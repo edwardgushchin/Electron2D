@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRBindingModifierEditor",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRBindingModifierEditor",
+    "kind": "class",
+    "baseType": "PanelContainer",
+    "interfaces": [],
+    "godotReference": "OpenXRBindingModifierEditor",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRBindingModifierEditor.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrbindingmodifiereditor.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBindingModifier",
+      "kind": "Method",
+      "signature": "public OpenXRBindingModifier GetBindingModifier()",
+      "returnType": "OpenXRBindingModifier",
+      "parameters": [],
+      "summary": "Returns the [OpenXRBindingModifier] currently being edited.",
+      "godotName": "get_binding_modifier",
+      "xmlDocId": "M:Godot.OpenXRBindingModifierEditor.GetBindingModifier",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifierEditor.xml"
+    },
+    {
+      "name": "Setup",
+      "kind": "Method",
+      "signature": "public void Setup(OpenXRActionMap actionMap, OpenXRBindingModifier bindingModifier)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_map",
+          "type": "OpenXRActionMap"
+        },
+        {
+          "name": "binding_modifier",
+          "type": "OpenXRBindingModifier"
+        }
+      ],
+      "summary": "Setup this editor for the provided [param action_map] and [param binding_modifier].",
+      "godotName": "setup",
+      "xmlDocId": "M:Godot.OpenXRBindingModifierEditor.Setup(OpenXRActionMap,OpenXRBindingModifier)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifierEditor.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BindingModifierRemoved",
+      "kind": "Signal",
+      "signature": "public event BindingModifierRemovedHandler BindingModifierRemoved",
+      "parameters": [
+        {
+          "name": "binding_modifier_editor",
+          "type": "Object"
+        }
+      ],
+      "summary": "Signal emitted when the user presses the delete binding modifier button for this modifier.",
+      "godotName": "binding_modifier_removed",
+      "xmlDocId": "E:Godot.OpenXRBindingModifierEditor.BindingModifierRemoved(Object)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifierEditor.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRBindingModifierEditor.xml",
+      "sha256": "5db22a8ae2bc3aba87d2022b025ce73df85407e1282120aa6ab31dfc480f71a2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

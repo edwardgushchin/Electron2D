@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tween.EaseType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Tween.EaseType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Tween.EaseType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "In",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.EaseType In",
+      "returnType": "Electron2D.Tween.EaseType",
+      "parameters": [],
+      "summary": "Applies the transition curve at the beginning of the interpolation.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Tween.EaseType.In",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InOut",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.EaseType InOut",
+      "returnType": "Electron2D.Tween.EaseType",
+      "parameters": [],
+      "summary": "Applies the transition curve to both halves of the interpolation.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.Tween.EaseType.InOut",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Out",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.EaseType Out",
+      "returnType": "Electron2D.Tween.EaseType",
+      "parameters": [],
+      "summary": "Applies the transition curve at the end of the interpolation.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Tween.EaseType.Out",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OutIn",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.EaseType OutIn",
+      "returnType": "Electron2D.Tween.EaseType",
+      "parameters": [],
+      "summary": "Applies out easing to the first half and in easing to the second half.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.Tween.EaseType.OutIn",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "In",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Applies the transition curve at the beginning of the interpolation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InOut",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Applies the transition curve to both halves of the interpolation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Out",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Applies the transition curve at the end of the interpolation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OutIn",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Applies out easing to the first half and in easing to the second half.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

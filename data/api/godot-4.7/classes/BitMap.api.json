@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BitMap",
+    "namespace": "Godot",
+    "fullName": "Godot.BitMap",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "BitMap",
+    "documentationPath": "doc/classes/BitMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_bitmap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ConvertToImage",
+      "kind": "Method",
+      "signature": "public Image ConvertToImage()",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "Returns an image of the same size as the bitmap and with an [enum Image.Format] of type [constant Image.FORMAT_L8]. [code]true[/code] bits of the bitmap are being converted into white pixels, and [code]false[/code] bits into black.",
+      "godotName": "convert_to_image",
+      "xmlDocId": "M:Godot.BitMap.ConvertToImage",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "Create",
+      "kind": "Method",
+      "signature": "public void Create(Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Creates a bitmap with the specified size, filled with [code]false[/code].",
+      "godotName": "create",
+      "xmlDocId": "M:Godot.BitMap.Create(Vector2i)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "CreateFromImageAlpha",
+      "kind": "Method",
+      "signature": "public void CreateFromImageAlpha(Image image, float threshold)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "threshold",
+          "type": "float",
+          "defaultValue": "0.1"
+        }
+      ],
+      "summary": "Creates a bitmap that matches the given image dimensions, every element of the bitmap is set to [code]false[/code] if the alpha value of the image at that position is equal to [param threshold] or less, and [code]true[/code] in other case.",
+      "godotName": "create_from_image_alpha",
+      "xmlDocId": "M:Godot.BitMap.CreateFromImageAlpha(Image,float)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "GetBit",
+      "kind": "Method",
+      "signature": "public bool GetBit(int x, int y)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns bitmap\u0027s value at the specified position.",
+      "godotName": "get_bit",
+      "xmlDocId": "M:Godot.BitMap.GetBit(int,int)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "GetBitv",
+      "kind": "Method",
+      "signature": "public bool GetBitv(Vector2i position)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns bitmap\u0027s value at the specified position.",
+      "godotName": "get_bitv",
+      "xmlDocId": "M:Godot.BitMap.GetBitv(Vector2i)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns bitmap\u0027s dimensions.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.BitMap.GetSize",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "GetTrueBitCount",
+      "kind": "Method",
+      "signature": "public int GetTrueBitCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bitmap elements that are set to [code]true[/code].",
+      "godotName": "get_true_bit_count",
+      "xmlDocId": "M:Godot.BitMap.GetTrueBitCount",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "GrowMask",
+      "kind": "Method",
+      "signature": "public void GrowMask(int pixels, Rect2i rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "int"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Applies morphological dilation or erosion to the bitmap. If [param pixels] is positive, dilation is applied to the bitmap. If [param pixels] is negative, erosion is applied to the bitmap. [param rect] defines the area where the morphological operation is applied. Pixels located outside the [param rect] are unaffected by [method grow_mask].",
+      "godotName": "grow_mask",
+      "xmlDocId": "M:Godot.BitMap.GrowMask(int,Rect2i)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "OpaqueToPolygons",
+      "kind": "Method",
+      "signature": "public PackedVector2Array[] OpaqueToPolygons(Rect2i rect, float epsilon)",
+      "returnType": "PackedVector2Array[]",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "epsilon",
+          "type": "float",
+          "defaultValue": "2.0"
+        }
+      ],
+      "summary": "Creates an [Array] of polygons covering a rectangular portion of the bitmap. It uses a marching squares algorithm, followed by Ramer-Douglas-Peucker (RDP) reduction of the number of vertices. Each polygon is described as a [PackedVector2Array] of its vertices. To get polygons covering the whole bitmap, pass: [codeblock] Rect2(Vector2(), get_size()) [/codeblock] [param epsilon] is passed to RDP to control how accurately the polygons cover the bitmap: a lower [param epsilon] corresponds to more points in the polygons.",
+      "godotName": "opaque_to_polygons",
+      "xmlDocId": "M:Godot.BitMap.OpaqueToPolygons(Rect2i,float)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public void Resize(Vector2i newSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Resizes the image to [param new_size].",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.BitMap.Resize(Vector2i)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "SetBit",
+      "kind": "Method",
+      "signature": "public void SetBit(int x, int y, bool bit)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        },
+        {
+          "name": "bit",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the bitmap\u0027s element at the specified position, to the specified value.",
+      "godotName": "set_bit",
+      "xmlDocId": "M:Godot.BitMap.SetBit(int,int,bool)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "SetBitRect",
+      "kind": "Method",
+      "signature": "public void SetBitRect(Rect2i rect, bool bit)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "bit",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets a rectangular portion of the bitmap to the specified value.",
+      "godotName": "set_bit_rect",
+      "xmlDocId": "M:Godot.BitMap.SetBitRect(Rect2i,bool)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    },
+    {
+      "name": "SetBitv",
+      "kind": "Method",
+      "signature": "public void SetBitv(Vector2i position, bool bit)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "bit",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the bitmap\u0027s element at the specified position, to the specified value.",
+      "godotName": "set_bitv",
+      "xmlDocId": "M:Godot.BitMap.SetBitv(Vector2i,bool)",
+      "sourcePath": "doc/classes/BitMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BitMap.xml",
+      "sha256": "7fb7bf0e69a8e9d648d5e583c699b3e5e5684cac26e6edeff05f09db7963c61d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

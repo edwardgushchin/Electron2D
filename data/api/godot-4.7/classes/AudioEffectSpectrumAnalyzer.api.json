@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectSpectrumAnalyzer",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectSpectrumAnalyzer",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectSpectrumAnalyzer",
+    "documentationPath": "doc/classes/AudioEffectSpectrumAnalyzer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectspectrumanalyzer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BufferLength",
+      "kind": "Property",
+      "signature": "public float BufferLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of the buffer to keep, in seconds. Higher values keep data around for longer, but require more memory. Value can range from 0.1 to 4.",
+      "defaultValue": "2.0",
+      "godotName": "buffer_length",
+      "xmlDocId": "P:Godot.AudioEffectSpectrumAnalyzer.BufferLength",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FftSize",
+      "kind": "Property",
+      "signature": "public int FftSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The size of the [url=https://en.wikipedia.org/wiki/Fast_Fourier_transform]Fast Fourier transform[/url] buffer. Higher values smooth out the spectrum analysis over time, but have greater latency. The effects of this higher latency are especially noticeable with sudden amplitude changes.",
+      "defaultValue": "2",
+      "godotName": "fft_size",
+      "xmlDocId": "P:Godot.AudioEffectSpectrumAnalyzer.FftSize",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "FFTSize",
+      "values": [
+        {
+          "name": "FFT_SIZE_1024",
+          "value": "2",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Use a buffer of 1024 samples for the Fast Fourier transform. This is a compromise between latency and stability over time.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        },
+        {
+          "name": "FFT_SIZE_2048",
+          "value": "3",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Use a buffer of 2048 samples for the Fast Fourier transform. High latency, but stable over time.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        },
+        {
+          "name": "FFT_SIZE_256",
+          "value": "0",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Use a buffer of 256 samples for the Fast Fourier transform. Lowest latency, but least stable over time.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        },
+        {
+          "name": "FFT_SIZE_4096",
+          "value": "4",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Use a buffer of 4096 samples for the Fast Fourier transform. Highest latency, but most stable over time.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        },
+        {
+          "name": "FFT_SIZE_512",
+          "value": "1",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Use a buffer of 512 samples for the Fast Fourier transform. Low latency, but less stable over time.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        },
+        {
+          "name": "FFT_SIZE_MAX",
+          "value": "5",
+          "enum": "FFTSize",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum FFTSize] enum.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FFT_SIZE_256",
+      "value": "0",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Use a buffer of 256 samples for the Fast Fourier transform. Lowest latency, but least stable over time.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FFT_SIZE_512",
+      "value": "1",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Use a buffer of 512 samples for the Fast Fourier transform. Low latency, but less stable over time.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FFT_SIZE_1024",
+      "value": "2",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Use a buffer of 1024 samples for the Fast Fourier transform. This is a compromise between latency and stability over time.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FFT_SIZE_2048",
+      "value": "3",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Use a buffer of 2048 samples for the Fast Fourier transform. High latency, but stable over time.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FFT_SIZE_4096",
+      "value": "4",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Use a buffer of 4096 samples for the Fast Fourier transform. Highest latency, but most stable over time.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    },
+    {
+      "name": "FFT_SIZE_MAX",
+      "value": "5",
+      "enum": "FFTSize",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum FFTSize] enum.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectSpectrumAnalyzer.xml",
+      "sha256": "10a5c4d75ccc0aec60273cf0a8d5f6d4dc1247096d7b51f2531749ef224e3cd1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

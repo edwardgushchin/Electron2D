@@ -1,0 +1,992 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Skeleton3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Skeleton3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "Skeleton3D",
+    "documentationPath": "doc/classes/Skeleton3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeleton3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBone",
+      "kind": "Method",
+      "signature": "public int AddBone(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a new bone with the given name. Returns the new bone\u0027s index, or [code]-1[/code] if this method fails. [b]Note:[/b] Bone names should be unique, non empty, and cannot include the [code]:[/code] and [code]/[/code] characters.",
+      "godotName": "add_bone",
+      "xmlDocId": "M:Godot.Skeleton3D.AddBone(String)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "Advance",
+      "kind": "Method",
+      "signature": "public void Advance(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Manually advance the child [SkeletonModifier3D]s by the specified time (in seconds). [b]Note:[/b] The [param delta] is temporarily accumulated in the [Skeleton3D], and the deferred process uses the accumulated value to process the modification.",
+      "godotName": "advance",
+      "xmlDocId": "M:Godot.Skeleton3D.Advance(float)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ClearBones",
+      "kind": "Method",
+      "signature": "public void ClearBones()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all the bones in this skeleton.",
+      "godotName": "clear_bones",
+      "xmlDocId": "M:Godot.Skeleton3D.ClearBones",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ClearBonesGlobalPoseOverride",
+      "kind": "Method",
+      "signature": "public void ClearBonesGlobalPoseOverride()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes the global pose override on all bones in the skeleton.",
+      "godotName": "clear_bones_global_pose_override",
+      "xmlDocId": "M:Godot.Skeleton3D.ClearBonesGlobalPoseOverride",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "CreateSkinFromRestTransforms",
+      "kind": "Method",
+      "signature": "public Skin CreateSkinFromRestTransforms()",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "",
+      "godotName": "create_skin_from_rest_transforms",
+      "xmlDocId": "M:Godot.Skeleton3D.CreateSkinFromRestTransforms",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "FindBone",
+      "kind": "Method",
+      "signature": "public int FindBone(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the bone index that matches [param name] as its name. Returns [code]-1[/code] if no bone with this name exists.",
+      "godotName": "find_bone",
+      "xmlDocId": "M:Godot.Skeleton3D.FindBone(String)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ForceUpdateAllBoneTransforms",
+      "kind": "Method",
+      "signature": "public void ForceUpdateAllBoneTransforms()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Force updates the bone transforms/poses for all bones in the skeleton.",
+      "godotName": "force_update_all_bone_transforms",
+      "xmlDocId": "M:Godot.Skeleton3D.ForceUpdateAllBoneTransforms",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ForceUpdateBoneChildTransform",
+      "kind": "Method",
+      "signature": "public void ForceUpdateBoneChildTransform(int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Force updates the bone transform for the bone at [param bone_idx] and all of its children.",
+      "godotName": "force_update_bone_child_transform",
+      "xmlDocId": "M:Godot.Skeleton3D.ForceUpdateBoneChildTransform(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneChildren",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetBoneChildren(int boneIdx)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array containing the bone indexes of all the child node of the passed in bone, [param bone_idx].",
+      "godotName": "get_bone_children",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneChildren(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneCount",
+      "kind": "Method",
+      "signature": "public int GetBoneCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bones in the skeleton.",
+      "godotName": "get_bone_count",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneCount",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneGlobalPose",
+      "kind": "Method",
+      "signature": "public Transform3D GetBoneGlobalPose(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the overall transform of the specified bone, with respect to the skeleton. Being relative to the skeleton frame, this is not the actual \u0022global\u0022 transform of the bone. [b]Note:[/b] This is the global pose you set to the skeleton in the process, the final global pose can get overridden by modifiers in the deferred process, if you want to access the final global pose, use [signal SkeletonModifier3D.modification_processed].",
+      "godotName": "get_bone_global_pose",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneGlobalPose(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneGlobalPoseNoOverride",
+      "kind": "Method",
+      "signature": "public Transform3D GetBoneGlobalPoseNoOverride(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the overall transform of the specified bone, with respect to the skeleton, but without any global pose overrides. Being relative to the skeleton frame, this is not the actual \u0022global\u0022 transform of the bone.",
+      "godotName": "get_bone_global_pose_no_override",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneGlobalPoseNoOverride(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneGlobalPoseOverride",
+      "kind": "Method",
+      "signature": "public Transform3D GetBoneGlobalPoseOverride(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the global pose override transform for [param bone_idx].",
+      "godotName": "get_bone_global_pose_override",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneGlobalPoseOverride(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneGlobalRest",
+      "kind": "Method",
+      "signature": "public Transform3D GetBoneGlobalRest(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the global rest transform for [param bone_idx].",
+      "godotName": "get_bone_global_rest",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneGlobalRest(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneMeta",
+      "kind": "Method",
+      "signature": "public Variant GetBoneMeta(int boneIdx, StringName key)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the metadata with the given [param key] for the bone at index [param bone_idx].",
+      "godotName": "get_bone_meta",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneMeta(int,StringName)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneMetaList",
+      "kind": "Method",
+      "signature": "public StringName[] GetBoneMetaList(int boneIdx)",
+      "returnType": "StringName[]",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the list of all metadata keys for the bone at index [param bone_idx].",
+      "godotName": "get_bone_meta_list",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneMetaList(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneName",
+      "kind": "Method",
+      "signature": "public String GetBoneName(int boneIdx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bone at index [param bone_idx].",
+      "godotName": "get_bone_name",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneName(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneParent",
+      "kind": "Method",
+      "signature": "public int GetBoneParent(int boneIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone index which is the parent of the bone at [param bone_idx]. If -1, then bone has no parent. [b]Note:[/b] The parent bone returned will always be less than [param bone_idx].",
+      "godotName": "get_bone_parent",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneParent(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBonePose",
+      "kind": "Method",
+      "signature": "public Transform3D GetBonePose(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pose transform of the specified bone. [b]Note:[/b] This is the pose you set to the skeleton in the process, the final pose can get overridden by modifiers in the deferred process, if you want to access the final pose, use [signal SkeletonModifier3D.modification_processed].",
+      "godotName": "get_bone_pose",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBonePose(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBonePosePosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetBonePosePosition(int boneIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pose position of the bone at [param bone_idx]. The returned [Vector3] is in the local coordinate space of the [Skeleton3D] node.",
+      "godotName": "get_bone_pose_position",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBonePosePosition(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBonePoseRotation",
+      "kind": "Method",
+      "signature": "public Quaternion GetBonePoseRotation(int boneIdx)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pose rotation of the bone at [param bone_idx]. The returned [Quaternion] is local to the bone with respect to the rotation of any parent bones.",
+      "godotName": "get_bone_pose_rotation",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBonePoseRotation(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBonePoseScale",
+      "kind": "Method",
+      "signature": "public Vector3 GetBonePoseScale(int boneIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pose scale of the bone at [param bone_idx].",
+      "godotName": "get_bone_pose_scale",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBonePoseScale(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetBoneRest",
+      "kind": "Method",
+      "signature": "public Transform3D GetBoneRest(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rest transform for a bone [param bone_idx].",
+      "godotName": "get_bone_rest",
+      "xmlDocId": "M:Godot.Skeleton3D.GetBoneRest(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetConcatenatedBoneNames",
+      "kind": "Method",
+      "signature": "public StringName GetConcatenatedBoneNames()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns all bone names concatenated with commas ([code],[/code]) as a single [StringName]. It is useful to set it as a hint for the enum property.",
+      "godotName": "get_concatenated_bone_names",
+      "xmlDocId": "M:Godot.Skeleton3D.GetConcatenatedBoneNames",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetParentlessBones",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetParentlessBones()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns an array with all of the bones that are parentless. Another way to look at this is that it returns the indexes of all the bones that are not dependent or modified by other bones in the Skeleton.",
+      "godotName": "get_parentless_bones",
+      "xmlDocId": "M:Godot.Skeleton3D.GetParentlessBones",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "GetVersion",
+      "kind": "Method",
+      "signature": "public int GetVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of times the bone hierarchy has changed within this skeleton, including renames. The Skeleton version is not serialized: only use within a single instance of Skeleton3D. Use for invalidating caches in IK solvers and other nodes which process bones.",
+      "godotName": "get_version",
+      "xmlDocId": "M:Godot.Skeleton3D.GetVersion",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "HasBoneMeta",
+      "kind": "Method",
+      "signature": "public bool HasBoneMeta(int boneIdx, StringName key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the bone at index [param bone_idx] has metadata with the given [param key].",
+      "godotName": "has_bone_meta",
+      "xmlDocId": "M:Godot.Skeleton3D.HasBoneMeta(int,StringName)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "IsBoneEnabled",
+      "kind": "Method",
+      "signature": "public bool IsBoneEnabled(int boneIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the bone pose for the bone at [param bone_idx] is enabled.",
+      "godotName": "is_bone_enabled",
+      "xmlDocId": "M:Godot.Skeleton3D.IsBoneEnabled(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "LocalizeRests",
+      "kind": "Method",
+      "signature": "public void LocalizeRests()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Returns all bones in the skeleton to their rest poses.",
+      "godotName": "localize_rests",
+      "xmlDocId": "M:Godot.Skeleton3D.LocalizeRests",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "PhysicalBonesAddCollisionException",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesAddCollisionException(RID exception)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "exception",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a collision exception to the physical bone. Works just like the [RigidBody3D] node.",
+      "godotName": "physical_bones_add_collision_exception",
+      "xmlDocId": "M:Godot.Skeleton3D.PhysicalBonesAddCollisionException(RID)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "PhysicalBonesRemoveCollisionException",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesRemoveCollisionException(RID exception)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "exception",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes a collision exception to the physical bone. Works just like the [RigidBody3D] node.",
+      "godotName": "physical_bones_remove_collision_exception",
+      "xmlDocId": "M:Godot.Skeleton3D.PhysicalBonesRemoveCollisionException(RID)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "PhysicalBonesStartSimulation",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesStartSimulation(StringName[] bones)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bones",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Tells the [PhysicalBone3D] nodes in the Skeleton to start simulating and reacting to the physics world. Optionally, a list of bone names can be passed-in, allowing only the passed-in bones to be simulated.",
+      "godotName": "physical_bones_start_simulation",
+      "xmlDocId": "M:Godot.Skeleton3D.PhysicalBonesStartSimulation(StringName[])",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "PhysicalBonesStopSimulation",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesStopSimulation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Tells the [PhysicalBone3D] nodes in the Skeleton to stop simulating.",
+      "godotName": "physical_bones_stop_simulation",
+      "xmlDocId": "M:Godot.Skeleton3D.PhysicalBonesStopSimulation",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "RegisterSkin",
+      "kind": "Method",
+      "signature": "public SkinReference RegisterSkin(Skin skin)",
+      "returnType": "SkinReference",
+      "parameters": [
+        {
+          "name": "skin",
+          "type": "Skin"
+        }
+      ],
+      "summary": "Binds the given Skin to the Skeleton.",
+      "godotName": "register_skin",
+      "xmlDocId": "M:Godot.Skeleton3D.RegisterSkin(Skin)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ResetBonePose",
+      "kind": "Method",
+      "signature": "public void ResetBonePose(int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the bone pose to rest for [param bone_idx].",
+      "godotName": "reset_bone_pose",
+      "xmlDocId": "M:Godot.Skeleton3D.ResetBonePose(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ResetBonePoses",
+      "kind": "Method",
+      "signature": "public void ResetBonePoses()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sets all bone poses to rests.",
+      "godotName": "reset_bone_poses",
+      "xmlDocId": "M:Godot.Skeleton3D.ResetBonePoses",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneEnabled",
+      "kind": "Method",
+      "signature": "public void SetBoneEnabled(int boneIdx, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Disables the pose for the bone at [param bone_idx] if [code]false[/code], enables the bone pose if [code]true[/code].",
+      "godotName": "set_bone_enabled",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneEnabled(int,bool)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneGlobalPose",
+      "kind": "Method",
+      "signature": "public void SetBoneGlobalPose(int boneIdx, Transform3D pose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the global pose transform, [param pose], for the bone at [param bone_idx]. [b]Note:[/b] If other bone poses have been changed, this method executes a dirty poses recalculation and will cause performance to deteriorate. If you know that multiple global poses will be applied, consider using [method set_bone_pose] with precalculation.",
+      "godotName": "set_bone_global_pose",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneGlobalPose(int,Transform3D)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneGlobalPoseOverride",
+      "kind": "Method",
+      "signature": "public void SetBoneGlobalPoseOverride(int boneIdx, Transform3D pose, float amount, bool persistent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        },
+        {
+          "name": "amount",
+          "type": "float"
+        },
+        {
+          "name": "persistent",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Sets the global pose transform, [param pose], for the bone at [param bone_idx]. [param amount] is the interpolation strength that will be used when applying the pose, and [param persistent] determines if the applied pose will remain. [b]Note:[/b] The pose transform needs to be a global pose! To convert a world transform from a [Node3D] to a global bone pose, multiply the [method Transform3D.affine_inverse] of the node\u0027s [member Node3D.global_transform] by the desired world transform.",
+      "godotName": "set_bone_global_pose_override",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneGlobalPoseOverride(int,Transform3D,float,bool)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneMeta",
+      "kind": "Method",
+      "signature": "public void SetBoneMeta(int boneIdx, StringName key, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata with the given [param key] to [param value] for the bone at index [param bone_idx].",
+      "godotName": "set_bone_meta",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneMeta(int,StringName,Variant)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneName",
+      "kind": "Method",
+      "signature": "public void SetBoneName(int boneIdx, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the bone name, [param name], for the bone at [param bone_idx].",
+      "godotName": "set_bone_name",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneName(int,String)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneParent",
+      "kind": "Method",
+      "signature": "public void SetBoneParent(int boneIdx, int parentIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "parent_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the bone index [param parent_idx] as the parent of the bone at [param bone_idx]. If -1, then bone has no parent. [b]Note:[/b] [param parent_idx] must be less than [param bone_idx].",
+      "godotName": "set_bone_parent",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneParent(int,int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBonePose",
+      "kind": "Method",
+      "signature": "public void SetBonePose(int boneIdx, Transform3D pose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the pose transform, [param pose], for the bone at [param bone_idx].",
+      "godotName": "set_bone_pose",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBonePose(int,Transform3D)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBonePosePosition",
+      "kind": "Method",
+      "signature": "public void SetBonePosePosition(int boneIdx, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the pose position of the bone at [param bone_idx] to [param position]. [param position] is a [Vector3] describing a position local to the [Skeleton3D] node.",
+      "godotName": "set_bone_pose_position",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBonePosePosition(int,Vector3)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBonePoseRotation",
+      "kind": "Method",
+      "signature": "public void SetBonePoseRotation(int boneIdx, Quaternion rotation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Sets the pose rotation of the bone at [param bone_idx] to [param rotation]. [param rotation] is a [Quaternion] describing a rotation in the bone\u0027s local coordinate space with respect to the rotation of any parent bones.",
+      "godotName": "set_bone_pose_rotation",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBonePoseRotation(int,Quaternion)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBonePoseScale",
+      "kind": "Method",
+      "signature": "public void SetBonePoseScale(int boneIdx, Vector3 scale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the pose scale of the bone at [param bone_idx] to [param scale].",
+      "godotName": "set_bone_pose_scale",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBonePoseScale(int,Vector3)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SetBoneRest",
+      "kind": "Method",
+      "signature": "public void SetBoneRest(int boneIdx, Transform3D rest)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "rest",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the rest transform for bone [param bone_idx].",
+      "godotName": "set_bone_rest",
+      "xmlDocId": "M:Godot.Skeleton3D.SetBoneRest(int,Transform3D)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "UnparentBoneAndRest",
+      "kind": "Method",
+      "signature": "public void UnparentBoneAndRest(int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Unparents the bone at [param bone_idx] and sets its rest position to that of its parent prior to being reset.",
+      "godotName": "unparent_bone_and_rest",
+      "xmlDocId": "M:Godot.Skeleton3D.UnparentBoneAndRest(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "AnimatePhysicalBones",
+      "kind": "Property",
+      "signature": "public bool AnimatePhysicalBones { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If you follow the recommended workflow and explicitly have [PhysicalBoneSimulator3D] as a child of [Skeleton3D], you can control whether it is affected by raycasting without running [method physical_bones_start_simulation], by its [member SkeletonModifier3D.active]. However, for old (deprecated) configurations, [Skeleton3D] has an internal virtual [PhysicalBoneSimulator3D] for compatibility. This property controls the internal virtual [PhysicalBoneSimulator3D]\u0027s [member SkeletonModifier3D.active].",
+      "defaultValue": "true",
+      "godotName": "animate_physical_bones",
+      "xmlDocId": "P:Godot.Skeleton3D.AnimatePhysicalBones",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ModifierCallbackModeProcess",
+      "kind": "Property",
+      "signature": "public int ModifierCallbackModeProcess { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the processing timing for the Modifier.",
+      "defaultValue": "1",
+      "godotName": "modifier_callback_mode_process",
+      "xmlDocId": "P:Godot.Skeleton3D.ModifierCallbackModeProcess",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "MotionScale",
+      "kind": "Property",
+      "signature": "public float MotionScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplies the 3D position track animation. [b]Note:[/b] Unless this value is [code]1.0[/code], the key value in animation will not match the actual position value.",
+      "defaultValue": "1.0",
+      "godotName": "motion_scale",
+      "xmlDocId": "P:Godot.Skeleton3D.MotionScale",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ShowRestOnly",
+      "kind": "Property",
+      "signature": "public bool ShowRestOnly { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], forces the bones in their default rest pose, regardless of their values. In the editor, this also prevents the bones from being edited.",
+      "defaultValue": "false",
+      "godotName": "show_rest_only",
+      "xmlDocId": "P:Godot.Skeleton3D.ShowRestOnly",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BoneEnabledChanged",
+      "kind": "Signal",
+      "signature": "public event BoneEnabledChangedHandler BoneEnabledChanged",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the bone at [param bone_idx] is toggled with [method set_bone_enabled]. Use [method is_bone_enabled] to check the new value.",
+      "godotName": "bone_enabled_changed",
+      "xmlDocId": "E:Godot.Skeleton3D.BoneEnabledChanged(int)",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "BoneListChanged",
+      "kind": "Signal",
+      "signature": "public event BoneListChangedHandler BoneListChanged",
+      "parameters": [],
+      "summary": "Emitted when the list of bones changes, such as when calling [method add_bone], [method set_bone_parent], [method unparent_bone_and_rest], or [method clear_bones].",
+      "godotName": "bone_list_changed",
+      "xmlDocId": "E:Godot.Skeleton3D.BoneListChanged",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "PoseUpdated",
+      "kind": "Signal",
+      "signature": "public event PoseUpdatedHandler PoseUpdated",
+      "parameters": [],
+      "summary": "Emitted when the pose is updated. [b]Note:[/b] During the update process, this signal is not fired, so modification by [SkeletonModifier3D] is not detected.",
+      "godotName": "pose_updated",
+      "xmlDocId": "E:Godot.Skeleton3D.PoseUpdated",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "RestUpdated",
+      "kind": "Signal",
+      "signature": "public event RestUpdatedHandler RestUpdated",
+      "parameters": [],
+      "summary": "Emitted when the rest is updated.",
+      "godotName": "rest_updated",
+      "xmlDocId": "E:Godot.Skeleton3D.RestUpdated",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "ShowRestOnlyChanged",
+      "kind": "Signal",
+      "signature": "public event ShowRestOnlyChangedHandler ShowRestOnlyChanged",
+      "parameters": [],
+      "summary": "Emitted when the value of [member show_rest_only] changes.",
+      "godotName": "show_rest_only_changed",
+      "xmlDocId": "E:Godot.Skeleton3D.ShowRestOnlyChanged",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "SkeletonUpdated",
+      "kind": "Signal",
+      "signature": "public event SkeletonUpdatedHandler SkeletonUpdated",
+      "parameters": [],
+      "summary": "Emitted when the final pose has been calculated will be applied to the skin in the update process. This means that all [SkeletonModifier3D] processing is complete. In order to detect the completion of the processing of each [SkeletonModifier3D], use [signal SkeletonModifier3D.modification_processed].",
+      "godotName": "skeleton_updated",
+      "xmlDocId": "E:Godot.Skeleton3D.SkeletonUpdated",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ModifierCallbackModeProcess",
+      "values": [
+        {
+          "name": "MODIFIER_CALLBACK_MODE_PROCESS_IDLE",
+          "value": "1",
+          "enum": "ModifierCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Set a flag to process modification during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+          "sourcePath": "doc/classes/Skeleton3D.xml"
+        },
+        {
+          "name": "MODIFIER_CALLBACK_MODE_PROCESS_MANUAL",
+          "value": "2",
+          "enum": "ModifierCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Do not process modification. Use [method advance] to process the modification manually.",
+          "sourcePath": "doc/classes/Skeleton3D.xml"
+        },
+        {
+          "name": "MODIFIER_CALLBACK_MODE_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "ModifierCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Set a flag to process modification during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+          "sourcePath": "doc/classes/Skeleton3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "NOTIFICATION_UPDATE_SKELETON",
+      "value": "50",
+      "kind": "Constant",
+      "summary": "Notification received when this skeleton\u0027s pose needs to be updated. In that case, this is called only once per frame in a deferred process.",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "MODIFIER_CALLBACK_MODE_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "ModifierCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Set a flag to process modification during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "MODIFIER_CALLBACK_MODE_PROCESS_IDLE",
+      "value": "1",
+      "enum": "ModifierCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Set a flag to process modification during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    },
+    {
+      "name": "MODIFIER_CALLBACK_MODE_PROCESS_MANUAL",
+      "value": "2",
+      "enum": "ModifierCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Do not process modification. Use [method advance] to process the modification manually.",
+      "sourcePath": "doc/classes/Skeleton3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Skeleton3D.xml",
+      "sha256": "3121242d15e42ca3ebacc813f77fbb2291d827ca781d1f4552cff1f899f34afb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

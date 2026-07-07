@@ -1,0 +1,2062 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSet",
+    "namespace": "Godot",
+    "fullName": "Godot.TileSet",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "TileSet",
+    "documentationPath": "doc/classes/TileSet.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tileset.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCustomDataLayer",
+      "kind": "Method",
+      "signature": "public void AddCustomDataLayer(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a custom data layer to the TileSet at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array. Custom data layers allow assigning custom properties to atlas tiles.",
+      "godotName": "add_custom_data_layer",
+      "xmlDocId": "M:Godot.TileSet.AddCustomDataLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddNavigationLayer",
+      "kind": "Method",
+      "signature": "public void AddNavigationLayer(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a navigation layer to the TileSet at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array. Navigation layers allow assigning a navigable area to atlas tiles.",
+      "godotName": "add_navigation_layer",
+      "xmlDocId": "M:Godot.TileSet.AddNavigationLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddOcclusionLayer",
+      "kind": "Method",
+      "signature": "public void AddOcclusionLayer(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an occlusion layer to the TileSet at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array. Occlusion layers allow assigning occlusion polygons to atlas tiles.",
+      "godotName": "add_occlusion_layer",
+      "xmlDocId": "M:Godot.TileSet.AddOcclusionLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddPattern",
+      "kind": "Method",
+      "signature": "public int AddPattern(TileMapPattern pattern, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "TileMapPattern"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a [TileMapPattern] to be stored in the TileSet resource. If provided, insert it at the given [param index].",
+      "godotName": "add_pattern",
+      "xmlDocId": "M:Godot.TileSet.AddPattern(TileMapPattern,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddPhysicsLayer",
+      "kind": "Method",
+      "signature": "public void AddPhysicsLayer(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a physics layer to the TileSet at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array. Physics layers allow assigning collision polygons to atlas tiles.",
+      "godotName": "add_physics_layer",
+      "xmlDocId": "M:Godot.TileSet.AddPhysicsLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddSource",
+      "kind": "Method",
+      "signature": "public int AddSource(TileSetSource source, int atlasSourceIdOverride)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "source",
+          "type": "TileSetSource"
+        },
+        {
+          "name": "atlas_source_id_override",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a [TileSetSource] to the TileSet. If [param atlas_source_id_override] is not -1, also set its source ID. Otherwise, a unique identifier is automatically generated. The function returns the added source ID or -1 if the source could not be added. [b]Warning:[/b] A source cannot belong to two TileSets at the same time. If the added source was attached to another [TileSet], it will be removed from that one.",
+      "godotName": "add_source",
+      "xmlDocId": "M:Godot.TileSet.AddSource(TileSetSource,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddTerrain",
+      "kind": "Method",
+      "signature": "public void AddTerrain(int terrainSet, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new terrain to the given terrain set [param terrain_set] at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array.",
+      "godotName": "add_terrain",
+      "xmlDocId": "M:Godot.TileSet.AddTerrain(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "AddTerrainSet",
+      "kind": "Method",
+      "signature": "public void AddTerrainSet(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new terrain set at the given position [param to_position] in the array. If [param to_position] is -1, adds it at the end of the array.",
+      "godotName": "add_terrain_set",
+      "xmlDocId": "M:Godot.TileSet.AddTerrainSet(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CleanupInvalidTileProxies",
+      "kind": "Method",
+      "signature": "public void CleanupInvalidTileProxies()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears tile proxies pointing to invalid tiles.",
+      "godotName": "cleanup_invalid_tile_proxies",
+      "xmlDocId": "M:Godot.TileSet.CleanupInvalidTileProxies",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "ClearTerrains",
+      "kind": "Method",
+      "signature": "public void ClearTerrains(int terrainSet)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        }
+      ],
+      "summary": "Clears all terrain properties for the given terrain set.",
+      "godotName": "clear_terrains",
+      "xmlDocId": "M:Godot.TileSet.ClearTerrains(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "ClearTileProxies",
+      "kind": "Method",
+      "signature": "public void ClearTileProxies()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all tile proxies.",
+      "godotName": "clear_tile_proxies",
+      "xmlDocId": "M:Godot.TileSet.ClearTileProxies",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetAlternativeLevelTileProxy",
+      "kind": "Method",
+      "signature": "public Array GetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the alternative-level proxy for the given identifiers. The returned array contains the three proxie\u0027s target identifiers (source ID, atlas coords ID and alternative tile ID). If the TileSet has no proxy for the given identifiers, returns an empty Array.",
+      "godotName": "get_alternative_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.GetAlternativeLevelTileProxy(int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetCoordsLevelTileProxy",
+      "kind": "Method",
+      "signature": "public Array GetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the coordinate-level proxy for the given identifiers. The returned array contains the two target identifiers of the proxy (source ID and atlas coordinates ID). If the TileSet has no proxy for the given identifiers, returns an empty Array.",
+      "godotName": "get_coords_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.GetCoordsLevelTileProxy(int,Vector2i)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetCustomDataLayerByName",
+      "kind": "Method",
+      "signature": "public int GetCustomDataLayerByName(String layerName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the index of the custom data layer identified by the given name.",
+      "godotName": "get_custom_data_layer_by_name",
+      "xmlDocId": "M:Godot.TileSet.GetCustomDataLayerByName(String)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetCustomDataLayerName",
+      "kind": "Method",
+      "signature": "public String GetCustomDataLayerName(int layerIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the custom data layer identified by the given index.",
+      "godotName": "get_custom_data_layer_name",
+      "xmlDocId": "M:Godot.TileSet.GetCustomDataLayerName(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetCustomDataLayerType",
+      "kind": "Method",
+      "signature": "public int GetCustomDataLayerType(int layerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type of the custom data layer identified by the given index.",
+      "godotName": "get_custom_data_layer_type",
+      "xmlDocId": "M:Godot.TileSet.GetCustomDataLayerType(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetCustomDataLayersCount",
+      "kind": "Method",
+      "signature": "public int GetCustomDataLayersCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the custom data layers count.",
+      "godotName": "get_custom_data_layers_count",
+      "xmlDocId": "M:Godot.TileSet.GetCustomDataLayersCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetNavigationLayerLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetNavigationLayerLayerValue(int layerIndex, int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified navigation layer of the TileSet navigation data layer identified by the given [param layer_index] is enabled, given a navigation_layers [param layer_number] between 1 and 32.",
+      "godotName": "get_navigation_layer_layer_value",
+      "xmlDocId": "M:Godot.TileSet.GetNavigationLayerLayerValue(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetNavigationLayerLayers",
+      "kind": "Method",
+      "signature": "public int GetNavigationLayerLayers(int layerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the navigation layers (as in the Navigation server) of the given TileSet navigation layer.",
+      "godotName": "get_navigation_layer_layers",
+      "xmlDocId": "M:Godot.TileSet.GetNavigationLayerLayers(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetNavigationLayersCount",
+      "kind": "Method",
+      "signature": "public int GetNavigationLayersCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the navigation layers count.",
+      "godotName": "get_navigation_layers_count",
+      "xmlDocId": "M:Godot.TileSet.GetNavigationLayersCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetNextSourceId",
+      "kind": "Method",
+      "signature": "public int GetNextSourceId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a new unused source ID. This generated ID is the same that a call to [method add_source] would return.",
+      "godotName": "get_next_source_id",
+      "xmlDocId": "M:Godot.TileSet.GetNextSourceId",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetOcclusionLayerLightMask",
+      "kind": "Method",
+      "signature": "public int GetOcclusionLayerLightMask(int layerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the light mask of the occlusion layer.",
+      "godotName": "get_occlusion_layer_light_mask",
+      "xmlDocId": "M:Godot.TileSet.GetOcclusionLayerLightMask(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetOcclusionLayerSdfCollision",
+      "kind": "Method",
+      "signature": "public bool GetOcclusionLayerSdfCollision(int layerIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if the occluders from this layer use [code]sdf_collision[/code].",
+      "godotName": "get_occlusion_layer_sdf_collision",
+      "xmlDocId": "M:Godot.TileSet.GetOcclusionLayerSdfCollision(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetOcclusionLayersCount",
+      "kind": "Method",
+      "signature": "public int GetOcclusionLayersCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the occlusion layers count.",
+      "godotName": "get_occlusion_layers_count",
+      "xmlDocId": "M:Godot.TileSet.GetOcclusionLayersCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPattern",
+      "kind": "Method",
+      "signature": "public TileMapPattern GetPattern(int index)",
+      "returnType": "TileMapPattern",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the [TileMapPattern] at the given [param index].",
+      "godotName": "get_pattern",
+      "xmlDocId": "M:Godot.TileSet.GetPattern(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPatternsCount",
+      "kind": "Method",
+      "signature": "public int GetPatternsCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of [TileMapPattern] this tile set handles.",
+      "godotName": "get_patterns_count",
+      "xmlDocId": "M:Godot.TileSet.GetPatternsCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPhysicsLayerCollisionLayer",
+      "kind": "Method",
+      "signature": "public int GetPhysicsLayerCollisionLayer(int layerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collision layer (as in the physics server) bodies on the given TileSet\u0027s physics layer are in.",
+      "godotName": "get_physics_layer_collision_layer",
+      "xmlDocId": "M:Godot.TileSet.GetPhysicsLayerCollisionLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPhysicsLayerCollisionMask",
+      "kind": "Method",
+      "signature": "public int GetPhysicsLayerCollisionMask(int layerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collision mask of bodies on the given TileSet\u0027s physics layer.",
+      "godotName": "get_physics_layer_collision_mask",
+      "xmlDocId": "M:Godot.TileSet.GetPhysicsLayerCollisionMask(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPhysicsLayerCollisionPriority",
+      "kind": "Method",
+      "signature": "public float GetPhysicsLayerCollisionPriority(int layerIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collision priority of bodies on the given TileSet\u0027s physics layer.",
+      "godotName": "get_physics_layer_collision_priority",
+      "xmlDocId": "M:Godot.TileSet.GetPhysicsLayerCollisionPriority(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPhysicsLayerPhysicsMaterial",
+      "kind": "Method",
+      "signature": "public PhysicsMaterial GetPhysicsLayerPhysicsMaterial(int layerIndex)",
+      "returnType": "PhysicsMaterial",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the physics material of bodies on the given TileSet\u0027s physics layer.",
+      "godotName": "get_physics_layer_physics_material",
+      "xmlDocId": "M:Godot.TileSet.GetPhysicsLayerPhysicsMaterial(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetPhysicsLayersCount",
+      "kind": "Method",
+      "signature": "public int GetPhysicsLayersCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the physics layers count.",
+      "godotName": "get_physics_layers_count",
+      "xmlDocId": "M:Godot.TileSet.GetPhysicsLayersCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetSource",
+      "kind": "Method",
+      "signature": "public TileSetSource GetSource(int sourceId)",
+      "returnType": "TileSetSource",
+      "parameters": [
+        {
+          "name": "source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [TileSetSource] with ID [param source_id].",
+      "godotName": "get_source",
+      "xmlDocId": "M:Godot.TileSet.GetSource(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetSourceCount",
+      "kind": "Method",
+      "signature": "public int GetSourceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of [TileSetSource] in this TileSet.",
+      "godotName": "get_source_count",
+      "xmlDocId": "M:Godot.TileSet.GetSourceCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetSourceId",
+      "kind": "Method",
+      "signature": "public int GetSourceId(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the source ID for source with index [param index].",
+      "godotName": "get_source_id",
+      "xmlDocId": "M:Godot.TileSet.GetSourceId(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetSourceLevelTileProxy",
+      "kind": "Method",
+      "signature": "public int GetSourceLevelTileProxy(int sourceFrom)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the source-level proxy for the given source identifier. If the TileSet has no proxy for the given identifier, returns -1.",
+      "godotName": "get_source_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.GetSourceLevelTileProxy(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetTerrainColor",
+      "kind": "Method",
+      "signature": "public Color GetTerrainColor(int terrainSet, int terrainIndex)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a terrain\u0027s color.",
+      "godotName": "get_terrain_color",
+      "xmlDocId": "M:Godot.TileSet.GetTerrainColor(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetTerrainName",
+      "kind": "Method",
+      "signature": "public String GetTerrainName(int terrainSet, int terrainIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a terrain\u0027s name.",
+      "godotName": "get_terrain_name",
+      "xmlDocId": "M:Godot.TileSet.GetTerrainName(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetTerrainSetMode",
+      "kind": "Method",
+      "signature": "public int GetTerrainSetMode(int terrainSet)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a terrain set mode.",
+      "godotName": "get_terrain_set_mode",
+      "xmlDocId": "M:Godot.TileSet.GetTerrainSetMode(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetTerrainSetsCount",
+      "kind": "Method",
+      "signature": "public int GetTerrainSetsCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the terrain sets count.",
+      "godotName": "get_terrain_sets_count",
+      "xmlDocId": "M:Godot.TileSet.GetTerrainSetsCount",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "GetTerrainsCount",
+      "kind": "Method",
+      "signature": "public int GetTerrainsCount(int terrainSet)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of terrains in the given terrain set.",
+      "godotName": "get_terrains_count",
+      "xmlDocId": "M:Godot.TileSet.GetTerrainsCount(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "HasAlternativeLevelTileProxy",
+      "kind": "Method",
+      "signature": "public bool HasAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if there is an alternative-level proxy for the given identifiers.",
+      "godotName": "has_alternative_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.HasAlternativeLevelTileProxy(int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "HasCoordsLevelTileProxy",
+      "kind": "Method",
+      "signature": "public bool HasCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns if there is a coodinates-level proxy for the given identifiers.",
+      "godotName": "has_coords_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.HasCoordsLevelTileProxy(int,Vector2i)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "HasCustomDataLayerByName",
+      "kind": "Method",
+      "signature": "public bool HasCustomDataLayerByName(String layerName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns if there is a custom data layer named [param layer_name].",
+      "godotName": "has_custom_data_layer_by_name",
+      "xmlDocId": "M:Godot.TileSet.HasCustomDataLayerByName(String)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "HasSource",
+      "kind": "Method",
+      "signature": "public bool HasSource(int sourceId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if this TileSet has a source for the given source ID.",
+      "godotName": "has_source",
+      "xmlDocId": "M:Godot.TileSet.HasSource(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "HasSourceLevelTileProxy",
+      "kind": "Method",
+      "signature": "public bool HasSourceLevelTileProxy(int sourceFrom)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if there is a source-level proxy for the given source ID.",
+      "godotName": "has_source_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.HasSourceLevelTileProxy(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MapTileProxy",
+      "kind": "Method",
+      "signature": "public Array MapTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_from",
+          "type": "int"
+        }
+      ],
+      "summary": "According to the configured proxies, maps the provided identifiers to a new set of identifiers. The source ID, atlas coordinates ID and alternative tile ID are returned as a 3 elements Array. This function first look for matching alternative-level proxies, then coordinates-level proxies, then source-level proxies. If no proxy corresponding to provided identifiers are found, returns the same values the ones used as arguments.",
+      "godotName": "map_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.MapTileProxy(int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MoveCustomDataLayer",
+      "kind": "Method",
+      "signature": "public void MoveCustomDataLayer(int layerIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the custom data layer at index [param layer_index] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_custom_data_layer",
+      "xmlDocId": "M:Godot.TileSet.MoveCustomDataLayer(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MoveNavigationLayer",
+      "kind": "Method",
+      "signature": "public void MoveNavigationLayer(int layerIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the navigation layer at index [param layer_index] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_navigation_layer",
+      "xmlDocId": "M:Godot.TileSet.MoveNavigationLayer(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MoveOcclusionLayer",
+      "kind": "Method",
+      "signature": "public void MoveOcclusionLayer(int layerIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the occlusion layer at index [param layer_index] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_occlusion_layer",
+      "xmlDocId": "M:Godot.TileSet.MoveOcclusionLayer(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MovePhysicsLayer",
+      "kind": "Method",
+      "signature": "public void MovePhysicsLayer(int layerIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the physics layer at index [param layer_index] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_physics_layer",
+      "xmlDocId": "M:Godot.TileSet.MovePhysicsLayer(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MoveTerrain",
+      "kind": "Method",
+      "signature": "public void MoveTerrain(int terrainSet, int terrainIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the terrain at index [param terrain_index] for terrain set [param terrain_set] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_terrain",
+      "xmlDocId": "M:Godot.TileSet.MoveTerrain(int,int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "MoveTerrainSet",
+      "kind": "Method",
+      "signature": "public void MoveTerrainSet(int terrainSet, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the terrain set at index [param terrain_set] to the given position [param to_position] in the array. Also updates the atlas tiles accordingly.",
+      "godotName": "move_terrain_set",
+      "xmlDocId": "M:Godot.TileSet.MoveTerrainSet(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveAlternativeLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void RemoveAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an alternative-level proxy for the given identifiers.",
+      "godotName": "remove_alternative_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.RemoveAlternativeLevelTileProxy(int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveCoordsLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void RemoveCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Removes a coordinates-level proxy for the given identifiers.",
+      "godotName": "remove_coords_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.RemoveCoordsLevelTileProxy(int,Vector2i)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveCustomDataLayer",
+      "kind": "Method",
+      "signature": "public void RemoveCustomDataLayer(int layerIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the custom data layer at index [param layer_index]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_custom_data_layer",
+      "xmlDocId": "M:Godot.TileSet.RemoveCustomDataLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveNavigationLayer",
+      "kind": "Method",
+      "signature": "public void RemoveNavigationLayer(int layerIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the navigation layer at index [param layer_index]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_navigation_layer",
+      "xmlDocId": "M:Godot.TileSet.RemoveNavigationLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveOcclusionLayer",
+      "kind": "Method",
+      "signature": "public void RemoveOcclusionLayer(int layerIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the occlusion layer at index [param layer_index]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_occlusion_layer",
+      "xmlDocId": "M:Godot.TileSet.RemoveOcclusionLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemovePattern",
+      "kind": "Method",
+      "signature": "public void RemovePattern(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Remove the [TileMapPattern] at the given index.",
+      "godotName": "remove_pattern",
+      "xmlDocId": "M:Godot.TileSet.RemovePattern(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemovePhysicsLayer",
+      "kind": "Method",
+      "signature": "public void RemovePhysicsLayer(int layerIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the physics layer at index [param layer_index]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_physics_layer",
+      "xmlDocId": "M:Godot.TileSet.RemovePhysicsLayer(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveSource",
+      "kind": "Method",
+      "signature": "public void RemoveSource(int sourceId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the source with the given source ID.",
+      "godotName": "remove_source",
+      "xmlDocId": "M:Godot.TileSet.RemoveSource(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveSourceLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void RemoveSourceLevelTileProxy(int sourceFrom)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a source-level tile proxy.",
+      "godotName": "remove_source_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.RemoveSourceLevelTileProxy(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveTerrain",
+      "kind": "Method",
+      "signature": "public void RemoveTerrain(int terrainSet, int terrainIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the terrain at index [param terrain_index] in the given terrain set [param terrain_set]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_terrain",
+      "xmlDocId": "M:Godot.TileSet.RemoveTerrain(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "RemoveTerrainSet",
+      "kind": "Method",
+      "signature": "public void RemoveTerrainSet(int terrainSet)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the terrain set at index [param terrain_set]. Also updates the atlas tiles accordingly.",
+      "godotName": "remove_terrain_set",
+      "xmlDocId": "M:Godot.TileSet.RemoveTerrainSet(int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetAlternativeLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void SetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom, int sourceTo, Vector2i coordsTo, int alternativeTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_from",
+          "type": "int"
+        },
+        {
+          "name": "source_to",
+          "type": "int"
+        },
+        {
+          "name": "coords_to",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_to",
+          "type": "int"
+        }
+      ],
+      "summary": "Create an alternative-level proxy for the given identifiers. A proxy will map set of tile identifiers to another set of identifiers. Proxied tiles can be automatically replaced in TileMapLayer nodes using the editor.",
+      "godotName": "set_alternative_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.SetAlternativeLevelTileProxy(int,Vector2i,int,int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetCoordsLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void SetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int sourceTo, Vector2i coordsTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "coords_from",
+          "type": "Vector2i"
+        },
+        {
+          "name": "source_to",
+          "type": "int"
+        },
+        {
+          "name": "coords_to",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Creates a coordinates-level proxy for the given identifiers. A proxy will map set of tile identifiers to another set of identifiers. The alternative tile ID is kept the same when using coordinates-level proxies. Proxied tiles can be automatically replaced in TileMapLayer nodes using the editor.",
+      "godotName": "set_coords_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.SetCoordsLevelTileProxy(int,Vector2i,int,Vector2i)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetCustomDataLayerName",
+      "kind": "Method",
+      "signature": "public void SetCustomDataLayerName(int layerIndex, String layerName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layer_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the name of the custom data layer identified by the given index. Names are identifiers of the layer therefore if the name is already taken it will fail and raise an error.",
+      "godotName": "set_custom_data_layer_name",
+      "xmlDocId": "M:Godot.TileSet.SetCustomDataLayerName(int,String)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetCustomDataLayerType",
+      "kind": "Method",
+      "signature": "public void SetCustomDataLayerType(int layerIndex, int layerType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layer_type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the type of the custom data layer identified by the given index.",
+      "godotName": "set_custom_data_layer_type",
+      "xmlDocId": "M:Godot.TileSet.SetCustomDataLayerType(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetNavigationLayerLayerValue",
+      "kind": "Method",
+      "signature": "public void SetNavigationLayerLayerValue(int layerIndex, int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified navigation layer of the TileSet navigation data layer identified by the given [param layer_index], given a navigation_layers [param layer_number] between 1 and 32.",
+      "godotName": "set_navigation_layer_layer_value",
+      "xmlDocId": "M:Godot.TileSet.SetNavigationLayerLayerValue(int,int,bool)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetNavigationLayerLayers",
+      "kind": "Method",
+      "signature": "public void SetNavigationLayerLayers(int layerIndex, int layers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the navigation layers (as in the navigation server) for navigation regions in the given TileSet navigation layer.",
+      "godotName": "set_navigation_layer_layers",
+      "xmlDocId": "M:Godot.TileSet.SetNavigationLayerLayers(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetOcclusionLayerLightMask",
+      "kind": "Method",
+      "signature": "public void SetOcclusionLayerLightMask(int layerIndex, int lightMask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "light_mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the occlusion layer (as in the rendering server) for occluders in the given TileSet occlusion layer.",
+      "godotName": "set_occlusion_layer_light_mask",
+      "xmlDocId": "M:Godot.TileSet.SetOcclusionLayerLightMask(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetOcclusionLayerSdfCollision",
+      "kind": "Method",
+      "signature": "public void SetOcclusionLayerSdfCollision(int layerIndex, bool sdfCollision)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "sdf_collision",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables SDF collision for occluders in the given TileSet occlusion layer.",
+      "godotName": "set_occlusion_layer_sdf_collision",
+      "xmlDocId": "M:Godot.TileSet.SetOcclusionLayerSdfCollision(int,bool)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetPhysicsLayerCollisionLayer",
+      "kind": "Method",
+      "signature": "public void SetPhysicsLayerCollisionLayer(int layerIndex, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the collision layer (as in the physics server) for bodies in the given TileSet physics layer.",
+      "godotName": "set_physics_layer_collision_layer",
+      "xmlDocId": "M:Godot.TileSet.SetPhysicsLayerCollisionLayer(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetPhysicsLayerCollisionMask",
+      "kind": "Method",
+      "signature": "public void SetPhysicsLayerCollisionMask(int layerIndex, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the collision mask for bodies in the given TileSet physics layer.",
+      "godotName": "set_physics_layer_collision_mask",
+      "xmlDocId": "M:Godot.TileSet.SetPhysicsLayerCollisionMask(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetPhysicsLayerCollisionPriority",
+      "kind": "Method",
+      "signature": "public void SetPhysicsLayerCollisionPriority(int layerIndex, float priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "priority",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the collision priority for bodies in the given TileSet physics layer.",
+      "godotName": "set_physics_layer_collision_priority",
+      "xmlDocId": "M:Godot.TileSet.SetPhysicsLayerCollisionPriority(int,float)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetPhysicsLayerPhysicsMaterial",
+      "kind": "Method",
+      "signature": "public void SetPhysicsLayerPhysicsMaterial(int layerIndex, PhysicsMaterial physicsMaterial)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        },
+        {
+          "name": "physics_material",
+          "type": "PhysicsMaterial"
+        }
+      ],
+      "summary": "Sets the physics material for bodies in the given TileSet physics layer.",
+      "godotName": "set_physics_layer_physics_material",
+      "xmlDocId": "M:Godot.TileSet.SetPhysicsLayerPhysicsMaterial(int,PhysicsMaterial)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetSourceId",
+      "kind": "Method",
+      "signature": "public void SetSourceId(int sourceId, int newSourceId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_id",
+          "type": "int"
+        },
+        {
+          "name": "new_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes a source\u0027s ID.",
+      "godotName": "set_source_id",
+      "xmlDocId": "M:Godot.TileSet.SetSourceId(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetSourceLevelTileProxy",
+      "kind": "Method",
+      "signature": "public void SetSourceLevelTileProxy(int sourceFrom, int sourceTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source_from",
+          "type": "int"
+        },
+        {
+          "name": "source_to",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a source-level proxy for the given source ID. A proxy will map set of tile identifiers to another set of identifiers. Both the atlas coordinates ID and the alternative tile ID are kept the same when using source-level proxies. Proxied tiles can be automatically replaced in TileMapLayer nodes using the editor.",
+      "godotName": "set_source_level_tile_proxy",
+      "xmlDocId": "M:Godot.TileSet.SetSourceLevelTileProxy(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetTerrainColor",
+      "kind": "Method",
+      "signature": "public void SetTerrainColor(int terrainSet, int terrainIndex, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets a terrain\u0027s color. This color is used for identifying the different terrains in the TileSet editor.",
+      "godotName": "set_terrain_color",
+      "xmlDocId": "M:Godot.TileSet.SetTerrainColor(int,int,Color)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetTerrainName",
+      "kind": "Method",
+      "signature": "public void SetTerrainName(int terrainSet, int terrainIndex, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain_index",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets a terrain\u0027s name.",
+      "godotName": "set_terrain_name",
+      "xmlDocId": "M:Godot.TileSet.SetTerrainName(int,int,String)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "SetTerrainSetMode",
+      "kind": "Method",
+      "signature": "public void SetTerrainSetMode(int terrainSet, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets a terrain mode. Each mode determines which bits of a tile shape is used to match the neighboring tiles\u0027 terrains.",
+      "godotName": "set_terrain_set_mode",
+      "xmlDocId": "M:Godot.TileSet.SetTerrainSetMode(int,int)",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TileLayout",
+      "kind": "Property",
+      "signature": "public int TileLayout { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), changes the way tiles are indexed in the [TileMapLayer] grid.",
+      "defaultValue": "0",
+      "godotName": "tile_layout",
+      "xmlDocId": "P:Godot.TileSet.TileLayout",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TileOffsetAxis",
+      "kind": "Property",
+      "signature": "public int TileOffsetAxis { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "For all half-offset shapes (Isometric, Hexagonal and Half-Offset square), determines the offset axis.",
+      "defaultValue": "0",
+      "godotName": "tile_offset_axis",
+      "xmlDocId": "P:Godot.TileSet.TileOffsetAxis",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TileShape",
+      "kind": "Property",
+      "signature": "public int TileShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The tile shape.",
+      "defaultValue": "0",
+      "godotName": "tile_shape",
+      "xmlDocId": "P:Godot.TileSet.TileShape",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TileSize",
+      "kind": "Property",
+      "signature": "public Vector2i TileSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The tile size, in pixels. For all tile shapes, this size corresponds to the encompassing rectangle of the tile shape. This is thus the minimal cell size required in an atlas.",
+      "defaultValue": "Vector2i(16, 16)",
+      "godotName": "tile_size",
+      "xmlDocId": "P:Godot.TileSet.TileSize",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "UvClipping",
+      "kind": "Property",
+      "signature": "public bool UvClipping { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables/Disable uv clipping when rendering the tiles.",
+      "defaultValue": "false",
+      "godotName": "uv_clipping",
+      "xmlDocId": "P:Godot.TileSet.UvClipping",
+      "sourcePath": "doc/classes/TileSet.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CellNeighbor",
+      "values": [
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_CORNER",
+          "value": "5",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the bottom corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_LEFT_CORNER",
+          "value": "7",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the bottom left corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_LEFT_SIDE",
+          "value": "6",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the bottom left side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER",
+          "value": "3",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the bottom right corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE",
+          "value": "2",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the bottom right side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_BOTTOM_SIDE",
+          "value": "4",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the bottom side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_LEFT_CORNER",
+          "value": "9",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the left corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_LEFT_SIDE",
+          "value": "8",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the left side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_RIGHT_CORNER",
+          "value": "1",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the right corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_RIGHT_SIDE",
+          "value": "0",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the right side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_CORNER",
+          "value": "13",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the top corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_LEFT_CORNER",
+          "value": "11",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the top left corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_LEFT_SIDE",
+          "value": "10",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the top left side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_RIGHT_CORNER",
+          "value": "15",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor in the top right corner.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_RIGHT_SIDE",
+          "value": "14",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the top right side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "CELL_NEIGHBOR_TOP_SIDE",
+          "value": "12",
+          "enum": "CellNeighbor",
+          "kind": "EnumValue",
+          "summary": "Neighbor on the top side.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        }
+      ]
+    },
+    {
+      "name": "TerrainMode",
+      "values": [
+        {
+          "name": "TERRAIN_MODE_MATCH_CORNERS",
+          "value": "1",
+          "enum": "TerrainMode",
+          "kind": "EnumValue",
+          "summary": "Requires corners to match with neighboring tiles\u0027 terrains.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TERRAIN_MODE_MATCH_CORNERS_AND_SIDES",
+          "value": "0",
+          "enum": "TerrainMode",
+          "kind": "EnumValue",
+          "summary": "Requires both corners and side to match with neighboring tiles\u0027 terrains.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TERRAIN_MODE_MATCH_SIDES",
+          "value": "2",
+          "enum": "TerrainMode",
+          "kind": "EnumValue",
+          "summary": "Requires sides to match with neighboring tiles\u0027 terrains.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        }
+      ]
+    },
+    {
+      "name": "TileLayout",
+      "values": [
+        {
+          "name": "TILE_LAYOUT_DIAMOND_DOWN",
+          "value": "5",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Tile coordinates layout where the horizontal axis goes down-right, and the vertical one goes down-left.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_LAYOUT_DIAMOND_RIGHT",
+          "value": "4",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Tile coordinates layout where the horizontal axis goes up-right, and the vertical one goes down-right.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_LAYOUT_STACKED",
+          "value": "0",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Tile coordinates layout where both axis stay consistent with their respective local horizontal and vertical axis.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_LAYOUT_STACKED_OFFSET",
+          "value": "1",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Same as [constant TILE_LAYOUT_STACKED], but the first half-offset is negative instead of positive.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_LAYOUT_STAIRS_DOWN",
+          "value": "3",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Tile coordinates layout where the vertical axis stay vertical, and the horizontal one goes down-right.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_LAYOUT_STAIRS_RIGHT",
+          "value": "2",
+          "enum": "TileLayout",
+          "kind": "EnumValue",
+          "summary": "Tile coordinates layout where the horizontal axis stay horizontal, and the vertical one goes down-right.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        }
+      ]
+    },
+    {
+      "name": "TileOffsetAxis",
+      "values": [
+        {
+          "name": "TILE_OFFSET_AXIS_HORIZONTAL",
+          "value": "0",
+          "enum": "TileOffsetAxis",
+          "kind": "EnumValue",
+          "summary": "Horizontal half-offset.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_OFFSET_AXIS_VERTICAL",
+          "value": "1",
+          "enum": "TileOffsetAxis",
+          "kind": "EnumValue",
+          "summary": "Vertical half-offset.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        }
+      ]
+    },
+    {
+      "name": "TileShape",
+      "values": [
+        {
+          "name": "TILE_SHAPE_HALF_OFFSET_SQUARE",
+          "value": "2",
+          "enum": "TileShape",
+          "kind": "EnumValue",
+          "summary": "Rectangular tile shape with one row/column out of two offset by half a tile.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_SHAPE_HEXAGON",
+          "value": "3",
+          "enum": "TileShape",
+          "kind": "EnumValue",
+          "summary": "Hexagonal tile shape.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_SHAPE_ISOMETRIC",
+          "value": "1",
+          "enum": "TileShape",
+          "kind": "EnumValue",
+          "summary": "Diamond tile shape (for isometric look). [b]Note:[/b] Isometric [TileSet] works best if all sibling [TileMapLayer]s and their parent inheriting from [Node2D] have Y-sort enabled.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        },
+        {
+          "name": "TILE_SHAPE_SQUARE",
+          "value": "0",
+          "enum": "TileShape",
+          "kind": "EnumValue",
+          "summary": "Rectangular tile shape.",
+          "sourcePath": "doc/classes/TileSet.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TILE_SHAPE_SQUARE",
+      "value": "0",
+      "enum": "TileShape",
+      "kind": "EnumValue",
+      "summary": "Rectangular tile shape.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_SHAPE_ISOMETRIC",
+      "value": "1",
+      "enum": "TileShape",
+      "kind": "EnumValue",
+      "summary": "Diamond tile shape (for isometric look). [b]Note:[/b] Isometric [TileSet] works best if all sibling [TileMapLayer]s and their parent inheriting from [Node2D] have Y-sort enabled.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_SHAPE_HALF_OFFSET_SQUARE",
+      "value": "2",
+      "enum": "TileShape",
+      "kind": "EnumValue",
+      "summary": "Rectangular tile shape with one row/column out of two offset by half a tile.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_SHAPE_HEXAGON",
+      "value": "3",
+      "enum": "TileShape",
+      "kind": "EnumValue",
+      "summary": "Hexagonal tile shape.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_STACKED",
+      "value": "0",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Tile coordinates layout where both axis stay consistent with their respective local horizontal and vertical axis.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_STACKED_OFFSET",
+      "value": "1",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Same as [constant TILE_LAYOUT_STACKED], but the first half-offset is negative instead of positive.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_STAIRS_RIGHT",
+      "value": "2",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Tile coordinates layout where the horizontal axis stay horizontal, and the vertical one goes down-right.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_STAIRS_DOWN",
+      "value": "3",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Tile coordinates layout where the vertical axis stay vertical, and the horizontal one goes down-right.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_DIAMOND_RIGHT",
+      "value": "4",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Tile coordinates layout where the horizontal axis goes up-right, and the vertical one goes down-right.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_LAYOUT_DIAMOND_DOWN",
+      "value": "5",
+      "enum": "TileLayout",
+      "kind": "EnumValue",
+      "summary": "Tile coordinates layout where the horizontal axis goes down-right, and the vertical one goes down-left.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_OFFSET_AXIS_HORIZONTAL",
+      "value": "0",
+      "enum": "TileOffsetAxis",
+      "kind": "EnumValue",
+      "summary": "Horizontal half-offset.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TILE_OFFSET_AXIS_VERTICAL",
+      "value": "1",
+      "enum": "TileOffsetAxis",
+      "kind": "EnumValue",
+      "summary": "Vertical half-offset.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_RIGHT_SIDE",
+      "value": "0",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the right side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_RIGHT_CORNER",
+      "value": "1",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the right corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE",
+      "value": "2",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the bottom right side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER",
+      "value": "3",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the bottom right corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_SIDE",
+      "value": "4",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the bottom side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_CORNER",
+      "value": "5",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the bottom corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_LEFT_SIDE",
+      "value": "6",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the bottom left side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_BOTTOM_LEFT_CORNER",
+      "value": "7",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the bottom left corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_LEFT_SIDE",
+      "value": "8",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the left side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_LEFT_CORNER",
+      "value": "9",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the left corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_LEFT_SIDE",
+      "value": "10",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the top left side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_LEFT_CORNER",
+      "value": "11",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the top left corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_SIDE",
+      "value": "12",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the top side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_CORNER",
+      "value": "13",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the top corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_RIGHT_SIDE",
+      "value": "14",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor on the top right side.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "CELL_NEIGHBOR_TOP_RIGHT_CORNER",
+      "value": "15",
+      "enum": "CellNeighbor",
+      "kind": "EnumValue",
+      "summary": "Neighbor in the top right corner.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TERRAIN_MODE_MATCH_CORNERS_AND_SIDES",
+      "value": "0",
+      "enum": "TerrainMode",
+      "kind": "EnumValue",
+      "summary": "Requires both corners and side to match with neighboring tiles\u0027 terrains.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TERRAIN_MODE_MATCH_CORNERS",
+      "value": "1",
+      "enum": "TerrainMode",
+      "kind": "EnumValue",
+      "summary": "Requires corners to match with neighboring tiles\u0027 terrains.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    },
+    {
+      "name": "TERRAIN_MODE_MATCH_SIDES",
+      "value": "2",
+      "enum": "TerrainMode",
+      "kind": "EnumValue",
+      "summary": "Requires sides to match with neighboring tiles\u0027 terrains.",
+      "sourcePath": "doc/classes/TileSet.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileSet.xml",
+      "sha256": "49b3e3c6f51e0578a58c9c02bd7c180e3b836afc75ef0fdd7d97166d493889ab"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlaylist",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlaylist",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlaylist",
+    "documentationPath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplaylist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBpm",
+      "kind": "Method",
+      "signature": "public float GetBpm()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the BPM of the playlist, which can vary depending on the clip being played.",
+      "godotName": "get_bpm",
+      "xmlDocId": "M:Godot.AudioStreamPlaylist.GetBpm",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "GetListStream",
+      "kind": "Method",
+      "signature": "public AudioStream GetListStream(int streamIndex)",
+      "returnType": "AudioStream",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stream at playback position index.",
+      "godotName": "get_list_stream",
+      "xmlDocId": "M:Godot.AudioStreamPlaylist.GetListStream(int)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "SetListStream",
+      "kind": "Method",
+      "signature": "public void SetListStream(int streamIndex, AudioStream audioStream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        },
+        {
+          "name": "audio_stream",
+          "type": "AudioStream"
+        }
+      ],
+      "summary": "Sets the stream at playback position index.",
+      "godotName": "set_list_stream",
+      "xmlDocId": "M:Godot.AudioStreamPlaylist.SetListStream(int,AudioStream)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "FadeTime",
+      "kind": "Property",
+      "signature": "public float FadeTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Fade time used when a stream ends, when going to the next one. Streams are expected to have an extra bit of audio after the end to help with fading.",
+      "defaultValue": "0.3",
+      "godotName": "fade_time",
+      "xmlDocId": "P:Godot.AudioStreamPlaylist.FadeTime",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the playlist will loop, otherwise the playlist will end when the last stream is finished.",
+      "defaultValue": "true",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.AudioStreamPlaylist.Loop",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "Shuffle",
+      "kind": "Property",
+      "signature": "public bool Shuffle { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the playlist will shuffle each time playback starts and each time it loops.",
+      "defaultValue": "false",
+      "godotName": "shuffle",
+      "xmlDocId": "P:Godot.AudioStreamPlaylist.Shuffle",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    },
+    {
+      "name": "StreamCount",
+      "kind": "Property",
+      "signature": "public int StreamCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Amount of streams in the playlist.",
+      "defaultValue": "0",
+      "godotName": "stream_count",
+      "xmlDocId": "P:Godot.AudioStreamPlaylist.StreamCount",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "MAX_STREAMS",
+      "value": "64",
+      "kind": "Constant",
+      "summary": "Maximum amount of streams supported in the playlist.",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/interactive_music/doc_classes/AudioStreamPlaylist.xml",
+      "sha256": "5d521a94f5165ec8e082435d2364d05717fd7ef1300b7ceeeadc8e58a1772a35"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectHardLimiter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectHardLimiter",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectHardLimiter",
+    "documentationPath": "doc/classes/AudioEffectHardLimiter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffecthardlimiter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CeilingDb",
+      "kind": "Property",
+      "signature": "public float CeilingDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The waveform\u0027s maximum allowed value, in dB. This value can range from -24 to 0. The default value of -0.3 prevents potential inter-sample peaks (ISP) from crossing over 0 dB, which can cause slight distortion on some older hardware.",
+      "defaultValue": "-0.3",
+      "godotName": "ceiling_db",
+      "xmlDocId": "P:Godot.AudioEffectHardLimiter.CeilingDb",
+      "sourcePath": "doc/classes/AudioEffectHardLimiter.xml"
+    },
+    {
+      "name": "PreGainDb",
+      "kind": "Property",
+      "signature": "public float PreGainDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain before limiting, in dB. Value can range from -24 to 24.",
+      "defaultValue": "0.0",
+      "godotName": "pre_gain_db",
+      "xmlDocId": "P:Godot.AudioEffectHardLimiter.PreGainDb",
+      "sourcePath": "doc/classes/AudioEffectHardLimiter.xml"
+    },
+    {
+      "name": "Release",
+      "kind": "Property",
+      "signature": "public float Release { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time it takes in seconds for the gain reduction to fully release. Value can range from 0.01 to 3.",
+      "defaultValue": "0.1",
+      "godotName": "release",
+      "xmlDocId": "P:Godot.AudioEffectHardLimiter.Release",
+      "sourcePath": "doc/classes/AudioEffectHardLimiter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectHardLimiter.xml",
+      "sha256": "3c0cf197710c46729e9882196869e52843182ccb8fc4975d66c7b0ec924c1f9d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

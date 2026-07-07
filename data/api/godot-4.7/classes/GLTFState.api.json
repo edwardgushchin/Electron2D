@@ -1,0 +1,911 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFState",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFState",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFState",
+    "documentationPath": "modules/gltf/doc_classes/GLTFState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfstate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddUsedExtension",
+      "kind": "Method",
+      "signature": "public void AddUsedExtension(String extensionName, bool required)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "String"
+        },
+        {
+          "name": "required",
+          "type": "bool"
+        }
+      ],
+      "summary": "Appends an extension to the list of extensions used by this glTF file during serialization. If [param required] is [code]true[/code], the extension will also be added to the list of required extensions. Do not run this in [method GLTFDocumentExtension._export_post], as that stage is too late to add extensions. The final list is sorted alphabetically.",
+      "godotName": "add_used_extension",
+      "xmlDocId": "M:Godot.GLTFState.AddUsedExtension(String,bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "AppendDataToBuffers",
+      "kind": "Method",
+      "signature": "public int AppendDataToBuffers(PackedByteArray data, bool deduplication)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "deduplication",
+          "type": "bool"
+        }
+      ],
+      "summary": "Appends the given byte array [param data] to the buffers and creates a [GLTFBufferView] for it. The index of the destination [GLTFBufferView] is returned. If [param deduplication] is [code]true[/code], the buffers are first searched for duplicate data, otherwise new bytes are always appended.",
+      "godotName": "append_data_to_buffers",
+      "xmlDocId": "M:Godot.GLTFState.AppendDataToBuffers(PackedByteArray,bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "AppendGltfNode",
+      "kind": "Method",
+      "signature": "public int AppendGltfNode(GLTFNode gltfNode, Node godotSceneNode, int parentNodeIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "godot_scene_node",
+          "type": "Node"
+        },
+        {
+          "name": "parent_node_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends the given [GLTFNode] to the state, and returns its new index. This can be used to export one Godot node as multiple glTF nodes, or inject new glTF nodes at import time. On import, this must be called before [method GLTFDocumentExtension._generate_scene_node] finishes for the parent node. On export, this must be called before [method GLTFDocumentExtension._export_node] runs for the parent node. The [param godot_scene_node] parameter is the Godot scene node that corresponds to this glTF node. This is highly recommended to be set to a valid node, but may be [code]null[/code] if there is no corresponding Godot scene node. One Godot scene node may be used for multiple glTF nodes, so if exporting multiple glTF nodes for one Godot scene node, use the same Godot scene node for each. The [param parent_node_index] parameter is the index of the parent [GLTFNode] in the state. If [code]-1[/code], the node will be a root node, otherwise the new node will be added to the parent\u0027s list of children. The index will also be written to the [member GLTFNode.parent] property of the new node.",
+      "godotName": "append_gltf_node",
+      "xmlDocId": "M:Godot.GLTFState.AppendGltfNode(GLTFNode,Node,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetAccessors",
+      "kind": "Method",
+      "signature": "public GLTFAccessor[] GetAccessors()",
+      "returnType": "GLTFAccessor[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_accessors",
+      "xmlDocId": "M:Godot.GLTFState.GetAccessors",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetAdditionalData",
+      "kind": "Method",
+      "signature": "public Variant GetAdditionalData(StringName extensionName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Gets additional arbitrary data in this [GLTFState] instance. This can be used to keep per-file state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the return value can be anything you set. If nothing was set, the return value is [code]null[/code].",
+      "godotName": "get_additional_data",
+      "xmlDocId": "M:Godot.GLTFState.GetAdditionalData(StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetAnimationPlayer",
+      "kind": "Method",
+      "signature": "public AnimationPlayer GetAnimationPlayer(int animPlayerIndex)",
+      "returnType": "AnimationPlayer",
+      "parameters": [
+        {
+          "name": "anim_player_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [AnimationPlayer] node with the given index. These nodes are only used during the export process when converting Godot [AnimationPlayer] nodes to glTF animations.",
+      "godotName": "get_animation_player",
+      "xmlDocId": "M:Godot.GLTFState.GetAnimationPlayer(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetAnimationPlayersCount",
+      "kind": "Method",
+      "signature": "public int GetAnimationPlayersCount(int animPlayerIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "anim_player_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of [AnimationPlayer] nodes in this [GLTFState]. These nodes are only used during the export process when converting Godot [AnimationPlayer] nodes to glTF animations.",
+      "godotName": "get_animation_players_count",
+      "xmlDocId": "M:Godot.GLTFState.GetAnimationPlayersCount(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetAnimations",
+      "kind": "Method",
+      "signature": "public GLTFAnimation[] GetAnimations()",
+      "returnType": "GLTFAnimation[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFAnimation]s in the glTF file. When importing, these will be generated as animations in an [AnimationPlayer] node. When exporting, these will be generated from Godot [AnimationPlayer] nodes.",
+      "godotName": "get_animations",
+      "xmlDocId": "M:Godot.GLTFState.GetAnimations",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetBufferViews",
+      "kind": "Method",
+      "signature": "public GLTFBufferView[] GetBufferViews()",
+      "returnType": "GLTFBufferView[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_buffer_views",
+      "xmlDocId": "M:Godot.GLTFState.GetBufferViews",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetCameras",
+      "kind": "Method",
+      "signature": "public GLTFCamera[] GetCameras()",
+      "returnType": "GLTFCamera[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFCamera]s in the glTF file. These are the cameras that the [member GLTFNode.camera] index refers to.",
+      "godotName": "get_cameras",
+      "xmlDocId": "M:Godot.GLTFState.GetCameras",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetHandleBinaryImage",
+      "kind": "Method",
+      "signature": "public int GetHandleBinaryImage()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Deprecated untyped alias for [member handle_binary_image_mode]. When importing a glTF file with unimported raw binary images embedded inside of binary blob buffers, in data URIs, or separate files not imported by Godot, this controls how the images are handled.",
+      "godotName": "get_handle_binary_image",
+      "xmlDocId": "M:Godot.GLTFState.GetHandleBinaryImage",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetImages",
+      "kind": "Method",
+      "signature": "public Texture2D[] GetImages()",
+      "returnType": "Texture2D[]",
+      "parameters": [],
+      "summary": "Gets the images of the glTF file as an array of [Texture2D]s. These are the images that the [member GLTFTexture.src_image] index refers to.",
+      "godotName": "get_images",
+      "xmlDocId": "M:Godot.GLTFState.GetImages",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetLights",
+      "kind": "Method",
+      "signature": "public GLTFLight[] GetLights()",
+      "returnType": "GLTFLight[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFLight]s in the glTF file. These are the lights that the [member GLTFNode.light] index refers to.",
+      "godotName": "get_lights",
+      "xmlDocId": "M:Godot.GLTFState.GetLights",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetMaterials",
+      "kind": "Method",
+      "signature": "public Material[] GetMaterials()",
+      "returnType": "Material[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_materials",
+      "xmlDocId": "M:Godot.GLTFState.GetMaterials",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetMeshes",
+      "kind": "Method",
+      "signature": "public GLTFMesh[] GetMeshes()",
+      "returnType": "GLTFMesh[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFMesh]es in the glTF file. These are the meshes that the [member GLTFNode.mesh] index refers to.",
+      "godotName": "get_meshes",
+      "xmlDocId": "M:Godot.GLTFState.GetMeshes",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetNodeIndex",
+      "kind": "Method",
+      "signature": "public int GetNodeIndex(Node sceneNode)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "scene_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns the index of the [GLTFNode] corresponding to this Godot scene node. This is the inverse of [method get_scene_node]. Useful during the export process. [b]Note:[/b] Not every Godot scene node will have a corresponding [GLTFNode], and not every [GLTFNode] will have a scene node generated. If there is no [GLTFNode] index for this scene node, [code]-1[/code] is returned.",
+      "godotName": "get_node_index",
+      "xmlDocId": "M:Godot.GLTFState.GetNodeIndex(Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetNodes",
+      "kind": "Method",
+      "signature": "public GLTFNode[] GetNodes()",
+      "returnType": "GLTFNode[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFNode]s in the glTF file. These are the nodes that [member GLTFNode.children] and [member root_nodes] refer to. This includes nodes that may not be generated in the Godot scene, or nodes that may generate multiple Godot scene nodes.",
+      "godotName": "get_nodes",
+      "xmlDocId": "M:Godot.GLTFState.GetNodes",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetSceneNode",
+      "kind": "Method",
+      "signature": "public Node GetSceneNode(int gltfNodeIndex)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "gltf_node_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the Godot scene node that corresponds to the same index as the [GLTFNode] it was generated from. This is the inverse of [method get_node_index]. Useful during the import process. [b]Note:[/b] Not every [GLTFNode] will have a scene node generated, and not every generated scene node will have a corresponding [GLTFNode]. If there is no scene node for this [GLTFNode] index, [code]null[/code] is returned.",
+      "godotName": "get_scene_node",
+      "xmlDocId": "M:Godot.GLTFState.GetSceneNode(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetSkeletons",
+      "kind": "Method",
+      "signature": "public GLTFSkeleton[] GetSkeletons()",
+      "returnType": "GLTFSkeleton[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFSkeleton]s in the glTF file. These are the skeletons that the [member GLTFNode.skeleton] index refers to.",
+      "godotName": "get_skeletons",
+      "xmlDocId": "M:Godot.GLTFState.GetSkeletons",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetSkins",
+      "kind": "Method",
+      "signature": "public GLTFSkin[] GetSkins()",
+      "returnType": "GLTFSkin[]",
+      "parameters": [],
+      "summary": "Returns an array of all [GLTFSkin]s in the glTF file. These are the skins that the [member GLTFNode.skin] index refers to.",
+      "godotName": "get_skins",
+      "xmlDocId": "M:Godot.GLTFState.GetSkins",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetTextureSamplers",
+      "kind": "Method",
+      "signature": "public GLTFTextureSampler[] GetTextureSamplers()",
+      "returnType": "GLTFTextureSampler[]",
+      "parameters": [],
+      "summary": "Retrieves the array of texture samplers that are used by the textures contained in the glTF.",
+      "godotName": "get_texture_samplers",
+      "xmlDocId": "M:Godot.GLTFState.GetTextureSamplers",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetTextures",
+      "kind": "Method",
+      "signature": "public GLTFTexture[] GetTextures()",
+      "returnType": "GLTFTexture[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_textures",
+      "xmlDocId": "M:Godot.GLTFState.GetTextures",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetUniqueAnimationNames",
+      "kind": "Method",
+      "signature": "public String[] GetUniqueAnimationNames()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Returns an array of unique animation names. This is only used during the import process.",
+      "godotName": "get_unique_animation_names",
+      "xmlDocId": "M:Godot.GLTFState.GetUniqueAnimationNames",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GetUniqueNames",
+      "kind": "Method",
+      "signature": "public String[] GetUniqueNames()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Returns an array of unique node names. This is used in both the import process and export process.",
+      "godotName": "get_unique_names",
+      "xmlDocId": "M:Godot.GLTFState.GetUniqueNames",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetAccessors",
+      "kind": "Method",
+      "signature": "public void SetAccessors(GLTFAccessor[] accessors)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "accessors",
+          "type": "GLTFAccessor[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_accessors",
+      "xmlDocId": "M:Godot.GLTFState.SetAccessors(GLTFAccessor[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetAdditionalData",
+      "kind": "Method",
+      "signature": "public void SetAdditionalData(StringName extensionName, Variant additionalData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        },
+        {
+          "name": "additional_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets additional arbitrary data in this [GLTFState] instance. This can be used to keep per-file state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The first argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the second argument can be anything you want.",
+      "godotName": "set_additional_data",
+      "xmlDocId": "M:Godot.GLTFState.SetAdditionalData(StringName,Variant)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetAnimations",
+      "kind": "Method",
+      "signature": "public void SetAnimations(GLTFAnimation[] animations)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "animations",
+          "type": "GLTFAnimation[]"
+        }
+      ],
+      "summary": "Sets the [GLTFAnimation]s in the state. When importing, these will be generated as animations in an [AnimationPlayer] node. When exporting, these will be generated from Godot [AnimationPlayer] nodes.",
+      "godotName": "set_animations",
+      "xmlDocId": "M:Godot.GLTFState.SetAnimations(GLTFAnimation[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetBufferViews",
+      "kind": "Method",
+      "signature": "public void SetBufferViews(GLTFBufferView[] bufferViews)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "buffer_views",
+          "type": "GLTFBufferView[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_buffer_views",
+      "xmlDocId": "M:Godot.GLTFState.SetBufferViews(GLTFBufferView[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetCameras",
+      "kind": "Method",
+      "signature": "public void SetCameras(GLTFCamera[] cameras)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cameras",
+          "type": "GLTFCamera[]"
+        }
+      ],
+      "summary": "Sets the [GLTFCamera]s in the state. These are the cameras that the [member GLTFNode.camera] index refers to.",
+      "godotName": "set_cameras",
+      "xmlDocId": "M:Godot.GLTFState.SetCameras(GLTFCamera[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetHandleBinaryImage",
+      "kind": "Method",
+      "signature": "public void SetHandleBinaryImage(int method)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "int"
+        }
+      ],
+      "summary": "Deprecated untyped alias for [member handle_binary_image_mode]. When importing a glTF file with unimported raw binary images embedded inside of binary blob buffers, in data URIs, or separate files not imported by Godot, this controls how the images are handled.",
+      "godotName": "set_handle_binary_image",
+      "xmlDocId": "M:Godot.GLTFState.SetHandleBinaryImage(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetImages",
+      "kind": "Method",
+      "signature": "public void SetImages(Texture2D[] images)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "images",
+          "type": "Texture2D[]"
+        }
+      ],
+      "summary": "Sets the images in the state stored as an array of [Texture2D]s. This can be used during export. These are the images that the [member GLTFTexture.src_image] index refers to.",
+      "godotName": "set_images",
+      "xmlDocId": "M:Godot.GLTFState.SetImages(Texture2D[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetLights",
+      "kind": "Method",
+      "signature": "public void SetLights(GLTFLight[] lights)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "lights",
+          "type": "GLTFLight[]"
+        }
+      ],
+      "summary": "Sets the [GLTFLight]s in the state. These are the lights that the [member GLTFNode.light] index refers to.",
+      "godotName": "set_lights",
+      "xmlDocId": "M:Godot.GLTFState.SetLights(GLTFLight[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetMaterials",
+      "kind": "Method",
+      "signature": "public void SetMaterials(Material[] materials)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "materials",
+          "type": "Material[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_materials",
+      "xmlDocId": "M:Godot.GLTFState.SetMaterials(Material[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetMeshes",
+      "kind": "Method",
+      "signature": "public void SetMeshes(GLTFMesh[] meshes)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "meshes",
+          "type": "GLTFMesh[]"
+        }
+      ],
+      "summary": "Sets the [GLTFMesh]es in the state. These are the meshes that the [member GLTFNode.mesh] index refers to.",
+      "godotName": "set_meshes",
+      "xmlDocId": "M:Godot.GLTFState.SetMeshes(GLTFMesh[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetNodes",
+      "kind": "Method",
+      "signature": "public void SetNodes(GLTFNode[] nodes)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "nodes",
+          "type": "GLTFNode[]"
+        }
+      ],
+      "summary": "Sets the [GLTFNode]s in the state. These are the nodes that [member GLTFNode.children] and [member root_nodes] refer to. Some of the nodes set here may not be generated in the Godot scene, or may generate multiple Godot scene nodes.",
+      "godotName": "set_nodes",
+      "xmlDocId": "M:Godot.GLTFState.SetNodes(GLTFNode[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetSkeletons",
+      "kind": "Method",
+      "signature": "public void SetSkeletons(GLTFSkeleton[] skeletons)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "skeletons",
+          "type": "GLTFSkeleton[]"
+        }
+      ],
+      "summary": "Sets the [GLTFSkeleton]s in the state. These are the skeletons that the [member GLTFNode.skeleton] index refers to.",
+      "godotName": "set_skeletons",
+      "xmlDocId": "M:Godot.GLTFState.SetSkeletons(GLTFSkeleton[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetSkins",
+      "kind": "Method",
+      "signature": "public void SetSkins(GLTFSkin[] skins)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "skins",
+          "type": "GLTFSkin[]"
+        }
+      ],
+      "summary": "Sets the [GLTFSkin]s in the state. These are the skins that the [member GLTFNode.skin] index refers to.",
+      "godotName": "set_skins",
+      "xmlDocId": "M:Godot.GLTFState.SetSkins(GLTFSkin[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetTextureSamplers",
+      "kind": "Method",
+      "signature": "public void SetTextureSamplers(GLTFTextureSampler[] textureSamplers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture_samplers",
+          "type": "GLTFTextureSampler[]"
+        }
+      ],
+      "summary": "Sets the array of texture samplers that are used by the textures contained in the glTF.",
+      "godotName": "set_texture_samplers",
+      "xmlDocId": "M:Godot.GLTFState.SetTextureSamplers(GLTFTextureSampler[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetTextures",
+      "kind": "Method",
+      "signature": "public void SetTextures(GLTFTexture[] textures)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "textures",
+          "type": "GLTFTexture[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_textures",
+      "xmlDocId": "M:Godot.GLTFState.SetTextures(GLTFTexture[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetUniqueAnimationNames",
+      "kind": "Method",
+      "signature": "public void SetUniqueAnimationNames(String[] uniqueAnimationNames)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "unique_animation_names",
+          "type": "String[]"
+        }
+      ],
+      "summary": "Sets the unique animation names in the state. This is only used during the import process.",
+      "godotName": "set_unique_animation_names",
+      "xmlDocId": "M:Godot.GLTFState.SetUniqueAnimationNames(String[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SetUniqueNames",
+      "kind": "Method",
+      "signature": "public void SetUniqueNames(String[] uniqueNames)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "unique_names",
+          "type": "String[]"
+        }
+      ],
+      "summary": "Sets the unique node names in the state. This is used in both the import process and export process.",
+      "godotName": "set_unique_names",
+      "xmlDocId": "M:Godot.GLTFState.SetUniqueNames(String[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "BakeFps",
+      "kind": "Property",
+      "signature": "public float BakeFps { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The baking fps of the animation for either import or export.",
+      "defaultValue": "30.0",
+      "godotName": "bake_fps",
+      "xmlDocId": "P:Godot.GLTFState.BakeFps",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "BasePath",
+      "kind": "Property",
+      "signature": "public String BasePath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The folder path associated with this glTF data. This is used to find other files the glTF file references, like images or binary buffers. This will be set during import when appending from a file, and will be set during export when writing to a file.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "base_path",
+      "xmlDocId": "P:Godot.GLTFState.BasePath",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "Buffers",
+      "kind": "Property",
+      "signature": "public PackedByteArray[] Buffers { get; set; }",
+      "returnType": "PackedByteArray[]",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "[]",
+      "godotName": "buffers",
+      "xmlDocId": "P:Godot.GLTFState.Buffers",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "Copyright",
+      "kind": "Property",
+      "signature": "public String Copyright { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The copyright string in the asset header of the glTF file. This is set during import if present and export if non-empty. See the glTF asset header documentation for more information.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "copyright",
+      "xmlDocId": "P:Godot.GLTFState.Copyright",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "CreateAnimations",
+      "kind": "Property",
+      "signature": "public bool CreateAnimations { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "create_animations",
+      "xmlDocId": "P:Godot.GLTFState.CreateAnimations",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "Filename",
+      "kind": "Property",
+      "signature": "public String Filename { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The file name associated with this glTF data. If it ends with [code].gltf[/code], this is text-based glTF, otherwise this is binary GLB. This will be set during import when appending from a file, and will be set during export when writing to a file. If writing to a buffer, this will be an empty string.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "filename",
+      "xmlDocId": "P:Godot.GLTFState.Filename",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "GlbData",
+      "kind": "Property",
+      "signature": "public PackedByteArray GlbData { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The binary buffer attached to a .glb file.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "glb_data",
+      "xmlDocId": "P:Godot.GLTFState.GlbData",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HandleBinaryImageMode",
+      "kind": "Property",
+      "signature": "public int HandleBinaryImageMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "When importing a glTF file with unimported raw binary images embedded inside of binary blob buffers, in data URIs, or separate files not imported by Godot, this controls how the images are handled. Images can be discarded, saved as separate files, or embedded in the scene lossily or losslessly. See [enum HandleBinaryImageMode] for options. This property does nothing for image files in the [code]res://[/code] folder imported by Godot, as those are handled by Godot\u0027s image importer directly, and then the Godot scene generated from the glTF file will use the images as Godot imported them.",
+      "defaultValue": "1",
+      "godotName": "handle_binary_image_mode",
+      "xmlDocId": "P:Godot.GLTFState.HandleBinaryImageMode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "ImportAsSkeletonBones",
+      "kind": "Property",
+      "signature": "public bool ImportAsSkeletonBones { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], forces all GLTFNodes in the document to be bones of a single [Skeleton3D] Godot node.",
+      "defaultValue": "false",
+      "godotName": "import_as_skeleton_bones",
+      "xmlDocId": "P:Godot.GLTFState.ImportAsSkeletonBones",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "Json",
+      "kind": "Property",
+      "signature": "public Dictionary Json { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "The original raw JSON document corresponding to this GLTFState.",
+      "defaultValue": "{}",
+      "godotName": "json",
+      "xmlDocId": "P:Godot.GLTFState.Json",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "MajorVersion",
+      "kind": "Property",
+      "signature": "public int MajorVersion { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "major_version",
+      "xmlDocId": "P:Godot.GLTFState.MajorVersion",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "MinorVersion",
+      "kind": "Property",
+      "signature": "public int MinorVersion { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "minor_version",
+      "xmlDocId": "P:Godot.GLTFState.MinorVersion",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "RootNodes",
+      "kind": "Property",
+      "signature": "public PackedInt32Array RootNodes { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "The root nodes of the glTF file. Typically, a glTF file will only have one scene, and therefore one root node. However, a glTF file may have multiple scenes and therefore multiple root nodes, which will be generated as siblings of each other and as children of the root node of the generated Godot scene.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "root_nodes",
+      "xmlDocId": "P:Godot.GLTFState.RootNodes",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "SceneName",
+      "kind": "Property",
+      "signature": "public String SceneName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the scene. When importing, if not specified, this will be the file name. When exporting, if specified, the scene name will be saved to the glTF file.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "scene_name",
+      "xmlDocId": "P:Godot.GLTFState.SceneName",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "UseNamedSkinBinds",
+      "kind": "Property",
+      "signature": "public bool UseNamedSkinBinds { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "use_named_skin_binds",
+      "xmlDocId": "P:Godot.GLTFState.UseNamedSkinBinds",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "HandleBinaryImageMode",
+      "values": [
+        {
+          "name": "HANDLE_BINARY_IMAGE_MODE_DISCARD_TEXTURES",
+          "value": "0",
+          "enum": "HandleBinaryImageMode",
+          "kind": "EnumValue",
+          "summary": "When importing a glTF file with embedded binary images, discards all images and uses untextured materials in their place. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+        },
+        {
+          "name": "HANDLE_BINARY_IMAGE_MODE_EMBED_AS_BASISU",
+          "value": "2",
+          "enum": "HandleBinaryImageMode",
+          "kind": "EnumValue",
+          "summary": "When importing a glTF file with embedded binary images, embeds textures VRAM compressed with Basis Universal into the generated scene. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+        },
+        {
+          "name": "HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED",
+          "value": "3",
+          "enum": "HandleBinaryImageMode",
+          "kind": "EnumValue",
+          "summary": "When importing a glTF file with embedded binary images, embeds textures compressed losslessly into the generated scene. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+        },
+        {
+          "name": "HANDLE_BINARY_IMAGE_MODE_EXTRACT_TEXTURES",
+          "value": "1",
+          "enum": "HandleBinaryImageMode",
+          "kind": "EnumValue",
+          "summary": "When importing a glTF file with embedded binary images, extracts them and saves them to their own files. This allows the image to be imported by Godot\u0027s image importer, which can then have their import options customized by the user, including optionally compressing the image to VRAM texture formats. This will save the images\u0027s bytes exactly as-is, without recompression. For image formats supplied by glTF extensions, the file will have a filename ending with the file extension supplied by [method GLTFDocumentExtension._get_image_file_extension] of the extension class. [b]Note:[/b] This option is editor-only. At runtime, this acts the same as [constant HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HANDLE_BINARY_IMAGE_MODE_DISCARD_TEXTURES",
+      "value": "0",
+      "enum": "HandleBinaryImageMode",
+      "kind": "EnumValue",
+      "summary": "When importing a glTF file with embedded binary images, discards all images and uses untextured materials in their place. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_IMAGE_MODE_EXTRACT_TEXTURES",
+      "value": "1",
+      "enum": "HandleBinaryImageMode",
+      "kind": "EnumValue",
+      "summary": "When importing a glTF file with embedded binary images, extracts them and saves them to their own files. This allows the image to be imported by Godot\u0027s image importer, which can then have their import options customized by the user, including optionally compressing the image to VRAM texture formats. This will save the images\u0027s bytes exactly as-is, without recompression. For image formats supplied by glTF extensions, the file will have a filename ending with the file extension supplied by [method GLTFDocumentExtension._get_image_file_extension] of the extension class. [b]Note:[/b] This option is editor-only. At runtime, this acts the same as [constant HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_IMAGE_MODE_EMBED_AS_BASISU",
+      "value": "2",
+      "enum": "HandleBinaryImageMode",
+      "kind": "EnumValue",
+      "summary": "When importing a glTF file with embedded binary images, embeds textures VRAM compressed with Basis Universal into the generated scene. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED",
+      "value": "3",
+      "enum": "HandleBinaryImageMode",
+      "kind": "EnumValue",
+      "summary": "When importing a glTF file with embedded binary images, embeds textures compressed losslessly into the generated scene. Images stored as separate files in the [code]res://[/code] folder are not affected by this; those will be used as Godot imported them.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_DISCARD_TEXTURES",
+      "value": "0",
+      "kind": "Constant",
+      "summary": "Discards all embedded textures and uses untextured materials.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_EXTRACT_TEXTURES",
+      "value": "1",
+      "kind": "Constant",
+      "summary": "Extracts embedded textures to be reimported and compressed. Editor only. Acts as uncompressed at runtime.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_EMBED_AS_BASISU",
+      "value": "2",
+      "kind": "Constant",
+      "summary": "Embeds textures VRAM compressed with Basis Universal into the generated scene.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    },
+    {
+      "name": "HANDLE_BINARY_EMBED_AS_UNCOMPRESSED",
+      "value": "3",
+      "kind": "Constant",
+      "summary": "Embeds textures compressed losslessly into the generated scene, matching old behavior.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFState.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFState.xml",
+      "sha256": "37910b83e392b0df20726b549a2b46f7092d24236f02885998a971c0d14450d9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

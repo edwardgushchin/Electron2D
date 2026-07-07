@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialMarkerTrackingCapability",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialMarkerTrackingCapability",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialMarkerTrackingCapability",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialmarkertrackingcapability.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DoEntityUpdate",
+      "kind": "Method",
+      "signature": "public void DoEntityUpdate(RID spatialContext, OpenXRSpatialComponentData[] componentData, OpenXRStructureBase nextSnapshotCreate, OpenXRStructureBase nextSnapshotQuery)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        },
+        {
+          "name": "component_data",
+          "type": "OpenXRSpatialComponentData[]"
+        },
+        {
+          "name": "next_snapshot_create",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "next_snapshot_query",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Calls [method OpenXRSpatialEntityExtension.update_spatial_entities] and [method OpenXRSpatialEntityExtension.query_snapshot] with the marker entities associated with [param spatial_context]. [param component_data] are the [OpenXRSpatialComponentData]s to update for this marker capability. If [param next_snapshot_create] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.update_spatial_entities]. If [param next_snapshot_query] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.query_snapshot].",
+      "godotName": "do_entity_update",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.DoEntityUpdate(RID,OpenXRSpatialComponentData[],OpenXRStructureBase,OpenXRStructureBase)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    },
+    {
+      "name": "IsAprilTagSupported",
+      "kind": "Method",
+      "signature": "public bool IsAprilTagSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if April tag marker tracking is supported by the current device.",
+      "godotName": "is_april_tag_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.IsAprilTagSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    },
+    {
+      "name": "IsArucoSupported",
+      "kind": "Method",
+      "signature": "public bool IsArucoSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if Aruco marker tracking is supported by the current device.",
+      "godotName": "is_aruco_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.IsArucoSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    },
+    {
+      "name": "IsMicroQrcodeSupported",
+      "kind": "Method",
+      "signature": "public bool IsMicroQrcodeSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if micro QR code marker tracking is supported by the current device.",
+      "godotName": "is_micro_qrcode_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.IsMicroQrcodeSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    },
+    {
+      "name": "IsQrcodeSupported",
+      "kind": "Method",
+      "signature": "public bool IsQrcodeSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if QR code marker tracking is supported by the current device.",
+      "godotName": "is_qrcode_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.IsQrcodeSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    },
+    {
+      "name": "StartEntityDiscovery",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult StartEntityDiscovery(RID spatialContext, OpenXRSpatialComponentData[] componentData, OpenXRStructureBase nextSnapshotCreate, OpenXRStructureBase nextSnapshotQuery, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        },
+        {
+          "name": "component_data",
+          "type": "OpenXRSpatialComponentData[]"
+        },
+        {
+          "name": "next_snapshot_create",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "next_snapshot_query",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Calls [method OpenXRSpatialEntityExtension.discover_spatial_entities] and [method OpenXRSpatialEntityExtension.query_snapshot] with the marker entities associated with [param spatial_context]. [param component_data] are the [OpenXRSpatialComponentData]s to discover for this marker capability. If [param next_snapshot_create] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.discover_spatial_entities]. If [param next_snapshot_query] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.query_snapshot]. [param user_callback], when non-null, is called with two parameters usually twice. The first parameter is the [RID] of the discovery snapshot and the second parameter is a boolean where [code]false[/code] indicates the discovery snapshot is about to be processed, and [code]true[/code] indicates the discovery snapshot has been processed and [param component_data] has valid data. The second call is skipped if an error was encountered. The returned [OpenXRFutureResult] is identical to the return from [method OpenXRSpatialEntityExtension.discover_spatial_entities].",
+      "godotName": "start_entity_discovery",
+      "xmlDocId": "M:Godot.OpenXRSpatialMarkerTrackingCapability.StartEntityDiscovery(RID,OpenXRSpatialComponentData[],OpenXRStructureBase,OpenXRStructureBase,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialMarkerTrackingCapability.xml",
+      "sha256": "1af99a8f171a8dda4f6815257c672787fdb800a9222a48e73807f150724cc396"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

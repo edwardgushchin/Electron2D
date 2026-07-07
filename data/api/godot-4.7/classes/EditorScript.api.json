@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorScript",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorScript",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorScript",
+    "documentationPath": "doc/classes/EditorScript.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorscript.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Run",
+      "kind": "Method",
+      "signature": "public void _Run()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "This method is executed by the Editor when [b]File \u003E Run[/b] is used.",
+      "godotName": "_run",
+      "xmlDocId": "M:Godot.EditorScript._Run",
+      "sourcePath": "doc/classes/EditorScript.xml"
+    },
+    {
+      "name": "AddRootNode",
+      "kind": "Method",
+      "signature": "public void AddRootNode(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Makes [param node] root of the currently opened scene. Only works if the scene is empty. If the [param node] is a scene instance, an inheriting scene will be created.",
+      "godotName": "add_root_node",
+      "xmlDocId": "M:Godot.EditorScript.AddRootNode(Node)",
+      "sourcePath": "doc/classes/EditorScript.xml"
+    },
+    {
+      "name": "GetEditorInterface",
+      "kind": "Method",
+      "signature": "public EditorInterface GetEditorInterface()",
+      "returnType": "EditorInterface",
+      "parameters": [],
+      "summary": "Returns the [EditorInterface] singleton instance.",
+      "godotName": "get_editor_interface",
+      "xmlDocId": "M:Godot.EditorScript.GetEditorInterface",
+      "sourcePath": "doc/classes/EditorScript.xml"
+    },
+    {
+      "name": "GetScene",
+      "kind": "Method",
+      "signature": "public Node GetScene()",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "Returns the edited (current) scene\u0027s root [Node]. Equivalent of [method EditorInterface.get_edited_scene_root].",
+      "godotName": "get_scene",
+      "xmlDocId": "M:Godot.EditorScript.GetScene",
+      "sourcePath": "doc/classes/EditorScript.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Run",
+      "kind": "Method",
+      "signature": "public void _Run()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "This method is executed by the Editor when [b]File \u003E Run[/b] is used.",
+      "godotName": "_run",
+      "xmlDocId": "M:Godot.EditorScript._Run",
+      "sourcePath": "doc/classes/EditorScript.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorScript.xml",
+      "sha256": "93776e96a98c414e6f58080398152803f567bcbbc2536b3c86bd36c0afd87335"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

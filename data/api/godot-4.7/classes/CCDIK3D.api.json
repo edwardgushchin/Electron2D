@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CCDIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CCDIK3D",
+    "kind": "class",
+    "baseType": "IterateIK3D",
+    "interfaces": [],
+    "godotReference": "CCDIK3D",
+    "documentationPath": "doc/classes/CCDIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_ccdik3d.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CCDIK3D.xml",
+      "sha256": "d8cb185d67a63e02a096372f7008fbf585231fcc39d76194453616421625a7f8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

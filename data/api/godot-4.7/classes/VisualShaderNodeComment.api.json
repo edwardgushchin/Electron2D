@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeComment",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeComment",
+    "kind": "class",
+    "baseType": "VisualShaderNodeFrame",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeComment",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeComment.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecomment.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Description",
+      "kind": "Property",
+      "signature": "public String Description { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "This property only exists to preserve data authored in earlier versions of Godot. It has currently no function.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "description",
+      "xmlDocId": "P:Godot.VisualShaderNodeComment.Description",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeComment.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeComment.xml",
+      "sha256": "bc04e0823af1858050c40802bdd55d0b3f312b8b475b1fed52436987e440649a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

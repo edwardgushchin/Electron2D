@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGTorus3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGTorus3D",
+    "kind": "class",
+    "baseType": "CSGPrimitive3D",
+    "interfaces": [],
+    "godotReference": "CSGTorus3D",
+    "documentationPath": "modules/csg/doc_classes/CSGTorus3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgtorus3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "InnerRadius",
+      "kind": "Property",
+      "signature": "public float InnerRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inner radius of the torus.",
+      "defaultValue": "0.5",
+      "godotName": "inner_radius",
+      "xmlDocId": "P:Godot.CSGTorus3D.InnerRadius",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    },
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The material used to render the torus.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CSGTorus3D.Material",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    },
+    {
+      "name": "OuterRadius",
+      "kind": "Property",
+      "signature": "public float OuterRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The outer radius of the torus.",
+      "defaultValue": "1.0",
+      "godotName": "outer_radius",
+      "xmlDocId": "P:Godot.CSGTorus3D.OuterRadius",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    },
+    {
+      "name": "RingSides",
+      "kind": "Property",
+      "signature": "public int RingSides { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of edges each ring of the torus is constructed of.",
+      "defaultValue": "6",
+      "godotName": "ring_sides",
+      "xmlDocId": "P:Godot.CSGTorus3D.RingSides",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    },
+    {
+      "name": "Sides",
+      "kind": "Property",
+      "signature": "public int Sides { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of slices the torus is constructed of.",
+      "defaultValue": "8",
+      "godotName": "sides",
+      "xmlDocId": "P:Godot.CSGTorus3D.Sides",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    },
+    {
+      "name": "SmoothFaces",
+      "kind": "Property",
+      "signature": "public bool SmoothFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] the normals of the torus are set to give a smooth effect making the torus seem rounded. If [code]false[/code] the torus will have a flat shaded look.",
+      "defaultValue": "true",
+      "godotName": "smooth_faces",
+      "xmlDocId": "P:Godot.CSGTorus3D.SmoothFaces",
+      "sourcePath": "modules/csg/doc_classes/CSGTorus3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGTorus3D.xml",
+      "sha256": "b749cdcd02080ccd7a39a396fa6aad82859a73dc67d893a4d0fba05bc8d6dbea"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

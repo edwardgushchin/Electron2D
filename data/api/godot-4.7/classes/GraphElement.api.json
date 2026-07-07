@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GraphElement",
+    "namespace": "Godot",
+    "fullName": "Godot.GraphElement",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "GraphElement",
+    "documentationPath": "doc/classes/GraphElement.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_graphelement.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Draggable",
+      "kind": "Property",
+      "signature": "public bool Draggable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the user can drag the GraphElement.",
+      "defaultValue": "true",
+      "godotName": "draggable",
+      "xmlDocId": "P:Godot.GraphElement.Draggable",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "PositionOffset",
+      "kind": "Property",
+      "signature": "public Vector2 PositionOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The offset of the GraphElement, relative to the scroll offset of the [GraphEdit].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position_offset",
+      "xmlDocId": "P:Godot.GraphElement.PositionOffset",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "Resizable",
+      "kind": "Property",
+      "signature": "public bool Resizable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the user can resize the GraphElement. [b]Note:[/b] Dragging the handle will only emit the [signal resize_request] and [signal resize_end] signals, the GraphElement needs to be resized manually.",
+      "defaultValue": "false",
+      "godotName": "resizable",
+      "xmlDocId": "P:Godot.GraphElement.Resizable",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "ScalingMenus",
+      "kind": "Property",
+      "signature": "public bool ScalingMenus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [PopupMenu]s that are descendants of the GraphElement are scaled with the [GraphEdit] zoom.",
+      "defaultValue": "false",
+      "godotName": "scaling_menus",
+      "xmlDocId": "P:Godot.GraphElement.ScalingMenus",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "Selectable",
+      "kind": "Property",
+      "signature": "public bool Selectable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the user can select the GraphElement.",
+      "defaultValue": "true",
+      "godotName": "selectable",
+      "xmlDocId": "P:Godot.GraphElement.Selectable",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "Selected",
+      "kind": "Property",
+      "signature": "public bool Selected { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the GraphElement is selected.",
+      "defaultValue": "false",
+      "godotName": "selected",
+      "xmlDocId": "P:Godot.GraphElement.Selected",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "DeleteRequest",
+      "kind": "Signal",
+      "signature": "public event DeleteRequestHandler DeleteRequest",
+      "parameters": [],
+      "summary": "Emitted when removing the GraphElement is requested.",
+      "godotName": "delete_request",
+      "xmlDocId": "E:Godot.GraphElement.DeleteRequest",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "Dragged",
+      "kind": "Signal",
+      "signature": "public event DraggedHandler Dragged",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when the GraphElement is dragged.",
+      "godotName": "dragged",
+      "xmlDocId": "E:Godot.GraphElement.Dragged(Vector2,Vector2)",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "NodeDeselected",
+      "kind": "Signal",
+      "signature": "public event NodeDeselectedHandler NodeDeselected",
+      "parameters": [],
+      "summary": "Emitted when the GraphElement is deselected.",
+      "godotName": "node_deselected",
+      "xmlDocId": "E:Godot.GraphElement.NodeDeselected",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "NodeSelected",
+      "kind": "Signal",
+      "signature": "public event NodeSelectedHandler NodeSelected",
+      "parameters": [],
+      "summary": "Emitted when the GraphElement is selected.",
+      "godotName": "node_selected",
+      "xmlDocId": "E:Godot.GraphElement.NodeSelected",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "PositionOffsetChanged",
+      "kind": "Signal",
+      "signature": "public event PositionOffsetChangedHandler PositionOffsetChanged",
+      "parameters": [],
+      "summary": "Emitted when the GraphElement is moved.",
+      "godotName": "position_offset_changed",
+      "xmlDocId": "E:Godot.GraphElement.PositionOffsetChanged",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "RaiseRequest",
+      "kind": "Signal",
+      "signature": "public event RaiseRequestHandler RaiseRequest",
+      "parameters": [],
+      "summary": "Emitted when displaying the GraphElement over other ones is requested. Happens on focusing (clicking into) the GraphElement.",
+      "godotName": "raise_request",
+      "xmlDocId": "E:Godot.GraphElement.RaiseRequest",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "ResizeEnd",
+      "kind": "Signal",
+      "signature": "public event ResizeEndHandler ResizeEnd",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when releasing the mouse button after dragging the resizer handle (see [member resizable]).",
+      "godotName": "resize_end",
+      "xmlDocId": "E:Godot.GraphElement.ResizeEnd(Vector2)",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    },
+    {
+      "name": "ResizeRequest",
+      "kind": "Signal",
+      "signature": "public event ResizeRequestHandler ResizeRequest",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when resizing the GraphElement is requested. Happens on dragging the resizer handle (see [member resizable]).",
+      "godotName": "resize_request",
+      "xmlDocId": "E:Godot.GraphElement.ResizeRequest(Vector2)",
+      "sourcePath": "doc/classes/GraphElement.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GraphElement.xml",
+      "sha256": "db2f2a4e162d66bc19770b0ba943b878dc00a931ca9d723a19ad3ace36a69f53"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

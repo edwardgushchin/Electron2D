@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ItemList",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ItemList",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "ItemList",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "ItemList",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ItemList()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ItemList\u0060 class.",
+      "xmlDocId": "M:Electron2D.ItemList.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "ItemList",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ItemList()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ItemList\u0060 class.",
+      "xmlDocId": "M:Electron2D.ItemList.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public System.Int32 AddIconItem(Electron2D.Texture2D icon, System.Boolean selectable)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "selectable",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Adds an item that displays only an icon.",
+      "xmlDocId": "M:Electron2D.ItemList.AddIconItem(Electron2D.Texture2D,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public System.Int32 AddItem(System.String text, Electron2D.Texture2D icon, System.Boolean selectable)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "System.String"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "selectable",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Adds an item with optional text and icon.",
+      "xmlDocId": "M:Electron2D.ItemList.AddItem(System.String,Electron2D.Texture2D,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes every item and clears selection.",
+      "xmlDocId": "M:Electron2D.ItemList.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this list.",
+      "xmlDocId": "M:Electron2D.ItemList._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Deselect",
+      "kind": "Method",
+      "signature": "public System.Void Deselect(System.Int32 idx)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Clears selection from one item.",
+      "xmlDocId": "M:Electron2D.ItemList.Deselect(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DeselectAll",
+      "kind": "Method",
+      "signature": "public System.Void DeselectAll()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Clears selection from every item.",
+      "xmlDocId": "M:Electron2D.ItemList.DeselectAll",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the list rows, selection backgrounds and text.",
+      "xmlDocId": "M:Electron2D.ItemList._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemAtPosition",
+      "kind": "Method",
+      "signature": "public System.Int32 GetItemAtPosition(Electron2D.Vector2 position, System.Boolean exact)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "exact",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Gets the item index at a local position.",
+      "xmlDocId": "M:Electron2D.ItemList.GetItemAtPosition(Electron2D.Vector2,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetItemCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of stored items.",
+      "xmlDocId": "M:Electron2D.ItemList.GetItemCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetItemIcon(System.Int32 idx)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the icon displayed by an item.",
+      "xmlDocId": "M:Electron2D.ItemList.GetItemIcon(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public System.String GetItemText(System.Int32 idx)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the text displayed by an item.",
+      "xmlDocId": "M:Electron2D.ItemList.GetItemText(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSelectedItems",
+      "kind": "Method",
+      "signature": "public System.Int32[] GetSelectedItems()",
+      "returnType": "System.Int32[]",
+      "parameters": [],
+      "summary": "Gets the indices of selected items.",
+      "xmlDocId": "M:Electron2D.ItemList.GetSelectedItems",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this list.",
+      "xmlDocId": "M:Electron2D.ItemList._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public System.Boolean IsItemDisabled(System.Int32 idx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item is disabled.",
+      "xmlDocId": "M:Electron2D.ItemList.IsItemDisabled(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsItemSelectable",
+      "kind": "Method",
+      "signature": "public System.Boolean IsItemSelectable(System.Int32 idx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item can be selected.",
+      "xmlDocId": "M:Electron2D.ItemList.IsItemSelectable(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsSelected",
+      "kind": "Method",
+      "signature": "public System.Boolean IsSelected(System.Int32 idx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item is selected.",
+      "xmlDocId": "M:Electron2D.ItemList.IsSelected(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public System.Void Select(System.Int32 idx, System.Boolean single)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "single",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Selects an item.",
+      "xmlDocId": "M:Electron2D.ItemList.Select(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public System.Void SetItemDisabled(System.Int32 idx, System.Boolean disabled)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "disabled",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether an item ignores user selection and activation.",
+      "xmlDocId": "M:Electron2D.ItemList.SetItemDisabled(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public System.Void SetItemIcon(System.Int32 idx, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Sets the icon displayed by an item.",
+      "xmlDocId": "M:Electron2D.ItemList.SetItemIcon(System.Int32,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemSelectable",
+      "kind": "Method",
+      "signature": "public System.Void SetItemSelectable(System.Int32 idx, System.Boolean selectable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "selectable",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether an item can be selected.",
+      "xmlDocId": "M:Electron2D.ItemList.SetItemSelectable(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public System.Void SetItemText(System.Int32 idx, System.String text)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "text",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets the text displayed by an item.",
+      "xmlDocId": "M:Electron2D.ItemList.SetItemText(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowReselect",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowReselect { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether selecting the current item again still emits signals.",
+      "xmlDocId": "P:Electron2D.ItemList.AllowReselect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowRmbSelect",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowRmbSelect { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether right mouse button input may select rows.",
+      "xmlDocId": "P:Electron2D.ItemList.AllowRmbSelect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FixedColumnWidth",
+      "kind": "Property",
+      "signature": "public System.Int32 FixedColumnWidth { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the requested fixed column width.",
+      "xmlDocId": "P:Electron2D.ItemList.FixedColumnWidth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FixedIconSize",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I FixedIconSize { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the requested fixed icon size.",
+      "xmlDocId": "P:Electron2D.ItemList.FixedIconSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ItemCount",
+      "kind": "Property",
+      "signature": "public System.Int32 ItemCount { get; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of items stored in this list.",
+      "xmlDocId": "P:Electron2D.ItemList.ItemCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxColumns",
+      "kind": "Property",
+      "signature": "public System.Int32 MaxColumns { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the maximum number of visual columns requested by the list.",
+      "xmlDocId": "P:Electron2D.ItemList.MaxColumns",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SelectMode",
+      "kind": "Property",
+      "signature": "public Electron2D.ItemList.SelectMode SelectMode { get; set; }",
+      "returnType": "Electron2D.ItemList.SelectMode",
+      "parameters": [],
+      "summary": "Gets or sets the selection mode used by this list.",
+      "xmlDocId": "P:Electron2D.ItemList.SelectMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this list.",
+      "xmlDocId": "M:Electron2D.ItemList._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the list rows, selection backgrounds and text.",
+      "xmlDocId": "M:Electron2D.ItemList._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this list.",
+      "xmlDocId": "M:Electron2D.ItemList._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

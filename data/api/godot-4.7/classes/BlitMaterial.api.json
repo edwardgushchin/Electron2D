@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BlitMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.BlitMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "BlitMaterial",
+    "documentationPath": "doc/classes/BlitMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_blitmaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BlendMode",
+      "kind": "Property",
+      "signature": "public int BlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The manner in which the newly blitted texture is blended with the original DrawableTexture.",
+      "defaultValue": "0",
+      "godotName": "blend_mode",
+      "xmlDocId": "P:Godot.BlitMaterial.BlendMode",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BlendMode",
+      "values": [
+        {
+          "name": "BLEND_MODE_ADD",
+          "value": "1",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Additive blending mode.",
+          "sourcePath": "doc/classes/BlitMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_DISABLED",
+          "value": "4",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "No blending mode, direct color copy.",
+          "sourcePath": "doc/classes/BlitMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_MIX",
+          "value": "0",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.",
+          "sourcePath": "doc/classes/BlitMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_MUL",
+          "value": "3",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Multiplicative blending mode.",
+          "sourcePath": "doc/classes/BlitMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_SUB",
+          "value": "2",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Subtractive blending mode.",
+          "sourcePath": "doc/classes/BlitMaterial.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BLEND_MODE_MIX",
+      "value": "0",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_ADD",
+      "value": "1",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Additive blending mode.",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_SUB",
+      "value": "2",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Subtractive blending mode.",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_MUL",
+      "value": "3",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Multiplicative blending mode.",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_DISABLED",
+      "value": "4",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "No blending mode, direct color copy.",
+      "sourcePath": "doc/classes/BlitMaterial.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BlitMaterial.xml",
+      "sha256": "5c8b9ed5196f04f2ced2b3c2497def51ceaa1b24ecd6f3adfe32a55f80d7c701"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

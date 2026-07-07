@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorScriptPicker",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorScriptPicker",
+    "kind": "class",
+    "baseType": "EditorResourcePicker",
+    "interfaces": [],
+    "godotReference": "EditorScriptPicker",
+    "documentationPath": "doc/classes/EditorScriptPicker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorscriptpicker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ScriptOwner",
+      "kind": "Property",
+      "signature": "public Node ScriptOwner { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The owner [Node] of the script property that holds the edited resource.",
+      "godotName": "script_owner",
+      "xmlDocId": "P:Godot.EditorScriptPicker.ScriptOwner",
+      "sourcePath": "doc/classes/EditorScriptPicker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorScriptPicker.xml",
+      "sha256": "8361b8547fce994edede0acdab1a0081f2a8ca4668a86572098d737d39fb3da7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

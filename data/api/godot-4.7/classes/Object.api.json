@@ -1,0 +1,1317 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Object",
+    "namespace": "Godot",
+    "fullName": "Godot.Object",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Object",
+    "documentationPath": "doc/classes/Object.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_object.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Get",
+      "kind": "Method",
+      "signature": "public Variant _Get(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the behavior of [method get]. Should return the given [param property]\u0027s value, or [code]null[/code] if the [param property] should be handled normally. Combined with [method _set] and [method _get_property_list], this method allows defining custom properties, which is particularly useful for editor plugins. [b]Note:[/b] This method is not called when getting built-in properties of an object, including properties defined with [annotation @GDScript.@export]. [codeblocks] [gdscript] func _get(property): if property == \u0022fake_property\u0022: print(\u0022Getting my property!\u0022) return 4 return null func _get_property_list(): return [ { \u0022name\u0022: \u0022fake_property\u0022, \u0022type\u0022: TYPE_INT } ] [/gdscript] [csharp] public override Variant _Get(StringName property) { if (property == \u0022FakeProperty\u0022) { GD.Print(\u0022Getting my property!\u0022); return 4; } return default; } public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { return [ new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022FakeProperty\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, }, ]; } [/csharp] [/codeblocks] [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns a non-[code]null[/code] value. [b]Warning:[/b] This method must be [url=$DOCS_URL/tutorials/performance/thread_safe_apis.html]thread-safe[/url] if overridden. Otherwise, the engine may crash when trying to save a resource containing the object.",
+      "godotName": "_get",
+      "xmlDocId": "M:Godot.Object._Get(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_GetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Override this method to provide a custom list of additional properties to handle by the engine. Should return a property list, as an [Array] of dictionaries. The result is added to the array of [method get_property_list], and should be formatted in the same way. Each [Dictionary] must at least contain the [code]name[/code] and [code]type[/code] entries. You can use [method _property_can_revert] and [method _property_get_revert] to customize the default values of the properties added by this method. The example below displays a list of numbers shown as words going from [code]ZERO[/code] to [code]FIVE[/code], with [code]number_count[/code] controlling the size of the list: [codeblocks] [gdscript] @tool extends Node @export var number_count = 3: set(nc): number_count = nc numbers.resize(number_count) notify_property_list_changed() var numbers = PackedInt32Array([0, 0, 0]) func _get_property_list(): var properties: Array[Dictionary] = [] for i in range(number_count): properties.append({ \u0022name\u0022: \u0022number_%d\u0022 % i, \u0022type\u0022: TYPE_INT, \u0022hint\u0022: PROPERTY_HINT_ENUM, \u0022hint_string\u0022: \u0022ZERO,ONE,TWO,THREE,FOUR,FIVE\u0022, }) return properties func _get(property): if property.begins_with(\u0022number_\u0022): var index = property.get_slice(\u0022_\u0022, 1).to_int() return numbers[index] return null func _set(property, value): if property.begins_with(\u0022number_\u0022): var index = property.get_slice(\u0022_\u0022, 1).to_int() numbers[index] = value return true return false [/gdscript] [csharp] [Tool] public partial class MyNode : Node { private int _numberCount; [Export] public int NumberCount { get =\u003E _numberCount; set { _numberCount = value; _numbers.Resize(_numberCount); NotifyPropertyListChanged(); } } private Godot.Collections.Array\u003Cint\u003E _numbers = []; public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E properties = []; for (int i = 0; i \u003C _numberCount; i\u002B\u002B) { properties.Add(new Godot.Collections.Dictionary() { { \u0022name\u0022, $\u0022number_{i}\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, { \u0022hint\u0022, (int)PropertyHint.Enum }, { \u0022hint_string\u0022, \u0022Zero,One,Two,Three,Four,Five\u0022 }, }); } return properties; } public override Variant _Get(StringName property) { string propertyName = property.ToString(); if (propertyName.StartsWith(\u0022number_\u0022)) { int index = int.Parse(propertyName.Substring(\u0022number_\u0022.Length)); return _numbers[index]; } return default; } public override bool _Set(StringName property, Variant value) { string propertyName = property.ToString(); if (propertyName.StartsWith(\u0022number_\u0022)) { int index = int.Parse(propertyName.Substring(\u0022number_\u0022.Length)); _numbers[index] = value.As\u003Cint\u003E(); return true; } return false; } } [/csharp] [/codeblocks] [b]Note:[/b] This method is intended for advanced purposes. For most common use cases, the scripting languages offer easier ways to handle properties. See [annotation @GDScript.@export], [annotation @GDScript.@export_enum], [annotation @GDScript.@export_group], etc. If you want to customize exported properties, use [method _validate_property]. [b]Note:[/b] If the object\u0027s script is not [annotation @GDScript.@tool], this method will not be called in the editor. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. [b]Warning:[/b] This method must be [url=$DOCS_URL/tutorials/performance/thread_safe_apis.html]thread-safe[/url] if overridden. Otherwise, the engine may crash when trying to save a resource containing the object.",
+      "godotName": "_get_property_list",
+      "xmlDocId": "M:Godot.Object._GetPropertyList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the object\u0027s script is instantiated, oftentimes after the object is initialized in memory (through [code]Object.new()[/code] in GDScript, or [code]new GodotObject[/code] in C#). It can be also defined to take in parameters. This method is similar to a constructor in most programming languages. [b]Note:[/b] If [method _init] is defined with [i]required[/i] parameters, the Object with script may only be created directly. If any other means (such as [method PackedScene.instantiate] or [method Node.duplicate]) are used, the script\u0027s initialization will fail.",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.Object._Init",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterGet",
+      "kind": "Method",
+      "signature": "public Variant _IterGet(Variant iter)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the current iterable value. [param iter] stores the iteration state, but unlike [method _iter_init] and [method _iter_next] the state is supposed to be read-only, so there is no [Array] wrapper. [b]Tip:[/b] In GDScript, you can use a subtype of [Variant] as the return type for [method _iter_get]. The specified type will be used to set the type of the iterator variable in [code]for[/code] loops, enhancing type safety.",
+      "godotName": "_iter_get",
+      "xmlDocId": "M:Godot.Object._IterGet(Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterInit",
+      "kind": "Method",
+      "signature": "public bool _IterInit(Array iter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Array"
+        }
+      ],
+      "summary": "Initializes the iterator. [param iter] stores the iteration state. Since GDScript does not support passing arguments by reference, a single-element array is used as a wrapper. Returns [code]true[/code] so long as the iterator has not reached the end. [codeblock] class MyRange: var _from var _to func _init(from, to): assert(from \u003C= to) _from = from _to = to func _iter_init(iter): iter[0] = _from return iter[0] \u003C _to func _iter_next(iter): iter[0] \u002B= 1 return iter[0] \u003C _to func _iter_get(iter): return iter func _ready(): var my_range = MyRange.new(2, 5) for x in my_range: print(x) # Prints 2, 3, 4. [/codeblock] [b]Note:[/b] Avoid storing iterator state in a member variable, use the [param iter] parameter instead. Otherwise, you won\u0027t be able to reuse the same iterator instance in nested loops. See also [url=$DOCS_URL/tutorials/scripting/gdscript/gdscript_advanced.html#custom-iterators]online docs[/url].",
+      "godotName": "_iter_init",
+      "xmlDocId": "M:Godot.Object._IterInit(Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterNext",
+      "kind": "Method",
+      "signature": "public bool _IterNext(Array iter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Array"
+        }
+      ],
+      "summary": "Moves the iterator to the next iteration. [param iter] stores the iteration state. Since GDScript does not support passing arguments by reference, a single-element array is used as a wrapper. Returns [code]true[/code] so long as the iterator has not reached the end.",
+      "godotName": "_iter_next",
+      "xmlDocId": "M:Godot.Object._IterNext(Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Notification",
+      "kind": "Method",
+      "signature": "public void _Notification(int what)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the object receives a notification, which can be identified in [param what] by comparing it with a constant. See also [method notification]. [codeblocks] [gdscript] func _notification(what): if what == NOTIFICATION_PREDELETE: print(\u0022Goodbye!\u0022) [/gdscript] [csharp] public override void _Notification(int what) { if (what == NotificationPredelete) { GD.Print(\u0022Goodbye!\u0022); } } [/csharp] [/codeblocks] [b]Note:[/b] The base [Object] defines a few notifications ([constant NOTIFICATION_POSTINITIALIZE] and [constant NOTIFICATION_PREDELETE]). Inheriting classes such as [Node] define a lot more notifications, which are also received by this method. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. Call order depends on the [code]reversed[/code] argument of [method notification] and varies between different notifications. Most notifications are sent in the forward order (i.e. Object class first, most derived class last).",
+      "godotName": "_notification",
+      "xmlDocId": "M:Godot.Object._Notification(int)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_PropertyCanRevert",
+      "kind": "Method",
+      "signature": "public bool _PropertyCanRevert(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the given [param property]\u0027s revert behavior. Should return [code]true[/code] if the [param property] has a custom default value and is revertible in the Inspector dock. Use [method _property_get_revert] to specify the [param property]\u0027s default value. [b]Note:[/b] This method must return consistently, regardless of the current value of the [param property]. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns [code]true[/code].",
+      "godotName": "_property_can_revert",
+      "xmlDocId": "M:Godot.Object._PropertyCanRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_PropertyGetRevert",
+      "kind": "Method",
+      "signature": "public Variant _PropertyGetRevert(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the given [param property]\u0027s revert behavior. Should return the default value for the [param property]. If the default value differs from the [param property]\u0027s current value, a revert icon is displayed in the Inspector dock. [b]Note:[/b] [method _property_can_revert] must also be overridden for this method to be called. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns a non-[code]null[/code] value.",
+      "godotName": "_property_get_revert",
+      "xmlDocId": "M:Godot.Object._PropertyGetRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Set",
+      "kind": "Method",
+      "signature": "public bool _Set(StringName property, Variant value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Override this method to customize the behavior of [method set]. Should set the [param property] to [param value] and return [code]true[/code], or [code]false[/code] if the [param property] should be handled normally. The [i]exact[/i] way to set the [param property] is up to this method\u0027s implementation. Combined with [method _get] and [method _get_property_list], this method allows defining custom properties, which is particularly useful for editor plugins. [b]Note:[/b] This method is not called when setting built-in properties of an object, including properties defined with [annotation @GDScript.@export]. [codeblocks] [gdscript] var internal_data = {} func _set(property, value): if property == \u0022fake_property\u0022: # Storing the value in the fake property. internal_data[\u0022fake_property\u0022] = value return true return false func _get_property_list(): return [ { \u0022name\u0022: \u0022fake_property\u0022, \u0022type\u0022: TYPE_INT } ] [/gdscript] [csharp] private Godot.Collections.Dictionary _internalData = new Godot.Collections.Dictionary(); public override bool _Set(StringName property, Variant value) { if (property == \u0022FakeProperty\u0022) { // Storing the value in the fake property. _internalData[\u0022FakeProperty\u0022] = value; return true; } return false; } public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { return [ new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022FakeProperty\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, }, ]; } [/csharp] [/codeblocks] [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns [code]true[/code].",
+      "godotName": "_set",
+      "xmlDocId": "M:Godot.Object._Set(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_ToString",
+      "kind": "Method",
+      "signature": "public String _ToString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to customize the return value of [method to_string], and therefore the object\u0027s representation as a [String]. [codeblock] func _to_string(): return \u0022Welcome to Godot 4!\u0022 func _init(): print(self) # Prints \u0022Welcome to Godot 4!\u0022 var a = str(self) # a is \u0022Welcome to Godot 4!\u0022 [/codeblock]",
+      "godotName": "_to_string",
+      "xmlDocId": "M:Godot.Object._ToString",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_ValidateProperty",
+      "kind": "Method",
+      "signature": "public void _ValidateProperty(Dictionary property)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Override this method to customize existing properties. Every property info goes through this method, except properties added with [method _get_property_list]. The dictionary contents is the same as in [method _get_property_list]. [codeblocks] [gdscript] @tool extends Node @export var is_number_editable: bool: set(value): is_number_editable = value notify_property_list_changed() @export var number: int func _validate_property(property: Dictionary): if property.name == \u0022number\u0022 and not is_number_editable: property.usage |= PROPERTY_USAGE_READ_ONLY [/gdscript] [csharp] [Tool] public partial class MyNode : Node { private bool _isNumberEditable; [Export] public bool IsNumberEditable { get =\u003E _isNumberEditable; set { _isNumberEditable = value; NotifyPropertyListChanged(); } } [Export] public int Number { get; set; } public override void _ValidateProperty(Godot.Collections.Dictionary property) { if (property[\u0022name\u0022].AsStringName() == PropertyName.Number \u0026\u0026 !IsNumberEditable) { var usage = property[\u0022usage\u0022].As\u003CPropertyUsageFlags\u003E() | PropertyUsageFlags.ReadOnly; property[\u0022usage\u0022] = (int)usage; } } } [/csharp] [/codeblocks]",
+      "godotName": "_validate_property",
+      "xmlDocId": "M:Godot.Object._ValidateProperty(Dictionary)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "AddUserSignal",
+      "kind": "Method",
+      "signature": "public void AddUserSignal(String signal, Array arguments)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "String"
+        },
+        {
+          "name": "arguments",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Adds a user-defined signal named [param signal]. Optional arguments for the signal can be added as an [Array] of dictionaries, each defining a [code]name[/code] [String] and a [code]type[/code] [int] (see [enum Variant.Type]). See also [method has_user_signal] and [method remove_user_signal]. [codeblocks] [gdscript] add_user_signal(\u0022hurt\u0022, [ { \u0022name\u0022: \u0022damage\u0022, \u0022type\u0022: TYPE_INT }, { \u0022name\u0022: \u0022source\u0022, \u0022type\u0022: TYPE_OBJECT } ]) [/gdscript] [csharp] AddUserSignal(\u0022Hurt\u0022, [ new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022damage\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, }, new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022source\u0022 }, { \u0022type\u0022, (int)Variant.Type.Object }, }, ]); [/csharp] [/codeblocks]",
+      "godotName": "add_user_signal",
+      "xmlDocId": "M:Godot.Object.AddUserSignal(String,Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Call",
+      "kind": "Method",
+      "signature": "public Variant Call(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Calls the [param method] on the object and returns the result. This method supports a variable number of arguments, so parameters can be passed as a comma separated list. [codeblocks] [gdscript] var node = Node3D.new() node.call(\u0022rotate\u0022, Vector3(1.0, 0.0, 0.0), 1.571) [/gdscript] [csharp] var node = new Node3D(); node.Call(Node3D.MethodName.Rotate, new Vector3(1f, 0f, 0f), 1.571f); [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "call",
+      "xmlDocId": "M:Godot.Object.Call(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CallDeferred",
+      "kind": "Method",
+      "signature": "public Variant CallDeferred(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Calls the [param method] on the object during idle time. Always returns [code]null[/code], [b]not[/b] the method\u0027s result. Idle time happens mainly at the end of process and physics frames. In it, deferred calls will be run until there are none left, which means you can defer calls from other deferred calls and they\u0027ll still be run in the current idle time cycle. This means you should not call a method deferred from itself (or from a method called by it), as this causes infinite recursion the same way as if you had called the method directly. This method supports a variable number of arguments, so parameters can be passed as a comma separated list. [codeblocks] [gdscript] var node = Node3D.new() node.call_deferred(\u0022rotate\u0022, Vector3(1.0, 0.0, 0.0), 1.571) [/gdscript] [csharp] var node = new Node3D(); node.CallDeferred(Node3D.MethodName.Rotate, new Vector3(1f, 0f, 0f), 1.571f); [/csharp] [/codeblocks] For methods that are deferred from the same thread, the order of execution at idle time is identical to the order in which [code skip-lint]call_deferred[/code] was called. See also [method Callable.call_deferred]. [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call. [b]Note:[/b] If you\u0027re looking to delay the function call by a frame, refer to the [signal SceneTree.process_frame] and [signal SceneTree.physics_frame] signals. [codeblock] var node = Node3D.new() # Make a Callable and bind the arguments to the node\u0027s rotate() call. var callable = node.rotate.bind(Vector3(1.0, 0.0, 0.0), 1.571) # Connect the callable to the process_frame signal, so it gets called in the next process frame. # CONNECT_ONE_SHOT makes sure it only gets called once instead of every frame. get_tree().process_frame.connect(callable, CONNECT_ONE_SHOT) [/codeblock]",
+      "godotName": "call_deferred",
+      "xmlDocId": "M:Godot.Object.CallDeferred(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Callv",
+      "kind": "Method",
+      "signature": "public Variant Callv(StringName method, Array argArray)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "arg_array",
+          "type": "Array"
+        }
+      ],
+      "summary": "Calls the [param method] on the object and returns the result. Unlike [method call], this method expects all parameters to be contained inside [param arg_array]. [codeblocks] [gdscript] var node = Node3D.new() node.callv(\u0022rotate\u0022, [Vector3(1.0, 0.0, 0.0), 1.571]) [/gdscript] [csharp] var node = new Node3D(); node.Callv(Node3D.MethodName.Rotate, [new Vector3(1f, 0f, 0f), 1.571f]); [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "callv",
+      "xmlDocId": "M:Godot.Object.Callv(StringName,Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CanTranslateMessages",
+      "kind": "Method",
+      "signature": "public bool CanTranslateMessages()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the object is allowed to translate messages with [method tr] and [method tr_n]. See also [method set_message_translation].",
+      "godotName": "can_translate_messages",
+      "xmlDocId": "M:Godot.Object.CanTranslateMessages",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CancelFree",
+      "kind": "Method",
+      "signature": "public void CancelFree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "If this method is called during [constant NOTIFICATION_PREDELETE], this object will reject being freed and will remain allocated. This is mostly an internal function used for error handling to avoid the user from freeing objects when they are not intended to.",
+      "godotName": "cancel_free",
+      "xmlDocId": "M:Godot.Object.CancelFree",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Connect",
+      "kind": "Method",
+      "signature": "public int Connect(StringName signal, Callable callable, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Connects a [param signal] by name to a [param callable]. Optional [param flags] can be also added to configure the connection\u0027s behavior (see [enum ConnectFlags] constants). A signal can only be connected once to the same [Callable]. If the signal is already connected, this method returns [constant ERR_INVALID_PARAMETER] and generates an error, unless the signal is connected with [constant CONNECT_REFERENCE_COUNTED]. To prevent this, use [method is_connected] first to check for existing connections. [b]Note:[/b] If the [param callable]\u0027s object is freed, the connection will be lost. [b]Note:[/b] In GDScript, it is generally recommended to connect signals with [method Signal.connect] instead. [b]Note:[/b] This method, and all other signal-related methods, are thread-safe.",
+      "godotName": "connect",
+      "xmlDocId": "M:Godot.Object.Connect(StringName,Callable,int)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Disconnect",
+      "kind": "Method",
+      "signature": "public void Disconnect(StringName signal, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Disconnects a [param signal] by name from a given [param callable]. If the connection does not exist, generates an error. Use [method is_connected] to make sure that the connection exists.",
+      "godotName": "disconnect",
+      "xmlDocId": "M:Godot.Object.Disconnect(StringName,Callable)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "EmitSignal",
+      "kind": "Method",
+      "signature": "public int EmitSignal(StringName signal)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emits the given [param signal] by name. The signal must exist, so it should be a built-in signal of this class or one of its inherited classes, or a user-defined signal (see [method add_user_signal]). This method supports a variable number of arguments, so parameters can be passed as a comma separated list. Returns [constant ERR_UNAVAILABLE] if [param signal] does not exist or the parameters are invalid. [codeblocks] [gdscript] emit_signal(\u0022hit\u0022, \u0022sword\u0022, 100) emit_signal(\u0022game_over\u0022) [/gdscript] [csharp] EmitSignal(SignalName.Hit, \u0022sword\u0022, 100); EmitSignal(SignalName.GameOver); [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param signal] must be in snake_case when referring to built-in Godot signals. Prefer using the names exposed in the [code]SignalName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "emit_signal",
+      "xmlDocId": "M:Godot.Object.EmitSignal(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Free",
+      "kind": "Method",
+      "signature": "public void Free()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Deletes the object from memory. Pre-existing references to the object become invalid, and any attempt to access them will result in a runtime error. Checking the references with [method @GlobalScope.is_instance_valid] will return [code]false[/code]. This is equivalent to the [code]memdelete[/code] function in GDExtension C\u002B\u002B.",
+      "godotName": "free",
+      "xmlDocId": "M:Godot.Object.Free",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public Variant Get(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [Variant] value of the given [param property]. If the [param property] does not exist, this method returns [code]null[/code]. [codeblocks] [gdscript] var node = Node2D.new() node.rotation = 1.5 var a = node.get(\u0022rotation\u0022) # a is 1.5 [/gdscript] [csharp] var node = new Node2D(); node.Rotation = 1.5f; var a = node.Get(Node2D.PropertyName.Rotation); // a is 1.5 [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.Object.Get(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetClass",
+      "kind": "Method",
+      "signature": "public String GetClass()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the object\u0027s built-in class name, as a [String]. See also [method is_class]. [b]Note:[/b] This method ignores [code]class_name[/code] declarations. If this object\u0027s script has defined a [code]class_name[/code], the base, built-in class name is returned instead.",
+      "godotName": "get_class",
+      "xmlDocId": "M:Godot.Object.GetClass",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetIncomingConnections",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetIncomingConnections()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of signal connections received by this object. Each connection is represented as a [Dictionary] that contains three entries: - [code]signal[/code] is a reference to the [Signal]; - [code]callable[/code] is a reference to the [Callable]; - [code]flags[/code] is a combination of [enum ConnectFlags].",
+      "godotName": "get_incoming_connections",
+      "xmlDocId": "M:Godot.Object.GetIncomingConnections",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetIndexed",
+      "kind": "Method",
+      "signature": "public Variant GetIndexed(NodePath propertyPath)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property_path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Gets the object\u0027s property indexed by the given [param property_path]. The path should be a [NodePath] relative to the current object and can use the colon character ([code]:[/code]) to access nested properties. [b]Examples:[/b] [code]\u0022position:x\u0022[/code] or [code]\u0022material:next_pass:blend_mode\u0022[/code]. [codeblocks] [gdscript] var node = Node2D.new() node.position = Vector2(5, -10) var a = node.get_indexed(\u0022position\u0022) # a is Vector2(5, -10) var b = node.get_indexed(\u0022position:y\u0022) # b is -10 [/gdscript] [csharp] var node = new Node2D(); node.Position = new Vector2(5, -10); var a = node.GetIndexed(\u0022position\u0022); // a is Vector2(5, -10) var b = node.GetIndexed(\u0022position:y\u0022); // b is -10 [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param property_path] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call. [b]Note:[/b] This method does not support actual paths to nodes in the [SceneTree], only sub-property paths. In the context of nodes, use [method Node.get_node_and_resource] instead.",
+      "godotName": "get_indexed",
+      "xmlDocId": "M:Godot.Object.GetIndexed(NodePath)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetInstanceId",
+      "kind": "Method",
+      "signature": "public int GetInstanceId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the object\u0027s unique instance ID. This ID can be saved in [EncodedObjectAsID], and can be used to retrieve this object instance with [method @GlobalScope.instance_from_id]. [b]Note:[/b] This ID is only useful during the current session. It won\u0027t correspond to a similar object if the ID is sent over a network, or loaded from a file at a later time.",
+      "godotName": "get_instance_id",
+      "xmlDocId": "M:Godot.Object.GetInstanceId",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetMeta",
+      "kind": "Method",
+      "signature": "public Variant GetMeta(StringName name, Variant @default)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "default",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Returns the object\u0027s metadata value for the given entry [param name]. If the entry does not exist, returns [param default]. If [param default] is [code]null[/code], an error is also generated. [b]Note:[/b] A metadata\u0027s name must be a valid identifier as per [method StringName.is_valid_identifier] method. [b]Note:[/b] Metadata that has a name starting with an underscore ([code]_[/code]) is considered editor-only. Editor-only metadata is not displayed in the Inspector and should not be edited, although it can still be found by this method.",
+      "godotName": "get_meta",
+      "xmlDocId": "M:Godot.Object.GetMeta(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetMetaList",
+      "kind": "Method",
+      "signature": "public StringName[] GetMetaList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns the object\u0027s metadata entry names as an [Array] of [StringName]s.",
+      "godotName": "get_meta_list",
+      "xmlDocId": "M:Godot.Object.GetMetaList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetMethodArgumentCount",
+      "kind": "Method",
+      "signature": "public int GetMethodArgumentCount(StringName method)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the number of arguments of the given [param method] by name. [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "get_method_argument_count",
+      "xmlDocId": "M:Godot.Object.GetMethodArgumentCount(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetMethodList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetMethodList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns this object\u0027s methods and their signatures as an [Array] of dictionaries. Each [Dictionary] contains the following entries: - [code]name[/code] is the name of the method, as a [String]; - [code]args[/code] is an [Array] of dictionaries representing the arguments; - [code]default_args[/code] is the default arguments as an [Array] of variants; - [code]flags[/code] is a combination of [enum MethodFlags]; - [code]id[/code] is the method\u0027s internal identifier [int]; - [code]return[/code] is the returned value, as a [Dictionary]; [b]Note:[/b] The dictionaries of [code]args[/code] and [code]return[/code] are formatted identically to the results of [method get_property_list], although not all entries are used.",
+      "godotName": "get_method_list",
+      "xmlDocId": "M:Godot.Object.GetMethodList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns the object\u0027s property list as an [Array] of dictionaries. Each [Dictionary] contains the following entries: - [code]name[/code] is the property\u0027s name, as a [String]; - [code]class_name[/code] is an empty [StringName], unless the property is [constant TYPE_OBJECT] and it inherits from a class; - [code]type[/code] is the property\u0027s type, as an [int] (see [enum Variant.Type]); - [code]hint[/code] is [i]how[/i] the property is meant to be edited (see [enum PropertyHint]); - [code]hint_string[/code] depends on the hint (see [enum PropertyHint]); - [code]usage[/code] is a combination of [enum PropertyUsageFlags]. [b]Note:[/b] In GDScript, all class members are treated as properties. In C# and GDExtension, it may be necessary to explicitly mark class members as Godot properties using decorators or attributes.",
+      "godotName": "get_property_list",
+      "xmlDocId": "M:Godot.Object.GetPropertyList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetScript",
+      "kind": "Method",
+      "signature": "public Variant GetScript()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the object\u0027s [Script] instance, or [code]null[/code] if no script is attached.",
+      "godotName": "get_script",
+      "xmlDocId": "M:Godot.Object.GetScript",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetSignalConnectionList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetSignalConnectionList(StringName signal)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns an [Array] of connections for the given [param signal] name. Each connection is represented as a [Dictionary] that contains three entries: - [code skip-lint]signal[/code] is a reference to the [Signal]; - [code]callable[/code] is a reference to the connected [Callable]; - [code]flags[/code] is a combination of [enum ConnectFlags].",
+      "godotName": "get_signal_connection_list",
+      "xmlDocId": "M:Godot.Object.GetSignalConnectionList(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetSignalList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetSignalList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns the list of existing signals as an [Array] of dictionaries. [b]Note:[/b] Due to the implementation, each [Dictionary] is formatted very similarly to the returned values of [method get_method_list].",
+      "godotName": "get_signal_list",
+      "xmlDocId": "M:Godot.Object.GetSignalList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "GetTranslationDomain",
+      "kind": "Method",
+      "signature": "public StringName GetTranslationDomain()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the name of the translation domain used by [method tr] and [method tr_n]. See also [TranslationServer].",
+      "godotName": "get_translation_domain",
+      "xmlDocId": "M:Godot.Object.GetTranslationDomain",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "HasConnections",
+      "kind": "Method",
+      "signature": "public bool HasConnections(StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if any connection exists on the given [param signal] name. [b]Note:[/b] In C#, [param signal] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]SignalName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "has_connections",
+      "xmlDocId": "M:Godot.Object.HasConnections(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "HasMeta",
+      "kind": "Method",
+      "signature": "public bool HasMeta(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a metadata entry is found with the given [param name]. See also [method get_meta], [method set_meta] and [method remove_meta]. [b]Note:[/b] A metadata\u0027s name must be a valid identifier as per [method StringName.is_valid_identifier] method. [b]Note:[/b] Metadata that has a name starting with an underscore ([code]_[/code]) is considered editor-only. Editor-only metadata is not displayed in the Inspector and should not be edited, although it can still be found by this method.",
+      "godotName": "has_meta",
+      "xmlDocId": "M:Godot.Object.HasMeta(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "HasMethod",
+      "kind": "Method",
+      "signature": "public bool HasMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param method] name exists in the object. [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "has_method",
+      "xmlDocId": "M:Godot.Object.HasMethod(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "HasSignal",
+      "kind": "Method",
+      "signature": "public bool HasSignal(StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param signal] name exists in the object. [b]Note:[/b] In C#, [param signal] must be in snake_case when referring to built-in Godot signals. Prefer using the names exposed in the [code]SignalName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "has_signal",
+      "xmlDocId": "M:Godot.Object.HasSignal(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "HasUserSignal",
+      "kind": "Method",
+      "signature": "public bool HasUserSignal(StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given user-defined [param signal] name exists. Only signals added with [method add_user_signal] are included. See also [method remove_user_signal].",
+      "godotName": "has_user_signal",
+      "xmlDocId": "M:Godot.Object.HasUserSignal(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "IsBlockingSignals",
+      "kind": "Method",
+      "signature": "public bool IsBlockingSignals()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the object is blocking its signals from being emitted. See [method set_block_signals].",
+      "godotName": "is_blocking_signals",
+      "xmlDocId": "M:Godot.Object.IsBlockingSignals",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "IsClass",
+      "kind": "Method",
+      "signature": "public bool IsClass(StringName @class)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the object inherits from the given [param class]. See also [method get_class]. [codeblocks] [gdscript] var sprite2d = Sprite2D.new() sprite2d.is_class(\u0022Sprite2D\u0022) # Returns true sprite2d.is_class(\u0022Node\u0022) # Returns true sprite2d.is_class(\u0022Node3D\u0022) # Returns false [/gdscript] [csharp] var sprite2D = new Sprite2D(); sprite2D.IsClass(\u0022Sprite2D\u0022); // Returns true sprite2D.IsClass(\u0022Node\u0022); // Returns true sprite2D.IsClass(\u0022Node3D\u0022); // Returns false [/csharp] [/codeblocks] [b]Note:[/b] This method ignores [code]class_name[/code] declarations in the object\u0027s script.",
+      "godotName": "is_class",
+      "xmlDocId": "M:Godot.Object.IsClass(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "IsConnected",
+      "kind": "Method",
+      "signature": "public bool IsConnected(StringName signal, Callable callable)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a connection exists between the given [param signal] name and [param callable]. [b]Note:[/b] In C#, [param signal] must be in snake_case when referring to built-in Godot signals. Prefer using the names exposed in the [code]SignalName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "is_connected",
+      "xmlDocId": "M:Godot.Object.IsConnected(StringName,Callable)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "IsQueuedForDeletion",
+      "kind": "Method",
+      "signature": "public bool IsQueuedForDeletion()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the methods [method Node.queue_free] or [method SceneTree.queue_delete] was called for the object. [b]Note:[/b] This method does not return [code]true[/code] on children of the node that [method Node.queue_free] has been called on, even though they will be freed together with the parent.",
+      "godotName": "is_queued_for_deletion",
+      "xmlDocId": "M:Godot.Object.IsQueuedForDeletion",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Notification",
+      "kind": "Method",
+      "signature": "public void Notification(int what, bool reversed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        },
+        {
+          "name": "reversed",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Sends the given [param what] notification to all classes inherited by the object, triggering calls to [method _notification], starting from the highest ancestor (the [Object] class) and going down to the object\u0027s script. If [param reversed] is [code]true[/code], the call order is reversed. [codeblocks] [gdscript] var player = Node2D.new() player.set_script(load(\u0022res://player.gd\u0022)) player.notification(NOTIFICATION_ENTER_TREE) # The call order is Object -\u003E Node -\u003E Node2D -\u003E player.gd. player.notification(NOTIFICATION_ENTER_TREE, true) # The call order is player.gd -\u003E Node2D -\u003E Node -\u003E Object. [/gdscript] [csharp] var player = new Node2D(); player.SetScript(GD.Load(\u0022res://player.gd\u0022)); player.Notification(NotificationEnterTree); // The call order is GodotObject -\u003E Node -\u003E Node2D -\u003E player.gd. player.Notification(NotificationEnterTree, true); // The call order is player.gd -\u003E Node2D -\u003E Node -\u003E GodotObject. [/csharp] [/codeblocks]",
+      "godotName": "notification",
+      "xmlDocId": "M:Godot.Object.Notification(int,bool)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "NotifyPropertyListChanged",
+      "kind": "Method",
+      "signature": "public void NotifyPropertyListChanged()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Emits the [signal property_list_changed] signal. This is mainly used to refresh the editor, so that the Inspector and editor plugins are properly updated.",
+      "godotName": "notify_property_list_changed",
+      "xmlDocId": "M:Godot.Object.NotifyPropertyListChanged",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "PropertyCanRevert",
+      "kind": "Method",
+      "signature": "public bool PropertyCanRevert(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param property] has a custom default value. Use [method property_get_revert] to get the [param property]\u0027s default value. [b]Note:[/b] This method is used by the Inspector dock to display a revert icon. The object must implement [method _property_can_revert] to customize the default value. If [method _property_can_revert] is not implemented, this method returns [code]false[/code].",
+      "godotName": "property_can_revert",
+      "xmlDocId": "M:Godot.Object.PropertyCanRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "PropertyGetRevert",
+      "kind": "Method",
+      "signature": "public Variant PropertyGetRevert(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the custom default value of the given [param property]. Use [method property_can_revert] to check if the [param property] has a custom default value. [b]Note:[/b] This method is used by the Inspector dock to display a revert icon. The object must implement [method _property_get_revert] to customize the default value. If [method _property_get_revert] is not implemented, this method returns [code]null[/code].",
+      "godotName": "property_get_revert",
+      "xmlDocId": "M:Godot.Object.PropertyGetRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "RemoveMeta",
+      "kind": "Method",
+      "signature": "public void RemoveMeta(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the given entry [param name] from the object\u0027s metadata. See also [method has_meta], [method get_meta] and [method set_meta]. [b]Note:[/b] A metadata\u0027s name must be a valid identifier as per [method StringName.is_valid_identifier] method. [b]Note:[/b] Metadata that has a name starting with an underscore ([code]_[/code]) is considered editor-only. Editor-only metadata is not displayed in the Inspector and should not be edited, although it can still be found by this method.",
+      "godotName": "remove_meta",
+      "xmlDocId": "M:Godot.Object.RemoveMeta(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "RemoveUserSignal",
+      "kind": "Method",
+      "signature": "public void RemoveUserSignal(StringName signal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the given user signal [param signal] from the object. See also [method add_user_signal] and [method has_user_signal].",
+      "godotName": "remove_user_signal",
+      "xmlDocId": "M:Godot.Object.RemoveUserSignal(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Assigns [param value] to the given [param property]. If the property does not exist or the given [param value]\u0027s type doesn\u0027t match, nothing happens. [codeblocks] [gdscript] var node = Node2D.new() node.set(\u0022global_scale\u0022, Vector2(8, 2.5)) print(node.global_scale) # Prints (8.0, 2.5) [/gdscript] [csharp] var node = new Node2D(); node.Set(Node2D.PropertyName.GlobalScale, new Vector2(8, 2.5f)); GD.Print(node.GlobalScale); // Prints (8, 2.5) [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.Object.Set(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetBlockSignals",
+      "kind": "Method",
+      "signature": "public void SetBlockSignals(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], the object becomes unable to emit signals. As such, [method emit_signal] and signal connections will not work, until it is set to [code]false[/code].",
+      "godotName": "set_block_signals",
+      "xmlDocId": "M:Godot.Object.SetBlockSignals(bool)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetDeferred",
+      "kind": "Method",
+      "signature": "public void SetDeferred(StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Assigns [param value] to the given [param property], at the end of the current frame. This is equivalent to calling [method set] through [method call_deferred]. [codeblocks] [gdscript] var node = Node2D.new() add_child(node) node.rotation = 1.5 node.set_deferred(\u0022rotation\u0022, 3.0) print(node.rotation) # Prints 1.5 await get_tree().process_frame print(node.rotation) # Prints 3.0 [/gdscript] [csharp] var node = new Node2D(); node.Rotation = 1.5f; node.SetDeferred(Node2D.PropertyName.Rotation, 3f); GD.Print(node.Rotation); // Prints 1.5 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame); GD.Print(node.Rotation); // Prints 3.0 [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "set_deferred",
+      "xmlDocId": "M:Godot.Object.SetDeferred(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetIndexed",
+      "kind": "Method",
+      "signature": "public void SetIndexed(NodePath propertyPath, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property_path",
+          "type": "NodePath"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Assigns a new [param value] to the property identified by the [param property_path]. The path should be a [NodePath] relative to this object, and can use the colon character ([code]:[/code]) to access nested properties. [codeblocks] [gdscript] var node = Node2D.new() node.set_indexed(\u0022position\u0022, Vector2(42, 0)) node.set_indexed(\u0022position:y\u0022, -10) print(node.position) # Prints (42.0, -10.0) [/gdscript] [csharp] var node = new Node2D(); node.SetIndexed(\u0022position\u0022, new Vector2(42, 0)); node.SetIndexed(\u0022position:y\u0022, -10); GD.Print(node.Position); // Prints (42, -10) [/csharp] [/codeblocks] [b]Note:[/b] In C#, [param property_path] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "set_indexed",
+      "xmlDocId": "M:Godot.Object.SetIndexed(NodePath,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetMessageTranslation",
+      "kind": "Method",
+      "signature": "public void SetMessageTranslation(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], allows the object to translate messages with [method tr] and [method tr_n]. Enabled by default. See also [method can_translate_messages].",
+      "godotName": "set_message_translation",
+      "xmlDocId": "M:Godot.Object.SetMessageTranslation(bool)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetMeta",
+      "kind": "Method",
+      "signature": "public void SetMeta(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Adds or changes the entry [param name] inside the object\u0027s metadata. The metadata [param value] can be any [Variant], although some types cannot be serialized correctly. If [param value] is [code]null[/code], the entry is removed. This is the equivalent of using [method remove_meta]. See also [method has_meta] and [method get_meta]. [b]Note:[/b] A metadata\u0027s name must be a valid identifier as per [method StringName.is_valid_identifier] method. [b]Note:[/b] Metadata that has a name starting with an underscore ([code]_[/code]) is considered editor-only. Editor-only metadata is not displayed in the Inspector and should not be edited, although it can still be found by this method.",
+      "godotName": "set_meta",
+      "xmlDocId": "M:Godot.Object.SetMeta(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetScript",
+      "kind": "Method",
+      "signature": "public void SetScript(Variant script)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Attaches [param script] to the object, and instantiates it. As a result, the script\u0027s [method _init] is called. A [Script] is used to extend the object\u0027s functionality. If a script already exists, its instance is detached, and its property values and state are lost. Built-in property values are still kept.",
+      "godotName": "set_script",
+      "xmlDocId": "M:Godot.Object.SetScript(Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "SetTranslationDomain",
+      "kind": "Method",
+      "signature": "public void SetTranslationDomain(StringName domain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the name of the translation domain used by [method tr] and [method tr_n]. See also [TranslationServer].",
+      "godotName": "set_translation_domain",
+      "xmlDocId": "M:Godot.Object.SetTranslationDomain(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public String ToString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representing the object. Defaults to [code]\u0022\u003CClassName#RID\u003E\u0022[/code]. Override [method _to_string] to customize the string representation of the object.",
+      "godotName": "to_string",
+      "xmlDocId": "M:Godot.Object.ToString",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "Tr",
+      "kind": "Method",
+      "signature": "public String Tr(StringName message, StringName context)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Translates a [param message], using the translation catalogs configured in the Project Settings. Further [param context] can be specified to help with the translation. Note that most [Control] nodes automatically translate their strings, so this method is mostly useful for formatted strings or custom drawn text. If [method can_translate_messages] is [code]false[/code], or no translation is available, this method returns the [param message] without changes. See [method set_message_translation]. For detailed examples, see [url=$DOCS_URL/tutorials/i18n/internationalizing_games.html]Internationalizing games[/url]. [b]Note:[/b] This method can\u0027t be used without an [Object] instance, as it requires the [method can_translate_messages] method. To translate strings in a static context, use [method TranslationServer.translate].",
+      "godotName": "tr",
+      "xmlDocId": "M:Godot.Object.Tr(StringName,StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "TrN",
+      "kind": "Method",
+      "signature": "public String TrN(StringName message, StringName pluralMessage, int n, StringName context)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Translates a [param message] or [param plural_message], using the translation catalogs configured in the Project Settings. Further [param context] can be specified to help with the translation. If [method can_translate_messages] is [code]false[/code], or no translation is available, this method returns [param message] or [param plural_message], without changes. See [method set_message_translation]. The [param n] is the number, or amount, of the message\u0027s subject. It is used by the translation system to fetch the correct plural form for the current language. For detailed examples, see [url=$DOCS_URL/tutorials/i18n/localization_using_gettext.html]Localization using gettext[/url]. [b]Note:[/b] Negative and [float] numbers may not properly apply to some countable subjects. It\u0027s recommended to handle these cases with [method tr]. [b]Note:[/b] This method can\u0027t be used without an [Object] instance, as it requires the [method can_translate_messages] method. To translate strings in a static context, use [method TranslationServer.translate_plural].",
+      "godotName": "tr_n",
+      "xmlDocId": "M:Godot.Object.TrN(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PropertyListChanged",
+      "kind": "Signal",
+      "signature": "public event PropertyListChangedHandler PropertyListChanged",
+      "parameters": [],
+      "summary": "Emitted when [method notify_property_list_changed] is called.",
+      "godotName": "property_list_changed",
+      "xmlDocId": "E:Godot.Object.PropertyListChanged",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "ScriptChanged",
+      "kind": "Signal",
+      "signature": "public event ScriptChangedHandler ScriptChanged",
+      "parameters": [],
+      "summary": "Emitted when the object\u0027s script is changed. [b]Note:[/b] When this signal is emitted, the new script is not initialized yet. If you need to access the new script, defer connections to this signal with [constant CONNECT_DEFERRED].",
+      "godotName": "script_changed",
+      "xmlDocId": "E:Godot.Object.ScriptChanged",
+      "sourcePath": "doc/classes/Object.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ConnectFlags",
+      "values": [
+        {
+          "name": "CONNECT_APPEND_SOURCE_OBJECT",
+          "value": "16",
+          "enum": "ConnectFlags",
+          "kind": "EnumValue",
+          "summary": "On signal emission, the source object is automatically appended after the original arguments of the signal, regardless of the connected [Callable]\u0027s unbinds which affect only the original arguments of the signal (see [method Callable.unbind], [method Callable.get_unbound_arguments_count]). [codeblock] extends Object signal test_signal func test(): print(self) # Prints e.g. \u003CObject#35332818393\u003E test_signal.connect(prints.unbind(1), CONNECT_APPEND_SOURCE_OBJECT) test_signal.emit(\u0022emit_arg_1\u0022, \u0022emit_arg_2\u0022) # Prints emit_arg_1 \u003CObject#35332818393\u003E [/codeblock]",
+          "sourcePath": "doc/classes/Object.xml"
+        },
+        {
+          "name": "CONNECT_DEFERRED",
+          "value": "1",
+          "enum": "ConnectFlags",
+          "kind": "EnumValue",
+          "summary": "Deferred connections trigger their [Callable]s on idle time (at the end of the frame), rather than instantly.",
+          "sourcePath": "doc/classes/Object.xml"
+        },
+        {
+          "name": "CONNECT_ONE_SHOT",
+          "value": "4",
+          "enum": "ConnectFlags",
+          "kind": "EnumValue",
+          "summary": "One-shot connections disconnect themselves after emission.",
+          "sourcePath": "doc/classes/Object.xml"
+        },
+        {
+          "name": "CONNECT_PERSIST",
+          "value": "2",
+          "enum": "ConnectFlags",
+          "kind": "EnumValue",
+          "summary": "Persisting connections are stored when the object is serialized (such as when using [method PackedScene.pack]). In the editor, connections created through the Signals dock are always persisting. [b]Note:[/b] Connections to lambda functions (that is, when the function code is embedded in the [method connect] call) cannot be made persistent.",
+          "sourcePath": "doc/classes/Object.xml"
+        },
+        {
+          "name": "CONNECT_REFERENCE_COUNTED",
+          "value": "8",
+          "enum": "ConnectFlags",
+          "kind": "EnumValue",
+          "summary": "Reference-counted connections can be assigned to the same [Callable] multiple times. Each disconnection decreases the internal counter. The signal fully disconnects only when the counter reaches 0.",
+          "sourcePath": "doc/classes/Object.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "NOTIFICATION_POSTINITIALIZE",
+      "value": "0",
+      "kind": "Constant",
+      "summary": "Notification received when the object is initialized, before its script is attached. Used internally.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "NOTIFICATION_PREDELETE",
+      "value": "1",
+      "kind": "Constant",
+      "summary": "Notification received when the object is about to be deleted. Can be used like destructors in object-oriented programming languages. This notification is sent in reversed order.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "NOTIFICATION_EXTENSION_RELOADED",
+      "value": "2",
+      "kind": "Constant",
+      "summary": "Notification received when the object finishes hot reloading. This notification is only sent for extensions classes and derived.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CONNECT_DEFERRED",
+      "value": "1",
+      "enum": "ConnectFlags",
+      "kind": "EnumValue",
+      "summary": "Deferred connections trigger their [Callable]s on idle time (at the end of the frame), rather than instantly.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CONNECT_PERSIST",
+      "value": "2",
+      "enum": "ConnectFlags",
+      "kind": "EnumValue",
+      "summary": "Persisting connections are stored when the object is serialized (such as when using [method PackedScene.pack]). In the editor, connections created through the Signals dock are always persisting. [b]Note:[/b] Connections to lambda functions (that is, when the function code is embedded in the [method connect] call) cannot be made persistent.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CONNECT_ONE_SHOT",
+      "value": "4",
+      "enum": "ConnectFlags",
+      "kind": "EnumValue",
+      "summary": "One-shot connections disconnect themselves after emission.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CONNECT_REFERENCE_COUNTED",
+      "value": "8",
+      "enum": "ConnectFlags",
+      "kind": "EnumValue",
+      "summary": "Reference-counted connections can be assigned to the same [Callable] multiple times. Each disconnection decreases the internal counter. The signal fully disconnects only when the counter reaches 0.",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "CONNECT_APPEND_SOURCE_OBJECT",
+      "value": "16",
+      "enum": "ConnectFlags",
+      "kind": "EnumValue",
+      "summary": "On signal emission, the source object is automatically appended after the original arguments of the signal, regardless of the connected [Callable]\u0027s unbinds which affect only the original arguments of the signal (see [method Callable.unbind], [method Callable.get_unbound_arguments_count]). [codeblock] extends Object signal test_signal func test(): print(self) # Prints e.g. \u003CObject#35332818393\u003E test_signal.connect(prints.unbind(1), CONNECT_APPEND_SOURCE_OBJECT) test_signal.emit(\u0022emit_arg_1\u0022, \u0022emit_arg_2\u0022) # Prints emit_arg_1 \u003CObject#35332818393\u003E [/codeblock]",
+      "sourcePath": "doc/classes/Object.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Get",
+      "kind": "Method",
+      "signature": "public Variant _Get(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the behavior of [method get]. Should return the given [param property]\u0027s value, or [code]null[/code] if the [param property] should be handled normally. Combined with [method _set] and [method _get_property_list], this method allows defining custom properties, which is particularly useful for editor plugins. [b]Note:[/b] This method is not called when getting built-in properties of an object, including properties defined with [annotation @GDScript.@export]. [codeblocks] [gdscript] func _get(property): if property == \u0022fake_property\u0022: print(\u0022Getting my property!\u0022) return 4 return null func _get_property_list(): return [ { \u0022name\u0022: \u0022fake_property\u0022, \u0022type\u0022: TYPE_INT } ] [/gdscript] [csharp] public override Variant _Get(StringName property) { if (property == \u0022FakeProperty\u0022) { GD.Print(\u0022Getting my property!\u0022); return 4; } return default; } public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { return [ new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022FakeProperty\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, }, ]; } [/csharp] [/codeblocks] [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns a non-[code]null[/code] value. [b]Warning:[/b] This method must be [url=$DOCS_URL/tutorials/performance/thread_safe_apis.html]thread-safe[/url] if overridden. Otherwise, the engine may crash when trying to save a resource containing the object.",
+      "godotName": "_get",
+      "xmlDocId": "M:Godot.Object._Get(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_GetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Override this method to provide a custom list of additional properties to handle by the engine. Should return a property list, as an [Array] of dictionaries. The result is added to the array of [method get_property_list], and should be formatted in the same way. Each [Dictionary] must at least contain the [code]name[/code] and [code]type[/code] entries. You can use [method _property_can_revert] and [method _property_get_revert] to customize the default values of the properties added by this method. The example below displays a list of numbers shown as words going from [code]ZERO[/code] to [code]FIVE[/code], with [code]number_count[/code] controlling the size of the list: [codeblocks] [gdscript] @tool extends Node @export var number_count = 3: set(nc): number_count = nc numbers.resize(number_count) notify_property_list_changed() var numbers = PackedInt32Array([0, 0, 0]) func _get_property_list(): var properties: Array[Dictionary] = [] for i in range(number_count): properties.append({ \u0022name\u0022: \u0022number_%d\u0022 % i, \u0022type\u0022: TYPE_INT, \u0022hint\u0022: PROPERTY_HINT_ENUM, \u0022hint_string\u0022: \u0022ZERO,ONE,TWO,THREE,FOUR,FIVE\u0022, }) return properties func _get(property): if property.begins_with(\u0022number_\u0022): var index = property.get_slice(\u0022_\u0022, 1).to_int() return numbers[index] return null func _set(property, value): if property.begins_with(\u0022number_\u0022): var index = property.get_slice(\u0022_\u0022, 1).to_int() numbers[index] = value return true return false [/gdscript] [csharp] [Tool] public partial class MyNode : Node { private int _numberCount; [Export] public int NumberCount { get =\u003E _numberCount; set { _numberCount = value; _numbers.Resize(_numberCount); NotifyPropertyListChanged(); } } private Godot.Collections.Array\u003Cint\u003E _numbers = []; public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E properties = []; for (int i = 0; i \u003C _numberCount; i\u002B\u002B) { properties.Add(new Godot.Collections.Dictionary() { { \u0022name\u0022, $\u0022number_{i}\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, { \u0022hint\u0022, (int)PropertyHint.Enum }, { \u0022hint_string\u0022, \u0022Zero,One,Two,Three,Four,Five\u0022 }, }); } return properties; } public override Variant _Get(StringName property) { string propertyName = property.ToString(); if (propertyName.StartsWith(\u0022number_\u0022)) { int index = int.Parse(propertyName.Substring(\u0022number_\u0022.Length)); return _numbers[index]; } return default; } public override bool _Set(StringName property, Variant value) { string propertyName = property.ToString(); if (propertyName.StartsWith(\u0022number_\u0022)) { int index = int.Parse(propertyName.Substring(\u0022number_\u0022.Length)); _numbers[index] = value.As\u003Cint\u003E(); return true; } return false; } } [/csharp] [/codeblocks] [b]Note:[/b] This method is intended for advanced purposes. For most common use cases, the scripting languages offer easier ways to handle properties. See [annotation @GDScript.@export], [annotation @GDScript.@export_enum], [annotation @GDScript.@export_group], etc. If you want to customize exported properties, use [method _validate_property]. [b]Note:[/b] If the object\u0027s script is not [annotation @GDScript.@tool], this method will not be called in the editor. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. [b]Warning:[/b] This method must be [url=$DOCS_URL/tutorials/performance/thread_safe_apis.html]thread-safe[/url] if overridden. Otherwise, the engine may crash when trying to save a resource containing the object.",
+      "godotName": "_get_property_list",
+      "xmlDocId": "M:Godot.Object._GetPropertyList",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the object\u0027s script is instantiated, oftentimes after the object is initialized in memory (through [code]Object.new()[/code] in GDScript, or [code]new GodotObject[/code] in C#). It can be also defined to take in parameters. This method is similar to a constructor in most programming languages. [b]Note:[/b] If [method _init] is defined with [i]required[/i] parameters, the Object with script may only be created directly. If any other means (such as [method PackedScene.instantiate] or [method Node.duplicate]) are used, the script\u0027s initialization will fail.",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.Object._Init",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterGet",
+      "kind": "Method",
+      "signature": "public Variant _IterGet(Variant iter)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the current iterable value. [param iter] stores the iteration state, but unlike [method _iter_init] and [method _iter_next] the state is supposed to be read-only, so there is no [Array] wrapper. [b]Tip:[/b] In GDScript, you can use a subtype of [Variant] as the return type for [method _iter_get]. The specified type will be used to set the type of the iterator variable in [code]for[/code] loops, enhancing type safety.",
+      "godotName": "_iter_get",
+      "xmlDocId": "M:Godot.Object._IterGet(Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterInit",
+      "kind": "Method",
+      "signature": "public bool _IterInit(Array iter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Array"
+        }
+      ],
+      "summary": "Initializes the iterator. [param iter] stores the iteration state. Since GDScript does not support passing arguments by reference, a single-element array is used as a wrapper. Returns [code]true[/code] so long as the iterator has not reached the end. [codeblock] class MyRange: var _from var _to func _init(from, to): assert(from \u003C= to) _from = from _to = to func _iter_init(iter): iter[0] = _from return iter[0] \u003C _to func _iter_next(iter): iter[0] \u002B= 1 return iter[0] \u003C _to func _iter_get(iter): return iter func _ready(): var my_range = MyRange.new(2, 5) for x in my_range: print(x) # Prints 2, 3, 4. [/codeblock] [b]Note:[/b] Avoid storing iterator state in a member variable, use the [param iter] parameter instead. Otherwise, you won\u0027t be able to reuse the same iterator instance in nested loops. See also [url=$DOCS_URL/tutorials/scripting/gdscript/gdscript_advanced.html#custom-iterators]online docs[/url].",
+      "godotName": "_iter_init",
+      "xmlDocId": "M:Godot.Object._IterInit(Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_IterNext",
+      "kind": "Method",
+      "signature": "public bool _IterNext(Array iter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "iter",
+          "type": "Array"
+        }
+      ],
+      "summary": "Moves the iterator to the next iteration. [param iter] stores the iteration state. Since GDScript does not support passing arguments by reference, a single-element array is used as a wrapper. Returns [code]true[/code] so long as the iterator has not reached the end.",
+      "godotName": "_iter_next",
+      "xmlDocId": "M:Godot.Object._IterNext(Array)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Notification",
+      "kind": "Method",
+      "signature": "public void _Notification(int what)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the object receives a notification, which can be identified in [param what] by comparing it with a constant. See also [method notification]. [codeblocks] [gdscript] func _notification(what): if what == NOTIFICATION_PREDELETE: print(\u0022Goodbye!\u0022) [/gdscript] [csharp] public override void _Notification(int what) { if (what == NotificationPredelete) { GD.Print(\u0022Goodbye!\u0022); } } [/csharp] [/codeblocks] [b]Note:[/b] The base [Object] defines a few notifications ([constant NOTIFICATION_POSTINITIALIZE] and [constant NOTIFICATION_PREDELETE]). Inheriting classes such as [Node] define a lot more notifications, which are also received by this method. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. Call order depends on the [code]reversed[/code] argument of [method notification] and varies between different notifications. Most notifications are sent in the forward order (i.e. Object class first, most derived class last).",
+      "godotName": "_notification",
+      "xmlDocId": "M:Godot.Object._Notification(int)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_PropertyCanRevert",
+      "kind": "Method",
+      "signature": "public bool _PropertyCanRevert(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the given [param property]\u0027s revert behavior. Should return [code]true[/code] if the [param property] has a custom default value and is revertible in the Inspector dock. Use [method _property_get_revert] to specify the [param property]\u0027s default value. [b]Note:[/b] This method must return consistently, regardless of the current value of the [param property]. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns [code]true[/code].",
+      "godotName": "_property_can_revert",
+      "xmlDocId": "M:Godot.Object._PropertyCanRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_PropertyGetRevert",
+      "kind": "Method",
+      "signature": "public Variant _PropertyGetRevert(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Override this method to customize the given [param property]\u0027s revert behavior. Should return the default value for the [param property]. If the default value differs from the [param property]\u0027s current value, a revert icon is displayed in the Inspector dock. [b]Note:[/b] [method _property_can_revert] must also be overridden for this method to be called. [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns a non-[code]null[/code] value.",
+      "godotName": "_property_get_revert",
+      "xmlDocId": "M:Godot.Object._PropertyGetRevert(StringName)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_Set",
+      "kind": "Method",
+      "signature": "public bool _Set(StringName property, Variant value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Override this method to customize the behavior of [method set]. Should set the [param property] to [param value] and return [code]true[/code], or [code]false[/code] if the [param property] should be handled normally. The [i]exact[/i] way to set the [param property] is up to this method\u0027s implementation. Combined with [method _get] and [method _get_property_list], this method allows defining custom properties, which is particularly useful for editor plugins. [b]Note:[/b] This method is not called when setting built-in properties of an object, including properties defined with [annotation @GDScript.@export]. [codeblocks] [gdscript] var internal_data = {} func _set(property, value): if property == \u0022fake_property\u0022: # Storing the value in the fake property. internal_data[\u0022fake_property\u0022] = value return true return false func _get_property_list(): return [ { \u0022name\u0022: \u0022fake_property\u0022, \u0022type\u0022: TYPE_INT } ] [/gdscript] [csharp] private Godot.Collections.Dictionary _internalData = new Godot.Collections.Dictionary(); public override bool _Set(StringName property, Variant value) { if (property == \u0022FakeProperty\u0022) { // Storing the value in the fake property. _internalData[\u0022FakeProperty\u0022] = value; return true; } return false; } public override Godot.Collections.Array\u003CGodot.Collections.Dictionary\u003E _GetPropertyList() { return [ new Godot.Collections.Dictionary() { { \u0022name\u0022, \u0022FakeProperty\u0022 }, { \u0022type\u0022, (int)Variant.Type.Int }, }, ]; } [/csharp] [/codeblocks] [b]Note:[/b] Unlike other virtual methods, this method is called automatically for every script that overrides it. This means that the base implementation should not be called via [code]super[/code] in GDScript or its equivalents in other languages. The bottom-most sub-class will be called first, with subsequent calls ascending the class hierarchy. The call chain will stop on the first class that returns [code]true[/code].",
+      "godotName": "_set",
+      "xmlDocId": "M:Godot.Object._Set(StringName,Variant)",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_ToString",
+      "kind": "Method",
+      "signature": "public String _ToString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to customize the return value of [method to_string], and therefore the object\u0027s representation as a [String]. [codeblock] func _to_string(): return \u0022Welcome to Godot 4!\u0022 func _init(): print(self) # Prints \u0022Welcome to Godot 4!\u0022 var a = str(self) # a is \u0022Welcome to Godot 4!\u0022 [/codeblock]",
+      "godotName": "_to_string",
+      "xmlDocId": "M:Godot.Object._ToString",
+      "sourcePath": "doc/classes/Object.xml"
+    },
+    {
+      "name": "_ValidateProperty",
+      "kind": "Method",
+      "signature": "public void _ValidateProperty(Dictionary property)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Override this method to customize existing properties. Every property info goes through this method, except properties added with [method _get_property_list]. The dictionary contents is the same as in [method _get_property_list]. [codeblocks] [gdscript] @tool extends Node @export var is_number_editable: bool: set(value): is_number_editable = value notify_property_list_changed() @export var number: int func _validate_property(property: Dictionary): if property.name == \u0022number\u0022 and not is_number_editable: property.usage |= PROPERTY_USAGE_READ_ONLY [/gdscript] [csharp] [Tool] public partial class MyNode : Node { private bool _isNumberEditable; [Export] public bool IsNumberEditable { get =\u003E _isNumberEditable; set { _isNumberEditable = value; NotifyPropertyListChanged(); } } [Export] public int Number { get; set; } public override void _ValidateProperty(Godot.Collections.Dictionary property) { if (property[\u0022name\u0022].AsStringName() == PropertyName.Number \u0026\u0026 !IsNumberEditable) { var usage = property[\u0022usage\u0022].As\u003CPropertyUsageFlags\u003E() | PropertyUsageFlags.ReadOnly; property[\u0022usage\u0022] = (int)usage; } } } [/csharp] [/codeblocks]",
+      "godotName": "_validate_property",
+      "xmlDocId": "M:Godot.Object._ValidateProperty(Dictionary)",
+      "sourcePath": "doc/classes/Object.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Object.xml",
+      "sha256": "8368b70064cc64893606f756356b5a6e01b935031ac4c530dacd09ec19fafb9f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

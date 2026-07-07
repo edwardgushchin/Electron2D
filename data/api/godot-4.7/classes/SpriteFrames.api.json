@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpriteFrames",
+    "namespace": "Godot",
+    "fullName": "Godot.SpriteFrames",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SpriteFrames",
+    "documentationPath": "doc/classes/SpriteFrames.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddAnimation",
+      "kind": "Method",
+      "signature": "public void AddAnimation(StringName anim)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Adds a new [param anim] animation to the library.",
+      "godotName": "add_animation",
+      "xmlDocId": "M:Godot.SpriteFrames.AddAnimation(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "AddFrame",
+      "kind": "Method",
+      "signature": "public void AddFrame(StringName anim, Texture2D texture, float duration, int atPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "duration",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "at_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a frame to the [param anim] animation. If [param at_position] is [code]-1[/code], the frame will be added to the end of the animation. [param duration] specifies the relative duration, see [method get_frame_duration] for details.",
+      "godotName": "add_frame",
+      "xmlDocId": "M:Godot.SpriteFrames.AddFrame(StringName,Texture2D,float,int)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear(StringName anim)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes all frames from the [param anim] animation.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.SpriteFrames.Clear(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "ClearAll",
+      "kind": "Method",
+      "signature": "public void ClearAll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all animations. An empty [code]default[/code] animation will be created.",
+      "godotName": "clear_all",
+      "xmlDocId": "M:Godot.SpriteFrames.ClearAll",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "DuplicateAnimation",
+      "kind": "Method",
+      "signature": "public void DuplicateAnimation(StringName animFrom, StringName animTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim_from",
+          "type": "StringName"
+        },
+        {
+          "name": "anim_to",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Duplicates the animation [param anim_from] to a new animation named [param anim_to]. Fails if [param anim_to] already exists, or if [param anim_from] does not exist.",
+      "godotName": "duplicate_animation",
+      "xmlDocId": "M:Godot.SpriteFrames.DuplicateAnimation(StringName,StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetAnimationLoop",
+      "kind": "Method",
+      "signature": "public bool GetAnimationLoop(StringName anim)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [code]get_animation_loop_mode(anim) == LOOP_LINEAR[/code]. Otherwise, returns [code]false[/code].",
+      "godotName": "get_animation_loop",
+      "xmlDocId": "M:Godot.SpriteFrames.GetAnimationLoop(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetAnimationLoopMode",
+      "kind": "Method",
+      "signature": "public int GetAnimationLoopMode(StringName anim)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the loop mode for the [param anim] animation.",
+      "godotName": "get_animation_loop_mode",
+      "xmlDocId": "M:Godot.SpriteFrames.GetAnimationLoopMode(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetAnimationNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAnimationNames()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array containing the names associated to each animation. Values are placed in alphabetical order.",
+      "godotName": "get_animation_names",
+      "xmlDocId": "M:Godot.SpriteFrames.GetAnimationNames",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetAnimationSpeed",
+      "kind": "Method",
+      "signature": "public float GetAnimationSpeed(StringName anim)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the speed in frames per second for the [param anim] animation.",
+      "godotName": "get_animation_speed",
+      "xmlDocId": "M:Godot.SpriteFrames.GetAnimationSpeed(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetFrameCount",
+      "kind": "Method",
+      "signature": "public int GetFrameCount(StringName anim)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the number of frames for the [param anim] animation.",
+      "godotName": "get_frame_count",
+      "xmlDocId": "M:Godot.SpriteFrames.GetFrameCount(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetFrameDuration",
+      "kind": "Method",
+      "signature": "public float GetFrameDuration(StringName anim, int idx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a relative duration of the frame [param idx] in the [param anim] animation (defaults to [code]1.0[/code]). For example, a frame with a duration of [code]2.0[/code] is displayed twice as long as a frame with a duration of [code]1.0[/code]. You can calculate the absolute duration (in seconds) of a frame using the following formula: [codeblock] absolute_duration = relative_duration / (animation_fps * abs(playing_speed)) [/codeblock] In this example, [code]playing_speed[/code] refers to either [method AnimatedSprite2D.get_playing_speed] or [method AnimatedSprite3D.get_playing_speed].",
+      "godotName": "get_frame_duration",
+      "xmlDocId": "M:Godot.SpriteFrames.GetFrameDuration(StringName,int)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "GetFrameTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetFrameTexture(StringName anim, int idx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the texture of the frame [param idx] in the [param anim] animation.",
+      "godotName": "get_frame_texture",
+      "xmlDocId": "M:Godot.SpriteFrames.GetFrameTexture(StringName,int)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public bool HasAnimation(StringName anim)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param anim] animation exists.",
+      "godotName": "has_animation",
+      "xmlDocId": "M:Godot.SpriteFrames.HasAnimation(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "RemoveAnimation",
+      "kind": "Method",
+      "signature": "public void RemoveAnimation(StringName anim)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [param anim] animation.",
+      "godotName": "remove_animation",
+      "xmlDocId": "M:Godot.SpriteFrames.RemoveAnimation(StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "RemoveFrame",
+      "kind": "Method",
+      "signature": "public void RemoveFrame(StringName anim, int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the [param anim] animation\u0027s frame [param idx].",
+      "godotName": "remove_frame",
+      "xmlDocId": "M:Godot.SpriteFrames.RemoveFrame(StringName,int)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "RenameAnimation",
+      "kind": "Method",
+      "signature": "public void RenameAnimation(StringName anim, StringName newname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "newname",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Changes the [param anim] animation\u0027s name to [param newname].",
+      "godotName": "rename_animation",
+      "xmlDocId": "M:Godot.SpriteFrames.RenameAnimation(StringName,StringName)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "SetAnimationLoop",
+      "kind": "Method",
+      "signature": "public void SetAnimationLoop(StringName anim, bool loop)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "loop",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param loop] is [code]false[/code] equivalent to [code]set_animation_loop_mode(LOOP_NONE)[/code]. If [param loop] is [code]true[/code] equivalent to [code]set_animation_loop_mode(LOOP_LINEAR)[/code].",
+      "godotName": "set_animation_loop",
+      "xmlDocId": "M:Godot.SpriteFrames.SetAnimationLoop(StringName,bool)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "SetAnimationLoopMode",
+      "kind": "Method",
+      "signature": "public void SetAnimationLoopMode(StringName anim, int loopMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "loop_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the [param loop_mode] for the [param anim] animation.",
+      "godotName": "set_animation_loop_mode",
+      "xmlDocId": "M:Godot.SpriteFrames.SetAnimationLoopMode(StringName,int)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "SetAnimationSpeed",
+      "kind": "Method",
+      "signature": "public void SetAnimationSpeed(StringName anim, float fps)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "fps",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the speed for the [param anim] animation in frames per second.",
+      "godotName": "set_animation_speed",
+      "xmlDocId": "M:Godot.SpriteFrames.SetAnimationSpeed(StringName,float)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "SetFrame",
+      "kind": "Method",
+      "signature": "public void SetFrame(StringName anim, int idx, Texture2D texture, float duration)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anim",
+          "type": "StringName"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "duration",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Sets the [param texture] and the [param duration] of the frame [param idx] in the [param anim] animation. [param duration] specifies the relative duration, see [method get_frame_duration] for details.",
+      "godotName": "set_frame",
+      "xmlDocId": "M:Godot.SpriteFrames.SetFrame(StringName,int,Texture2D,float)",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "LoopMode",
+      "values": [
+        {
+          "name": "LOOP_LINEAR",
+          "value": "1",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "The animation restarts from the beginning when it reaches the end, or from the end if played in reverse, repeating continuously.",
+          "sourcePath": "doc/classes/SpriteFrames.xml"
+        },
+        {
+          "name": "LOOP_NONE",
+          "value": "0",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "The animation plays once and stops when it reaches the end, or the start if played in reverse.",
+          "sourcePath": "doc/classes/SpriteFrames.xml"
+        },
+        {
+          "name": "LOOP_PINGPONG",
+          "value": "2",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "The animation alternates direction each time it reaches the end or start, playing forward and then in reverse repeatedly. [b]Note:[/b] Both [AnimatedSprite2D] and [AnimatedSprite3D] play the first/last frame for its duration only once at each end of the animation loop (instead of twice, once per forward/backward animation direction).",
+          "sourcePath": "doc/classes/SpriteFrames.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "LOOP_NONE",
+      "value": "0",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "The animation plays once and stops when it reaches the end, or the start if played in reverse.",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "LOOP_LINEAR",
+      "value": "1",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "The animation restarts from the beginning when it reaches the end, or from the end if played in reverse, repeating continuously.",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    },
+    {
+      "name": "LOOP_PINGPONG",
+      "value": "2",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "The animation alternates direction each time it reaches the end or start, playing forward and then in reverse repeatedly. [b]Note:[/b] Both [AnimatedSprite2D] and [AnimatedSprite3D] play the first/last frame for its duration only once at each end of the animation loop (instead of twice, once per forward/backward animation direction).",
+      "sourcePath": "doc/classes/SpriteFrames.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpriteFrames.xml",
+      "sha256": "eebbb41ee3f407ab7b9f97c20b9feb7e498ccd8dcfc71b3d1ba6872f39563daf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

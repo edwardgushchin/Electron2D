@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "CameraTexture",
+    "documentationPath": "doc/classes/CameraTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cameratexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CameraFeedId",
+      "kind": "Property",
+      "signature": "public int CameraFeedId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of the [CameraFeed] for which we want to display the image.",
+      "defaultValue": "0",
+      "godotName": "camera_feed_id",
+      "xmlDocId": "P:Godot.CameraTexture.CameraFeedId",
+      "sourcePath": "doc/classes/CameraTexture.xml"
+    },
+    {
+      "name": "CameraIsActive",
+      "kind": "Property",
+      "signature": "public bool CameraIsActive { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Convenience property that gives access to the active property of the [CameraFeed].",
+      "defaultValue": "false",
+      "godotName": "camera_is_active",
+      "xmlDocId": "P:Godot.CameraTexture.CameraIsActive",
+      "sourcePath": "doc/classes/CameraTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.CameraTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/CameraTexture.xml"
+    },
+    {
+      "name": "WhichFeed",
+      "kind": "Property",
+      "signature": "public int WhichFeed { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Which image within the [CameraFeed] we want access to, important if the camera image is split in a Y and CbCr component.",
+      "defaultValue": "0",
+      "godotName": "which_feed",
+      "xmlDocId": "P:Godot.CameraTexture.WhichFeed",
+      "sourcePath": "doc/classes/CameraTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraTexture.xml",
+      "sha256": "26050a821ad3c1a18379070426ef9e7461958ddab09f8012c1a7f9b51049e9dd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

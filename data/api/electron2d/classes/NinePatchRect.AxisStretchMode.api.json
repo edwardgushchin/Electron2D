@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NinePatchRect.AxisStretchMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.NinePatchRect.AxisStretchMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "NinePatchRect.AxisStretchMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Stretch",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.NinePatchRect.AxisStretchMode Stretch",
+      "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+      "parameters": [],
+      "summary": "Stretches the center segment to fill the destination span.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.NinePatchRect.AxisStretchModeEnum.Stretch",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tile",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.NinePatchRect.AxisStretchMode Tile",
+      "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+      "parameters": [],
+      "summary": "Tiles the center segment using its source size.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.NinePatchRect.AxisStretchModeEnum.Tile",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileFit",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.NinePatchRect.AxisStretchMode TileFit",
+      "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+      "parameters": [],
+      "summary": "Tiles the center segment with adjusted tile size so it fits exactly.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.NinePatchRect.AxisStretchModeEnum.TileFit",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Stretch",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Stretches the center segment to fill the destination span.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tile",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Tiles the center segment using its source size.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileFit",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Tiles the center segment with adjusted tile size so it fits exactly.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

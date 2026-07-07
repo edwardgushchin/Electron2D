@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentData",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentData",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentData",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentdata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetComponentType",
+      "kind": "Method",
+      "signature": "public int _GetComponentType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Return the component type for the component we store data for.",
+      "godotName": "_get_component_type",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._GetComponentType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "_GetStructureData",
+      "kind": "Method",
+      "signature": "public int _GetStructureData(int next)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "int"
+        }
+      ],
+      "summary": "Return a pointer to the structure data that will be submitted along with the snapshot query. This pointer must remain valid as long as this object is instantiated.",
+      "godotName": "_get_structure_data",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._GetStructureData(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "_SetCapacity",
+      "kind": "Method",
+      "signature": "public void _SetCapacity(int capacity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "capacity",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the expected capacity as provided by the spatial entities query system. Buffers should be initialized with the correct storage.",
+      "godotName": "_set_capacity",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._SetCapacity(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "GetComponentType",
+      "kind": "Method",
+      "signature": "public int GetComponentType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets this [OpenXRSpatialComponentData]\u0027s [code]XrSpatialComponentTypeEXT[/code].",
+      "godotName": "get_component_type",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData.GetComponentType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "SetCapacity",
+      "kind": "Method",
+      "signature": "public void SetCapacity(int capacity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "capacity",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the expected capacity as provided by the spatial entities query system. Buffers should be initialized with the correct storage.",
+      "godotName": "set_capacity",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData.SetCapacity(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetComponentType",
+      "kind": "Method",
+      "signature": "public int _GetComponentType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Return the component type for the component we store data for.",
+      "godotName": "_get_component_type",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._GetComponentType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "_GetStructureData",
+      "kind": "Method",
+      "signature": "public int _GetStructureData(int next)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "int"
+        }
+      ],
+      "summary": "Return a pointer to the structure data that will be submitted along with the snapshot query. This pointer must remain valid as long as this object is instantiated.",
+      "godotName": "_get_structure_data",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._GetStructureData(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    },
+    {
+      "name": "_SetCapacity",
+      "kind": "Method",
+      "signature": "public void _SetCapacity(int capacity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "capacity",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the expected capacity as provided by the spatial entities query system. Buffers should be initialized with the correct storage.",
+      "godotName": "_set_capacity",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentData._SetCapacity(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentData.xml",
+      "sha256": "193f74a8cf1596cd0ab4c0c82c46c6be79b94f89bfb7efb8b1ae870092c1775f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

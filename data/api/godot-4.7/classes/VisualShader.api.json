@@ -1,0 +1,922 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShader",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShader",
+    "kind": "class",
+    "baseType": "Shader",
+    "interfaces": [],
+    "godotReference": "VisualShader",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddNode",
+      "kind": "Method",
+      "signature": "public void AddNode(int type, VisualShaderNode node, Vector2 position, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "node",
+          "type": "VisualShaderNode"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds the specified [param node] to the shader.",
+      "godotName": "add_node",
+      "xmlDocId": "M:Godot.VisualShader.AddNode(int,VisualShaderNode,Vector2,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "AddVarying",
+      "kind": "Method",
+      "signature": "public void AddVarying(String name, int mode, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a new varying value node to the shader.",
+      "godotName": "add_varying",
+      "xmlDocId": "M:Godot.VisualShader.AddVarying(String,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "AttachNodeToFrame",
+      "kind": "Method",
+      "signature": "public void AttachNodeToFrame(int type, int id, int frame)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "frame",
+          "type": "int"
+        }
+      ],
+      "summary": "Attaches the given node to the given frame.",
+      "godotName": "attach_node_to_frame",
+      "xmlDocId": "M:Godot.VisualShader.AttachNodeToFrame(int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "CanConnectNodes",
+      "kind": "Method",
+      "signature": "public bool CanConnectNodes(int type, int fromNode, int fromPort, int toNode, int toPort)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "from_node",
+          "type": "int"
+        },
+        {
+          "name": "from_port",
+          "type": "int"
+        },
+        {
+          "name": "to_node",
+          "type": "int"
+        },
+        {
+          "name": "to_port",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified nodes and ports can be connected together.",
+      "godotName": "can_connect_nodes",
+      "xmlDocId": "M:Godot.VisualShader.CanConnectNodes(int,int,int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "ConnectNodes",
+      "kind": "Method",
+      "signature": "public int ConnectNodes(int type, int fromNode, int fromPort, int toNode, int toPort)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "from_node",
+          "type": "int"
+        },
+        {
+          "name": "from_port",
+          "type": "int"
+        },
+        {
+          "name": "to_node",
+          "type": "int"
+        },
+        {
+          "name": "to_port",
+          "type": "int"
+        }
+      ],
+      "summary": "Connects the specified nodes and ports.",
+      "godotName": "connect_nodes",
+      "xmlDocId": "M:Godot.VisualShader.ConnectNodes(int,int,int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "ConnectNodesForced",
+      "kind": "Method",
+      "signature": "public void ConnectNodesForced(int type, int fromNode, int fromPort, int toNode, int toPort)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "from_node",
+          "type": "int"
+        },
+        {
+          "name": "from_port",
+          "type": "int"
+        },
+        {
+          "name": "to_node",
+          "type": "int"
+        },
+        {
+          "name": "to_port",
+          "type": "int"
+        }
+      ],
+      "summary": "Connects the specified nodes and ports, even if they can\u0027t be connected. Such connection is invalid and will not function properly.",
+      "godotName": "connect_nodes_forced",
+      "xmlDocId": "M:Godot.VisualShader.ConnectNodesForced(int,int,int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "DetachNodeFromFrame",
+      "kind": "Method",
+      "signature": "public void DetachNodeFromFrame(int type, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Detaches the given node from the frame it is attached to.",
+      "godotName": "detach_node_from_frame",
+      "xmlDocId": "M:Godot.VisualShader.DetachNodeFromFrame(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "DisconnectNodes",
+      "kind": "Method",
+      "signature": "public void DisconnectNodes(int type, int fromNode, int fromPort, int toNode, int toPort)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "from_node",
+          "type": "int"
+        },
+        {
+          "name": "from_port",
+          "type": "int"
+        },
+        {
+          "name": "to_node",
+          "type": "int"
+        },
+        {
+          "name": "to_port",
+          "type": "int"
+        }
+      ],
+      "summary": "Connects the specified nodes and ports.",
+      "godotName": "disconnect_nodes",
+      "xmlDocId": "M:Godot.VisualShader.DisconnectNodes(int,int,int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GetNode",
+      "kind": "Method",
+      "signature": "public VisualShaderNode GetNode(int type, int id)",
+      "returnType": "VisualShaderNode",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the shader node instance with specified [param type] and [param id].",
+      "godotName": "get_node",
+      "xmlDocId": "M:Godot.VisualShader.GetNode(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GetNodeConnections",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetNodeConnections(int type)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the list of connected nodes with the specified type.",
+      "godotName": "get_node_connections",
+      "xmlDocId": "M:Godot.VisualShader.GetNodeConnections(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GetNodeList",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetNodeList(int type)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the list of all nodes in the shader with the specified type.",
+      "godotName": "get_node_list",
+      "xmlDocId": "M:Godot.VisualShader.GetNodeList(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GetNodePosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetNodePosition(int type, int id)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the specified node within the shader graph.",
+      "godotName": "get_node_position",
+      "xmlDocId": "M:Godot.VisualShader.GetNodePosition(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GetValidNodeId",
+      "kind": "Method",
+      "signature": "public int GetValidNodeId(int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns next valid node ID that can be added to the shader graph.",
+      "godotName": "get_valid_node_id",
+      "xmlDocId": "M:Godot.VisualShader.GetValidNodeId(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "HasVarying",
+      "kind": "Method",
+      "signature": "public bool HasVarying(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the shader has a varying with the given [param name].",
+      "godotName": "has_varying",
+      "xmlDocId": "M:Godot.VisualShader.HasVarying(String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "IsNodeConnection",
+      "kind": "Method",
+      "signature": "public bool IsNodeConnection(int type, int fromNode, int fromPort, int toNode, int toPort)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "from_node",
+          "type": "int"
+        },
+        {
+          "name": "from_port",
+          "type": "int"
+        },
+        {
+          "name": "to_node",
+          "type": "int"
+        },
+        {
+          "name": "to_port",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified node and port connection exist.",
+      "godotName": "is_node_connection",
+      "xmlDocId": "M:Godot.VisualShader.IsNodeConnection(int,int,int,int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "RemoveNode",
+      "kind": "Method",
+      "signature": "public void RemoveNode(int type, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the specified node from the shader.",
+      "godotName": "remove_node",
+      "xmlDocId": "M:Godot.VisualShader.RemoveNode(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "RemoveVarying",
+      "kind": "Method",
+      "signature": "public void RemoveVarying(String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes a varying value node with the given [param name]. Prints an error if a node with this name is not found.",
+      "godotName": "remove_varying",
+      "xmlDocId": "M:Godot.VisualShader.RemoveVarying(String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "ReplaceNode",
+      "kind": "Method",
+      "signature": "public void ReplaceNode(int type, int id, StringName newClass)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "new_class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Replaces the specified node with a node of new class type.",
+      "godotName": "replace_node",
+      "xmlDocId": "M:Godot.VisualShader.ReplaceNode(int,int,StringName)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "SetMode",
+      "kind": "Method",
+      "signature": "public void SetMode(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the mode of this shader.",
+      "godotName": "set_mode",
+      "xmlDocId": "M:Godot.VisualShader.SetMode(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "SetNodePosition",
+      "kind": "Method",
+      "signature": "public void SetNodePosition(int type, int id, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the position of the specified node.",
+      "godotName": "set_node_position",
+      "xmlDocId": "M:Godot.VisualShader.SetNodePosition(int,int,Vector2)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "GraphOffset",
+      "kind": "Property",
+      "signature": "public Vector2 GraphOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Deprecated.",
+      "godotName": "graph_offset",
+      "xmlDocId": "P:Godot.VisualShader.GraphOffset",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Type",
+      "values": [
+        {
+          "name": "TYPE_COLLIDE",
+          "value": "5",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A function for the \u0022collide\u0022 stage (particle collision handler) of particle shader.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_FOG",
+          "value": "9",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A compute shader that runs for each froxel of the volumetric fog map.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_FRAGMENT",
+          "value": "1",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A fragment shader, operating on fragments (pixels).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_LIGHT",
+          "value": "2",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A shader for light calculations.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_MAX",
+          "value": "11",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Type] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_PROCESS",
+          "value": "4",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A function for the \u0022process\u0022 stage of particle shader.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_PROCESS_CUSTOM",
+          "value": "7",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A function for the \u0022process\u0022 stage of particle shader, with customized output.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_SKY",
+          "value": "8",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A shader for 3D environment\u0027s sky.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_START",
+          "value": "3",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A function for the \u0022start\u0022 stage of particle shader.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_START_CUSTOM",
+          "value": "6",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A function for the \u0022start\u0022 stage of particle shader, with customized output.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_TEXTURE_BLIT",
+          "value": "10",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A shader used to process blit calls to a DrawableTexture.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "TYPE_VERTEX",
+          "value": "0",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "A vertex shader, operating on vertices.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        }
+      ]
+    },
+    {
+      "name": "VaryingMode",
+      "values": [
+        {
+          "name": "VARYING_MODE_FRAG_TO_LIGHT",
+          "value": "1",
+          "enum": "VaryingMode",
+          "kind": "EnumValue",
+          "summary": "Varying is passed from [code]Fragment[/code] function to [code]Light[/code] function.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_MODE_MAX",
+          "value": "2",
+          "enum": "VaryingMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum VaryingMode] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_MODE_VERTEX_TO_FRAG_LIGHT",
+          "value": "0",
+          "enum": "VaryingMode",
+          "kind": "EnumValue",
+          "summary": "Varying is passed from [code]Vertex[/code] function to [code]Fragment[/code] and [code]Light[/code] functions.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        }
+      ]
+    },
+    {
+      "name": "VaryingType",
+      "values": [
+        {
+          "name": "VARYING_TYPE_BOOLEAN",
+          "value": "6",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [bool].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_FLOAT",
+          "value": "0",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [float].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_INT",
+          "value": "1",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [int].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_MAX",
+          "value": "8",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum VaryingType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_TRANSFORM",
+          "value": "7",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [Transform3D].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_UINT",
+          "value": "2",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type unsigned [int].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_VECTOR_2D",
+          "value": "3",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [Vector2].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_VECTOR_3D",
+          "value": "4",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [Vector3].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        },
+        {
+          "name": "VARYING_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "VaryingType",
+          "kind": "EnumValue",
+          "summary": "Varying is of type [Vector4].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TYPE_VERTEX",
+      "value": "0",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A vertex shader, operating on vertices.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_FRAGMENT",
+      "value": "1",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A fragment shader, operating on fragments (pixels).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_LIGHT",
+      "value": "2",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A shader for light calculations.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_START",
+      "value": "3",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A function for the \u0022start\u0022 stage of particle shader.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_PROCESS",
+      "value": "4",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A function for the \u0022process\u0022 stage of particle shader.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_COLLIDE",
+      "value": "5",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A function for the \u0022collide\u0022 stage (particle collision handler) of particle shader.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_START_CUSTOM",
+      "value": "6",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A function for the \u0022start\u0022 stage of particle shader, with customized output.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_PROCESS_CUSTOM",
+      "value": "7",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A function for the \u0022process\u0022 stage of particle shader, with customized output.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_SKY",
+      "value": "8",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A shader for 3D environment\u0027s sky.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_FOG",
+      "value": "9",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A compute shader that runs for each froxel of the volumetric fog map.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_TEXTURE_BLIT",
+      "value": "10",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "A shader used to process blit calls to a DrawableTexture.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "TYPE_MAX",
+      "value": "11",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Type] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_MODE_VERTEX_TO_FRAG_LIGHT",
+      "value": "0",
+      "enum": "VaryingMode",
+      "kind": "EnumValue",
+      "summary": "Varying is passed from [code]Vertex[/code] function to [code]Fragment[/code] and [code]Light[/code] functions.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_MODE_FRAG_TO_LIGHT",
+      "value": "1",
+      "enum": "VaryingMode",
+      "kind": "EnumValue",
+      "summary": "Varying is passed from [code]Fragment[/code] function to [code]Light[/code] function.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_MODE_MAX",
+      "value": "2",
+      "enum": "VaryingMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum VaryingMode] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_FLOAT",
+      "value": "0",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [float].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_INT",
+      "value": "1",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [int].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_UINT",
+      "value": "2",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type unsigned [int].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_VECTOR_2D",
+      "value": "3",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [Vector2].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_VECTOR_3D",
+      "value": "4",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [Vector3].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [Vector4].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_BOOLEAN",
+      "value": "6",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [bool].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_TRANSFORM",
+      "value": "7",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Varying is of type [Transform3D].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "VARYING_TYPE_MAX",
+      "value": "8",
+      "enum": "VaryingType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum VaryingType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "NODE_ID_INVALID",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Indicates an invalid [VisualShader] node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    },
+    {
+      "name": "NODE_ID_OUTPUT",
+      "value": "0",
+      "kind": "Constant",
+      "summary": "Indicates an output node of [VisualShader].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShader.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShader.xml",
+      "sha256": "e4224690113515db319513bbaa789cbad1a9ca96edeb3eee7eea2d80ea181c85"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

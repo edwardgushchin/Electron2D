@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "@GDScript",
+    "namespace": "Godot",
+    "fullName": "Godot.@GDScript",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "@GDScript",
+    "documentationPath": "modules/gdscript/doc_classes/@GDScript.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_@gdscript.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Color8",
+      "kind": "Method",
+      "signature": "public Color Color8(int r8, int g8, int b8, int a8)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "r8",
+          "type": "int"
+        },
+        {
+          "name": "g8",
+          "type": "int"
+        },
+        {
+          "name": "b8",
+          "type": "int"
+        },
+        {
+          "name": "a8",
+          "type": "int",
+          "defaultValue": "255"
+        }
+      ],
+      "summary": "Returns a [Color] constructed from red ([param r8]), green ([param g8]), blue ([param b8]), and optionally alpha ([param a8]) integer channels, each divided by [code]255.0[/code] for their final value. Using [method Color8] instead of the standard [Color] constructor is useful when you need to match exact color values in an [Image]. [codeblock] var red = Color8(255, 0, 0) # Same as Color(1, 0, 0). var dark_blue = Color8(0, 0, 51) # Same as Color(0, 0, 0.2). var my_color = Color8(306, 255, 0, 102) # Same as Color(1.2, 1, 0, 0.4). [/codeblock] [b]Note:[/b] Due to the lower precision of [method Color8] compared to the standard [Color] constructor, a color created with [method Color8] will generally not be equal to the same color created with the standard [Color] constructor. Use [method Color.is_equal_approx] for comparisons to avoid issues with floating-point precision error.",
+      "godotName": "Color8",
+      "xmlDocId": "M:Godot.@GDScript.Color8(int,int,int,int)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Assert",
+      "kind": "Method",
+      "signature": "public void Assert(bool condition, String message)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "condition",
+          "type": "bool"
+        },
+        {
+          "name": "message",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Asserts that the [param condition] is [code]true[/code]. If the [param condition] is [code]false[/code], an error is generated and the current method returns a default value. When running from the editor, failed asserts also cause a debugger break. This can be used as a stronger form of [method @GlobalScope.push_error] for reporting errors to project developers or add-on users. An optional [param message] can be shown in addition to the generic \u0022Assertion failed\u0022 message. You can use this to provide additional details about why the assertion failed. [b]Warning:[/b] For performance reasons, the code inside [method assert] is only executed in debug builds or when running the project from the editor. Don\u0027t include code that has side effects in an [method assert] call. Otherwise, the project will behave differently when exported in release mode. [codeblock] # Imagine we always want speed to be between 0 and 20. var speed = -10 assert(speed \u003C 20) # True, the program will continue. assert(speed \u003E= 0) # False, the program will stop. assert(speed \u003E= 0 and speed \u003C 20) # You can also combine the two conditional statements in one check. assert(speed \u003C 20, \u0022the speed limit is 20\u0022) # Show a message. [/codeblock] [b]Note:[/b] [method assert] is a keyword, not a function. So you cannot access it as a [Callable] or use it inside expressions.",
+      "godotName": "assert",
+      "xmlDocId": "M:Godot.@GDScript.Assert(bool,String)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Char",
+      "kind": "Method",
+      "signature": "public String Char(int code)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a single character (as a [String] of length 1) of the given Unicode code point [param code]. [codeblock] print(char(65)) # Prints \u0022A\u0022 print(char(129302)) # Prints \u0022\uD83E\uDD16\u0022 (robot face emoji) [/codeblock] This is the inverse of [method ord]. See also [method String.chr] and [method String.unicode_at].",
+      "godotName": "char",
+      "xmlDocId": "M:Godot.@GDScript.Char(int)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Convert",
+      "kind": "Method",
+      "signature": "public Variant Convert(Variant what, int type)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "Variant"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts [param what] to [param type] in the best way possible. The [param type] uses the [enum Variant.Type] values. [codeblock] var a = [4, 2.5, 1.2] print(a is Array) # Prints true var b = convert(a, TYPE_PACKED_BYTE_ARRAY) print(b) # Prints [4, 2, 1] print(b is Array) # Prints false [/codeblock]",
+      "godotName": "convert",
+      "xmlDocId": "M:Godot.@GDScript.Convert(Variant,int)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "DictToInst",
+      "kind": "Method",
+      "signature": "public Object DictToInst(Dictionary dictionary)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Converts a [param dictionary] (created with [method inst_to_dict]) back to an Object instance. Can be useful for deserializing.",
+      "godotName": "dict_to_inst",
+      "xmlDocId": "M:Godot.@GDScript.DictToInst(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "GetStack",
+      "kind": "Method",
+      "signature": "public Array GetStack()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array of dictionaries representing the current call stack. [codeblock] func _ready(): foo() func foo(): bar() func bar(): print(get_stack()) [/codeblock] Starting from [code]_ready()[/code], [code]bar()[/code] would print: [codeblock lang=text] [{function:bar, line:12, source:res://script.gd}, {function:foo, line:9, source:res://script.gd}, {function:_ready, line:6, source:res://script.gd}] [/codeblock] See also [method print_debug], [method print_stack], and [method Engine.capture_script_backtraces]. [b]Note:[/b] By default, backtraces are only available in editor builds and debug builds. To enable them for release builds as well, you need to enable [member ProjectSettings.debug/settings/gdscript/always_track_call_stacks].",
+      "godotName": "get_stack",
+      "xmlDocId": "M:Godot.@GDScript.GetStack",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "InstToDict",
+      "kind": "Method",
+      "signature": "public Dictionary InstToDict(Object instance)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns the passed [param instance] converted to a [Dictionary]. Can be useful for serializing. [codeblock] var foo = \u0022bar\u0022 func _ready(): var d = inst_to_dict(self) print(d.keys()) print(d.values()) [/codeblock] Prints out: [codeblock lang=text] [@subpath, @path, foo] [, res://test.gd, bar] [/codeblock] [b]Note:[/b] This function can only be used to serialize objects with an attached [GDScript] stored in a separate file. Objects without an attached script, with a script written in another language, or with a built-in script are not supported. [b]Note:[/b] This function is not recursive, which means that nested objects will not be represented as dictionaries. Also, properties passed by reference ([Object], [Dictionary], [Array], and packed arrays) are copied by reference, not duplicated.",
+      "godotName": "inst_to_dict",
+      "xmlDocId": "M:Godot.@GDScript.InstToDict(Object)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "IsInstanceOf",
+      "kind": "Method",
+      "signature": "public bool IsInstanceOf(Variant value, Variant type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "type",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param value] is an instance of [param type]. The [param type] value must be one of the following: - A constant from the [enum Variant.Type] enumeration, for example [constant TYPE_INT]. - An [Object]-derived class which exists in [ClassDB], for example [Node]. - A [Script] (you can use any class, including inner one). Unlike the right operand of the [code]is[/code] operator, [param type] can be a non-constant value. The [code]is[/code] operator supports more features (such as typed arrays and dictionaries). Use the operator instead of this method if you do not need to check the type dynamically. [b]Examples:[/b] [codeblock] print(is_instance_of(a, TYPE_INT)) print(is_instance_of(a, Node)) print(is_instance_of(a, MyClass)) print(is_instance_of(a, MyClass.InnerClass)) [/codeblock] [b]Note:[/b] If [param value] and/or [param type] are freed objects (see [method @GlobalScope.is_instance_valid]), or [param type] is not one of the above options, this method will raise a runtime error. See also [method @GlobalScope.typeof], [method Object.is_class], [method Object.get_script], [method Array.is_same_typed] (and other [Array] methods), [method Dictionary.is_same_typed] (and other [Dictionary] methods).",
+      "godotName": "is_instance_of",
+      "xmlDocId": "M:Godot.@GDScript.IsInstanceOf(Variant,Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Len",
+      "kind": "Method",
+      "signature": "public int Len(Variant var)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "var",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the length of the given Variant [param var]. The length can be the character count of a [String] or [StringName], the element count of any array type, or the size of a [Dictionary]. For every other Variant type, a run-time error is generated and execution is stopped. [codeblock] var a = [1, 2, 3, 4] len(a) # Returns 4 var b = \u0022Hello!\u0022 len(b) # Returns 6 [/codeblock]",
+      "godotName": "len",
+      "xmlDocId": "M:Godot.@GDScript.Len(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public Resource Load(String path)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a [Resource] from the filesystem located at the absolute [param path]. Unless it\u0027s already referenced elsewhere (such as in another script or in the scene), the resource is loaded from disk on function call, which might cause a slight delay, especially when loading large scenes. To avoid unnecessary delays when loading something multiple times, either store the resource in a variable or use [method preload]. This method is equivalent of using [method ResourceLoader.load] with [constant ResourceLoader.CACHE_MODE_REUSE]. [b]Note:[/b] Resource paths can be obtained by right-clicking on a resource in the FileSystem dock and choosing \u0022Copy Path\u0022, or by dragging the file from the FileSystem dock into the current script. [codeblock] # Load a scene called \u0022main\u0022 located in the root of the project directory and cache it in a variable. var main = load(\u0022res://main.tscn\u0022) # main will contain a PackedScene resource. [/codeblock] [b]Important:[/b] Relative paths are [i]not[/i] relative to the script calling this method, instead it is prefixed with [code]\u0022res://\u0022[/code]. Loading from relative paths might not work as expected. This function is a simplified version of [method ResourceLoader.load], which can be used for more advanced scenarios. [b]Note:[/b] Files have to be imported into the engine first to load them using this function. If you want to load [Image]s at run-time, you may use [method Image.load]. If you want to import audio files, you can use the snippet described in [member AudioStreamMP3.data]. [b]Note:[/b] If [member ProjectSettings.editor/export/convert_text_resources_to_binary] is [code]true[/code], [method @GDScript.load] will not be able to read converted files in an exported project. If you rely on run-time loading of files present within the PCK, set [member ProjectSettings.editor/export/convert_text_resources_to_binary] to [code]false[/code].",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.@GDScript.Load(String)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Ord",
+      "kind": "Method",
+      "signature": "public int Ord(String @char)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "char",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an integer representing the Unicode code point of the given character [param char], which should be a string of length 1. [codeblock] print(ord(\u0022A\u0022)) # Prints 65 print(ord(\u0022\uD83E\uDD16\u0022)) # Prints 129302 [/codeblock] This is the inverse of [method char]. See also [method String.chr] and [method String.unicode_at].",
+      "godotName": "ord",
+      "xmlDocId": "M:Godot.@GDScript.Ord(String)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Preload",
+      "kind": "Method",
+      "signature": "public Resource Preload(String path)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a [Resource] from the filesystem located at [param path]. During run-time, the resource is loaded when the script is being parsed. This function effectively acts as a reference to that resource. Note that this function requires [param path] to be a constant [String]. If you want to load a resource from a dynamic/variable path, use [method load]. [b]Note:[/b] Resource paths can be obtained by right-clicking on a resource in the Assets Panel and choosing \u0022Copy Path\u0022, or by dragging the file from the FileSystem dock into the current script. [codeblock] # Create instance of a scene. var diamond = preload(\u0022res://diamond.tscn\u0022).instantiate() [/codeblock] [b]Note:[/b] [method preload] is a keyword, not a function. So you cannot access it as a [Callable].",
+      "godotName": "preload",
+      "xmlDocId": "M:Godot.@GDScript.Preload(String)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "PrintDebug",
+      "kind": "Method",
+      "signature": "public void PrintDebug()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Like [method @GlobalScope.print], but includes the current stack frame when running with the debugger turned on. The output in the console may look like the following: [codeblock lang=text] Test print At: res://test.gd:15:_process() [/codeblock] See also [method print_stack], [method get_stack], and [method Engine.capture_script_backtraces]. [b]Note:[/b] By default, backtraces are only available in editor builds and debug builds. To enable them for release builds as well, you need to enable [member ProjectSettings.debug/settings/gdscript/always_track_call_stacks].",
+      "godotName": "print_debug",
+      "xmlDocId": "M:Godot.@GDScript.PrintDebug",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "PrintStack",
+      "kind": "Method",
+      "signature": "public void PrintStack()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Prints a stack trace at the current code location. The output in the console may look like the following: [codeblock lang=text] Frame 0 - res://test.gd:16 in function \u0027_process\u0027 [/codeblock] See also [method print_debug], [method get_stack], and [method Engine.capture_script_backtraces]. [b]Note:[/b] By default, backtraces are only available in editor builds and debug builds. To enable them for release builds as well, you need to enable [member ProjectSettings.debug/settings/gdscript/always_track_call_stacks].",
+      "godotName": "print_stack",
+      "xmlDocId": "M:Godot.@GDScript.PrintStack",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "Range",
+      "kind": "Method",
+      "signature": "public Array Range()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array with the given range. [method range] can be called in three ways: [code]range(n: int)[/code]: Starts from 0, increases by steps of 1, and stops [i]before[/i] [code]n[/code]. The argument [code]n[/code] is [b]exclusive[/b]. [code]range(b: int, n: int)[/code]: Starts from [code]b[/code], increases by steps of 1, and stops [i]before[/i] [code]n[/code]. The arguments [code]b[/code] and [code]n[/code] are [b]inclusive[/b] and [b]exclusive[/b], respectively. [code]range(b: int, n: int, s: int)[/code]: Starts from [code]b[/code], increases/decreases by steps of [code]s[/code], and stops [i]before[/i] [code]n[/code]. The arguments [code]b[/code] and [code]n[/code] are [b]inclusive[/b] and [b]exclusive[/b], respectively. The argument [code]s[/code] [b]can[/b] be negative, but not [code]0[/code]. If [code]s[/code] is [code]0[/code], an error message is printed. [method range] converts all arguments to [int] before processing. [b]Note:[/b] Returns an empty array if no value meets the value constraint (e.g. [code]range(2, 5, -1)[/code] or [code]range(5, 5, 1)[/code]). [b]Examples:[/b] [codeblock] print(range(4)) # Prints [0, 1, 2, 3] print(range(2, 5)) # Prints [2, 3, 4] print(range(0, 6, 2)) # Prints [0, 2, 4] print(range(4, 1, -1)) # Prints [4, 3, 2] [/codeblock] To iterate over an [Array] backwards, use: [codeblock] var array = [3, 6, 9] for i in range(array.size() - 1, -1, -1): print(array[i]) [/codeblock] Output: [codeblock lang=text] 9 6 3 [/codeblock] To iterate over [float], convert them in the loop. [codeblock] for i in range (3, 0, -1): print(i / 10.0) [/codeblock] Output: [codeblock lang=text] 0.3 0.2 0.1 [/codeblock]",
+      "godotName": "range",
+      "xmlDocId": "M:Godot.@GDScript.Range",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "TypeExists",
+      "kind": "Method",
+      "signature": "public bool TypeExists(StringName type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [Object]-derived class exists in [ClassDB]. Note that [Variant] data types are not registered in [ClassDB]. [codeblock] type_exists(\u0022Sprite2D\u0022) # Returns true type_exists(\u0022NonExistentClass\u0022) # Returns false [/codeblock]",
+      "godotName": "type_exists",
+      "xmlDocId": "M:Godot.@GDScript.TypeExists(StringName)",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "PI",
+      "value": "3.14159265358979",
+      "kind": "Constant",
+      "summary": "Constant that represents how many times the diameter of a circle fits around its perimeter. This is equivalent to [code]TAU / 2[/code], or 180 degrees in rotations.",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "TAU",
+      "value": "6.28318530717959",
+      "kind": "Constant",
+      "summary": "The circle constant, the circumference of the unit circle in radians. This is equivalent to [code]PI * 2[/code], or 360 degrees in rotations.",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "INF",
+      "value": "inf",
+      "kind": "Constant",
+      "summary": "Positive floating-point infinity. This is the result of floating-point division when the divisor is [code]0.0[/code]. For negative infinity, use [code]-INF[/code]. Dividing by [code]-0.0[/code] will result in negative infinity if the numerator is positive, so dividing by [code]0.0[/code] is not the same as dividing by [code]-0.0[/code] (despite [code]0.0 == -0.0[/code] returning [code]true[/code]). [b]Warning:[/b] Numeric infinity is only a concept with floating-point numbers, and has no equivalent for integers. Dividing an integer number by [code]0[/code] will not result in [constant INF] and will result in a run-time error instead.",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    },
+    {
+      "name": "NAN",
+      "value": "nan",
+      "kind": "Constant",
+      "summary": "\u0022Not a Number\u0022, an invalid floating-point value. It is returned by some invalid operations, such as dividing floating-point [code]0.0[/code] by [code]0.0[/code]. [constant NAN] has special properties, including that [code]!=[/code] always returns [code]true[/code], while other comparison operators always return [code]false[/code]. This is true even when comparing with itself ([code]NAN == NAN[/code] returns [code]false[/code] and [code]NAN != NAN[/code] returns [code]true[/code]). Due to this, you must use [method @GlobalScope.is_nan] to check whether a number is equal to [constant NAN]. [b]Warning:[/b] \u0022Not a Number\u0022 is only a concept with floating-point numbers, and has no equivalent for integers. Dividing an integer [code]0[/code] by [code]0[/code] will not result in [constant NAN] and will result in a run-time error instead.",
+      "sourcePath": "modules/gdscript/doc_classes/@GDScript.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gdscript/doc_classes/@GDScript.xml",
+      "sha256": "026380e93f4d27607588fd4651d71d54ecd41122fa149cc22e3141e46571da6f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

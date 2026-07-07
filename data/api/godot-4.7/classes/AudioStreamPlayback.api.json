@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlayback",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlayback",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlayback",
+    "documentationPath": "doc/classes/AudioStreamPlayback.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayback.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetLoopCount",
+      "kind": "Method",
+      "signature": "public int _GetLoopCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Overridable method. Should return how many times this audio stream has looped. Most built-in playbacks always return [code]0[/code].",
+      "godotName": "_get_loop_count",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetLoopCount",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_GetParameter",
+      "kind": "Method",
+      "signature": "public Variant _GetParameter(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Return the current value of a playback parameter by name (see [method AudioStream._get_parameter_list]).",
+      "godotName": "_get_parameter",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetParameter(StringName)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float _GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overridable method. Should return the current progress along the audio stream, in seconds.",
+      "godotName": "_get_playback_position",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetPlaybackPosition",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPlaying",
+      "kind": "Method",
+      "signature": "public bool _IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Overridable method. Should return [code]true[/code] if this playback is active and playing its audio stream.",
+      "godotName": "_is_playing",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._IsPlaying",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Mix",
+      "kind": "Method",
+      "signature": "public int _Mix(AudioFrame* buffer, float rateScale, int frames)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "rate_scale",
+          "type": "float"
+        },
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to customize how the audio stream is mixed. This method is called even if the playback is not active. [b]Note:[/b] It is not useful to override this method in GDScript or C#. Only GDExtension can take advantage of it.",
+      "godotName": "_mix",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Mix(AudioFrame*,float,int)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Seek",
+      "kind": "Method",
+      "signature": "public void _Seek(float position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this method to customize what happens when seeking this audio stream at the given [param position], such as by calling [method AudioStreamPlayer.seek].",
+      "godotName": "_seek",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Seek(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_SetParameter",
+      "kind": "Method",
+      "signature": "public void _SetParameter(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Set the current value of a playback parameter by name (see [method AudioStream._get_parameter_list]).",
+      "godotName": "_set_parameter",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._SetParameter(StringName,Variant)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Start",
+      "kind": "Method",
+      "signature": "public void _Start(float fromPos)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_pos",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this method to customize what happens when the playback starts at the given position, such as by calling [method AudioStreamPlayer.play].",
+      "godotName": "_start",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Start(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Stop",
+      "kind": "Method",
+      "signature": "public void _Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to customize what happens when the playback is stopped, such as by calling [method AudioStreamPlayer.stop].",
+      "godotName": "_stop",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Stop",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_TagUsedStreams",
+      "kind": "Method",
+      "signature": "public void _TagUsedStreams()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Overridable method. Called whenever the audio stream is mixed if the playback is active and [method AudioServer.set_enable_tagging_used_audio_streams] has been set to [code]true[/code]. Editor plugins may use this method to \u0022tag\u0022 the current position along the audio stream and display it in a preview.",
+      "godotName": "_tag_used_streams",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._TagUsedStreams",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "GetLoopCount",
+      "kind": "Method",
+      "signature": "public int GetLoopCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of times the stream has looped.",
+      "godotName": "get_loop_count",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.GetLoopCount",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the current position in the stream, in seconds.",
+      "godotName": "get_playback_position",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.GetPlaybackPosition",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "GetSamplePlayback",
+      "kind": "Method",
+      "signature": "public AudioSamplePlayback GetSamplePlayback()",
+      "returnType": "AudioSamplePlayback",
+      "parameters": [],
+      "summary": "Returns the [AudioSamplePlayback] associated with this [AudioStreamPlayback] for playing back the audio sample of this stream.",
+      "godotName": "get_sample_playback",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.GetSamplePlayback",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public bool IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the stream is playing.",
+      "godotName": "is_playing",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.IsPlaying",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "MixAudio",
+      "kind": "Method",
+      "signature": "public PackedVector2Array MixAudio(float rateScale, int frames)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "rate_scale",
+          "type": "float"
+        },
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Mixes up to [param frames] of audio from the stream from the current position, at a rate of [param rate_scale], advancing the stream. Returns a [PackedVector2Array] where each element holds the left and right channel volume levels of each frame. [b]Note:[/b] Can return fewer frames than requested, make sure to use the size of the return value.",
+      "godotName": "mix_audio",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.MixAudio(float,int)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public void Seek(float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Seeks the stream at the given [param time], in seconds.",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.Seek(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "SetSamplePlayback",
+      "kind": "Method",
+      "signature": "public void SetSamplePlayback(AudioSamplePlayback playbackSample)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "playback_sample",
+          "type": "AudioSamplePlayback"
+        }
+      ],
+      "summary": "Associates [AudioSamplePlayback] to this [AudioStreamPlayback] for playing back the audio sample of this stream.",
+      "godotName": "set_sample_playback",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.SetSamplePlayback(AudioSamplePlayback)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public void Start(float fromPos)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_pos",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Starts the stream from the given [param from_pos], in seconds.",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.Start(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the stream.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.AudioStreamPlayback.Stop",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetLoopCount",
+      "kind": "Method",
+      "signature": "public int _GetLoopCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Overridable method. Should return how many times this audio stream has looped. Most built-in playbacks always return [code]0[/code].",
+      "godotName": "_get_loop_count",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetLoopCount",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_GetParameter",
+      "kind": "Method",
+      "signature": "public Variant _GetParameter(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Return the current value of a playback parameter by name (see [method AudioStream._get_parameter_list]).",
+      "godotName": "_get_parameter",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetParameter(StringName)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float _GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overridable method. Should return the current progress along the audio stream, in seconds.",
+      "godotName": "_get_playback_position",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._GetPlaybackPosition",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPlaying",
+      "kind": "Method",
+      "signature": "public bool _IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Overridable method. Should return [code]true[/code] if this playback is active and playing its audio stream.",
+      "godotName": "_is_playing",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._IsPlaying",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Mix",
+      "kind": "Method",
+      "signature": "public int _Mix(AudioFrame* buffer, float rateScale, int frames)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "rate_scale",
+          "type": "float"
+        },
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to customize how the audio stream is mixed. This method is called even if the playback is not active. [b]Note:[/b] It is not useful to override this method in GDScript or C#. Only GDExtension can take advantage of it.",
+      "godotName": "_mix",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Mix(AudioFrame*,float,int)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Seek",
+      "kind": "Method",
+      "signature": "public void _Seek(float position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this method to customize what happens when seeking this audio stream at the given [param position], such as by calling [method AudioStreamPlayer.seek].",
+      "godotName": "_seek",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Seek(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_SetParameter",
+      "kind": "Method",
+      "signature": "public void _SetParameter(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Set the current value of a playback parameter by name (see [method AudioStream._get_parameter_list]).",
+      "godotName": "_set_parameter",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._SetParameter(StringName,Variant)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Start",
+      "kind": "Method",
+      "signature": "public void _Start(float fromPos)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_pos",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this method to customize what happens when the playback starts at the given position, such as by calling [method AudioStreamPlayer.play].",
+      "godotName": "_start",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Start(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_Stop",
+      "kind": "Method",
+      "signature": "public void _Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to customize what happens when the playback is stopped, such as by calling [method AudioStreamPlayer.stop].",
+      "godotName": "_stop",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._Stop",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    },
+    {
+      "name": "_TagUsedStreams",
+      "kind": "Method",
+      "signature": "public void _TagUsedStreams()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Overridable method. Called whenever the audio stream is mixed if the playback is active and [method AudioServer.set_enable_tagging_used_audio_streams] has been set to [code]true[/code]. Editor plugins may use this method to \u0022tag\u0022 the current position along the audio stream and display it in a preview.",
+      "godotName": "_tag_used_streams",
+      "xmlDocId": "M:Godot.AudioStreamPlayback._TagUsedStreams",
+      "sourcePath": "doc/classes/AudioStreamPlayback.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamPlayback.xml",
+      "sha256": "7ea2a43af9904559400f325915d2396c27a7ad0cd446449e56ca65660654c755"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

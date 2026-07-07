@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamMP3",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamMP3",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamMP3",
+    "documentationPath": "modules/mp3/doc_classes/AudioStreamMP3.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreammp3.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LoadFromBuffer",
+      "kind": "Method",
+      "signature": "public AudioStreamMP3 LoadFromBuffer(PackedByteArray streamData)",
+      "returnType": "AudioStreamMP3",
+      "parameters": [
+        {
+          "name": "stream_data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamMP3] instance from the given buffer. The buffer must contain MP3 data.",
+      "godotName": "load_from_buffer",
+      "xmlDocId": "M:Godot.AudioStreamMP3.LoadFromBuffer(PackedByteArray)",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public AudioStreamMP3 LoadFromFile(String path)",
+      "returnType": "AudioStreamMP3",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamMP3] instance from the given file path. The file must be in MP3 format.",
+      "godotName": "load_from_file",
+      "xmlDocId": "M:Godot.AudioStreamMP3.LoadFromFile(String)",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "BarBeats",
+      "kind": "Property",
+      "signature": "public int BarBeats { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of beats within a single bar in the audio track.",
+      "defaultValue": "4",
+      "godotName": "bar_beats",
+      "xmlDocId": "P:Godot.AudioStreamMP3.BarBeats",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "BeatCount",
+      "kind": "Property",
+      "signature": "public int BeatCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The length of the audio track, in beats. The actual duration of the audio file might be longer than what is indicated by this property. It defines the end of the audio for looping, [AudioStreamPlaylist], and [AudioStreamInteractive].",
+      "defaultValue": "0",
+      "godotName": "beat_count",
+      "xmlDocId": "P:Godot.AudioStreamMP3.BeatCount",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "Bpm",
+      "kind": "Property",
+      "signature": "public float Bpm { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The tempo of the audio track, measured in beats per minute.",
+      "defaultValue": "0.0",
+      "godotName": "bpm",
+      "xmlDocId": "P:Godot.AudioStreamMP3.Bpm",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "Data",
+      "kind": "Property",
+      "signature": "public PackedByteArray Data { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Contains the audio data in bytes. You can load a file without having to import it beforehand using the code snippet below. Keep in mind that this snippet loads the whole file into memory and may not be ideal for huge files (hundreds of megabytes or more). [codeblocks] [gdscript] func load_mp3(path): var file = FileAccess.open(path, FileAccess.READ) var sound = AudioStreamMP3.new() sound.data = file.get_buffer(file.get_length()) return sound [/gdscript] [csharp] public AudioStreamMP3 LoadMP3(string path) { using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read); var sound = new AudioStreamMP3(); sound.Data = file.GetBuffer(file.GetLength()); return sound; } [/csharp] [/codeblocks]",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "data",
+      "xmlDocId": "P:Godot.AudioStreamMP3.Data",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the stream will play again from the specified [member loop_offset] once it reaches the end of the audio track, or once it reaches the end of the last beat according to the amount specified in [member beat_count]. Useful for ambient sounds and background music.",
+      "defaultValue": "false",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.AudioStreamMP3.Loop",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    },
+    {
+      "name": "LoopOffset",
+      "kind": "Property",
+      "signature": "public float LoopOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time in seconds at which the stream starts after being looped.",
+      "defaultValue": "0.0",
+      "godotName": "loop_offset",
+      "xmlDocId": "P:Godot.AudioStreamMP3.LoopOffset",
+      "sourcePath": "modules/mp3/doc_classes/AudioStreamMP3.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/mp3/doc_classes/AudioStreamMP3.xml",
+      "sha256": "f370cacc912b2d846e10e9c7aebebe64a451d90259bc7035cba03630081c4593"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImmediateMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.ImmediateMesh",
+    "kind": "class",
+    "baseType": "Mesh",
+    "interfaces": [],
+    "godotReference": "ImmediateMesh",
+    "documentationPath": "doc/classes/ImmediateMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_immediatemesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearSurfaces",
+      "kind": "Method",
+      "signature": "public void ClearSurfaces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all surfaces.",
+      "godotName": "clear_surfaces",
+      "xmlDocId": "M:Godot.ImmediateMesh.ClearSurfaces",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceAddVertex",
+      "kind": "Method",
+      "signature": "public void SurfaceAddVertex(Vector3 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Add a 3D vertex using the current attributes previously set.",
+      "godotName": "surface_add_vertex",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceAddVertex(Vector3)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceAddVertex2d",
+      "kind": "Method",
+      "signature": "public void SurfaceAddVertex2d(Vector2 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Add a 2D vertex using the current attributes previously set.",
+      "godotName": "surface_add_vertex_2d",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceAddVertex2d(Vector2)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceBegin",
+      "kind": "Method",
+      "signature": "public void SurfaceBegin(int primitive, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "primitive",
+          "type": "int"
+        },
+        {
+          "name": "material",
+          "type": "Material",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Begin a new surface.",
+      "godotName": "surface_begin",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceBegin(int,Material)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceEnd",
+      "kind": "Method",
+      "signature": "public void SurfaceEnd()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "End and commit current surface. Note that surface being created will not be visible until this function is called.",
+      "godotName": "surface_end",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceEnd",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceSetColor",
+      "kind": "Method",
+      "signature": "public void SurfaceSetColor(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Set the color attribute that will be pushed with the next vertex.",
+      "godotName": "surface_set_color",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceSetColor(Color)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceSetNormal",
+      "kind": "Method",
+      "signature": "public void SurfaceSetNormal(Vector3 normal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Set the normal attribute that will be pushed with the next vertex.",
+      "godotName": "surface_set_normal",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceSetNormal(Vector3)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceSetTangent",
+      "kind": "Method",
+      "signature": "public void SurfaceSetTangent(Plane tangent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tangent",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Set the tangent attribute that will be pushed with the next vertex. [b]Note:[/b] Even though [param tangent] is a [Plane], it does not directly represent the tangent plane. Its [member Plane.x], [member Plane.y], and [member Plane.z] represent the tangent vector and [member Plane.d] should be either [code]-1[/code] or [code]1[/code]. See also [constant Mesh.ARRAY_TANGENT].",
+      "godotName": "surface_set_tangent",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceSetTangent(Plane)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceSetUv",
+      "kind": "Method",
+      "signature": "public void SurfaceSetUv(Vector2 uv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "uv",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Set the UV attribute that will be pushed with the next vertex.",
+      "godotName": "surface_set_uv",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceSetUv(Vector2)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    },
+    {
+      "name": "SurfaceSetUv2",
+      "kind": "Method",
+      "signature": "public void SurfaceSetUv2(Vector2 uv2)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "uv2",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Set the UV2 attribute that will be pushed with the next vertex.",
+      "godotName": "surface_set_uv2",
+      "xmlDocId": "M:Godot.ImmediateMesh.SurfaceSetUv2(Vector2)",
+      "sourcePath": "doc/classes/ImmediateMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ImmediateMesh.xml",
+      "sha256": "a09e7d223474f5ad457da8b5fb27036dc319ae93c58676b67a9b4476d5841302"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

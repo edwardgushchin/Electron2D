@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorFileSystemImportFormatSupportQuery",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorFileSystemImportFormatSupportQuery",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorFileSystemImportFormatSupportQuery",
+    "documentationPath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorfilesystemimportformatsupportquery.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetFileExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetFileExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Return the file extensions supported.",
+      "godotName": "_get_file_extensions",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._GetFileExtensions",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    },
+    {
+      "name": "_IsActive",
+      "kind": "Method",
+      "signature": "public bool _IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Return whether this importer is active.",
+      "godotName": "_is_active",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._IsActive",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    },
+    {
+      "name": "_Query",
+      "kind": "Method",
+      "signature": "public bool _Query()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Query support. Return [code]false[/code] if import must not continue.",
+      "godotName": "_query",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._Query",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetFileExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetFileExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Return the file extensions supported.",
+      "godotName": "_get_file_extensions",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._GetFileExtensions",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    },
+    {
+      "name": "_IsActive",
+      "kind": "Method",
+      "signature": "public bool _IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Return whether this importer is active.",
+      "godotName": "_is_active",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._IsActive",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    },
+    {
+      "name": "_Query",
+      "kind": "Method",
+      "signature": "public bool _Query()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Query support. Return [code]false[/code] if import must not continue.",
+      "godotName": "_query",
+      "xmlDocId": "M:Godot.EditorFileSystemImportFormatSupportQuery._Query",
+      "sourcePath": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorFileSystemImportFormatSupportQuery.xml",
+      "sha256": "5f8a87279d03b88692873d05ff39fe94282f2ff74125cd2b468c5024e11f812f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

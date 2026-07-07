@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Button",
+    "namespace": "Godot",
+    "fullName": "Godot.Button",
+    "kind": "class",
+    "baseType": "BaseButton",
+    "interfaces": [],
+    "godotReference": "Button",
+    "documentationPath": "doc/classes/Button.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_button.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text alignment policy for the button\u0027s text.",
+      "defaultValue": "1",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.Button.Alignment",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "AutowrapMode",
+      "kind": "Property",
+      "signature": "public int AutowrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If set to something other than [constant TextServer.AUTOWRAP_OFF], the text gets wrapped inside the node\u0027s bounding rectangle.",
+      "defaultValue": "0",
+      "godotName": "autowrap_mode",
+      "xmlDocId": "P:Godot.Button.AutowrapMode",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "AutowrapTrimFlags",
+      "kind": "Property",
+      "signature": "public int AutowrapTrimFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Autowrap space trimming flags. See [constant TextServer.BREAK_TRIM_START_EDGE_SPACES] and [constant TextServer.BREAK_TRIM_END_EDGE_SPACES] for more info.",
+      "defaultValue": "128",
+      "godotName": "autowrap_trim_flags",
+      "xmlDocId": "P:Godot.Button.AutowrapTrimFlags",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "ClipText",
+      "kind": "Property",
+      "signature": "public bool ClipText { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], text that is too large to fit the button is clipped horizontally. If [code]false[/code], the button will always be wide enough to hold the text. The text is not vertically clipped, and the button\u0027s height is not affected by this property.",
+      "defaultValue": "false",
+      "godotName": "clip_text",
+      "xmlDocId": "P:Godot.Button.ClipText",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "ExpandIcon",
+      "kind": "Property",
+      "signature": "public bool ExpandIcon { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When enabled, the button\u0027s icon will expand/shrink to fit the button\u0027s size while keeping its aspect. See also [theme_item icon_max_width].",
+      "defaultValue": "false",
+      "godotName": "expand_icon",
+      "xmlDocId": "P:Godot.Button.ExpandIcon",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "Flat",
+      "kind": "Property",
+      "signature": "public bool Flat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Flat buttons don\u0027t display decoration.",
+      "defaultValue": "false",
+      "godotName": "flat",
+      "xmlDocId": "P:Godot.Button.Flat",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "Icon",
+      "kind": "Property",
+      "signature": "public Texture2D Icon { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Button\u0027s icon, if text is present the icon will be placed before the text. To edit margin and spacing of the icon, use [theme_item h_separation] theme property and [code]content_margin_*[/code] properties of the used [StyleBox]es.",
+      "godotName": "icon",
+      "xmlDocId": "P:Godot.Button.Icon",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "IconAlignment",
+      "kind": "Property",
+      "signature": "public int IconAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies if the icon should be aligned horizontally to the left, right, or center of a button. Uses the same [enum HorizontalAlignment] constants as the text alignment. If centered horizontally and vertically, text will draw on top of the icon.",
+      "defaultValue": "0",
+      "godotName": "icon_alignment",
+      "xmlDocId": "P:Godot.Button.IconAlignment",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.Button.Language",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The button\u0027s text that will be displayed inside the button\u0027s area.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.Button.Text",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.Button.TextDirection",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the clipping behavior when the text exceeds the node\u0027s bounding rectangle.",
+      "defaultValue": "0",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.Button.TextOverrunBehavior",
+      "sourcePath": "doc/classes/Button.xml"
+    },
+    {
+      "name": "VerticalIconAlignment",
+      "kind": "Property",
+      "signature": "public int VerticalIconAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies if the icon should be aligned vertically to the top, bottom, or center of a button. Uses the same [enum VerticalAlignment] constants as the text alignment. If centered horizontally and vertically, text will draw on top of the icon.",
+      "defaultValue": "1",
+      "godotName": "vertical_icon_alignment",
+      "xmlDocId": "P:Godot.Button.VerticalIconAlignment",
+      "sourcePath": "doc/classes/Button.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Button.xml",
+      "sha256": "961a61264211eee38f0675630fb4504d538476965b6766f2dd9b197ca817882f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

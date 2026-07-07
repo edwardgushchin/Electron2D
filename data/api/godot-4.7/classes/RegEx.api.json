@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RegEx",
+    "namespace": "Godot",
+    "fullName": "Godot.RegEx",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RegEx",
+    "documentationPath": "modules/regex/doc_classes/RegEx.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_regex.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "This method resets the state of the object, as if it was freshly created. Namely, it unassigns the regular expression of this object.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.RegEx.Clear",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "Compile",
+      "kind": "Method",
+      "signature": "public int Compile(String pattern, bool showError)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "String"
+        },
+        {
+          "name": "show_error",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Compiles and assign the search pattern to use. Returns [constant OK] if the compilation is successful. If compilation fails, returns [constant FAILED] and when [param show_error] is [code]true[/code], details are printed to standard output.",
+      "godotName": "compile",
+      "xmlDocId": "M:Godot.RegEx.Compile(String,bool)",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "CreateFromString",
+      "kind": "Method",
+      "signature": "public RegEx CreateFromString(String pattern, bool showError)",
+      "returnType": "RegEx",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "String"
+        },
+        {
+          "name": "show_error",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Creates and compiles a new [RegEx] object. See also [method compile].",
+      "godotName": "create_from_string",
+      "xmlDocId": "M:Godot.RegEx.CreateFromString(String,bool)",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "GetGroupCount",
+      "kind": "Method",
+      "signature": "public int GetGroupCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of capturing groups in compiled pattern.",
+      "godotName": "get_group_count",
+      "xmlDocId": "M:Godot.RegEx.GetGroupCount",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "GetNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetNames()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of names of named capturing groups in the compiled pattern. They are ordered by appearance.",
+      "godotName": "get_names",
+      "xmlDocId": "M:Godot.RegEx.GetNames",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "GetPattern",
+      "kind": "Method",
+      "signature": "public String GetPattern()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the original search pattern that was compiled.",
+      "godotName": "get_pattern",
+      "xmlDocId": "M:Godot.RegEx.GetPattern",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "IsValid",
+      "kind": "Method",
+      "signature": "public bool IsValid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether this object has a valid search pattern assigned.",
+      "godotName": "is_valid",
+      "xmlDocId": "M:Godot.RegEx.IsValid",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "Search",
+      "kind": "Method",
+      "signature": "public RegExMatch Search(String subject, int offset, int end)",
+      "returnType": "RegExMatch",
+      "parameters": [
+        {
+          "name": "subject",
+          "type": "String"
+        },
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the text for the compiled pattern. Returns a [RegExMatch] container of the first matching result if found, otherwise [code]null[/code]. The region to search within can be specified with [param offset] and [param end]. This is useful when searching for another match in the same [param subject] by calling this method again after a previous success. Note that setting these parameters differs from passing over a shortened string. For example, the start anchor [code]^[/code] is not affected by [param offset], and the character before [param offset] will be checked for the word boundary [code]\\b[/code].",
+      "godotName": "search",
+      "xmlDocId": "M:Godot.RegEx.Search(String,int,int)",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "SearchAll",
+      "kind": "Method",
+      "signature": "public RegExMatch[] SearchAll(String subject, int offset, int end)",
+      "returnType": "RegExMatch[]",
+      "parameters": [
+        {
+          "name": "subject",
+          "type": "String"
+        },
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the text for the compiled pattern. Returns an array of [RegExMatch] containers for each non-overlapping result. If no results were found, an empty array is returned instead. The region to search within can be specified with [param offset] and [param end]. This is useful when searching for another match in the same [param subject] by calling this method again after a previous success. Note that setting these parameters differs from passing over a shortened string. For example, the start anchor [code]^[/code] is not affected by [param offset], and the character before [param offset] will be checked for the word boundary [code]\\b[/code].",
+      "godotName": "search_all",
+      "xmlDocId": "M:Godot.RegEx.SearchAll(String,int,int)",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    },
+    {
+      "name": "Sub",
+      "kind": "Method",
+      "signature": "public String Sub(String subject, String replacement, bool all, int offset, int end)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "subject",
+          "type": "String"
+        },
+        {
+          "name": "replacement",
+          "type": "String"
+        },
+        {
+          "name": "all",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the text for the compiled pattern and replaces it with the specified string. Escapes and backreferences such as [code]$1[/code] and [code]$name[/code] are expanded and resolved. By default, only the first instance is replaced, but it can be changed for all instances (global replacement). The region to search within can be specified with [param offset] and [param end]. This is useful when searching for another match in the same [param subject] by calling this method again after a previous success. Note that setting these parameters differs from passing over a shortened string. For example, the start anchor [code]^[/code] is not affected by [param offset], and the character before [param offset] will be checked for the word boundary [code]\\b[/code].",
+      "godotName": "sub",
+      "xmlDocId": "M:Godot.RegEx.Sub(String,String,bool,int,int)",
+      "sourcePath": "modules/regex/doc_classes/RegEx.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/regex/doc_classes/RegEx.xml",
+      "sha256": "3a228920c00124bfa2d6ba11585af6d956a6ed931c063f5d4e2629f45c3fceaf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

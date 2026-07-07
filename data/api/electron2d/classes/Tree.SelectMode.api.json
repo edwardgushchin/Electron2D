@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tree.SelectMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Tree.SelectMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Tree.SelectMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Multi",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tree.SelectMode Multi",
+      "returnType": "Electron2D.Tree.SelectMode",
+      "parameters": [],
+      "summary": "Allows multiple selected cells.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.Tree.SelectModeEnum.Multi",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Row",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tree.SelectMode Row",
+      "returnType": "Electron2D.Tree.SelectMode",
+      "parameters": [],
+      "summary": "Selects the whole visible row.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Tree.SelectModeEnum.Row",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Single",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tree.SelectMode Single",
+      "returnType": "Electron2D.Tree.SelectMode",
+      "parameters": [],
+      "summary": "Allows at most one selected cell.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Tree.SelectModeEnum.Single",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Multi",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Allows multiple selected cells.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Row",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Selects the whole visible row.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Single",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Allows at most one selected cell.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

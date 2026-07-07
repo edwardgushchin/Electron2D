@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CodeHighlighter",
+    "namespace": "Godot",
+    "fullName": "Godot.CodeHighlighter",
+    "kind": "class",
+    "baseType": "SyntaxHighlighter",
+    "interfaces": [],
+    "godotReference": "CodeHighlighter",
+    "documentationPath": "doc/classes/CodeHighlighter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_codehighlighter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddColorRegion",
+      "kind": "Method",
+      "signature": "public void AddColorRegion(String startKey, String endKey, Color color, bool lineOnly)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        },
+        {
+          "name": "end_key",
+          "type": "String"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "line_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a color region (such as for comments or strings) from [param start_key] to [param end_key]. Both keys should be symbols, and [param start_key] must not be shared with other delimiters. If [param line_only] is [code]true[/code] or [param end_key] is an empty [String], the region does not carry over to the next line.",
+      "godotName": "add_color_region",
+      "xmlDocId": "M:Godot.CodeHighlighter.AddColorRegion(String,String,Color,bool)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "AddKeywordColor",
+      "kind": "Method",
+      "signature": "public void AddKeywordColor(String keyword, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color for a keyword. The keyword cannot contain any symbols except \u0027_\u0027.",
+      "godotName": "add_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.AddKeywordColor(String,Color)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "AddMemberKeywordColor",
+      "kind": "Method",
+      "signature": "public void AddMemberKeywordColor(String memberKeyword, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "member_keyword",
+          "type": "String"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color for a member keyword. The member keyword cannot contain any symbols except \u0027_\u0027. It will not be highlighted if preceded by a \u0027.\u0027.",
+      "godotName": "add_member_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.AddMemberKeywordColor(String,Color)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "ClearColorRegions",
+      "kind": "Method",
+      "signature": "public void ClearColorRegions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all color regions.",
+      "godotName": "clear_color_regions",
+      "xmlDocId": "M:Godot.CodeHighlighter.ClearColorRegions",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "ClearKeywordColors",
+      "kind": "Method",
+      "signature": "public void ClearKeywordColors()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all keywords.",
+      "godotName": "clear_keyword_colors",
+      "xmlDocId": "M:Godot.CodeHighlighter.ClearKeywordColors",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "ClearMemberKeywordColors",
+      "kind": "Method",
+      "signature": "public void ClearMemberKeywordColors()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all member keywords.",
+      "godotName": "clear_member_keyword_colors",
+      "xmlDocId": "M:Godot.CodeHighlighter.ClearMemberKeywordColors",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "GetKeywordColor",
+      "kind": "Method",
+      "signature": "public Color GetKeywordColor(String keyword)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the color for a keyword.",
+      "godotName": "get_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.GetKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "GetMemberKeywordColor",
+      "kind": "Method",
+      "signature": "public Color GetMemberKeywordColor(String memberKeyword)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "member_keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the color for a member keyword.",
+      "godotName": "get_member_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.GetMemberKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "HasColorRegion",
+      "kind": "Method",
+      "signature": "public bool HasColorRegion(String startKey)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the start key exists, else [code]false[/code].",
+      "godotName": "has_color_region",
+      "xmlDocId": "M:Godot.CodeHighlighter.HasColorRegion(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "HasKeywordColor",
+      "kind": "Method",
+      "signature": "public bool HasKeywordColor(String keyword)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the keyword exists, else [code]false[/code].",
+      "godotName": "has_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.HasKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "HasMemberKeywordColor",
+      "kind": "Method",
+      "signature": "public bool HasMemberKeywordColor(String memberKeyword)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "member_keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the member keyword exists, else [code]false[/code].",
+      "godotName": "has_member_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.HasMemberKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "RemoveColorRegion",
+      "kind": "Method",
+      "signature": "public void RemoveColorRegion(String startKey)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the color region that uses that start key.",
+      "godotName": "remove_color_region",
+      "xmlDocId": "M:Godot.CodeHighlighter.RemoveColorRegion(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "RemoveKeywordColor",
+      "kind": "Method",
+      "signature": "public void RemoveKeywordColor(String keyword)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the keyword.",
+      "godotName": "remove_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.RemoveKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "RemoveMemberKeywordColor",
+      "kind": "Method",
+      "signature": "public void RemoveMemberKeywordColor(String memberKeyword)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "member_keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the member keyword.",
+      "godotName": "remove_member_keyword_color",
+      "xmlDocId": "M:Godot.CodeHighlighter.RemoveMemberKeywordColor(String)",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "ColorRegions",
+      "kind": "Property",
+      "signature": "public Dictionary ColorRegions { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Sets the color regions. All existing regions will be removed. The [Dictionary] key is the region start and end key, separated by a space. The value is the region color.",
+      "defaultValue": "{}",
+      "godotName": "color_regions",
+      "xmlDocId": "P:Godot.CodeHighlighter.ColorRegions",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "FunctionColor",
+      "kind": "Property",
+      "signature": "public Color FunctionColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets color for functions. A function is a non-keyword string followed by a \u0027(\u0027.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "function_color",
+      "xmlDocId": "P:Godot.CodeHighlighter.FunctionColor",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "KeywordColors",
+      "kind": "Property",
+      "signature": "public Dictionary KeywordColors { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Sets the keyword colors. All existing keywords will be removed. The [Dictionary] key is the keyword. The value is the keyword color.",
+      "defaultValue": "{}",
+      "godotName": "keyword_colors",
+      "xmlDocId": "P:Godot.CodeHighlighter.KeywordColors",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "MemberKeywordColors",
+      "kind": "Property",
+      "signature": "public Dictionary MemberKeywordColors { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Sets the member keyword colors. All existing member keyword will be removed. The [Dictionary] key is the member keyword. The value is the member keyword color.",
+      "defaultValue": "{}",
+      "godotName": "member_keyword_colors",
+      "xmlDocId": "P:Godot.CodeHighlighter.MemberKeywordColors",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "MemberVariableColor",
+      "kind": "Property",
+      "signature": "public Color MemberVariableColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets color for member variables. A member variable is non-keyword, non-function string proceeded with a \u0027.\u0027.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "member_variable_color",
+      "xmlDocId": "P:Godot.CodeHighlighter.MemberVariableColor",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "NumberColor",
+      "kind": "Property",
+      "signature": "public Color NumberColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets the color for numbers.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "number_color",
+      "xmlDocId": "P:Godot.CodeHighlighter.NumberColor",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    },
+    {
+      "name": "SymbolColor",
+      "kind": "Property",
+      "signature": "public Color SymbolColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets the color for symbols.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "symbol_color",
+      "xmlDocId": "P:Godot.CodeHighlighter.SymbolColor",
+      "sourcePath": "doc/classes/CodeHighlighter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CodeHighlighter.xml",
+      "sha256": "5efa6fb7a797da407cf63d47fbfefaa8bf3fd30cefa45fe3bfe1bcd9d73f2ff9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

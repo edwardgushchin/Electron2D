@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScrollContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.ScrollContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "ScrollContainer",
+    "documentationPath": "doc/classes/ScrollContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scrollcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EnsureControlVisible",
+      "kind": "Method",
+      "signature": "public void EnsureControlVisible(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Ensures the given [param control] is visible (must be a direct or indirect child of the ScrollContainer). Used by [member follow_focus]. [b]Note:[/b] This will not work on a node that was just added during the same frame. If you want to scroll to a newly added child, you must wait until the next frame using [signal SceneTree.process_frame]: [codeblock] add_child(child_node) await get_tree().process_frame ensure_control_visible(child_node) [/codeblock]",
+      "godotName": "ensure_control_visible",
+      "xmlDocId": "M:Godot.ScrollContainer.EnsureControlVisible(Control)",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "GetHScrollBar",
+      "kind": "Method",
+      "signature": "public HScrollBar GetHScrollBar()",
+      "returnType": "HScrollBar",
+      "parameters": [],
+      "summary": "Returns the horizontal scrollbar [HScrollBar] of this [ScrollContainer]. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to disable or hide a scrollbar, you can use [member horizontal_scroll_mode].",
+      "godotName": "get_h_scroll_bar",
+      "xmlDocId": "M:Godot.ScrollContainer.GetHScrollBar",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "GetVScrollBar",
+      "kind": "Method",
+      "signature": "public VScrollBar GetVScrollBar()",
+      "returnType": "VScrollBar",
+      "parameters": [],
+      "summary": "Returns the vertical scrollbar [VScrollBar] of this [ScrollContainer]. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to disable or hide a scrollbar, you can use [member vertical_scroll_mode].",
+      "godotName": "get_v_scroll_bar",
+      "xmlDocId": "M:Godot.ScrollContainer.GetVScrollBar",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ClipContents",
+      "kind": "Property",
+      "signature": "public bool ClipContents { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "clip_contents",
+      "xmlDocId": "P:Godot.ScrollContainer.ClipContents",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "DrawFocusBorder",
+      "kind": "Property",
+      "signature": "public bool DrawFocusBorder { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [theme_item focus] is drawn when the ScrollContainer or one of its descendant nodes is focused.",
+      "defaultValue": "false",
+      "godotName": "draw_focus_border",
+      "xmlDocId": "P:Godot.ScrollContainer.DrawFocusBorder",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "FollowFocus",
+      "kind": "Property",
+      "signature": "public bool FollowFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the ScrollContainer will automatically scroll to focused children (including indirect children) to make sure they are fully visible.",
+      "defaultValue": "false",
+      "godotName": "follow_focus",
+      "xmlDocId": "P:Godot.ScrollContainer.FollowFocus",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "HorizontalScrollMode",
+      "kind": "Property",
+      "signature": "public int HorizontalScrollMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls whether horizontal scrollbar can be used and when it should be visible.",
+      "defaultValue": "1",
+      "godotName": "horizontal_scroll_mode",
+      "xmlDocId": "P:Godot.ScrollContainer.HorizontalScrollMode",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "PropagateMaximumSize",
+      "kind": "Property",
+      "signature": "public bool PropagateMaximumSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "propagate_maximum_size",
+      "xmlDocId": "P:Godot.ScrollContainer.PropagateMaximumSize",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollDeadzone",
+      "kind": "Property",
+      "signature": "public int ScrollDeadzone { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Deadzone for touch scrolling. Lower deadzone makes the scrolling more sensitive.",
+      "defaultValue": "0",
+      "godotName": "scroll_deadzone",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollDeadzone",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollHintMode",
+      "kind": "Property",
+      "signature": "public int ScrollHintMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The way which scroll hints (indicators that show that the content can still be scrolled in a certain direction) will be shown. [b]Note:[/b] Hints won\u0027t be shown if the content can be scrolled both vertically and horizontally.",
+      "defaultValue": "0",
+      "godotName": "scroll_hint_mode",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollHintMode",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollHorizontal",
+      "kind": "Property",
+      "signature": "public int ScrollHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The current horizontal scroll value. [b]Note:[/b] If you are setting this value in the [method Node._ready] function or earlier, it needs to be wrapped with [method Object.set_deferred], since scroll bar\u0027s [member Range.max_value] is not initialized yet. [codeblock] func _ready(): set_deferred(\u0022scroll_horizontal\u0022, 600) [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "scroll_horizontal",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollHorizontal",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollHorizontalByDefault",
+      "kind": "Property",
+      "signature": "public bool ScrollHorizontalByDefault { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the mouse wheel scrolls the view horizontally, and holding [kbd]Shift[/kbd] scrolls vertically. If [code]false[/code] (default), the mouse wheel scrolls the view vertically, and holding [kbd]Shift[/kbd] scrolls horizontally.",
+      "defaultValue": "false",
+      "godotName": "scroll_horizontal_by_default",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollHorizontalByDefault",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollHorizontalCustomStep",
+      "kind": "Property",
+      "signature": "public float ScrollHorizontalCustomStep { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides the [member ScrollBar.custom_step] used when clicking the internal scroll bar\u0027s horizontal increment and decrement buttons or when using arrow keys when the [ScrollBar] is focused.",
+      "defaultValue": "-1.0",
+      "godotName": "scroll_horizontal_custom_step",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollHorizontalCustomStep",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollVertical",
+      "kind": "Property",
+      "signature": "public int ScrollVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The current vertical scroll value. [b]Note:[/b] Setting it early needs to be deferred, just like in [member scroll_horizontal]. [codeblock] func _ready(): set_deferred(\u0022scroll_vertical\u0022, 600) [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "scroll_vertical",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollVertical",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollVerticalCustomStep",
+      "kind": "Property",
+      "signature": "public float ScrollVerticalCustomStep { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides the [member ScrollBar.custom_step] used when clicking the internal scroll bar\u0027s vertical increment and decrement buttons or when using arrow keys when the [ScrollBar] is focused.",
+      "defaultValue": "-1.0",
+      "godotName": "scroll_vertical_custom_step",
+      "xmlDocId": "P:Godot.ScrollContainer.ScrollVerticalCustomStep",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "TileScrollHint",
+      "kind": "Property",
+      "signature": "public bool TileScrollHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the scroll hint texture will be tiled instead of stretched. See [member scroll_hint_mode].",
+      "defaultValue": "false",
+      "godotName": "tile_scroll_hint",
+      "xmlDocId": "P:Godot.ScrollContainer.TileScrollHint",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "VerticalScrollMode",
+      "kind": "Property",
+      "signature": "public int VerticalScrollMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls whether vertical scrollbar can be used and when it should be visible.",
+      "defaultValue": "1",
+      "godotName": "vertical_scroll_mode",
+      "xmlDocId": "P:Godot.ScrollContainer.VerticalScrollMode",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ScrollEnded",
+      "kind": "Signal",
+      "signature": "public event ScrollEndedHandler ScrollEnded",
+      "parameters": [],
+      "summary": "Emitted when scrolling stops when dragging the scrollable area [i]with a touch event[/i]. This signal is [i]not[/i] emitted when scrolling by dragging the scrollbar, scrolling with the mouse wheel or scrolling with keyboard/gamepad events. [b]Note:[/b] This signal is only emitted on Android or iOS, or on desktop/web platforms when [member ProjectSettings.input_devices/pointing/emulate_touch_from_mouse] is enabled.",
+      "godotName": "scroll_ended",
+      "xmlDocId": "E:Godot.ScrollContainer.ScrollEnded",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "ScrollStarted",
+      "kind": "Signal",
+      "signature": "public event ScrollStartedHandler ScrollStarted",
+      "parameters": [],
+      "summary": "Emitted when scrolling starts when dragging the scrollable area [i]with a touch event[/i]. This signal is [i]not[/i] emitted when scrolling by dragging the scrollbar, scrolling with the mouse wheel or scrolling with keyboard/gamepad events. [b]Note:[/b] This signal is only emitted on Android or iOS, or on desktop/web platforms when [member ProjectSettings.input_devices/pointing/emulate_touch_from_mouse] is enabled.",
+      "godotName": "scroll_started",
+      "xmlDocId": "E:Godot.ScrollContainer.ScrollStarted",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ScrollHintMode",
+      "values": [
+        {
+          "name": "SCROLL_HINT_MODE_ALL",
+          "value": "1",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will be shown at the top and bottom (if vertical), or left and right (if horizontal).",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_BOTTOM_AND_RIGHT",
+          "value": "3",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will be shown at the bottom (if horizontal), or the right (if horizontal).",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_DISABLED",
+          "value": "0",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will never be shown.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_TOP_AND_LEFT",
+          "value": "2",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will be shown at the top (if vertical), or the left (if horizontal).",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        }
+      ]
+    },
+    {
+      "name": "ScrollMode",
+      "values": [
+        {
+          "name": "SCROLL_MODE_AUTO",
+          "value": "1",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Scrolling enabled, scrollbar will be visible only if necessary, i.e. container\u0027s content is bigger than the container.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_MODE_DISABLED",
+          "value": "0",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Scrolling disabled, scrollbar will be invisible.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_MODE_MAXIMIZE_FIRST",
+          "value": "5",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Behaves like [constant SCROLL_MODE_AUTO], but makes the [ScrollContainer] report a minimum size based on its content (limited by [member Control.custom_maximum_size] when set on the corresponding axis). This allows it to grow first and only start scrolling once constrained.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_MODE_RESERVE",
+          "value": "4",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Combines [constant SCROLL_MODE_AUTO] and [constant SCROLL_MODE_SHOW_ALWAYS]. The scrollbar is only visible if necessary, but the content size is adjusted as if it was always visible. It\u0027s useful for ensuring that content size stays the same regardless if the scrollbar is visible.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_MODE_SHOW_ALWAYS",
+          "value": "2",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Scrolling enabled, scrollbar will be always visible.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        },
+        {
+          "name": "SCROLL_MODE_SHOW_NEVER",
+          "value": "3",
+          "enum": "ScrollMode",
+          "kind": "EnumValue",
+          "summary": "Scrolling enabled, scrollbar will be hidden.",
+          "sourcePath": "doc/classes/ScrollContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SCROLL_MODE_DISABLED",
+      "value": "0",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Scrolling disabled, scrollbar will be invisible.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_MODE_AUTO",
+      "value": "1",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Scrolling enabled, scrollbar will be visible only if necessary, i.e. container\u0027s content is bigger than the container.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_MODE_SHOW_ALWAYS",
+      "value": "2",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Scrolling enabled, scrollbar will be always visible.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_MODE_SHOW_NEVER",
+      "value": "3",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Scrolling enabled, scrollbar will be hidden.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_MODE_RESERVE",
+      "value": "4",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Combines [constant SCROLL_MODE_AUTO] and [constant SCROLL_MODE_SHOW_ALWAYS]. The scrollbar is only visible if necessary, but the content size is adjusted as if it was always visible. It\u0027s useful for ensuring that content size stays the same regardless if the scrollbar is visible.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_MODE_MAXIMIZE_FIRST",
+      "value": "5",
+      "enum": "ScrollMode",
+      "kind": "EnumValue",
+      "summary": "Behaves like [constant SCROLL_MODE_AUTO], but makes the [ScrollContainer] report a minimum size based on its content (limited by [member Control.custom_maximum_size] when set on the corresponding axis). This allows it to grow first and only start scrolling once constrained.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_DISABLED",
+      "value": "0",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will never be shown.",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_ALL",
+      "value": "1",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will be shown at the top and bottom (if vertical), or left and right (if horizontal).",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_TOP_AND_LEFT",
+      "value": "2",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will be shown at the top (if vertical), or the left (if horizontal).",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_BOTTOM_AND_RIGHT",
+      "value": "3",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will be shown at the bottom (if horizontal), or the right (if horizontal).",
+      "sourcePath": "doc/classes/ScrollContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScrollContainer.xml",
+      "sha256": "9a80037549da39e3080f06567fb2d6a2b8cb50b428454c74cde42974cc1b2cc8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

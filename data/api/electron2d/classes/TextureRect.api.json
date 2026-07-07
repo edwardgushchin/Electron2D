@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureRect",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TextureRect",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "TextureRect",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TextureRect",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TextureRect()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TextureRect\u0060 class.",
+      "xmlDocId": "M:Electron2D.TextureRect.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TextureRect",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TextureRect()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TextureRect\u0060 class.",
+      "xmlDocId": "M:Electron2D.TextureRect.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this texture rectangle.",
+      "xmlDocId": "M:Electron2D.TextureRect._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the texture according to \u0060Electron2D.TextureRect.StretchMode\u0060.",
+      "xmlDocId": "M:Electron2D.TextureRect._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExpandMode",
+      "kind": "Property",
+      "signature": "public Electron2D.TextureRect.ExpandMode ExpandMode { get; set; }",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Gets or sets how texture size affects minimum size.",
+      "xmlDocId": "P:Electron2D.TextureRect.ExpandMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public System.Boolean FlipH { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture is flipped horizontally.",
+      "xmlDocId": "P:Electron2D.TextureRect.FlipH",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public System.Boolean FlipV { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture is flipped vertically.",
+      "xmlDocId": "P:Electron2D.TextureRect.FlipV",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StretchMode",
+      "kind": "Property",
+      "signature": "public Electron2D.TextureRect.StretchMode StretchMode { get; set; }",
+      "returnType": "Electron2D.TextureRect.StretchMode",
+      "parameters": [],
+      "summary": "Gets or sets how the texture is drawn.",
+      "xmlDocId": "P:Electron2D.TextureRect.StretchMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D Texture { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the texture drawn by this control.",
+      "xmlDocId": "P:Electron2D.TextureRect.Texture",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this texture rectangle.",
+      "xmlDocId": "M:Electron2D.TextureRect._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the texture according to \u0060Electron2D.TextureRect.StretchMode\u0060.",
+      "xmlDocId": "M:Electron2D.TextureRect._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

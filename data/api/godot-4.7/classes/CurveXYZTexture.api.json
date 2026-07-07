@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CurveXYZTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.CurveXYZTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "CurveXYZTexture",
+    "documentationPath": "doc/classes/CurveXYZTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_curvexyztexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CurveX",
+      "kind": "Property",
+      "signature": "public Curve CurveX { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "The [Curve] that is rendered onto the texture\u0027s red channel. Should be a unit [Curve].",
+      "godotName": "curve_x",
+      "xmlDocId": "P:Godot.CurveXYZTexture.CurveX",
+      "sourcePath": "doc/classes/CurveXYZTexture.xml"
+    },
+    {
+      "name": "CurveY",
+      "kind": "Property",
+      "signature": "public Curve CurveY { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "The [Curve] that is rendered onto the texture\u0027s green channel. Should be a unit [Curve].",
+      "godotName": "curve_y",
+      "xmlDocId": "P:Godot.CurveXYZTexture.CurveY",
+      "sourcePath": "doc/classes/CurveXYZTexture.xml"
+    },
+    {
+      "name": "CurveZ",
+      "kind": "Property",
+      "signature": "public Curve CurveZ { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "The [Curve] that is rendered onto the texture\u0027s blue channel. Should be a unit [Curve].",
+      "godotName": "curve_z",
+      "xmlDocId": "P:Godot.CurveXYZTexture.CurveZ",
+      "sourcePath": "doc/classes/CurveXYZTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.CurveXYZTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/CurveXYZTexture.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.",
+      "defaultValue": "256",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.CurveXYZTexture.Width",
+      "sourcePath": "doc/classes/CurveXYZTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CurveXYZTexture.xml",
+      "sha256": "5bc335ad8a595859ac7a3e2f5ee314bc1959b132283e21d6444ba96ea0e3ce31"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SphereMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.SphereMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "SphereMesh",
+    "documentationPath": "doc/classes/SphereMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_spheremesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Full height of the sphere.",
+      "defaultValue": "1.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.SphereMesh.Height",
+      "sourcePath": "doc/classes/SphereMesh.xml"
+    },
+    {
+      "name": "IsHemisphere",
+      "kind": "Property",
+      "signature": "public bool IsHemisphere { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a hemisphere is created rather than a full sphere. [b]Note:[/b] To get a regular hemisphere, the height and radius of the sphere must be equal.",
+      "defaultValue": "false",
+      "godotName": "is_hemisphere",
+      "xmlDocId": "P:Godot.SphereMesh.IsHemisphere",
+      "sourcePath": "doc/classes/SphereMesh.xml"
+    },
+    {
+      "name": "RadialSegments",
+      "kind": "Property",
+      "signature": "public int RadialSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of radial segments on the sphere.",
+      "defaultValue": "64",
+      "godotName": "radial_segments",
+      "xmlDocId": "P:Godot.SphereMesh.RadialSegments",
+      "sourcePath": "doc/classes/SphereMesh.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Radius of sphere.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.SphereMesh.Radius",
+      "sourcePath": "doc/classes/SphereMesh.xml"
+    },
+    {
+      "name": "Rings",
+      "kind": "Property",
+      "signature": "public int Rings { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of segments along the height of the sphere.",
+      "defaultValue": "32",
+      "godotName": "rings",
+      "xmlDocId": "P:Godot.SphereMesh.Rings",
+      "sourcePath": "doc/classes/SphereMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SphereMesh.xml",
+      "sha256": "51e5969af76574f28538899ea0bd46cb5790d8d63f56c8a6254270ca581980ab"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

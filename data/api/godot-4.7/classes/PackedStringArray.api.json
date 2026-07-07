@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedStringArray",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedStringArray",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedStringArray",
+    "documentationPath": "doc/classes/PackedStringArray.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedstringarray.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedStringArray",
+      "kind": "Constructor",
+      "signature": "public PackedStringArray()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedStringArray].",
+      "godotName": "PackedStringArray",
+      "xmlDocId": "M:Godot.PackedStringArray.#ctor",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "PackedStringArray",
+      "kind": "Constructor",
+      "signature": "public PackedStringArray(PackedStringArray from)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Constructs a [PackedStringArray] as a copy of the given [PackedStringArray].",
+      "godotName": "PackedStringArray",
+      "xmlDocId": "M:Godot.PackedStringArray.#ctor(PackedStringArray)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "PackedStringArray",
+      "kind": "Constructor",
+      "signature": "public PackedStringArray(Array from)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedStringArray]. Optionally, you can pass in a generic [Array] that will be converted.",
+      "godotName": "PackedStringArray",
+      "xmlDocId": "M:Godot.PackedStringArray.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(String value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedStringArray.Append(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedStringArray array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Appends a [PackedStringArray] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedStringArray.AppendArray(PackedStringArray)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(String value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedStringArray.Bsearch(String,bool)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedStringArray.Clear",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(String value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedStringArray.Count(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedStringArray Duplicate()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedStringArray.Duplicate",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(String value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedStringArray.Erase(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedStringArray.Fill(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(String value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedStringArray.Find(String,int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public String Get(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [String] at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns an empty string. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedStringArray.Get(int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(String value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedStringArray.Has(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, String value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedStringArray.Insert(int,String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedStringArray.IsEmpty",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(String value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Appends a string element at end of the array.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedStringArray.PushBack(String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedStringArray.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedStringArray.Resize(int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedStringArray.Reverse",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(String value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedStringArray.Rfind(String,int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Changes the [String] at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedStringArray.Set(int,String)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedStringArray.Size",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedStringArray Slice(int begin, int end)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedStringArray], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedStringArray]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedStringArray.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedStringArray.Sort",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "ToByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a [PackedByteArray] with each string encoded as UTF-8. Strings are [code]null[/code] terminated.",
+      "godotName": "to_byte_array",
+      "xmlDocId": "M:Godot.PackedStringArray.ToByteArray",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedStringArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedStringArray.operator !=(PackedStringArray)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedStringArray operator \u002B(PackedStringArray right)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Returns a new [PackedStringArray] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedStringArray.operator \u002B(PackedStringArray)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedStringArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal [String]s at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedStringArray.operator ==(PackedStringArray)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public String operator [](int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [String] at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedStringArray.operator [](int)",
+      "sourcePath": "doc/classes/PackedStringArray.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedStringArray.xml",
+      "sha256": "54c6a6475d468f72b82447a8c1c6e7988a9da2067afd55ff7a588750c7f14ab7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

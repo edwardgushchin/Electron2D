@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorUndoRedoManager",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorUndoRedoManager",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorUndoRedoManager",
+    "documentationPath": "doc/classes/EditorUndoRedoManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorundoredomanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddDoMethod",
+      "kind": "Method",
+      "signature": "public void AddDoMethod(Object @object, StringName method)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Register a method that will be called when the action is committed (i.e. the \u0022do\u0022 action). If this is the first operation, the [param object] will be used to deduce target undo history.",
+      "godotName": "add_do_method",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddDoMethod(Object,StringName)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "AddDoProperty",
+      "kind": "Method",
+      "signature": "public void AddDoProperty(Object @object, StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Register a property value change for \u0022do\u0022. If this is the first operation, the [param object] will be used to deduce target undo history.",
+      "godotName": "add_do_property",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddDoProperty(Object,StringName,Variant)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "AddDoReference",
+      "kind": "Method",
+      "signature": "public void AddDoReference(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Register a reference for \u0022do\u0022 that will be erased if the \u0022do\u0022 history is lost. This is useful mostly for new nodes created for the \u0022do\u0022 call. Do not use for resources.",
+      "godotName": "add_do_reference",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddDoReference(Object)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "AddUndoMethod",
+      "kind": "Method",
+      "signature": "public void AddUndoMethod(Object @object, StringName method)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Register a method that will be called when the action is undone (i.e. the \u0022undo\u0022 action). If this is the first operation, the [param object] will be used to deduce target undo history.",
+      "godotName": "add_undo_method",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddUndoMethod(Object,StringName)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "AddUndoProperty",
+      "kind": "Method",
+      "signature": "public void AddUndoProperty(Object @object, StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Register a property value change for \u0022undo\u0022. If this is the first operation, the [param object] will be used to deduce target undo history.",
+      "godotName": "add_undo_property",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddUndoProperty(Object,StringName,Variant)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "AddUndoReference",
+      "kind": "Method",
+      "signature": "public void AddUndoReference(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Register a reference for \u0022undo\u0022 that will be erased if the \u0022undo\u0022 history is lost. This is useful mostly for nodes removed with the \u0022do\u0022 call (not the \u0022undo\u0022 call!).",
+      "godotName": "add_undo_reference",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.AddUndoReference(Object)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "ClearHistory",
+      "kind": "Method",
+      "signature": "public void ClearHistory(int id, bool increaseVersion)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-99"
+        },
+        {
+          "name": "increase_version",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Clears the given undo history. You can clear history for a specific scene, global history, or for all histories at once (except [constant REMOTE_HISTORY]) if [param id] is [constant INVALID_HISTORY]. If [param increase_version] is [code]true[/code], the undo history version will be increased, marking it as unsaved. Useful for operations that modify the scene, but don\u0027t support undo. [codeblock] var scene_root = EditorInterface.get_edited_scene_root() var undo_redo = EditorInterface.get_editor_undo_redo() undo_redo.clear_history(undo_redo.get_object_history_id(scene_root)) [/codeblock] [b]Note:[/b] If you want to mark an edited scene as unsaved without clearing its history, use [method EditorInterface.mark_scene_as_unsaved] instead.",
+      "godotName": "clear_history",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.ClearHistory(int,bool)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "CommitAction",
+      "kind": "Method",
+      "signature": "public void CommitAction(bool execute)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "execute",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Commits the action. If [param execute] is [code]true[/code] (default), all \u0022do\u0022 methods/properties are called/set when this function is called.",
+      "godotName": "commit_action",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.CommitAction(bool)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "CreateAction",
+      "kind": "Method",
+      "signature": "public void CreateAction(String name, int mergeMode, Object customContext, bool backwardUndoOps, bool markUnsaved)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "merge_mode",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "custom_context",
+          "type": "Object",
+          "defaultValue": "null"
+        },
+        {
+          "name": "backward_undo_ops",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "mark_unsaved",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Create a new action. After this is called, do all your calls to [method add_do_method], [method add_undo_method], [method add_do_property], and [method add_undo_property], then commit the action with [method commit_action]. The way actions are merged is dictated by the [param merge_mode] argument. If [param custom_context] object is provided, it will be used for deducing target history (instead of using the first operation). The way undo operation are ordered in actions is dictated by [param backward_undo_ops]. When [param backward_undo_ops] is [code]false[/code] undo option are ordered in the same order they were added. Which means the first operation to be added will be the first to be undone. If [param mark_unsaved] is [code]false[/code], the action will not mark the history as unsaved. This is useful for example for actions that change a selection, or a setting that will be saved automatically. Otherwise, this should be left to [code]true[/code] if the action requires saving by the user or if it can cause data loss when left unsaved.",
+      "godotName": "create_action",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.CreateAction(String,int,Object,bool,bool)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "ForceFixedHistory",
+      "kind": "Method",
+      "signature": "public void ForceFixedHistory()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces the next operation (e.g. [method add_do_method]) to use the action\u0027s history rather than guessing it from the object. This is sometimes needed when a history can\u0027t be correctly determined, like for a nested resource that doesn\u0027t have a path yet. This method should only be used when absolutely necessary, otherwise it might cause invalid history state. For most of complex cases, the [code]custom_context[/code] parameter of [method create_action] is sufficient.",
+      "godotName": "force_fixed_history",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.ForceFixedHistory",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "GetHistoryUndoRedo",
+      "kind": "Method",
+      "signature": "public UndoRedo GetHistoryUndoRedo(int id)",
+      "returnType": "UndoRedo",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [UndoRedo] object associated with the given history [param id]. [param id] above [code]0[/code] are mapped to the opened scene tabs (but it doesn\u0027t match their order). [param id] of [code]0[/code] or lower have special meaning (see [enum SpecialHistory]). Best used with [method get_object_history_id]. This method is only provided in case you need some more advanced methods of [UndoRedo] (but keep in mind that directly operating on the [UndoRedo] object might affect editor\u0027s stability).",
+      "godotName": "get_history_undo_redo",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.GetHistoryUndoRedo(int)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "GetObjectHistoryId",
+      "kind": "Method",
+      "signature": "public int GetObjectHistoryId(Object @object)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns the history ID deduced from the given [param object]. It can be used with [method get_history_undo_redo].",
+      "godotName": "get_object_history_id",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.GetObjectHistoryId(Object)",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "IsCommittingAction",
+      "kind": "Method",
+      "signature": "public bool IsCommittingAction()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [EditorUndoRedoManager] is currently committing the action, i.e. running its \u0022do\u0022 method or property change (see [method commit_action]).",
+      "godotName": "is_committing_action",
+      "xmlDocId": "M:Godot.EditorUndoRedoManager.IsCommittingAction",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "HistoryChanged",
+      "kind": "Signal",
+      "signature": "public event HistoryChangedHandler HistoryChanged",
+      "parameters": [],
+      "summary": "Emitted when the list of actions in any history has changed, either when an action is committed or a history is cleared.",
+      "godotName": "history_changed",
+      "xmlDocId": "E:Godot.EditorUndoRedoManager.HistoryChanged",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "VersionChanged",
+      "kind": "Signal",
+      "signature": "public event VersionChangedHandler VersionChanged",
+      "parameters": [],
+      "summary": "Emitted when the version of any history has changed as a result of undo or redo call.",
+      "godotName": "version_changed",
+      "xmlDocId": "E:Godot.EditorUndoRedoManager.VersionChanged",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "SpecialHistory",
+      "values": [
+        {
+          "name": "GLOBAL_HISTORY",
+          "value": "0",
+          "enum": "SpecialHistory",
+          "kind": "EnumValue",
+          "summary": "Global history not associated with any scene, but with external resources etc.",
+          "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+        },
+        {
+          "name": "INVALID_HISTORY",
+          "value": "-99",
+          "enum": "SpecialHistory",
+          "kind": "EnumValue",
+          "summary": "Invalid \u0022null\u0022 history. It\u0027s a special value, not associated with any object.",
+          "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+        },
+        {
+          "name": "REMOTE_HISTORY",
+          "value": "-9",
+          "enum": "SpecialHistory",
+          "kind": "EnumValue",
+          "summary": "History associated with remote inspector. Used when live editing a running project.",
+          "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GLOBAL_HISTORY",
+      "value": "0",
+      "enum": "SpecialHistory",
+      "kind": "EnumValue",
+      "summary": "Global history not associated with any scene, but with external resources etc.",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "REMOTE_HISTORY",
+      "value": "-9",
+      "enum": "SpecialHistory",
+      "kind": "EnumValue",
+      "summary": "History associated with remote inspector. Used when live editing a running project.",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    },
+    {
+      "name": "INVALID_HISTORY",
+      "value": "-99",
+      "enum": "SpecialHistory",
+      "kind": "EnumValue",
+      "summary": "Invalid \u0022null\u0022 history. It\u0027s a special value, not associated with any object.",
+      "sourcePath": "doc/classes/EditorUndoRedoManager.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorUndoRedoManager.xml",
+      "sha256": "7036fcd64d3163560443a1824829b7b89a6118de3aa2b373ef68d445197a04bb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

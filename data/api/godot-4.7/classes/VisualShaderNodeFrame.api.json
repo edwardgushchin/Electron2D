@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeFrame",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeFrame",
+    "kind": "class",
+    "baseType": "VisualShaderNodeResizableBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeFrame",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeframe.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddAttachedNode",
+      "kind": "Method",
+      "signature": "public void AddAttachedNode(int node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a node to the list of nodes attached to the frame. Should not be called directly, use the [method VisualShader.attach_node_to_frame] method instead.",
+      "godotName": "add_attached_node",
+      "xmlDocId": "M:Godot.VisualShaderNodeFrame.AddAttachedNode(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "RemoveAttachedNode",
+      "kind": "Method",
+      "signature": "public void RemoveAttachedNode(int node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a node from the list of nodes attached to the frame. Should not be called directly, use the [method VisualShader.detach_node_from_frame] method instead.",
+      "godotName": "remove_attached_node",
+      "xmlDocId": "M:Godot.VisualShaderNodeFrame.RemoveAttachedNode(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "AttachedNodes",
+      "kind": "Property",
+      "signature": "public PackedInt32Array AttachedNodes { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "The list of nodes attached to the frame.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "attached_nodes",
+      "xmlDocId": "P:Godot.VisualShaderNodeFrame.AttachedNodes",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "Autoshrink",
+      "kind": "Property",
+      "signature": "public bool Autoshrink { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the frame will automatically resize to enclose all attached nodes.",
+      "defaultValue": "true",
+      "godotName": "autoshrink",
+      "xmlDocId": "P:Godot.VisualShaderNodeFrame.Autoshrink",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "TintColor",
+      "kind": "Property",
+      "signature": "public Color TintColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the frame when [member tint_color_enabled] is [code]true[/code].",
+      "defaultValue": "Color(0.3, 0.3, 0.3, 0.75)",
+      "godotName": "tint_color",
+      "xmlDocId": "P:Godot.VisualShaderNodeFrame.TintColor",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "TintColorEnabled",
+      "kind": "Property",
+      "signature": "public bool TintColorEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the frame will be tinted with the color specified in [member tint_color].",
+      "defaultValue": "false",
+      "godotName": "tint_color_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeFrame.TintColorEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The title of the node.",
+      "defaultValue": "\u0022Title\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.VisualShaderNodeFrame.Title",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeFrame.xml",
+      "sha256": "dcd1896e0309bc35a38335ad5faf91209d799297e5ef717cf3512cde851aaab5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AESContext",
+    "namespace": "Godot",
+    "fullName": "Godot.AESContext",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AESContext",
+    "documentationPath": "doc/classes/AESContext.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_aescontext.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Finish",
+      "kind": "Method",
+      "signature": "public void Finish()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Close this AES context so it can be started again. See [method start].",
+      "godotName": "finish",
+      "xmlDocId": "M:Godot.AESContext.Finish",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "GetIvState",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetIvState()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Get the current IV state for this context (IV gets updated when calling [method update]). You normally don\u0027t need this function. [b]Note:[/b] This function only makes sense when the context is started with [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT].",
+      "godotName": "get_iv_state",
+      "xmlDocId": "M:Godot.AESContext.GetIvState",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public int Start(int mode, PackedByteArray key, PackedByteArray iv)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "iv",
+          "type": "PackedByteArray",
+          "defaultValue": "PackedByteArray()"
+        }
+      ],
+      "summary": "Start the AES context in the given [param mode]. A [param key] of either 16 or 32 bytes must always be provided, while an [param iv] (initialization vector) of exactly 16 bytes, is only needed when [param mode] is either [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT].",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.AESContext.Start(int,PackedByteArray,PackedByteArray)",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "Update",
+      "kind": "Method",
+      "signature": "public PackedByteArray Update(PackedByteArray src)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Run the desired operation for this AES context. Will return a [PackedByteArray] containing the result of encrypting (or decrypting) the given [param src]. See [method start] for mode of operation. [b]Note:[/b] The size of [param src] must be a multiple of 16. Apply some padding if needed.",
+      "godotName": "update",
+      "xmlDocId": "M:Godot.AESContext.Update(PackedByteArray)",
+      "sourcePath": "doc/classes/AESContext.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "MODE_CBC_DECRYPT",
+          "value": "3",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "AES cipher block chaining decryption mode.",
+          "sourcePath": "doc/classes/AESContext.xml"
+        },
+        {
+          "name": "MODE_CBC_ENCRYPT",
+          "value": "2",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "AES cipher block chaining encryption mode.",
+          "sourcePath": "doc/classes/AESContext.xml"
+        },
+        {
+          "name": "MODE_ECB_DECRYPT",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "AES electronic codebook decryption mode.",
+          "sourcePath": "doc/classes/AESContext.xml"
+        },
+        {
+          "name": "MODE_ECB_ENCRYPT",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "AES electronic codebook encryption mode.",
+          "sourcePath": "doc/classes/AESContext.xml"
+        },
+        {
+          "name": "MODE_MAX",
+          "value": "4",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Maximum value for the mode enum.",
+          "sourcePath": "doc/classes/AESContext.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_ECB_ENCRYPT",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "AES electronic codebook encryption mode.",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "MODE_ECB_DECRYPT",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "AES electronic codebook decryption mode.",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "MODE_CBC_ENCRYPT",
+      "value": "2",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "AES cipher block chaining encryption mode.",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "MODE_CBC_DECRYPT",
+      "value": "3",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "AES cipher block chaining decryption mode.",
+      "sourcePath": "doc/classes/AESContext.xml"
+    },
+    {
+      "name": "MODE_MAX",
+      "value": "4",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Maximum value for the mode enum.",
+      "sourcePath": "doc/classes/AESContext.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AESContext.xml",
+      "sha256": "425c7912b31bb991186250f2226261cbeb1459ada7f36a9a56fb330bb04887d3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

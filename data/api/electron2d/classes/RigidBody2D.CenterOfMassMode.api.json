@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RigidBody2D.CenterOfMassMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RigidBody2D.CenterOfMassMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "RigidBody2D.CenterOfMassMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Auto",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RigidBody2D.CenterOfMassMode Auto",
+      "returnType": "Electron2D.RigidBody2D.CenterOfMassMode",
+      "parameters": [],
+      "summary": "Calculate the center of mass from shapes.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.RigidBody2D.CenterOfMassModeEnum.Auto",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Custom",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RigidBody2D.CenterOfMassMode Custom",
+      "returnType": "Electron2D.RigidBody2D.CenterOfMassMode",
+      "parameters": [],
+      "summary": "Use \u0060Electron2D.RigidBody2D.CenterOfMass\u0060.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.RigidBody2D.CenterOfMassModeEnum.Custom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Auto",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Calculate the center of mass from shapes.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Custom",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Use \u0060Electron2D.RigidBody2D.CenterOfMass\u0060.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

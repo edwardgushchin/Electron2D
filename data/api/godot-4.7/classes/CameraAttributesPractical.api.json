@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraAttributesPractical",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraAttributesPractical",
+    "kind": "class",
+    "baseType": "CameraAttributes",
+    "interfaces": [],
+    "godotReference": "CameraAttributesPractical",
+    "documentationPath": "doc/classes/CameraAttributesPractical.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cameraattributespractical.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AutoExposureMaxSensitivity",
+      "kind": "Property",
+      "signature": "public float AutoExposureMaxSensitivity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum sensitivity (in ISO) used when calculating auto exposure. When calculating scene average luminance, color values will be clamped to at least this value. This limits the auto-exposure from exposing below a certain brightness, resulting in a cut off point where the scene will remain bright.",
+      "defaultValue": "800.0",
+      "godotName": "auto_exposure_max_sensitivity",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.AutoExposureMaxSensitivity",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "AutoExposureMinSensitivity",
+      "kind": "Property",
+      "signature": "public float AutoExposureMinSensitivity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum sensitivity (in ISO) used when calculating auto exposure. When calculating scene average luminance, color values will be clamped to at least this value. This limits the auto-exposure from exposing above a certain brightness, resulting in a cut off point where the scene will remain dark.",
+      "defaultValue": "0.0",
+      "godotName": "auto_exposure_min_sensitivity",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.AutoExposureMinSensitivity",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurAmount",
+      "kind": "Property",
+      "signature": "public float DofBlurAmount { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the maximum amount of blur. When using physically-based blur amounts, will instead act as a multiplier. High values lead to an increased amount of blurriness, but can be much more expensive to calculate. It is best to keep this as low as possible for a given art style.",
+      "defaultValue": "0.1",
+      "godotName": "dof_blur_amount",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurAmount",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurFarDistance",
+      "kind": "Property",
+      "signature": "public float DofBlurFarDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Objects further from the [Camera3D] by this amount will be blurred by the depth of field effect. Measured in meters.",
+      "defaultValue": "10.0",
+      "godotName": "dof_blur_far_distance",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurFarDistance",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurFarEnabled",
+      "kind": "Property",
+      "signature": "public bool DofBlurFarEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables depth of field blur for objects further than [member dof_blur_far_distance]. Strength of blur is controlled by [member dof_blur_amount] and modulated by [member dof_blur_far_transition]. [b]Note:[/b] Depth of field blur is only supported in the Forward\u002B and Mobile rendering methods, not Compatibility. [b]Note:[/b] Depth of field blur is not supported on viewports that have a transparent background (where [member Viewport.transparent_bg] is [code]true[/code]).",
+      "defaultValue": "false",
+      "godotName": "dof_blur_far_enabled",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurFarEnabled",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurFarTransition",
+      "kind": "Property",
+      "signature": "public float DofBlurFarTransition { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When positive, distance over which (starting from [member dof_blur_far_distance]) blur effect will scale from 0 to [member dof_blur_amount]. When negative, uses physically-based scaling so depth of field effect will scale from 0 at [member dof_blur_far_distance] and will increase in a physically accurate way as objects get further from the [Camera3D].",
+      "defaultValue": "5.0",
+      "godotName": "dof_blur_far_transition",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurFarTransition",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurNearDistance",
+      "kind": "Property",
+      "signature": "public float DofBlurNearDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Objects closer from the [Camera3D] by this amount will be blurred by the depth of field effect. Measured in meters.",
+      "defaultValue": "2.0",
+      "godotName": "dof_blur_near_distance",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurNearDistance",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurNearEnabled",
+      "kind": "Property",
+      "signature": "public bool DofBlurNearEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables depth of field blur for objects closer than [member dof_blur_near_distance]. Strength of blur is controlled by [member dof_blur_amount] and modulated by [member dof_blur_near_transition]. [b]Note:[/b] Depth of field blur is only supported in the Forward\u002B and Mobile rendering methods, not Compatibility. [b]Note:[/b] Depth of field blur is not supported on viewports that have a transparent background (where [member Viewport.transparent_bg] is [code]true[/code]).",
+      "defaultValue": "false",
+      "godotName": "dof_blur_near_enabled",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurNearEnabled",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    },
+    {
+      "name": "DofBlurNearTransition",
+      "kind": "Property",
+      "signature": "public float DofBlurNearTransition { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When positive, distance over which blur effect will scale from 0 to [member dof_blur_amount], ending at [member dof_blur_near_distance]. When negative, uses physically-based scaling so depth of field effect will scale from 0 at [member dof_blur_near_distance] and will increase in a physically accurate way as objects get closer to the [Camera3D].",
+      "defaultValue": "1.0",
+      "godotName": "dof_blur_near_transition",
+      "xmlDocId": "P:Godot.CameraAttributesPractical.DofBlurNearTransition",
+      "sourcePath": "doc/classes/CameraAttributesPractical.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraAttributesPractical.xml",
+      "sha256": "0bc21107b7ced64cf0cb541c17a49706b839bdc9c3ff230a813e74bc24c7030f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MenuButton",
+    "namespace": "Godot",
+    "fullName": "Godot.MenuButton",
+    "kind": "class",
+    "baseType": "Button",
+    "interfaces": [],
+    "godotReference": "MenuButton",
+    "documentationPath": "doc/classes/MenuButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_menubutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPopup",
+      "kind": "Method",
+      "signature": "public PopupMenu GetPopup()",
+      "returnType": "PopupMenu",
+      "parameters": [],
+      "summary": "Returns the [PopupMenu] contained in this button. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_popup",
+      "xmlDocId": "M:Godot.MenuButton.GetPopup",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "SetDisableShortcuts",
+      "kind": "Method",
+      "signature": "public void SetDisableShortcuts(bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], shortcuts are disabled and cannot be used to trigger the button.",
+      "godotName": "set_disable_shortcuts",
+      "xmlDocId": "M:Godot.MenuButton.SetDisableShortcuts(bool)",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "ShowPopup",
+      "kind": "Method",
+      "signature": "public void ShowPopup()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Adjusts popup position and sizing for the [MenuButton], then shows the [PopupMenu]. Prefer this over using [code]get_popup().popup()[/code].",
+      "godotName": "show_popup",
+      "xmlDocId": "M:Godot.MenuButton.ShowPopup",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "ActionMode",
+      "kind": "Property",
+      "signature": "public int ActionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "action_mode",
+      "xmlDocId": "P:Godot.MenuButton.ActionMode",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "Flat",
+      "kind": "Property",
+      "signature": "public bool Flat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "flat",
+      "xmlDocId": "P:Godot.MenuButton.Flat",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.MenuButton.FocusMode",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "ItemCount",
+      "kind": "Property",
+      "signature": "public int ItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of items currently in the list.",
+      "defaultValue": "0",
+      "godotName": "item_count",
+      "xmlDocId": "P:Godot.MenuButton.ItemCount",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "SwitchOnHover",
+      "kind": "Property",
+      "signature": "public bool SwitchOnHover { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], when the cursor hovers above another [MenuButton] within the same parent which also has [member switch_on_hover] enabled, it will close the current [MenuButton] and open the other one.",
+      "defaultValue": "false",
+      "godotName": "switch_on_hover",
+      "xmlDocId": "P:Godot.MenuButton.SwitchOnHover",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.MenuButton.ToggleMode",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "popup/item_{index}/checkable",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The checkable item type of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "popup/item_{index}/checkable",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/checked",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is checked. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "popup/item_{index}/checked",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/disabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is disabled. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "popup/item_{index}/disabled",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/icon",
+      "kind": "RawProperty",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The icon of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "godotName": "popup/item_{index}/icon",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/id",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "popup/item_{index}/id",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/separator",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is a separator. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "popup/item_{index}/separator",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/text",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "popup/item_{index}/text",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "AboutToPopup",
+      "kind": "Signal",
+      "signature": "public event AboutToPopupHandler AboutToPopup",
+      "parameters": [],
+      "summary": "Emitted when the [PopupMenu] of this MenuButton is about to show.",
+      "godotName": "about_to_popup",
+      "xmlDocId": "E:Godot.MenuButton.AboutToPopup",
+      "sourcePath": "doc/classes/MenuButton.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MenuButton.xml",
+      "sha256": "928925e03d5a452c6077f0c0fd6b19ebd575e83e3caf6422fa7f4b329914e907"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

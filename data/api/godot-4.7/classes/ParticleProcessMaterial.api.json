@@ -1,0 +1,2180 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ParticleProcessMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.ParticleProcessMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "ParticleProcessMaterial",
+    "documentationPath": "doc/classes/ParticleProcessMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_particleprocessmaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParam",
+      "kind": "Method",
+      "signature": "public Vector2 GetParam(int param)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum and maximum values of the given [param param] as a vector. The [code]x[/code] component of the returned vector corresponds to minimum and the [code]y[/code] component corresponds to maximum.",
+      "godotName": "get_param",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.GetParam(int)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "GetParamMax",
+      "kind": "Method",
+      "signature": "public float GetParamMax(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum value range for the given parameter.",
+      "godotName": "get_param_max",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.GetParamMax(int)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "GetParamMin",
+      "kind": "Method",
+      "signature": "public float GetParamMin(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum value range for the given parameter.",
+      "godotName": "get_param_min",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.GetParamMin(int)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "GetParamTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetParamTexture(int param)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Texture2D] used by the specified parameter.",
+      "godotName": "get_param_texture",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.GetParamTexture(int)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "GetParticleFlag",
+      "kind": "Method",
+      "signature": "public bool GetParticleFlag(int particleFlag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "particle_flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified particle flag is enabled.",
+      "godotName": "get_particle_flag",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.GetParticleFlag(int)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SetParam",
+      "kind": "Method",
+      "signature": "public void SetParam(int param, Vector2 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the minimum and maximum values of the given [param param]. The [code]x[/code] component of the argument vector corresponds to minimum and the [code]y[/code] component corresponds to maximum.",
+      "godotName": "set_param",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.SetParam(int,Vector2)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SetParamMax",
+      "kind": "Method",
+      "signature": "public void SetParamMax(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum value range for the given parameter.",
+      "godotName": "set_param_max",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.SetParamMax(int,float)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SetParamMin",
+      "kind": "Method",
+      "signature": "public void SetParamMin(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum value range for the given parameter.",
+      "godotName": "set_param_min",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.SetParamMin(int,float)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SetParamTexture",
+      "kind": "Method",
+      "signature": "public void SetParamTexture(int param, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the [Texture2D] for the specified [enum Parameter].",
+      "godotName": "set_param_texture",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.SetParamTexture(int,Texture2D)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SetParticleFlag",
+      "kind": "Method",
+      "signature": "public void SetParticleFlag(int particleFlag, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "particle_flag",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the [param particle_flag] to [param enable].",
+      "godotName": "set_particle_flag",
+      "xmlDocId": "M:Godot.ParticleProcessMaterial.SetParticleFlag(int,bool)",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AlphaCurve",
+      "kind": "Property",
+      "signature": "public Texture2D AlphaCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The alpha value of each particle\u0027s color will be multiplied by this [CurveTexture] over its lifetime. [b]Note:[/b] [member alpha_curve] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALPHA *= COLOR.a;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member alpha_curve] will have no visible effect.",
+      "godotName": "alpha_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AlphaCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngleCurve",
+      "kind": "Property",
+      "signature": "public Texture2D AngleCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s rotation will be animated along this [CurveTexture].",
+      "godotName": "angle_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngleCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngleMax",
+      "kind": "Property",
+      "signature": "public float AngleMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial rotation applied to each particle, in degrees. Only applied when [member particle_flag_disable_z] or [member particle_flag_rotate_y] are [code]true[/code] or the [BaseMaterial3D] being used to draw the particle is using [constant BaseMaterial3D.BILLBOARD_PARTICLES].",
+      "defaultValue": "0.0",
+      "godotName": "angle_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngleMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngleMin",
+      "kind": "Property",
+      "signature": "public float AngleMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member angle_max].",
+      "defaultValue": "0.0",
+      "godotName": "angle_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngleMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngularVelocityCurve",
+      "kind": "Property",
+      "signature": "public Texture2D AngularVelocityCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s angular velocity (rotation speed) will vary along this [CurveTexture] over its lifetime.",
+      "godotName": "angular_velocity_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngularVelocityCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngularVelocityMax",
+      "kind": "Property",
+      "signature": "public float AngularVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial angular velocity (rotation speed) applied to each particle in [i]degrees[/i] per second. Only applied when [member particle_flag_disable_z] or [member particle_flag_rotate_y] are [code]true[/code] or the [BaseMaterial3D] being used to draw the particle is using [constant BaseMaterial3D.BILLBOARD_PARTICLES].",
+      "defaultValue": "0.0",
+      "godotName": "angular_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngularVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AngularVelocityMin",
+      "kind": "Property",
+      "signature": "public float AngularVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member angular_velocity_max].",
+      "defaultValue": "0.0",
+      "godotName": "angular_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AngularVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimOffsetCurve",
+      "kind": "Property",
+      "signature": "public Texture2D AnimOffsetCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s animation offset will vary along this [CurveTexture].",
+      "godotName": "anim_offset_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimOffsetCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimOffsetMax",
+      "kind": "Property",
+      "signature": "public float AnimOffsetMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum animation offset that corresponds to frame index in the texture. [code]0[/code] is the first frame, [code]1[/code] is the last one. See [member CanvasItemMaterial.particles_animation].",
+      "defaultValue": "0.0",
+      "godotName": "anim_offset_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimOffsetMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimOffsetMin",
+      "kind": "Property",
+      "signature": "public float AnimOffsetMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member anim_offset_max].",
+      "defaultValue": "0.0",
+      "godotName": "anim_offset_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimOffsetMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimSpeedCurve",
+      "kind": "Property",
+      "signature": "public Texture2D AnimSpeedCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s animation speed will vary along this [CurveTexture].",
+      "godotName": "anim_speed_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimSpeedCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimSpeedMax",
+      "kind": "Property",
+      "signature": "public float AnimSpeedMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum particle animation speed. Animation speed of [code]1[/code] means that the particles will make full [code]0[/code] to [code]1[/code] offset cycle during lifetime, [code]2[/code] means [code]2[/code] cycles etc. With animation speed greater than [code]1[/code], remember to enable [member CanvasItemMaterial.particles_anim_loop] property if you want the animation to repeat.",
+      "defaultValue": "0.0",
+      "godotName": "anim_speed_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimSpeedMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AnimSpeedMin",
+      "kind": "Property",
+      "signature": "public float AnimSpeedMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member anim_speed_max].",
+      "defaultValue": "0.0",
+      "godotName": "anim_speed_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AnimSpeedMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "AttractorInteractionEnabled",
+      "kind": "Property",
+      "signature": "public bool AttractorInteractionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], interaction with particle attractors is enabled. In 3D, attraction only occurs within the area defined by the [GPUParticles3D] node\u0027s [member GPUParticles3D.visibility_aabb].",
+      "defaultValue": "true",
+      "godotName": "attractor_interaction_enabled",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.AttractorInteractionEnabled",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "CollisionBounce",
+      "kind": "Property",
+      "signature": "public float CollisionBounce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The particles\u0027 bounciness. Values range from [code]0[/code] (no bounce) to [code]1[/code] (full bounciness). Only effective if [member collision_mode] is [constant COLLISION_RIGID].",
+      "godotName": "collision_bounce",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.CollisionBounce",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "CollisionFriction",
+      "kind": "Property",
+      "signature": "public float CollisionFriction { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The particles\u0027 friction. Values range from [code]0[/code] (frictionless) to [code]1[/code] (maximum friction). Only effective if [member collision_mode] is [constant COLLISION_RIGID].",
+      "godotName": "collision_friction",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.CollisionFriction",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "CollisionMode",
+      "kind": "Property",
+      "signature": "public int CollisionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particles\u0027 collision mode. [b]Note:[/b] 3D Particles can only collide with [GPUParticlesCollision3D] nodes, not [PhysicsBody3D] nodes. To make particles collide with various objects, you can add [GPUParticlesCollision3D] nodes as children of [PhysicsBody3D] nodes. In 3D, collisions only occur within the area defined by the [GPUParticles3D] node\u0027s [member GPUParticles3D.visibility_aabb]. [b]Note:[/b] 2D Particles can only collide with [LightOccluder2D] nodes, not [PhysicsBody2D] nodes.",
+      "defaultValue": "0",
+      "godotName": "collision_mode",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.CollisionMode",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "CollisionUseScale",
+      "kind": "Property",
+      "signature": "public bool CollisionUseScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member GPUParticles3D.collision_base_size] is multiplied by the particle\u0027s effective scale (see [member scale_min], [member scale_max], [member scale_curve], and [member scale_over_velocity_curve]).",
+      "defaultValue": "false",
+      "godotName": "collision_use_scale",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.CollisionUseScale",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial color. If the [GPUParticles2D]\u0027s [code]texture[/code] is defined, it will be multiplied by this color. [b]Note:[/b] [member color] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color] will have no visible effect.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Color",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ColorInitialRamp",
+      "kind": "Property",
+      "signature": "public Texture2D ColorInitialRamp { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial color will vary along this [GradientTexture1D] (multiplied with [member color]). [b]Note:[/b] [member color_initial_ramp] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color_initial_ramp] will have no visible effect.",
+      "godotName": "color_initial_ramp",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ColorInitialRamp",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ColorRamp",
+      "kind": "Property",
+      "signature": "public Texture2D ColorRamp { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s color will vary along this [GradientTexture1D] over its lifetime (multiplied with [member color]). [b]Note:[/b] [member color_ramp] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color_ramp] will have no visible effect.",
+      "godotName": "color_ramp",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ColorRamp",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DampingCurve",
+      "kind": "Property",
+      "signature": "public Texture2D DampingCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Damping will vary along this [CurveTexture].",
+      "godotName": "damping_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DampingCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DampingMax",
+      "kind": "Property",
+      "signature": "public float DampingMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum rate at which particles lose velocity. For example value of [code]100[/code] means that the particle will go from [code]100[/code] velocity to [code]0[/code] in [code]1[/code] second.",
+      "defaultValue": "0.0",
+      "godotName": "damping_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DampingMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DampingMin",
+      "kind": "Property",
+      "signature": "public float DampingMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member damping_max].",
+      "defaultValue": "0.0",
+      "godotName": "damping_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DampingMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Direction",
+      "kind": "Property",
+      "signature": "public Vector3 Direction { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Unit vector specifying the particles\u0027 emission direction.",
+      "defaultValue": "Vector3(1, 0, 0)",
+      "godotName": "direction",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Direction",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DirectionalVelocityCurve",
+      "kind": "Property",
+      "signature": "public Texture2D DirectionalVelocityCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "A curve that specifies the velocity along each of the axes of the particle system along its lifetime. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "godotName": "directional_velocity_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DirectionalVelocityCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DirectionalVelocityMax",
+      "kind": "Property",
+      "signature": "public float DirectionalVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum directional velocity value, which is multiplied by [member directional_velocity_curve]. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "godotName": "directional_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DirectionalVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "DirectionalVelocityMin",
+      "kind": "Property",
+      "signature": "public float DirectionalVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum directional velocity value, which is multiplied by [member directional_velocity_curve]. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "godotName": "directional_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.DirectionalVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionBoxExtents",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionBoxExtents { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The box\u0027s extents if [member emission_shape] is set to [constant EMISSION_SHAPE_BOX]. [b]Note:[/b] [member emission_box_extents] starts from the center point and applies the X, Y, and Z values in both directions. The size is twice the area of the extents.",
+      "godotName": "emission_box_extents",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionBoxExtents",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionColorTexture",
+      "kind": "Property",
+      "signature": "public Texture2D EmissionColorTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Particle color will be modulated by color determined by sampling this texture at the same point as the [member emission_point_texture]. [b]Note:[/b] [member emission_color_texture] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member emission_color_texture] will have no visible effect.",
+      "godotName": "emission_color_texture",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionColorTexture",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionCurve",
+      "kind": "Property",
+      "signature": "public Texture2D EmissionCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s color will be multiplied by this [CurveTexture] over its lifetime. [b]Note:[/b] [member emission_curve] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member emission_curve] will have no visible effect.",
+      "godotName": "emission_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionNormalTexture",
+      "kind": "Property",
+      "signature": "public Texture2D EmissionNormalTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Particle velocity and rotation will be set by sampling this texture at the same point as the [member emission_point_texture]. Used only in [constant EMISSION_SHAPE_DIRECTED_POINTS]. Can be created automatically from mesh or node by selecting \u0022Create Emission Points from Mesh/Node\u0022 under the \u0022Particles\u0022 tool in the toolbar.",
+      "godotName": "emission_normal_texture",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionNormalTexture",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionPointCount",
+      "kind": "Property",
+      "signature": "public int EmissionPointCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of emission points if [member emission_shape] is set to [constant EMISSION_SHAPE_POINTS] or [constant EMISSION_SHAPE_DIRECTED_POINTS].",
+      "godotName": "emission_point_count",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionPointCount",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionPointTexture",
+      "kind": "Property",
+      "signature": "public Texture2D EmissionPointTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Particles will be emitted at positions determined by sampling this texture at a random position. Used with [constant EMISSION_SHAPE_POINTS] and [constant EMISSION_SHAPE_DIRECTED_POINTS]. Can be created automatically from mesh or node by selecting \u0022Create Emission Points from Mesh/Node\u0022 under the \u0022Particles\u0022 tool in the toolbar.",
+      "godotName": "emission_point_texture",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionPointTexture",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionRingAxis",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionRingAxis { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The axis of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_axis",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionRingAxis",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionRingConeAngle",
+      "kind": "Property",
+      "signature": "public float EmissionRingConeAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The angle of the cone when using the emitter [constant EMISSION_SHAPE_RING]. The default angle of 90 degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values will result in a ring where one end is larger than the other. [b]Note:[/b] Depending on [member emission_ring_height], the angle may be clamped if the ring\u0027s end is reached to form a perfect cone.",
+      "godotName": "emission_ring_cone_angle",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionRingConeAngle",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionRingHeight",
+      "kind": "Property",
+      "signature": "public float EmissionRingHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_height",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionRingHeight",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionRingInnerRadius",
+      "kind": "Property",
+      "signature": "public float EmissionRingInnerRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inner radius of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_inner_radius",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionRingInnerRadius",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionRingRadius",
+      "kind": "Property",
+      "signature": "public float EmissionRingRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_radius",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionRingRadius",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionShape",
+      "kind": "Property",
+      "signature": "public int EmissionShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Particles will be emitted inside this region.",
+      "defaultValue": "0",
+      "godotName": "emission_shape",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionShape",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionShapeOffset",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionShapeOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The offset for the [member emission_shape], in local space.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "emission_shape_offset",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionShapeOffset",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionShapeScale",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionShapeScale { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The scale of the [member emission_shape], in local space.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "emission_shape_scale",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionShapeScale",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EmissionSphereRadius",
+      "kind": "Property",
+      "signature": "public float EmissionSphereRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sphere\u0027s radius if [member emission_shape] is set to [constant EMISSION_SHAPE_SPHERE].",
+      "godotName": "emission_sphere_radius",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.EmissionSphereRadius",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Flatness",
+      "kind": "Property",
+      "signature": "public float Flatness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of [member spread] along the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "flatness",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Flatness",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Gravity",
+      "kind": "Property",
+      "signature": "public Vector3 Gravity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Gravity applied to every particle.",
+      "defaultValue": "Vector3(0, -9.8, 0)",
+      "godotName": "gravity",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Gravity",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "HueVariationCurve",
+      "kind": "Property",
+      "signature": "public Texture2D HueVariationCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s hue will vary along this [CurveTexture].",
+      "godotName": "hue_variation_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.HueVariationCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "HueVariationMax",
+      "kind": "Property",
+      "signature": "public float HueVariationMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial hue variation applied to each particle. It will shift the particle color\u0027s hue.",
+      "defaultValue": "0.0",
+      "godotName": "hue_variation_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.HueVariationMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "HueVariationMin",
+      "kind": "Property",
+      "signature": "public float HueVariationMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member hue_variation_max].",
+      "defaultValue": "0.0",
+      "godotName": "hue_variation_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.HueVariationMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "InheritVelocityRatio",
+      "kind": "Property",
+      "signature": "public float InheritVelocityRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Percentage of the velocity of the respective [GPUParticles2D] or [GPUParticles3D] inherited by each particle when spawning.",
+      "defaultValue": "0.0",
+      "godotName": "inherit_velocity_ratio",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.InheritVelocityRatio",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "InitialVelocityMax",
+      "kind": "Property",
+      "signature": "public float InitialVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial velocity magnitude for each particle. Direction comes from [member direction] and [member spread].",
+      "defaultValue": "0.0",
+      "godotName": "initial_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.InitialVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "InitialVelocityMin",
+      "kind": "Property",
+      "signature": "public float InitialVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member initial_velocity_max].",
+      "defaultValue": "0.0",
+      "godotName": "initial_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.InitialVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "LifetimeRandomness",
+      "kind": "Property",
+      "signature": "public float LifetimeRandomness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Particle lifetime randomness ratio. The equation for the lifetime of a particle is [code]lifetime * (1.0 - randf() * lifetime_randomness)[/code]. For example, a [member lifetime_randomness] of [code]0.4[/code] scales the lifetime between [code]0.6[/code] to [code]1.0[/code] of its original value.",
+      "defaultValue": "0.0",
+      "godotName": "lifetime_randomness",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.LifetimeRandomness",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "LinearAccelCurve",
+      "kind": "Property",
+      "signature": "public Texture2D LinearAccelCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s linear acceleration will vary along this [CurveTexture].",
+      "godotName": "linear_accel_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.LinearAccelCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "LinearAccelMax",
+      "kind": "Property",
+      "signature": "public float LinearAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum linear acceleration applied to each particle in the direction of motion.",
+      "defaultValue": "0.0",
+      "godotName": "linear_accel_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.LinearAccelMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "LinearAccelMin",
+      "kind": "Property",
+      "signature": "public float LinearAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member linear_accel_max].",
+      "defaultValue": "0.0",
+      "godotName": "linear_accel_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.LinearAccelMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "OrbitVelocityCurve",
+      "kind": "Property",
+      "signature": "public Texture2D OrbitVelocityCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s orbital velocity will vary along this [CurveTexture]. [b]Note:[/b] For 3D orbital velocity, use a [CurveXYZTexture]. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "godotName": "orbit_velocity_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.OrbitVelocityCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "OrbitVelocityMax",
+      "kind": "Property",
+      "signature": "public float OrbitVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum orbital velocity applied to each particle. Makes the particles circle around origin. Specified in number of full rotations around origin per second. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "defaultValue": "0.0",
+      "godotName": "orbit_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.OrbitVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "OrbitVelocityMin",
+      "kind": "Property",
+      "signature": "public float OrbitVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member orbit_velocity_max]. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "defaultValue": "0.0",
+      "godotName": "orbit_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.OrbitVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ParticleFlagAlignY",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagAlignY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Align Y axis of particle with the direction of its velocity.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_align_y",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ParticleFlagAlignY",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ParticleFlagDampingAsFriction",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagDampingAsFriction { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Changes the behavior of the damping properties from a linear deceleration to a deceleration based on speed percentage.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_damping_as_friction",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ParticleFlagDampingAsFriction",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ParticleFlagDisableZ",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagDisableZ { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles will not move on the z axis.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_disable_z",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ParticleFlagDisableZ",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ParticleFlagInheritEmitterScale",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagInheritEmitterScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles will inherit the scale of the emitter. [b]Note:[/b] This has no effect when [member GPUParticles3D.local_coords] is [code]true[/code], since particles in local space are already affected by the emitter\u0027s scale.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_inherit_emitter_scale",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ParticleFlagInheritEmitterScale",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ParticleFlagRotateY",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagRotateY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles rotate around Y axis by [member angle_min].",
+      "defaultValue": "false",
+      "godotName": "particle_flag_rotate_y",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ParticleFlagRotateY",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialAccelCurve",
+      "kind": "Property",
+      "signature": "public Texture2D RadialAccelCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s radial acceleration will vary along this [CurveTexture].",
+      "godotName": "radial_accel_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialAccelCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialAccelMax",
+      "kind": "Property",
+      "signature": "public float RadialAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum radial acceleration applied to each particle. Makes particle accelerate away from the origin or towards it if negative.",
+      "defaultValue": "0.0",
+      "godotName": "radial_accel_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialAccelMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialAccelMin",
+      "kind": "Property",
+      "signature": "public float RadialAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member radial_accel_max].",
+      "defaultValue": "0.0",
+      "godotName": "radial_accel_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialAccelMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialVelocityCurve",
+      "kind": "Property",
+      "signature": "public Texture2D RadialVelocityCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "A [CurveTexture] that defines the velocity over the particle\u0027s lifetime away (or toward) the [member velocity_pivot]. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "godotName": "radial_velocity_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialVelocityCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialVelocityMax",
+      "kind": "Property",
+      "signature": "public float RadialVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum radial velocity applied to each particle. Makes particles move away from the [member velocity_pivot], or toward it if negative. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "defaultValue": "0.0",
+      "godotName": "radial_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RadialVelocityMin",
+      "kind": "Property",
+      "signature": "public float RadialVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum radial velocity applied to each particle. Makes particles move away from the [member velocity_pivot], or toward it if negative. [b]Note:[/b] Animated velocities will not be affected by damping, use [member velocity_limit_curve] instead.",
+      "defaultValue": "0.0",
+      "godotName": "radial_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RadialVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Rotation3dMax",
+      "kind": "Property",
+      "signature": "public Vector3 Rotation3dMax { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The maximum 3D orientation, in degrees. Works only in 3D and if [member use_rotation_3d] is enabled.",
+      "godotName": "rotation_3d_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Rotation3dMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Rotation3dMin",
+      "kind": "Property",
+      "signature": "public Vector3 Rotation3dMin { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The minimum 3D orientation, in degrees. Works only in 3D and if [member use_rotation_3d] is enabled.",
+      "godotName": "rotation_3d_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Rotation3dMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RotationVelocity3dCurve",
+      "kind": "Property",
+      "signature": "public Texture2D RotationVelocity3dCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Rotation velocity curve over lifetime, per-axis. Enable [member use_rotation_velocity_3d] to use this.",
+      "godotName": "rotation_velocity_3d_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RotationVelocity3dCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RotationVelocity3dMax",
+      "kind": "Property",
+      "signature": "public Vector3 RotationVelocity3dMax { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Maximum 3D rotation velocity on the particle\u0027s local axis. Enable [member use_rotation_velocity_3d] to use this.",
+      "godotName": "rotation_velocity_3d_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RotationVelocity3dMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "RotationVelocity3dMin",
+      "kind": "Property",
+      "signature": "public Vector3 RotationVelocity3dMin { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Minimum 3D rotation velocity on the particle\u0027s local axis. Enable [member use_rotation_velocity_3d] to use this.",
+      "godotName": "rotation_velocity_3d_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.RotationVelocity3dMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Scale3dMax",
+      "kind": "Property",
+      "signature": "public Vector3 Scale3dMax { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The maximum value of the random scale vector for each particle. Works only if [member use_scale_3d] is enabled.",
+      "godotName": "scale_3d_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Scale3dMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Scale3dMin",
+      "kind": "Property",
+      "signature": "public Vector3 Scale3dMin { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The minimum value of the random scale vector for each particle. Works only if [member use_scale_3d] is enabled.",
+      "godotName": "scale_3d_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Scale3dMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleCurve",
+      "kind": "Property",
+      "signature": "public Texture2D ScaleCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s scale will vary along this [CurveTexture] over its lifetime. If a [CurveXYZTexture] is supplied instead, the scale will be separated per-axis.",
+      "godotName": "scale_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleMax",
+      "kind": "Property",
+      "signature": "public float ScaleMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial scale applied to each particle.",
+      "defaultValue": "1.0",
+      "godotName": "scale_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleMin",
+      "kind": "Property",
+      "signature": "public float ScaleMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member scale_max].",
+      "defaultValue": "1.0",
+      "godotName": "scale_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleOverVelocityCurve",
+      "kind": "Property",
+      "signature": "public Texture2D ScaleOverVelocityCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Either a [CurveTexture] or a [CurveXYZTexture] that scales each particle based on its velocity.",
+      "godotName": "scale_over_velocity_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleOverVelocityCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleOverVelocityMax",
+      "kind": "Property",
+      "signature": "public float ScaleOverVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum velocity value reference for [member scale_over_velocity_curve]. [member scale_over_velocity_curve] will be interpolated between [member scale_over_velocity_min] and [member scale_over_velocity_max].",
+      "defaultValue": "0.0",
+      "godotName": "scale_over_velocity_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleOverVelocityMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "ScaleOverVelocityMin",
+      "kind": "Property",
+      "signature": "public float ScaleOverVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum velocity value reference for [member scale_over_velocity_curve]. [member scale_over_velocity_curve] will be interpolated between [member scale_over_velocity_min] and [member scale_over_velocity_max].",
+      "defaultValue": "0.0",
+      "godotName": "scale_over_velocity_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.ScaleOverVelocityMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "Spread",
+      "kind": "Property",
+      "signature": "public float Spread { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial direction range from [code]\u002Bspread[/code] to [code]-spread[/code] degrees.",
+      "defaultValue": "45.0",
+      "godotName": "spread",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.Spread",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterAmountAtCollision",
+      "kind": "Property",
+      "signature": "public int SubEmitterAmountAtCollision { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of particles to spawn from the subemitter node when a collision occurs. When combined with [constant COLLISION_HIDE_ON_CONTACT] on the main particles material, this can be used to achieve effects such as raindrops hitting the ground. [b]Note:[/b] This value shouldn\u0027t exceed [member GPUParticles2D.amount] or [member GPUParticles3D.amount] defined on the [i]subemitter node[/i] (not the main node), relative to the subemitter\u0027s particle lifetime. If the number of particles is exceeded, no new particles will spawn from the subemitter until enough particles have expired.",
+      "godotName": "sub_emitter_amount_at_collision",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterAmountAtCollision",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterAmountAtEnd",
+      "kind": "Property",
+      "signature": "public int SubEmitterAmountAtEnd { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of particles to spawn from the subemitter node when the particle expires. [b]Note:[/b] This value shouldn\u0027t exceed [member GPUParticles2D.amount] or [member GPUParticles3D.amount] defined on the [i]subemitter node[/i] (not the main node), relative to the subemitter\u0027s particle lifetime. If the number of particles is exceeded, no new particles will spawn from the subemitter until enough particles have expired.",
+      "godotName": "sub_emitter_amount_at_end",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterAmountAtEnd",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterAmountAtStart",
+      "kind": "Property",
+      "signature": "public int SubEmitterAmountAtStart { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of particles to spawn from the subemitter node when the particle spawns. [b]Note:[/b] This value shouldn\u0027t exceed [member GPUParticles2D.amount] or [member GPUParticles3D.amount] defined on the [i]subemitter node[/i] (not the main node), relative to the subemitter\u0027s particle lifetime. If the number of particles is exceeded, no new particles will spawn from the subemitter until enough particles have expired.",
+      "godotName": "sub_emitter_amount_at_start",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterAmountAtStart",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterFrequency",
+      "kind": "Property",
+      "signature": "public float SubEmitterFrequency { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency at which particles should be emitted from the subemitter node. One particle will be spawned every [member sub_emitter_frequency] seconds. [b]Note:[/b] This value shouldn\u0027t exceed [member GPUParticles2D.amount] or [member GPUParticles3D.amount] defined on the [i]subemitter node[/i] (not the main node), relative to the subemitter\u0027s particle lifetime. If the number of particles is exceeded, no new particles will spawn from the subemitter until enough particles have expired.",
+      "godotName": "sub_emitter_frequency",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterFrequency",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterKeepVelocity",
+      "kind": "Property",
+      "signature": "public bool SubEmitterKeepVelocity { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the subemitter inherits the parent particle\u0027s velocity when it spawns.",
+      "defaultValue": "false",
+      "godotName": "sub_emitter_keep_velocity",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterKeepVelocity",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SubEmitterMode",
+      "kind": "Property",
+      "signature": "public int SubEmitterMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particle subemitter mode (see [member GPUParticles2D.sub_emitter] and [member GPUParticles3D.sub_emitter]).",
+      "defaultValue": "0",
+      "godotName": "sub_emitter_mode",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.SubEmitterMode",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TangentialAccelCurve",
+      "kind": "Property",
+      "signature": "public Texture2D TangentialAccelCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s tangential acceleration will vary along this [CurveTexture].",
+      "godotName": "tangential_accel_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TangentialAccelCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TangentialAccelMax",
+      "kind": "Property",
+      "signature": "public float TangentialAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum tangential acceleration applied to each particle. Tangential acceleration is perpendicular to the particle\u0027s velocity giving the particles a swirling motion.",
+      "defaultValue": "0.0",
+      "godotName": "tangential_accel_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TangentialAccelMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TangentialAccelMin",
+      "kind": "Property",
+      "signature": "public float TangentialAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum equivalent of [member tangential_accel_max].",
+      "defaultValue": "0.0",
+      "godotName": "tangential_accel_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TangentialAccelMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceEnabled",
+      "kind": "Property",
+      "signature": "public bool TurbulenceEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables turbulence for the particle system. Turbulence can be used to vary particle movement according to its position (based on a 3D noise pattern). In 3D, [GPUParticlesAttractorVectorField3D] with [NoiseTexture3D] can be used as an alternative to turbulence that works in world space and with multiple particle systems reacting in the same way. [b]Note:[/b] Enabling turbulence has a high performance cost on the GPU. Only enable turbulence on a few particle systems at once at most, and consider disabling it when targeting mobile/web platforms.",
+      "defaultValue": "false",
+      "godotName": "turbulence_enabled",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceEnabled",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceInfluenceMax",
+      "kind": "Property",
+      "signature": "public float TurbulenceInfluenceMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum turbulence influence on each particle. The actual amount of turbulence influence on each particle is calculated as a random value between [member turbulence_influence_min] and [member turbulence_influence_max] and multiplied by the amount of turbulence influence from [member turbulence_influence_over_life].",
+      "defaultValue": "0.1",
+      "godotName": "turbulence_influence_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceInfluenceMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceInfluenceMin",
+      "kind": "Property",
+      "signature": "public float TurbulenceInfluenceMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum turbulence influence on each particle. The actual amount of turbulence influence on each particle is calculated as a random value between [member turbulence_influence_min] and [member turbulence_influence_max] and multiplied by the amount of turbulence influence from [member turbulence_influence_over_life].",
+      "defaultValue": "0.1",
+      "godotName": "turbulence_influence_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceInfluenceMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceInfluenceOverLife",
+      "kind": "Property",
+      "signature": "public Texture2D TurbulenceInfluenceOverLife { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Each particle\u0027s amount of turbulence will be influenced along this [CurveTexture] over its life time.",
+      "godotName": "turbulence_influence_over_life",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceInfluenceOverLife",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceInitialDisplacementMax",
+      "kind": "Property",
+      "signature": "public float TurbulenceInitialDisplacementMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum displacement of each particle\u0027s spawn position by the turbulence. The actual amount of displacement will be a factor of the underlying turbulence multiplied by a random value between [member turbulence_initial_displacement_min] and [member turbulence_initial_displacement_max].",
+      "defaultValue": "0.0",
+      "godotName": "turbulence_initial_displacement_max",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceInitialDisplacementMax",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceInitialDisplacementMin",
+      "kind": "Property",
+      "signature": "public float TurbulenceInitialDisplacementMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum displacement of each particle\u0027s spawn position by the turbulence. The actual amount of displacement will be a factor of the underlying turbulence multiplied by a random value between [member turbulence_initial_displacement_min] and [member turbulence_initial_displacement_max].",
+      "defaultValue": "0.0",
+      "godotName": "turbulence_initial_displacement_min",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceInitialDisplacementMin",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceNoiseScale",
+      "kind": "Property",
+      "signature": "public float TurbulenceNoiseScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This value controls the overall scale/frequency of the turbulence noise pattern. A small scale will result in smaller features with more detail while a high scale will result in smoother noise with larger features.",
+      "defaultValue": "9.0",
+      "godotName": "turbulence_noise_scale",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceNoiseScale",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceNoiseSpeed",
+      "kind": "Property",
+      "signature": "public Vector3 TurbulenceNoiseSpeed { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "A scrolling velocity for the turbulence field. This sets a directional trend for the pattern to move in over time. The default value of [code]Vector3(0, 0, 0)[/code] turns off the scrolling.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "turbulence_noise_speed",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceNoiseSpeed",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceNoiseSpeedRandom",
+      "kind": "Property",
+      "signature": "public float TurbulenceNoiseSpeedRandom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The in-place rate of change of the turbulence field. This defines how quickly the noise pattern varies over time. A value of 0.0 will result in a fixed pattern.",
+      "defaultValue": "0.2",
+      "godotName": "turbulence_noise_speed_random",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceNoiseSpeedRandom",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "TurbulenceNoiseStrength",
+      "kind": "Property",
+      "signature": "public float TurbulenceNoiseStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The turbulence noise strength. Increasing this will result in a stronger, more contrasting, flow pattern.",
+      "defaultValue": "1.0",
+      "godotName": "turbulence_noise_strength",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.TurbulenceNoiseStrength",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "UseRotation3d",
+      "kind": "Property",
+      "signature": "public bool UseRotation3d { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enable the usage of [member rotation_3d_min] and [member rotation_3d_max].",
+      "defaultValue": "false",
+      "godotName": "use_rotation_3d",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.UseRotation3d",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "UseRotationVelocity3d",
+      "kind": "Property",
+      "signature": "public bool UseRotationVelocity3d { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enable 3D rotation velocity.",
+      "defaultValue": "false",
+      "godotName": "use_rotation_velocity_3d",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.UseRotationVelocity3d",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "UseScale3d",
+      "kind": "Property",
+      "signature": "public bool UseScale3d { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enable the usage of [member scale_3d_min] and [member scale_3d_max].",
+      "defaultValue": "false",
+      "godotName": "use_scale_3d",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.UseScale3d",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "VelocityLimitCurve",
+      "kind": "Property",
+      "signature": "public Texture2D VelocityLimitCurve { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "A [CurveTexture] that defines the maximum velocity of a particle during its lifetime.",
+      "godotName": "velocity_limit_curve",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.VelocityLimitCurve",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "VelocityPivot",
+      "kind": "Property",
+      "signature": "public Vector3 VelocityPivot { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "A pivot point used to calculate radial and orbital velocity of particles.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "velocity_pivot",
+      "xmlDocId": "P:Godot.ParticleProcessMaterial.VelocityPivot",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "EmissionShapeChanged",
+      "kind": "Signal",
+      "signature": "public event EmissionShapeChangedHandler EmissionShapeChanged",
+      "parameters": [],
+      "summary": "Emitted when this material\u0027s emission shape is changed in any way. This includes changes to [member emission_shape], [member emission_shape_scale], or [member emission_sphere_radius], and any other property that affects the emission shape\u0027s offset, size, scale, or orientation. [b]Note:[/b] This signal is only emitted inside the editor for performance reasons.",
+      "godotName": "emission_shape_changed",
+      "xmlDocId": "E:Godot.ParticleProcessMaterial.EmissionShapeChanged",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CollisionMode",
+      "values": [
+        {
+          "name": "COLLISION_DISABLED",
+          "value": "0",
+          "enum": "CollisionMode",
+          "kind": "EnumValue",
+          "summary": "No collision for particles. Particles will go through [GPUParticlesCollision3D] nodes.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "COLLISION_HIDE_ON_CONTACT",
+          "value": "2",
+          "enum": "CollisionMode",
+          "kind": "EnumValue",
+          "summary": "Hide particles instantly when colliding with a [GPUParticlesCollision3D] node. This can be combined with a subemitter that uses the [constant COLLISION_RIGID] collision mode to \u0022replace\u0022 the parent particle with the subemitter on impact.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "COLLISION_MAX",
+          "value": "3",
+          "enum": "CollisionMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum CollisionMode] enum.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "COLLISION_RIGID",
+          "value": "1",
+          "enum": "CollisionMode",
+          "kind": "EnumValue",
+          "summary": "[RigidBody3D]-style collision for particles using [GPUParticlesCollision3D] nodes.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        }
+      ]
+    },
+    {
+      "name": "EmissionShape",
+      "values": [
+        {
+          "name": "EMISSION_SHAPE_BOX",
+          "value": "3",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in the volume of a box.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_DIRECTED_POINTS",
+          "value": "5",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted at a position determined by sampling a random point on the [member emission_point_texture]. Particle velocity and rotation will be set based on [member emission_normal_texture]. Particle color will be modulated by [member emission_color_texture].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_MAX",
+          "value": "7",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum EmissionShape] enum.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_POINT",
+          "value": "0",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "All particles will be emitted from a single point.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_POINTS",
+          "value": "4",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted at a position determined by sampling a random point on the [member emission_point_texture]. Particle color will be modulated by [member emission_color_texture].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_RING",
+          "value": "6",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in a ring or cylinder.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_SPHERE",
+          "value": "1",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in the volume of a sphere.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_SPHERE_SURFACE",
+          "value": "2",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted on the surface of a sphere.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        }
+      ]
+    },
+    {
+      "name": "Parameter",
+      "values": [
+        {
+          "name": "PARAM_ANGLE",
+          "value": "7",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set angle properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_VELOCITY",
+          "value": "1",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set angular velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_ANIM_OFFSET",
+          "value": "11",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set animation offset properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_ANIM_SPEED",
+          "value": "10",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set animation speed properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_DAMPING",
+          "value": "6",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set damping properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_DIRECTIONAL_VELOCITY",
+          "value": "16",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set directional velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_HUE_VARIATION",
+          "value": "9",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set hue variation properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_INITIAL_LINEAR_VELOCITY",
+          "value": "0",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set initial velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_ACCEL",
+          "value": "3",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set linear acceleration properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "18",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Parameter] enum.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_ORBIT_VELOCITY",
+          "value": "2",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set orbital velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_RADIAL_ACCEL",
+          "value": "4",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set radial acceleration properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_RADIAL_VELOCITY",
+          "value": "15",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set radial velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_SCALE",
+          "value": "8",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set scale properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_SCALE_OVER_VELOCITY",
+          "value": "17",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set scale over velocity properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_TANGENTIAL_ACCEL",
+          "value": "5",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set tangential acceleration properties.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_TURB_INFLUENCE_OVER_LIFE",
+          "value": "12",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_texture] to set the turbulence influence over the particles life time.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_TURB_INIT_DISPLACEMENT",
+          "value": "14",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min] and [method set_param_max] to set the turbulence minimum and maximum displacement of the particles spawn position.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARAM_TURB_VEL_INFLUENCE",
+          "value": "13",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min] and [method set_param_max] to set the turbulence minimum und maximum influence on each particles velocity.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        }
+      ]
+    },
+    {
+      "name": "ParticleFlags",
+      "values": [
+        {
+          "name": "PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+          "value": "0",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_align_y].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_DAMPING_AS_FRICTION",
+          "value": "3",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_DISABLE_Z",
+          "value": "2",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_disable_z].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_INHERIT_EMITTER_SCALE",
+          "value": "4",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_MAX",
+          "value": "5",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ParticleFlags] enum.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_ROTATE_Y",
+          "value": "1",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_rotate_y].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        }
+      ]
+    },
+    {
+      "name": "SubEmitterMode",
+      "values": [
+        {
+          "name": "SUB_EMITTER_AT_COLLISION",
+          "value": "3",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "The subemitter is emitted when the particle collides.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "SUB_EMITTER_AT_END",
+          "value": "2",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "The subemitter is emitted at the end of the particle\u0027s lifetime.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "SUB_EMITTER_AT_START",
+          "value": "4",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "The subemitter is emitted when the particle spawns.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "SUB_EMITTER_CONSTANT",
+          "value": "1",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "The submitter is emitted on the constant interval defined by [member sub_emitter_frequency].",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "SUB_EMITTER_DISABLED",
+          "value": "0",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "The subemitter is disabled.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        },
+        {
+          "name": "SUB_EMITTER_MAX",
+          "value": "5",
+          "enum": "SubEmitterMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum SubEmitterMode] enum.",
+          "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_INITIAL_LINEAR_VELOCITY",
+      "value": "0",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set initial velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_VELOCITY",
+      "value": "1",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set angular velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_ORBIT_VELOCITY",
+      "value": "2",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set orbital velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_ACCEL",
+      "value": "3",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set linear acceleration properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_RADIAL_ACCEL",
+      "value": "4",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set radial acceleration properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_TANGENTIAL_ACCEL",
+      "value": "5",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set tangential acceleration properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_DAMPING",
+      "value": "6",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set damping properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_ANGLE",
+      "value": "7",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set angle properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_SCALE",
+      "value": "8",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set scale properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_HUE_VARIATION",
+      "value": "9",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set hue variation properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_ANIM_SPEED",
+      "value": "10",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set animation speed properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_ANIM_OFFSET",
+      "value": "11",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set animation offset properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_RADIAL_VELOCITY",
+      "value": "15",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set radial velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_DIRECTIONAL_VELOCITY",
+      "value": "16",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set directional velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_SCALE_OVER_VELOCITY",
+      "value": "17",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_texture] to set scale over velocity properties.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "18",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Parameter] enum.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+      "value": "0",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_align_y].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_ROTATE_Y",
+      "value": "1",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_rotate_y].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_DISABLE_Z",
+      "value": "2",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_disable_z].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_DAMPING_AS_FRICTION",
+      "value": "3",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_INHERIT_EMITTER_SCALE",
+      "value": "4",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_MAX",
+      "value": "5",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ParticleFlags] enum.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_POINT",
+      "value": "0",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "All particles will be emitted from a single point.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_SPHERE",
+      "value": "1",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in the volume of a sphere.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_SPHERE_SURFACE",
+      "value": "2",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted on the surface of a sphere.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_BOX",
+      "value": "3",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in the volume of a box.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_POINTS",
+      "value": "4",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted at a position determined by sampling a random point on the [member emission_point_texture]. Particle color will be modulated by [member emission_color_texture].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_DIRECTED_POINTS",
+      "value": "5",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted at a position determined by sampling a random point on the [member emission_point_texture]. Particle velocity and rotation will be set based on [member emission_normal_texture]. Particle color will be modulated by [member emission_color_texture].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_RING",
+      "value": "6",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in a ring or cylinder.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_MAX",
+      "value": "7",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum EmissionShape] enum.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_TURB_VEL_INFLUENCE",
+      "value": "13",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min] and [method set_param_max] to set the turbulence minimum und maximum influence on each particles velocity.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_TURB_INIT_DISPLACEMENT",
+      "value": "14",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min] and [method set_param_max] to set the turbulence minimum and maximum displacement of the particles spawn position.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "PARAM_TURB_INFLUENCE_OVER_LIFE",
+      "value": "12",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_texture] to set the turbulence influence over the particles life time.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_DISABLED",
+      "value": "0",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "The subemitter is disabled.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_CONSTANT",
+      "value": "1",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "The submitter is emitted on the constant interval defined by [member sub_emitter_frequency].",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_AT_END",
+      "value": "2",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "The subemitter is emitted at the end of the particle\u0027s lifetime.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_AT_COLLISION",
+      "value": "3",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "The subemitter is emitted when the particle collides.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_AT_START",
+      "value": "4",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "The subemitter is emitted when the particle spawns.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "SUB_EMITTER_MAX",
+      "value": "5",
+      "enum": "SubEmitterMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum SubEmitterMode] enum.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "COLLISION_DISABLED",
+      "value": "0",
+      "enum": "CollisionMode",
+      "kind": "EnumValue",
+      "summary": "No collision for particles. Particles will go through [GPUParticlesCollision3D] nodes.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "COLLISION_RIGID",
+      "value": "1",
+      "enum": "CollisionMode",
+      "kind": "EnumValue",
+      "summary": "[RigidBody3D]-style collision for particles using [GPUParticlesCollision3D] nodes.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "COLLISION_HIDE_ON_CONTACT",
+      "value": "2",
+      "enum": "CollisionMode",
+      "kind": "EnumValue",
+      "summary": "Hide particles instantly when colliding with a [GPUParticlesCollision3D] node. This can be combined with a subemitter that uses the [constant COLLISION_RIGID] collision mode to \u0022replace\u0022 the parent particle with the subemitter on impact.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    },
+    {
+      "name": "COLLISION_MAX",
+      "value": "3",
+      "enum": "CollisionMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum CollisionMode] enum.",
+      "sourcePath": "doc/classes/ParticleProcessMaterial.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ParticleProcessMaterial.xml",
+      "sha256": "c5cceabc981f5e3040339f0d6bf56aaec25f69e3c84865efea8b14b3350f9c9e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

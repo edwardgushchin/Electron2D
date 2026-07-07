@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Object",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Object",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Object",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Object",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Object()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Object type.",
+      "xmlDocId": "M:Electron2D.Object.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Object",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Object()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Object type.",
+      "xmlDocId": "M:Electron2D.Object.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddUserSignal",
+      "kind": "Method",
+      "signature": "public System.Void AddUserSignal(System.String signal)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Adds the user signal value.",
+      "xmlDocId": "M:Electron2D.Object.AddUserSignal(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CallDeferred",
+      "kind": "Method",
+      "signature": "public System.Object CallDeferred(System.String method, System.Object[] args)",
+      "returnType": "System.Object",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "System.String"
+        },
+        {
+          "name": "args",
+          "type": "System.Object[]"
+        }
+      ],
+      "summary": "Executes the call deferred operation.",
+      "xmlDocId": "M:Electron2D.Object.CallDeferred(System.String,System.Object[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Connect",
+      "kind": "Method",
+      "signature": "public Electron2D.Error Connect(System.String signal, Electron2D.Callable callable, Electron2D.ConnectFlags flags)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        },
+        {
+          "name": "callable",
+          "type": "Electron2D.Callable"
+        },
+        {
+          "name": "flags",
+          "type": "Electron2D.ConnectFlags",
+          "defaultValue": "None"
+        }
+      ],
+      "summary": "Executes the connect operation.",
+      "xmlDocId": "M:Electron2D.Object.Connect(System.String,Electron2D.Callable,Electron2D.ConnectFlags)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disconnect",
+      "kind": "Method",
+      "signature": "public System.Void Disconnect(System.String signal, Electron2D.Callable callable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        },
+        {
+          "name": "callable",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Executes the disconnect operation.",
+      "xmlDocId": "M:Electron2D.Object.Disconnect(System.String,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EmitSignal",
+      "kind": "Method",
+      "signature": "public Electron2D.Error EmitSignal(System.String signal, System.Object[] args)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        },
+        {
+          "name": "args",
+          "type": "System.Object[]"
+        }
+      ],
+      "summary": "Executes the emit signal operation.",
+      "xmlDocId": "M:Electron2D.Object.EmitSignal(System.String,System.Object[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Free",
+      "kind": "Method",
+      "signature": "public System.Void Free()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Executes the free operation.",
+      "xmlDocId": "M:Electron2D.Object.Free",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetInstanceId",
+      "kind": "Method",
+      "signature": "public System.UInt64 GetInstanceId()",
+      "returnType": "System.UInt64",
+      "parameters": [],
+      "summary": "Gets the instance id value.",
+      "xmlDocId": "M:Electron2D.Object.GetInstanceId",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasSignal",
+      "kind": "Method",
+      "signature": "public System.Boolean HasSignal(System.String signal)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Checks whether signal is available.",
+      "xmlDocId": "M:Electron2D.Object.HasSignal(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsConnected",
+      "kind": "Method",
+      "signature": "public System.Boolean IsConnected(System.String signal, Electron2D.Callable callable)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "System.String"
+        },
+        {
+          "name": "callable",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Checks whether connected is true.",
+      "xmlDocId": "M:Electron2D.Object.IsConnected(System.String,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsInstanceValid",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsInstanceValid(Electron2D.Object instance)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "Electron2D.Object"
+        }
+      ],
+      "summary": "Checks whether instance valid is true.",
+      "xmlDocId": "M:Electron2D.Object.IsInstanceValid(Electron2D.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsQueuedForDeletion",
+      "kind": "Method",
+      "signature": "public System.Boolean IsQueuedForDeletion()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether queued for deletion is true.",
+      "xmlDocId": "M:Electron2D.Object.IsQueuedForDeletion",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.Object.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tr",
+      "kind": "Method",
+      "signature": "public System.String Tr(System.String message, System.String context)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "System.String"
+        },
+        {
+          "name": "context",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Translates a message through the process-wide translation server.",
+      "xmlDocId": "M:Electron2D.Object.Tr(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

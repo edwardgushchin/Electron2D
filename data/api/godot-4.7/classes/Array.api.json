@@ -1,0 +1,1160 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Array",
+    "namespace": "Godot",
+    "fullName": "Godot.Array",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Array",
+    "documentationPath": "doc/classes/Array.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_array.html"
+  },
+  "constructors": [
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Constructs an empty [Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(Array @base, int type, StringName className, Variant script)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "base",
+          "type": "Array"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "script",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Creates a typed array from the [param base] array. A typed array can only contain elements of the given type, or that inherit from the given class, as described by this constructor\u0027s parameters: - [param type] is the built-in [Variant] type, as one the [enum Variant.Type] constants. - [param class_name] is the built-in class name (see [method Object.get_class]). - [param script] is the associated script. It must be a [Script] instance or [code]null[/code]. If [param type] is not [constant TYPE_OBJECT], [param class_name] must be an empty [StringName] and [param script] must be [code]null[/code]. [codeblock] class_name Sword extends Node class Stats: pass func _ready(): var a = Array([], TYPE_INT, \u0022\u0022, null) # Array[int] var b = Array([], TYPE_OBJECT, \u0022Node\u0022, null) # Array[Node] var c = Array([], TYPE_OBJECT, \u0022Node\u0022, Sword) # Array[Sword] var d = Array([], TYPE_OBJECT, \u0022RefCounted\u0022, Stats) # Array[Stats] [/codeblock] The [param base] array\u0027s elements are converted when necessary. If this is not possible or [param base] is already typed, this constructor fails and returns an empty [Array]. In GDScript, this constructor is usually not necessary, as it is possible to create a typed array through static typing: [codeblock] var numbers: Array[float] = [] var children: Array[Node] = [$Node, $Sprite2D, $RigidBody3D] var integers: Array[int] = [0.2, 4.5, -2.0] print(integers) # Prints [0, 4, -2] [/codeblock]",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(Array,int,StringName,Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Returns the same array as [param from]. If you need a copy of the array, use [method duplicate].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedByteArray from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedByteArray].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedByteArray)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedColorArray from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedColorArray].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedColorArray)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedFloat32Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedFloat32Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedFloat32Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedFloat64Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedFloat64Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedFloat64Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedInt32Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedInt32Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedInt32Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedInt64Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedInt64Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedInt64Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedStringArray from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedStringArray].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedStringArray)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedVector2Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedVector2Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedVector2Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedVector3Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedVector3Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedVector3Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Array(PackedVector4Array from)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedVector4Array"
+        }
+      ],
+      "summary": "Constructs an array from a [PackedVector4Array].",
+      "godotName": "Array",
+      "xmlDocId": "M:Godot.Array.#ctor(PackedVector4Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "All",
+      "kind": "Method",
+      "signature": "public bool All(Callable method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Calls the given [Callable] on each element in the array and returns [code]true[/code] if the [Callable] returns [code]true[/code] for [i]all[/i] elements in the array. If the [Callable] returns [code]false[/code] for one array element or more, this method returns [code]false[/code]. The [param method] should take one [Variant] parameter (the current array element) and return a [bool]. [codeblocks] [gdscript] func greater_than_5(number): return number \u003E 5 func _ready(): print([6, 10, 6].all(greater_than_5)) # Prints true (3/3 elements evaluate to true). print([4, 10, 4].all(greater_than_5)) # Prints false (1/3 elements evaluate to true). print([4, 4, 4].all(greater_than_5)) # Prints false (0/3 elements evaluate to true). print([].all(greater_than_5)) # Prints true (0/0 elements evaluate to true). # Same as the first line above, but using a lambda function. print([6, 10, 6].all(func(element): return element \u003E 5)) # Prints true [/gdscript] [csharp] private static bool GreaterThan5(int number) { return number \u003E 5; } public override void _Ready() { // Prints True (3/3 elements evaluate to true). GD.Print(new Godot.Collections.Array\u003Cint\u003E { 6, 10, 6 }.All(GreaterThan5)); // Prints False (1/3 elements evaluate to true). GD.Print(new Godot.Collections.Array\u003Cint\u003E { 4, 10, 4 }.All(GreaterThan5)); // Prints False (0/3 elements evaluate to true). GD.Print(new Godot.Collections.Array\u003Cint\u003E { 4, 4, 4 }.All(GreaterThan5)); // Prints True (0/0 elements evaluate to true). GD.Print(new Godot.Collections.Array\u003Cint\u003E { }.All(GreaterThan5)); // Same as the first line above, but using a lambda function. GD.Print(new Godot.Collections.Array\u003Cint\u003E { 6, 10, 6 }.All(element =\u003E element \u003E 5)); // Prints True } [/csharp] [/codeblocks] See also [method any], [method filter], [method map] and [method reduce]. [b]Note:[/b] Unlike relying on the size of an array returned by [method filter], this method will return as early as possible to improve performance (especially with large arrays). [b]Note:[/b] For an empty array, this method [url=https://en.wikipedia.org/wiki/Vacuous_truth]always[/url] returns [code]true[/code].",
+      "godotName": "all",
+      "xmlDocId": "M:Godot.Array.All(Callable)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Any",
+      "kind": "Method",
+      "signature": "public bool Any(Callable method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Calls the given [Callable] on each element in the array and returns [code]true[/code] if the [Callable] returns [code]true[/code] for [i]one or more[/i] elements in the array. If the [Callable] returns [code]false[/code] for all elements in the array, this method returns [code]false[/code]. The [param method] should take one [Variant] parameter (the current array element) and return a [bool]. [codeblock] func greater_than_5(number): return number \u003E 5 func _ready(): print([6, 10, 6].any(greater_than_5)) # Prints true (3 elements evaluate to true). print([4, 10, 4].any(greater_than_5)) # Prints true (1 elements evaluate to true). print([4, 4, 4].any(greater_than_5)) # Prints false (0 elements evaluate to true). print([].any(greater_than_5)) # Prints false (0 elements evaluate to true). # Same as the first line above, but using a lambda function. print([6, 10, 6].any(func(number): return number \u003E 5)) # Prints true [/codeblock] See also [method all], [method filter], [method map] and [method reduce]. [b]Note:[/b] Unlike relying on the size of an array returned by [method filter], this method will return as early as possible to improve performance (especially with large arrays). [b]Note:[/b] For an empty array, this method always returns [code]false[/code].",
+      "godotName": "any",
+      "xmlDocId": "M:Godot.Array.Any(Callable)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public void Append(Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Appends [param value] at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.Array.Append(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(Array array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "Array"
+        }
+      ],
+      "summary": "Appends another [param array] at the end of this array. [codeblock] var numbers = [1, 2, 3] var extra = [4, 5, 6] numbers.append_array(extra) print(numbers) # Prints [1, 2, 3, 4, 5, 6] [/codeblock]",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.Array.AppendArray(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Assign",
+      "kind": "Method",
+      "signature": "public void Assign(Array array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "Array"
+        }
+      ],
+      "summary": "Assigns elements of another [param array] into the array. Resizes the array to match [param array]. Performs type conversions if the array is typed.",
+      "godotName": "assign",
+      "xmlDocId": "M:Godot.Array.Assign(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Back",
+      "kind": "Method",
+      "signature": "public Variant Back()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the last element of the array. If the array is empty, fails and returns [code]null[/code]. See also [method front]. [b]Note:[/b] Unlike with the [code][][/code] operator ([code]array[-1][/code]), an error is generated without stopping project execution.",
+      "godotName": "back",
+      "xmlDocId": "M:Godot.Array.Back",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(Variant value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the index of [param value] in the sorted array. If it cannot be found, returns where [param value] should be inserted to keep the array sorted. The algorithm used is [url=https://en.wikipedia.org/wiki/Binary_search_algorithm]binary search[/url]. If [param before] is [code]true[/code] (as by default), the returned index comes before all existing elements equal to [param value] in the array. [codeblock] var numbers = [2, 4, 8, 10] var idx = numbers.bsearch(7) numbers.insert(idx, 7) print(numbers) # Prints [2, 4, 7, 8, 10] var fruits = [\u0022Apple\u0022, \u0022Lemon\u0022, \u0022Lemon\u0022, \u0022Orange\u0022] print(fruits.bsearch(\u0022Lemon\u0022, true)) # Prints 1, points at the first \u0022Lemon\u0022. print(fruits.bsearch(\u0022Lemon\u0022, false)) # Prints 3, points at \u0022Orange\u0022. [/codeblock] [b]Note:[/b] Calling [method bsearch] on an [i]unsorted[/i] array will result in unexpected behavior. Use [method sort] before calling this method.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.Array.Bsearch(Variant,bool)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "BsearchCustom",
+      "kind": "Method",
+      "signature": "public int BsearchCustom(Variant value, Callable func, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "func",
+          "type": "Callable"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the index of [param value] in the sorted array. If it cannot be found, returns where [param value] should be inserted to keep the array sorted (using [param func] for the comparisons). The algorithm used is [url=https://en.wikipedia.org/wiki/Binary_search_algorithm]binary search[/url]. Similar to [method sort_custom], [param func] is called as many times as necessary, receiving one array element and [param value] as arguments. The function should return [code]true[/code] if the array element should be [i]behind[/i] [param value], otherwise it should return [code]false[/code]. If [param before] is [code]true[/code] (as by default), the returned index comes before all existing elements equal to [param value] in the array. [codeblock] func sort_by_amount(a, b): if a[1] \u003C b[1]: return true return false func _ready(): var my_items = [[\u0022Tomato\u0022, 2], [\u0022Kiwi\u0022, 5], [\u0022Rice\u0022, 9]] var apple = [\u0022Apple\u0022, 5] # \u0022Apple\u0022 is inserted before \u0022Kiwi\u0022. my_items.insert(my_items.bsearch_custom(apple, sort_by_amount, true), apple) var banana = [\u0022Banana\u0022, 5] # \u0022Banana\u0022 is inserted after \u0022Kiwi\u0022. my_items.insert(my_items.bsearch_custom(banana, sort_by_amount, false), banana) # Prints [[\u0022Tomato\u0022, 2], [\u0022Apple\u0022, 5], [\u0022Kiwi\u0022, 5], [\u0022Banana\u0022, 5], [\u0022Rice\u0022, 9]] print(my_items) [/codeblock] [b]Note:[/b] Calling [method bsearch_custom] on an [i]unsorted[/i] array will result in unexpected behavior. Use [method sort_custom] with [param func] before calling this method.",
+      "godotName": "bsearch_custom",
+      "xmlDocId": "M:Godot.Array.BsearchCustom(Variant,Callable,bool)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all elements from the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.Array.Clear",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(Variant value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array. To count how many elements in an array satisfy a condition, see [method reduce].",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.Array.Count(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public Array Duplicate(bool deep)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "deep",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a new copy of the array. By default, a [b]shallow[/b] copy is returned: all nested [Array], [Dictionary], and [Resource] elements are shared with the original array. Modifying any of those in one array will also affect them in the other. If [param deep] is [code]true[/code], a [b]deep[/b] copy is returned: all nested arrays and dictionaries are also duplicated (recursively). Any [Resource] is still shared with the original array, though.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.Array.Duplicate(bool)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "DuplicateDeep",
+      "kind": "Method",
+      "signature": "public Array DuplicateDeep(int deepSubresourcesMode)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "deep_subresources_mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Duplicates this array, deeply, like [method duplicate] when passing [code]true[/code], with extra control over how subresources are handled. [param deep_subresources_mode] must be one of the values from [enum Resource.DeepDuplicateMode]. By default, only internal resources will be duplicated (recursively).",
+      "godotName": "duplicate_deep",
+      "xmlDocId": "M:Godot.Array.DuplicateDeep(int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public void Erase(Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Finds and removes the first occurrence of [param value] from the array. If [param value] does not exist in the array, nothing happens. To remove an element by index, use [method remove_at] instead. [b]Note:[/b] This method shifts every element\u0027s index after the removed [param value] back, which may have a noticeable performance cost, especially on larger arrays. [b]Note:[/b] Erasing elements while iterating over arrays is [b]not[/b] supported and will result in unpredictable behavior.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.Array.Erase(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Assigns the given [param value] to all elements in the array. This method can often be combined with [method resize] to create an array with a given size and initialized elements: [codeblocks] [gdscript] var array = [] array.resize(5) array.fill(2) print(array) # Prints [2, 2, 2, 2, 2] [/gdscript] [csharp] Godot.Collections.Array array = []; array.Resize(5); array.Fill(2); GD.Print(array); // Prints [2, 2, 2, 2, 2] [/csharp] [/codeblocks] [b]Note:[/b] If [param value] is a [Variant] passed by reference ([Object]-derived, [Array], [Dictionary], etc.), the array will be filled with references to the same [param value], which are not duplicates.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.Array.Fill(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Filter",
+      "kind": "Method",
+      "signature": "public Array Filter(Callable method)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Calls the given [Callable] on each element in the array and returns a new, filtered [Array]. The [param method] receives one of the array elements as an argument, and should return [code]true[/code] to add the element to the filtered array, or [code]false[/code] to exclude it. [codeblock] func is_even(number): return number % 2 == 0 func _ready(): print([1, 4, 5, 8].filter(is_even)) # Prints [4, 8] # Same as above, but using a lambda function. print([1, 4, 5, 8].filter(func(number): return number % 2 == 0)) [/codeblock] See also [method any], [method all], [method map] and [method reduce].",
+      "godotName": "filter",
+      "xmlDocId": "M:Godot.Array.Filter(Callable)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(Variant what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "Variant"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the index of the [b]first[/b] occurrence of [param what] in this array, or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the end of the array. [b]Note:[/b] If you just want to know whether the array contains [param what], use [method has] ([code]Contains[/code] in C#). In GDScript, you may also use the [code]in[/code] operator. [b]Note:[/b] For performance reasons, the search is affected by [param what]\u0027s [enum Variant.Type]. For example, [code]7[/code] ([int]) and [code]7.0[/code] ([float]) are not considered equal for this method.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.Array.Find(Variant,int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "FindCustom",
+      "kind": "Method",
+      "signature": "public int FindCustom(Callable method, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the index of the [b]first[/b] element in the array that causes [param method] to return [code]true[/code], or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the end of the array. [param method] is a callable that takes an element of the array, and returns a [bool]. [b]Note:[/b] If you just want to know whether the array contains [i]anything[/i] that satisfies [param method], use [method any]. [codeblocks] [gdscript] func is_even(number): return number % 2 == 0 func _ready(): print([1, 3, 4, 7].find_custom(is_even.bind())) # Prints 2 # Another example using \u0060bind()\u0060 to pass an additional parameter: func is_specific_number(number, expected): return number == expected func _ready(): print([1, 3, 4, 7].find_custom(is_specific_number.bind(4))) # Prints 2 [/gdscript] [/codeblocks]",
+      "godotName": "find_custom",
+      "xmlDocId": "M:Godot.Array.FindCustom(Callable,int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Front",
+      "kind": "Method",
+      "signature": "public Variant Front()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the first element of the array. If the array is empty, fails and returns [code]null[/code]. See also [method back]. [b]Note:[/b] Unlike with the [code][][/code] operator ([code]array[0][/code]), an error is generated without stopping project execution.",
+      "godotName": "front",
+      "xmlDocId": "M:Godot.Array.Front",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public Variant Get(int index)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the element at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]null[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.Array.Get(int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "GetTypedBuiltin",
+      "kind": "Method",
+      "signature": "public int GetTypedBuiltin()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the built-in [Variant] type of the typed array as a [enum Variant.Type] constant. If the array is not typed, returns [constant TYPE_NIL]. See also [method is_typed].",
+      "godotName": "get_typed_builtin",
+      "xmlDocId": "M:Godot.Array.GetTypedBuiltin",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "GetTypedClassName",
+      "kind": "Method",
+      "signature": "public StringName GetTypedClassName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the [b]built-in[/b] class name of the typed array, if the built-in [Variant] type [constant TYPE_OBJECT]. Otherwise, returns an empty [StringName]. See also [method is_typed] and [method Object.get_class].",
+      "godotName": "get_typed_class_name",
+      "xmlDocId": "M:Godot.Array.GetTypedClassName",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "GetTypedScript",
+      "kind": "Method",
+      "signature": "public Variant GetTypedScript()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the [Script] instance associated with this typed array, or [code]null[/code] if it does not exist. See also [method is_typed].",
+      "godotName": "get_typed_script",
+      "xmlDocId": "M:Godot.Array.GetTypedScript",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(Variant value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains the given [param value]. [codeblocks] [gdscript] print([\u0022inside\u0022, 7].has(\u0022inside\u0022)) # Prints true print([\u0022inside\u0022, 7].has(\u0022outside\u0022)) # Prints false print([\u0022inside\u0022, 7].has(7)) # Prints true print([\u0022inside\u0022, 7].has(\u00227\u0022)) # Prints false [/gdscript] [csharp] Godot.Collections.Array arr = [\u0022inside\u0022, 7]; // By C# convention, this method is renamed to \u0060Contains\u0060. GD.Print(arr.Contains(\u0022inside\u0022)); // Prints True GD.Print(arr.Contains(\u0022outside\u0022)); // Prints False GD.Print(arr.Contains(7)); // Prints True GD.Print(arr.Contains(\u00227\u0022)); // Prints False [/csharp] [/codeblocks] In GDScript, this is equivalent to the [code]in[/code] operator: [codeblock] if 4 in [2, 4, 6, 8]: print(\u00224 is here!\u0022) # Will be printed. [/codeblock] [b]Note:[/b] For performance reasons, the search is affected by the [param value]\u0027s [enum Variant.Type]. For example, [code]7[/code] ([int]) and [code]7.0[/code] ([float]) are not considered equal for this method.",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.Array.Has(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Hash",
+      "kind": "Method",
+      "signature": "public int Hash()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a hashed 32-bit integer value representing the array and its contents. [b]Note:[/b] Arrays with equal hash values are [i]not[/i] guaranteed to be the same, as a result of hash collisions. On the contrary, arrays with different hash values are guaranteed to be different.",
+      "godotName": "hash",
+      "xmlDocId": "M:Godot.Array.Hash",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int position, Variant value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Inserts a new element ([param value]) at a given index ([param position]) in the array. [param position] should be between [code]0[/code] and the array\u0027s [method size]. If negative, [param position] is considered relative to the end of the array. Returns [constant OK] on success, or one of the other [enum Error] constants if this method fails. [b]Note:[/b] Every element\u0027s index after [param position] needs to be shifted forward, which may have a noticeable performance cost, especially on larger arrays.",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.Array.Insert(int,Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty ([code][][/code]). See also [method size].",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.Array.IsEmpty",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "IsReadOnly",
+      "kind": "Method",
+      "signature": "public bool IsReadOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is read-only. See [method make_read_only]. In GDScript, arrays are automatically read-only if declared with the [code]const[/code] keyword.",
+      "godotName": "is_read_only",
+      "xmlDocId": "M:Godot.Array.IsReadOnly",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "IsSameTyped",
+      "kind": "Method",
+      "signature": "public bool IsSameTyped(Array array)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this array is typed the same as the given [param array]. See also [method is_typed].",
+      "godotName": "is_same_typed",
+      "xmlDocId": "M:Godot.Array.IsSameTyped(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "IsTyped",
+      "kind": "Method",
+      "signature": "public bool IsTyped()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is typed. Typed arrays can only contain elements of a specific type, as defined by the typed array constructor. The methods of a typed array are still expected to return a generic [Variant]. In GDScript, it is possible to define a typed array with static typing: [codeblock] var numbers: Array[float] = [0.2, 4.2, -2.0] print(numbers.is_typed()) # Prints true [/codeblock]",
+      "godotName": "is_typed",
+      "xmlDocId": "M:Godot.Array.IsTyped",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "MakeReadOnly",
+      "kind": "Method",
+      "signature": "public void MakeReadOnly()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes the array read-only. The array\u0027s elements cannot be overridden with different values, and their order cannot change. Does not apply to nested elements, such as dictionaries. In GDScript, arrays are automatically read-only if declared with the [code]const[/code] keyword.",
+      "godotName": "make_read_only",
+      "xmlDocId": "M:Godot.Array.MakeReadOnly",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Map",
+      "kind": "Method",
+      "signature": "public Array Map(Callable method)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Calls the given [Callable] for each element in the array and returns a new array filled with values returned by the [param method]. The [param method] should take one [Variant] parameter (the current array element) and can return any [Variant]. [codeblock] func double(number): return number * 2 func _ready(): print([1, 2, 3].map(double)) # Prints [2, 4, 6] # Same as above, but using a lambda function. print([1, 2, 3].map(func(element): return element * 2)) [/codeblock] See also [method filter], [method reduce], [method any] and [method all].",
+      "godotName": "map",
+      "xmlDocId": "M:Godot.Array.Map(Callable)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Method",
+      "signature": "public Variant Max()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the maximum value contained in the array, if all elements can be compared. Otherwise, returns [code]null[/code]. See also [method min]. To find the maximum value using a custom comparator, you can use [method reduce].",
+      "godotName": "max",
+      "xmlDocId": "M:Godot.Array.Max",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Method",
+      "signature": "public Variant Min()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the minimum value contained in the array, if all elements can be compared. Otherwise, returns [code]null[/code]. See also [method max].",
+      "godotName": "min",
+      "xmlDocId": "M:Godot.Array.Min",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PickRandom",
+      "kind": "Method",
+      "signature": "public Variant PickRandom()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns a random element from the array. Generates an error and returns [code]null[/code] if the array is empty. [codeblocks] [gdscript] # May print 1, 2, 3.25, or \u0022Hi\u0022. print([1, 2, 3.25, \u0022Hi\u0022].pick_random()) [/gdscript] [csharp] Godot.Collections.Array array = [1, 2, 3.25f, \u0022Hi\u0022]; GD.Print(array.PickRandom()); // May print 1, 2, 3.25, or \u0022Hi\u0022. [/csharp] [/codeblocks] [b]Note:[/b] Like many similar functions in the engine (such as [method @GlobalScope.randi] or [method shuffle]), this method uses a common, global random seed. To get a predictable outcome from this method, see [method @GlobalScope.seed].",
+      "godotName": "pick_random",
+      "xmlDocId": "M:Godot.Array.PickRandom",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PopAt",
+      "kind": "Method",
+      "signature": "public Variant PopAt(int position)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes and returns the element of the array at index [param position]. If negative, [param position] is considered relative to the end of the array. Returns [code]null[/code] if the array is empty. If [param position] is out of bounds, an error message is also generated. [b]Note:[/b] This method shifts every element\u0027s index after [param position] back, which may have a noticeable performance cost, especially on larger arrays.",
+      "godotName": "pop_at",
+      "xmlDocId": "M:Godot.Array.PopAt(int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PopBack",
+      "kind": "Method",
+      "signature": "public Variant PopBack()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Removes and returns the last element of the array. Returns [code]null[/code] if the array is empty, without generating an error. See also [method pop_front].",
+      "godotName": "pop_back",
+      "xmlDocId": "M:Godot.Array.PopBack",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PopFront",
+      "kind": "Method",
+      "signature": "public Variant PopFront()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Removes and returns the first element of the array. Returns [code]null[/code] if the array is empty, without generating an error. See also [method pop_back]. [b]Note:[/b] This method shifts every other element\u0027s index back, which may have a noticeable performance cost, especially on larger arrays.",
+      "godotName": "pop_front",
+      "xmlDocId": "M:Godot.Array.PopFront",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public void PushBack(Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Appends an element at the end of the array. See also [method push_front].",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.Array.PushBack(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "PushFront",
+      "kind": "Method",
+      "signature": "public void PushFront(Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Adds an element at the beginning of the array. See also [method push_back]. [b]Note:[/b] This method shifts every other element\u0027s index forward, which may have a noticeable performance cost, especially on larger arrays.",
+      "godotName": "push_front",
+      "xmlDocId": "M:Godot.Array.PushFront(Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Reduce",
+      "kind": "Method",
+      "signature": "public Variant Reduce(Callable method, Variant accum)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        },
+        {
+          "name": "accum",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Calls the given [Callable] for each element in array, accumulates the result in [param accum], then returns it. The [param method] takes two arguments: the current value of [param accum] and the current array element. If [param accum] is [code]null[/code] (as by default), the iteration will start from the second element, with the first one used as initial value of [param accum]. [codeblock] func sum(accum, number): return accum \u002B number func _ready(): print([1, 2, 3].reduce(sum, 0)) # Prints 6 print([1, 2, 3].reduce(sum, 10)) # Prints 16 # Same as above, but using a lambda function. print([1, 2, 3].reduce(func(accum, number): return accum \u002B number, 10)) [/codeblock] If [method max] is not desirable, this method may also be used to implement a custom comparator: [codeblock] func _ready(): var arr = [Vector2i(5, 0), Vector2i(3, 4), Vector2i(1, 2)] var longest_vec = arr.reduce(func(max, vec): return vec if is_length_greater(vec, max) else max) print(longest_vec) # Prints (3, 4) func is_length_greater(a, b): return a.length() \u003E b.length() [/codeblock] This method can also be used to count how many elements in an array satisfy a certain condition, similar to [method count]: [codeblock] func is_even(number): return number % 2 == 0 func _ready(): var arr = [1, 2, 3, 4, 5] # If the current element is even, increment count, otherwise leave count the same. var even_count = arr.reduce(func(count, next): return count \u002B 1 if is_even(next) else count, 0) print(even_count) # Prints 2 [/codeblock] See also [method map], [method filter], [method any], and [method all].",
+      "godotName": "reduce",
+      "xmlDocId": "M:Godot.Array.Reduce(Callable,Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the element from the array at the given index ([param position]). If the index is out of bounds, this method fails. If the index is negative, [param position] is considered relative to the end of the array. If you need to return the removed element, use [method pop_at]. To remove an element by value, use [method erase] instead. [b]Note:[/b] This method shifts every element\u0027s index after [param position] back, which may have a noticeable performance cost, especially on larger arrays.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.Array.RemoveAt(int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int size)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the array\u0027s number of elements to [param size]. If [param size] is smaller than the array\u0027s current size, the elements at the end are removed. If [param size] is greater, new default elements (usually [code]null[/code]) are added, depending on the array\u0027s type. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_LOCKED] if the array is read-only, [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize. [b]Note:[/b] Calling this method once and assigning the new values is faster than calling [method append] for every new element.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.Array.Resize(int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of all elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.Array.Reverse",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(Variant what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "Variant"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the index of the [b]last[/b] occurrence of [param what] in this array, or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the beginning of the array. This method is the reverse of [method find].",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.Array.Rfind(Variant,int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "RfindCustom",
+      "kind": "Method",
+      "signature": "public int RfindCustom(Callable method, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the index of the [b]last[/b] element of the array that causes [param method] to return [code]true[/code], or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the beginning of the array. This method is the reverse of [method find_custom].",
+      "godotName": "rfind_custom",
+      "xmlDocId": "M:Godot.Array.RfindCustom(Callable,int)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of the element at the given [param index] to the given [param value]. This will not change the size of the array, it only changes the value at an index already in the array. This is the same as using the [code][][/code] operator ([code]array[index] = value[/code]).",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.Array.Set(int,Variant)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Shuffle",
+      "kind": "Method",
+      "signature": "public void Shuffle()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shuffles all elements of the array in a random order. [b]Note:[/b] Like many similar functions in the engine (such as [method @GlobalScope.randi] or [method pick_random]), this method uses a common, global random seed. To get a predictable outcome from this method, see [method @GlobalScope.seed].",
+      "godotName": "shuffle",
+      "xmlDocId": "M:Godot.Array.Shuffle",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array. Empty arrays ([code][][/code]) always return [code]0[/code]. See also [method is_empty].",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.Array.Size",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public Array Slice(int begin, int end, int step, bool deep)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        },
+        {
+          "name": "step",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "deep",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a new [Array] containing this array\u0027s elements, from index [param begin] (inclusive) to [param end] (exclusive), every [param step] elements. If either [param begin] or [param end] are negative, their value is relative to the end of the array. If [param step] is negative, this method iterates through the array in reverse, returning a slice ordered backwards. For this to work, [param begin] must be greater than [param end]. If [param deep] is [code]true[/code], all nested [Array] and [Dictionary] elements in the slice are duplicated from the original, recursively. See also [method duplicate]. [codeblock] var letters = [\u0022A\u0022, \u0022B\u0022, \u0022C\u0022, \u0022D\u0022, \u0022E\u0022, \u0022F\u0022] print(letters.slice(0, 2)) # Prints [\u0022A\u0022, \u0022B\u0022] print(letters.slice(2, -2)) # Prints [\u0022C\u0022, \u0022D\u0022] print(letters.slice(-2, 6)) # Prints [\u0022E\u0022, \u0022F\u0022] print(letters.slice(0, 6, 2)) # Prints [\u0022A\u0022, \u0022C\u0022, \u0022E\u0022] print(letters.slice(4, 1, -1)) # Prints [\u0022E\u0022, \u0022D\u0022, \u0022C\u0022] [/codeblock]",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.Array.Slice(int,int,int,bool)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the array in ascending order. The final order is dependent on the \u0022less than\u0022 ([code]\u003C[/code]) comparison between elements. [codeblocks] [gdscript] var numbers = [10, 5, 2.5, 8] numbers.sort() print(numbers) # Prints [2.5, 5, 8, 10] [/gdscript] [csharp] Godot.Collections.Array numbers = [10, 5, 2.5, 8]; numbers.Sort(); GD.Print(numbers); // Prints [2.5, 5, 8, 10] [/csharp] [/codeblocks] [b]Note:[/b] The sorting algorithm used is not [url=https://en.wikipedia.org/wiki/Sorting_algorithm#Stability]stable[/url]. This means that equivalent elements (such as [code]2[/code] and [code]2.0[/code]) may have their order changed when calling [method sort].",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.Array.Sort",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "SortCustom",
+      "kind": "Method",
+      "signature": "public void SortCustom(Callable func)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "func",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sorts the array using a custom [Callable]. [param func] is called as many times as necessary, receiving two array elements as arguments. The function should return [code]true[/code] if the first element should be moved [i]before[/i] the second one, otherwise it should return [code]false[/code]. [codeblock] func sort_ascending(a, b): if a[1] \u003C b[1]: return true return false func _ready(): var my_items = [[\u0022Tomato\u0022, 5], [\u0022Apple\u0022, 9], [\u0022Rice\u0022, 4]] my_items.sort_custom(sort_ascending) print(my_items) # Prints [[\u0022Rice\u0022, 4], [\u0022Tomato\u0022, 5], [\u0022Apple\u0022, 9]] # Sort descending, using a lambda function. my_items.sort_custom(func(a, b): return a[1] \u003E b[1]) print(my_items) # Prints [[\u0022Apple\u0022, 9], [\u0022Tomato\u0022, 5], [\u0022Rice\u0022, 4]] [/codeblock] It may also be necessary to use this method to sort strings by natural order, with [method String.naturalnocasecmp_to], as in the following example: [codeblock] var files = [\u0022newfile1\u0022, \u0022newfile2\u0022, \u0022newfile10\u0022, \u0022newfile11\u0022] files.sort_custom(func(a, b): return a.naturalnocasecmp_to(b) \u003C 0) print(files) # Prints [\u0022newfile1\u0022, \u0022newfile2\u0022, \u0022newfile10\u0022, \u0022newfile11\u0022] [/codeblock] [b]Note:[/b] In C#, this method is not supported. [b]Note:[/b] The sorting algorithm used is not [url=https://en.wikipedia.org/wiki/Sorting_algorithm#Stability]stable[/url]. This means that values considered equal may have their order changed when calling this method. [b]Note:[/b] You should not randomize the return value of [param func], as the heapsort algorithm expects a consistent result. Randomizing the return value will result in unexpected behavior.",
+      "godotName": "sort_custom",
+      "xmlDocId": "M:Godot.Array.SortCustom(Callable)",
+      "sourcePath": "doc/classes/Array.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array\u0027s size or its elements are different than [param right]\u0027s.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Array.operator !=(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public Array operator \u002B(Array right)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Appends the [param right] array to the left operand, creating a new [Array]. This is also known as an array concatenation. [codeblocks] [gdscript] var array1 = [\u0022One\u0022, 2] var array2 = [3, \u0022Four\u0022] print(array1 \u002B array2) # Prints [\u0022One\u0022, 2, 3, \u0022Four\u0022] [/gdscript] [csharp] // Note that concatenation is not possible with C#\u0027s native Array type. Godot.Collections.Array array1 = [\u0022One\u0022, 2]; Godot.Collections.Array array2 = [3, \u0022Four\u0022]; GD.Print(array1 \u002B array2); // Prints [\u0022One\u0022, 2, 3, \u0022Four\u0022] [/csharp] [/codeblocks] [b]Note:[/b] For existing arrays, [method append_array] is much more efficient than concatenation and assignment with the [code]\u002B=[/code] operator.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.Array.operator \u002B(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Compares the elements of both arrays in order, starting from index [code]0[/code] and ending on the last index in common between both arrays. For each pair of elements, returns [code]true[/code] if this array\u0027s element is less than [param right]\u0027s, [code]false[/code] if this element is greater. Otherwise, continues to the next pair. If all searched elements are equal, returns [code]true[/code] if this array\u0027s size is less than [param right]\u0027s, otherwise returns [code]false[/code].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.Array.operator \u003C(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Compares the elements of both arrays in order, starting from index [code]0[/code] and ending on the last index in common between both arrays. For each pair of elements, returns [code]true[/code] if this array\u0027s element is less than [param right]\u0027s, [code]false[/code] if this element is greater. Otherwise, continues to the next pair. If all searched elements are equal, returns [code]true[/code] if this array\u0027s size is less or equal to [param right]\u0027s, otherwise returns [code]false[/code].",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.Array.operator \u003C=(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Compares the left operand [Array] against the [param right] [Array]. Returns [code]true[/code] if the sizes and contents of the arrays are equal, [code]false[/code] otherwise.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Array.operator ==(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Compares the elements of both arrays in order, starting from index [code]0[/code] and ending on the last index in common between both arrays. For each pair of elements, returns [code]true[/code] if this array\u0027s element is greater than [param right]\u0027s, [code]false[/code] if this element is less. Otherwise, continues to the next pair. If all searched elements are equal, returns [code]true[/code] if this array\u0027s size is greater than [param right]\u0027s, otherwise returns [code]false[/code].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.Array.operator \u003E(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Array"
+        }
+      ],
+      "summary": "Compares the elements of both arrays in order, starting from index [code]0[/code] and ending on the last index in common between both arrays. For each pair of elements, returns [code]true[/code] if this array\u0027s element is greater than [param right]\u0027s, [code]false[/code] if this element is less. Otherwise, continues to the next pair. If all searched elements are equal, returns [code]true[/code] if this array\u0027s size is greater or equal to [param right]\u0027s, otherwise returns [code]false[/code].",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.Array.operator \u003E=(Array)",
+      "sourcePath": "doc/classes/Array.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Variant operator [](int index)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Variant] element at the specified [param index]. Arrays start at index 0. If [param index] is greater or equal to [code]0[/code], the element is fetched starting from the beginning of the array. If [param index] is a negative value, the element is fetched starting from the end. Accessing an array out-of-bounds will cause a run-time error, pausing the project execution if run from the editor.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Array.operator [](int)",
+      "sourcePath": "doc/classes/Array.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Array.xml",
+      "sha256": "d8d71a5dcd4c951e7a99eee3cff012d4998c8a2b57d412807c771bc880902142"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

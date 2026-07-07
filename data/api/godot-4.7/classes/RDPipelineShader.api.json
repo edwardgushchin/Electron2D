@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDPipelineShader",
+    "namespace": "Godot",
+    "fullName": "Godot.RDPipelineShader",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDPipelineShader",
+    "documentationPath": "doc/classes/RDPipelineShader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdpipelineshader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Shader",
+      "kind": "Property",
+      "signature": "public RID Shader { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Shader resource. The required stage is selected by the pipeline.",
+      "defaultValue": "RID()",
+      "godotName": "shader",
+      "xmlDocId": "P:Godot.RDPipelineShader.Shader",
+      "sourcePath": "doc/classes/RDPipelineShader.xml"
+    },
+    {
+      "name": "SpecializationConstants",
+      "kind": "Property",
+      "signature": "public RDPipelineSpecializationConstant[] SpecializationConstants { get; set; }",
+      "returnType": "RDPipelineSpecializationConstant[]",
+      "parameters": [],
+      "summary": "Specialization constants applied to the selected shader stage at pipeline creation time.",
+      "defaultValue": "[]",
+      "godotName": "specialization_constants",
+      "xmlDocId": "P:Godot.RDPipelineShader.SpecializationConstants",
+      "sourcePath": "doc/classes/RDPipelineShader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDPipelineShader.xml",
+      "sha256": "9cf70ba5eae571b853f8c1b4e2c46083662b4a58b060362746739c9ef83f1a8c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

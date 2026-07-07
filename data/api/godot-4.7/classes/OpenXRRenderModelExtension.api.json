@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRRenderModelExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRRenderModelExtension",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRRenderModelExtension",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrrendermodelextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsActive",
+      "kind": "Method",
+      "signature": "public bool IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR\u0027s render model extension is supported and enabled. [b]Note:[/b] This only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_active",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.IsActive",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelCreate",
+      "kind": "Method",
+      "signature": "public RID RenderModelCreate(int renderModelId)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "render_model_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a render model object within OpenXR using a render model id. [b]Note:[/b] This function is exposed for dependent OpenXR extensions that provide render model ids to be used with the render model extension.",
+      "godotName": "render_model_create",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelCreate(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelDestroy",
+      "kind": "Method",
+      "signature": "public void RenderModelDestroy(RID renderModel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Destroys a render model object within OpenXR that was previously created with [method render_model_create]. [b]Note:[/b] This function is exposed for dependent OpenXR extensions that provide render model ids to be used with the render model extension.",
+      "godotName": "render_model_destroy",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelDestroy(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetAll",
+      "kind": "Method",
+      "signature": "public RID[] RenderModelGetAll()",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "Returns an array of all currently active render models registered with this extension.",
+      "godotName": "render_model_get_all",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetAll",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetAnimatableNodeCount",
+      "kind": "Method",
+      "signature": "public int RenderModelGetAnimatableNodeCount(RID renderModel)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the number of animatable nodes this render model has.",
+      "godotName": "render_model_get_animatable_node_count",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetAnimatableNodeCount(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetAnimatableNodeName",
+      "kind": "Method",
+      "signature": "public String RenderModelGetAnimatableNodeName(RID renderModel, int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the given animatable node.",
+      "godotName": "render_model_get_animatable_node_name",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetAnimatableNodeName(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetAnimatableNodeTransform",
+      "kind": "Method",
+      "signature": "public Transform3D RenderModelGetAnimatableNodeTransform(RID renderModel, int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the current local transform for an animatable node. This is updated every frame.",
+      "godotName": "render_model_get_animatable_node_transform",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetAnimatableNodeTransform(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetConfidence",
+      "kind": "Method",
+      "signature": "public int RenderModelGetConfidence(RID renderModel)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the tracking confidence of the tracking data for the render model.",
+      "godotName": "render_model_get_confidence",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetConfidence(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetRootTransform",
+      "kind": "Method",
+      "signature": "public Transform3D RenderModelGetRootTransform(RID renderModel)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the root transform of a render model. This is the tracked position relative to our [XROrigin3D] node.",
+      "godotName": "render_model_get_root_transform",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetRootTransform(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetSubactionPaths",
+      "kind": "Method",
+      "signature": "public PackedStringArray RenderModelGetSubactionPaths(RID renderModel)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns a list of active subaction paths for this [param render_model]. [b]Note:[/b] If different devices are bound to your actions than available in suggested interaction bindings, this information shows paths related to the interaction bindings being mimicked by that device.",
+      "godotName": "render_model_get_subaction_paths",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetSubactionPaths(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelGetTopLevelPath",
+      "kind": "Method",
+      "signature": "public String RenderModelGetTopLevelPath(RID renderModel)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the top level path associated with this [param render_model]. If provided this identifies whether the render model is associated with the player\u0027s hands or other body part.",
+      "godotName": "render_model_get_top_level_path",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelGetTopLevelPath(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelIsAnimatableNodeVisible",
+      "kind": "Method",
+      "signature": "public bool RenderModelIsAnimatableNodeVisible(RID renderModel, int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this animatable node should be visible.",
+      "godotName": "render_model_is_animatable_node_visible",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelIsAnimatableNodeVisible(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelNewSceneInstance",
+      "kind": "Method",
+      "signature": "public Node3D RenderModelNewSceneInstance(RID renderModel)",
+      "returnType": "Node3D",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns an instance of a subscene that contains all [MeshInstance3D] nodes that allow you to visualize the render model.",
+      "godotName": "render_model_new_scene_instance",
+      "xmlDocId": "M:Godot.OpenXRRenderModelExtension.RenderModelNewSceneInstance(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "RenderModelAdded",
+      "kind": "Signal",
+      "signature": "public event RenderModelAddedHandler RenderModelAdded",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Emitted when a new render model is added.",
+      "godotName": "render_model_added",
+      "xmlDocId": "E:Godot.OpenXRRenderModelExtension.RenderModelAdded(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelRemoved",
+      "kind": "Signal",
+      "signature": "public event RenderModelRemovedHandler RenderModelRemoved",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Emitted when a render model is removed.",
+      "godotName": "render_model_removed",
+      "xmlDocId": "E:Godot.OpenXRRenderModelExtension.RenderModelRemoved(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    },
+    {
+      "name": "RenderModelTopLevelPathChanged",
+      "kind": "Signal",
+      "signature": "public event RenderModelTopLevelPathChangedHandler RenderModelTopLevelPathChanged",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "RID"
+        }
+      ],
+      "summary": "Emitted when the top level path associated with a render model changed.",
+      "godotName": "render_model_top_level_path_changed",
+      "xmlDocId": "E:Godot.OpenXRRenderModelExtension.RenderModelTopLevelPathChanged(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRRenderModelExtension.xml",
+      "sha256": "2fddbcb28951b8b73cd28efa25fdfd4ae90e3eeba7df34c1cb3adc833b1d0e34"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

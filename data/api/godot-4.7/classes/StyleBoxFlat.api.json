@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBoxFlat",
+    "namespace": "Godot",
+    "fullName": "Godot.StyleBoxFlat",
+    "kind": "class",
+    "baseType": "StyleBox",
+    "interfaces": [],
+    "godotReference": "StyleBoxFlat",
+    "documentationPath": "doc/classes/StyleBoxFlat.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_styleboxflat.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBorderWidth",
+      "kind": "Method",
+      "signature": "public int GetBorderWidth(int margin)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the specified [enum Side]\u0027s border width.",
+      "godotName": "get_border_width",
+      "xmlDocId": "M:Godot.StyleBoxFlat.GetBorderWidth(int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "GetBorderWidthMin",
+      "kind": "Method",
+      "signature": "public int GetBorderWidthMin()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the smallest border width out of all four borders.",
+      "godotName": "get_border_width_min",
+      "xmlDocId": "M:Godot.StyleBoxFlat.GetBorderWidthMin",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "GetCornerRadius",
+      "kind": "Method",
+      "signature": "public int GetCornerRadius(int corner)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "corner",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given [param corner]\u0027s radius.",
+      "godotName": "get_corner_radius",
+      "xmlDocId": "M:Godot.StyleBoxFlat.GetCornerRadius(int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "GetExpandMargin",
+      "kind": "Method",
+      "signature": "public float GetExpandMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the size of the specified [enum Side]\u0027s expand margin.",
+      "godotName": "get_expand_margin",
+      "xmlDocId": "M:Godot.StyleBoxFlat.GetExpandMargin(int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetBorderWidth",
+      "kind": "Method",
+      "signature": "public void SetBorderWidth(int margin, int width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the specified [enum Side]\u0027s border width to [param width] pixels.",
+      "godotName": "set_border_width",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetBorderWidth(int,int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetBorderWidthAll",
+      "kind": "Method",
+      "signature": "public void SetBorderWidthAll(int width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the border width to [param width] pixels for all sides.",
+      "godotName": "set_border_width_all",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetBorderWidthAll(int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetCornerRadius",
+      "kind": "Method",
+      "signature": "public void SetCornerRadius(int corner, int radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "corner",
+          "type": "int"
+        },
+        {
+          "name": "radius",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the corner radius to [param radius] pixels for the given [param corner].",
+      "godotName": "set_corner_radius",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetCornerRadius(int,int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetCornerRadiusAll",
+      "kind": "Method",
+      "signature": "public void SetCornerRadiusAll(int radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "radius",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the corner radius to [param radius] pixels for all corners.",
+      "godotName": "set_corner_radius_all",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetCornerRadiusAll(int)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetExpandMargin",
+      "kind": "Method",
+      "signature": "public void SetExpandMargin(int margin, float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the expand margin to [param size] pixels for the specified [enum Side].",
+      "godotName": "set_expand_margin",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetExpandMargin(int,float)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "SetExpandMarginAll",
+      "kind": "Method",
+      "signature": "public void SetExpandMarginAll(float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the expand margin to [param size] pixels for all sides.",
+      "godotName": "set_expand_margin_all",
+      "xmlDocId": "M:Godot.StyleBoxFlat.SetExpandMarginAll(float)",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "AntiAliasing",
+      "kind": "Property",
+      "signature": "public bool AntiAliasing { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners or [member skew]. [b]Note:[/b] When using beveled corners with 45-degree angles ([member corner_detail] = 1), it is recommended to set [member anti_aliasing] to [code]false[/code] to ensure crisp visuals and avoid possible visual glitches.",
+      "defaultValue": "true",
+      "godotName": "anti_aliasing",
+      "xmlDocId": "P:Godot.StyleBoxFlat.AntiAliasing",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "AntiAliasingSize",
+      "kind": "Property",
+      "signature": "public float AntiAliasingSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This changes the size of the antialiasing effect. [code]1.0[/code] is recommended for an optimal result at 100% scale, identical to how rounded rectangles are rendered in web browsers and most vector drawing software. [b]Note:[/b] Higher values may produce a blur effect but can also create undesired artifacts on small boxes with large-radius corners.",
+      "defaultValue": "1.0",
+      "godotName": "anti_aliasing_size",
+      "xmlDocId": "P:Godot.StyleBoxFlat.AntiAliasingSize",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BgColor",
+      "kind": "Property",
+      "signature": "public Color BgColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The background color of the stylebox.",
+      "defaultValue": "Color(0.6, 0.6, 0.6, 1)",
+      "godotName": "bg_color",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BgColor",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderBlend",
+      "kind": "Property",
+      "signature": "public bool BorderBlend { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the border will fade into the background color.",
+      "defaultValue": "false",
+      "godotName": "border_blend",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderBlend",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderColor",
+      "kind": "Property",
+      "signature": "public Color BorderColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets the color of the border.",
+      "defaultValue": "Color(0.8, 0.8, 0.8, 1)",
+      "godotName": "border_color",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderColor",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderWidthBottom",
+      "kind": "Property",
+      "signature": "public int BorderWidthBottom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Border width for the bottom border.",
+      "defaultValue": "0",
+      "godotName": "border_width_bottom",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderWidthBottom",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderWidthLeft",
+      "kind": "Property",
+      "signature": "public int BorderWidthLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Border width for the left border.",
+      "defaultValue": "0",
+      "godotName": "border_width_left",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderWidthLeft",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderWidthRight",
+      "kind": "Property",
+      "signature": "public int BorderWidthRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Border width for the right border.",
+      "defaultValue": "0",
+      "godotName": "border_width_right",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderWidthRight",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "BorderWidthTop",
+      "kind": "Property",
+      "signature": "public int BorderWidthTop { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Border width for the top border.",
+      "defaultValue": "0",
+      "godotName": "border_width_top",
+      "xmlDocId": "P:Godot.StyleBoxFlat.BorderWidthTop",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "CornerDetail",
+      "kind": "Property",
+      "signature": "public int CornerDetail { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "This sets the number of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius ([method set_corner_radius_all]) into account. For corner radii less than 10, [code]4[/code] or [code]5[/code] should be enough. For corner radii less than 30, values between [code]8[/code] and [code]12[/code] should be enough. A corner detail of [code]1[/code] will result in chamfered corners instead of rounded corners, which is useful for some artistic effects.",
+      "defaultValue": "8",
+      "godotName": "corner_detail",
+      "xmlDocId": "P:Godot.StyleBoxFlat.CornerDetail",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "CornerRadiusBottomLeft",
+      "kind": "Property",
+      "signature": "public int CornerRadiusBottomLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The bottom-left corner\u0027s radius. If [code]0[/code], the corner is not rounded.",
+      "defaultValue": "0",
+      "godotName": "corner_radius_bottom_left",
+      "xmlDocId": "P:Godot.StyleBoxFlat.CornerRadiusBottomLeft",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "CornerRadiusBottomRight",
+      "kind": "Property",
+      "signature": "public int CornerRadiusBottomRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The bottom-right corner\u0027s radius. If [code]0[/code], the corner is not rounded.",
+      "defaultValue": "0",
+      "godotName": "corner_radius_bottom_right",
+      "xmlDocId": "P:Godot.StyleBoxFlat.CornerRadiusBottomRight",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "CornerRadiusTopLeft",
+      "kind": "Property",
+      "signature": "public int CornerRadiusTopLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The top-left corner\u0027s radius. If [code]0[/code], the corner is not rounded.",
+      "defaultValue": "0",
+      "godotName": "corner_radius_top_left",
+      "xmlDocId": "P:Godot.StyleBoxFlat.CornerRadiusTopLeft",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "CornerRadiusTopRight",
+      "kind": "Property",
+      "signature": "public int CornerRadiusTopRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The top-right corner\u0027s radius. If [code]0[/code], the corner is not rounded.",
+      "defaultValue": "0",
+      "godotName": "corner_radius_top_right",
+      "xmlDocId": "P:Godot.StyleBoxFlat.CornerRadiusTopRight",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "DrawCenter",
+      "kind": "Property",
+      "signature": "public bool DrawCenter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Toggles drawing of the inner part of the stylebox.",
+      "defaultValue": "true",
+      "godotName": "draw_center",
+      "xmlDocId": "P:Godot.StyleBoxFlat.DrawCenter",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ExpandMarginBottom",
+      "kind": "Property",
+      "signature": "public float ExpandMarginBottom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the stylebox outside of the control rect on the bottom edge. Useful in combination with [member border_width_bottom] to draw a border outside the control rect. [b]Note:[/b] Unlike [member StyleBox.content_margin_bottom], [member expand_margin_bottom] does [i]not[/i] affect the size of the clickable area for [Control]s. This can negatively impact usability if used wrong, as the user may try to click an area of the StyleBox that cannot actually receive clicks.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_bottom",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ExpandMarginBottom",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ExpandMarginLeft",
+      "kind": "Property",
+      "signature": "public float ExpandMarginLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the stylebox outside of the control rect on the left edge. Useful in combination with [member border_width_left] to draw a border outside the control rect. [b]Note:[/b] Unlike [member StyleBox.content_margin_left], [member expand_margin_left] does [i]not[/i] affect the size of the clickable area for [Control]s. This can negatively impact usability if used wrong, as the user may try to click an area of the StyleBox that cannot actually receive clicks.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_left",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ExpandMarginLeft",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ExpandMarginRight",
+      "kind": "Property",
+      "signature": "public float ExpandMarginRight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the stylebox outside of the control rect on the right edge. Useful in combination with [member border_width_right] to draw a border outside the control rect. [b]Note:[/b] Unlike [member StyleBox.content_margin_right], [member expand_margin_right] does [i]not[/i] affect the size of the clickable area for [Control]s. This can negatively impact usability if used wrong, as the user may try to click an area of the StyleBox that cannot actually receive clicks.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_right",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ExpandMarginRight",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ExpandMarginTop",
+      "kind": "Property",
+      "signature": "public float ExpandMarginTop { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the stylebox outside of the control rect on the top edge. Useful in combination with [member border_width_top] to draw a border outside the control rect. [b]Note:[/b] Unlike [member StyleBox.content_margin_top], [member expand_margin_top] does [i]not[/i] affect the size of the clickable area for [Control]s. This can negatively impact usability if used wrong, as the user may try to click an area of the StyleBox that cannot actually receive clicks.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_top",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ExpandMarginTop",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ShadowColor",
+      "kind": "Property",
+      "signature": "public Color ShadowColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the shadow. This has no effect if [member shadow_size] is lower than 1.",
+      "defaultValue": "Color(0, 0, 0, 0.6)",
+      "godotName": "shadow_color",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ShadowColor",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ShadowOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ShadowOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The shadow offset in pixels. Adjusts the position of the shadow relatively to the stylebox.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "shadow_offset",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ShadowOffset",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "ShadowSize",
+      "kind": "Property",
+      "signature": "public int ShadowSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The shadow size in pixels.",
+      "defaultValue": "0",
+      "godotName": "shadow_size",
+      "xmlDocId": "P:Godot.StyleBoxFlat.ShadowSize",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    },
+    {
+      "name": "Skew",
+      "kind": "Property",
+      "signature": "public Vector2 Skew { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "If set to a non-zero value on either axis, [member skew] distorts the StyleBox horizontally and/or vertically. This can be used for \u0022futuristic\u0022-style UIs. Positive values skew the StyleBox towards the right (X axis) and upwards (Y axis), while negative values skew the StyleBox towards the left (X axis) and downwards (Y axis). [b]Note:[/b] To ensure text does not touch the StyleBox\u0027s edges, consider increasing the [StyleBox]\u0027s content margin (see [member StyleBox.content_margin_bottom]). It is preferable to increase the content margin instead of the expand margin (see [member expand_margin_bottom]), as increasing the expand margin does not increase the size of the clickable area for [Control]s.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "skew",
+      "xmlDocId": "P:Godot.StyleBoxFlat.Skew",
+      "sourcePath": "doc/classes/StyleBoxFlat.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StyleBoxFlat.xml",
+      "sha256": "db51e1809b6d2febb9b39a8e0997eff496fbc50471df7f4d24b575cee386fa1b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

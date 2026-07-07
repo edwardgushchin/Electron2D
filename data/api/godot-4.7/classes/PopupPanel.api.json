@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PopupPanel",
+    "namespace": "Godot",
+    "fullName": "Godot.PopupPanel",
+    "kind": "class",
+    "baseType": "Popup",
+    "interfaces": [],
+    "godotReference": "PopupPanel",
+    "documentationPath": "doc/classes/PopupPanel.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_popuppanel.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanvasItemDefaultTextureFilter",
+      "kind": "Property",
+      "signature": "public int CanvasItemDefaultTextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "4",
+      "godotName": "canvas_item_default_texture_filter",
+      "xmlDocId": "P:Godot.PopupPanel.CanvasItemDefaultTextureFilter",
+      "sourcePath": "doc/classes/PopupPanel.xml"
+    },
+    {
+      "name": "CanvasItemDefaultTextureRepeat",
+      "kind": "Property",
+      "signature": "public int CanvasItemDefaultTextureRepeat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "canvas_item_default_texture_repeat",
+      "xmlDocId": "P:Godot.PopupPanel.CanvasItemDefaultTextureRepeat",
+      "sourcePath": "doc/classes/PopupPanel.xml"
+    },
+    {
+      "name": "Transparent",
+      "kind": "Property",
+      "signature": "public bool Transparent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transparent",
+      "xmlDocId": "P:Godot.PopupPanel.Transparent",
+      "sourcePath": "doc/classes/PopupPanel.xml"
+    },
+    {
+      "name": "TransparentBg",
+      "kind": "Property",
+      "signature": "public bool TransparentBg { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transparent_bg",
+      "xmlDocId": "P:Godot.PopupPanel.TransparentBg",
+      "sourcePath": "doc/classes/PopupPanel.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PopupPanel.xml",
+      "sha256": "425569139e38da20edfdf4cd9ec2996ab65c7eb44212c85b230e31921bed86e5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

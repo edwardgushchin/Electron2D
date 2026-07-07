@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleMultiplyByAxisAngle",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleMultiplyByAxisAngle",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMultiplyByAxisAngle.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticlemultiplybyaxisangle.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DegreesMode",
+      "kind": "Property",
+      "signature": "public bool DegreesMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the angle will be interpreted in degrees instead of radians.",
+      "defaultValue": "true",
+      "godotName": "degrees_mode",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleMultiplyByAxisAngle.DegreesMode",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMultiplyByAxisAngle.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMultiplyByAxisAngle.xml",
+      "sha256": "fe9380419106737f9b63207d54ff029fe1f13e4be70e5af759a29a9ff328bf96"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

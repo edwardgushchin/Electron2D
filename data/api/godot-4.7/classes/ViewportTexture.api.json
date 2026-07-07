@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ViewportTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.ViewportTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "ViewportTexture",
+    "documentationPath": "doc/classes/ViewportTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_viewporttexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ViewportPath",
+      "kind": "Property",
+      "signature": "public NodePath ViewportPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The path to the [Viewport] node to display. This is relative to the local scene root (see [method Resource.get_local_scene]), [b]not[/b] to the nodes that use this texture. [b]Note:[/b] In the editor, this path is automatically updated when the target viewport or one of its ancestors is renamed or moved. At runtime, this path may not automatically update if the scene root cannot be found.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "viewport_path",
+      "xmlDocId": "P:Godot.ViewportTexture.ViewportPath",
+      "sourcePath": "doc/classes/ViewportTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ViewportTexture.xml",
+      "sha256": "931cb43640a59d0e4cc4e7b737f3ada275939943f67f8666acac84fbcae0b8a0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

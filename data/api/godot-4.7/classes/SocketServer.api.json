@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SocketServer",
+    "namespace": "Godot",
+    "fullName": "Godot.SocketServer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "SocketServer",
+    "documentationPath": "doc/classes/SocketServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_socketserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsConnectionAvailable",
+      "kind": "Method",
+      "signature": "public bool IsConnectionAvailable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a connection is available for taking.",
+      "godotName": "is_connection_available",
+      "xmlDocId": "M:Godot.SocketServer.IsConnectionAvailable",
+      "sourcePath": "doc/classes/SocketServer.xml"
+    },
+    {
+      "name": "IsListening",
+      "kind": "Method",
+      "signature": "public bool IsListening()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the server is currently listening for connections.",
+      "godotName": "is_listening",
+      "xmlDocId": "M:Godot.SocketServer.IsListening",
+      "sourcePath": "doc/classes/SocketServer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops listening.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.SocketServer.Stop",
+      "sourcePath": "doc/classes/SocketServer.xml"
+    },
+    {
+      "name": "TakeSocketConnection",
+      "kind": "Method",
+      "signature": "public StreamPeerSocket TakeSocketConnection()",
+      "returnType": "StreamPeerSocket",
+      "parameters": [],
+      "summary": "If a connection is available, returns a StreamPeerSocket with the connection.",
+      "godotName": "take_socket_connection",
+      "xmlDocId": "M:Godot.SocketServer.TakeSocketConnection",
+      "sourcePath": "doc/classes/SocketServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SocketServer.xml",
+      "sha256": "11812511143a29dddd3724c61bca724c2951c7107f65e78bfab860eb1223cbd8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

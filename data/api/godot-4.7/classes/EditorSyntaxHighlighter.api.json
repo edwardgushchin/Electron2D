@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSyntaxHighlighter",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSyntaxHighlighter",
+    "kind": "class",
+    "baseType": "SyntaxHighlighter",
+    "interfaces": [],
+    "godotReference": "EditorSyntaxHighlighter",
+    "documentationPath": "doc/classes/EditorSyntaxHighlighter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorsyntaxhighlighter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Create",
+      "kind": "Method",
+      "signature": "public EditorSyntaxHighlighter _Create()",
+      "returnType": "EditorSyntaxHighlighter",
+      "parameters": [],
+      "summary": "Virtual method which creates a new instance of the syntax highlighter.",
+      "godotName": "_create",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._Create",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to return the syntax highlighter name.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._GetName",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetSupportedLanguages",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedLanguages()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to return the supported language names.",
+      "godotName": "_get_supported_languages",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._GetSupportedLanguages",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Create",
+      "kind": "Method",
+      "signature": "public EditorSyntaxHighlighter _Create()",
+      "returnType": "EditorSyntaxHighlighter",
+      "parameters": [],
+      "summary": "Virtual method which creates a new instance of the syntax highlighter.",
+      "godotName": "_create",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._Create",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to return the syntax highlighter name.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._GetName",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetSupportedLanguages",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedLanguages()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to return the supported language names.",
+      "godotName": "_get_supported_languages",
+      "xmlDocId": "M:Godot.EditorSyntaxHighlighter._GetSupportedLanguages",
+      "sourcePath": "doc/classes/EditorSyntaxHighlighter.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorSyntaxHighlighter.xml",
+      "sha256": "0065fdf00aec1dd61d3118e66f59d725291a78f61208e894a719a9ec70cd2db2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

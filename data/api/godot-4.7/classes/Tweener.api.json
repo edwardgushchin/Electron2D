@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tweener",
+    "namespace": "Godot",
+    "fullName": "Godot.Tweener",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Tweener",
+    "documentationPath": "doc/classes/Tweener.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tweener.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when the [Tweener] has just finished its job or became invalid (e.g. due to a freed object).",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.Tweener.Finished",
+      "sourcePath": "doc/classes/Tweener.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Tweener.xml",
+      "sha256": "5903c5355b3a4c173ef4f63b0c9181e5970d27656d324223d588f4ffb4e2f4b9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

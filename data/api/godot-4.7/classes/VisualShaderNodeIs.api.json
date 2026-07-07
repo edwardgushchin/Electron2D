@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeIs",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeIs",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeIs",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeis.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The comparison function.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeIs.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_IS_INF",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison with [code]INF[/code] (Infinity).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+        },
+        {
+          "name": "FUNC_IS_NAN",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison with [code]NaN[/code] (Not a Number; indicates invalid numeric results, such as division by zero).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_IS_INF",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison with [code]INF[/code] (Infinity).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+    },
+    {
+      "name": "FUNC_IS_NAN",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison with [code]NaN[/code] (Not a Number; indicates invalid numeric results, such as division by zero).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeIs.xml",
+      "sha256": "70226e5d0cf464b02ae049d0f1392648c95ec081737e396dbdf5c186b5e9eb85"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

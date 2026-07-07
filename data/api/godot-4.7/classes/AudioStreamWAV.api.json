@@ -1,0 +1,330 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamWAV",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamWAV",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamWAV",
+    "documentationPath": "doc/classes/AudioStreamWAV.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamwav.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LoadFromBuffer",
+      "kind": "Method",
+      "signature": "public AudioStreamWAV LoadFromBuffer(PackedByteArray streamData, Dictionary options)",
+      "returnType": "AudioStreamWAV",
+      "parameters": [
+        {
+          "name": "stream_data",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary",
+          "defaultValue": "{}"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamWAV] instance from the given buffer. The buffer must contain WAV data. The keys and values of [param options] match the properties of [ResourceImporterWAV]. The usage of [param options] is identical to [method AudioStreamWAV.load_from_file].",
+      "godotName": "load_from_buffer",
+      "xmlDocId": "M:Godot.AudioStreamWAV.LoadFromBuffer(PackedByteArray,Dictionary)",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public AudioStreamWAV LoadFromFile(String path, Dictionary options)",
+      "returnType": "AudioStreamWAV",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary",
+          "defaultValue": "{}"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamWAV] instance from the given file path. The file must be in WAV format. The keys and values of [param options] match the properties of [ResourceImporterWAV]. [b]Example:[/b] Load the first file dropped as a WAV and play it: [codeblock] @onready var audio_player = $AudioStreamPlayer func _ready(): get_window().files_dropped.connect(_on_files_dropped) func _on_files_dropped(files): if files[0].get_extension() == \u0022wav\u0022: audio_player.stream = AudioStreamWAV.load_from_file(files[0], { \u0022force/max_rate\u0022: true, \u0022force/max_rate_hz\u0022: 11025 }) audio_player.play() [/codeblock]",
+      "godotName": "load_from_file",
+      "xmlDocId": "M:Godot.AudioStreamWAV.LoadFromFile(String,Dictionary)",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "SaveToWav",
+      "kind": "Method",
+      "signature": "public int SaveToWav(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the AudioStreamWAV as a WAV file to [param path]. Samples with IMA ADPCM or Quite OK Audio formats can\u0027t be saved. [b]Note:[/b] A [code].wav[/code] extension is automatically appended to [param path] if it is missing.",
+      "godotName": "save_to_wav",
+      "xmlDocId": "M:Godot.AudioStreamWAV.SaveToWav(String)",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "Data",
+      "kind": "Property",
+      "signature": "public PackedByteArray Data { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Contains the audio data in bytes. [b]Note:[/b] If [member format] is set to [constant FORMAT_8_BITS], this property expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte. [b]Note:[/b] If [member format] is set to [constant FORMAT_QOA], this property expects data from a full QOA file.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "data",
+      "xmlDocId": "P:Godot.AudioStreamWAV.Data",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "Format",
+      "kind": "Property",
+      "signature": "public int Format { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Audio format.",
+      "defaultValue": "0",
+      "godotName": "format",
+      "xmlDocId": "P:Godot.AudioStreamWAV.Format",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LoopBegin",
+      "kind": "Property",
+      "signature": "public int LoopBegin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The loop start point (in number of samples, relative to the beginning of the stream).",
+      "defaultValue": "0",
+      "godotName": "loop_begin",
+      "xmlDocId": "P:Godot.AudioStreamWAV.LoopBegin",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LoopEnd",
+      "kind": "Property",
+      "signature": "public int LoopEnd { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The loop end point (in number of samples, relative to the beginning of the stream).",
+      "defaultValue": "0",
+      "godotName": "loop_end",
+      "xmlDocId": "P:Godot.AudioStreamWAV.LoopEnd",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LoopMode",
+      "kind": "Property",
+      "signature": "public int LoopMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The loop mode.",
+      "defaultValue": "0",
+      "godotName": "loop_mode",
+      "xmlDocId": "P:Godot.AudioStreamWAV.LoopMode",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "MixRate",
+      "kind": "Property",
+      "signature": "public int MixRate { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The sample rate for mixing this audio. Higher values require more storage space, but result in better quality. In games, common sample rates in use are [code]11025[/code], [code]16000[/code], [code]22050[/code], [code]32000[/code], [code]44100[/code], and [code]48000[/code]. According to the [url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem]Nyquist-Shannon sampling theorem[/url], there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are using lower-pitched sounds such as voices, lower sample rates such as [code]32000[/code] or [code]22050[/code] may be usable with no loss in quality.",
+      "defaultValue": "44100",
+      "godotName": "mix_rate",
+      "xmlDocId": "P:Godot.AudioStreamWAV.MixRate",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "Stereo",
+      "kind": "Property",
+      "signature": "public bool Stereo { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], audio is stereo.",
+      "defaultValue": "false",
+      "godotName": "stereo",
+      "xmlDocId": "P:Godot.AudioStreamWAV.Stereo",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "Tags",
+      "kind": "Property",
+      "signature": "public Dictionary Tags { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Contains user-defined tags if found in the WAV data. Commonly used tags include [code]title[/code], [code]artist[/code], [code]album[/code], [code]tracknumber[/code], and [code]date[/code] ([code]date[/code] does not have a standard date format). [b]Note:[/b] No tag is [i]guaranteed[/i] to be present in every file, so make sure to account for the keys not always existing. [b]Note:[/b] Only WAV files using a [code]LIST[/code] chunk with an identifier of [code]INFO[/code] to encode the tags are currently supported.",
+      "defaultValue": "{}",
+      "godotName": "tags",
+      "xmlDocId": "P:Godot.AudioStreamWAV.Tags",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Format",
+      "values": [
+        {
+          "name": "FORMAT_16_BITS",
+          "value": "1",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "16-bit PCM audio codec.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "FORMAT_8_BITS",
+          "value": "0",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "8-bit PCM audio codec.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "FORMAT_IMA_ADPCM",
+          "value": "2",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Audio is lossily compressed as IMA ADPCM.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "FORMAT_QOA",
+          "value": "3",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Audio is lossily compressed as [url=https://qoaformat.org/]Quite OK Audio[/url].",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        }
+      ]
+    },
+    {
+      "name": "LoopMode",
+      "values": [
+        {
+          "name": "LOOP_BACKWARD",
+          "value": "3",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing backward only.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "LOOP_DISABLED",
+          "value": "0",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "Audio does not loop.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "LOOP_FORWARD",
+          "value": "1",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing forward only.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        },
+        {
+          "name": "LOOP_PINGPONG",
+          "value": "2",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing back and forth.",
+          "sourcePath": "doc/classes/AudioStreamWAV.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FORMAT_8_BITS",
+      "value": "0",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "8-bit PCM audio codec.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "FORMAT_16_BITS",
+      "value": "1",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "16-bit PCM audio codec.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "FORMAT_IMA_ADPCM",
+      "value": "2",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Audio is lossily compressed as IMA ADPCM.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "FORMAT_QOA",
+      "value": "3",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Audio is lossily compressed as [url=https://qoaformat.org/]Quite OK Audio[/url].",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LOOP_DISABLED",
+      "value": "0",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "Audio does not loop.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LOOP_FORWARD",
+      "value": "1",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing forward only.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LOOP_PINGPONG",
+      "value": "2",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing back and forth.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    },
+    {
+      "name": "LOOP_BACKWARD",
+      "value": "3",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "Audio loops the data between [member loop_begin] and [member loop_end], playing backward only.",
+      "sourcePath": "doc/classes/AudioStreamWAV.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamWAV.xml",
+      "sha256": "63c4d145a13092dcf007e38c95542983dc598d9be222031aa7226f3a4c38db2d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Joint2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Joint2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Joint2D",
+    "documentationPath": "doc/classes/Joint2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_joint2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the joint\u0027s internal [RID] from the [PhysicsServer2D].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.Joint2D.GetRid",
+      "sourcePath": "doc/classes/Joint2D.xml"
+    },
+    {
+      "name": "Bias",
+      "kind": "Property",
+      "signature": "public float Bias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member node_a] and [member node_b] move in different directions the [member bias] controls how fast the joint pulls them back to their original position. The lower the [member bias] the more the two bodies can pull on the joint. When set to [code]0[/code], the default value from [member ProjectSettings.physics/2d/solver/default_constraint_bias] is used.",
+      "defaultValue": "0.0",
+      "godotName": "bias",
+      "xmlDocId": "P:Godot.Joint2D.Bias",
+      "sourcePath": "doc/classes/Joint2D.xml"
+    },
+    {
+      "name": "DisableCollision",
+      "kind": "Property",
+      "signature": "public bool DisableCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the two bodies bound together do not collide with each other.",
+      "defaultValue": "true",
+      "godotName": "disable_collision",
+      "xmlDocId": "P:Godot.Joint2D.DisableCollision",
+      "sourcePath": "doc/classes/Joint2D.xml"
+    },
+    {
+      "name": "NodeA",
+      "kind": "Property",
+      "signature": "public NodePath NodeA { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to the first body (A) attached to the joint. The node must inherit [PhysicsBody2D].",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "node_a",
+      "xmlDocId": "P:Godot.Joint2D.NodeA",
+      "sourcePath": "doc/classes/Joint2D.xml"
+    },
+    {
+      "name": "NodeB",
+      "kind": "Property",
+      "signature": "public NodePath NodeB { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to the second body (B) attached to the joint. The node must inherit [PhysicsBody2D].",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "node_b",
+      "xmlDocId": "P:Godot.Joint2D.NodeB",
+      "sourcePath": "doc/classes/Joint2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Joint2D.xml",
+      "sha256": "6954b251b1b6fd4cb61dcd1536f90fceecdf6e7baf7b33ad274270955696e034"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

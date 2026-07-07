@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventScreenTouch",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventScreenTouch",
+    "kind": "class",
+    "baseType": "InputEventFromWindow",
+    "interfaces": [],
+    "godotReference": "InputEventScreenTouch",
+    "documentationPath": "doc/classes/InputEventScreenTouch.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventscreentouch.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Canceled",
+      "kind": "Property",
+      "signature": "public bool Canceled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the touch event has been canceled.",
+      "defaultValue": "false",
+      "godotName": "canceled",
+      "xmlDocId": "P:Godot.InputEventScreenTouch.Canceled",
+      "sourcePath": "doc/classes/InputEventScreenTouch.xml"
+    },
+    {
+      "name": "DoubleTap",
+      "kind": "Property",
+      "signature": "public bool DoubleTap { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the touch\u0027s state is a double tap.",
+      "defaultValue": "false",
+      "godotName": "double_tap",
+      "xmlDocId": "P:Godot.InputEventScreenTouch.DoubleTap",
+      "sourcePath": "doc/classes/InputEventScreenTouch.xml"
+    },
+    {
+      "name": "Index",
+      "kind": "Property",
+      "signature": "public int Index { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The touch index in the case of a multi-touch event. One index = one finger.",
+      "defaultValue": "0",
+      "godotName": "index",
+      "xmlDocId": "P:Godot.InputEventScreenTouch.Index",
+      "sourcePath": "doc/classes/InputEventScreenTouch.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The touch position in the viewport the node is in, using the coordinate system of this viewport.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.InputEventScreenTouch.Position",
+      "sourcePath": "doc/classes/InputEventScreenTouch.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public bool Pressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the touch\u0027s state is pressed. If [code]false[/code], the touch\u0027s state is released.",
+      "defaultValue": "false",
+      "godotName": "pressed",
+      "xmlDocId": "P:Godot.InputEventScreenTouch.Pressed",
+      "sourcePath": "doc/classes/InputEventScreenTouch.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventScreenTouch.xml",
+      "sha256": "ffa728a4a2e7b856a589211ec062ccc0817538bc383400655525e0a4b2c0bfdd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

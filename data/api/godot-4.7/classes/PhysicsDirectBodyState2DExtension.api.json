@@ -1,0 +1,1407 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectBodyState2DExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsDirectBodyState2DExtension",
+    "kind": "class",
+    "baseType": "PhysicsDirectBodyState2D",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectBodyState2DExtension",
+    "documentationPath": "doc/classes/PhysicsDirectBodyState2DExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsdirectbodystate2dextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_central_force].",
+      "godotName": "_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantCentralForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_AddConstantForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_force].",
+      "godotName": "_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _AddConstantTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_torque].",
+      "godotName": "_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_central_force].",
+      "godotName": "_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyCentralForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralImpulse(Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_central_impulse].",
+      "godotName": "_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyCentralImpulse(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyForce",
+      "kind": "Method",
+      "signature": "public void _ApplyForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_force].",
+      "godotName": "_apply_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyImpulse(Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_impulse].",
+      "godotName": "_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyImpulse(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorque",
+      "kind": "Method",
+      "signature": "public void _ApplyTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_torque].",
+      "godotName": "_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyTorqueImpulse(float impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_torque_impulse].",
+      "godotName": "_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyTorqueImpulse(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetAngularVelocity",
+      "kind": "Method",
+      "signature": "public float _GetAngularVelocity()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.angular_velocity] and its respective getter.",
+      "godotName": "_get_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetAngularVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMass",
+      "kind": "Method",
+      "signature": "public Vector2 _GetCenterOfMass()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass] and its respective getter.",
+      "godotName": "_get_center_of_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCenterOfMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMassLocal",
+      "kind": "Method",
+      "signature": "public Vector2 _GetCenterOfMassLocal()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass_local] and its respective getter.",
+      "godotName": "_get_center_of_mass_local",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCenterOfMassLocal",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _GetCollisionLayer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCollisionLayer",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _GetCollisionMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCollisionMask",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector2 _GetConstantForce()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_constant_force].",
+      "godotName": "_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetConstantForce",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetConstantTorque",
+      "kind": "Method",
+      "signature": "public float _GetConstantTorque()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_constant_torque].",
+      "godotName": "_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetConstantTorque",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactCollider",
+      "kind": "Method",
+      "signature": "public RID _GetContactCollider(int contactIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider].",
+      "godotName": "_get_contact_collider",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactCollider(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderId",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderId(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_id].",
+      "godotName": "_get_contact_collider_id",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderObject",
+      "kind": "Method",
+      "signature": "public Object _GetContactColliderObject(int contactIdx)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_object].",
+      "godotName": "_get_contact_collider_object",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderObject(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactColliderPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_position].",
+      "godotName": "_get_contact_collider_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderShape",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_shape].",
+      "godotName": "_get_contact_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactColliderVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_velocity_at_position].",
+      "godotName": "_get_contact_collider_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactCount",
+      "kind": "Method",
+      "signature": "public int _GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_count].",
+      "godotName": "_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactCount",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactImpulse",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactImpulse(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_impulse].",
+      "godotName": "_get_contact_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactImpulse(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalNormal",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalNormal(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_normal].",
+      "godotName": "_get_contact_local_normal",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalNormal(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_position].",
+      "godotName": "_get_contact_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalShape",
+      "kind": "Method",
+      "signature": "public int _GetContactLocalShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_shape].",
+      "godotName": "_get_contact_local_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_velocity_at_position].",
+      "godotName": "_get_contact_local_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertia",
+      "kind": "Method",
+      "signature": "public float _GetInverseInertia()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.inverse_inertia] and its respective getter.",
+      "godotName": "_get_inverse_inertia",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetInverseInertia",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetInverseMass",
+      "kind": "Method",
+      "signature": "public float _GetInverseMass()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.inverse_mass] and its respective getter.",
+      "godotName": "_get_inverse_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetInverseMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 _GetLinearVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective getter.",
+      "godotName": "_get_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetLinearVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetSpaceState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState2D _GetSpaceState()",
+      "returnType": "PhysicsDirectSpaceState2D",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_space_state].",
+      "godotName": "_get_space_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetSpaceState",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetStep",
+      "kind": "Method",
+      "signature": "public float _GetStep()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.step] and its respective getter.",
+      "godotName": "_get_step",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetStep",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalAngularDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalAngularDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_angular_damp] and its respective getter.",
+      "godotName": "_get_total_angular_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalAngularDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalGravity",
+      "kind": "Method",
+      "signature": "public Vector2 _GetTotalGravity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_gravity] and its respective getter.",
+      "godotName": "_get_total_gravity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalGravity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalLinearDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalLinearDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_linear_damp] and its respective getter.",
+      "godotName": "_get_total_linear_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalLinearDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _GetTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.transform] and its respective getter.",
+      "godotName": "_get_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTransform",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetVelocityAtLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetVelocityAtLocalPosition(Vector2 localPosition)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_velocity_at_local_position].",
+      "godotName": "_get_velocity_at_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetVelocityAtLocalPosition(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.integrate_forces].",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._IntegrateForces",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_IsSleeping",
+      "kind": "Method",
+      "signature": "public bool _IsSleeping()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.sleeping] and its respective getter.",
+      "godotName": "_is_sleeping",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._IsSleeping",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetAngularVelocity",
+      "kind": "Method",
+      "signature": "public void _SetAngularVelocity(float velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.angular_velocity] and its respective setter.",
+      "godotName": "_set_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetAngularVelocity(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _SetCollisionLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetCollisionLayer(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _SetCollisionMask(int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetCollisionMask(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetConstantForce",
+      "kind": "Method",
+      "signature": "public void _SetConstantForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.set_constant_force].",
+      "godotName": "_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetConstantForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _SetConstantTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.set_constant_torque].",
+      "godotName": "_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetConstantTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetLinearVelocity",
+      "kind": "Method",
+      "signature": "public void _SetLinearVelocity(Vector2 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective setter.",
+      "godotName": "_set_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetLinearVelocity(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetSleepState",
+      "kind": "Method",
+      "signature": "public void _SetSleepState(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.sleeping] and its respective setter.",
+      "godotName": "_set_sleep_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetSleepState(bool)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetTransform",
+      "kind": "Method",
+      "signature": "public void _SetTransform(Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.transform] and its respective setter.",
+      "godotName": "_set_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetTransform(Transform2D)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_central_force].",
+      "godotName": "_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantCentralForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_AddConstantForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_force].",
+      "godotName": "_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _AddConstantTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.add_constant_torque].",
+      "godotName": "_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._AddConstantTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_central_force].",
+      "godotName": "_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyCentralForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralImpulse(Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_central_impulse].",
+      "godotName": "_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyCentralImpulse(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyForce",
+      "kind": "Method",
+      "signature": "public void _ApplyForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_force].",
+      "godotName": "_apply_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyImpulse(Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_impulse].",
+      "godotName": "_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyImpulse(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorque",
+      "kind": "Method",
+      "signature": "public void _ApplyTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_torque].",
+      "godotName": "_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyTorqueImpulse(float impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.apply_torque_impulse].",
+      "godotName": "_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._ApplyTorqueImpulse(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetAngularVelocity",
+      "kind": "Method",
+      "signature": "public float _GetAngularVelocity()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.angular_velocity] and its respective getter.",
+      "godotName": "_get_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetAngularVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMass",
+      "kind": "Method",
+      "signature": "public Vector2 _GetCenterOfMass()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass] and its respective getter.",
+      "godotName": "_get_center_of_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCenterOfMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMassLocal",
+      "kind": "Method",
+      "signature": "public Vector2 _GetCenterOfMassLocal()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass_local] and its respective getter.",
+      "godotName": "_get_center_of_mass_local",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCenterOfMassLocal",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _GetCollisionLayer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCollisionLayer",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _GetCollisionMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetCollisionMask",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector2 _GetConstantForce()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_constant_force].",
+      "godotName": "_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetConstantForce",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetConstantTorque",
+      "kind": "Method",
+      "signature": "public float _GetConstantTorque()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_constant_torque].",
+      "godotName": "_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetConstantTorque",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactCollider",
+      "kind": "Method",
+      "signature": "public RID _GetContactCollider(int contactIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider].",
+      "godotName": "_get_contact_collider",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactCollider(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderId",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderId(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_id].",
+      "godotName": "_get_contact_collider_id",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderObject",
+      "kind": "Method",
+      "signature": "public Object _GetContactColliderObject(int contactIdx)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_object].",
+      "godotName": "_get_contact_collider_object",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderObject(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactColliderPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_position].",
+      "godotName": "_get_contact_collider_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderShape",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_shape].",
+      "godotName": "_get_contact_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactColliderVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_velocity_at_position].",
+      "godotName": "_get_contact_collider_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactColliderVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactCount",
+      "kind": "Method",
+      "signature": "public int _GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_count].",
+      "godotName": "_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactCount",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactImpulse",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactImpulse(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_impulse].",
+      "godotName": "_get_contact_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactImpulse(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalNormal",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalNormal(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_normal].",
+      "godotName": "_get_contact_local_normal",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalNormal(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_position].",
+      "godotName": "_get_contact_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalShape",
+      "kind": "Method",
+      "signature": "public int _GetContactLocalShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_shape].",
+      "godotName": "_get_contact_local_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetContactLocalVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_velocity_at_position].",
+      "godotName": "_get_contact_local_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetContactLocalVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertia",
+      "kind": "Method",
+      "signature": "public float _GetInverseInertia()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.inverse_inertia] and its respective getter.",
+      "godotName": "_get_inverse_inertia",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetInverseInertia",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetInverseMass",
+      "kind": "Method",
+      "signature": "public float _GetInverseMass()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.inverse_mass] and its respective getter.",
+      "godotName": "_get_inverse_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetInverseMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 _GetLinearVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective getter.",
+      "godotName": "_get_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetLinearVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetSpaceState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState2D _GetSpaceState()",
+      "returnType": "PhysicsDirectSpaceState2D",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_space_state].",
+      "godotName": "_get_space_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetSpaceState",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetStep",
+      "kind": "Method",
+      "signature": "public float _GetStep()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.step] and its respective getter.",
+      "godotName": "_get_step",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetStep",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalAngularDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalAngularDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_angular_damp] and its respective getter.",
+      "godotName": "_get_total_angular_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalAngularDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalGravity",
+      "kind": "Method",
+      "signature": "public Vector2 _GetTotalGravity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_gravity] and its respective getter.",
+      "godotName": "_get_total_gravity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalGravity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTotalLinearDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalLinearDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.total_linear_damp] and its respective getter.",
+      "godotName": "_get_total_linear_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTotalLinearDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _GetTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.transform] and its respective getter.",
+      "godotName": "_get_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetTransform",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_GetVelocityAtLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector2 _GetVelocityAtLocalPosition(Vector2 localPosition)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.get_velocity_at_local_position].",
+      "godotName": "_get_velocity_at_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._GetVelocityAtLocalPosition(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.integrate_forces].",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._IntegrateForces",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_IsSleeping",
+      "kind": "Method",
+      "signature": "public bool _IsSleeping()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.sleeping] and its respective getter.",
+      "godotName": "_is_sleeping",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._IsSleeping",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetAngularVelocity",
+      "kind": "Method",
+      "signature": "public void _SetAngularVelocity(float velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.angular_velocity] and its respective setter.",
+      "godotName": "_set_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetAngularVelocity(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _SetCollisionLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetCollisionLayer(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _SetCollisionMask(int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetCollisionMask(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetConstantForce",
+      "kind": "Method",
+      "signature": "public void _SetConstantForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.set_constant_force].",
+      "godotName": "_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetConstantForce(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _SetConstantTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsDirectBodyState2D.set_constant_torque].",
+      "godotName": "_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetConstantTorque(float)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetLinearVelocity",
+      "kind": "Method",
+      "signature": "public void _SetLinearVelocity(Vector2 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective setter.",
+      "godotName": "_set_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetLinearVelocity(Vector2)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetSleepState",
+      "kind": "Method",
+      "signature": "public void _SetSleepState(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.sleeping] and its respective setter.",
+      "godotName": "_set_sleep_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetSleepState(bool)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    },
+    {
+      "name": "_SetTransform",
+      "kind": "Method",
+      "signature": "public void _SetTransform(Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Implement to override the behavior of [member PhysicsDirectBodyState2D.transform] and its respective setter.",
+      "godotName": "_set_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState2DExtension._SetTransform(Transform2D)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState2DExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsDirectBodyState2DExtension.xml",
+      "sha256": "7734293728eb617c5551914e1abfb7d6a05ffe633dbde5a98760da29799e7398"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

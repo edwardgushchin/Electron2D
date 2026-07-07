@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GPUParticlesCollisionSDF3D",
+    "namespace": "Godot",
+    "fullName": "Godot.GPUParticlesCollisionSDF3D",
+    "kind": "class",
+    "baseType": "GPUParticlesCollision3D",
+    "interfaces": [],
+    "godotReference": "GPUParticlesCollisionSDF3D",
+    "documentationPath": "doc/classes/GPUParticlesCollisionSDF3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gpuparticlescollisionsdf3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBakeMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetBakeMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member bake_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_bake_mask_value",
+      "xmlDocId": "M:Godot.GPUParticlesCollisionSDF3D.GetBakeMaskValue(int)",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "SetBakeMaskValue",
+      "kind": "Method",
+      "signature": "public void SetBakeMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member bake_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_bake_mask_value",
+      "xmlDocId": "M:Godot.GPUParticlesCollisionSDF3D.SetBakeMaskValue(int,bool)",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "BakeMask",
+      "kind": "Property",
+      "signature": "public int BakeMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The visual layers to account for when baking the particle collision SDF. Only [MeshInstance3D]s whose [member VisualInstance3D.layers] match with this [member bake_mask] will be included in the generated particle collision SDF. By default, all objects are taken into account for the particle collision SDF baking.",
+      "defaultValue": "4294967295",
+      "godotName": "bake_mask",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionSDF3D.BakeMask",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "Resolution",
+      "kind": "Property",
+      "signature": "public int Resolution { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The bake resolution to use for the signed distance field [member texture]. The texture must be baked again for changes to the [member resolution] property to be effective. Higher resolutions have a greater performance cost and take more time to bake. Higher resolutions also result in larger baked textures, leading to increased VRAM and storage space requirements. To improve performance and reduce bake times, use the lowest resolution possible for the object you\u0027re representing the collision of.",
+      "defaultValue": "2",
+      "godotName": "resolution",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionSDF3D.Resolution",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The collision SDF\u0027s size in 3D units. To improve SDF quality, the [member size] should be set as small as possible while covering the parts of the scene you need.",
+      "defaultValue": "Vector3(2, 2, 2)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionSDF3D.Size",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture3D Texture { get; set; }",
+      "returnType": "Texture3D",
+      "parameters": [],
+      "summary": "The 3D texture representing the signed distance field.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionSDF3D.Texture",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "Thickness",
+      "kind": "Property",
+      "signature": "public float Thickness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The collision shape\u0027s thickness. Unlike other particle colliders, [GPUParticlesCollisionSDF3D] is actually hollow on the inside. [member thickness] can be increased to prevent particles from tunneling through the collision shape at high speeds, or when the [GPUParticlesCollisionSDF3D] is moved.",
+      "defaultValue": "1.0",
+      "godotName": "thickness",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionSDF3D.Thickness",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Resolution",
+      "values": [
+        {
+          "name": "RESOLUTION_128",
+          "value": "3",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 128\u00D7128\u00D7128 signed distance field.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_16",
+          "value": "0",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 16\u00D716\u00D716 signed distance field. This is the fastest option, but also the least precise.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_256",
+          "value": "4",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 256\u00D7256\u00D7256 signed distance field.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_32",
+          "value": "1",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 32\u00D732\u00D732 signed distance field.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_512",
+          "value": "5",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 512\u00D7512\u00D7512 signed distance field. This is the slowest option, but also the most precise.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_64",
+          "value": "2",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Bake a 64\u00D764\u00D764 signed distance field.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        },
+        {
+          "name": "RESOLUTION_MAX",
+          "value": "6",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Resolution] enum.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RESOLUTION_16",
+      "value": "0",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 16\u00D716\u00D716 signed distance field. This is the fastest option, but also the least precise.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_32",
+      "value": "1",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 32\u00D732\u00D732 signed distance field.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_64",
+      "value": "2",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 64\u00D764\u00D764 signed distance field.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_128",
+      "value": "3",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 128\u00D7128\u00D7128 signed distance field.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_256",
+      "value": "4",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 256\u00D7256\u00D7256 signed distance field.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_512",
+      "value": "5",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Bake a 512\u00D7512\u00D7512 signed distance field. This is the slowest option, but also the most precise.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    },
+    {
+      "name": "RESOLUTION_MAX",
+      "value": "6",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Resolution] enum.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionSDF3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GPUParticlesCollisionSDF3D.xml",
+      "sha256": "21df30c8d41ee811f75b04ea412c56ffa811937f656ae968596d0fca0ca14182"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

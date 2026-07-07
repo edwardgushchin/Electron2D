@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeSDFToScreenUV",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeSDFToScreenUV",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeSDFToScreenUV",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeSDFToScreenUV.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodesdftoscreenuv.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeSDFToScreenUV.xml",
+      "sha256": "c35704d242194d8e5f085910de70d972082970649a2f2c898b9ba7d7cc978f27"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

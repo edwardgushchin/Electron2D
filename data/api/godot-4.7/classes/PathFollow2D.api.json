@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PathFollow2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PathFollow2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "PathFollow2D",
+    "documentationPath": "doc/classes/PathFollow2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_pathfollow2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CubicInterp",
+      "kind": "Property",
+      "signature": "public bool CubicInterp { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the position between two cached points is interpolated cubically, and linearly otherwise. The points along the [Curve2D] of the [Path2D] are precomputed before use, for faster calculations. The point at the requested offset is then calculated interpolating between two adjacent cached points. This may present a problem if the curve makes sharp turns, as the cached points may not follow the curve closely enough. There are two answers to this problem: either increase the number of cached points and increase memory consumption, or make a cubic interpolation between two points at the cost of (slightly) slower calculations.",
+      "defaultValue": "true",
+      "godotName": "cubic_interp",
+      "xmlDocId": "P:Godot.PathFollow2D.CubicInterp",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "HOffset",
+      "kind": "Property",
+      "signature": "public float HOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The node\u0027s offset along the curve.",
+      "defaultValue": "0.0",
+      "godotName": "h_offset",
+      "xmlDocId": "P:Godot.PathFollow2D.HOffset",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], any offset outside the path\u0027s length will wrap around, instead of stopping at the ends. Use it for cyclic paths.",
+      "defaultValue": "true",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.PathFollow2D.Loop",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "Progress",
+      "kind": "Property",
+      "signature": "public float Progress { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance along the path, in pixels. Changing this value sets this node\u0027s position to a point within the path.",
+      "defaultValue": "0.0",
+      "godotName": "progress",
+      "xmlDocId": "P:Godot.PathFollow2D.Progress",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "ProgressRatio",
+      "kind": "Property",
+      "signature": "public float ProgressRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance along the path as a number in the range 0.0 (for the first vertex) to 1.0 (for the last). This is just another way of expressing the progress within the path, as the offset supplied is multiplied internally by the path\u0027s length. It can be set or get only if the [PathFollow2D] is the child of a [Path2D] which is part of the scene tree, and that this [Path2D] has a [Curve2D] with a non-zero length. Otherwise, trying to set this field will print an error, and getting this field will return [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "progress_ratio",
+      "xmlDocId": "P:Godot.PathFollow2D.ProgressRatio",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "Rotates",
+      "kind": "Property",
+      "signature": "public bool Rotates { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this node rotates to follow the path, with the \u002BX direction facing forward on the path.",
+      "defaultValue": "true",
+      "godotName": "rotates",
+      "xmlDocId": "P:Godot.PathFollow2D.Rotates",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    },
+    {
+      "name": "VOffset",
+      "kind": "Property",
+      "signature": "public float VOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The node\u0027s offset perpendicular to the curve.",
+      "defaultValue": "0.0",
+      "godotName": "v_offset",
+      "xmlDocId": "P:Godot.PathFollow2D.VOffset",
+      "sourcePath": "doc/classes/PathFollow2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PathFollow2D.xml",
+      "sha256": "8811b6dabf00ce47d8eff211a8d98cff18a7fa2433c5287161117232506a4247"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

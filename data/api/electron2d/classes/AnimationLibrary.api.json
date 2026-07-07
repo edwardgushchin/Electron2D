@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationLibrary",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AnimationLibrary",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "AnimationLibrary",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "AnimationLibrary",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AnimationLibrary()",
+      "parameters": [],
+      "summary": "Creates an empty animation library.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "AnimationLibrary",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AnimationLibrary()",
+      "parameters": [],
+      "summary": "Creates an empty animation library.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddAnimation",
+      "kind": "Method",
+      "signature": "public Electron2D.Error AddAnimation(Electron2D.StringName name, Electron2D.Animation animation)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "animation",
+          "type": "Electron2D.Animation"
+        }
+      ],
+      "summary": "Adds an animation under a name.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.AddAnimation(Electron2D.StringName,Electron2D.Animation)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimation",
+      "kind": "Method",
+      "signature": "public Electron2D.Animation GetAnimation(Electron2D.StringName name)",
+      "returnType": "Electron2D.Animation",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets an animation by name.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.GetAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationList",
+      "kind": "Method",
+      "signature": "public Electron2D.StringName[] GetAnimationList()",
+      "returnType": "Electron2D.StringName[]",
+      "parameters": [],
+      "summary": "Gets animation names in deterministic alphabetical order.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.GetAnimationList",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAnimation(Electron2D.StringName name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Checks whether the library contains an animation.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.HasAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveAnimation",
+      "kind": "Method",
+      "signature": "public System.Void RemoveAnimation(Electron2D.StringName name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Removes an animation by name.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.RemoveAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenameAnimation",
+      "kind": "Method",
+      "signature": "public System.Void RenameAnimation(Electron2D.StringName name, Electron2D.StringName newName)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "newName",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Renames an existing animation.",
+      "xmlDocId": "M:Electron2D.AnimationLibrary.RenameAnimation(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

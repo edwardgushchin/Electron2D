@@ -1,0 +1,613 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "float",
+    "namespace": "Godot",
+    "fullName": "Godot.float",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "float",
+    "documentationPath": "doc/classes/float.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_float.html"
+  },
+  "constructors": [
+    {
+      "name": "Float",
+      "kind": "Constructor",
+      "signature": "public Float()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Constructs a default-initialized [float] set to [code]0.0[/code].",
+      "godotName": "float",
+      "xmlDocId": "M:Godot.float.#ctor",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "Float",
+      "kind": "Constructor",
+      "signature": "public Float(float from)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [float] as a copy of the given [float].",
+      "godotName": "float",
+      "xmlDocId": "M:Godot.float.#ctor(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "Float",
+      "kind": "Constructor",
+      "signature": "public Float(String from)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts a [String] to a [float], following the same rules as [method String.to_float].",
+      "godotName": "float",
+      "xmlDocId": "M:Godot.float.#ctor(String)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "Float",
+      "kind": "Constructor",
+      "signature": "public Float(bool from)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "bool"
+        }
+      ],
+      "summary": "Cast a [bool] value to a floating-point value, [code]float(true)[/code] will be equal to 1.0 and [code]float(false)[/code] will be equal to 0.0.",
+      "godotName": "float",
+      "xmlDocId": "M:Godot.float.#ctor(bool)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "Float",
+      "kind": "Constructor",
+      "signature": "public Float(int from)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int"
+        }
+      ],
+      "summary": "Cast an [int] value to a floating-point value, [code]float(1)[/code] will be equal to [code]1.0[/code].",
+      "godotName": "float",
+      "xmlDocId": "M:Godot.float.#ctor(int)",
+      "sourcePath": "doc/classes/float.xml"
+    }
+  ],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if two floats are different from each other. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.float.operator !=(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the integer has different value than the float.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.float.operator !=(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Color operator *(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Multiplies each component of the [Color], including the alpha, by the given [float]. [codeblock] print(1.5 * Color(0.5, 0.5, 0.5)) # Prints (0.75, 0.75, 0.75, 1.5) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Color)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Quaternion operator *(Quaternion right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Multiplies each component of the [Quaternion] by the given [float]. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Quaternion)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2 operator *(Vector2 right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2] by the given [float]. [codeblock] print(2.5 * Vector2(1, 3)) # Prints (2.5, 7.5) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector2)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2 operator *(Vector2i right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2i] by the given [float]. Returns a [Vector2]. [codeblock] print(0.9 * Vector2i(10, 15)) # Prints (9.0, 13.5) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector2i)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3 right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector3] by the given [float].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector3)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3i right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector3i] by the given [float]. Returns a [Vector3]. [codeblock] print(0.9 * Vector3i(10, 15, 20)) # Prints (9.0, 13.5, 18.0) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector3i)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4] by the given [float].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector4)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Vector4i right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4i] by the given [float]. Returns a [Vector4]. [codeblock] print(0.9 * Vector4i(10, 15, 20, -10)) # Prints (9.0, 13.5, 18.0, -9.0) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(Vector4i)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public float operator *(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies two [float]s.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public float operator *(int right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies a [float] and an [int]. The result is a [float].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.float.operator *(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator **",
+      "kind": "Operator",
+      "signature": "public float operator **(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Raises a [float] to a power of a [float]. [codeblock] print(39.0625**0.25) # 2.5 [/codeblock]",
+      "godotName": "operator **",
+      "xmlDocId": "M:Godot.float.operator **(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator **",
+      "kind": "Operator",
+      "signature": "public float operator **(int right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Raises a [float] to a power of an [int]. The result is a [float]. [codeblock] print(0.9**3) # 0.729 [/codeblock]",
+      "godotName": "operator **",
+      "xmlDocId": "M:Godot.float.operator **(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public float operator \u002B(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Adds two floats.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.float.operator \u002B(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public float operator \u002B(int right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a [float] and an [int]. The result is a [float].",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.float.operator \u002B(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public float operator -(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Subtracts a float from a float.",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.float.operator -(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public float operator -(int right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Subtracts an [int] from a [float]. The result is a [float].",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.float.operator -(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public float operator /(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides two floats.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.float.operator /(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public float operator /(int right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides a [float] by an [int]. The result is a [float].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.float.operator /(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left float is less than the right one. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.float.operator \u003C(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [float] is less than the given [int].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.float.operator \u003C(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left float is less than or equal to the right one. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.float.operator \u003C=(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [float] is less than or equal to the given [int].",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.float.operator \u003C=(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both floats are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method @GlobalScope.is_equal_approx] or [method @GlobalScope.is_zero_approx] instead, which are more reliable. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.float.operator ==(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [float] and the given [int] are equal.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.float.operator ==(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left float is greater than the right one. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.float.operator \u003E(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [float] is greater than the given [int].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.float.operator \u003E(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left float is greater than or equal to the right one. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.float.operator \u003E=(float)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [float] is greater than or equal to the given [int].",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.float.operator \u003E=(int)",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public float operator unary\u002B()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.float.operator unary\u002B",
+      "sourcePath": "doc/classes/float.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public float operator unary-()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the negative value of the [float]. If positive, turns the number negative. If negative, turns the number positive. With floats, the number zero can be either positive or negative.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.float.operator unary-",
+      "sourcePath": "doc/classes/float.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/float.xml",
+      "sha256": "ca8d3c66d6561400ac0dada576a52b6f902db2d42810d6a5ebb4f228eb671fca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

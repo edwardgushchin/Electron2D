@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SystemFont",
+    "namespace": "Godot",
+    "fullName": "Godot.SystemFont",
+    "kind": "class",
+    "baseType": "Font",
+    "interfaces": [],
+    "godotReference": "SystemFont",
+    "documentationPath": "doc/classes/SystemFont.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_systemfont.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AllowSystemFallback",
+      "kind": "Property",
+      "signature": "public bool AllowSystemFallback { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], system fonts can be automatically used as fallbacks.",
+      "defaultValue": "true",
+      "godotName": "allow_system_fallback",
+      "xmlDocId": "P:Godot.SystemFont.AllowSystemFallback",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "Antialiasing",
+      "kind": "Property",
+      "signature": "public int Antialiasing { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font anti-aliasing mode.",
+      "defaultValue": "1",
+      "godotName": "antialiasing",
+      "xmlDocId": "P:Godot.SystemFont.Antialiasing",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "DisableEmbeddedBitmaps",
+      "kind": "Property",
+      "signature": "public bool DisableEmbeddedBitmaps { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], embedded font bitmap loading is disabled (bitmap-only and color fonts ignore this property).",
+      "defaultValue": "true",
+      "godotName": "disable_embedded_bitmaps",
+      "xmlDocId": "P:Godot.SystemFont.DisableEmbeddedBitmaps",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "FontItalic",
+      "kind": "Property",
+      "signature": "public bool FontItalic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], italic or oblique font is preferred.",
+      "defaultValue": "false",
+      "godotName": "font_italic",
+      "xmlDocId": "P:Godot.SystemFont.FontItalic",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "FontNames",
+      "kind": "Property",
+      "signature": "public PackedStringArray FontNames { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Array of font family names to search, first matching font found is used.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "font_names",
+      "xmlDocId": "P:Godot.SystemFont.FontNames",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "FontStretch",
+      "kind": "Property",
+      "signature": "public int FontStretch { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Preferred font stretch amount, compared to a normal width. A percentage value between [code]50%[/code] and [code]200%[/code].",
+      "defaultValue": "100",
+      "godotName": "font_stretch",
+      "xmlDocId": "P:Godot.SystemFont.FontStretch",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "FontWeight",
+      "kind": "Property",
+      "signature": "public int FontWeight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Preferred weight (boldness) of the font. A value in the [code]100...999[/code] range, normal font weight is [code]400[/code], bold font weight is [code]700[/code].",
+      "defaultValue": "400",
+      "godotName": "font_weight",
+      "xmlDocId": "P:Godot.SystemFont.FontWeight",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "ForceAutohinter",
+      "kind": "Property",
+      "signature": "public bool ForceAutohinter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], auto-hinting is supported and preferred over font built-in hinting.",
+      "defaultValue": "false",
+      "godotName": "force_autohinter",
+      "xmlDocId": "P:Godot.SystemFont.ForceAutohinter",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "GenerateMipmaps",
+      "kind": "Property",
+      "signature": "public bool GenerateMipmaps { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], generate mipmaps for the font textures.",
+      "defaultValue": "false",
+      "godotName": "generate_mipmaps",
+      "xmlDocId": "P:Godot.SystemFont.GenerateMipmaps",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "Hinting",
+      "kind": "Property",
+      "signature": "public int Hinting { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font hinting mode.",
+      "defaultValue": "1",
+      "godotName": "hinting",
+      "xmlDocId": "P:Godot.SystemFont.Hinting",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "KeepRoundingRemainders",
+      "kind": "Property",
+      "signature": "public bool KeepRoundingRemainders { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], when aligning glyphs to the pixel boundaries rounding remainders are accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel positioning is enabled.",
+      "defaultValue": "true",
+      "godotName": "keep_rounding_remainders",
+      "xmlDocId": "P:Godot.SystemFont.KeepRoundingRemainders",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "ModulateColorGlyphs",
+      "kind": "Property",
+      "signature": "public bool ModulateColorGlyphs { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], color modulation is applied when drawing colored glyphs, otherwise it\u0027s applied to the monochrome glyphs only.",
+      "defaultValue": "false",
+      "godotName": "modulate_color_glyphs",
+      "xmlDocId": "P:Godot.SystemFont.ModulateColorGlyphs",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "MsdfPixelRange",
+      "kind": "Property",
+      "signature": "public int MsdfPixelRange { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the range around the shape between the minimum and maximum representable signed distance. If using font outlines, [member msdf_pixel_range] must be set to at least [i]twice[/i] the size of the largest font outline. The default [member msdf_pixel_range] value of [code]16[/code] allows outline sizes up to [code]8[/code] to look correct.",
+      "defaultValue": "16",
+      "godotName": "msdf_pixel_range",
+      "xmlDocId": "P:Godot.SystemFont.MsdfPixelRange",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "MsdfSize",
+      "kind": "Property",
+      "signature": "public int MsdfSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Source font size used to generate MSDF textures. Higher values allow for more precision, but are slower to render and require more memory. Only increase this value if you notice a visible lack of precision in glyph rendering.",
+      "defaultValue": "48",
+      "godotName": "msdf_size",
+      "xmlDocId": "P:Godot.SystemFont.MsdfSize",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "MultichannelSignedDistanceField",
+      "kind": "Property",
+      "signature": "public bool MultichannelSignedDistanceField { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font vector data.",
+      "defaultValue": "false",
+      "godotName": "multichannel_signed_distance_field",
+      "xmlDocId": "P:Godot.SystemFont.MultichannelSignedDistanceField",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "Oversampling",
+      "kind": "Property",
+      "signature": "public float Oversampling { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set to a positive value, overrides the oversampling factor of the viewport this font is used in. See [member Viewport.oversampling]. This value doesn\u0027t override the [code skip-lint]oversampling[/code] parameter of [code skip-lint]draw_*[/code] methods.",
+      "defaultValue": "0.0",
+      "godotName": "oversampling",
+      "xmlDocId": "P:Godot.SystemFont.Oversampling",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    },
+    {
+      "name": "SubpixelPositioning",
+      "kind": "Property",
+      "signature": "public int SubpixelPositioning { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use [constant TextServer.SUBPIXEL_POSITIONING_AUTO] to automatically enable it based on the font size.",
+      "defaultValue": "1",
+      "godotName": "subpixel_positioning",
+      "xmlDocId": "P:Godot.SystemFont.SubpixelPositioning",
+      "sourcePath": "doc/classes/SystemFont.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SystemFont.xml",
+      "sha256": "b7d3e90a4f557095187cafd89ff0db0699f2e68cbd377511f97ca2132c9b610d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

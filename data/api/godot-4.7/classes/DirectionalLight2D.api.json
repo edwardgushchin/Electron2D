@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DirectionalLight2D",
+    "namespace": "Godot",
+    "fullName": "Godot.DirectionalLight2D",
+    "kind": "class",
+    "baseType": "Light2D",
+    "interfaces": [],
+    "godotReference": "DirectionalLight2D",
+    "documentationPath": "doc/classes/DirectionalLight2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_directionallight2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height of the light. Used with 2D normal mapping. Ranges from 0 (parallel to the plane) to 1 (perpendicular to the plane).",
+      "defaultValue": "0.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.DirectionalLight2D.Height",
+      "sourcePath": "doc/classes/DirectionalLight2D.xml"
+    },
+    {
+      "name": "MaxDistance",
+      "kind": "Property",
+      "signature": "public float MaxDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance from the camera center objects can be before their shadows are culled (in pixels). Decreasing this value can prevent objects located outside the camera from casting shadows (while also improving performance). [member Camera2D.zoom] is not taken into account by [member max_distance], which means that at higher zoom values, shadows will appear to fade out sooner when zooming onto a given point.",
+      "defaultValue": "10000.0",
+      "godotName": "max_distance",
+      "xmlDocId": "P:Godot.DirectionalLight2D.MaxDistance",
+      "sourcePath": "doc/classes/DirectionalLight2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/DirectionalLight2D.xml",
+      "sha256": "f26d2efea58f857dc43bda239d78d0d7cdae323cdc638af67be188a690f1a539"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterBMFont",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterBMFont",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterBMFont",
+    "documentationPath": "doc/classes/ResourceImporterBMFont.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterbmfont.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Compress",
+      "kind": "Property",
+      "signature": "public bool Compress { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses lossless compression for the resulting font.",
+      "defaultValue": "true",
+      "godotName": "compress",
+      "xmlDocId": "P:Godot.ResourceImporterBMFont.Compress",
+      "sourcePath": "doc/classes/ResourceImporterBMFont.xml"
+    },
+    {
+      "name": "Fallbacks",
+      "kind": "Property",
+      "signature": "public Array Fallbacks { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "List of font fallbacks to use if a glyph isn\u0027t found in this bitmap font. Fonts at the beginning of the array are attempted first.",
+      "defaultValue": "[]",
+      "godotName": "fallbacks",
+      "xmlDocId": "P:Godot.ResourceImporterBMFont.Fallbacks",
+      "sourcePath": "doc/classes/ResourceImporterBMFont.xml"
+    },
+    {
+      "name": "ScalingMode",
+      "kind": "Property",
+      "signature": "public int ScalingMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font scaling mode.",
+      "defaultValue": "2",
+      "godotName": "scaling_mode",
+      "xmlDocId": "P:Godot.ResourceImporterBMFont.ScalingMode",
+      "sourcePath": "doc/classes/ResourceImporterBMFont.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterBMFont.xml",
+      "sha256": "2df7ccdf532b2306017e4aaa8f90dfb436d58492a1073cc0335b8417bb4f2548"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

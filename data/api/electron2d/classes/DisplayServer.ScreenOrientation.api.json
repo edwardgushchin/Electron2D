@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DisplayServer.ScreenOrientation",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.DisplayServer.ScreenOrientation",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "DisplayServer.ScreenOrientation",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Landscape",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation Landscape",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents default landscape orientation.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.Landscape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Portrait",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation Portrait",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents default portrait orientation.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.Portrait",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReverseLandscape",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation ReverseLandscape",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents reverse landscape orientation.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.ReverseLandscape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReversePortrait",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation ReversePortrait",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents reverse portrait orientation.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.ReversePortrait",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sensor",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation Sensor",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents automatic landscape or portrait orientation selected by sensors.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.Sensor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SensorLandscape",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation SensorLandscape",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents automatic landscape orientation selected by sensors.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.SensorLandscape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SensorPortrait",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.ScreenOrientation SensorPortrait",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [],
+      "summary": "Represents automatic portrait orientation selected by sensors.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.DisplayServer.ScreenOrientation.SensorPortrait",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Landscape",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Represents default landscape orientation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Portrait",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Represents default portrait orientation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReverseLandscape",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Represents reverse landscape orientation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReversePortrait",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Represents reverse portrait orientation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sensor",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Represents automatic landscape or portrait orientation selected by sensors.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SensorLandscape",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Represents automatic landscape orientation selected by sensors.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SensorPortrait",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Represents automatic portrait orientation selected by sensors.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

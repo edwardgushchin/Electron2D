@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationServer3DManager",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationServer3DManager",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "NavigationServer3DManager",
+    "documentationPath": "doc/classes/NavigationServer3DManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationserver3dmanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "RegisterServer",
+      "kind": "Method",
+      "signature": "public void RegisterServer(String name, Callable createCallback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "create_callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers a [NavigationServer3D] implementation by passing a [param name] and a [Callable] that returns a [NavigationServer3D] object.",
+      "godotName": "register_server",
+      "xmlDocId": "M:Godot.NavigationServer3DManager.RegisterServer(String,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3DManager.xml"
+    },
+    {
+      "name": "SetDefaultServer",
+      "kind": "Method",
+      "signature": "public void SetDefaultServer(String name, int priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "priority",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the default [NavigationServer3D] implementation to the one identified by [param name], if [param priority] is greater than the priority of the current default implementation.",
+      "godotName": "set_default_server",
+      "xmlDocId": "M:Godot.NavigationServer3DManager.SetDefaultServer(String,int)",
+      "sourcePath": "doc/classes/NavigationServer3DManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationServer3DManager.xml",
+      "sha256": "9d278c3d108172619caeadb176fda93e50855bd22aa8a5007f275b3339545866"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

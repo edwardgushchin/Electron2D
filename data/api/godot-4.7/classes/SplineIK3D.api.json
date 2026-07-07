@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SplineIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SplineIK3D",
+    "kind": "class",
+    "baseType": "ChainIK3D",
+    "interfaces": [],
+    "godotReference": "SplineIK3D",
+    "documentationPath": "doc/classes/SplineIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_splineik3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPath3d",
+      "kind": "Method",
+      "signature": "public NodePath GetPath3d(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the node path of the [Path3D] which is describing the path.",
+      "godotName": "get_path_3d",
+      "xmlDocId": "M:Godot.SplineIK3D.GetPath3d(int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "GetTiltFadeIn",
+      "kind": "Method",
+      "signature": "public int GetTiltFadeIn(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tilt interpolation method used between the root bone and the start point of the [Curve3D] when they are apart. See also [method set_tilt_fade_in].",
+      "godotName": "get_tilt_fade_in",
+      "xmlDocId": "M:Godot.SplineIK3D.GetTiltFadeIn(int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "GetTiltFadeOut",
+      "kind": "Method",
+      "signature": "public int GetTiltFadeOut(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tilt interpolation method used between the end bone and the end point of the [Curve3D] when they are apart. See also [method set_tilt_fade_out].",
+      "godotName": "get_tilt_fade_out",
+      "xmlDocId": "M:Godot.SplineIK3D.GetTiltFadeOut(int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "IsTiltEnabled",
+      "kind": "Method",
+      "signature": "public bool IsTiltEnabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if the tilt property of the [Curve3D] affects the bone twist.",
+      "godotName": "is_tilt_enabled",
+      "xmlDocId": "M:Godot.SplineIK3D.IsTiltEnabled(int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "SetPath3d",
+      "kind": "Method",
+      "signature": "public void SetPath3d(int index, NodePath path3d)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "path_3d",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the node path of the [Path3D] which is describing the path.",
+      "godotName": "set_path_3d",
+      "xmlDocId": "M:Godot.SplineIK3D.SetPath3d(int,NodePath)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "SetTiltEnabled",
+      "kind": "Method",
+      "signature": "public void SetTiltEnabled(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets if the tilt property of the [Curve3D] should affect the bone twist.",
+      "godotName": "set_tilt_enabled",
+      "xmlDocId": "M:Godot.SplineIK3D.SetTiltEnabled(int,bool)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "SetTiltFadeIn",
+      "kind": "Method",
+      "signature": "public void SetTiltFadeIn(int index, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "If [param size] is greater than [code]0[/code], the tilt is interpolated between [param size] start bones from the start point of the [Curve3D] when they are apart. If [param size] is equal [code]0[/code], the tilts between the root bone head and the start point of the [Curve3D] are unified with a tilt of the start point of the [Curve3D]. If [param size] is less than [code]0[/code], the tilts between the root bone and the start point of the [Curve3D] are [code]0.0[/code].",
+      "godotName": "set_tilt_fade_in",
+      "xmlDocId": "M:Godot.SplineIK3D.SetTiltFadeIn(int,int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "SetTiltFadeOut",
+      "kind": "Method",
+      "signature": "public void SetTiltFadeOut(int index, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "If [param size] is greater than [code]0[/code], the tilt is interpolated between [param size] end bones from the end point of the [Curve3D] when they are apart. If [param size] is equal [code]0[/code], the tilts between the end bone tail and the end point of the [Curve3D] are unified with a tilt of the end point of the [Curve3D]. If [param size] is less than [code]0[/code], the tilts between the end bone and the end point of the [Curve3D] are [code]0.0[/code].",
+      "godotName": "set_tilt_fade_out",
+      "xmlDocId": "M:Godot.SplineIK3D.SetTiltFadeOut(int,int)",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.SplineIK3D.SettingCount",
+      "sourcePath": "doc/classes/SplineIK3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SplineIK3D.xml",
+      "sha256": "406db450d8ccb7134631d193b1cf895babc811c7dc7026c13b78d51a768e416d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeIntFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeIntFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeIntFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeintfunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A function to be applied to the scalar.",
+      "defaultValue": "2",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_ABS",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the absolute value of the parameter. Translates to [code]abs(x)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+        },
+        {
+          "name": "FUNC_BITWISE_NOT",
+          "value": "3",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise [code]NOT[/code] operation on the integer. Translates to [code]~a[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "4",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+        },
+        {
+          "name": "FUNC_NEGATE",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Negates the [code]x[/code] using [code]-(x)[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+        },
+        {
+          "name": "FUNC_SIGN",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Extracts the sign of the parameter. Translates to [code]sign(x)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_ABS",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the absolute value of the parameter. Translates to [code]abs(x)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    },
+    {
+      "name": "FUNC_NEGATE",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Negates the [code]x[/code] using [code]-(x)[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    },
+    {
+      "name": "FUNC_SIGN",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Extracts the sign of the parameter. Translates to [code]sign(x)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    },
+    {
+      "name": "FUNC_BITWISE_NOT",
+      "value": "3",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise [code]NOT[/code] operation on the integer. Translates to [code]~a[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "4",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeIntFunc.xml",
+      "sha256": "537a88e48b73ae2d0e9c31de27df9e3087295db489411ecbebf699025065a8f9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

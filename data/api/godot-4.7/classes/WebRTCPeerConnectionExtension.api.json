@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WebRTCPeerConnectionExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.WebRTCPeerConnectionExtension",
+    "kind": "class",
+    "baseType": "WebRTCPeerConnection",
+    "interfaces": [],
+    "godotReference": "WebRTCPeerConnectionExtension",
+    "documentationPath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_webrtcpeerconnectionextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AddIceCandidate",
+      "kind": "Method",
+      "signature": "public int _AddIceCandidate(String sdpMidName, int sdpMlineIndex, String sdpName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "sdp_mid_name",
+          "type": "String"
+        },
+        {
+          "name": "sdp_mline_index",
+          "type": "int"
+        },
+        {
+          "name": "sdp_name",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_ice_candidate",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._AddIceCandidate(String,int,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Close",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_CreateDataChannel",
+      "kind": "Method",
+      "signature": "public WebRTCDataChannel _CreateDataChannel(String label, Dictionary config)",
+      "returnType": "WebRTCDataChannel",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "config",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "_create_data_channel",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._CreateDataChannel(String,Dictionary)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_CreateOffer",
+      "kind": "Method",
+      "signature": "public int _CreateOffer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_create_offer",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._CreateOffer",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetConnectionState",
+      "kind": "Method",
+      "signature": "public int _GetConnectionState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_connection_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetConnectionState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetGatheringState",
+      "kind": "Method",
+      "signature": "public int _GetGatheringState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_gathering_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetGatheringState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetSignalingState",
+      "kind": "Method",
+      "signature": "public int _GetSignalingState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_signaling_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetSignalingState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public int _Initialize(Dictionary config)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "config",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Initialize(Dictionary)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Poll",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_SetLocalDescription",
+      "kind": "Method",
+      "signature": "public int _SetLocalDescription(String type, String sdp)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        },
+        {
+          "name": "sdp",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_local_description",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._SetLocalDescription(String,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_SetRemoteDescription",
+      "kind": "Method",
+      "signature": "public int _SetRemoteDescription(String type, String sdp)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        },
+        {
+          "name": "sdp",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_remote_description",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._SetRemoteDescription(String,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AddIceCandidate",
+      "kind": "Method",
+      "signature": "public int _AddIceCandidate(String sdpMidName, int sdpMlineIndex, String sdpName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "sdp_mid_name",
+          "type": "String"
+        },
+        {
+          "name": "sdp_mline_index",
+          "type": "int"
+        },
+        {
+          "name": "sdp_name",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_ice_candidate",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._AddIceCandidate(String,int,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Close",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_CreateDataChannel",
+      "kind": "Method",
+      "signature": "public WebRTCDataChannel _CreateDataChannel(String label, Dictionary config)",
+      "returnType": "WebRTCDataChannel",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "config",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "_create_data_channel",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._CreateDataChannel(String,Dictionary)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_CreateOffer",
+      "kind": "Method",
+      "signature": "public int _CreateOffer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_create_offer",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._CreateOffer",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetConnectionState",
+      "kind": "Method",
+      "signature": "public int _GetConnectionState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_connection_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetConnectionState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetGatheringState",
+      "kind": "Method",
+      "signature": "public int _GetGatheringState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_gathering_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetGatheringState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_GetSignalingState",
+      "kind": "Method",
+      "signature": "public int _GetSignalingState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_signaling_state",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._GetSignalingState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public int _Initialize(Dictionary config)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "config",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Initialize(Dictionary)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._Poll",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_SetLocalDescription",
+      "kind": "Method",
+      "signature": "public int _SetLocalDescription(String type, String sdp)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        },
+        {
+          "name": "sdp",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_local_description",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._SetLocalDescription(String,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    },
+    {
+      "name": "_SetRemoteDescription",
+      "kind": "Method",
+      "signature": "public int _SetRemoteDescription(String type, String sdp)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        },
+        {
+          "name": "sdp",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_remote_description",
+      "xmlDocId": "M:Godot.WebRTCPeerConnectionExtension._SetRemoteDescription(String,String)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/webrtc/doc_classes/WebRTCPeerConnectionExtension.xml",
+      "sha256": "5f9f3aeec425c955cdffb8c0cb1bb141d6543e63df40a569fc323161108a7892"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

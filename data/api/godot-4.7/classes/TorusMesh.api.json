@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TorusMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.TorusMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "TorusMesh",
+    "documentationPath": "doc/classes/TorusMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_torusmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "InnerRadius",
+      "kind": "Property",
+      "signature": "public float InnerRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inner radius of the torus.",
+      "defaultValue": "0.5",
+      "godotName": "inner_radius",
+      "xmlDocId": "P:Godot.TorusMesh.InnerRadius",
+      "sourcePath": "doc/classes/TorusMesh.xml"
+    },
+    {
+      "name": "OuterRadius",
+      "kind": "Property",
+      "signature": "public float OuterRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The outer radius of the torus.",
+      "defaultValue": "1.0",
+      "godotName": "outer_radius",
+      "xmlDocId": "P:Godot.TorusMesh.OuterRadius",
+      "sourcePath": "doc/classes/TorusMesh.xml"
+    },
+    {
+      "name": "RingSegments",
+      "kind": "Property",
+      "signature": "public int RingSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of edges each ring of the torus is constructed of.",
+      "defaultValue": "32",
+      "godotName": "ring_segments",
+      "xmlDocId": "P:Godot.TorusMesh.RingSegments",
+      "sourcePath": "doc/classes/TorusMesh.xml"
+    },
+    {
+      "name": "Rings",
+      "kind": "Property",
+      "signature": "public int Rings { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of slices the torus is constructed of.",
+      "defaultValue": "64",
+      "godotName": "rings",
+      "xmlDocId": "P:Godot.TorusMesh.Rings",
+      "sourcePath": "doc/classes/TorusMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TorusMesh.xml",
+      "sha256": "c700afc13154cdf162e59ba62b84fe40bdfa93e1eb9bc6ca6cfe8acddbf227b7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

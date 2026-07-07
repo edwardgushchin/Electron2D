@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OccluderInstance3D",
+    "namespace": "Godot",
+    "fullName": "Godot.OccluderInstance3D",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "OccluderInstance3D",
+    "documentationPath": "doc/classes/OccluderInstance3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_occluderinstance3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBakeMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetBakeMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member bake_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_bake_mask_value",
+      "xmlDocId": "M:Godot.OccluderInstance3D.GetBakeMaskValue(int)",
+      "sourcePath": "doc/classes/OccluderInstance3D.xml"
+    },
+    {
+      "name": "SetBakeMaskValue",
+      "kind": "Method",
+      "signature": "public void SetBakeMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member bake_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_bake_mask_value",
+      "xmlDocId": "M:Godot.OccluderInstance3D.SetBakeMaskValue(int,bool)",
+      "sourcePath": "doc/classes/OccluderInstance3D.xml"
+    },
+    {
+      "name": "BakeMask",
+      "kind": "Property",
+      "signature": "public int BakeMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The visual layers to account for when baking for occluders. Only [MeshInstance3D]s whose [member VisualInstance3D.layers] match with this [member bake_mask] will be included in the generated occluder mesh. By default, all objects with [i]opaque[/i] materials are taken into account for the occluder baking. To improve performance and avoid artifacts, it is recommended to exclude dynamic objects, small objects and fixtures from the baking process by moving them to a separate visual layer and excluding this layer in [member bake_mask].",
+      "defaultValue": "4294967295",
+      "godotName": "bake_mask",
+      "xmlDocId": "P:Godot.OccluderInstance3D.BakeMask",
+      "sourcePath": "doc/classes/OccluderInstance3D.xml"
+    },
+    {
+      "name": "BakeSimplificationDistance",
+      "kind": "Property",
+      "signature": "public float BakeSimplificationDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The simplification distance to use for simplifying the generated occluder polygon (in 3D units). Higher values result in a less detailed occluder mesh, which improves performance but reduces culling accuracy. The occluder geometry is rendered on the CPU, so it is important to keep its geometry as simple as possible. Since the buffer is rendered at a low resolution, less detailed occluder meshes generally still work well. The default value is fairly aggressive, so you may have to decrease it if you run into false negatives (objects being occluded even though they are visible by the camera). A value of [code]0.01[/code] will act conservatively, and will keep geometry [i]perceptually[/i] unaffected in the occlusion culling buffer. Depending on the scene, a value of [code]0.01[/code] may still simplify the mesh noticeably compared to disabling simplification entirely. Setting this to [code]0.0[/code] disables simplification entirely, but vertices in the exact same position will still be merged. The mesh will also be re-indexed to reduce both the number of vertices and indices. [b]Note:[/b] This uses the [url=https://meshoptimizer.org/]meshoptimizer[/url] library under the hood, similar to LOD generation.",
+      "defaultValue": "0.1",
+      "godotName": "bake_simplification_distance",
+      "xmlDocId": "P:Godot.OccluderInstance3D.BakeSimplificationDistance",
+      "sourcePath": "doc/classes/OccluderInstance3D.xml"
+    },
+    {
+      "name": "Occluder",
+      "kind": "Property",
+      "signature": "public Occluder3D Occluder { get; set; }",
+      "returnType": "Occluder3D",
+      "parameters": [],
+      "summary": "The occluder resource for this [OccluderInstance3D]. You can generate an occluder resource by selecting an [OccluderInstance3D] node then using the [b]Bake Occluders[/b] button at the top of the editor. You can also draw your own 2D occluder polygon by adding a new [PolygonOccluder3D] resource to the [member occluder] property in the Inspector. Alternatively, you can select a primitive occluder to use: [QuadOccluder3D], [BoxOccluder3D] or [SphereOccluder3D].",
+      "godotName": "occluder",
+      "xmlDocId": "P:Godot.OccluderInstance3D.Occluder",
+      "sourcePath": "doc/classes/OccluderInstance3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OccluderInstance3D.xml",
+      "sha256": "67fba86c656023ba1ff33136d4197d2027d61fb7d267ffc8c0abb37a14a670d5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

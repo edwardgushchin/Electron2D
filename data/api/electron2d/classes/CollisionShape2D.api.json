@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionShape2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CollisionShape2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "CollisionShape2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CollisionShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CollisionShape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CollisionShape2D type.",
+      "xmlDocId": "M:Electron2D.CollisionShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CollisionShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CollisionShape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CollisionShape2D type.",
+      "xmlDocId": "M:Electron2D.CollisionShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DebugColor",
+      "kind": "Property",
+      "signature": "public Electron2D.Color DebugColor { get; set; }",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Gets or sets the color used for collision shape debug visualization.",
+      "xmlDocId": "P:Electron2D.CollisionShape2D.DebugColor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public System.Boolean Disabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the shape is disabled.",
+      "xmlDocId": "P:Electron2D.CollisionShape2D.Disabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OneWayCollision",
+      "kind": "Property",
+      "signature": "public System.Boolean OneWayCollision { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the shape should act as a one-way collision shape.",
+      "xmlDocId": "P:Electron2D.CollisionShape2D.OneWayCollision",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OneWayCollisionMargin",
+      "kind": "Property",
+      "signature": "public System.Single OneWayCollisionMargin { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the one-way collision margin.",
+      "xmlDocId": "P:Electron2D.CollisionShape2D.OneWayCollisionMargin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Electron2D.Shape2D Shape { get; set; }",
+      "returnType": "Electron2D.Shape2D",
+      "parameters": [],
+      "summary": "Gets or sets the shape resource attached by this node.",
+      "xmlDocId": "P:Electron2D.CollisionShape2D.Shape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

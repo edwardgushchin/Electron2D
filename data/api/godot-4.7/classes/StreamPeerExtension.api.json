@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerExtension",
+    "kind": "class",
+    "baseType": "StreamPeer",
+    "interfaces": [],
+    "godotReference": "StreamPeerExtension",
+    "documentationPath": "doc/classes/StreamPeerExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeerextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAvailableBytes",
+      "kind": "Method",
+      "signature": "public int _GetAvailableBytes()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_bytes",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetAvailableBytes",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_GetData",
+      "kind": "Method",
+      "signature": "public int _GetData(uint8_t* rBuffer, int rBytes, int32_t* rReceived)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "uint8_t*"
+        },
+        {
+          "name": "r_bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_received",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetData(uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_GetPartialData",
+      "kind": "Method",
+      "signature": "public int _GetPartialData(uint8_t* rBuffer, int rBytes, int32_t* rReceived)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "uint8_t*"
+        },
+        {
+          "name": "r_bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_received",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_partial_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetPartialData(uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_PutData",
+      "kind": "Method",
+      "signature": "public int _PutData(const uint8_t* data, int bytes, int32_t* rSent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_sent",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._PutData(const uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_PutPartialData",
+      "kind": "Method",
+      "signature": "public int _PutPartialData(const uint8_t* data, int bytes, int32_t* rSent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_sent",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_partial_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._PutPartialData(const uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAvailableBytes",
+      "kind": "Method",
+      "signature": "public int _GetAvailableBytes()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_bytes",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetAvailableBytes",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_GetData",
+      "kind": "Method",
+      "signature": "public int _GetData(uint8_t* rBuffer, int rBytes, int32_t* rReceived)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "uint8_t*"
+        },
+        {
+          "name": "r_bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_received",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetData(uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_GetPartialData",
+      "kind": "Method",
+      "signature": "public int _GetPartialData(uint8_t* rBuffer, int rBytes, int32_t* rReceived)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "uint8_t*"
+        },
+        {
+          "name": "r_bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_received",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_partial_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._GetPartialData(uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_PutData",
+      "kind": "Method",
+      "signature": "public int _PutData(const uint8_t* data, int bytes, int32_t* rSent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_sent",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._PutData(const uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    },
+    {
+      "name": "_PutPartialData",
+      "kind": "Method",
+      "signature": "public int _PutPartialData(const uint8_t* data, int bytes, int32_t* rSent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "bytes",
+          "type": "int"
+        },
+        {
+          "name": "r_sent",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_partial_data",
+      "xmlDocId": "M:Godot.StreamPeerExtension._PutPartialData(const uint8_t*,int,int32_t*)",
+      "sourcePath": "doc/classes/StreamPeerExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerExtension.xml",
+      "sha256": "ba916f5669cc94d3a5bb198270ee1ea55387351854455a6b75b89f83146cc46f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

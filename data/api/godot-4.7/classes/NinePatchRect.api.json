@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NinePatchRect",
+    "namespace": "Godot",
+    "fullName": "Godot.NinePatchRect",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "NinePatchRect",
+    "documentationPath": "doc/classes/NinePatchRect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_ninepatchrect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPatchMargin",
+      "kind": "Method",
+      "signature": "public int GetPatchMargin(int margin)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the size of the margin on the specified [enum Side].",
+      "godotName": "get_patch_margin",
+      "xmlDocId": "M:Godot.NinePatchRect.GetPatchMargin(int)",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "SetPatchMargin",
+      "kind": "Method",
+      "signature": "public void SetPatchMargin(int margin, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the margin on the specified [enum Side] to [param value] pixels.",
+      "godotName": "set_patch_margin",
+      "xmlDocId": "M:Godot.NinePatchRect.SetPatchMargin(int,int)",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "AxisStretchHorizontal",
+      "kind": "Property",
+      "signature": "public int AxisStretchHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stretch mode to use for horizontal stretching/tiling.",
+      "defaultValue": "0",
+      "godotName": "axis_stretch_horizontal",
+      "xmlDocId": "P:Godot.NinePatchRect.AxisStretchHorizontal",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "AxisStretchVertical",
+      "kind": "Property",
+      "signature": "public int AxisStretchVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stretch mode to use for vertical stretching/tiling.",
+      "defaultValue": "0",
+      "godotName": "axis_stretch_vertical",
+      "xmlDocId": "P:Godot.NinePatchRect.AxisStretchVertical",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "DrawCenter",
+      "kind": "Property",
+      "signature": "public bool DrawCenter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], draw the panel\u0027s center. Else, only draw the 9-slice\u0027s borders.",
+      "defaultValue": "true",
+      "godotName": "draw_center",
+      "xmlDocId": "P:Godot.NinePatchRect.DrawCenter",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.NinePatchRect.MouseFilter",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "PatchMarginBottom",
+      "kind": "Property",
+      "signature": "public int PatchMarginBottom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The height of the 9-slice\u0027s bottom row. A margin of 16 means the 9-slice\u0027s bottom corners and side will have a height of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders.",
+      "defaultValue": "0",
+      "godotName": "patch_margin_bottom",
+      "xmlDocId": "P:Godot.NinePatchRect.PatchMarginBottom",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "PatchMarginLeft",
+      "kind": "Property",
+      "signature": "public int PatchMarginLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the 9-slice\u0027s left column. A margin of 16 means the 9-slice\u0027s left corners and side will have a width of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders.",
+      "defaultValue": "0",
+      "godotName": "patch_margin_left",
+      "xmlDocId": "P:Godot.NinePatchRect.PatchMarginLeft",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "PatchMarginRight",
+      "kind": "Property",
+      "signature": "public int PatchMarginRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the 9-slice\u0027s right column. A margin of 16 means the 9-slice\u0027s right corners and side will have a width of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders.",
+      "defaultValue": "0",
+      "godotName": "patch_margin_right",
+      "xmlDocId": "P:Godot.NinePatchRect.PatchMarginRight",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "PatchMarginTop",
+      "kind": "Property",
+      "signature": "public int PatchMarginTop { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The height of the 9-slice\u0027s top row. A margin of 16 means the 9-slice\u0027s top corners and side will have a height of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders.",
+      "defaultValue": "0",
+      "godotName": "patch_margin_top",
+      "xmlDocId": "P:Godot.NinePatchRect.PatchMarginTop",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Rect2 RegionRect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Rectangular region of the texture to sample from. If you\u0027re working with an atlas, use this property to define the area the 9-slice should use. All other properties are relative to this one. If the rect is empty, NinePatchRect will use the whole texture.",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "region_rect",
+      "xmlDocId": "P:Godot.NinePatchRect.RegionRect",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The node\u0027s texture resource.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.NinePatchRect.Texture",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "TextureChanged",
+      "kind": "Signal",
+      "signature": "public event TextureChangedHandler TextureChanged",
+      "parameters": [],
+      "summary": "Emitted when the node\u0027s texture changes.",
+      "godotName": "texture_changed",
+      "xmlDocId": "E:Godot.NinePatchRect.TextureChanged",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AxisStretchMode",
+      "values": [
+        {
+          "name": "AXIS_STRETCH_MODE_STRETCH",
+          "value": "0",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Stretches the center texture across the NinePatchRect. This may cause the texture to be distorted.",
+          "sourcePath": "doc/classes/NinePatchRect.xml"
+        },
+        {
+          "name": "AXIS_STRETCH_MODE_TILE",
+          "value": "1",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Repeats the center texture across the NinePatchRect. This won\u0027t cause any visible distortion. The texture must be seamless for this to work without displaying artifacts between edges.",
+          "sourcePath": "doc/classes/NinePatchRect.xml"
+        },
+        {
+          "name": "AXIS_STRETCH_MODE_TILE_FIT",
+          "value": "2",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Repeats the center texture across the NinePatchRect, but will also stretch the texture to make sure each tile is visible in full. This may cause the texture to be distorted, but less than [constant AXIS_STRETCH_MODE_STRETCH]. The texture must be seamless for this to work without displaying artifacts between edges.",
+          "sourcePath": "doc/classes/NinePatchRect.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "AXIS_STRETCH_MODE_STRETCH",
+      "value": "0",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Stretches the center texture across the NinePatchRect. This may cause the texture to be distorted.",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "AXIS_STRETCH_MODE_TILE",
+      "value": "1",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Repeats the center texture across the NinePatchRect. This won\u0027t cause any visible distortion. The texture must be seamless for this to work without displaying artifacts between edges.",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    },
+    {
+      "name": "AXIS_STRETCH_MODE_TILE_FIT",
+      "value": "2",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Repeats the center texture across the NinePatchRect, but will also stretch the texture to make sure each tile is visible in full. This may cause the texture to be distorted, but less than [constant AXIS_STRETCH_MODE_STRETCH]. The texture must be seamless for this to work without displaying artifacts between edges.",
+      "sourcePath": "doc/classes/NinePatchRect.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NinePatchRect.xml",
+      "sha256": "b526e2485f2b5eb0fa5263fc569b597499909694bb02c16d249af314b4320ec0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

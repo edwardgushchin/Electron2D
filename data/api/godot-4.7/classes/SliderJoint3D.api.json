@@ -1,0 +1,668 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SliderJoint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SliderJoint3D",
+    "kind": "class",
+    "baseType": "Joint3D",
+    "interfaces": [],
+    "godotReference": "SliderJoint3D",
+    "documentationPath": "doc/classes/SliderJoint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_sliderjoint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParam",
+      "kind": "Method",
+      "signature": "public float GetParam(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given parameter.",
+      "godotName": "get_param",
+      "xmlDocId": "M:Godot.SliderJoint3D.GetParam(int)",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "SetParam",
+      "kind": "Method",
+      "signature": "public void SetParam(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Assigns [param value] to the given parameter.",
+      "godotName": "set_param",
+      "xmlDocId": "M:Godot.SliderJoint3D.SetParam(int,float)",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "angular_limit/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping of the rotation when the limit is surpassed. A lower damping value allows a rotation initiated by body A to travel to body B slower.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/lower_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The lower limit of rotation in the slider.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit/lower_angle",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution of the rotation when the limit is surpassed. Does not affect damping.",
+      "defaultValue": "0.7",
+      "godotName": "angular_limit/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the all rotation once the limit is surpassed. Makes all rotation slower when between 0 and 1.",
+      "defaultValue": "1.0",
+      "godotName": "angular_limit/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/upper_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The upper limit of rotation in the slider.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit/upper_angle",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_motion/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping of the rotation in the limits.",
+      "defaultValue": "1.0",
+      "godotName": "angular_motion/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_motion/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution of the rotation in the limits.",
+      "defaultValue": "0.7",
+      "godotName": "angular_motion/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_motion/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the all rotation in the limits.",
+      "defaultValue": "1.0",
+      "godotName": "angular_motion/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_ortho/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping of the rotation across axes orthogonal to the slider.",
+      "defaultValue": "1.0",
+      "godotName": "angular_ortho/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_ortho/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution of the rotation across axes orthogonal to the slider.",
+      "defaultValue": "0.7",
+      "godotName": "angular_ortho/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "angular_ortho/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the all rotation across axes orthogonal to the slider.",
+      "defaultValue": "1.0",
+      "godotName": "angular_ortho/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_limit/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping that happens once the limit defined by [member linear_limit/lower_distance] and [member linear_limit/upper_distance] is surpassed.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_limit/lower_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum difference between the pivot points on their X axis before damping happens.",
+      "defaultValue": "-1.0",
+      "godotName": "linear_limit/lower_distance",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_limit/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution once the limits are surpassed. The lower, the more velocity-energy gets lost.",
+      "defaultValue": "0.7",
+      "godotName": "linear_limit/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_limit/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across the slider axis once the limits get surpassed. The lower, the slower the movement.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_limit/upper_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum difference between the pivot points on their X axis before damping happens.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit/upper_distance",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_motion/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping inside the slider limits.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motion/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_motion/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution inside the slider limits.",
+      "defaultValue": "0.7",
+      "godotName": "linear_motion/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_motion/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across the slider axis as long as the slider is in the limits. The lower, the slower the movement.",
+      "defaultValue": "1.0",
+      "godotName": "linear_motion/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_ortho/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping when movement is across axes orthogonal to the slider.",
+      "defaultValue": "1.0",
+      "godotName": "linear_ortho/damping",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_ortho/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution when movement is across axes orthogonal to the slider.",
+      "defaultValue": "0.7",
+      "godotName": "linear_ortho/restitution",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "linear_ortho/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across axes orthogonal to the slider.",
+      "defaultValue": "1.0",
+      "godotName": "linear_ortho/softness",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Param",
+      "values": [
+        {
+          "name": "PARAM_ANGULAR_LIMIT_DAMPING",
+          "value": "15",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_limit/damping]. The amount of damping of the rotation when the limit is surpassed.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LIMIT_LOWER",
+          "value": "12",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_limit/lower_angle]. The lower limit of rotation in the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LIMIT_RESTITUTION",
+          "value": "14",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_limit/restitution]. The amount of restitution of the rotation when the limit is surpassed.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LIMIT_SOFTNESS",
+          "value": "13",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_limit/softness]. A factor applied to the all rotation once the limit is surpassed.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LIMIT_UPPER",
+          "value": "11",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_limit/upper_angle]. The upper limit of rotation in the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_MOTION_DAMPING",
+          "value": "18",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_motion/damping]. The amount of damping of the rotation in the limits.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_MOTION_RESTITUTION",
+          "value": "17",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_motion/restitution]. The amount of restitution of the rotation in the limits.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_MOTION_SOFTNESS",
+          "value": "16",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_motion/softness]. A factor applied to the all rotation in the limits.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_ORTHOGONAL_DAMPING",
+          "value": "21",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_ortho/damping]. The amount of damping of the rotation across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_ORTHOGONAL_RESTITUTION",
+          "value": "20",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_ortho/restitution]. The amount of restitution of the rotation across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_ORTHOGONAL_SOFTNESS",
+          "value": "19",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member angular_ortho/softness]. A factor applied to the all rotation across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_DAMPING",
+          "value": "4",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_limit/damping]. The amount of damping once the slider limits are surpassed.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_LOWER",
+          "value": "1",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_limit/lower_distance]. The minimum difference between the pivot points on their X axis before damping happens.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_RESTITUTION",
+          "value": "3",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_limit/restitution]. The amount of restitution once the limits are surpassed. The lower, the more velocity-energy gets lost.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_SOFTNESS",
+          "value": "2",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_limit/softness]. A factor applied to the movement across the slider axis once the limits get surpassed. The lower, the slower the movement.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_UPPER",
+          "value": "0",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_limit/upper_distance]. The maximum difference between the pivot points on their X axis before damping happens.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_MOTION_DAMPING",
+          "value": "7",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_motion/damping]. The amount of damping inside the slider limits.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_MOTION_RESTITUTION",
+          "value": "6",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_motion/restitution]. The amount of restitution inside the slider limits.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_MOTION_SOFTNESS",
+          "value": "5",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_motion/softness]. A factor applied to the movement across the slider axis as long as the slider is in the limits. The lower, the slower the movement.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_ORTHOGONAL_DAMPING",
+          "value": "10",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_motion/damping]. The amount of damping when movement is across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_ORTHOGONAL_RESTITUTION",
+          "value": "9",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_motion/restitution]. The amount of restitution when movement is across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_ORTHOGONAL_SOFTNESS",
+          "value": "8",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Constant for accessing [member linear_ortho/softness]. A factor applied to the movement across axes orthogonal to the slider.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "22",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Param] enum.",
+          "sourcePath": "doc/classes/SliderJoint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_LINEAR_LIMIT_UPPER",
+      "value": "0",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_limit/upper_distance]. The maximum difference between the pivot points on their X axis before damping happens.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_LIMIT_LOWER",
+      "value": "1",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_limit/lower_distance]. The minimum difference between the pivot points on their X axis before damping happens.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_LIMIT_SOFTNESS",
+      "value": "2",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_limit/softness]. A factor applied to the movement across the slider axis once the limits get surpassed. The lower, the slower the movement.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_LIMIT_RESTITUTION",
+      "value": "3",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_limit/restitution]. The amount of restitution once the limits are surpassed. The lower, the more velocity-energy gets lost.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_LIMIT_DAMPING",
+      "value": "4",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_limit/damping]. The amount of damping once the slider limits are surpassed.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_MOTION_SOFTNESS",
+      "value": "5",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_motion/softness]. A factor applied to the movement across the slider axis as long as the slider is in the limits. The lower, the slower the movement.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_MOTION_RESTITUTION",
+      "value": "6",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_motion/restitution]. The amount of restitution inside the slider limits.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_MOTION_DAMPING",
+      "value": "7",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_motion/damping]. The amount of damping inside the slider limits.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_ORTHOGONAL_SOFTNESS",
+      "value": "8",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_ortho/softness]. A factor applied to the movement across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_ORTHOGONAL_RESTITUTION",
+      "value": "9",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_motion/restitution]. The amount of restitution when movement is across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_ORTHOGONAL_DAMPING",
+      "value": "10",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member linear_motion/damping]. The amount of damping when movement is across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_UPPER",
+      "value": "11",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_limit/upper_angle]. The upper limit of rotation in the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_LOWER",
+      "value": "12",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_limit/lower_angle]. The lower limit of rotation in the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_SOFTNESS",
+      "value": "13",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_limit/softness]. A factor applied to the all rotation once the limit is surpassed.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_RESTITUTION",
+      "value": "14",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_limit/restitution]. The amount of restitution of the rotation when the limit is surpassed.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_DAMPING",
+      "value": "15",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_limit/damping]. The amount of damping of the rotation when the limit is surpassed.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_MOTION_SOFTNESS",
+      "value": "16",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_motion/softness]. A factor applied to the all rotation in the limits.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_MOTION_RESTITUTION",
+      "value": "17",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_motion/restitution]. The amount of restitution of the rotation in the limits.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_MOTION_DAMPING",
+      "value": "18",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_motion/damping]. The amount of damping of the rotation in the limits.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_ORTHOGONAL_SOFTNESS",
+      "value": "19",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_ortho/softness]. A factor applied to the all rotation across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_ORTHOGONAL_RESTITUTION",
+      "value": "20",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_ortho/restitution]. The amount of restitution of the rotation across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_ORTHOGONAL_DAMPING",
+      "value": "21",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Constant for accessing [member angular_ortho/damping]. The amount of damping of the rotation across axes orthogonal to the slider.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "22",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Param] enum.",
+      "sourcePath": "doc/classes/SliderJoint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SliderJoint3D.xml",
+      "sha256": "1575785c8bb7ce97bbb447a0d959ac6429af540717c16c591a83ba55c1e53bed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeCurveXYZTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeCurveXYZTexture",
+    "kind": "class",
+    "baseType": "VisualShaderNodeResizableBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeCurveXYZTexture",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeCurveXYZTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecurvexyztexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public CurveXYZTexture Texture { get; set; }",
+      "returnType": "CurveXYZTexture",
+      "parameters": [],
+      "summary": "The source texture.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.VisualShaderNodeCurveXYZTexture.Texture",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCurveXYZTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeCurveXYZTexture.xml",
+      "sha256": "7b0f6c8b1f57402e7dcc187999b519ee5579e46aca4337ae0b106144cff321c9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

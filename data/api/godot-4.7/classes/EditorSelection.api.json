@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSelection",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSelection",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorSelection",
+    "documentationPath": "doc/classes/EditorSelection.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorselection.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddNode",
+      "kind": "Method",
+      "signature": "public void AddNode(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Adds a node to the selection. [b]Note:[/b] The newly selected node will not be automatically edited in the inspector. If you want to edit a node, use [method EditorInterface.edit_node].",
+      "godotName": "add_node",
+      "xmlDocId": "M:Godot.EditorSelection.AddNode(Node)",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear the selection.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.EditorSelection.Clear",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    },
+    {
+      "name": "GetSelectedNodes",
+      "kind": "Method",
+      "signature": "public Node[] GetSelectedNodes()",
+      "returnType": "Node[]",
+      "parameters": [],
+      "summary": "Returns the list of selected nodes.",
+      "godotName": "get_selected_nodes",
+      "xmlDocId": "M:Godot.EditorSelection.GetSelectedNodes",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    },
+    {
+      "name": "GetTopSelectedNodes",
+      "kind": "Method",
+      "signature": "public Node[] GetTopSelectedNodes()",
+      "returnType": "Node[]",
+      "parameters": [],
+      "summary": "Returns the list of top selected nodes only, excluding any children. This is useful for performing transform operations (moving them, rotating, etc.). For example, if there is a node A with a child B and a sibling C, then selecting all three will cause this method to return only A and C. Changing the global transform of A will affect the global transform of B, so there is no need to change B separately.",
+      "godotName": "get_top_selected_nodes",
+      "xmlDocId": "M:Godot.EditorSelection.GetTopSelectedNodes",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    },
+    {
+      "name": "GetTransformableSelectedNodes",
+      "kind": "Method",
+      "signature": "public Node[] GetTransformableSelectedNodes()",
+      "returnType": "Node[]",
+      "parameters": [],
+      "summary": "Returns the list of top selected nodes only, excluding any children. This is useful for performing transform operations (moving them, rotating, etc.). See [method get_top_selected_nodes].",
+      "godotName": "get_transformable_selected_nodes",
+      "xmlDocId": "M:Godot.EditorSelection.GetTransformableSelectedNodes",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    },
+    {
+      "name": "RemoveNode",
+      "kind": "Method",
+      "signature": "public void RemoveNode(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Removes a node from the selection.",
+      "godotName": "remove_node",
+      "xmlDocId": "M:Godot.EditorSelection.RemoveNode(Node)",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "SelectionChanged",
+      "kind": "Signal",
+      "signature": "public event SelectionChangedHandler SelectionChanged",
+      "parameters": [],
+      "summary": "Emitted when the selection changes.",
+      "godotName": "selection_changed",
+      "xmlDocId": "E:Godot.EditorSelection.SelectionChanged",
+      "sourcePath": "doc/classes/EditorSelection.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorSelection.xml",
+      "sha256": "ce357c3376a078a458afd1cf4471d8a790bc8ebe9fb967cc9653d7063516f7c7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDShaderFile",
+    "namespace": "Godot",
+    "fullName": "Godot.RDShaderFile",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "RDShaderFile",
+    "documentationPath": "doc/classes/RDShaderFile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdshaderfile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetSpirv",
+      "kind": "Method",
+      "signature": "public RDShaderSPIRV GetSpirv(StringName version)",
+      "returnType": "RDShaderSPIRV",
+      "parameters": [
+        {
+          "name": "version",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns the SPIR-V intermediate representation for the specified shader [param version].",
+      "godotName": "get_spirv",
+      "xmlDocId": "M:Godot.RDShaderFile.GetSpirv(StringName)",
+      "sourcePath": "doc/classes/RDShaderFile.xml"
+    },
+    {
+      "name": "GetVersionList",
+      "kind": "Method",
+      "signature": "public StringName[] GetVersionList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns the list of compiled versions for this shader.",
+      "godotName": "get_version_list",
+      "xmlDocId": "M:Godot.RDShaderFile.GetVersionList",
+      "sourcePath": "doc/classes/RDShaderFile.xml"
+    },
+    {
+      "name": "SetBytecode",
+      "kind": "Method",
+      "signature": "public void SetBytecode(RDShaderSPIRV bytecode, StringName version)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bytecode",
+          "type": "RDShaderSPIRV"
+        },
+        {
+          "name": "version",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Sets the SPIR-V [param bytecode] that will be compiled for the specified [param version].",
+      "godotName": "set_bytecode",
+      "xmlDocId": "M:Godot.RDShaderFile.SetBytecode(RDShaderSPIRV,StringName)",
+      "sourcePath": "doc/classes/RDShaderFile.xml"
+    },
+    {
+      "name": "BaseError",
+      "kind": "Property",
+      "signature": "public String BaseError { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The base compilation error message, which indicates errors not related to a specific shader stage if non-empty. If empty, shader compilation is not necessarily successful (check [RDShaderSPIRV]\u0027s error message members).",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "base_error",
+      "xmlDocId": "P:Godot.RDShaderFile.BaseError",
+      "sourcePath": "doc/classes/RDShaderFile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDShaderFile.xml",
+      "sha256": "1e6c4b3ee1fe64dc0bb63791112bd72258d37672d0a30551d4eb54f372418bfe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

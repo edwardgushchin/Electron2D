@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConcavePolygonShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ConcavePolygonShape3D",
+    "kind": "class",
+    "baseType": "Shape3D",
+    "interfaces": [],
+    "godotReference": "ConcavePolygonShape3D",
+    "documentationPath": "doc/classes/ConcavePolygonShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_concavepolygonshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFaces",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetFaces()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns the faces of the trimesh shape as an array of vertices. The array (of length divisible by three) is naturally divided into triples; each triple of vertices defines a triangle.",
+      "godotName": "get_faces",
+      "xmlDocId": "M:Godot.ConcavePolygonShape3D.GetFaces",
+      "sourcePath": "doc/classes/ConcavePolygonShape3D.xml"
+    },
+    {
+      "name": "SetFaces",
+      "kind": "Method",
+      "signature": "public void SetFaces(PackedVector3Array faces)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "faces",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Sets the faces of the trimesh shape from an array of vertices. The [param faces] array should be composed of triples such that each triple of vertices defines a triangle.",
+      "godotName": "set_faces",
+      "xmlDocId": "M:Godot.ConcavePolygonShape3D.SetFaces(PackedVector3Array)",
+      "sourcePath": "doc/classes/ConcavePolygonShape3D.xml"
+    },
+    {
+      "name": "BackfaceCollision",
+      "kind": "Property",
+      "signature": "public bool BackfaceCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], collisions occur on both sides of the concave shape faces. Otherwise they occur only along the face normals.",
+      "defaultValue": "false",
+      "godotName": "backface_collision",
+      "xmlDocId": "P:Godot.ConcavePolygonShape3D.BackfaceCollision",
+      "sourcePath": "doc/classes/ConcavePolygonShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConcavePolygonShape3D.xml",
+      "sha256": "d1cbfb42635e3b8f1308ba0bc3a4e54a16993d240a853dc778b7a688c356a769"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

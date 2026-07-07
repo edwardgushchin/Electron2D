@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Vector4",
+    "namespace": "Godot",
+    "fullName": "Godot.Vector4",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Vector4",
+    "documentationPath": "doc/classes/Vector4.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vector4.html"
+  },
+  "constructors": [
+    {
+      "name": "Vector4",
+      "kind": "Constructor",
+      "signature": "public Vector4()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Constructs a default-initialized [Vector4] with all components set to [code]0[/code].",
+      "godotName": "Vector4",
+      "xmlDocId": "M:Godot.Vector4.#ctor",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Vector4",
+      "kind": "Constructor",
+      "signature": "public Vector4(Vector4 from)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Constructs a [Vector4] as a copy of the given [Vector4].",
+      "godotName": "Vector4",
+      "xmlDocId": "M:Godot.Vector4.#ctor(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Vector4",
+      "kind": "Constructor",
+      "signature": "public Vector4(Vector4i from)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector4i"
+        }
+      ],
+      "summary": "Constructs a new [Vector4] from the given [Vector4i].",
+      "godotName": "Vector4",
+      "xmlDocId": "M:Godot.Vector4.#ctor(Vector4i)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Vector4",
+      "kind": "Constructor",
+      "signature": "public Vector4(float x, float y, float z, float w)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        },
+        {
+          "name": "z",
+          "type": "float"
+        },
+        {
+          "name": "w",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a [Vector4] with the given components.",
+      "godotName": "Vector4",
+      "xmlDocId": "M:Godot.Vector4.#ctor(float,float,float,float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Vector4 Abs()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns a new vector with all components in absolute values (i.e. positive).",
+      "godotName": "abs",
+      "xmlDocId": "M:Godot.Vector4.Abs",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Ceil",
+      "kind": "Method",
+      "signature": "public Vector4 Ceil()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns a new vector with all components rounded up (towards positive infinity).",
+      "godotName": "ceil",
+      "xmlDocId": "M:Godot.Vector4.Ceil",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public Vector4 Clamp(Vector4 min, Vector4 max)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "Vector4"
+        },
+        {
+          "name": "max",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns a new vector with all components clamped between the components of [param min] and [param max], by running [method @GlobalScope.clamp] on each component.",
+      "godotName": "clamp",
+      "xmlDocId": "M:Godot.Vector4.Clamp(Vector4,Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Clampf",
+      "kind": "Method",
+      "signature": "public Vector4 Clampf(float min, float max)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "float"
+        },
+        {
+          "name": "max",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a new vector with all components clamped between [param min] and [param max], by running [method @GlobalScope.clamp] on each component.",
+      "godotName": "clampf",
+      "xmlDocId": "M:Godot.Vector4.Clampf(float,float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "CubicInterpolate",
+      "kind": "Method",
+      "signature": "public Vector4 CubicInterpolate(Vector4 b, Vector4 preA, Vector4 postB, float weight)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Vector4"
+        },
+        {
+          "name": "pre_a",
+          "type": "Vector4"
+        },
+        {
+          "name": "post_b",
+          "type": "Vector4"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a cubic interpolation between this vector and [param b] using [param pre_a] and [param post_b] as handles, and returns the result at position [param weight]. [param weight] is on the range of 0.0 to 1.0, representing the amount of interpolation.",
+      "godotName": "cubic_interpolate",
+      "xmlDocId": "M:Godot.Vector4.CubicInterpolate(Vector4,Vector4,Vector4,float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "CubicInterpolateInTime",
+      "kind": "Method",
+      "signature": "public Vector4 CubicInterpolateInTime(Vector4 b, Vector4 preA, Vector4 postB, float weight, float bT, float preAT, float postBT)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Vector4"
+        },
+        {
+          "name": "pre_a",
+          "type": "Vector4"
+        },
+        {
+          "name": "post_b",
+          "type": "Vector4"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        },
+        {
+          "name": "b_t",
+          "type": "float"
+        },
+        {
+          "name": "pre_a_t",
+          "type": "float"
+        },
+        {
+          "name": "post_b_t",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a cubic interpolation between this vector and [param b] using [param pre_a] and [param post_b] as handles, and returns the result at position [param weight]. [param weight] is on the range of 0.0 to 1.0, representing the amount of interpolation. It can perform smoother interpolation than [method cubic_interpolate] by the time values.",
+      "godotName": "cubic_interpolate_in_time",
+      "xmlDocId": "M:Godot.Vector4.CubicInterpolateInTime(Vector4,Vector4,Vector4,float,float,float,float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "DirectionTo",
+      "kind": "Method",
+      "signature": "public Vector4 DirectionTo(Vector4 to)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the normalized vector pointing from this vector to [param to]. This is equivalent to using [code](b - a).normalized()[/code].",
+      "godotName": "direction_to",
+      "xmlDocId": "M:Godot.Vector4.DirectionTo(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "DistanceSquaredTo",
+      "kind": "Method",
+      "signature": "public float DistanceSquaredTo(Vector4 to)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the squared [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean distance[/url] between this vector and [param to]. This method runs faster than [method distance_to], so prefer it if you need to compare vectors or need the squared distance for some formula.",
+      "godotName": "distance_squared_to",
+      "xmlDocId": "M:Godot.Vector4.DistanceSquaredTo(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "DistanceTo",
+      "kind": "Method",
+      "signature": "public float DistanceTo(Vector4 to)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean distance[/url] between this vector and [param to].",
+      "godotName": "distance_to",
+      "xmlDocId": "M:Godot.Vector4.DistanceTo(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Dot",
+      "kind": "Method",
+      "signature": "public float Dot(Vector4 with)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the dot product of this vector and [param with].",
+      "godotName": "dot",
+      "xmlDocId": "M:Godot.Vector4.Dot(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Floor",
+      "kind": "Method",
+      "signature": "public Vector4 Floor()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns a new vector with all components rounded down (towards negative infinity).",
+      "godotName": "floor",
+      "xmlDocId": "M:Godot.Vector4.Floor",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Vector4 Inverse()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns the inverse of the vector. This is the same as [code]Vector4(1.0 / v.x, 1.0 / v.y, 1.0 / v.z, 1.0 / v.w)[/code].",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Vector4.Inverse",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Vector4 to)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this vector and [param to] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Vector4.IsEqualApprox(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this vector is finite, by calling [method @GlobalScope.is_finite] on each component.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Vector4.IsFinite",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "IsNormalized",
+      "kind": "Method",
+      "signature": "public bool IsNormalized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the vector is normalized, i.e. its length is approximately equal to 1.",
+      "godotName": "is_normalized",
+      "xmlDocId": "M:Godot.Vector4.IsNormalized",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "IsZeroApprox",
+      "kind": "Method",
+      "signature": "public bool IsZeroApprox()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this vector\u0027s values are approximately zero, by running [method @GlobalScope.is_zero_approx] on each component. This method is faster than using [method is_equal_approx] with one value as a zero vector.",
+      "godotName": "is_zero_approx",
+      "xmlDocId": "M:Godot.Vector4.IsZeroApprox",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Length",
+      "kind": "Method",
+      "signature": "public float Length()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the length (magnitude) of this vector.",
+      "godotName": "length",
+      "xmlDocId": "M:Godot.Vector4.Length",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "LengthSquared",
+      "kind": "Method",
+      "signature": "public float LengthSquared()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the squared length (squared magnitude) of this vector. This method runs faster than [method length], so prefer it if you need to compare vectors or need the squared distance for some formula.",
+      "godotName": "length_squared",
+      "xmlDocId": "M:Godot.Vector4.LengthSquared",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Lerp",
+      "kind": "Method",
+      "signature": "public Vector4 Lerp(Vector4 to, float weight)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector4"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the result of the linear interpolation between this vector and [param to] by amount [param weight]. [param weight] is on the range of [code]0.0[/code] to [code]1.0[/code], representing the amount of interpolation.",
+      "godotName": "lerp",
+      "xmlDocId": "M:Godot.Vector4.Lerp(Vector4,float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Method",
+      "signature": "public Vector4 Max(Vector4 with)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the component-wise maximum of this and [param with], equivalent to [code]Vector4(maxf(x, with.x), maxf(y, with.y), maxf(z, with.z), maxf(w, with.w))[/code].",
+      "godotName": "max",
+      "xmlDocId": "M:Godot.Vector4.Max(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "MaxAxisIndex",
+      "kind": "Method",
+      "signature": "public int MaxAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the axis of the vector\u0027s highest value. See [code]AXIS_*[/code] constants. If all components are equal, this method returns [constant AXIS_X].",
+      "godotName": "max_axis_index",
+      "xmlDocId": "M:Godot.Vector4.MaxAxisIndex",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Maxf",
+      "kind": "Method",
+      "signature": "public Vector4 Maxf(float with)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the component-wise maximum of this and [param with], equivalent to [code]Vector4(maxf(x, with), maxf(y, with), maxf(z, with), maxf(w, with))[/code].",
+      "godotName": "maxf",
+      "xmlDocId": "M:Godot.Vector4.Maxf(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Method",
+      "signature": "public Vector4 Min(Vector4 with)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns the component-wise minimum of this and [param with], equivalent to [code]Vector4(minf(x, with.x), minf(y, with.y), minf(z, with.z), minf(w, with.w))[/code].",
+      "godotName": "min",
+      "xmlDocId": "M:Godot.Vector4.Min(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "MinAxisIndex",
+      "kind": "Method",
+      "signature": "public int MinAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the axis of the vector\u0027s lowest value. See [code]AXIS_*[/code] constants. If all components are equal, this method returns [constant AXIS_W].",
+      "godotName": "min_axis_index",
+      "xmlDocId": "M:Godot.Vector4.MinAxisIndex",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Minf",
+      "kind": "Method",
+      "signature": "public Vector4 Minf(float with)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the component-wise minimum of this and [param with], equivalent to [code]Vector4(minf(x, with), minf(y, with), minf(z, with), minf(w, with))[/code].",
+      "godotName": "minf",
+      "xmlDocId": "M:Godot.Vector4.Minf(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Normalized",
+      "kind": "Method",
+      "signature": "public Vector4 Normalized()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns the result of scaling the vector to unit length. Equivalent to [code]v / v.length()[/code]. Returns [code](0, 0, 0, 0)[/code] if [code]v.length() == 0[/code]. See also [method is_normalized]. [b]Note:[/b] This function may return incorrect values if the input vector length is near zero.",
+      "godotName": "normalized",
+      "xmlDocId": "M:Godot.Vector4.Normalized",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Posmod",
+      "kind": "Method",
+      "signature": "public Vector4 Posmod(float mod)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "mod",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a vector composed of the [method @GlobalScope.fposmod] of this vector\u0027s components and [param mod].",
+      "godotName": "posmod",
+      "xmlDocId": "M:Godot.Vector4.Posmod(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Posmodv",
+      "kind": "Method",
+      "signature": "public Vector4 Posmodv(Vector4 modv)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "modv",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns a vector composed of the [method @GlobalScope.fposmod] of this vector\u0027s components and [param modv]\u0027s components.",
+      "godotName": "posmodv",
+      "xmlDocId": "M:Godot.Vector4.Posmodv(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Round",
+      "kind": "Method",
+      "signature": "public Vector4 Round()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns a new vector with all components rounded to the nearest integer, with halfway cases rounded away from zero.",
+      "godotName": "round",
+      "xmlDocId": "M:Godot.Vector4.Round",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Sign",
+      "kind": "Method",
+      "signature": "public Vector4 Sign()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns a new vector with each component set to [code]1.0[/code] if it\u0027s positive, [code]-1.0[/code] if it\u0027s negative, and [code]0.0[/code] if it\u0027s zero. The result is identical to calling [method @GlobalScope.sign] on each component.",
+      "godotName": "sign",
+      "xmlDocId": "M:Godot.Vector4.Sign",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Snapped",
+      "kind": "Method",
+      "signature": "public Vector4 Snapped(Vector4 step)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns a new vector with each component snapped to the nearest multiple of the corresponding component in [param step]. This can also be used to round the components to an arbitrary number of decimals.",
+      "godotName": "snapped",
+      "xmlDocId": "M:Godot.Vector4.Snapped(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Snappedf",
+      "kind": "Method",
+      "signature": "public Vector4 Snappedf(float step)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a new vector with each component snapped to the nearest multiple of [param step]. This can also be used to round the components to an arbitrary number of decimals.",
+      "godotName": "snappedf",
+      "xmlDocId": "M:Godot.Vector4.Snappedf(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "W",
+      "kind": "Property",
+      "signature": "public float W { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The vector\u0027s W component. Also accessible by using the index position [code][3][/code].",
+      "defaultValue": "0.0",
+      "godotName": "w",
+      "xmlDocId": "P:Godot.Vector4.W",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public float X { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The vector\u0027s X component. Also accessible by using the index position [code][0][/code].",
+      "defaultValue": "0.0",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Vector4.X",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public float Y { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The vector\u0027s Y component. Also accessible by using the index position [code][1][/code].",
+      "defaultValue": "0.0",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Vector4.Y",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "Z",
+      "kind": "Property",
+      "signature": "public float Z { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The vector\u0027s Z component. Also accessible by using the index position [code][2][/code].",
+      "defaultValue": "0.0",
+      "godotName": "z",
+      "xmlDocId": "P:Godot.Vector4.Z",
+      "sourcePath": "doc/classes/Vector4.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Axis",
+      "values": [
+        {
+          "name": "AXIS_W",
+          "value": "3",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the W axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector4.xml"
+        },
+        {
+          "name": "AXIS_X",
+          "value": "0",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the X axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector4.xml"
+        },
+        {
+          "name": "AXIS_Y",
+          "value": "1",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the Y axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector4.xml"
+        },
+        {
+          "name": "AXIS_Z",
+          "value": "2",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the Z axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector4.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "AXIS_X",
+      "value": "0",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the X axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "AXIS_Y",
+      "value": "1",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the Y axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "AXIS_Z",
+      "value": "2",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the Z axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "AXIS_W",
+      "value": "3",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the W axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "ZERO",
+      "value": "Vector4(0, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "Zero vector, a vector with all components set to [code]0[/code].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "ONE",
+      "value": "Vector4(1, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "One vector, a vector with all components set to [code]1[/code].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "INF",
+      "value": "Vector4(inf, inf, inf, inf)",
+      "kind": "Constant",
+      "summary": "Infinity vector, a vector with all components set to [constant @GDScript.INF].",
+      "sourcePath": "doc/classes/Vector4.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the vectors are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Vector4.operator !=(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Projection right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [Vector4] by the transpose of the given [Projection] matrix. For transforming by inverse of a projection [code]projection.inverse() * vector[/code] can be used instead. See [method Projection.inverse].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector4.operator *(Projection)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4] by the components of the given [Vector4]. [codeblock] print(Vector4(10, 20, 30, 40) * Vector4(3, 4, 5, 6)) # Prints (30.0, 80.0, 150.0, 240.0) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector4.operator *(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(float right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4] by the given [float]. [codeblock] print(Vector4(10, 20, 30, 40) * 2) # Prints (20.0, 40.0, 60.0, 80.0) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector4.operator *(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(int right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4] by the given [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector4.operator *(int)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public Vector4 operator \u002B(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Adds each component of the [Vector4] by the components of the given [Vector4]. [codeblock] print(Vector4(10, 20, 30, 40) \u002B Vector4(3, 4, 5, 6)) # Prints (13.0, 24.0, 35.0, 46.0) [/codeblock]",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.Vector4.operator \u002B(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public Vector4 operator -(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Subtracts each component of the [Vector4] by the components of the given [Vector4]. [codeblock] print(Vector4(10, 20, 30, 40) - Vector4(3, 4, 5, 6)) # Prints (7.0, 16.0, 25.0, 34.0) [/codeblock]",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.Vector4.operator -(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector4 operator /(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Divides each component of the [Vector4] by the components of the given [Vector4]. [codeblock] print(Vector4(10, 20, 30, 40) / Vector4(2, 5, 3, 4)) # Prints (5.0, 4.0, 10.0, 10.0) [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector4.operator /(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector4 operator /(float right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides each component of the [Vector4] by the given [float]. [codeblock] print(Vector4(10, 20, 30, 40) / 2) # Prints (5.0, 10.0, 15.0, 20.0) [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector4.operator /(float)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector4 operator /(int right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides each component of the [Vector4] by the given [int].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector4.operator /(int)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Compares two [Vector4] vectors by first checking if the X value of the left vector is less than the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors, Z values of the two vectors, and then with the W values. This operator is useful for sorting vectors. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.Vector4.operator \u003C(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Compares two [Vector4] vectors by first checking if the X value of the left vector is less than or equal to the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors, Z values of the two vectors, and then with the W values. This operator is useful for sorting vectors. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.Vector4.operator \u003C=(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the vectors are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Vector4.operator ==(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Compares two [Vector4] vectors by first checking if the X value of the left vector is greater than the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors, Z values of the two vectors, and then with the W values. This operator is useful for sorting vectors. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.Vector4.operator \u003E(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(Vector4 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Compares two [Vector4] vectors by first checking if the X value of the left vector is greater than or equal to the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors, Z values of the two vectors, and then with the W values. This operator is useful for sorting vectors. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this operator may not be accurate if NaNs are included.",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.Vector4.operator \u003E=(Vector4)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public float operator [](int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Access vector components using their [param index]. [code]v[0][/code] is equivalent to [code]v.x[/code], [code]v[1][/code] is equivalent to [code]v.y[/code], [code]v[2][/code] is equivalent to [code]v.z[/code], and [code]v[3][/code] is equivalent to [code]v.w[/code].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Vector4.operator [](int)",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public Vector4 operator unary\u002B()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.Vector4.operator unary\u002B",
+      "sourcePath": "doc/classes/Vector4.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public Vector4 operator unary-()",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "Returns the negative value of the [Vector4]. This is the same as writing [code]Vector4(-v.x, -v.y, -v.z, -v.w)[/code]. This operation flips the direction of the vector while keeping the same magnitude. With floats, the number zero can be either positive or negative.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.Vector4.operator unary-",
+      "sourcePath": "doc/classes/Vector4.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Vector4.xml",
+      "sha256": "fdcb3d6421f01ca7ab50e4efab61cd4bccaadae862ddb9bb57b8764f1836524b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

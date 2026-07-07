@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeInput",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeInput",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeInput",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeInput.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeinput.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetInputRealName",
+      "kind": "Method",
+      "signature": "public String GetInputRealName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a translated name of the current constant in the Godot Shader Language. E.g. [code]\u0022ALBEDO\u0022[/code] if the [member input_name] equal to [code]\u0022albedo\u0022[/code].",
+      "godotName": "get_input_real_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeInput.GetInputRealName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeInput.xml"
+    },
+    {
+      "name": "InputName",
+      "kind": "Property",
+      "signature": "public String InputName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "One of the several input constants in lower-case style like: \u0022vertex\u0022 ([code]VERTEX[/code]) or \u0022point_size\u0022 ([code]POINT_SIZE[/code]).",
+      "defaultValue": "\u0022[None]\u0022",
+      "godotName": "input_name",
+      "xmlDocId": "P:Godot.VisualShaderNodeInput.InputName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeInput.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "InputTypeChanged",
+      "kind": "Signal",
+      "signature": "public event InputTypeChangedHandler InputTypeChanged",
+      "parameters": [],
+      "summary": "Emitted when input is changed via [member input_name].",
+      "godotName": "input_type_changed",
+      "xmlDocId": "E:Godot.VisualShaderNodeInput.InputTypeChanged",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeInput.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeInput.xml",
+      "sha256": "3fa0be0a179f807153137153345c2fe1ee0520ce1c0141b5eb6ca05ec929c247"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

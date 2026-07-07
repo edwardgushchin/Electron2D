@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PCKPacker",
+    "namespace": "Godot",
+    "fullName": "Godot.PCKPacker",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PCKPacker",
+    "documentationPath": "doc/classes/PCKPacker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_pckpacker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddFile",
+      "kind": "Method",
+      "signature": "public int AddFile(String targetPath, String sourcePath, bool encrypt)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "target_path",
+          "type": "String"
+        },
+        {
+          "name": "source_path",
+          "type": "String"
+        },
+        {
+          "name": "encrypt",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds the [param source_path] file to the current PCK package at the [param target_path] internal path. The [code]res://[/code] prefix for [param target_path] is optional and stripped internally. File content is immediately written to the PCK.",
+      "godotName": "add_file",
+      "xmlDocId": "M:Godot.PCKPacker.AddFile(String,String,bool)",
+      "sourcePath": "doc/classes/PCKPacker.xml"
+    },
+    {
+      "name": "AddFileFromBuffer",
+      "kind": "Method",
+      "signature": "public int AddFileFromBuffer(String targetPath, PackedByteArray data, bool encrypt)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "target_path",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "encrypt",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds the [param data] to the current PCK package at the [param target_path] internal path. The [code]res://[/code] prefix for [param target_path] is optional and stripped internally. File content is immediately written to the PCK.",
+      "godotName": "add_file_from_buffer",
+      "xmlDocId": "M:Godot.PCKPacker.AddFileFromBuffer(String,PackedByteArray,bool)",
+      "sourcePath": "doc/classes/PCKPacker.xml"
+    },
+    {
+      "name": "AddFileRemoval",
+      "kind": "Method",
+      "signature": "public int AddFileRemoval(String targetPath)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "target_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Registers a file removal of the [param target_path] internal path to the PCK. This is mainly used for patches. If the file at this path has been loaded from a previous PCK, it will be removed. The [code]res://[/code] prefix for [param target_path] is optional and stripped internally.",
+      "godotName": "add_file_removal",
+      "xmlDocId": "M:Godot.PCKPacker.AddFileRemoval(String)",
+      "sourcePath": "doc/classes/PCKPacker.xml"
+    },
+    {
+      "name": "Flush",
+      "kind": "Method",
+      "signature": "public int Flush(bool verbose)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "verbose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Writes the file directory and closes the PCK. If [param verbose] is [code]true[/code], a list of files added will be printed to the console for easier debugging. [b]Note:[/b] [PCKPacker] will automatically flush when it\u0027s freed, which happens when it goes out of scope or when it gets assigned with [code]null[/code]. In C# the reference must be disposed after use, either with the [code]using[/code] statement or by calling the [code]Dispose[/code] method directly.",
+      "godotName": "flush",
+      "xmlDocId": "M:Godot.PCKPacker.Flush(bool)",
+      "sourcePath": "doc/classes/PCKPacker.xml"
+    },
+    {
+      "name": "PckStart",
+      "kind": "Method",
+      "signature": "public int PckStart(String pckPath, int alignment, String key, bool encryptDirectory)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "pck_path",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "32"
+        },
+        {
+          "name": "key",
+          "type": "String",
+          "defaultValue": "\u00220000000000000000000000000000000000000000000000000000000000000000\u0022"
+        },
+        {
+          "name": "encrypt_directory",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new PCK file at the file path [param pck_path]. The [code].pck[/code] file extension isn\u0027t added automatically, so it should be part of [param pck_path] (even though it\u0027s not required).",
+      "godotName": "pck_start",
+      "xmlDocId": "M:Godot.PCKPacker.PckStart(String,int,String,bool)",
+      "sourcePath": "doc/classes/PCKPacker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PCKPacker.xml",
+      "sha256": "bf3ea98ffb378e7a7e178bf69291604ecb6a06074c42e33e9659098034899d6d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

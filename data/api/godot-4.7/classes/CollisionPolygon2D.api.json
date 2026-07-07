@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionPolygon2D",
+    "namespace": "Godot",
+    "fullName": "Godot.CollisionPolygon2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "CollisionPolygon2D",
+    "documentationPath": "doc/classes/CollisionPolygon2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_collisionpolygon2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BuildMode",
+      "kind": "Property",
+      "signature": "public int BuildMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Collision build mode.",
+      "defaultValue": "0",
+      "godotName": "build_mode",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.BuildMode",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public bool Disabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], no collisions will be detected. This property should be changed with [method Object.set_deferred].",
+      "defaultValue": "false",
+      "godotName": "disabled",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.Disabled",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "OneWayCollision",
+      "kind": "Property",
+      "signature": "public bool OneWayCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], only edges that face up, relative to [CollisionPolygon2D]\u0027s rotation, will collide with other objects. [b]Note:[/b] This property has no effect if this [CollisionPolygon2D] is a child of an [Area2D] node. [b]Note:[/b] The one way collision direction can be configured by setting [member one_way_collision_direction].",
+      "defaultValue": "false",
+      "godotName": "one_way_collision",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.OneWayCollision",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "OneWayCollisionDirection",
+      "kind": "Property",
+      "signature": "public Vector2 OneWayCollisionDirection { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The direction used for one-way collision.",
+      "defaultValue": "Vector2(0, 1)",
+      "godotName": "one_way_collision_direction",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.OneWayCollisionDirection",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "OneWayCollisionMargin",
+      "kind": "Property",
+      "signature": "public float OneWayCollisionMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The margin used for one-way collision (in pixels). Higher values will make the shape thicker, and work better for colliders that enter the polygon at a high velocity.",
+      "defaultValue": "1.0",
+      "godotName": "one_way_collision_margin",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.OneWayCollisionMargin",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "Polygon",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Polygon { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "The polygon\u0027s list of vertices. Each point will be connected to the next, and the final point will be connected to the first. [b]Note:[/b] The returned vertices are in the local coordinate space of the given [CollisionPolygon2D].",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "polygon",
+      "xmlDocId": "P:Godot.CollisionPolygon2D.Polygon",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BuildMode",
+      "values": [
+        {
+          "name": "BUILD_SEGMENTS",
+          "value": "1",
+          "enum": "BuildMode",
+          "kind": "EnumValue",
+          "summary": "Collisions will only include the polygon edges. In this mode the node has the same effect as a single [ConcavePolygonShape2D] made of segments, with the restriction that each segment (after the first one) starts where the previous one ends, and the last one ends where the first one starts (forming a closed but hollow polygon).",
+          "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+        },
+        {
+          "name": "BUILD_SOLIDS",
+          "value": "0",
+          "enum": "BuildMode",
+          "kind": "EnumValue",
+          "summary": "Collisions will include the polygon and its contained area. In this mode the node has the same effect as several [ConvexPolygonShape2D] nodes, one for each convex shape in the convex decomposition of the polygon (but without the overhead of multiple nodes).",
+          "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BUILD_SOLIDS",
+      "value": "0",
+      "enum": "BuildMode",
+      "kind": "EnumValue",
+      "summary": "Collisions will include the polygon and its contained area. In this mode the node has the same effect as several [ConvexPolygonShape2D] nodes, one for each convex shape in the convex decomposition of the polygon (but without the overhead of multiple nodes).",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    },
+    {
+      "name": "BUILD_SEGMENTS",
+      "value": "1",
+      "enum": "BuildMode",
+      "kind": "EnumValue",
+      "summary": "Collisions will only include the polygon edges. In this mode the node has the same effect as a single [ConcavePolygonShape2D] made of segments, with the restriction that each segment (after the first one) starts where the previous one ends, and the last one ends where the first one starts (forming a closed but hollow polygon).",
+      "sourcePath": "doc/classes/CollisionPolygon2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CollisionPolygon2D.xml",
+      "sha256": "20e768fa3bc34b17edd3159193f8aba8bcc70d24be13d5e559384121ed0416f5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

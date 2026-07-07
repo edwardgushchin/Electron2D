@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventGesture",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventGesture",
+    "kind": "class",
+    "baseType": "InputEventWithModifiers",
+    "interfaces": [],
+    "godotReference": "InputEventGesture",
+    "documentationPath": "doc/classes/InputEventGesture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventgesture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Device",
+      "kind": "Property",
+      "signature": "public int Device { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "device",
+      "xmlDocId": "P:Godot.InputEventGesture.Device",
+      "sourcePath": "doc/classes/InputEventGesture.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The local gesture position relative to the [Viewport]. If used in [method Control._gui_input], the position is relative to the current [Control] that received this gesture.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.InputEventGesture.Position",
+      "sourcePath": "doc/classes/InputEventGesture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventGesture.xml",
+      "sha256": "a6ca02dbe2ea2ab75172ce735d968b3c2caecfed0fed8f74d5d96814f4d75c7e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

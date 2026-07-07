@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FBXDocument",
+    "namespace": "Godot",
+    "fullName": "Godot.FBXDocument",
+    "kind": "class",
+    "baseType": "GLTFDocument",
+    "interfaces": [],
+    "godotReference": "FBXDocument",
+    "documentationPath": "modules/fbx/doc_classes/FBXDocument.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fbxdocument.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/fbx/doc_classes/FBXDocument.xml",
+      "sha256": "7329cc7029c4f05d908c24b936cf0e34c94eabb9c48e22d3d707af0e029ddf46"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

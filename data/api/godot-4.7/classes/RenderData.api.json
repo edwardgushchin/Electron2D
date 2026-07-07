@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderData",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderData",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "RenderData",
+    "documentationPath": "doc/classes/RenderData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderdata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCameraAttributes",
+      "kind": "Method",
+      "signature": "public RID GetCameraAttributes()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the camera attributes object in the [RenderingServer] being used to render this viewport.",
+      "godotName": "get_camera_attributes",
+      "xmlDocId": "M:Godot.RenderData.GetCameraAttributes",
+      "sourcePath": "doc/classes/RenderData.xml"
+    },
+    {
+      "name": "GetEnvironment",
+      "kind": "Method",
+      "signature": "public RID GetEnvironment()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the environment object in the [RenderingServer] being used to render this viewport.",
+      "godotName": "get_environment",
+      "xmlDocId": "M:Godot.RenderData.GetEnvironment",
+      "sourcePath": "doc/classes/RenderData.xml"
+    },
+    {
+      "name": "GetRenderSceneBuffers",
+      "kind": "Method",
+      "signature": "public RenderSceneBuffers GetRenderSceneBuffers()",
+      "returnType": "RenderSceneBuffers",
+      "parameters": [],
+      "summary": "Returns the [RenderSceneBuffers] object managing the scene buffers for rendering this viewport.",
+      "godotName": "get_render_scene_buffers",
+      "xmlDocId": "M:Godot.RenderData.GetRenderSceneBuffers",
+      "sourcePath": "doc/classes/RenderData.xml"
+    },
+    {
+      "name": "GetRenderSceneData",
+      "kind": "Method",
+      "signature": "public RenderSceneData GetRenderSceneData()",
+      "returnType": "RenderSceneData",
+      "parameters": [],
+      "summary": "Returns the [RenderSceneData] object managing this frames scene data.",
+      "godotName": "get_render_scene_data",
+      "xmlDocId": "M:Godot.RenderData.GetRenderSceneData",
+      "sourcePath": "doc/classes/RenderData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderData.xml",
+      "sha256": "d225a3e70e11a84ba9f772158bbcf556f854f738f99382f44cca51cd5fdccabe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

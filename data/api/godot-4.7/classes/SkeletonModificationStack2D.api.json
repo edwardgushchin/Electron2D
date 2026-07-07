@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModificationStack2D",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModificationStack2D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SkeletonModificationStack2D",
+    "documentationPath": "doc/classes/SkeletonModificationStack2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodificationstack2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddModification",
+      "kind": "Method",
+      "signature": "public void AddModification(SkeletonModification2D modification)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "modification",
+          "type": "SkeletonModification2D"
+        }
+      ],
+      "summary": "Adds the passed-in [SkeletonModification2D] to the stack.",
+      "godotName": "add_modification",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.AddModification(SkeletonModification2D)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "DeleteModification",
+      "kind": "Method",
+      "signature": "public void DeleteModification(int modIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mod_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Deletes the [SkeletonModification2D] at the index position [param mod_idx], if it exists.",
+      "godotName": "delete_modification",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.DeleteModification(int)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "EnableAllModifications",
+      "kind": "Method",
+      "signature": "public void EnableAllModifications(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables all [SkeletonModification2D]s in the stack.",
+      "godotName": "enable_all_modifications",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.EnableAllModifications(bool)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "Execute",
+      "kind": "Method",
+      "signature": "public void Execute(float delta, int executionMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        },
+        {
+          "name": "execution_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Executes all of the [SkeletonModification2D]s in the stack that use the same execution mode as the passed-in [param execution_mode], starting from index [code]0[/code] to [member modification_count]. [b]Note:[/b] The order of the modifications can matter depending on the modifications. For example, modifications on a spine should operate before modifications on the arms in order to get proper results.",
+      "godotName": "execute",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.Execute(float,int)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "GetIsSetup",
+      "kind": "Method",
+      "signature": "public bool GetIsSetup()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns a boolean that indicates whether the modification stack is setup and can execute.",
+      "godotName": "get_is_setup",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.GetIsSetup",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "GetModification",
+      "kind": "Method",
+      "signature": "public SkeletonModification2D GetModification(int modIdx)",
+      "returnType": "SkeletonModification2D",
+      "parameters": [
+        {
+          "name": "mod_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [SkeletonModification2D] at the passed-in index, [param mod_idx].",
+      "godotName": "get_modification",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.GetModification(int)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton2D GetSkeleton()",
+      "returnType": "Skeleton2D",
+      "parameters": [],
+      "summary": "Returns the [Skeleton2D] node that the SkeletonModificationStack2D is bound to.",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.GetSkeleton",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "SetModification",
+      "kind": "Method",
+      "signature": "public void SetModification(int modIdx, SkeletonModification2D modification)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mod_idx",
+          "type": "int"
+        },
+        {
+          "name": "modification",
+          "type": "SkeletonModification2D"
+        }
+      ],
+      "summary": "Sets the modification at [param mod_idx] to the passed-in modification, [param modification].",
+      "godotName": "set_modification",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.SetModification(int,SkeletonModification2D)",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "Setup",
+      "kind": "Method",
+      "signature": "public void Setup()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sets up the modification stack so it can execute. This function should be called by [Skeleton2D] and shouldn\u0027t be manually called unless you know what you are doing.",
+      "godotName": "setup",
+      "xmlDocId": "M:Godot.SkeletonModificationStack2D.Setup",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the modification\u0027s in the stack will be called. This is handled automatically through the [Skeleton2D] node.",
+      "defaultValue": "false",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.SkeletonModificationStack2D.Enabled",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "ModificationCount",
+      "kind": "Property",
+      "signature": "public int ModificationCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of modifications in the stack.",
+      "defaultValue": "0",
+      "godotName": "modification_count",
+      "xmlDocId": "P:Godot.SkeletonModificationStack2D.ModificationCount",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    },
+    {
+      "name": "Strength",
+      "kind": "Property",
+      "signature": "public float Strength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The interpolation strength of the modifications in stack. A value of [code]0[/code] will make it where the modifications are not applied, a strength of [code]0.5[/code] will be half applied, and a strength of [code]1[/code] will allow the modifications to be fully applied and override the [Skeleton2D] [Bone2D] poses.",
+      "defaultValue": "1.0",
+      "godotName": "strength",
+      "xmlDocId": "P:Godot.SkeletonModificationStack2D.Strength",
+      "sourcePath": "doc/classes/SkeletonModificationStack2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModificationStack2D.xml",
+      "sha256": "a761a0440ed54961fef7d686400ac87264e8fa5407b9b44038db72edb6469383"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

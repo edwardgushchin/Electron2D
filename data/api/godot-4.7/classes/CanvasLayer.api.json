@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasLayer",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasLayer",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "CanvasLayer",
+    "documentationPath": "doc/classes/CanvasLayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvaslayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCanvas",
+      "kind": "Method",
+      "signature": "public RID GetCanvas()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the RID of the canvas used by this layer.",
+      "godotName": "get_canvas",
+      "xmlDocId": "M:Godot.CanvasLayer.GetCanvas",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "GetFinalTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetFinalTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform from the [CanvasLayer]s coordinate system to the [Viewport]s coordinate system.",
+      "godotName": "get_final_transform",
+      "xmlDocId": "M:Godot.CanvasLayer.GetFinalTransform",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Hide",
+      "kind": "Method",
+      "signature": "public void Hide()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Hides any [CanvasItem] under this [CanvasLayer]. This is equivalent to setting [member visible] to [code]false[/code].",
+      "godotName": "hide",
+      "xmlDocId": "M:Godot.CanvasLayer.Hide",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Show",
+      "kind": "Method",
+      "signature": "public void Show()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shows any [CanvasItem] under this [CanvasLayer]. This is equivalent to setting [member visible] to [code]true[/code].",
+      "godotName": "show",
+      "xmlDocId": "M:Godot.CanvasLayer.Show",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "CustomViewport",
+      "kind": "Property",
+      "signature": "public Node CustomViewport { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The custom [Viewport] node assigned to the [CanvasLayer]. If [code]null[/code], uses the default viewport instead.",
+      "godotName": "custom_viewport",
+      "xmlDocId": "P:Godot.CanvasLayer.CustomViewport",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "FollowViewportEnabled",
+      "kind": "Property",
+      "signature": "public bool FollowViewportEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, the [CanvasLayer] maintains its position in world space. If disabled, the [CanvasLayer] stays in a fixed position on the screen. Together with [member follow_viewport_scale], this can be used for a pseudo-3D effect.",
+      "defaultValue": "false",
+      "godotName": "follow_viewport_enabled",
+      "xmlDocId": "P:Godot.CanvasLayer.FollowViewportEnabled",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "FollowViewportScale",
+      "kind": "Property",
+      "signature": "public float FollowViewportScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the layer when using [member follow_viewport_enabled]. Layers moving into the foreground should have increasing scales, while layers moving into the background should have decreasing scales.",
+      "defaultValue": "1.0",
+      "godotName": "follow_viewport_scale",
+      "xmlDocId": "P:Godot.CanvasLayer.FollowViewportScale",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Layer",
+      "kind": "Property",
+      "signature": "public int Layer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Layer index for draw order. Lower values are drawn behind higher values. [b]Note:[/b] If multiple CanvasLayers have the same layer index, [CanvasItem] children of one CanvasLayer are drawn behind the [CanvasItem] children of the other CanvasLayer. Which CanvasLayer is drawn in front is non-deterministic. [b]Note:[/b] The layer index should be between [constant RenderingServer.CANVAS_LAYER_MIN] and [constant RenderingServer.CANVAS_LAYER_MAX] (inclusive). Any other value will wrap around.",
+      "defaultValue": "1",
+      "godotName": "layer",
+      "xmlDocId": "P:Godot.CanvasLayer.Layer",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The layer\u0027s base offset.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.CanvasLayer.Offset",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Rotation",
+      "kind": "Property",
+      "signature": "public float Rotation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The layer\u0027s rotation in radians.",
+      "defaultValue": "0.0",
+      "godotName": "rotation",
+      "xmlDocId": "P:Godot.CanvasLayer.Rotation",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Scale",
+      "kind": "Property",
+      "signature": "public Vector2 Scale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The layer\u0027s scale.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "scale",
+      "xmlDocId": "P:Godot.CanvasLayer.Scale",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform2D Transform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "The layer\u0027s transform.",
+      "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.CanvasLayer.Transform",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], any [CanvasItem] under this [CanvasLayer] will be hidden. Unlike [member CanvasItem.visible], visibility of a [CanvasLayer] isn\u0027t propagated to underlying layers.",
+      "defaultValue": "true",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.CanvasLayer.Visible",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "VisibilityChanged",
+      "kind": "Signal",
+      "signature": "public event VisibilityChangedHandler VisibilityChanged",
+      "parameters": [],
+      "summary": "Emitted when visibility of the layer is changed. See [member visible].",
+      "godotName": "visibility_changed",
+      "xmlDocId": "E:Godot.CanvasLayer.VisibilityChanged",
+      "sourcePath": "doc/classes/CanvasLayer.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasLayer.xml",
+      "sha256": "0e524bfaa76cd2357ceade93dd80455c30d638e0f5d84a1e72f54efe81d91d89"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

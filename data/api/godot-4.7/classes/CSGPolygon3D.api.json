@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGPolygon3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGPolygon3D",
+    "kind": "class",
+    "baseType": "CSGPrimitive3D",
+    "interfaces": [],
+    "godotReference": "CSGPolygon3D",
+    "documentationPath": "modules/csg/doc_classes/CSGPolygon3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgpolygon3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Depth",
+      "kind": "Property",
+      "signature": "public float Depth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_DEPTH], the depth of the extrusion.",
+      "defaultValue": "1.0",
+      "godotName": "depth",
+      "xmlDocId": "P:Godot.CSGPolygon3D.Depth",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "Material to use for the resulting mesh. The UV maps the top half of the material to the extruded shape (U along the length of the extrusions and V around the outline of the [member polygon]), the bottom-left quarter to the front end face, and the bottom-right quarter to the back end face.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CSGPolygon3D.Material",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "Mode",
+      "kind": "Property",
+      "signature": "public int Mode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The [member mode] used to extrude the [member polygon].",
+      "defaultValue": "0",
+      "godotName": "mode",
+      "xmlDocId": "P:Godot.CSGPolygon3D.Mode",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathContinuousU",
+      "kind": "Property",
+      "signature": "public bool PathContinuousU { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], by default, the top half of the [member material] is stretched along the entire length of the extruded shape. If [code]false[/code] the top half of the material is repeated every step of the extrusion.",
+      "godotName": "path_continuous_u",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathContinuousU",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathInterval",
+      "kind": "Property",
+      "signature": "public float PathInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], the path interval or ratio of path points to extrusions.",
+      "godotName": "path_interval",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathInterval",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathIntervalType",
+      "kind": "Property",
+      "signature": "public int PathIntervalType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], this will determine if the interval should be by distance ([constant PATH_INTERVAL_DISTANCE]) or subdivision fractions ([constant PATH_INTERVAL_SUBDIVIDE]).",
+      "godotName": "path_interval_type",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathIntervalType",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathJoined",
+      "kind": "Property",
+      "signature": "public bool PathJoined { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], if [code]true[/code] the ends of the path are joined, by adding an extrusion between the last and first points of the path.",
+      "godotName": "path_joined",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathJoined",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathLocal",
+      "kind": "Property",
+      "signature": "public bool PathLocal { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], if [code]true[/code] the [Transform3D] of the [CSGPolygon3D] is used as the starting point for the extrusions, not the [Transform3D] of the [member path_node].",
+      "godotName": "path_local",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathLocal",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathNode",
+      "kind": "Property",
+      "signature": "public NodePath PathNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], the location of the [Path3D] object used to extrude the [member polygon].",
+      "godotName": "path_node",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathNode",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathRotation",
+      "kind": "Property",
+      "signature": "public int PathRotation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], the path rotation method used to rotate the [member polygon] as it is extruded.",
+      "godotName": "path_rotation",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathRotation",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathRotationAccurate",
+      "kind": "Property",
+      "signature": "public bool PathRotationAccurate { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], if [code]true[/code] the polygon will be rotated according to the proper tangent of the path at the sampled points. If [code]false[/code] an approximation is used, which decreases in accuracy as the number of subdivisions decreases.",
+      "godotName": "path_rotation_accurate",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathRotationAccurate",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathSimplifyAngle",
+      "kind": "Property",
+      "signature": "public float PathSimplifyAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], extrusions that are less than this angle, will be merged together to reduce polygon count.",
+      "godotName": "path_simplify_angle",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathSimplifyAngle",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PathUDistance",
+      "kind": "Property",
+      "signature": "public float PathUDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_PATH], this is the distance along the path, in meters, the texture coordinates will tile. When set to 0, texture coordinates will match geometry exactly with no tiling.",
+      "godotName": "path_u_distance",
+      "xmlDocId": "P:Godot.CSGPolygon3D.PathUDistance",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "Polygon",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Polygon { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "The point array that defines the 2D polygon that is extruded. This can be a convex or concave polygon with 3 or more points. The polygon must [i]not[/i] have any intersecting edges. Otherwise, triangulation will fail and no mesh will be generated. [b]Note:[/b] If only 1 or 2 points are defined in [member polygon], no mesh will be generated.",
+      "defaultValue": "PackedVector2Array(0, 0, 0, 1, 1, 1, 1, 0)",
+      "godotName": "polygon",
+      "xmlDocId": "P:Godot.CSGPolygon3D.Polygon",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "SmoothFaces",
+      "kind": "Property",
+      "signature": "public bool SmoothFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], applies smooth shading to the extrusions.",
+      "defaultValue": "false",
+      "godotName": "smooth_faces",
+      "xmlDocId": "P:Godot.CSGPolygon3D.SmoothFaces",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "SpinDegrees",
+      "kind": "Property",
+      "signature": "public float SpinDegrees { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_SPIN], the total number of degrees the [member polygon] is rotated when extruding.",
+      "godotName": "spin_degrees",
+      "xmlDocId": "P:Godot.CSGPolygon3D.SpinDegrees",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "SpinSides",
+      "kind": "Property",
+      "signature": "public int SpinSides { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "When [member mode] is [constant MODE_SPIN], the number of extrusions made.",
+      "godotName": "spin_sides",
+      "xmlDocId": "P:Godot.CSGPolygon3D.SpinSides",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "MODE_DEPTH",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape is extruded along the negative Z axis.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        },
+        {
+          "name": "MODE_PATH",
+          "value": "2",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape is extruded along the [Path3D] specified in [member path_node].",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        },
+        {
+          "name": "MODE_SPIN",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape is extruded by rotating it around the Y axis.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "PathIntervalType",
+      "values": [
+        {
+          "name": "PATH_INTERVAL_DISTANCE",
+          "value": "0",
+          "enum": "PathIntervalType",
+          "kind": "EnumValue",
+          "summary": "When [member mode] is set to [constant MODE_PATH], [member path_interval] will determine the distance, in meters, each interval of the path will extrude.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        },
+        {
+          "name": "PATH_INTERVAL_SUBDIVIDE",
+          "value": "1",
+          "enum": "PathIntervalType",
+          "kind": "EnumValue",
+          "summary": "When [member mode] is set to [constant MODE_PATH], [member path_interval] will subdivide the polygons along the path.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "PathRotation",
+      "values": [
+        {
+          "name": "PATH_ROTATION_PATH",
+          "value": "1",
+          "enum": "PathRotation",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape is rotated along the path, but it is not rotated around the path axis. [b]Note:[/b] Requires the path Z coordinates to continually decrease to ensure viable shapes.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        },
+        {
+          "name": "PATH_ROTATION_PATH_FOLLOW",
+          "value": "2",
+          "enum": "PathRotation",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape follows the path and its rotations around the path axis.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        },
+        {
+          "name": "PATH_ROTATION_POLYGON",
+          "value": "0",
+          "enum": "PathRotation",
+          "kind": "EnumValue",
+          "summary": "The [member polygon] shape is not rotated. [b]Note:[/b] Requires the path Z coordinates to continually decrease to ensure viable shapes.",
+          "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_DEPTH",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape is extruded along the negative Z axis.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "MODE_SPIN",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape is extruded by rotating it around the Y axis.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "MODE_PATH",
+      "value": "2",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape is extruded along the [Path3D] specified in [member path_node].",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PATH_ROTATION_POLYGON",
+      "value": "0",
+      "enum": "PathRotation",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape is not rotated. [b]Note:[/b] Requires the path Z coordinates to continually decrease to ensure viable shapes.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PATH_ROTATION_PATH",
+      "value": "1",
+      "enum": "PathRotation",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape is rotated along the path, but it is not rotated around the path axis. [b]Note:[/b] Requires the path Z coordinates to continually decrease to ensure viable shapes.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PATH_ROTATION_PATH_FOLLOW",
+      "value": "2",
+      "enum": "PathRotation",
+      "kind": "EnumValue",
+      "summary": "The [member polygon] shape follows the path and its rotations around the path axis.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PATH_INTERVAL_DISTANCE",
+      "value": "0",
+      "enum": "PathIntervalType",
+      "kind": "EnumValue",
+      "summary": "When [member mode] is set to [constant MODE_PATH], [member path_interval] will determine the distance, in meters, each interval of the path will extrude.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    },
+    {
+      "name": "PATH_INTERVAL_SUBDIVIDE",
+      "value": "1",
+      "enum": "PathIntervalType",
+      "kind": "EnumValue",
+      "summary": "When [member mode] is set to [constant MODE_PATH], [member path_interval] will subdivide the polygons along the path.",
+      "sourcePath": "modules/csg/doc_classes/CSGPolygon3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGPolygon3D.xml",
+      "sha256": "57edca34a8f47e9da9699a750c6e9bca54a894171c19a417e845c7b3b4b9314c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

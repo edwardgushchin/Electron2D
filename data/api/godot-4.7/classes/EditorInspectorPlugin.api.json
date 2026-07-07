@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorInspectorPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorInspectorPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorInspectorPlugin",
+    "documentationPath": "doc/classes/EditorInspectorPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorinspectorplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CanHandle",
+      "kind": "Method",
+      "signature": "public bool _CanHandle(Object @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this object can be handled by this plugin.",
+      "godotName": "_can_handle",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._CanHandle(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseBegin",
+      "kind": "Method",
+      "signature": "public void _ParseBegin(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of the property list for [param object].",
+      "godotName": "_parse_begin",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseBegin(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseCategory",
+      "kind": "Method",
+      "signature": "public void _ParseCategory(Object @object, String category)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "category",
+          "type": "String"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of a category in the property list for [param object].",
+      "godotName": "_parse_category",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseCategory(Object,String)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseEnd",
+      "kind": "Method",
+      "signature": "public void _ParseEnd(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Called to allow adding controls at the end of the property list for [param object].",
+      "godotName": "_parse_end",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseEnd(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseGroup",
+      "kind": "Method",
+      "signature": "public void _ParseGroup(Object @object, String group)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "group",
+          "type": "String"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of a group or a sub-group in the property list for [param object].",
+      "godotName": "_parse_group",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseGroup(Object,String)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseProperty",
+      "kind": "Method",
+      "signature": "public bool _ParseProperty(Object @object, int type, String name, int hintType, String hintString, int usageFlags, bool wide)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "hint_type",
+          "type": "int"
+        },
+        {
+          "name": "hint_string",
+          "type": "String"
+        },
+        {
+          "name": "usage_flags",
+          "type": "int"
+        },
+        {
+          "name": "wide",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called to allow adding property-specific editors to the property list for [param object]. The added editor control must extend [EditorProperty]. Returning [code]true[/code] removes the built-in editor for this property, otherwise allows to insert a custom editor before the built-in one.",
+      "godotName": "_parse_property",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseProperty(Object,int,String,int,String,int,bool)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "AddCustomControl",
+      "kind": "Method",
+      "signature": "public void AddCustomControl(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Adds a custom control, which is not necessarily a property editor.",
+      "godotName": "add_custom_control",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin.AddCustomControl(Control)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "AddPropertyEditor",
+      "kind": "Method",
+      "signature": "public void AddPropertyEditor(String property, Control editor, bool addToEnd, String label)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        },
+        {
+          "name": "editor",
+          "type": "Control"
+        },
+        {
+          "name": "add_to_end",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "label",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a property editor for an individual property. The [param editor] control must extend [EditorProperty]. There can be multiple property editors for a property. If [param add_to_end] is [code]true[/code], this newly added editor will be displayed after all the other editors of the property whose [param add_to_end] is [code]false[/code]. For example, the editor uses this parameter to add an \u0022Edit Region\u0022 button for [member Sprite2D.region_rect] below the regular [Rect2] editor. [param label] can be used to choose a custom label for the property editor in the inspector. If left empty, the label is computed from the name of the property instead.",
+      "godotName": "add_property_editor",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin.AddPropertyEditor(String,Control,bool,String)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "AddPropertyEditorForMultipleProperties",
+      "kind": "Method",
+      "signature": "public void AddPropertyEditorForMultipleProperties(String label, PackedStringArray properties, Control editor)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "properties",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "editor",
+          "type": "Control"
+        }
+      ],
+      "summary": "Adds an editor that allows modifying multiple properties. The [param editor] control must extend [EditorProperty].",
+      "godotName": "add_property_editor_for_multiple_properties",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin.AddPropertyEditorForMultipleProperties(String,PackedStringArray,Control)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CanHandle",
+      "kind": "Method",
+      "signature": "public bool _CanHandle(Object @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this object can be handled by this plugin.",
+      "godotName": "_can_handle",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._CanHandle(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseBegin",
+      "kind": "Method",
+      "signature": "public void _ParseBegin(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of the property list for [param object].",
+      "godotName": "_parse_begin",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseBegin(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseCategory",
+      "kind": "Method",
+      "signature": "public void _ParseCategory(Object @object, String category)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "category",
+          "type": "String"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of a category in the property list for [param object].",
+      "godotName": "_parse_category",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseCategory(Object,String)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseEnd",
+      "kind": "Method",
+      "signature": "public void _ParseEnd(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Called to allow adding controls at the end of the property list for [param object].",
+      "godotName": "_parse_end",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseEnd(Object)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseGroup",
+      "kind": "Method",
+      "signature": "public void _ParseGroup(Object @object, String group)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "group",
+          "type": "String"
+        }
+      ],
+      "summary": "Called to allow adding controls at the beginning of a group or a sub-group in the property list for [param object].",
+      "godotName": "_parse_group",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseGroup(Object,String)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    },
+    {
+      "name": "_ParseProperty",
+      "kind": "Method",
+      "signature": "public bool _ParseProperty(Object @object, int type, String name, int hintType, String hintString, int usageFlags, bool wide)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "hint_type",
+          "type": "int"
+        },
+        {
+          "name": "hint_string",
+          "type": "String"
+        },
+        {
+          "name": "usage_flags",
+          "type": "int"
+        },
+        {
+          "name": "wide",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called to allow adding property-specific editors to the property list for [param object]. The added editor control must extend [EditorProperty]. Returning [code]true[/code] removes the built-in editor for this property, otherwise allows to insert a custom editor before the built-in one.",
+      "godotName": "_parse_property",
+      "xmlDocId": "M:Godot.EditorInspectorPlugin._ParseProperty(Object,int,String,int,String,int,bool)",
+      "sourcePath": "doc/classes/EditorInspectorPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorInspectorPlugin.xml",
+      "sha256": "19e95b92794866a468cca3da14b6b24af007f6f52c3a817cb7335a303450e4c6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

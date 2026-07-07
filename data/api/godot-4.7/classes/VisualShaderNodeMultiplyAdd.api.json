@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeMultiplyAdd",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeMultiplyAdd",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeMultiplyAdd",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodemultiplyadd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A type of operands and returned value.",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeMultiplyAdd.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+        },
+        {
+          "name": "OP_TYPE_SCALAR",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_SCALAR",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeMultiplyAdd.xml",
+      "sha256": "138dacb34f5b2fa791ba84d140d8329cdbd5041e14375b3fb2ac94462990d84a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

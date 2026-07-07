@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LabelSettings",
+    "namespace": "Godot",
+    "fullName": "Godot.LabelSettings",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "LabelSettings",
+    "documentationPath": "doc/classes/LabelSettings.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_labelsettings.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddStackedOutline",
+      "kind": "Method",
+      "signature": "public void AddStackedOutline(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new stacked outline to the label at the given [param index]. If [param index] is [code]-1[/code], the new stacked outline will be added at the end of the list.",
+      "godotName": "add_stacked_outline",
+      "xmlDocId": "M:Godot.LabelSettings.AddStackedOutline(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "AddStackedShadow",
+      "kind": "Method",
+      "signature": "public void AddStackedShadow(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new stacked shadow to the label at the given [param index]. If [param index] is [code]-1[/code], the new stacked shadow will be added at the end of the list.",
+      "godotName": "add_stacked_shadow",
+      "xmlDocId": "M:Godot.LabelSettings.AddStackedShadow(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "GetStackedOutlineColor",
+      "kind": "Method",
+      "signature": "public Color GetStackedOutlineColor(int index)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the color of the stacked outline at [param index].",
+      "godotName": "get_stacked_outline_color",
+      "xmlDocId": "M:Godot.LabelSettings.GetStackedOutlineColor(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "GetStackedOutlineSize",
+      "kind": "Method",
+      "signature": "public int GetStackedOutlineSize(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the size of the stacked outline at [param index].",
+      "godotName": "get_stacked_outline_size",
+      "xmlDocId": "M:Godot.LabelSettings.GetStackedOutlineSize(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "GetStackedShadowColor",
+      "kind": "Method",
+      "signature": "public Color GetStackedShadowColor(int index)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the color of the stacked shadow at [param index].",
+      "godotName": "get_stacked_shadow_color",
+      "xmlDocId": "M:Godot.LabelSettings.GetStackedShadowColor(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "GetStackedShadowOffset",
+      "kind": "Method",
+      "signature": "public Vector2 GetStackedShadowOffset(int index)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the offset of the stacked shadow at [param index].",
+      "godotName": "get_stacked_shadow_offset",
+      "xmlDocId": "M:Godot.LabelSettings.GetStackedShadowOffset(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "GetStackedShadowOutlineSize",
+      "kind": "Method",
+      "signature": "public int GetStackedShadowOutlineSize(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the outline size of the stacked shadow at [param index].",
+      "godotName": "get_stacked_shadow_outline_size",
+      "xmlDocId": "M:Godot.LabelSettings.GetStackedShadowOutlineSize(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "MoveStackedOutline",
+      "kind": "Method",
+      "signature": "public void MoveStackedOutline(int fromIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the stacked outline at index [param from_index] to the given position [param to_position] in the array.",
+      "godotName": "move_stacked_outline",
+      "xmlDocId": "M:Godot.LabelSettings.MoveStackedOutline(int,int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "MoveStackedShadow",
+      "kind": "Method",
+      "signature": "public void MoveStackedShadow(int fromIndex, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_index",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the stacked shadow at index [param from_index] to the given position [param to_position] in the array.",
+      "godotName": "move_stacked_shadow",
+      "xmlDocId": "M:Godot.LabelSettings.MoveStackedShadow(int,int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "RemoveStackedOutline",
+      "kind": "Method",
+      "signature": "public void RemoveStackedOutline(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the stacked outline at index [param index].",
+      "godotName": "remove_stacked_outline",
+      "xmlDocId": "M:Godot.LabelSettings.RemoveStackedOutline(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "RemoveStackedShadow",
+      "kind": "Method",
+      "signature": "public void RemoveStackedShadow(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the stacked shadow at index [param index].",
+      "godotName": "remove_stacked_shadow",
+      "xmlDocId": "M:Godot.LabelSettings.RemoveStackedShadow(int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "SetStackedOutlineColor",
+      "kind": "Method",
+      "signature": "public void SetStackedOutlineColor(int index, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color of the stacked outline identified by the given [param index] to [param color].",
+      "godotName": "set_stacked_outline_color",
+      "xmlDocId": "M:Godot.LabelSettings.SetStackedOutlineColor(int,Color)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "SetStackedOutlineSize",
+      "kind": "Method",
+      "signature": "public void SetStackedOutlineSize(int index, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the stacked outline identified by the given [param index] to [param size].",
+      "godotName": "set_stacked_outline_size",
+      "xmlDocId": "M:Godot.LabelSettings.SetStackedOutlineSize(int,int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "SetStackedShadowColor",
+      "kind": "Method",
+      "signature": "public void SetStackedShadowColor(int index, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color of the stacked shadow identified by the given [param index] to [param color].",
+      "godotName": "set_stacked_shadow_color",
+      "xmlDocId": "M:Godot.LabelSettings.SetStackedShadowColor(int,Color)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "SetStackedShadowOffset",
+      "kind": "Method",
+      "signature": "public void SetStackedShadowOffset(int index, Vector2 offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the offset of the stacked shadow identified by the given [param index] to [param offset].",
+      "godotName": "set_stacked_shadow_offset",
+      "xmlDocId": "M:Godot.LabelSettings.SetStackedShadowOffset(int,Vector2)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "SetStackedShadowOutlineSize",
+      "kind": "Method",
+      "signature": "public void SetStackedShadowOutlineSize(int index, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the outline size of the stacked shadow identified by the given [param index] to [param size].",
+      "godotName": "set_stacked_shadow_outline_size",
+      "xmlDocId": "M:Godot.LabelSettings.SetStackedShadowOutlineSize(int,int)",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "Font",
+      "kind": "Property",
+      "signature": "public Font Font { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "[Font] used for the text.",
+      "godotName": "font",
+      "xmlDocId": "P:Godot.LabelSettings.Font",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "FontColor",
+      "kind": "Property",
+      "signature": "public Color FontColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the text.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "font_color",
+      "xmlDocId": "P:Godot.LabelSettings.FontColor",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "FontSize",
+      "kind": "Property",
+      "signature": "public int FontSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Size of the text.",
+      "defaultValue": "16",
+      "godotName": "font_size",
+      "xmlDocId": "P:Godot.LabelSettings.FontSize",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "LineSpacing",
+      "kind": "Property",
+      "signature": "public float LineSpacing { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Additional vertical spacing between lines (in pixels), spacing is added to line descent. This value can be negative.",
+      "defaultValue": "3.0",
+      "godotName": "line_spacing",
+      "xmlDocId": "P:Godot.LabelSettings.LineSpacing",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "OutlineColor",
+      "kind": "Property",
+      "signature": "public Color OutlineColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the outline.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "outline_color",
+      "xmlDocId": "P:Godot.LabelSettings.OutlineColor",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "OutlineSize",
+      "kind": "Property",
+      "signature": "public int OutlineSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text outline size.",
+      "defaultValue": "0",
+      "godotName": "outline_size",
+      "xmlDocId": "P:Godot.LabelSettings.OutlineSize",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "ParagraphSpacing",
+      "kind": "Property",
+      "signature": "public float ParagraphSpacing { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Vertical space between paragraphs. Added on top of [member line_spacing].",
+      "defaultValue": "0.0",
+      "godotName": "paragraph_spacing",
+      "xmlDocId": "P:Godot.LabelSettings.ParagraphSpacing",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "ShadowColor",
+      "kind": "Property",
+      "signature": "public Color ShadowColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the shadow effect. If alpha is [code]0[/code], no shadow will be drawn.",
+      "defaultValue": "Color(0, 0, 0, 0)",
+      "godotName": "shadow_color",
+      "xmlDocId": "P:Godot.LabelSettings.ShadowColor",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "ShadowOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ShadowOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Offset of the shadow effect, in pixels.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "shadow_offset",
+      "xmlDocId": "P:Godot.LabelSettings.ShadowOffset",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "ShadowSize",
+      "kind": "Property",
+      "signature": "public int ShadowSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Size of the shadow effect.",
+      "defaultValue": "1",
+      "godotName": "shadow_size",
+      "xmlDocId": "P:Godot.LabelSettings.ShadowSize",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "StackedOutlineCount",
+      "kind": "Property",
+      "signature": "public int StackedOutlineCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of stacked outlines.",
+      "defaultValue": "0",
+      "godotName": "stacked_outline_count",
+      "xmlDocId": "P:Godot.LabelSettings.StackedOutlineCount",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "StackedShadowCount",
+      "kind": "Property",
+      "signature": "public int StackedShadowCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of stacked shadows.",
+      "defaultValue": "0",
+      "godotName": "stacked_shadow_count",
+      "xmlDocId": "P:Godot.LabelSettings.StackedShadowCount",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "stacked_outline_{index}/color",
+      "kind": "RawProperty",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the outline at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. stacked_outline_count - 1[/code] range.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "stacked_outline_{index}/color",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "stacked_outline_{index}/size",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The size of the outline at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. stacked_outline_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "stacked_outline_{index}/size",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "stacked_shadow_{index}/color",
+      "kind": "RawProperty",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the shadow at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. stacked_shadow_count - 1[/code] range.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "stacked_shadow_{index}/color",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "stacked_shadow_{index}/offset",
+      "kind": "RawProperty",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The offset of the shadow at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. stacked_shadow_count - 1[/code] range.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "stacked_shadow_{index}/offset",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    },
+    {
+      "name": "stacked_shadow_{index}/outline_size",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The size of the shadow outline at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. stacked_shadow_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "stacked_shadow_{index}/outline_size",
+      "sourcePath": "doc/classes/LabelSettings.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LabelSettings.xml",
+      "sha256": "99a8c3f6b5fd28af43212bf73ad552dea23151d805a25d22561e78ec3b71a911"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

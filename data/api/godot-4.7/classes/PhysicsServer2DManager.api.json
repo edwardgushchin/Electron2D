@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2DManager",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsServer2DManager",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "PhysicsServer2DManager",
+    "documentationPath": "doc/classes/PhysicsServer2DManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsserver2dmanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "RegisterServer",
+      "kind": "Method",
+      "signature": "public void RegisterServer(String name, Callable createCallback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "create_callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Register a [PhysicsServer2D] implementation by passing a [param name] and a [Callable] that returns a [PhysicsServer2D] object.",
+      "godotName": "register_server",
+      "xmlDocId": "M:Godot.PhysicsServer2DManager.RegisterServer(String,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DManager.xml"
+    },
+    {
+      "name": "SetDefaultServer",
+      "kind": "Method",
+      "signature": "public void SetDefaultServer(String name, int priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "priority",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the default [PhysicsServer2D] implementation to the one identified by [param name], if [param priority] is greater than the priority of the current default implementation.",
+      "godotName": "set_default_server",
+      "xmlDocId": "M:Godot.PhysicsServer2DManager.SetDefaultServer(String,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsServer2DManager.xml",
+      "sha256": "fc73b35813b01272f2ba5997bc55f4c59b87e68456a1aef697d9b3cbc3a2d98e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

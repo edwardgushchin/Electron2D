@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorToaster",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorToaster",
+    "kind": "class",
+    "baseType": "HBoxContainer",
+    "interfaces": [],
+    "godotReference": "EditorToaster",
+    "documentationPath": "doc/classes/EditorToaster.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editortoaster.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "PushToast",
+      "kind": "Method",
+      "signature": "public void PushToast(String message, int severity, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "severity",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "tooltip",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Pushes a toast notification to the editor for display.",
+      "godotName": "push_toast",
+      "xmlDocId": "M:Godot.EditorToaster.PushToast(String,int,String)",
+      "sourcePath": "doc/classes/EditorToaster.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Severity",
+      "values": [
+        {
+          "name": "SEVERITY_ERROR",
+          "value": "2",
+          "enum": "Severity",
+          "kind": "EnumValue",
+          "summary": "Toast will display with an ERROR severity and have a corresponding color.",
+          "sourcePath": "doc/classes/EditorToaster.xml"
+        },
+        {
+          "name": "SEVERITY_INFO",
+          "value": "0",
+          "enum": "Severity",
+          "kind": "EnumValue",
+          "summary": "Toast will display with an INFO severity.",
+          "sourcePath": "doc/classes/EditorToaster.xml"
+        },
+        {
+          "name": "SEVERITY_WARNING",
+          "value": "1",
+          "enum": "Severity",
+          "kind": "EnumValue",
+          "summary": "Toast will display with a WARNING severity and have a corresponding color.",
+          "sourcePath": "doc/classes/EditorToaster.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SEVERITY_INFO",
+      "value": "0",
+      "enum": "Severity",
+      "kind": "EnumValue",
+      "summary": "Toast will display with an INFO severity.",
+      "sourcePath": "doc/classes/EditorToaster.xml"
+    },
+    {
+      "name": "SEVERITY_WARNING",
+      "value": "1",
+      "enum": "Severity",
+      "kind": "EnumValue",
+      "summary": "Toast will display with a WARNING severity and have a corresponding color.",
+      "sourcePath": "doc/classes/EditorToaster.xml"
+    },
+    {
+      "name": "SEVERITY_ERROR",
+      "value": "2",
+      "enum": "Severity",
+      "kind": "EnumValue",
+      "summary": "Toast will display with an ERROR severity and have a corresponding color.",
+      "sourcePath": "doc/classes/EditorToaster.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorToaster.xml",
+      "sha256": "f9e89c2cc66b8a2bd0cbe83b1bedf7002e91f802002a7b0dbd060abec3ded8a1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

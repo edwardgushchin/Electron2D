@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Joint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Joint3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "Joint3D",
+    "documentationPath": "doc/classes/Joint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_joint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the joint\u0027s internal [RID] from the [PhysicsServer3D].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.Joint3D.GetRid",
+      "sourcePath": "doc/classes/Joint3D.xml"
+    },
+    {
+      "name": "ExcludeNodesFromCollision",
+      "kind": "Property",
+      "signature": "public bool ExcludeNodesFromCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the two bodies bound together do not collide with each other.",
+      "defaultValue": "true",
+      "godotName": "exclude_nodes_from_collision",
+      "xmlDocId": "P:Godot.Joint3D.ExcludeNodesFromCollision",
+      "sourcePath": "doc/classes/Joint3D.xml"
+    },
+    {
+      "name": "NodeA",
+      "kind": "Property",
+      "signature": "public NodePath NodeA { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to the first node (A) attached to the joint. The node must inherit [PhysicsBody3D]. If left empty and [member node_b] is set, the body is attached to a fixed [StaticBody3D] without collision shapes.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "node_a",
+      "xmlDocId": "P:Godot.Joint3D.NodeA",
+      "sourcePath": "doc/classes/Joint3D.xml"
+    },
+    {
+      "name": "NodeB",
+      "kind": "Property",
+      "signature": "public NodePath NodeB { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to the second node (B) attached to the joint. The node must inherit [PhysicsBody3D]. If left empty and [member node_a] is set, the body is attached to a fixed [StaticBody3D] without collision shapes.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "node_b",
+      "xmlDocId": "P:Godot.Joint3D.NodeB",
+      "sourcePath": "doc/classes/Joint3D.xml"
+    },
+    {
+      "name": "SolverPriority",
+      "kind": "Property",
+      "signature": "public int SolverPriority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The priority used to define which solver is executed first for multiple joints. The lower the value, the higher the priority. [b]Note:[/b] Only supported when using GodotPhysics3D. This property is ignored when using Jolt Physics.",
+      "defaultValue": "1",
+      "godotName": "solver_priority",
+      "xmlDocId": "P:Godot.Joint3D.SolverPriority",
+      "sourcePath": "doc/classes/Joint3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Joint3D.xml",
+      "sha256": "feb902358de4c92a6f1c750cf1dfcd9b856addade5a0d1aba780abf0965410d9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WeakRef",
+    "namespace": "Godot",
+    "fullName": "Godot.WeakRef",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "WeakRef",
+    "documentationPath": "doc/classes/WeakRef.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_weakref.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRef",
+      "kind": "Method",
+      "signature": "public Variant GetRef()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the [Object] this weakref is referring to. Returns [code]null[/code] if that object no longer exists.",
+      "godotName": "get_ref",
+      "xmlDocId": "M:Godot.WeakRef.GetRef",
+      "sourcePath": "doc/classes/WeakRef.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/WeakRef.xml",
+      "sha256": "cfe9748038bd960ac308979c7372a2e7121ba82ff15596a60cc8916ba02ebf1c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentMarkerList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentMarkerList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentMarkerList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentmarkerlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMarkerData",
+      "kind": "Method",
+      "signature": "public Variant GetMarkerData(RID snapshot, int index)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "snapshot",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns either a [String] or a [PackedByteArray] buffer with data for the marker at this [param index]. Only applicable for QR code markers.",
+      "godotName": "get_marker_data",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMarkerList.GetMarkerData(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "GetMarkerId",
+      "kind": "Method",
+      "signature": "public int GetMarkerId(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the marker ID for the marker at this [param index]. Only applicable for Aruco or April Tag markers.",
+      "godotName": "get_marker_id",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMarkerList.GetMarkerId(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "GetMarkerType",
+      "kind": "Method",
+      "signature": "public int GetMarkerType(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the marker type for the marker at this [param index].",
+      "godotName": "get_marker_type",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMarkerList.GetMarkerType(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "MarkerType",
+      "values": [
+        {
+          "name": "MARKER_TYPE_APRIL_TAG",
+          "value": "4",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Marker based on an April Tag.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        },
+        {
+          "name": "MARKER_TYPE_ARUCO",
+          "value": "3",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Marker based on an Aruco code.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        },
+        {
+          "name": "MARKER_TYPE_MAX",
+          "value": "5",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Maximum value for this enum.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        },
+        {
+          "name": "MARKER_TYPE_MICRO_QRCODE",
+          "value": "2",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Marker based on a micro QR code.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        },
+        {
+          "name": "MARKER_TYPE_QRCODE",
+          "value": "1",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Marker based on a QR code.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        },
+        {
+          "name": "MARKER_TYPE_UNKNOWN",
+          "value": "0",
+          "enum": "MarkerType",
+          "kind": "EnumValue",
+          "summary": "Unknown or unset marker type.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MARKER_TYPE_UNKNOWN",
+      "value": "0",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Unknown or unset marker type.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "MARKER_TYPE_QRCODE",
+      "value": "1",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Marker based on a QR code.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "MARKER_TYPE_MICRO_QRCODE",
+      "value": "2",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Marker based on a micro QR code.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "MARKER_TYPE_ARUCO",
+      "value": "3",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Marker based on an Aruco code.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "MARKER_TYPE_APRIL_TAG",
+      "value": "4",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Marker based on an April Tag.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    },
+    {
+      "name": "MARKER_TYPE_MAX",
+      "value": "5",
+      "enum": "MarkerType",
+      "kind": "EnumValue",
+      "summary": "Maximum value for this enum.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentMarkerList.xml",
+      "sha256": "ac35703f1456614d69d6e680585ed047ced81c2515e8084d14fceb0d864ae3ca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

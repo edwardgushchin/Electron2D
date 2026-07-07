@@ -1,0 +1,1163 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "classes": [
+    {
+      "name": "AnimatedSprite2D",
+      "fullName": "Electron2D.AnimatedSprite2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 22,
+      "jsonPath": "data/api/electron2d/classes/AnimatedSprite2D.api.json"
+    },
+    {
+      "name": "Animation",
+      "fullName": "Electron2D.Animation",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 19,
+      "jsonPath": "data/api/electron2d/classes/Animation.api.json"
+    },
+    {
+      "name": "Animation.InterpolationType",
+      "fullName": "Electron2D.Animation.InterpolationType",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/Animation.InterpolationType.api.json"
+    },
+    {
+      "name": "Animation.LoopMode",
+      "fullName": "Electron2D.Animation.LoopMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/Animation.LoopMode.api.json"
+    },
+    {
+      "name": "Animation.TrackType",
+      "fullName": "Electron2D.Animation.TrackType",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/Animation.TrackType.api.json"
+    },
+    {
+      "name": "AnimationLibrary",
+      "fullName": "Electron2D.AnimationLibrary",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/AnimationLibrary.api.json"
+    },
+    {
+      "name": "AnimationPlayer",
+      "fullName": "Electron2D.AnimationPlayer",
+      "baseType": "Electron2D.Node",
+      "memberCount": 23,
+      "jsonPath": "data/api/electron2d/classes/AnimationPlayer.api.json"
+    },
+    {
+      "name": "Area2D",
+      "fullName": "Electron2D.Area2D",
+      "baseType": "Electron2D.CollisionObject2D",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/Area2D.api.json"
+    },
+    {
+      "name": "AtlasTexture",
+      "fullName": "Electron2D.AtlasTexture",
+      "baseType": "Electron2D.Texture2D",
+      "memberCount": 11,
+      "jsonPath": "data/api/electron2d/classes/AtlasTexture.api.json"
+    },
+    {
+      "name": "AudioServer",
+      "fullName": "Electron2D.AudioServer",
+      "memberCount": 23,
+      "jsonPath": "data/api/electron2d/classes/AudioServer.api.json"
+    },
+    {
+      "name": "AudioServer.SpeakerMode",
+      "fullName": "Electron2D.AudioServer.SpeakerMode",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/AudioServer.SpeakerMode.api.json"
+    },
+    {
+      "name": "AudioStream",
+      "fullName": "Electron2D.AudioStream",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/AudioStream.api.json"
+    },
+    {
+      "name": "AudioStreamPlayer",
+      "fullName": "Electron2D.AudioStreamPlayer",
+      "baseType": "Electron2D.Node",
+      "memberCount": 15,
+      "jsonPath": "data/api/electron2d/classes/AudioStreamPlayer.api.json"
+    },
+    {
+      "name": "AudioStreamPlayer2D",
+      "fullName": "Electron2D.AudioStreamPlayer2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 19,
+      "jsonPath": "data/api/electron2d/classes/AudioStreamPlayer2D.api.json"
+    },
+    {
+      "name": "BaseButton",
+      "fullName": "Electron2D.BaseButton",
+      "baseType": "Electron2D.Control",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/BaseButton.api.json"
+    },
+    {
+      "name": "BaseButton.ActionMode",
+      "fullName": "Electron2D.BaseButton.ActionMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/BaseButton.ActionMode.api.json"
+    },
+    {
+      "name": "BoxContainer",
+      "fullName": "Electron2D.BoxContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/BoxContainer.api.json"
+    },
+    {
+      "name": "BoxContainerAlignmentMode",
+      "fullName": "Electron2D.BoxContainerAlignmentMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/BoxContainerAlignmentMode.api.json"
+    },
+    {
+      "name": "Button",
+      "fullName": "Electron2D.Button",
+      "baseType": "Electron2D.BaseButton",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/Button.api.json"
+    },
+    {
+      "name": "Callable",
+      "fullName": "Electron2D.Callable",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/Callable.api.json"
+    },
+    {
+      "name": "CallbackTweener",
+      "fullName": "Electron2D.CallbackTweener",
+      "baseType": "Electron2D.Tweener",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/CallbackTweener.api.json"
+    },
+    {
+      "name": "Camera2D",
+      "fullName": "Electron2D.Camera2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 16,
+      "jsonPath": "data/api/electron2d/classes/Camera2D.api.json"
+    },
+    {
+      "name": "CanvasItem",
+      "fullName": "Electron2D.CanvasItem",
+      "baseType": "Electron2D.Node",
+      "memberCount": 18,
+      "jsonPath": "data/api/electron2d/classes/CanvasItem.api.json"
+    },
+    {
+      "name": "CanvasLayer",
+      "fullName": "Electron2D.CanvasLayer",
+      "baseType": "Electron2D.Node",
+      "memberCount": 11,
+      "jsonPath": "data/api/electron2d/classes/CanvasLayer.api.json"
+    },
+    {
+      "name": "CapsuleShape2D",
+      "fullName": "Electron2D.CapsuleShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/CapsuleShape2D.api.json"
+    },
+    {
+      "name": "CenterContainer",
+      "fullName": "Electron2D.CenterContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/CenterContainer.api.json"
+    },
+    {
+      "name": "CharacterBody2D",
+      "fullName": "Electron2D.CharacterBody2D",
+      "baseType": "Electron2D.PhysicsBody2D",
+      "memberCount": 34,
+      "jsonPath": "data/api/electron2d/classes/CharacterBody2D.api.json"
+    },
+    {
+      "name": "CharacterBody2D.MotionMode",
+      "fullName": "Electron2D.CharacterBody2D.MotionMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/CharacterBody2D.MotionMode.api.json"
+    },
+    {
+      "name": "CharacterBody2D.PlatformOnLeave",
+      "fullName": "Electron2D.CharacterBody2D.PlatformOnLeave",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/CharacterBody2D.PlatformOnLeave.api.json"
+    },
+    {
+      "name": "CheckBox",
+      "fullName": "Electron2D.CheckBox",
+      "baseType": "Electron2D.Button",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/CheckBox.api.json"
+    },
+    {
+      "name": "CircleShape2D",
+      "fullName": "Electron2D.CircleShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/CircleShape2D.api.json"
+    },
+    {
+      "name": "Collections.Array",
+      "fullName": "Electron2D.Collections.Array",
+      "memberCount": 9,
+      "jsonPath": "data/api/electron2d/classes/Collections.Array.api.json"
+    },
+    {
+      "name": "Collections.Dictionary",
+      "fullName": "Electron2D.Collections.Dictionary",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/Collections.Dictionary.api.json"
+    },
+    {
+      "name": "CollisionObject2D",
+      "fullName": "Electron2D.CollisionObject2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/CollisionObject2D.api.json"
+    },
+    {
+      "name": "CollisionShape2D",
+      "fullName": "Electron2D.CollisionShape2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/CollisionShape2D.api.json"
+    },
+    {
+      "name": "Color",
+      "fullName": "Electron2D.Color",
+      "memberCount": 27,
+      "jsonPath": "data/api/electron2d/classes/Color.api.json"
+    },
+    {
+      "name": "ConcavePolygonShape2D",
+      "fullName": "Electron2D.ConcavePolygonShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/ConcavePolygonShape2D.api.json"
+    },
+    {
+      "name": "ConnectFlags",
+      "fullName": "Electron2D.ConnectFlags",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/ConnectFlags.api.json"
+    },
+    {
+      "name": "Container",
+      "fullName": "Electron2D.Container",
+      "baseType": "Electron2D.Control",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/Container.api.json"
+    },
+    {
+      "name": "Control",
+      "fullName": "Electron2D.Control",
+      "baseType": "Electron2D.CanvasItem",
+      "memberCount": 77,
+      "jsonPath": "data/api/electron2d/classes/Control.api.json"
+    },
+    {
+      "name": "ConvexPolygonShape2D",
+      "fullName": "Electron2D.ConvexPolygonShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/ConvexPolygonShape2D.api.json"
+    },
+    {
+      "name": "DisplayServer",
+      "fullName": "Electron2D.DisplayServer",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/DisplayServer.api.json"
+    },
+    {
+      "name": "DisplayServer.ScreenOrientation",
+      "fullName": "Electron2D.DisplayServer.ScreenOrientation",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/DisplayServer.ScreenOrientation.api.json"
+    },
+    {
+      "name": "DisplayServer.VirtualKeyboardType",
+      "fullName": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/DisplayServer.VirtualKeyboardType.api.json"
+    },
+    {
+      "name": "Error",
+      "fullName": "Electron2D.Error",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/Error.api.json"
+    },
+    {
+      "name": "ExportAttribute",
+      "fullName": "Electron2D.ExportAttribute",
+      "baseType": "System.Attribute",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/ExportAttribute.api.json"
+    },
+    {
+      "name": "FocusMode",
+      "fullName": "Electron2D.FocusMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/FocusMode.api.json"
+    },
+    {
+      "name": "Font",
+      "fullName": "Electron2D.Font",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/Font.api.json"
+    },
+    {
+      "name": "GridContainer",
+      "fullName": "Electron2D.GridContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/GridContainer.api.json"
+    },
+    {
+      "name": "GrowDirection",
+      "fullName": "Electron2D.GrowDirection",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/GrowDirection.api.json"
+    },
+    {
+      "name": "HBoxContainer",
+      "fullName": "Electron2D.HBoxContainer",
+      "baseType": "Electron2D.BoxContainer",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/HBoxContainer.api.json"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "fullName": "Electron2D.HorizontalAlignment",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/HorizontalAlignment.api.json"
+    },
+    {
+      "name": "ImageTexture",
+      "fullName": "Electron2D.ImageTexture",
+      "baseType": "Electron2D.Texture2D",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/ImageTexture.api.json"
+    },
+    {
+      "name": "Input",
+      "fullName": "Electron2D.Input",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/Input.api.json"
+    },
+    {
+      "name": "InputEvent",
+      "fullName": "Electron2D.InputEvent",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/InputEvent.api.json"
+    },
+    {
+      "name": "InputEventAction",
+      "fullName": "Electron2D.InputEventAction",
+      "baseType": "Electron2D.InputEvent",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/InputEventAction.api.json"
+    },
+    {
+      "name": "InputEventFromWindow",
+      "fullName": "Electron2D.InputEventFromWindow",
+      "baseType": "Electron2D.InputEvent",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/InputEventFromWindow.api.json"
+    },
+    {
+      "name": "InputEventJoypadButton",
+      "fullName": "Electron2D.InputEventJoypadButton",
+      "baseType": "Electron2D.InputEvent",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/InputEventJoypadButton.api.json"
+    },
+    {
+      "name": "InputEventJoypadMotion",
+      "fullName": "Electron2D.InputEventJoypadMotion",
+      "baseType": "Electron2D.InputEvent",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/InputEventJoypadMotion.api.json"
+    },
+    {
+      "name": "InputEventKey",
+      "fullName": "Electron2D.InputEventKey",
+      "baseType": "Electron2D.InputEventWithModifiers",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/InputEventKey.api.json"
+    },
+    {
+      "name": "InputEventMouse",
+      "fullName": "Electron2D.InputEventMouse",
+      "baseType": "Electron2D.InputEventWithModifiers",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/InputEventMouse.api.json"
+    },
+    {
+      "name": "InputEventMouseButton",
+      "fullName": "Electron2D.InputEventMouseButton",
+      "baseType": "Electron2D.InputEventMouse",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/InputEventMouseButton.api.json"
+    },
+    {
+      "name": "InputEventMouseMotion",
+      "fullName": "Electron2D.InputEventMouseMotion",
+      "baseType": "Electron2D.InputEventMouse",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/InputEventMouseMotion.api.json"
+    },
+    {
+      "name": "InputEventScreenDrag",
+      "fullName": "Electron2D.InputEventScreenDrag",
+      "baseType": "Electron2D.InputEventFromWindow",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/InputEventScreenDrag.api.json"
+    },
+    {
+      "name": "InputEventScreenTouch",
+      "fullName": "Electron2D.InputEventScreenTouch",
+      "baseType": "Electron2D.InputEventFromWindow",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/InputEventScreenTouch.api.json"
+    },
+    {
+      "name": "InputEventWithModifiers",
+      "fullName": "Electron2D.InputEventWithModifiers",
+      "baseType": "Electron2D.InputEventFromWindow",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/InputEventWithModifiers.api.json"
+    },
+    {
+      "name": "InputMap",
+      "fullName": "Electron2D.InputMap",
+      "memberCount": 11,
+      "jsonPath": "data/api/electron2d/classes/InputMap.api.json"
+    },
+    {
+      "name": "IntervalTweener",
+      "fullName": "Electron2D.IntervalTweener",
+      "baseType": "Electron2D.Tweener",
+      "memberCount": 0,
+      "jsonPath": "data/api/electron2d/classes/IntervalTweener.api.json"
+    },
+    {
+      "name": "ItemList",
+      "fullName": "Electron2D.ItemList",
+      "baseType": "Electron2D.Control",
+      "memberCount": 29,
+      "jsonPath": "data/api/electron2d/classes/ItemList.api.json"
+    },
+    {
+      "name": "ItemList.SelectMode",
+      "fullName": "Electron2D.ItemList.SelectMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/ItemList.SelectMode.api.json"
+    },
+    {
+      "name": "JoyAxis",
+      "fullName": "Electron2D.JoyAxis",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/JoyAxis.api.json"
+    },
+    {
+      "name": "JoyButton",
+      "fullName": "Electron2D.JoyButton",
+      "memberCount": 22,
+      "jsonPath": "data/api/electron2d/classes/JoyButton.api.json"
+    },
+    {
+      "name": "Key",
+      "fullName": "Electron2D.Key",
+      "memberCount": 100,
+      "jsonPath": "data/api/electron2d/classes/Key.api.json"
+    },
+    {
+      "name": "KeyLocation",
+      "fullName": "Electron2D.KeyLocation",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/KeyLocation.api.json"
+    },
+    {
+      "name": "KinematicCollision2D",
+      "fullName": "Electron2D.KinematicCollision2D",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/KinematicCollision2D.api.json"
+    },
+    {
+      "name": "Label",
+      "fullName": "Electron2D.Label",
+      "baseType": "Electron2D.Control",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/Label.api.json"
+    },
+    {
+      "name": "LineEdit",
+      "fullName": "Electron2D.LineEdit",
+      "baseType": "Electron2D.Control",
+      "memberCount": 16,
+      "jsonPath": "data/api/electron2d/classes/LineEdit.api.json"
+    },
+    {
+      "name": "MarginContainer",
+      "fullName": "Electron2D.MarginContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/MarginContainer.api.json"
+    },
+    {
+      "name": "Material",
+      "fullName": "Electron2D.Material",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/Material.api.json"
+    },
+    {
+      "name": "Mathf",
+      "fullName": "Electron2D.Mathf",
+      "memberCount": 20,
+      "jsonPath": "data/api/electron2d/classes/Mathf.api.json"
+    },
+    {
+      "name": "MouseButton",
+      "fullName": "Electron2D.MouseButton",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/MouseButton.api.json"
+    },
+    {
+      "name": "MouseButtonMask",
+      "fullName": "Electron2D.MouseButtonMask",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/MouseButtonMask.api.json"
+    },
+    {
+      "name": "MouseFilter",
+      "fullName": "Electron2D.MouseFilter",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/MouseFilter.api.json"
+    },
+    {
+      "name": "NinePatchRect",
+      "fullName": "Electron2D.NinePatchRect",
+      "baseType": "Electron2D.Control",
+      "memberCount": 12,
+      "jsonPath": "data/api/electron2d/classes/NinePatchRect.api.json"
+    },
+    {
+      "name": "NinePatchRect.AxisStretchMode",
+      "fullName": "Electron2D.NinePatchRect.AxisStretchMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/NinePatchRect.AxisStretchMode.api.json"
+    },
+    {
+      "name": "Node",
+      "fullName": "Electron2D.Node",
+      "baseType": "Electron2D.Object",
+      "memberCount": 30,
+      "jsonPath": "data/api/electron2d/classes/Node.api.json"
+    },
+    {
+      "name": "Node2D",
+      "fullName": "Electron2D.Node2D",
+      "baseType": "Electron2D.CanvasItem",
+      "memberCount": 17,
+      "jsonPath": "data/api/electron2d/classes/Node2D.api.json"
+    },
+    {
+      "name": "NodePath",
+      "fullName": "Electron2D.NodePath",
+      "memberCount": 14,
+      "jsonPath": "data/api/electron2d/classes/NodePath.api.json"
+    },
+    {
+      "name": "Object",
+      "fullName": "Electron2D.Object",
+      "memberCount": 14,
+      "jsonPath": "data/api/electron2d/classes/Object.api.json"
+    },
+    {
+      "name": "PackedScene",
+      "fullName": "Electron2D.PackedScene",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/PackedScene.api.json"
+    },
+    {
+      "name": "Panel",
+      "fullName": "Electron2D.Panel",
+      "baseType": "Electron2D.Control",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/Panel.api.json"
+    },
+    {
+      "name": "PhysicsBody2D",
+      "fullName": "Electron2D.PhysicsBody2D",
+      "baseType": "Electron2D.CollisionObject2D",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/PhysicsBody2D.api.json"
+    },
+    {
+      "name": "PhysicsDirectSpaceState2D",
+      "fullName": "Electron2D.PhysicsDirectSpaceState2D",
+      "baseType": "Electron2D.Object",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/PhysicsDirectSpaceState2D.api.json"
+    },
+    {
+      "name": "PhysicsMaterial",
+      "fullName": "Electron2D.PhysicsMaterial",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/PhysicsMaterial.api.json"
+    },
+    {
+      "name": "PhysicsPointQueryParameters2D",
+      "fullName": "Electron2D.PhysicsPointQueryParameters2D",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/PhysicsPointQueryParameters2D.api.json"
+    },
+    {
+      "name": "PhysicsRayQueryParameters2D",
+      "fullName": "Electron2D.PhysicsRayQueryParameters2D",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/PhysicsRayQueryParameters2D.api.json"
+    },
+    {
+      "name": "PhysicsServer2D",
+      "fullName": "Electron2D.PhysicsServer2D",
+      "memberCount": 20,
+      "jsonPath": "data/api/electron2d/classes/PhysicsServer2D.api.json"
+    },
+    {
+      "name": "PhysicsServer2D.ProcessInfo",
+      "fullName": "Electron2D.PhysicsServer2D.ProcessInfo",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/PhysicsServer2D.ProcessInfo.api.json"
+    },
+    {
+      "name": "PhysicsServer2D.ShapeType",
+      "fullName": "Electron2D.PhysicsServer2D.ShapeType",
+      "memberCount": 9,
+      "jsonPath": "data/api/electron2d/classes/PhysicsServer2D.ShapeType.api.json"
+    },
+    {
+      "name": "PhysicsServer2D.SpaceParameter",
+      "fullName": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "memberCount": 9,
+      "jsonPath": "data/api/electron2d/classes/PhysicsServer2D.SpaceParameter.api.json"
+    },
+    {
+      "name": "PhysicsShapeQueryParameters2D",
+      "fullName": "Electron2D.PhysicsShapeQueryParameters2D",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/PhysicsShapeQueryParameters2D.api.json"
+    },
+    {
+      "name": "PopupMenu",
+      "fullName": "Electron2D.PopupMenu",
+      "baseType": "Electron2D.Control",
+      "memberCount": 23,
+      "jsonPath": "data/api/electron2d/classes/PopupMenu.api.json"
+    },
+    {
+      "name": "ProcessMode",
+      "fullName": "Electron2D.ProcessMode",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/ProcessMode.api.json"
+    },
+    {
+      "name": "ProgressBar",
+      "fullName": "Electron2D.ProgressBar",
+      "baseType": "Electron2D.Range",
+      "memberCount": 5,
+      "jsonPath": "data/api/electron2d/classes/ProgressBar.api.json"
+    },
+    {
+      "name": "PropertyTweener",
+      "fullName": "Electron2D.PropertyTweener",
+      "baseType": "Electron2D.Tweener",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/PropertyTweener.api.json"
+    },
+    {
+      "name": "RandomNumberGenerator",
+      "fullName": "Electron2D.RandomNumberGenerator",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 9,
+      "jsonPath": "data/api/electron2d/classes/RandomNumberGenerator.api.json"
+    },
+    {
+      "name": "Range",
+      "fullName": "Electron2D.Range",
+      "baseType": "Electron2D.Control",
+      "memberCount": 12,
+      "jsonPath": "data/api/electron2d/classes/Range.api.json"
+    },
+    {
+      "name": "RayCast2D",
+      "fullName": "Electron2D.RayCast2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 15,
+      "jsonPath": "data/api/electron2d/classes/RayCast2D.api.json"
+    },
+    {
+      "name": "Rect2",
+      "fullName": "Electron2D.Rect2",
+      "memberCount": 23,
+      "jsonPath": "data/api/electron2d/classes/Rect2.api.json"
+    },
+    {
+      "name": "Rect2I",
+      "fullName": "Electron2D.Rect2I",
+      "memberCount": 22,
+      "jsonPath": "data/api/electron2d/classes/Rect2I.api.json"
+    },
+    {
+      "name": "RectangleShape2D",
+      "fullName": "Electron2D.RectangleShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/RectangleShape2D.api.json"
+    },
+    {
+      "name": "RefCounted",
+      "fullName": "Electron2D.RefCounted",
+      "baseType": "Electron2D.Object",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/RefCounted.api.json"
+    },
+    {
+      "name": "RenderingServer",
+      "fullName": "Electron2D.RenderingServer",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/RenderingServer.api.json"
+    },
+    {
+      "name": "RenderingServer.RenderingFeature",
+      "fullName": "Electron2D.RenderingServer.RenderingFeature",
+      "memberCount": 15,
+      "jsonPath": "data/api/electron2d/classes/RenderingServer.RenderingFeature.api.json"
+    },
+    {
+      "name": "RenderingServer.RenderingProfile",
+      "fullName": "Electron2D.RenderingServer.RenderingProfile",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/RenderingServer.RenderingProfile.api.json"
+    },
+    {
+      "name": "Resource",
+      "fullName": "Electron2D.Resource",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/Resource.api.json"
+    },
+    {
+      "name": "ResourceUid",
+      "fullName": "Electron2D.ResourceUid",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/ResourceUid.api.json"
+    },
+    {
+      "name": "Rid",
+      "fullName": "Electron2D.Rid",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/Rid.api.json"
+    },
+    {
+      "name": "RigidBody2D",
+      "fullName": "Electron2D.RigidBody2D",
+      "baseType": "Electron2D.PhysicsBody2D",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/RigidBody2D.api.json"
+    },
+    {
+      "name": "RigidBody2D.CenterOfMassMode",
+      "fullName": "Electron2D.RigidBody2D.CenterOfMassMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/RigidBody2D.CenterOfMassMode.api.json"
+    },
+    {
+      "name": "RigidBody2D.FreezeMode",
+      "fullName": "Electron2D.RigidBody2D.FreezeMode",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/RigidBody2D.FreezeMode.api.json"
+    },
+    {
+      "name": "SceneTree",
+      "fullName": "Electron2D.SceneTree",
+      "baseType": "Electron2D.Object",
+      "memberCount": 12,
+      "jsonPath": "data/api/electron2d/classes/SceneTree.api.json"
+    },
+    {
+      "name": "ScrollContainer",
+      "fullName": "Electron2D.ScrollContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 14,
+      "jsonPath": "data/api/electron2d/classes/ScrollContainer.api.json"
+    },
+    {
+      "name": "ScrollHintMode",
+      "fullName": "Electron2D.ScrollHintMode",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/ScrollHintMode.api.json"
+    },
+    {
+      "name": "ScrollMode",
+      "fullName": "Electron2D.ScrollMode",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/ScrollMode.api.json"
+    },
+    {
+      "name": "SegmentShape2D",
+      "fullName": "Electron2D.SegmentShape2D",
+      "baseType": "Electron2D.Shape2D",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/SegmentShape2D.api.json"
+    },
+    {
+      "name": "Shader",
+      "fullName": "Electron2D.Shader",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/Shader.api.json"
+    },
+    {
+      "name": "Shader.Mode",
+      "fullName": "Electron2D.Shader.Mode",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/Shader.Mode.api.json"
+    },
+    {
+      "name": "ShaderMaterial",
+      "fullName": "Electron2D.ShaderMaterial",
+      "baseType": "Electron2D.Material",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/ShaderMaterial.api.json"
+    },
+    {
+      "name": "Shape2D",
+      "fullName": "Electron2D.Shape2D",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/Shape2D.api.json"
+    },
+    {
+      "name": "SignalAttribute",
+      "fullName": "Electron2D.SignalAttribute",
+      "baseType": "System.Attribute",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/SignalAttribute.api.json"
+    },
+    {
+      "name": "SizeFlags",
+      "fullName": "Electron2D.SizeFlags",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/SizeFlags.api.json"
+    },
+    {
+      "name": "Slider",
+      "fullName": "Electron2D.Slider",
+      "baseType": "Electron2D.Range",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/Slider.api.json"
+    },
+    {
+      "name": "Sprite2D",
+      "fullName": "Electron2D.Sprite2D",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 11,
+      "jsonPath": "data/api/electron2d/classes/Sprite2D.api.json"
+    },
+    {
+      "name": "SpriteFrames",
+      "fullName": "Electron2D.SpriteFrames",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 21,
+      "jsonPath": "data/api/electron2d/classes/SpriteFrames.api.json"
+    },
+    {
+      "name": "SpriteFrames.LoopMode",
+      "fullName": "Electron2D.SpriteFrames.LoopMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/SpriteFrames.LoopMode.api.json"
+    },
+    {
+      "name": "StaticBody2D",
+      "fullName": "Electron2D.StaticBody2D",
+      "baseType": "Electron2D.PhysicsBody2D",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/StaticBody2D.api.json"
+    },
+    {
+      "name": "StringName",
+      "fullName": "Electron2D.StringName",
+      "memberCount": 13,
+      "jsonPath": "data/api/electron2d/classes/StringName.api.json"
+    },
+    {
+      "name": "StyleBox",
+      "fullName": "Electron2D.StyleBox",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/StyleBox.api.json"
+    },
+    {
+      "name": "StyleBoxFlat",
+      "fullName": "Electron2D.StyleBoxFlat",
+      "baseType": "Electron2D.StyleBox",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/StyleBoxFlat.api.json"
+    },
+    {
+      "name": "TabContainer",
+      "fullName": "Electron2D.TabContainer",
+      "baseType": "Electron2D.Container",
+      "memberCount": 27,
+      "jsonPath": "data/api/electron2d/classes/TabContainer.api.json"
+    },
+    {
+      "name": "TabContainer.AlignmentMode",
+      "fullName": "Electron2D.TabContainer.AlignmentMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/TabContainer.AlignmentMode.api.json"
+    },
+    {
+      "name": "TabContainer.TabPosition",
+      "fullName": "Electron2D.TabContainer.TabPosition",
+      "memberCount": 2,
+      "jsonPath": "data/api/electron2d/classes/TabContainer.TabPosition.api.json"
+    },
+    {
+      "name": "Texture2D",
+      "fullName": "Electron2D.Texture2D",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/Texture2D.api.json"
+    },
+    {
+      "name": "TextureButton",
+      "fullName": "Electron2D.TextureButton",
+      "baseType": "Electron2D.BaseButton",
+      "memberCount": 11,
+      "jsonPath": "data/api/electron2d/classes/TextureButton.api.json"
+    },
+    {
+      "name": "TextureButton.StretchMode",
+      "fullName": "Electron2D.TextureButton.StretchMode",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/TextureButton.StretchMode.api.json"
+    },
+    {
+      "name": "TextureRect",
+      "fullName": "Electron2D.TextureRect",
+      "baseType": "Electron2D.Control",
+      "memberCount": 8,
+      "jsonPath": "data/api/electron2d/classes/TextureRect.api.json"
+    },
+    {
+      "name": "TextureRect.ExpandMode",
+      "fullName": "Electron2D.TextureRect.ExpandMode",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/TextureRect.ExpandMode.api.json"
+    },
+    {
+      "name": "TextureRect.StretchMode",
+      "fullName": "Electron2D.TextureRect.StretchMode",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/TextureRect.StretchMode.api.json"
+    },
+    {
+      "name": "Theme",
+      "fullName": "Electron2D.Theme",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 32,
+      "jsonPath": "data/api/electron2d/classes/Theme.api.json"
+    },
+    {
+      "name": "TileData",
+      "fullName": "Electron2D.TileData",
+      "baseType": "Electron2D.Object",
+      "memberCount": 12,
+      "jsonPath": "data/api/electron2d/classes/TileData.api.json"
+    },
+    {
+      "name": "TileMapLayer",
+      "fullName": "Electron2D.TileMapLayer",
+      "baseType": "Electron2D.Node2D",
+      "memberCount": 24,
+      "jsonPath": "data/api/electron2d/classes/TileMapLayer.api.json"
+    },
+    {
+      "name": "TileSet",
+      "fullName": "Electron2D.TileSet",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 9,
+      "jsonPath": "data/api/electron2d/classes/TileSet.api.json"
+    },
+    {
+      "name": "TileSetAtlasSource",
+      "fullName": "Electron2D.TileSetAtlasSource",
+      "baseType": "Electron2D.TileSetSource",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/TileSetAtlasSource.api.json"
+    },
+    {
+      "name": "TileSetSource",
+      "fullName": "Electron2D.TileSetSource",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 0,
+      "jsonPath": "data/api/electron2d/classes/TileSetSource.api.json"
+    },
+    {
+      "name": "ToolAttribute",
+      "fullName": "Electron2D.ToolAttribute",
+      "baseType": "System.Attribute",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/ToolAttribute.api.json"
+    },
+    {
+      "name": "Transform2D",
+      "fullName": "Electron2D.Transform2D",
+      "memberCount": 28,
+      "jsonPath": "data/api/electron2d/classes/Transform2D.api.json"
+    },
+    {
+      "name": "Translation",
+      "fullName": "Electron2D.Translation",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 6,
+      "jsonPath": "data/api/electron2d/classes/Translation.api.json"
+    },
+    {
+      "name": "TranslationServer",
+      "fullName": "Electron2D.TranslationServer",
+      "memberCount": 7,
+      "jsonPath": "data/api/electron2d/classes/TranslationServer.api.json"
+    },
+    {
+      "name": "Tree",
+      "fullName": "Electron2D.Tree",
+      "baseType": "Electron2D.Control",
+      "memberCount": 21,
+      "jsonPath": "data/api/electron2d/classes/Tree.api.json"
+    },
+    {
+      "name": "Tree.SelectMode",
+      "fullName": "Electron2D.Tree.SelectMode",
+      "memberCount": 3,
+      "jsonPath": "data/api/electron2d/classes/Tree.SelectMode.api.json"
+    },
+    {
+      "name": "TreeItem",
+      "fullName": "Electron2D.TreeItem",
+      "baseType": "Electron2D.Object",
+      "memberCount": 19,
+      "jsonPath": "data/api/electron2d/classes/TreeItem.api.json"
+    },
+    {
+      "name": "Tween",
+      "fullName": "Electron2D.Tween",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 18,
+      "jsonPath": "data/api/electron2d/classes/Tween.api.json"
+    },
+    {
+      "name": "Tween.EaseType",
+      "fullName": "Electron2D.Tween.EaseType",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/Tween.EaseType.api.json"
+    },
+    {
+      "name": "Tween.TransitionType",
+      "fullName": "Electron2D.Tween.TransitionType",
+      "memberCount": 12,
+      "jsonPath": "data/api/electron2d/classes/Tween.TransitionType.api.json"
+    },
+    {
+      "name": "Tweener",
+      "fullName": "Electron2D.Tweener",
+      "baseType": "Electron2D.RefCounted",
+      "memberCount": 0,
+      "jsonPath": "data/api/electron2d/classes/Tweener.api.json"
+    },
+    {
+      "name": "VBoxContainer",
+      "fullName": "Electron2D.VBoxContainer",
+      "baseType": "Electron2D.BoxContainer",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/VBoxContainer.api.json"
+    },
+    {
+      "name": "Variant",
+      "fullName": "Electron2D.Variant",
+      "memberCount": 55,
+      "jsonPath": "data/api/electron2d/classes/Variant.api.json"
+    },
+    {
+      "name": "Variant.Type",
+      "fullName": "Electron2D.Variant.Type",
+      "memberCount": 18,
+      "jsonPath": "data/api/electron2d/classes/Variant.Type.api.json"
+    },
+    {
+      "name": "Vector2",
+      "fullName": "Electron2D.Vector2",
+      "memberCount": 48,
+      "jsonPath": "data/api/electron2d/classes/Vector2.api.json"
+    },
+    {
+      "name": "Vector2I",
+      "fullName": "Electron2D.Vector2I",
+      "memberCount": 34,
+      "jsonPath": "data/api/electron2d/classes/Vector2I.api.json"
+    },
+    {
+      "name": "VerticalAlignment",
+      "fullName": "Electron2D.VerticalAlignment",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/VerticalAlignment.api.json"
+    },
+    {
+      "name": "Viewport",
+      "fullName": "Electron2D.Viewport",
+      "baseType": "Electron2D.Node",
+      "memberCount": 10,
+      "jsonPath": "data/api/electron2d/classes/Viewport.api.json"
+    },
+    {
+      "name": "ViewportTexture",
+      "fullName": "Electron2D.ViewportTexture",
+      "baseType": "Electron2D.Texture2D",
+      "memberCount": 4,
+      "jsonPath": "data/api/electron2d/classes/ViewportTexture.api.json"
+    },
+    {
+      "name": "World2D",
+      "fullName": "Electron2D.World2D",
+      "baseType": "Electron2D.Resource",
+      "memberCount": 1,
+      "jsonPath": "data/api/electron2d/classes/World2D.api.json"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TubeTrailMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.TubeTrailMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "TubeTrailMesh",
+    "documentationPath": "doc/classes/TubeTrailMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tubetrailmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CapBottom",
+      "kind": "Property",
+      "signature": "public bool CapBottom { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates a cap at the bottom of the tube. This can be set to [code]false[/code] to speed up generation and rendering when the cap is never seen by the camera.",
+      "defaultValue": "true",
+      "godotName": "cap_bottom",
+      "xmlDocId": "P:Godot.TubeTrailMesh.CapBottom",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "CapTop",
+      "kind": "Property",
+      "signature": "public bool CapTop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates a cap at the top of the tube. This can be set to [code]false[/code] to speed up generation and rendering when the cap is never seen by the camera.",
+      "defaultValue": "true",
+      "godotName": "cap_top",
+      "xmlDocId": "P:Godot.TubeTrailMesh.CapTop",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "Curve",
+      "kind": "Property",
+      "signature": "public Curve Curve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Determines the radius of the tube along its length. The radius of a particular section ring is obtained by multiplying the baseline [member radius] by the value of this curve at the given distance. For values smaller than [code]0[/code], the faces will be inverted. Should be a unit [Curve].",
+      "godotName": "curve",
+      "xmlDocId": "P:Godot.TubeTrailMesh.Curve",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "RadialSteps",
+      "kind": "Property",
+      "signature": "public int RadialSteps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of sides on the tube. For example, a value of [code]5[/code] means the tube will be pentagonal. Higher values result in a more detailed tube at the cost of performance.",
+      "defaultValue": "8",
+      "godotName": "radial_steps",
+      "xmlDocId": "P:Godot.TubeTrailMesh.RadialSteps",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The baseline radius of the tube. The radius of a particular section ring is obtained by multiplying this radius by the value of the [member curve] at the given distance.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.TubeTrailMesh.Radius",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "SectionLength",
+      "kind": "Property",
+      "signature": "public float SectionLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of a section of the tube.",
+      "defaultValue": "0.2",
+      "godotName": "section_length",
+      "xmlDocId": "P:Godot.TubeTrailMesh.SectionLength",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "SectionRings",
+      "kind": "Property",
+      "signature": "public int SectionRings { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of rings in a section. The [member curve] is sampled on each ring to determine its radius. Higher values result in a more detailed tube at the cost of performance.",
+      "defaultValue": "3",
+      "godotName": "section_rings",
+      "xmlDocId": "P:Godot.TubeTrailMesh.SectionRings",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    },
+    {
+      "name": "Sections",
+      "kind": "Property",
+      "signature": "public int Sections { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The total number of sections on the tube.",
+      "defaultValue": "5",
+      "godotName": "sections",
+      "xmlDocId": "P:Godot.TubeTrailMesh.Sections",
+      "sourcePath": "doc/classes/TubeTrailMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TubeTrailMesh.xml",
+      "sha256": "21928a7921acdd7aff7ae6928da071b182658a32a2eace1dbfa15676a0a06fbe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

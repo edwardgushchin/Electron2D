@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDUniform",
+    "namespace": "Godot",
+    "fullName": "Godot.RDUniform",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDUniform",
+    "documentationPath": "doc/classes/RDUniform.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rduniform.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddId",
+      "kind": "Method",
+      "signature": "public void AddId(RID id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Binds the given id to the uniform. The data associated with the id is then used when the uniform is passed to a shader.",
+      "godotName": "add_id",
+      "xmlDocId": "M:Godot.RDUniform.AddId(RID)",
+      "sourcePath": "doc/classes/RDUniform.xml"
+    },
+    {
+      "name": "ClearIds",
+      "kind": "Method",
+      "signature": "public void ClearIds()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Unbinds all ids currently bound to the uniform.",
+      "godotName": "clear_ids",
+      "xmlDocId": "M:Godot.RDUniform.ClearIds",
+      "sourcePath": "doc/classes/RDUniform.xml"
+    },
+    {
+      "name": "GetIds",
+      "kind": "Method",
+      "signature": "public RID[] GetIds()",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "Returns an array of all ids currently bound to the uniform.",
+      "godotName": "get_ids",
+      "xmlDocId": "M:Godot.RDUniform.GetIds",
+      "sourcePath": "doc/classes/RDUniform.xml"
+    },
+    {
+      "name": "Binding",
+      "kind": "Property",
+      "signature": "public int Binding { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The uniform\u0027s binding.",
+      "defaultValue": "0",
+      "godotName": "binding",
+      "xmlDocId": "P:Godot.RDUniform.Binding",
+      "sourcePath": "doc/classes/RDUniform.xml"
+    },
+    {
+      "name": "UniformType",
+      "kind": "Property",
+      "signature": "public int UniformType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The uniform\u0027s data type.",
+      "defaultValue": "3",
+      "godotName": "uniform_type",
+      "xmlDocId": "P:Godot.RDUniform.UniformType",
+      "sourcePath": "doc/classes/RDUniform.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDUniform.xml",
+      "sha256": "b6d712956aa2520308bb5f15f45224177214807126c1f29e67c41d03e376aeb1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

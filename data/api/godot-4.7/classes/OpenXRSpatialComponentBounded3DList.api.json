@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentBounded3DList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentBounded3DList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentBounded3DList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentBounded3DList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentbounded3dlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCenterPose",
+      "kind": "Method",
+      "signature": "public Transform3D GetCenterPose(int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the center of our bounding box for the entity at this [param index].",
+      "godotName": "get_center_pose",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentBounded3DList.GetCenterPose(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentBounded3DList.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector3 GetSize(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the size of our bounding box for the entity at this [param index].",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentBounded3DList.GetSize(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentBounded3DList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentBounded3DList.xml",
+      "sha256": "7832de5bf1841f18077de24421bc9ee22b72dc9d7f8e5d9402ae95a8bec0d402"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

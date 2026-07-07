@@ -1,0 +1,653 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectSpaceState3DExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsDirectSpaceState3DExtension",
+    "kind": "class",
+    "baseType": "PhysicsDirectSpaceState3D",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectSpaceState3DExtension",
+    "documentationPath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsdirectspacestate3dextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CastMotion",
+      "kind": "Method",
+      "signature": "public bool _CastMotion(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, float* rClosestSafe, float* rClosestUnsafe, PhysicsServer3DExtensionShapeRestInfo* rInfo)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_closest_safe",
+          "type": "float*"
+        },
+        {
+          "name": "r_closest_unsafe",
+          "type": "float*"
+        },
+        {
+          "name": "r_info",
+          "type": "PhysicsServer3DExtensionShapeRestInfo*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_cast_motion",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._CastMotion(RID,Transform3D,Vector3,float,int,bool,bool,float*,float*,PhysicsServer3DExtensionShapeRestInfo*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_CollideShape",
+      "kind": "Method",
+      "signature": "public bool _CollideShape(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, void* rResults, int maxResults, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_collide_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._CollideShape(RID,Transform3D,Vector3,float,int,bool,bool,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_GetClosestPointToObjectVolume",
+      "kind": "Method",
+      "signature": "public Vector3 _GetClosestPointToObjectVolume(RID @object, Vector3 point)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "RID"
+        },
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_closest_point_to_object_volume",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._GetClosestPointToObjectVolume(RID,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectPoint",
+      "kind": "Method",
+      "signature": "public int _IntersectPoint(Vector3 position, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeResult* rResults, int maxResults)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_results",
+          "type": "PhysicsServer3DExtensionShapeResult*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_point",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectPoint(Vector3,int,bool,bool,PhysicsServer3DExtensionShapeResult*,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectRay",
+      "kind": "Method",
+      "signature": "public bool _IntersectRay(Vector3 from, Vector3 to, int collisionMask, bool collideWithBodies, bool collideWithAreas, bool hitFromInside, bool hitBackFaces, bool pickRay, PhysicsServer3DExtensionRayResult* rResult)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "to",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "hit_from_inside",
+          "type": "bool"
+        },
+        {
+          "name": "hit_back_faces",
+          "type": "bool"
+        },
+        {
+          "name": "pick_ray",
+          "type": "bool"
+        },
+        {
+          "name": "r_result",
+          "type": "PhysicsServer3DExtensionRayResult*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_ray",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectRay(Vector3,Vector3,int,bool,bool,bool,bool,bool,PhysicsServer3DExtensionRayResult*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectShape",
+      "kind": "Method",
+      "signature": "public int _IntersectShape(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeResult* rResultCount, int maxResults)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_result_count",
+          "type": "PhysicsServer3DExtensionShapeResult*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectShape(RID,Transform3D,Vector3,float,int,bool,bool,PhysicsServer3DExtensionShapeResult*,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_RestInfo",
+      "kind": "Method",
+      "signature": "public bool _RestInfo(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeRestInfo* rRestInfo)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_rest_info",
+          "type": "PhysicsServer3DExtensionShapeRestInfo*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_rest_info",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._RestInfo(RID,Transform3D,Vector3,float,int,bool,bool,PhysicsServer3DExtensionShapeRestInfo*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "IsBodyExcludedFromQuery",
+      "kind": "Method",
+      "signature": "public bool IsBodyExcludedFromQuery(RID body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "",
+      "godotName": "is_body_excluded_from_query",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension.IsBodyExcludedFromQuery(RID)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CastMotion",
+      "kind": "Method",
+      "signature": "public bool _CastMotion(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, float* rClosestSafe, float* rClosestUnsafe, PhysicsServer3DExtensionShapeRestInfo* rInfo)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_closest_safe",
+          "type": "float*"
+        },
+        {
+          "name": "r_closest_unsafe",
+          "type": "float*"
+        },
+        {
+          "name": "r_info",
+          "type": "PhysicsServer3DExtensionShapeRestInfo*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_cast_motion",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._CastMotion(RID,Transform3D,Vector3,float,int,bool,bool,float*,float*,PhysicsServer3DExtensionShapeRestInfo*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_CollideShape",
+      "kind": "Method",
+      "signature": "public bool _CollideShape(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, void* rResults, int maxResults, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_collide_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._CollideShape(RID,Transform3D,Vector3,float,int,bool,bool,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_GetClosestPointToObjectVolume",
+      "kind": "Method",
+      "signature": "public Vector3 _GetClosestPointToObjectVolume(RID @object, Vector3 point)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "RID"
+        },
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_closest_point_to_object_volume",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._GetClosestPointToObjectVolume(RID,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectPoint",
+      "kind": "Method",
+      "signature": "public int _IntersectPoint(Vector3 position, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeResult* rResults, int maxResults)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_results",
+          "type": "PhysicsServer3DExtensionShapeResult*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_point",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectPoint(Vector3,int,bool,bool,PhysicsServer3DExtensionShapeResult*,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectRay",
+      "kind": "Method",
+      "signature": "public bool _IntersectRay(Vector3 from, Vector3 to, int collisionMask, bool collideWithBodies, bool collideWithAreas, bool hitFromInside, bool hitBackFaces, bool pickRay, PhysicsServer3DExtensionRayResult* rResult)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "to",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "hit_from_inside",
+          "type": "bool"
+        },
+        {
+          "name": "hit_back_faces",
+          "type": "bool"
+        },
+        {
+          "name": "pick_ray",
+          "type": "bool"
+        },
+        {
+          "name": "r_result",
+          "type": "PhysicsServer3DExtensionRayResult*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_ray",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectRay(Vector3,Vector3,int,bool,bool,bool,bool,bool,PhysicsServer3DExtensionRayResult*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_IntersectShape",
+      "kind": "Method",
+      "signature": "public int _IntersectShape(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeResult* rResultCount, int maxResults)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_result_count",
+          "type": "PhysicsServer3DExtensionShapeResult*"
+        },
+        {
+          "name": "max_results",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_intersect_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._IntersectShape(RID,Transform3D,Vector3,float,int,bool,bool,PhysicsServer3DExtensionShapeResult*,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    },
+    {
+      "name": "_RestInfo",
+      "kind": "Method",
+      "signature": "public bool _RestInfo(RID shapeRid, Transform3D transform, Vector3 motion, float margin, int collisionMask, bool collideWithBodies, bool collideWithAreas, PhysicsServer3DExtensionShapeRestInfo* rRestInfo)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_rid",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int"
+        },
+        {
+          "name": "collide_with_bodies",
+          "type": "bool"
+        },
+        {
+          "name": "collide_with_areas",
+          "type": "bool"
+        },
+        {
+          "name": "r_rest_info",
+          "type": "PhysicsServer3DExtensionShapeRestInfo*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_rest_info",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState3DExtension._RestInfo(RID,Transform3D,Vector3,float,int,bool,bool,PhysicsServer3DExtensionShapeRestInfo*)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState3DExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsDirectSpaceState3DExtension.xml",
+      "sha256": "0411754d0ed6ad63c13e9c8988582d0e6fc817bc7b1e20acfbfbff5b02b7cdf0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

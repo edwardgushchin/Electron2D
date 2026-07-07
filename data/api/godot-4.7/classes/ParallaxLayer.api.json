@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ParallaxLayer",
+    "namespace": "Godot",
+    "fullName": "Godot.ParallaxLayer",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "ParallaxLayer",
+    "documentationPath": "doc/classes/ParallaxLayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_parallaxlayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MotionMirroring",
+      "kind": "Property",
+      "signature": "public Vector2 MotionMirroring { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The interval, in pixels, at which the [ParallaxLayer] is drawn repeatedly. Useful for creating an infinitely scrolling background. If an axis is set to [code]0[/code], the [ParallaxLayer] will be drawn only once along that direction. [b]Note:[/b] If you want the repetition to pixel-perfect match a [Texture2D] displayed by a child node, you should account for any scale applied to the texture when defining this interval. For example, if you use a child [Sprite2D] scaled to [code]0.5[/code] to display a 600x600 texture, and want this sprite to be repeated continuously horizontally, you should set the mirroring to [code]Vector2(300, 0)[/code]. [b]Note:[/b] If the length of the viewport axis is bigger than twice the repeated axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the layer at any given time. The visibility window is calculated from the parent [ParallaxBackground]\u0027s position, not the layer\u0027s own position. So, if you use mirroring, [b]do not[/b] change the [ParallaxLayer] position relative to its parent. Instead, if you need to adjust the background\u0027s position, set the [member CanvasLayer.offset] property in the parent [ParallaxBackground]. [b]Note:[/b] Despite the name, the layer will not be mirrored, it will only be repeated.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "motion_mirroring",
+      "xmlDocId": "P:Godot.ParallaxLayer.MotionMirroring",
+      "sourcePath": "doc/classes/ParallaxLayer.xml"
+    },
+    {
+      "name": "MotionOffset",
+      "kind": "Property",
+      "signature": "public Vector2 MotionOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The ParallaxLayer\u0027s offset relative to the parent ParallaxBackground\u0027s [member ParallaxBackground.scroll_offset].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "motion_offset",
+      "xmlDocId": "P:Godot.ParallaxLayer.MotionOffset",
+      "sourcePath": "doc/classes/ParallaxLayer.xml"
+    },
+    {
+      "name": "MotionScale",
+      "kind": "Property",
+      "signature": "public Vector2 MotionScale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Multiplies the ParallaxLayer\u0027s motion. If an axis is set to [code]0[/code], it will not scroll.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "motion_scale",
+      "xmlDocId": "P:Godot.ParallaxLayer.MotionScale",
+      "sourcePath": "doc/classes/ParallaxLayer.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.ParallaxLayer.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/ParallaxLayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ParallaxLayer.xml",
+      "sha256": "21c9447508f8d86ab85e1d6dddfb3ec353c9ddac5faa015f228400afca34204c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

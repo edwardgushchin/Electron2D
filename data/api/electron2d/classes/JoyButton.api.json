@@ -1,0 +1,432 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JoyButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.JoyButton",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "JoyButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "A",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton A",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the bottom face button.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.JoyButton.A",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton B",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the right face button.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.JoyButton.B",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Back",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Back",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the back or select button.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.JoyButton.Back",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadDown",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton DpadDown",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the directional pad down button.",
+      "value": "12",
+      "xmlDocId": "F:Electron2D.JoyButton.DpadDown",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadLeft",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton DpadLeft",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the directional pad left button.",
+      "value": "13",
+      "xmlDocId": "F:Electron2D.JoyButton.DpadLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadRight",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton DpadRight",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the directional pad right button.",
+      "value": "14",
+      "xmlDocId": "F:Electron2D.JoyButton.DpadRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadUp",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton DpadUp",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the directional pad up button.",
+      "value": "11",
+      "xmlDocId": "F:Electron2D.JoyButton.DpadUp",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Guide",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Guide",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the guide, home or system button.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.JoyButton.Guide",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Invalid",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Invalid",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents an invalid or unmapped gamepad button.",
+      "value": "-1",
+      "xmlDocId": "F:Electron2D.JoyButton.Invalid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LeftShoulder",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton LeftShoulder",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the left shoulder button.",
+      "value": "9",
+      "xmlDocId": "F:Electron2D.JoyButton.LeftShoulder",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LeftStick",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton LeftStick",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents pressing the left stick.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.JoyButton.LeftStick",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Misc1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Misc1",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the first miscellaneous gamepad button.",
+      "value": "15",
+      "xmlDocId": "F:Electron2D.JoyButton.Misc1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Paddle1",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the first paddle button.",
+      "value": "16",
+      "xmlDocId": "F:Electron2D.JoyButton.Paddle1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Paddle2",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the second paddle button.",
+      "value": "17",
+      "xmlDocId": "F:Electron2D.JoyButton.Paddle2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle3",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Paddle3",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the third paddle button.",
+      "value": "18",
+      "xmlDocId": "F:Electron2D.JoyButton.Paddle3",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle4",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Paddle4",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the fourth paddle button.",
+      "value": "19",
+      "xmlDocId": "F:Electron2D.JoyButton.Paddle4",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RightShoulder",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton RightShoulder",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the right shoulder button.",
+      "value": "10",
+      "xmlDocId": "F:Electron2D.JoyButton.RightShoulder",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RightStick",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton RightStick",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents pressing the right stick.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.JoyButton.RightStick",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Start",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Start",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the start or menu button.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.JoyButton.Start",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Touchpad",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Touchpad",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the touchpad click button.",
+      "value": "20",
+      "xmlDocId": "F:Electron2D.JoyButton.Touchpad",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton X",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the left face button.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.JoyButton.X",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.JoyButton Y",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Represents the top face button.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.JoyButton.Y",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "A",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Represents the bottom face button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Represents the right face button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Back",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Represents the back or select button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadDown",
+      "value": "12",
+      "kind": "EnumValue",
+      "summary": "Represents the directional pad down button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadLeft",
+      "value": "13",
+      "kind": "EnumValue",
+      "summary": "Represents the directional pad left button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadRight",
+      "value": "14",
+      "kind": "EnumValue",
+      "summary": "Represents the directional pad right button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DpadUp",
+      "value": "11",
+      "kind": "EnumValue",
+      "summary": "Represents the directional pad up button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Guide",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Represents the guide, home or system button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Invalid",
+      "value": "-1",
+      "kind": "EnumValue",
+      "summary": "Represents an invalid or unmapped gamepad button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LeftShoulder",
+      "value": "9",
+      "kind": "EnumValue",
+      "summary": "Represents the left shoulder button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LeftStick",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Represents pressing the left stick.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Misc1",
+      "value": "15",
+      "kind": "EnumValue",
+      "summary": "Represents the first miscellaneous gamepad button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle1",
+      "value": "16",
+      "kind": "EnumValue",
+      "summary": "Represents the first paddle button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle2",
+      "value": "17",
+      "kind": "EnumValue",
+      "summary": "Represents the second paddle button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle3",
+      "value": "18",
+      "kind": "EnumValue",
+      "summary": "Represents the third paddle button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paddle4",
+      "value": "19",
+      "kind": "EnumValue",
+      "summary": "Represents the fourth paddle button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RightShoulder",
+      "value": "10",
+      "kind": "EnumValue",
+      "summary": "Represents the right shoulder button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RightStick",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Represents pressing the right stick.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Start",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Represents the start or menu button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Touchpad",
+      "value": "20",
+      "kind": "EnumValue",
+      "summary": "Represents the touchpad click button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Represents the left face button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Represents the top face button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

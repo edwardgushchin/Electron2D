@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRHand",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRHand",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "OpenXRHand",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRHand.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrhand.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BoneUpdate",
+      "kind": "Property",
+      "signature": "public int BoneUpdate { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specify the type of updates to perform on the bone.",
+      "defaultValue": "0",
+      "godotName": "bone_update",
+      "xmlDocId": "P:Godot.OpenXRHand.BoneUpdate",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "Hand",
+      "kind": "Property",
+      "signature": "public int Hand { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies whether this node tracks the left or right hand of the player.",
+      "defaultValue": "0",
+      "godotName": "hand",
+      "xmlDocId": "P:Godot.OpenXRHand.Hand",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "HandSkeleton",
+      "kind": "Property",
+      "signature": "public NodePath HandSkeleton { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Set a [Skeleton3D] node for which the pose positions will be updated.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "hand_skeleton",
+      "xmlDocId": "P:Godot.OpenXRHand.HandSkeleton",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "MotionRange",
+      "kind": "Property",
+      "signature": "public int MotionRange { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set the motion range (if supported) limiting the hand motion.",
+      "defaultValue": "0",
+      "godotName": "motion_range",
+      "xmlDocId": "P:Godot.OpenXRHand.MotionRange",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "SkeletonRig",
+      "kind": "Property",
+      "signature": "public int SkeletonRig { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set the type of skeleton rig the [member hand_skeleton] is compliant with.",
+      "defaultValue": "0",
+      "godotName": "skeleton_rig",
+      "xmlDocId": "P:Godot.OpenXRHand.SkeletonRig",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BoneUpdate",
+      "values": [
+        {
+          "name": "BONE_UPDATE_FULL",
+          "value": "0",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeletons bones are fully updated (both position and rotation) to match the tracked bones.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "BONE_UPDATE_MAX",
+          "value": "2",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "Maximum supported bone update mode.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "BONE_UPDATE_ROTATION_ONLY",
+          "value": "1",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeletons bones are only rotated to align with the tracked bones, preserving bone length.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        }
+      ]
+    },
+    {
+      "name": "Hands",
+      "values": [
+        {
+          "name": "HAND_LEFT",
+          "value": "0",
+          "enum": "Hands",
+          "kind": "EnumValue",
+          "summary": "Tracking the player\u0027s left hand.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "HAND_MAX",
+          "value": "2",
+          "enum": "Hands",
+          "kind": "EnumValue",
+          "summary": "Maximum supported hands.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "HAND_RIGHT",
+          "value": "1",
+          "enum": "Hands",
+          "kind": "EnumValue",
+          "summary": "Tracking the player\u0027s right hand.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        }
+      ]
+    },
+    {
+      "name": "MotionRange",
+      "values": [
+        {
+          "name": "MOTION_RANGE_CONFORM_TO_CONTROLLER",
+          "value": "1",
+          "enum": "MotionRange",
+          "kind": "EnumValue",
+          "summary": "When player grips, hand skeleton conforms to the controller the player is holding.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "MOTION_RANGE_MAX",
+          "value": "2",
+          "enum": "MotionRange",
+          "kind": "EnumValue",
+          "summary": "Maximum supported motion ranges.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "MOTION_RANGE_UNOBSTRUCTED",
+          "value": "0",
+          "enum": "MotionRange",
+          "kind": "EnumValue",
+          "summary": "When player grips, hand skeleton will form a full fist.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        }
+      ]
+    },
+    {
+      "name": "SkeletonRig",
+      "values": [
+        {
+          "name": "SKELETON_RIG_HUMANOID",
+          "value": "1",
+          "enum": "SkeletonRig",
+          "kind": "EnumValue",
+          "summary": "A [SkeletonProfileHumanoid] compliant skeleton.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "SKELETON_RIG_MAX",
+          "value": "2",
+          "enum": "SkeletonRig",
+          "kind": "EnumValue",
+          "summary": "Maximum supported hands.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        },
+        {
+          "name": "SKELETON_RIG_OPENXR",
+          "value": "0",
+          "enum": "SkeletonRig",
+          "kind": "EnumValue",
+          "summary": "An OpenXR compliant skeleton.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HAND_LEFT",
+      "value": "0",
+      "enum": "Hands",
+      "kind": "EnumValue",
+      "summary": "Tracking the player\u0027s left hand.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "HAND_RIGHT",
+      "value": "1",
+      "enum": "Hands",
+      "kind": "EnumValue",
+      "summary": "Tracking the player\u0027s right hand.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "HAND_MAX",
+      "value": "2",
+      "enum": "Hands",
+      "kind": "EnumValue",
+      "summary": "Maximum supported hands.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "MOTION_RANGE_UNOBSTRUCTED",
+      "value": "0",
+      "enum": "MotionRange",
+      "kind": "EnumValue",
+      "summary": "When player grips, hand skeleton will form a full fist.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "MOTION_RANGE_CONFORM_TO_CONTROLLER",
+      "value": "1",
+      "enum": "MotionRange",
+      "kind": "EnumValue",
+      "summary": "When player grips, hand skeleton conforms to the controller the player is holding.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "MOTION_RANGE_MAX",
+      "value": "2",
+      "enum": "MotionRange",
+      "kind": "EnumValue",
+      "summary": "Maximum supported motion ranges.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "SKELETON_RIG_OPENXR",
+      "value": "0",
+      "enum": "SkeletonRig",
+      "kind": "EnumValue",
+      "summary": "An OpenXR compliant skeleton.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "SKELETON_RIG_HUMANOID",
+      "value": "1",
+      "enum": "SkeletonRig",
+      "kind": "EnumValue",
+      "summary": "A [SkeletonProfileHumanoid] compliant skeleton.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "SKELETON_RIG_MAX",
+      "value": "2",
+      "enum": "SkeletonRig",
+      "kind": "EnumValue",
+      "summary": "Maximum supported hands.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "BONE_UPDATE_FULL",
+      "value": "0",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeletons bones are fully updated (both position and rotation) to match the tracked bones.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "BONE_UPDATE_ROTATION_ONLY",
+      "value": "1",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeletons bones are only rotated to align with the tracked bones, preserving bone length.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    },
+    {
+      "name": "BONE_UPDATE_MAX",
+      "value": "2",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "Maximum supported bone update mode.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHand.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRHand.xml",
+      "sha256": "de2065158c0a67fa737496ba3576792ef6fb931130e96106fa69f45ecff3517e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

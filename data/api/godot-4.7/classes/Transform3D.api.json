@@ -1,0 +1,567 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Transform3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Transform3D",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Transform3D",
+    "documentationPath": "doc/classes/Transform3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_transform3d.html"
+  },
+  "constructors": [
+    {
+      "name": "Transform3D",
+      "kind": "Constructor",
+      "signature": "public Transform3D()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Constructs a [Transform3D] identical to [constant IDENTITY]. [b]Note:[/b] In C#, this constructs a [Transform3D] with its [member origin] and the components of its [member basis] set to [constant Vector3.ZERO].",
+      "godotName": "Transform3D",
+      "xmlDocId": "M:Godot.Transform3D.#ctor",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Transform3D",
+      "kind": "Constructor",
+      "signature": "public Transform3D(Transform3D from)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Constructs a [Transform3D] as a copy of the given [Transform3D].",
+      "godotName": "Transform3D",
+      "xmlDocId": "M:Godot.Transform3D.#ctor(Transform3D)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Transform3D",
+      "kind": "Constructor",
+      "signature": "public Transform3D(Basis basis, Vector3 origin)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "basis",
+          "type": "Basis"
+        },
+        {
+          "name": "origin",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a [Transform3D] from a [Basis] and [Vector3].",
+      "godotName": "Transform3D",
+      "xmlDocId": "M:Godot.Transform3D.#ctor(Basis,Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Transform3D",
+      "kind": "Constructor",
+      "signature": "public Transform3D(Projection from)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Constructs a [Transform3D] from a [Projection]. Because [Transform3D] is a 3\u00D74 matrix and [Projection] is a 4\u00D74 matrix, this operation trims the last row of the projection matrix ([code]from.x.w[/code], [code]from.y.w[/code], [code]from.z.w[/code], and [code]from.w.w[/code] are not included in the new transform).",
+      "godotName": "Transform3D",
+      "xmlDocId": "M:Godot.Transform3D.#ctor(Projection)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Transform3D",
+      "kind": "Constructor",
+      "signature": "public Transform3D(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 origin)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "x_axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "y_axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "z_axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "origin",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a [Transform3D] from four [Vector3] values (also called matrix columns). The first three arguments are the [member basis]\u0027s axes ([member Basis.x], [member Basis.y], and [member Basis.z]).",
+      "godotName": "Transform3D",
+      "xmlDocId": "M:Godot.Transform3D.#ctor(Vector3,Vector3,Vector3,Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "AffineInverse",
+      "kind": "Method",
+      "signature": "public Transform3D AffineInverse()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the inverted version of this transform. Unlike [method inverse], this method works with almost any [member basis], including non-uniform ones, but is slower. See also [method Basis.inverse]. [b]Note:[/b] For this method to return correctly, the transform\u0027s [member basis] needs to have a determinant that is not exactly [code]0.0[/code] (see [method Basis.determinant]).",
+      "godotName": "affine_inverse",
+      "xmlDocId": "M:Godot.Transform3D.AffineInverse",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "InterpolateWith",
+      "kind": "Method",
+      "signature": "public Transform3D InterpolateWith(Transform3D xform, float weight)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the result of the linear interpolation between this transform and [param xform] by the given [param weight]. The [param weight] should be between [code]0.0[/code] and [code]1.0[/code] (inclusive). Values outside this range are allowed and can be used to perform [i]extrapolation[/i] instead.",
+      "godotName": "interpolate_with",
+      "xmlDocId": "M:Godot.Transform3D.InterpolateWith(Transform3D,float)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Transform3D Inverse()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Invertible_matrix]inverted version of this transform[/url]. See also [method Basis.inverse]. [b]Note:[/b] For this method to return correctly, the transform\u0027s [member basis] needs to be [i]orthonormal[/i] (see [method orthonormalized]). That means the basis should only represent a rotation. If it does not, use [method affine_inverse] instead.",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Transform3D.Inverse",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Transform3D xform)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this transform and [param xform] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Transform3D.IsEqualApprox(Transform3D)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this transform is finite, by calling [method @GlobalScope.is_finite] on each component.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Transform3D.IsFinite",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "LookingAt",
+      "kind": "Method",
+      "signature": "public Transform3D LookingAt(Vector3 target, Vector3 up, bool useModelFront)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Vector3"
+        },
+        {
+          "name": "up",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 1, 0)"
+        },
+        {
+          "name": "use_model_front",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a copy of this transform rotated so that the forward axis (-Z) points towards the [param target] position. The up axis (\u002BY) points as close to the [param up] vector as possible while staying perpendicular to the forward axis. The resulting transform is orthonormalized. The existing rotation, scale, and skew information from the original transform is discarded. The [param target] and [param up] vectors cannot be zero, cannot be parallel to each other, and are defined in global/parent space. If [param use_model_front] is [code]true[/code], the \u002BZ axis (asset front) is treated as forward (implies \u002BX is left) and points toward the [param target] position. By default, the -Z axis (camera forward) is treated as forward (implies \u002BX is right).",
+      "godotName": "looking_at",
+      "xmlDocId": "M:Godot.Transform3D.LookingAt(Vector3,Vector3,bool)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Orthonormalized",
+      "kind": "Method",
+      "signature": "public Transform3D Orthonormalized()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns a copy of this transform with its [member basis] orthonormalized. An orthonormal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]normalized[/i] (the axes have a length of [code]1.0[/code]), which also means it can only represent a rotation. See also [method Basis.orthonormalized].",
+      "godotName": "orthonormalized",
+      "xmlDocId": "M:Godot.Transform3D.Orthonormalized",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Rotated",
+      "kind": "Method",
+      "signature": "public Transform3D Rotated(Vector3 axis, float angle)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this transform rotated around the given [param axis] by the given [param angle] (in radians). The [param axis] must be a normalized vector (see [method Vector3.normalized]). If [param angle] is positive, the basis is rotated counter-clockwise around the axis. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the left, i.e., [code]R * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "rotated",
+      "xmlDocId": "M:Godot.Transform3D.Rotated(Vector3,float)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "RotatedLocal",
+      "kind": "Method",
+      "signature": "public Transform3D RotatedLocal(Vector3 axis, float angle)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this transform rotated around the given [param axis] by the given [param angle] (in radians). The [param axis] must be a normalized vector in the transform\u0027s local coordinate system. For example, to rotate around the local X-axis, use [constant Vector3.RIGHT]. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the right, i.e., [code]X * R[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "rotated_local",
+      "xmlDocId": "M:Godot.Transform3D.RotatedLocal(Vector3,float)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Scaled",
+      "kind": "Method",
+      "signature": "public Transform3D Scaled(Vector3 scale)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns a copy of this transform scaled by the given [param scale] factor. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the left, i.e., [code]S * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "scaled",
+      "xmlDocId": "M:Godot.Transform3D.Scaled(Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "ScaledLocal",
+      "kind": "Method",
+      "signature": "public Transform3D ScaledLocal(Vector3 scale)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns a copy of this transform scaled by the given [param scale] factor. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the right, i.e., [code]X * S[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "scaled_local",
+      "xmlDocId": "M:Godot.Transform3D.ScaledLocal(Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Translated",
+      "kind": "Method",
+      "signature": "public Transform3D Translated(Vector3 offset)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns a copy of this transform translated by the given [param offset]. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the left, i.e., [code]T * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "translated",
+      "xmlDocId": "M:Godot.Transform3D.Translated(Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "TranslatedLocal",
+      "kind": "Method",
+      "signature": "public Transform3D TranslatedLocal(Vector3 offset)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns a copy of this transform translated by the given [param offset]. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the right, i.e., [code]X * T[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "translated_local",
+      "xmlDocId": "M:Godot.Transform3D.TranslatedLocal(Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Basis",
+      "kind": "Property",
+      "signature": "public Basis Basis { get; set; }",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "The [Basis] of this transform. It is composed by 3 axes ([member Basis.x], [member Basis.y], and [member Basis.z]). Together, these represent the transform\u0027s rotation, scale, and shear.",
+      "defaultValue": "Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)",
+      "godotName": "basis",
+      "xmlDocId": "P:Godot.Transform3D.Basis",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "Origin",
+      "kind": "Property",
+      "signature": "public Vector3 Origin { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The translation offset of this transform. In 3D space, this can be seen as the position.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "origin",
+      "xmlDocId": "P:Godot.Transform3D.Origin",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "IDENTITY",
+      "value": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "The identity [Transform3D]. This is a transform with no translation, no rotation, and a scale of [constant Vector3.ONE]. Its [member basis] is equal to [constant Basis.IDENTITY]. This also means that: - Its [member Basis.x] points right ([constant Vector3.RIGHT]); - Its [member Basis.y] points up ([constant Vector3.UP]); - Its [member Basis.z] points back ([constant Vector3.BACK]). [codeblock] var transform = Transform3D.IDENTITY var basis = transform.basis print(\u0022| X | Y | Z | Origin\u0022) print(\u0022| %.f | %.f | %.f | %.f\u0022 % [basis.x.x, basis.y.x, basis.z.x, transform.origin.x]) print(\u0022| %.f | %.f | %.f | %.f\u0022 % [basis.x.y, basis.y.y, basis.z.y, transform.origin.y]) print(\u0022| %.f | %.f | %.f | %.f\u0022 % [basis.x.z, basis.y.z, basis.z.z, transform.origin.z]) # Prints: # | X | Y | Z | Origin # | 1 | 0 | 0 | 0 # | 0 | 1 | 0 | 0 # | 0 | 0 | 1 | 0 [/codeblock] If a [Vector3], an [AABB], a [Plane], a [PackedVector3Array], or another [Transform3D] is transformed (multiplied) by this constant, no transformation occurs. [b]Note:[/b] In GDScript, this constant is equivalent to creating a [constructor Transform3D] without any arguments. It can be used to make your code clearer, and for consistency with C#.",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "FLIP_X",
+      "value": "Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "[Transform3D] with mirroring applied perpendicular to the YZ plane. Its [member basis] is equal to [constant Basis.FLIP_X].",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "FLIP_Y",
+      "value": "Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "[Transform3D] with mirroring applied perpendicular to the XZ plane. Its [member basis] is equal to [constant Basis.FLIP_Y].",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "FLIP_Z",
+      "value": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "[Transform3D] with mirroring applied perpendicular to the XY plane. Its [member basis] is equal to [constant Basis.FLIP_Z].",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Transform3D right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both transforms are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Transform3D.operator !=(Transform3D)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public AABB operator *(AABB right)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [AABB] by this transformation matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(AABB)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public PackedVector3Array operator *(PackedVector3Array right)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Transforms (multiplies) every [Vector3] element of the given [PackedVector3Array] by this transformation matrix. On larger arrays, this operation is much faster than transforming each [Vector3] individually.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(PackedVector3Array)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Plane operator *(Plane right)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [Plane] by this transformation matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(Plane)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform3D operator *(Transform3D right)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Transforms (multiplies) this transform by the [param right] transform. This is the operation performed between parent and child [Node3D]s. [b]Note:[/b] If you need to only modify one attribute of this transform, consider using one of the following methods, instead: - For translation, see [method translated] or [method translated_local]. - For rotation, see [method rotated] or [method rotated_local]. - For scale, see [method scaled] or [method scaled_local].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(Transform3D)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3 right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [Vector3] by this transformation matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(Vector3)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform3D operator *(float right)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies all components of the [Transform3D] by the given [float], including the [member origin]. This affects the transform\u0027s scale uniformly, scaling the [member basis].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(float)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform3D operator *(int right)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies all components of the [Transform3D] by the given [int], including the [member origin]. This affects the transform\u0027s scale uniformly, scaling the [member basis].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform3D.operator *(int)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Transform3D operator /(float right)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides all components of the [Transform3D] by the given [float], including the [member origin]. This affects the transform\u0027s scale uniformly, scaling the [member basis].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Transform3D.operator /(float)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Transform3D operator /(int right)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides all components of the [Transform3D] by the given [int], including the [member origin]. This affects the transform\u0027s scale uniformly, scaling the [member basis].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Transform3D.operator /(int)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Transform3D right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both transforms are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Transform3D.operator ==(Transform3D)",
+      "sourcePath": "doc/classes/Transform3D.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Transform3D.xml",
+      "sha256": "cf032998274d397b52f8c44b671313eab920c34387fd42958480d22dcdcf4b49"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

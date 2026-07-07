@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVarying",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVarying",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVarying",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVarying.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevarying.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "VaryingName",
+      "kind": "Property",
+      "signature": "public String VaryingName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Name of the variable. Must be unique.",
+      "defaultValue": "\u0022[None]\u0022",
+      "godotName": "varying_name",
+      "xmlDocId": "P:Godot.VisualShaderNodeVarying.VaryingName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVarying.xml"
+    },
+    {
+      "name": "VaryingType",
+      "kind": "Property",
+      "signature": "public int VaryingType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Type of the variable. Determines where the variable can be accessed.",
+      "defaultValue": "0",
+      "godotName": "varying_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeVarying.VaryingType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVarying.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVarying.xml",
+      "sha256": "5a5be9939c064565ed4368e040958f85a645921b11ffc3515b98943e258961eb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

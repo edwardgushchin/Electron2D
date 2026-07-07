@@ -1,0 +1,541 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HTTPRequest",
+    "namespace": "Godot",
+    "fullName": "Godot.HTTPRequest",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "HTTPRequest",
+    "documentationPath": "doc/classes/HTTPRequest.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_httprequest.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CancelRequest",
+      "kind": "Method",
+      "signature": "public void CancelRequest()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Cancels the current request.",
+      "godotName": "cancel_request",
+      "xmlDocId": "M:Godot.HTTPRequest.CancelRequest",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "GetBodySize",
+      "kind": "Method",
+      "signature": "public int GetBodySize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the response body length. [b]Note:[/b] Some Web servers may not send a body length. In this case, the value returned will be [code]-1[/code]. If using chunked transfer encoding, the body length will also be [code]-1[/code].",
+      "godotName": "get_body_size",
+      "xmlDocId": "M:Godot.HTTPRequest.GetBodySize",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "GetDownloadedBytes",
+      "kind": "Method",
+      "signature": "public int GetDownloadedBytes()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bytes this HTTPRequest downloaded.",
+      "godotName": "get_downloaded_bytes",
+      "xmlDocId": "M:Godot.HTTPRequest.GetDownloadedBytes",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "GetHttpClientStatus",
+      "kind": "Method",
+      "signature": "public int GetHttpClientStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current status of the underlying [HTTPClient].",
+      "godotName": "get_http_client_status",
+      "xmlDocId": "M:Godot.HTTPRequest.GetHttpClientStatus",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "Request",
+      "kind": "Method",
+      "signature": "public int Request(String url, PackedStringArray customHeaders, int method, String requestData)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "String"
+        },
+        {
+          "name": "custom_headers",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        },
+        {
+          "name": "method",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "request_data",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Creates request on the underlying [HTTPClient]. If there is no configuration errors, it tries to connect using [method HTTPClient.connect_to_host] and passes parameters onto [method HTTPClient.request]. Returns [constant OK] if request is successfully created. (Does not imply that the server has responded), [constant ERR_UNCONFIGURED] if not in the tree, [constant ERR_BUSY] if still processing previous request, [constant ERR_INVALID_PARAMETER] if given string is not a valid URL format, or [constant ERR_CANT_CONNECT] if not using thread and the [HTTPClient] cannot connect to host. [b]Note:[/b] When [param method] is [constant HTTPClient.METHOD_GET], the payload sent via [param request_data] might be ignored by the server or even cause the server to reject the request (check [url=https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1]RFC 7231 section 4.3.1[/url] for more details). As a workaround, you can send data as a query string in the URL (see [method String.uri_encode] for an example). [b]Note:[/b] It\u0027s recommended to use transport encryption (TLS) and to avoid sending sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using HTTP POST requests or HTTP headers for such information instead.",
+      "godotName": "request",
+      "xmlDocId": "M:Godot.HTTPRequest.Request(String,PackedStringArray,int,String)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RequestRaw",
+      "kind": "Method",
+      "signature": "public int RequestRaw(String url, PackedStringArray customHeaders, int method, PackedByteArray requestDataRaw)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "String"
+        },
+        {
+          "name": "custom_headers",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        },
+        {
+          "name": "method",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "request_data_raw",
+          "type": "PackedByteArray",
+          "defaultValue": "PackedByteArray()"
+        }
+      ],
+      "summary": "Creates request on the underlying [HTTPClient] using a raw array of bytes for the request body. If there is no configuration errors, it tries to connect using [method HTTPClient.connect_to_host] and passes parameters onto [method HTTPClient.request]. Returns [constant OK] if request is successfully created. (Does not imply that the server has responded), [constant ERR_UNCONFIGURED] if not in the tree, [constant ERR_BUSY] if still processing previous request, [constant ERR_INVALID_PARAMETER] if given string is not a valid URL format, or [constant ERR_CANT_CONNECT] if not using thread and the [HTTPClient] cannot connect to host.",
+      "godotName": "request_raw",
+      "xmlDocId": "M:Godot.HTTPRequest.RequestRaw(String,PackedStringArray,int,PackedByteArray)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "SetHttpProxy",
+      "kind": "Method",
+      "signature": "public void SetHttpProxy(String host, int port)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the proxy server for HTTP requests. The proxy server is unset if [param host] is empty or [param port] is -1.",
+      "godotName": "set_http_proxy",
+      "xmlDocId": "M:Godot.HTTPRequest.SetHttpProxy(String,int)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "SetHttpsProxy",
+      "kind": "Method",
+      "signature": "public void SetHttpsProxy(String host, int port)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the proxy server for HTTPS requests. The proxy server is unset if [param host] is empty or [param port] is -1.",
+      "godotName": "set_https_proxy",
+      "xmlDocId": "M:Godot.HTTPRequest.SetHttpsProxy(String,int)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "SetTlsOptions",
+      "kind": "Method",
+      "signature": "public void SetTlsOptions(TLSOptions clientOptions)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "client_options",
+          "type": "TLSOptions"
+        }
+      ],
+      "summary": "Sets the [TLSOptions] to be used when connecting to an HTTPS server. See [method TLSOptions.client].",
+      "godotName": "set_tls_options",
+      "xmlDocId": "M:Godot.HTTPRequest.SetTlsOptions(TLSOptions)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "AcceptGzip",
+      "kind": "Property",
+      "signature": "public bool AcceptGzip { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this header will be added to each request: [code]Accept-Encoding: gzip, deflate[/code] telling servers that it\u0027s okay to compress response bodies. Any Response body declaring a [code]Content-Encoding[/code] of either [code]gzip[/code] or [code]deflate[/code] will then be automatically decompressed, and the uncompressed bytes will be delivered via [signal request_completed]. If the user has specified their own [code]Accept-Encoding[/code] header, then no header will be added regardless of [member accept_gzip]. If [code]false[/code] no header will be added, and no decompression will be performed on response bodies. The raw bytes of the response body will be returned via [signal request_completed].",
+      "defaultValue": "true",
+      "godotName": "accept_gzip",
+      "xmlDocId": "P:Godot.HTTPRequest.AcceptGzip",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "BodySizeLimit",
+      "kind": "Property",
+      "signature": "public int BodySizeLimit { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum allowed size for response bodies. If the response body is compressed, this will be used as the maximum allowed size for the decompressed body.",
+      "defaultValue": "-1",
+      "godotName": "body_size_limit",
+      "xmlDocId": "P:Godot.HTTPRequest.BodySizeLimit",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "DownloadChunkSize",
+      "kind": "Property",
+      "signature": "public int DownloadChunkSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The size of the buffer used and maximum bytes to read per iteration. See [member HTTPClient.read_chunk_size]. Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.",
+      "defaultValue": "65536",
+      "godotName": "download_chunk_size",
+      "xmlDocId": "P:Godot.HTTPRequest.DownloadChunkSize",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "DownloadFile",
+      "kind": "Property",
+      "signature": "public String DownloadFile { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The file to download into. Will output any received file into it.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "download_file",
+      "xmlDocId": "P:Godot.HTTPRequest.DownloadFile",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "MaxRedirects",
+      "kind": "Property",
+      "signature": "public int MaxRedirects { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum number of allowed redirects.",
+      "defaultValue": "8",
+      "godotName": "max_redirects",
+      "xmlDocId": "P:Godot.HTTPRequest.MaxRedirects",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "Timeout",
+      "kind": "Property",
+      "signature": "public float Timeout { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The duration to wait before a request times out, in seconds (independent of [member Engine.time_scale]). If [member timeout] is set to [code]0.0[/code], the request will never time out. For simple requests, such as communication with a REST API, it is recommended to set [member timeout] to a value suitable for the server response time (commonly between [code]1.0[/code] and [code]10.0[/code]). This will help prevent unwanted timeouts caused by variation in response times while still allowing the application to detect when a request has timed out. For larger requests such as file downloads, it is recommended to set [member timeout] to [code]0.0[/code], disabling the timeout functionality. This will help prevent large transfers from failing due to exceeding the timeout value.",
+      "defaultValue": "0.0",
+      "godotName": "timeout",
+      "xmlDocId": "P:Godot.HTTPRequest.Timeout",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "UseThreads",
+      "kind": "Property",
+      "signature": "public bool UseThreads { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], multithreading is used to improve performance.",
+      "defaultValue": "false",
+      "godotName": "use_threads",
+      "xmlDocId": "P:Godot.HTTPRequest.UseThreads",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "RequestCompleted",
+      "kind": "Signal",
+      "signature": "public event RequestCompletedHandler RequestCompleted",
+      "parameters": [
+        {
+          "name": "result",
+          "type": "int"
+        },
+        {
+          "name": "response_code",
+          "type": "int"
+        },
+        {
+          "name": "headers",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "body",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Emitted when a request is completed.",
+      "godotName": "request_completed",
+      "xmlDocId": "E:Godot.HTTPRequest.RequestCompleted(int,int,PackedStringArray,PackedByteArray)",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "Result",
+      "values": [
+        {
+          "name": "RESULT_BODY_DECOMPRESS_FAILED",
+          "value": "8",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed due to an error while decompressing the response body. Possible causes include unsupported or incorrect compression format, corrupted data, or incomplete transfer.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_BODY_SIZE_LIMIT_EXCEEDED",
+          "value": "7",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request exceeded its maximum size limit, see [member body_size_limit].",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_CANT_CONNECT",
+          "value": "2",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed while connecting.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_CANT_RESOLVE",
+          "value": "3",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed while resolving.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_CHUNKED_BODY_SIZE_MISMATCH",
+          "value": "1",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed due to a mismatch between the expected and actual chunked body size during transfer. Possible causes include network errors, server misconfiguration, or issues with chunked encoding.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_CONNECTION_ERROR",
+          "value": "4",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed due to connection (read/write) error.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_DOWNLOAD_FILE_CANT_OPEN",
+          "value": "10",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "HTTPRequest couldn\u0027t open the download file.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_DOWNLOAD_FILE_WRITE_ERROR",
+          "value": "11",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "HTTPRequest couldn\u0027t write to the download file.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_NO_RESPONSE",
+          "value": "6",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request does not have a response (yet).",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_REDIRECT_LIMIT_REACHED",
+          "value": "12",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request reached its maximum redirect limit, see [member max_redirects].",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_REQUEST_FAILED",
+          "value": "9",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed (currently unused).",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_SUCCESS",
+          "value": "0",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request successful.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_TIMEOUT",
+          "value": "13",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed due to a timeout. If you expect requests to take a long time, try increasing the value of [member timeout] or setting it to [code]0.0[/code] to remove the timeout completely.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        },
+        {
+          "name": "RESULT_TLS_HANDSHAKE_ERROR",
+          "value": "5",
+          "enum": "Result",
+          "kind": "EnumValue",
+          "summary": "Request failed on TLS handshake.",
+          "sourcePath": "doc/classes/HTTPRequest.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RESULT_SUCCESS",
+      "value": "0",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request successful.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_CHUNKED_BODY_SIZE_MISMATCH",
+      "value": "1",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed due to a mismatch between the expected and actual chunked body size during transfer. Possible causes include network errors, server misconfiguration, or issues with chunked encoding.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_CANT_CONNECT",
+      "value": "2",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed while connecting.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_CANT_RESOLVE",
+      "value": "3",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed while resolving.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_CONNECTION_ERROR",
+      "value": "4",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed due to connection (read/write) error.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_TLS_HANDSHAKE_ERROR",
+      "value": "5",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed on TLS handshake.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_NO_RESPONSE",
+      "value": "6",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request does not have a response (yet).",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_BODY_SIZE_LIMIT_EXCEEDED",
+      "value": "7",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request exceeded its maximum size limit, see [member body_size_limit].",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_BODY_DECOMPRESS_FAILED",
+      "value": "8",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed due to an error while decompressing the response body. Possible causes include unsupported or incorrect compression format, corrupted data, or incomplete transfer.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_REQUEST_FAILED",
+      "value": "9",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed (currently unused).",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_DOWNLOAD_FILE_CANT_OPEN",
+      "value": "10",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "HTTPRequest couldn\u0027t open the download file.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_DOWNLOAD_FILE_WRITE_ERROR",
+      "value": "11",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "HTTPRequest couldn\u0027t write to the download file.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_REDIRECT_LIMIT_REACHED",
+      "value": "12",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request reached its maximum redirect limit, see [member max_redirects].",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    },
+    {
+      "name": "RESULT_TIMEOUT",
+      "value": "13",
+      "enum": "Result",
+      "kind": "EnumValue",
+      "summary": "Request failed due to a timeout. If you expect requests to take a long time, try increasing the value of [member timeout] or setting it to [code]0.0[/code] to remove the timeout completely.",
+      "sourcePath": "doc/classes/HTTPRequest.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HTTPRequest.xml",
+      "sha256": "54450e58fb7c7b71c1daeee002ec8f9d9aeb00b310eb62a02f248ff5d4cbc91e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

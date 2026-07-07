@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OptimizedTranslation",
+    "namespace": "Godot",
+    "fullName": "Godot.OptimizedTranslation",
+    "kind": "class",
+    "baseType": "Translation",
+    "interfaces": [],
+    "godotReference": "OptimizedTranslation",
+    "documentationPath": "doc/classes/OptimizedTranslation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_optimizedtranslation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Generate",
+      "kind": "Method",
+      "signature": "public bool Generate(Translation from)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Generates and sets an optimized translation from the given [Translation] resource. Returns [code]true[/code] if successful. [b]Note:[/b] Messages in [param from] should not use context or plural forms. [b]Note:[/b] This method is intended to be used in the editor. It does nothing when called from an exported project.",
+      "godotName": "generate",
+      "xmlDocId": "M:Godot.OptimizedTranslation.Generate(Translation)",
+      "sourcePath": "doc/classes/OptimizedTranslation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OptimizedTranslation.xml",
+      "sha256": "edf1d45821754ec864d1205fa192bc80c3ad4058d3e3232d69304bc8bcaacaec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

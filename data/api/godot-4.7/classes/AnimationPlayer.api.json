@@ -1,0 +1,927 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationPlayer",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationPlayer",
+    "kind": "class",
+    "baseType": "AnimationMixer",
+    "interfaces": [],
+    "godotReference": "AnimationPlayer",
+    "documentationPath": "doc/classes/AnimationPlayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationplayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AnimationGetNext",
+      "kind": "Method",
+      "signature": "public StringName AnimationGetNext(StringName animationFrom)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "animation_from",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the key of the animation which is queued to play after the [param animation_from] animation.",
+      "godotName": "animation_get_next",
+      "xmlDocId": "M:Godot.AnimationPlayer.AnimationGetNext(StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "AnimationSetNext",
+      "kind": "Method",
+      "signature": "public void AnimationSetNext(StringName animationFrom, StringName animationTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "animation_from",
+          "type": "StringName"
+        },
+        {
+          "name": "animation_to",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Triggers the [param animation_to] animation when the [param animation_from] animation completes.",
+      "godotName": "animation_set_next",
+      "xmlDocId": "M:Godot.AnimationPlayer.AnimationSetNext(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ClearQueue",
+      "kind": "Method",
+      "signature": "public void ClearQueue()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all queued, unplayed animations.",
+      "godotName": "clear_queue",
+      "xmlDocId": "M:Godot.AnimationPlayer.ClearQueue",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetBlendTime",
+      "kind": "Method",
+      "signature": "public float GetBlendTime(StringName animationFrom, StringName animationTo)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "animation_from",
+          "type": "StringName"
+        },
+        {
+          "name": "animation_to",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the blend time (in seconds) between two animations, referenced by their keys.",
+      "godotName": "get_blend_time",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetBlendTime(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetMethodCallMode",
+      "kind": "Method",
+      "signature": "public int GetMethodCallMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the call mode used for \u0022Call Method\u0022 tracks.",
+      "godotName": "get_method_call_mode",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetMethodCallMode",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetPlayingSpeed",
+      "kind": "Method",
+      "signature": "public float GetPlayingSpeed()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the actual playing speed of current animation or [code]0[/code] if not playing. This speed is the [member speed_scale] property multiplied by [code]custom_speed[/code] argument specified when calling the [method play] method. Returns a negative value if the current animation is playing backwards.",
+      "godotName": "get_playing_speed",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetPlayingSpeed",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetProcessCallback",
+      "kind": "Method",
+      "signature": "public int GetProcessCallback()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the process notification in which to update animations.",
+      "godotName": "get_process_callback",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetProcessCallback",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetQueue",
+      "kind": "Method",
+      "signature": "public StringName[] GetQueue()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns a list of the animation keys that are currently queued to play.",
+      "godotName": "get_queue",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetQueue",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetRoot",
+      "kind": "Method",
+      "signature": "public NodePath GetRoot()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Returns the node which node path references will travel from.",
+      "godotName": "get_root",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetRoot",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetSectionEndTime",
+      "kind": "Method",
+      "signature": "public float GetSectionEndTime()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the end time of the section currently being played.",
+      "godotName": "get_section_end_time",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetSectionEndTime",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "GetSectionStartTime",
+      "kind": "Method",
+      "signature": "public float GetSectionStartTime()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the start time of the section currently being played.",
+      "godotName": "get_section_start_time",
+      "xmlDocId": "M:Godot.AnimationPlayer.GetSectionStartTime",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "HasSection",
+      "kind": "Method",
+      "signature": "public bool HasSection()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an animation is currently playing with a section.",
+      "godotName": "has_section",
+      "xmlDocId": "M:Godot.AnimationPlayer.HasSection",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "IsAnimationActive",
+      "kind": "Method",
+      "signature": "public bool IsAnimationActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the an animation is currently active. An animation is active if it was played by calling [method play] and was not finished yet, or was stopped by calling [method stop]. This can be used to check whether an animation is currently paused or stopped. [codeblock] var is_paused = not is_playing() and is_animation_active() var is_stopped = not is_playing() and not is_animation_active() [/codeblock]",
+      "godotName": "is_animation_active",
+      "xmlDocId": "M:Godot.AnimationPlayer.IsAnimationActive",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public bool IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an animation is currently playing (even if [member speed_scale] and/or [code]custom_speed[/code] are [code]0[/code]).",
+      "godotName": "is_playing",
+      "xmlDocId": "M:Godot.AnimationPlayer.IsPlaying",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public void Pause()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Pauses the currently playing animation. The [member current_animation_position] will be kept and calling [method play] or [method play_backwards] without arguments or with the same animation name as [member assigned_animation] will resume the animation. See also [method stop].",
+      "godotName": "pause",
+      "xmlDocId": "M:Godot.AnimationPlayer.Pause",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public void Play(StringName name, float customBlend, float customSpeed, bool fromEnd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_speed",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "from_end",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Plays the animation with key [param name]. Custom blend times and speed can be set. The [param from_end] option only affects when switching to a new animation track, or if the same track but at the start or end. It does not affect resuming playback that was paused in the middle of an animation. If [param custom_speed] is negative and [param from_end] is [code]true[/code], the animation will play backwards (which is equivalent to calling [method play_backwards]). The [AnimationPlayer] keeps track of its current or last played animation with [member assigned_animation]. If this method is called with that same animation [param name], or with no [param name] parameter, the assigned animation will resume playing if it was paused. [b]Note:[/b] The animation will be updated the next time the [AnimationPlayer] is processed. If other variables are updated at the same time this is called, they may be updated too early. To perform the update immediately, call [code]advance(0)[/code].",
+      "godotName": "play",
+      "xmlDocId": "M:Godot.AnimationPlayer.Play(StringName,float,float,bool)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlayBackwards",
+      "kind": "Method",
+      "signature": "public void PlayBackwards(StringName name, float customBlend)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] in reverse. This method is a shorthand for [method play] with [code]custom_speed = -1.0[/code] and [code]from_end = true[/code], so see its description for more information.",
+      "godotName": "play_backwards",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlayBackwards(StringName,float)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaySection",
+      "kind": "Method",
+      "signature": "public void PlaySection(StringName name, float startTime, float endTime, float customBlend, float customSpeed, bool fromEnd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "start_time",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "end_time",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_speed",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "from_end",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] and the section starting from [param start_time] and ending on [param end_time]. See also [method play]. Setting [param start_time] to a value outside the range of the animation means the start of the animation will be used instead, and setting [param end_time] to a value outside the range of the animation means the end of the animation will be used instead. [param start_time] cannot be equal to [param end_time].",
+      "godotName": "play_section",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlaySection(StringName,float,float,float,float,bool)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaySectionBackwards",
+      "kind": "Method",
+      "signature": "public void PlaySectionBackwards(StringName name, float startTime, float endTime, float customBlend)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "start_time",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "end_time",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] and the section starting from [param start_time] and ending on [param end_time] in reverse. This method is a shorthand for [method play_section] with [code]custom_speed = -1.0[/code] and [code]from_end = true[/code], see its description for more information.",
+      "godotName": "play_section_backwards",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlaySectionBackwards(StringName,float,float,float)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaySectionWithMarkers",
+      "kind": "Method",
+      "signature": "public void PlaySectionWithMarkers(StringName name, StringName startMarker, StringName endMarker, float customBlend, float customSpeed, bool fromEnd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "start_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "end_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_speed",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "from_end",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] and the section starting from [param start_marker] and ending on [param end_marker]. If the start marker is empty, the section starts from the beginning of the animation. If the end marker is empty, the section ends on the end of the animation. See also [method play].",
+      "godotName": "play_section_with_markers",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlaySectionWithMarkers(StringName,StringName,StringName,float,float,bool)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaySectionWithMarkersBackwards",
+      "kind": "Method",
+      "signature": "public void PlaySectionWithMarkersBackwards(StringName name, StringName startMarker, StringName endMarker, float customBlend)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "start_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "end_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] and the section starting from [param start_marker] and ending on [param end_marker] in reverse. This method is a shorthand for [method play_section_with_markers] with [code]custom_speed = -1.0[/code] and [code]from_end = true[/code], see its description for more information.",
+      "godotName": "play_section_with_markers_backwards",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlaySectionWithMarkersBackwards(StringName,StringName,StringName,float)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlayWithCapture",
+      "kind": "Method",
+      "signature": "public void PlayWithCapture(StringName name, float duration, float customBlend, float customSpeed, bool fromEnd, int transType, int easeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "duration",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "custom_blend",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "custom_speed",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "from_end",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "trans_type",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "ease_type",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "See also [method AnimationMixer.capture]. You can use this method to use more detailed options for capture than those performed by [member playback_auto_capture]. When [member playback_auto_capture] is [code]false[/code], this method is almost the same as the following: [codeblock] capture(name, duration, trans_type, ease_type) play(name, custom_blend, custom_speed, from_end) [/codeblock] If [param name] is blank, it specifies [member assigned_animation]. If [param duration] is a negative value, the duration is set to the interval between the current position and the first key, when [param from_end] is [code]true[/code], uses the interval between the current position and the last key instead. [b]Note:[/b] The [param duration] takes [member speed_scale] into account, but [param custom_speed] does not, because the capture cache is interpolated with the blend result and the result may contain multiple animations.",
+      "godotName": "play_with_capture",
+      "xmlDocId": "M:Godot.AnimationPlayer.PlayWithCapture(StringName,float,float,float,bool,int,int)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Queue",
+      "kind": "Method",
+      "signature": "public void Queue(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Queues an animation for playback once the current animation and all previously queued animations are done. [b]Note:[/b] If a looped animation is currently playing, the queued animation will never play unless the looped animation is stopped somehow.",
+      "godotName": "queue",
+      "xmlDocId": "M:Godot.AnimationPlayer.Queue(StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ResetSection",
+      "kind": "Method",
+      "signature": "public void ResetSection()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resets the current section. Does nothing if a section has not been set.",
+      "godotName": "reset_section",
+      "xmlDocId": "M:Godot.AnimationPlayer.ResetSection",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public void Seek(float seconds, bool update, bool updateOnly)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "seconds",
+          "type": "float"
+        },
+        {
+          "name": "update",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "update_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Seeks the animation to the [param seconds] point in time (in seconds). If [param update] is [code]true[/code], the animation updates too, otherwise it updates at process time. Events between the current frame and [param seconds] are skipped. If [param update_only] is [code]true[/code], the method / audio / animation playback tracks will not be processed. [b]Note:[/b] Seeking to the end of the animation doesn\u0027t emit [signal AnimationMixer.animation_finished]. If you want to skip animation and emit the signal, use [method AnimationMixer.advance].",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.AnimationPlayer.Seek(float,bool,bool)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetBlendTime",
+      "kind": "Method",
+      "signature": "public void SetBlendTime(StringName animationFrom, StringName animationTo, float sec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "animation_from",
+          "type": "StringName"
+        },
+        {
+          "name": "animation_to",
+          "type": "StringName"
+        },
+        {
+          "name": "sec",
+          "type": "float"
+        }
+      ],
+      "summary": "Specifies a blend time (in seconds) between two animations, referenced by their keys.",
+      "godotName": "set_blend_time",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetBlendTime(StringName,StringName,float)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetMethodCallMode",
+      "kind": "Method",
+      "signature": "public void SetMethodCallMode(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the call mode used for \u0022Call Method\u0022 tracks.",
+      "godotName": "set_method_call_mode",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetMethodCallMode(int)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetProcessCallback",
+      "kind": "Method",
+      "signature": "public void SetProcessCallback(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the process notification in which to update animations.",
+      "godotName": "set_process_callback",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetProcessCallback(int)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetRoot",
+      "kind": "Method",
+      "signature": "public void SetRoot(NodePath path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the node which node path references will travel from.",
+      "godotName": "set_root",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetRoot(NodePath)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetSection",
+      "kind": "Method",
+      "signature": "public void SetSection(float startTime, float endTime)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_time",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "end_time",
+          "type": "float",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Changes the start and end times of the section being played. The current playback position will be clamped within the new section. See also [method play_section].",
+      "godotName": "set_section",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetSection(float,float)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SetSectionWithMarkers",
+      "kind": "Method",
+      "signature": "public void SetSectionWithMarkers(StringName startMarker, StringName endMarker)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "end_marker",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Changes the start and end markers of the section being played. The current playback position will be clamped within the new section. See also [method play_section_with_markers]. If the argument is empty, the section uses the beginning or end of the animation. If both are empty, it means that the section is not set.",
+      "godotName": "set_section_with_markers",
+      "xmlDocId": "M:Godot.AnimationPlayer.SetSectionWithMarkers(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop(bool keepState)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keep_state",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Stops the currently playing animation. The animation position is reset to [code]0[/code] and the [code]custom_speed[/code] is reset to [code]1.0[/code]. See also [method pause]. If [param keep_state] is [code]true[/code], the animation state is not updated visually. [b]Note:[/b] The method / audio / animation playback tracks will not be processed by this method.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.AnimationPlayer.Stop(bool)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "AssignedAnimation",
+      "kind": "Property",
+      "signature": "public StringName AssignedAnimation { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "If playing, the current animation\u0027s key, otherwise, the animation last played. When set, this changes the animation, but will not play it unless already playing. See also [member current_animation].",
+      "godotName": "assigned_animation",
+      "xmlDocId": "P:Godot.AnimationPlayer.AssignedAnimation",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public StringName Autoplay { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The key of the animation to play when the scene loads.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "autoplay",
+      "xmlDocId": "P:Godot.AnimationPlayer.Autoplay",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "CurrentAnimation",
+      "kind": "Property",
+      "signature": "public StringName CurrentAnimation { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The key of the currently playing animation. If no animation is playing, the property\u0027s value is an empty string. Changing this value does not restart the animation. See [method play] for more information on playing animations. [b]Note:[/b] While this property appears in the Inspector, it\u0027s not meant to be edited, and it\u0027s not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see [Animation].",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "current_animation",
+      "xmlDocId": "P:Godot.AnimationPlayer.CurrentAnimation",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "CurrentAnimationLength",
+      "kind": "Property",
+      "signature": "public float CurrentAnimationLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length (in seconds) of the currently playing animation.",
+      "godotName": "current_animation_length",
+      "xmlDocId": "P:Godot.AnimationPlayer.CurrentAnimationLength",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "CurrentAnimationPosition",
+      "kind": "Property",
+      "signature": "public float CurrentAnimationPosition { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The position (in seconds) of the currently playing animation.",
+      "godotName": "current_animation_position",
+      "xmlDocId": "P:Godot.AnimationPlayer.CurrentAnimationPosition",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "MovieQuitOnFinish",
+      "kind": "Property",
+      "signature": "public bool MovieQuitOnFinish { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] and the engine is running in Movie Maker mode (see [MovieWriter]), exits the engine with [method SceneTree.quit] as soon as an animation is done playing in this [AnimationPlayer]. A message is printed when the engine quits for this reason. [b]Note:[/b] This obeys the same logic as the [signal AnimationMixer.animation_finished] signal, so it will not quit the engine if the animation is set to be looping.",
+      "defaultValue": "false",
+      "godotName": "movie_quit_on_finish",
+      "xmlDocId": "P:Godot.AnimationPlayer.MovieQuitOnFinish",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaybackAutoCapture",
+      "kind": "Property",
+      "signature": "public bool PlaybackAutoCapture { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], performs [method AnimationMixer.capture] before playback automatically. This means just [method play_with_capture] is executed with default arguments instead of [method play]. [b]Note:[/b] Capture interpolation is only performed if the animation contains a capture track. See also [constant Animation.UPDATE_CAPTURE].",
+      "defaultValue": "true",
+      "godotName": "playback_auto_capture",
+      "xmlDocId": "P:Godot.AnimationPlayer.PlaybackAutoCapture",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaybackAutoCaptureDuration",
+      "kind": "Property",
+      "signature": "public float PlaybackAutoCaptureDuration { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "See also [method play_with_capture] and [method AnimationMixer.capture]. If [member playback_auto_capture_duration] is negative value, the duration is set to the interval between the current position and the first key.",
+      "defaultValue": "-1.0",
+      "godotName": "playback_auto_capture_duration",
+      "xmlDocId": "P:Godot.AnimationPlayer.PlaybackAutoCaptureDuration",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaybackAutoCaptureEaseType",
+      "kind": "Property",
+      "signature": "public int PlaybackAutoCaptureEaseType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ease type of the capture interpolation. See also [enum Tween.EaseType].",
+      "defaultValue": "0",
+      "godotName": "playback_auto_capture_ease_type",
+      "xmlDocId": "P:Godot.AnimationPlayer.PlaybackAutoCaptureEaseType",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaybackAutoCaptureTransitionType",
+      "kind": "Property",
+      "signature": "public int PlaybackAutoCaptureTransitionType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The transition type of the capture interpolation. See also [enum Tween.TransitionType].",
+      "defaultValue": "0",
+      "godotName": "playback_auto_capture_transition_type",
+      "xmlDocId": "P:Godot.AnimationPlayer.PlaybackAutoCaptureTransitionType",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "PlaybackDefaultBlendTime",
+      "kind": "Property",
+      "signature": "public float PlaybackDefaultBlendTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The default time in which to blend animations. Ranges from 0 to 4096 with 0.01 precision.",
+      "defaultValue": "0.0",
+      "godotName": "playback_default_blend_time",
+      "xmlDocId": "P:Godot.AnimationPlayer.PlaybackDefaultBlendTime",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed scaling ratio. For example, if this value is [code]1[/code], then the animation plays at normal speed. If it\u0027s [code]0.5[/code], then it plays at half speed. If it\u0027s [code]2[/code], then it plays at double speed. If set to a negative value, the animation is played in reverse. If set to [code]0[/code], the animation will not advance.",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.AnimationPlayer.SpeedScale",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationChanged",
+      "kind": "Signal",
+      "signature": "public event AnimationChangedHandler AnimationChanged",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "new_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when a queued animation plays after the previous animation finished. See also [method AnimationPlayer.queue]. [b]Note:[/b] The signal is not emitted when the animation is changed via [method AnimationPlayer.play] or by an [AnimationTree].",
+      "godotName": "animation_changed",
+      "xmlDocId": "E:Godot.AnimationPlayer.AnimationChanged(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "CurrentAnimationChanged",
+      "kind": "Signal",
+      "signature": "public event CurrentAnimationChangedHandler CurrentAnimationChanged",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when [member current_animation] changes.",
+      "godotName": "current_animation_changed",
+      "xmlDocId": "E:Godot.AnimationPlayer.CurrentAnimationChanged(StringName)",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AnimationMethodCallMode",
+      "values": [
+        {
+          "name": "ANIMATION_METHOD_CALL_DEFERRED",
+          "value": "0",
+          "enum": "AnimationMethodCallMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationPlayer.xml"
+        },
+        {
+          "name": "ANIMATION_METHOD_CALL_IMMEDIATE",
+          "value": "1",
+          "enum": "AnimationMethodCallMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationPlayer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AnimationProcessCallback",
+      "values": [
+        {
+          "name": "ANIMATION_PROCESS_IDLE",
+          "value": "1",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationPlayer.xml"
+        },
+        {
+          "name": "ANIMATION_PROCESS_MANUAL",
+          "value": "2",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationPlayer.xml"
+        },
+        {
+          "name": "ANIMATION_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationPlayer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ANIMATION_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ANIMATION_PROCESS_IDLE",
+      "value": "1",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ANIMATION_PROCESS_MANUAL",
+      "value": "2",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ANIMATION_METHOD_CALL_DEFERRED",
+      "value": "0",
+      "enum": "AnimationMethodCallMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    },
+    {
+      "name": "ANIMATION_METHOD_CALL_IMMEDIATE",
+      "value": "1",
+      "enum": "AnimationMethodCallMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationPlayer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationPlayer.xml",
+      "sha256": "d51336fba682ba21baaf52c9a65a289520eac38993b58c78e060006fe7f65e56"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

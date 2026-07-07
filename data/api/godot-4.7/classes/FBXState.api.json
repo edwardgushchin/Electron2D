@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FBXState",
+    "namespace": "Godot",
+    "fullName": "Godot.FBXState",
+    "kind": "class",
+    "baseType": "GLTFState",
+    "interfaces": [],
+    "godotReference": "FBXState",
+    "documentationPath": "modules/fbx/doc_classes/FBXState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fbxstate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AllowGeometryHelperNodes",
+      "kind": "Property",
+      "signature": "public bool AllowGeometryHelperNodes { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the import process used auxiliary nodes called geometry helper nodes. These nodes help preserve the pivots and transformations of the original 3D model during import.",
+      "defaultValue": "false",
+      "godotName": "allow_geometry_helper_nodes",
+      "xmlDocId": "P:Godot.FBXState.AllowGeometryHelperNodes",
+      "sourcePath": "modules/fbx/doc_classes/FBXState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/fbx/doc_classes/FBXState.xml",
+      "sha256": "1bf7ac3f25b8ea3b4d447c631523e494a2e8cee48fcc2eec22f6383b78aa989c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

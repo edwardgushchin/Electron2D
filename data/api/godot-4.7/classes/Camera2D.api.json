@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Camera2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Camera2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Camera2D",
+    "documentationPath": "doc/classes/Camera2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_camera2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Align",
+      "kind": "Method",
+      "signature": "public void Align()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Aligns the camera to the tracked node. [b]Note:[/b] Calling [method force_update_scroll] after this method is not required.",
+      "godotName": "align",
+      "xmlDocId": "M:Godot.Camera2D.Align",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "ForceUpdateScroll",
+      "kind": "Method",
+      "signature": "public void ForceUpdateScroll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces the camera to update scroll immediately.",
+      "godotName": "force_update_scroll",
+      "xmlDocId": "M:Godot.Camera2D.ForceUpdateScroll",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "GetDragMargin",
+      "kind": "Method",
+      "signature": "public float GetDragMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the specified [enum Side]\u0027s margin. See also [member drag_bottom_margin], [member drag_top_margin], [member drag_left_margin], and [member drag_right_margin].",
+      "godotName": "get_drag_margin",
+      "xmlDocId": "M:Godot.Camera2D.GetDragMargin(int)",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "GetLimit",
+      "kind": "Method",
+      "signature": "public int GetLimit(int margin)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the camera limit for the specified [enum Side]. See also [member limit_bottom], [member limit_top], [member limit_left], and [member limit_right].",
+      "godotName": "get_limit",
+      "xmlDocId": "M:Godot.Camera2D.GetLimit(int)",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "GetScreenCenterPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetScreenCenterPosition()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the center of the screen from this camera\u0027s point of view, in global coordinates. [b]Note:[/b] The exact targeted position of the camera may be different. See [method get_target_position].",
+      "godotName": "get_screen_center_position",
+      "xmlDocId": "M:Godot.Camera2D.GetScreenCenterPosition",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "GetScreenRotation",
+      "kind": "Method",
+      "signature": "public float GetScreenRotation()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the current screen rotation from this camera\u0027s point of view. [b]Note:[/b] The screen rotation can be different from [member Node2D.global_rotation] if the camera is rotating smoothly due to [member rotation_smoothing_enabled].",
+      "godotName": "get_screen_rotation",
+      "xmlDocId": "M:Godot.Camera2D.GetScreenRotation",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "GetTargetPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetTargetPosition()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns this camera\u0027s target position, in global coordinates. [b]Note:[/b] The returned value is not the same as [member Node2D.global_position], as it is affected by the drag properties. It is also not the same as the current position if [member position_smoothing_enabled] is [code]true[/code] (see [method get_screen_center_position]).",
+      "godotName": "get_target_position",
+      "xmlDocId": "M:Godot.Camera2D.GetTargetPosition",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "IsCurrent",
+      "kind": "Method",
+      "signature": "public bool IsCurrent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this [Camera2D] is the active camera (see [method Viewport.get_camera_2d]).",
+      "godotName": "is_current",
+      "xmlDocId": "M:Godot.Camera2D.IsCurrent",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "MakeCurrent",
+      "kind": "Method",
+      "signature": "public void MakeCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces this [Camera2D] to become the current active one. [member enabled] must be [code]true[/code].",
+      "godotName": "make_current",
+      "xmlDocId": "M:Godot.Camera2D.MakeCurrent",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "ResetSmoothing",
+      "kind": "Method",
+      "signature": "public void ResetSmoothing()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sets the camera\u0027s position immediately to its current smoothing destination. This method has no effect if [member position_smoothing_enabled] is [code]false[/code].",
+      "godotName": "reset_smoothing",
+      "xmlDocId": "M:Godot.Camera2D.ResetSmoothing",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "SetDragMargin",
+      "kind": "Method",
+      "signature": "public void SetDragMargin(int margin, float dragMargin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "drag_margin",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the specified [enum Side]\u0027s margin. See also [member drag_bottom_margin], [member drag_top_margin], [member drag_left_margin], and [member drag_right_margin].",
+      "godotName": "set_drag_margin",
+      "xmlDocId": "M:Godot.Camera2D.SetDragMargin(int,float)",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "SetLimit",
+      "kind": "Method",
+      "signature": "public void SetLimit(int margin, int limit)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "limit",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the camera limit for the specified [enum Side]. See also [member limit_bottom], [member limit_top], [member limit_left], and [member limit_right].",
+      "godotName": "set_limit",
+      "xmlDocId": "M:Godot.Camera2D.SetLimit(int,int)",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "AnchorMode",
+      "kind": "Property",
+      "signature": "public int AnchorMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The Camera2D\u0027s anchor point.",
+      "defaultValue": "1",
+      "godotName": "anchor_mode",
+      "xmlDocId": "P:Godot.Camera2D.AnchorMode",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "CustomViewport",
+      "kind": "Property",
+      "signature": "public Node CustomViewport { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The custom [Viewport] node attached to the [Camera2D]. If [code]null[/code] or not a [Viewport], uses the default viewport instead.",
+      "godotName": "custom_viewport",
+      "xmlDocId": "P:Godot.Camera2D.CustomViewport",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragBottomMargin",
+      "kind": "Property",
+      "signature": "public float DragBottomMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Bottom margin needed to drag the camera. A value of [code]1[/code] makes the camera move only when reaching the bottom edge of the screen.",
+      "defaultValue": "0.2",
+      "godotName": "drag_bottom_margin",
+      "xmlDocId": "P:Godot.Camera2D.DragBottomMargin",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragHorizontalEnabled",
+      "kind": "Property",
+      "signature": "public bool DragHorizontalEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera only moves when reaching the horizontal (left and right) drag margins. If [code]false[/code], the camera moves horizontally regardless of margins.",
+      "defaultValue": "false",
+      "godotName": "drag_horizontal_enabled",
+      "xmlDocId": "P:Godot.Camera2D.DragHorizontalEnabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragHorizontalOffset",
+      "kind": "Property",
+      "signature": "public float DragHorizontalOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The relative horizontal drag offset of the camera between the right ([code]-1[/code]) and left ([code]1[/code]) drag margins. [b]Note:[/b] Used to set the initial horizontal drag offset; determine the current offset; or force the current offset. It\u0027s not automatically updated when [member drag_horizontal_enabled] is [code]true[/code] or the drag margins are changed.",
+      "defaultValue": "0.0",
+      "godotName": "drag_horizontal_offset",
+      "xmlDocId": "P:Godot.Camera2D.DragHorizontalOffset",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragLeftMargin",
+      "kind": "Property",
+      "signature": "public float DragLeftMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Left margin needed to drag the camera. A value of [code]1[/code] makes the camera move only when reaching the left edge of the screen.",
+      "defaultValue": "0.2",
+      "godotName": "drag_left_margin",
+      "xmlDocId": "P:Godot.Camera2D.DragLeftMargin",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragRightMargin",
+      "kind": "Property",
+      "signature": "public float DragRightMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Right margin needed to drag the camera. A value of [code]1[/code] makes the camera move only when reaching the right edge of the screen.",
+      "defaultValue": "0.2",
+      "godotName": "drag_right_margin",
+      "xmlDocId": "P:Godot.Camera2D.DragRightMargin",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragTopMargin",
+      "kind": "Property",
+      "signature": "public float DragTopMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Top margin needed to drag the camera. A value of [code]1[/code] makes the camera move only when reaching the top edge of the screen.",
+      "defaultValue": "0.2",
+      "godotName": "drag_top_margin",
+      "xmlDocId": "P:Godot.Camera2D.DragTopMargin",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragVerticalEnabled",
+      "kind": "Property",
+      "signature": "public bool DragVerticalEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera only moves when reaching the vertical (top and bottom) drag margins. If [code]false[/code], the camera moves vertically regardless of the drag margins.",
+      "defaultValue": "false",
+      "godotName": "drag_vertical_enabled",
+      "xmlDocId": "P:Godot.Camera2D.DragVerticalEnabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "DragVerticalOffset",
+      "kind": "Property",
+      "signature": "public float DragVerticalOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The relative vertical drag offset of the camera between the bottom ([code]-1[/code]) and top ([code]1[/code]) drag margins. [b]Note:[/b] Used to set the initial vertical drag offset; determine the current offset; or force the current offset. It\u0027s not automatically updated when [member drag_vertical_enabled] is [code]true[/code] or the drag margins are changed.",
+      "defaultValue": "0.0",
+      "godotName": "drag_vertical_offset",
+      "xmlDocId": "P:Godot.Camera2D.DragVerticalOffset",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "EditorDrawDragMargin",
+      "kind": "Property",
+      "signature": "public bool EditorDrawDragMargin { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], draws the camera\u0027s drag margin rectangle in the editor.",
+      "defaultValue": "false",
+      "godotName": "editor_draw_drag_margin",
+      "xmlDocId": "P:Godot.Camera2D.EditorDrawDragMargin",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "EditorDrawLimits",
+      "kind": "Property",
+      "signature": "public bool EditorDrawLimits { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], draws the camera\u0027s limits rectangle in the editor.",
+      "defaultValue": "false",
+      "godotName": "editor_draw_limits",
+      "xmlDocId": "P:Godot.Camera2D.EditorDrawLimits",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "EditorDrawScreen",
+      "kind": "Property",
+      "signature": "public bool EditorDrawScreen { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], draws the camera\u0027s screen rectangle in the editor.",
+      "defaultValue": "true",
+      "godotName": "editor_draw_screen",
+      "xmlDocId": "P:Godot.Camera2D.EditorDrawScreen",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Controls whether the camera can be active or not. If [code]true[/code], the [Camera2D] will become the main camera when it enters the scene tree and there is no active camera currently (see [method Viewport.get_camera_2d]). When the camera is currently active and [member enabled] is set to [code]false[/code], the next enabled [Camera2D] in the scene tree will become active.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.Camera2D.Enabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "IgnoreRotation",
+      "kind": "Property",
+      "signature": "public bool IgnoreRotation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera\u0027s rendered view is not affected by its [member Node2D.rotation] and [member Node2D.global_rotation].",
+      "defaultValue": "true",
+      "godotName": "ignore_rotation",
+      "xmlDocId": "P:Godot.Camera2D.IgnoreRotation",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitBottom",
+      "kind": "Property",
+      "signature": "public int LimitBottom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Bottom scroll limit in pixels. The camera stops moving when reaching this value, but [member offset] can push the view past the limit.",
+      "defaultValue": "10000000",
+      "godotName": "limit_bottom",
+      "xmlDocId": "P:Godot.Camera2D.LimitBottom",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitEnabled",
+      "kind": "Property",
+      "signature": "public bool LimitEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the limits will be enabled. Disabling this will allow the camera to focus anywhere, when the four [code]limit_*[/code] properties will not work.",
+      "defaultValue": "true",
+      "godotName": "limit_enabled",
+      "xmlDocId": "P:Godot.Camera2D.LimitEnabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitLeft",
+      "kind": "Property",
+      "signature": "public int LimitLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Left scroll limit in pixels. The camera stops moving when reaching this value, but [member offset] can push the view past the limit.",
+      "defaultValue": "-10000000",
+      "godotName": "limit_left",
+      "xmlDocId": "P:Godot.Camera2D.LimitLeft",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitRight",
+      "kind": "Property",
+      "signature": "public int LimitRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Right scroll limit in pixels. The camera stops moving when reaching this value, but [member offset] can push the view past the limit.",
+      "defaultValue": "10000000",
+      "godotName": "limit_right",
+      "xmlDocId": "P:Godot.Camera2D.LimitRight",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitSmoothed",
+      "kind": "Property",
+      "signature": "public bool LimitSmoothed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera smoothly stops when reaches its limits. This property has no effect if [member position_smoothing_enabled] is [code]false[/code]. [b]Note:[/b] To immediately update the camera\u0027s position to be within limits without smoothing, even with this setting enabled, invoke [method reset_smoothing].",
+      "defaultValue": "false",
+      "godotName": "limit_smoothed",
+      "xmlDocId": "P:Godot.Camera2D.LimitSmoothed",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "LimitTop",
+      "kind": "Property",
+      "signature": "public int LimitTop { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Top scroll limit in pixels. The camera stops moving when reaching this value, but [member offset] can push the view past the limit.",
+      "defaultValue": "-10000000",
+      "godotName": "limit_top",
+      "xmlDocId": "P:Godot.Camera2D.LimitTop",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The camera\u0027s relative offset. Useful for looking around or camera shake animations. The offsetted camera can go past the limits defined in [member limit_top], [member limit_bottom], [member limit_left] and [member limit_right].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.Camera2D.Offset",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "PositionSmoothingEnabled",
+      "kind": "Property",
+      "signature": "public bool PositionSmoothingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera\u0027s view smoothly moves towards its target position at [member position_smoothing_speed].",
+      "defaultValue": "false",
+      "godotName": "position_smoothing_enabled",
+      "xmlDocId": "P:Godot.Camera2D.PositionSmoothingEnabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "PositionSmoothingSpeed",
+      "kind": "Property",
+      "signature": "public float PositionSmoothingSpeed { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Speed in pixels per second of the camera\u0027s smoothing effect when [member position_smoothing_enabled] is [code]true[/code].",
+      "defaultValue": "5.0",
+      "godotName": "position_smoothing_speed",
+      "xmlDocId": "P:Godot.Camera2D.PositionSmoothingSpeed",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "ProcessCallback",
+      "kind": "Property",
+      "signature": "public int ProcessCallback { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The camera\u0027s process callback.",
+      "defaultValue": "1",
+      "godotName": "process_callback",
+      "xmlDocId": "P:Godot.Camera2D.ProcessCallback",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "RotationSmoothingEnabled",
+      "kind": "Property",
+      "signature": "public bool RotationSmoothingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera\u0027s view smoothly rotates, via asymptotic smoothing, to align with its target rotation at [member rotation_smoothing_speed]. [b]Note:[/b] This property has no effect if [member ignore_rotation] is [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "rotation_smoothing_enabled",
+      "xmlDocId": "P:Godot.Camera2D.RotationSmoothingEnabled",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "RotationSmoothingSpeed",
+      "kind": "Property",
+      "signature": "public float RotationSmoothingSpeed { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The angular, asymptotic speed of the camera\u0027s rotation smoothing effect when [member rotation_smoothing_enabled] is [code]true[/code].",
+      "defaultValue": "5.0",
+      "godotName": "rotation_smoothing_speed",
+      "xmlDocId": "P:Godot.Camera2D.RotationSmoothingSpeed",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "Zoom",
+      "kind": "Property",
+      "signature": "public Vector2 Zoom { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The camera\u0027s zoom. Higher values are more zoomed in. For example, a zoom of [code]Vector2(2.0, 2.0)[/code] will be twice as zoomed in on each axis (the view covers an area four times smaller). In contrast, a zoom of [code]Vector2(0.5, 0.5)[/code] will be twice as zoomed out on each axis (the view covers an area four times larger). The X and Y components should generally always be set to the same value, unless you wish to stretch the camera view. [b]Note:[/b] [member FontFile.oversampling] does [i]not[/i] take [Camera2D] zoom into account. This means that zooming in/out will cause bitmap fonts and rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated unless the font is part of a [CanvasLayer] that makes it ignore camera zoom. To ensure text remains crisp regardless of zoom, you can enable MSDF font rendering by enabling [member ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field] (applies to the default project font only), or enabling [b]Multichannel Signed Distance Field[/b] in the import options of a DynamicFont for custom fonts. On system fonts, [member SystemFont.multichannel_signed_distance_field] can be enabled in the inspector.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "zoom",
+      "xmlDocId": "P:Godot.Camera2D.Zoom",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AnchorMode",
+      "values": [
+        {
+          "name": "ANCHOR_MODE_DRAG_CENTER",
+          "value": "1",
+          "enum": "AnchorMode",
+          "kind": "EnumValue",
+          "summary": "The camera\u0027s position takes into account vertical/horizontal offsets and the screen size.",
+          "sourcePath": "doc/classes/Camera2D.xml"
+        },
+        {
+          "name": "ANCHOR_MODE_FIXED_TOP_LEFT",
+          "value": "0",
+          "enum": "AnchorMode",
+          "kind": "EnumValue",
+          "summary": "The camera\u0027s position is fixed so that the top-left corner is always at the origin.",
+          "sourcePath": "doc/classes/Camera2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Camera2DProcessCallback",
+      "values": [
+        {
+          "name": "CAMERA2D_PROCESS_IDLE",
+          "value": "1",
+          "enum": "Camera2DProcessCallback",
+          "kind": "EnumValue",
+          "summary": "The camera updates during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+          "sourcePath": "doc/classes/Camera2D.xml"
+        },
+        {
+          "name": "CAMERA2D_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "Camera2DProcessCallback",
+          "kind": "EnumValue",
+          "summary": "The camera updates during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+          "sourcePath": "doc/classes/Camera2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ANCHOR_MODE_FIXED_TOP_LEFT",
+      "value": "0",
+      "enum": "AnchorMode",
+      "kind": "EnumValue",
+      "summary": "The camera\u0027s position is fixed so that the top-left corner is always at the origin.",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "ANCHOR_MODE_DRAG_CENTER",
+      "value": "1",
+      "enum": "AnchorMode",
+      "kind": "EnumValue",
+      "summary": "The camera\u0027s position takes into account vertical/horizontal offsets and the screen size.",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "CAMERA2D_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "Camera2DProcessCallback",
+      "kind": "EnumValue",
+      "summary": "The camera updates during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    },
+    {
+      "name": "CAMERA2D_PROCESS_IDLE",
+      "value": "1",
+      "enum": "Camera2DProcessCallback",
+      "kind": "EnumValue",
+      "summary": "The camera updates during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+      "sourcePath": "doc/classes/Camera2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Camera2D.xml",
+      "sha256": "95f025c58179b35c8f26372a8b05cce5de8230ef712dbb8e75b94e39043992e3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RemoteTransform3D",
+    "namespace": "Godot",
+    "fullName": "Godot.RemoteTransform3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "RemoteTransform3D",
+    "documentationPath": "doc/classes/RemoteTransform3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_remotetransform3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ForceUpdateCache",
+      "kind": "Method",
+      "signature": "public void ForceUpdateCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "[RemoteTransform3D] caches the remote node. It may not notice if the remote node disappears; [method force_update_cache] forces it to update the cache again.",
+      "godotName": "force_update_cache",
+      "xmlDocId": "M:Godot.RemoteTransform3D.ForceUpdateCache",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    },
+    {
+      "name": "RemotePath",
+      "kind": "Property",
+      "signature": "public NodePath RemotePath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [NodePath] to the remote node, relative to the RemoteTransform3D\u0027s position in the scene.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "remote_path",
+      "xmlDocId": "P:Godot.RemoteTransform3D.RemotePath",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    },
+    {
+      "name": "UpdatePosition",
+      "kind": "Property",
+      "signature": "public bool UpdatePosition { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the remote node\u0027s position is updated.",
+      "defaultValue": "true",
+      "godotName": "update_position",
+      "xmlDocId": "P:Godot.RemoteTransform3D.UpdatePosition",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    },
+    {
+      "name": "UpdateRotation",
+      "kind": "Property",
+      "signature": "public bool UpdateRotation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the remote node\u0027s rotation is updated.",
+      "defaultValue": "true",
+      "godotName": "update_rotation",
+      "xmlDocId": "P:Godot.RemoteTransform3D.UpdateRotation",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    },
+    {
+      "name": "UpdateScale",
+      "kind": "Property",
+      "signature": "public bool UpdateScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the remote node\u0027s scale is updated.",
+      "defaultValue": "true",
+      "godotName": "update_scale",
+      "xmlDocId": "P:Godot.RemoteTransform3D.UpdateScale",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    },
+    {
+      "name": "UseGlobalCoordinates",
+      "kind": "Property",
+      "signature": "public bool UseGlobalCoordinates { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], global coordinates are used. If [code]false[/code], local coordinates are used.",
+      "defaultValue": "true",
+      "godotName": "use_global_coordinates",
+      "xmlDocId": "P:Godot.RemoteTransform3D.UseGlobalCoordinates",
+      "sourcePath": "doc/classes/RemoteTransform3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RemoteTransform3D.xml",
+      "sha256": "9731e3070005c7ecc70f88d1bffc9702083684768fc6c01ca067ebdbd8d90740"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

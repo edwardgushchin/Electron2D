@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LineEdit",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.LineEdit",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "LineEdit",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "LineEdit",
+      "kind": "Constructor",
+      "signature": "public Electron2D.LineEdit()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.LineEdit\u0060 class.",
+      "xmlDocId": "M:Electron2D.LineEdit.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "LineEdit",
+      "kind": "Constructor",
+      "signature": "public Electron2D.LineEdit()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.LineEdit\u0060 class.",
+      "xmlDocId": "M:Electron2D.LineEdit.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Clears all text from this control.",
+      "xmlDocId": "M:Electron2D.LineEdit.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this line edit.",
+      "xmlDocId": "M:Electron2D.LineEdit._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DeleteCharAtCaret",
+      "kind": "Method",
+      "signature": "public System.Void DeleteCharAtCaret()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Deletes the character before the caret.",
+      "xmlDocId": "M:Electron2D.LineEdit.DeleteCharAtCaret",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DeleteText",
+      "kind": "Method",
+      "signature": "public System.Void DeleteText(System.Int32 fromColumn, System.Int32 toColumn)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "fromColumn",
+          "type": "System.Int32"
+        },
+        {
+          "name": "toColumn",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Deletes text in the specified column range.",
+      "xmlDocId": "M:Electron2D.LineEdit.DeleteText(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the text field background and current text.",
+      "xmlDocId": "M:Electron2D.LineEdit._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles focused text input and editing keys.",
+      "xmlDocId": "M:Electron2D.LineEdit._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InsertTextAtCaret",
+      "kind": "Method",
+      "signature": "public System.Void InsertTextAtCaret(System.String value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Inserts text at the current caret column.",
+      "xmlDocId": "M:Electron2D.LineEdit.InsertTextAtCaret(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CaretColumn",
+      "kind": "Property",
+      "signature": "public System.Int32 CaretColumn { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the caret column.",
+      "xmlDocId": "P:Electron2D.LineEdit.CaretColumn",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public System.Boolean Editable { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether user input can edit the text.",
+      "xmlDocId": "P:Electron2D.LineEdit.Editable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "kind": "Property",
+      "signature": "public Electron2D.HorizontalAlignment HorizontalAlignment { get; set; }",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal alignment used for drawing text.",
+      "xmlDocId": "P:Electron2D.LineEdit.HorizontalAlignment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxLength",
+      "kind": "Property",
+      "signature": "public System.Int32 MaxLength { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the maximum number of UTF-16 code units accepted by this control.",
+      "xmlDocId": "P:Electron2D.LineEdit.MaxLength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PlaceholderText",
+      "kind": "Property",
+      "signature": "public System.String PlaceholderText { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the placeholder text drawn when \u0060Electron2D.LineEdit.Text\u0060 is empty.",
+      "xmlDocId": "P:Electron2D.LineEdit.PlaceholderText",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Secret",
+      "kind": "Property",
+      "signature": "public System.Boolean Secret { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether text is drawn using \u0060Electron2D.LineEdit.SecretCharacter\u0060.",
+      "xmlDocId": "P:Electron2D.LineEdit.Secret",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SecretCharacter",
+      "kind": "Property",
+      "signature": "public System.String SecretCharacter { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the character string used when \u0060Electron2D.LineEdit.Secret\u0060 is enabled.",
+      "xmlDocId": "P:Electron2D.LineEdit.SecretCharacter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public System.String Text { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the editable text.",
+      "xmlDocId": "P:Electron2D.LineEdit.Text",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this line edit.",
+      "xmlDocId": "M:Electron2D.LineEdit._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the text field background and current text.",
+      "xmlDocId": "M:Electron2D.LineEdit._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles focused text input and editing keys.",
+      "xmlDocId": "M:Electron2D.LineEdit._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

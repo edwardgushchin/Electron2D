@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorContextMenuPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorContextMenuPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorContextMenuPlugin",
+    "documentationPath": "doc/classes/EditorContextMenuPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorcontextmenuplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_PopupMenu",
+      "kind": "Method",
+      "signature": "public void _PopupMenu(PackedStringArray paths)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Called when creating a context menu, custom options can be added by using the [method add_context_menu_item] or [method add_context_menu_item_from_shortcut] functions. [param paths] contains currently selected paths (depending on menu), which can be used to conditionally add options.",
+      "godotName": "_popup_menu",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin._PopupMenu(PackedStringArray)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "AddContextMenuItem",
+      "kind": "Method",
+      "signature": "public void AddContextMenuItem(String name, Callable callback, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Add custom option to the context menu of the plugin\u0027s specified slot. When the option is activated, [param callback] will be called. Callback should take single [Array] argument; array contents depend on context menu slot. [codeblock] func _popup_menu(paths): add_context_menu_item(\u0022File Custom options\u0022, handle, ICON) [/codeblock] If you want to assign shortcut to the menu item, use [method add_context_menu_item_from_shortcut] instead.",
+      "godotName": "add_context_menu_item",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin.AddContextMenuItem(String,Callable,Texture2D)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "AddContextMenuItemFromShortcut",
+      "kind": "Method",
+      "signature": "public void AddContextMenuItemFromShortcut(String name, Shortcut shortcut, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Add custom option to the context menu of the plugin\u0027s specified slot. The option will have the [param shortcut] assigned and reuse its callback. The shortcut has to be registered beforehand with [method add_menu_shortcut]. [codeblock] func _init(): add_menu_shortcut(SHORTCUT, handle) func _popup_menu(paths): add_context_menu_item_from_shortcut(\u0022File Custom options\u0022, SHORTCUT, ICON) [/codeblock]",
+      "godotName": "add_context_menu_item_from_shortcut",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin.AddContextMenuItemFromShortcut(String,Shortcut,Texture2D)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "AddContextSubmenuItem",
+      "kind": "Method",
+      "signature": "public void AddContextSubmenuItem(String name, PopupMenu menu, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "menu",
+          "type": "PopupMenu"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Add a submenu to the context menu of the plugin\u0027s specified slot. The submenu is not automatically handled, you need to connect to its signals yourself. Also the submenu is freed on every popup, so provide a new [PopupMenu] every time. [codeblock] func _popup_menu(paths): var popup_menu = PopupMenu.new() popup_menu.add_item(\u0022Blue\u0022) popup_menu.add_item(\u0022White\u0022) popup_menu.id_pressed.connect(_on_color_submenu_option) add_context_submenu_item(\u0022Set Node Color\u0022, popup_menu) [/codeblock]",
+      "godotName": "add_context_submenu_item",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin.AddContextSubmenuItem(String,PopupMenu,Texture2D)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "AddMenuShortcut",
+      "kind": "Method",
+      "signature": "public void AddMenuShortcut(Shortcut shortcut, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers a shortcut associated with the plugin\u0027s context menu. This method should be called once (e.g. in plugin\u0027s [method Object._init]). [param callback] will be called when user presses the specified [param shortcut] while the menu\u0027s context is in effect (e.g. FileSystem dock is focused). Callback should take single [Array] argument; array contents depend on context menu slot. [codeblock] func _init(): add_menu_shortcut(SHORTCUT, handle) [/codeblock]",
+      "godotName": "add_menu_shortcut",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin.AddMenuShortcut(Shortcut,Callable)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ContextMenuSlot",
+      "values": [
+        {
+          "name": "CONTEXT_SLOT_2D_EDITOR",
+          "value": "6",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of 2D editor\u0027s basic right-click menu. [method _popup_menu] will be called with paths to all [CanvasItem] nodes under the cursor. You can fetch them using this code: [codeblock] func _popup_menu(paths): var canvas_item = Engine.get_main_loop().root.get_node(paths[0]); # Replace 0 with the desired index. [/codeblock] The paths array is empty if there weren\u0027t any nodes under cursor. The option callback will receive a typed array of [CanvasItem] nodes.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_FILESYSTEM",
+          "value": "1",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of FileSystem dock. [method _popup_menu] and option callback will be called with list of paths of the currently selected files.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_FILESYSTEM_CREATE",
+          "value": "3",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "The \u0022Create...\u0022 submenu of FileSystem dock\u0027s context menu, or the \u0022New\u0022 section of the main context menu when empty space is clicked. [method _popup_menu] and option callback will be called with the path of the currently selected folder. When clicking the empty space, the list of paths for popup method will be empty. [codeblock] func _popup_menu(paths): if paths.is_empty(): add_context_menu_item(\u0022New Image File...\u0022, create_image) else: add_context_menu_item(\u0022Image File...\u0022, create_image) [/codeblock]",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_INSPECTOR_PROPERTY",
+          "value": "7",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of the inspectors right-click menu. [method _popup_menu] will be called with an array of two items: The first will be the object\u0027s ID, the second will be the property name. An object can be retrieved from it\u0027s ID via [method @GlobalScope.instance_from_id] after converting it to an int. The option callback will receive the EditorProperty directly.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_SCENE_TABS",
+          "value": "5",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of scene tabs. [method _popup_menu] will be called with the path of the clicked scene, or empty [PackedStringArray] if the menu was opened on empty space. The option callback will receive the path of the clicked scene, or empty [String] if none was clicked.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_SCENE_TREE",
+          "value": "0",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of Scene dock. [method _popup_menu] will be called with a list of paths to currently selected nodes, while option callback will receive the list of currently selected nodes.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_SCRIPT_EDITOR",
+          "value": "2",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of Script editor\u0027s script tabs. [method _popup_menu] will be called with the path to the currently edited script, while option callback will receive reference to that script.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        },
+        {
+          "name": "CONTEXT_SLOT_SCRIPT_EDITOR_CODE",
+          "value": "4",
+          "enum": "ContextMenuSlot",
+          "kind": "EnumValue",
+          "summary": "Context menu of Script editor\u0027s code editor. [method _popup_menu] will be called with the path to the [CodeEdit] node. You can fetch it using this code: [codeblock] func _popup_menu(paths): var code_edit = Engine.get_main_loop().root.get_node(paths[0]); [/codeblock] The option callback will receive reference to that node. You can use [CodeEdit] methods to perform symbol lookups etc.",
+          "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CONTEXT_SLOT_SCENE_TREE",
+      "value": "0",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of Scene dock. [method _popup_menu] will be called with a list of paths to currently selected nodes, while option callback will receive the list of currently selected nodes.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_FILESYSTEM",
+      "value": "1",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of FileSystem dock. [method _popup_menu] and option callback will be called with list of paths of the currently selected files.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_SCRIPT_EDITOR",
+      "value": "2",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of Script editor\u0027s script tabs. [method _popup_menu] will be called with the path to the currently edited script, while option callback will receive reference to that script.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_FILESYSTEM_CREATE",
+      "value": "3",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "The \u0022Create...\u0022 submenu of FileSystem dock\u0027s context menu, or the \u0022New\u0022 section of the main context menu when empty space is clicked. [method _popup_menu] and option callback will be called with the path of the currently selected folder. When clicking the empty space, the list of paths for popup method will be empty. [codeblock] func _popup_menu(paths): if paths.is_empty(): add_context_menu_item(\u0022New Image File...\u0022, create_image) else: add_context_menu_item(\u0022Image File...\u0022, create_image) [/codeblock]",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_SCRIPT_EDITOR_CODE",
+      "value": "4",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of Script editor\u0027s code editor. [method _popup_menu] will be called with the path to the [CodeEdit] node. You can fetch it using this code: [codeblock] func _popup_menu(paths): var code_edit = Engine.get_main_loop().root.get_node(paths[0]); [/codeblock] The option callback will receive reference to that node. You can use [CodeEdit] methods to perform symbol lookups etc.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_SCENE_TABS",
+      "value": "5",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of scene tabs. [method _popup_menu] will be called with the path of the clicked scene, or empty [PackedStringArray] if the menu was opened on empty space. The option callback will receive the path of the clicked scene, or empty [String] if none was clicked.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_2D_EDITOR",
+      "value": "6",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of 2D editor\u0027s basic right-click menu. [method _popup_menu] will be called with paths to all [CanvasItem] nodes under the cursor. You can fetch them using this code: [codeblock] func _popup_menu(paths): var canvas_item = Engine.get_main_loop().root.get_node(paths[0]); # Replace 0 with the desired index. [/codeblock] The paths array is empty if there weren\u0027t any nodes under cursor. The option callback will receive a typed array of [CanvasItem] nodes.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    },
+    {
+      "name": "CONTEXT_SLOT_INSPECTOR_PROPERTY",
+      "value": "7",
+      "enum": "ContextMenuSlot",
+      "kind": "EnumValue",
+      "summary": "Context menu of the inspectors right-click menu. [method _popup_menu] will be called with an array of two items: The first will be the object\u0027s ID, the second will be the property name. An object can be retrieved from it\u0027s ID via [method @GlobalScope.instance_from_id] after converting it to an int. The option callback will receive the EditorProperty directly.",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_PopupMenu",
+      "kind": "Method",
+      "signature": "public void _PopupMenu(PackedStringArray paths)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Called when creating a context menu, custom options can be added by using the [method add_context_menu_item] or [method add_context_menu_item_from_shortcut] functions. [param paths] contains currently selected paths (depending on menu), which can be used to conditionally add options.",
+      "godotName": "_popup_menu",
+      "xmlDocId": "M:Godot.EditorContextMenuPlugin._PopupMenu(PackedStringArray)",
+      "sourcePath": "doc/classes/EditorContextMenuPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorContextMenuPlugin.xml",
+      "sha256": "8bd35d62f555b8dc9507990cb74c3c4f5930df63ea793f0b9f3c8f49c8108acc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

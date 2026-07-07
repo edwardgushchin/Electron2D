@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Separator",
+    "namespace": "Godot",
+    "fullName": "Godot.Separator",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "Separator",
+    "documentationPath": "doc/classes/Separator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_separator.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Separator.xml",
+      "sha256": "c50fc74542878a2b3382a64b3b436b51834fd38cc4b3a35243872f7c29ce4e88"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

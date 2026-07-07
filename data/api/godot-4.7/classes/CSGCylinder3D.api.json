@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGCylinder3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGCylinder3D",
+    "kind": "class",
+    "baseType": "CSGPrimitive3D",
+    "interfaces": [],
+    "godotReference": "CSGCylinder3D",
+    "documentationPath": "modules/csg/doc_classes/CSGCylinder3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgcylinder3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Cone",
+      "kind": "Property",
+      "signature": "public bool Cone { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] a cone is created, the [member radius] will only apply to one side.",
+      "defaultValue": "false",
+      "godotName": "cone",
+      "xmlDocId": "P:Godot.CSGCylinder3D.Cone",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height of the cylinder.",
+      "defaultValue": "2.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.CSGCylinder3D.Height",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    },
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The material used to render the cylinder.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CSGCylinder3D.Material",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the cylinder.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.CSGCylinder3D.Radius",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    },
+    {
+      "name": "Sides",
+      "kind": "Property",
+      "signature": "public int Sides { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of sides of the cylinder, the higher this number the more detail there will be in the cylinder.",
+      "defaultValue": "8",
+      "godotName": "sides",
+      "xmlDocId": "P:Godot.CSGCylinder3D.Sides",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    },
+    {
+      "name": "SmoothFaces",
+      "kind": "Property",
+      "signature": "public bool SmoothFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] the normals of the cylinder are set to give a smooth effect making the cylinder seem rounded. If [code]false[/code] the cylinder will have a flat shaded look.",
+      "defaultValue": "true",
+      "godotName": "smooth_faces",
+      "xmlDocId": "P:Godot.CSGCylinder3D.SmoothFaces",
+      "sourcePath": "modules/csg/doc_classes/CSGCylinder3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGCylinder3D.xml",
+      "sha256": "e235a79e5c29cf4168c03dc08126456efd788df11e305bd3176ea3800b99fb12"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

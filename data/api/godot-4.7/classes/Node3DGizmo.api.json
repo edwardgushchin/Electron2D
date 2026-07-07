@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Node3DGizmo",
+    "namespace": "Godot",
+    "fullName": "Godot.Node3DGizmo",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Node3DGizmo",
+    "documentationPath": "doc/classes/Node3DGizmo.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_node3dgizmo.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Node3DGizmo.xml",
+      "sha256": "80df9179916f3b44eb06a04c3f41acc6f7229e1e269fae3e4a1ea9496d3c7285"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

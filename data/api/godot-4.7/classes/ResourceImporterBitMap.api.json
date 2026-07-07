@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterBitMap",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterBitMap",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterBitMap",
+    "documentationPath": "doc/classes/ResourceImporterBitMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterbitmap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateFrom",
+      "kind": "Property",
+      "signature": "public int CreateFrom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The data source to use for generating the bitmap. [b]Black \u0026 White:[/b] Pixels whose HSV value is greater than the [member threshold] will be considered as \u0022enabled\u0022 (bit is [code]true[/code]). If the pixel is lower than or equal to the threshold, it will be considered as \u0022disabled\u0022 (bit is [code]false[/code]). [b]Alpha:[/b] Pixels whose alpha value is greater than the [member threshold] will be considered as \u0022enabled\u0022 (bit is [code]true[/code]). If the pixel is lower than or equal to the threshold, it will be considered as \u0022disabled\u0022 (bit is [code]false[/code]).",
+      "defaultValue": "0",
+      "godotName": "create_from",
+      "xmlDocId": "P:Godot.ResourceImporterBitMap.CreateFrom",
+      "sourcePath": "doc/classes/ResourceImporterBitMap.xml"
+    },
+    {
+      "name": "Threshold",
+      "kind": "Property",
+      "signature": "public float Threshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to use to determine which bits should be considered enabled or disabled. See also [member create_from].",
+      "defaultValue": "0.5",
+      "godotName": "threshold",
+      "xmlDocId": "P:Godot.ResourceImporterBitMap.Threshold",
+      "sourcePath": "doc/classes/ResourceImporterBitMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterBitMap.xml",
+      "sha256": "4081113a9561d00ff583f337a9c0a872f14c504382427bdbb472f0d0293791bc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

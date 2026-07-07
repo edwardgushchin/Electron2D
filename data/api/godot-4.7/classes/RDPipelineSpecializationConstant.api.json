@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDPipelineSpecializationConstant",
+    "namespace": "Godot",
+    "fullName": "Godot.RDPipelineSpecializationConstant",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDPipelineSpecializationConstant",
+    "documentationPath": "doc/classes/RDPipelineSpecializationConstant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdpipelinespecializationconstant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ConstantId",
+      "kind": "Property",
+      "signature": "public int ConstantId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The identifier of the specialization constant. This is a value starting from [code]0[/code] and that increments for every different specialization constant for a given shader.",
+      "defaultValue": "0",
+      "godotName": "constant_id",
+      "xmlDocId": "P:Godot.RDPipelineSpecializationConstant.ConstantId",
+      "sourcePath": "doc/classes/RDPipelineSpecializationConstant.xml"
+    },
+    {
+      "name": "Value",
+      "kind": "Property",
+      "signature": "public Variant Value { get; set; }",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "The specialization constant\u0027s value. Only [bool], [int] and [float] types are valid for specialization constants.",
+      "godotName": "value",
+      "xmlDocId": "P:Godot.RDPipelineSpecializationConstant.Value",
+      "sourcePath": "doc/classes/RDPipelineSpecializationConstant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDPipelineSpecializationConstant.xml",
+      "sha256": "3402d583631394e712504ca02bb66d763354234c46495087fb026aff8f301f04"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Label",
+    "namespace": "Godot",
+    "fullName": "Godot.Label",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "Label",
+    "documentationPath": "doc/classes/Label.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_label.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCharacterBounds",
+      "kind": "Method",
+      "signature": "public Rect2 GetCharacterBounds(int pos)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "pos",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bounding rectangle of the character at position [param pos] in the label\u0027s local coordinate system. If the character is a non-visual character or [param pos] is outside the valid range, an empty [Rect2] is returned. If the character is a part of a composite grapheme, the bounding rectangle of the whole grapheme is returned.",
+      "godotName": "get_character_bounds",
+      "xmlDocId": "M:Godot.Label.GetCharacterBounds(int)",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "GetLineCount",
+      "kind": "Method",
+      "signature": "public int GetLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines of text the Label has.",
+      "godotName": "get_line_count",
+      "xmlDocId": "M:Godot.Label.GetLineCount",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "GetLineHeight",
+      "kind": "Method",
+      "signature": "public int GetLineHeight(int line)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the height of the line [param line]. If [param line] is set to [code]-1[/code], returns the biggest line height. If there are no lines, returns font size in pixels.",
+      "godotName": "get_line_height",
+      "xmlDocId": "M:Godot.Label.GetLineHeight(int)",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "GetTotalCharacterCount",
+      "kind": "Method",
+      "signature": "public int GetTotalCharacterCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the total number of printable characters in the text (excluding spaces and newlines).",
+      "godotName": "get_total_character_count",
+      "xmlDocId": "M:Godot.Label.GetTotalCharacterCount",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "GetVisibleLineCount",
+      "kind": "Method",
+      "signature": "public int GetVisibleLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines shown. Useful if the [Label]\u0027s height cannot currently display all lines.",
+      "godotName": "get_visible_line_count",
+      "xmlDocId": "M:Godot.Label.GetVisibleLineCount",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "AutowrapMode",
+      "kind": "Property",
+      "signature": "public int AutowrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If set to something other than [constant TextServer.AUTOWRAP_OFF], the text gets wrapped inside the node\u0027s bounding rectangle. If you resize the node, it will change its height automatically to show all the text. [b]Note:[/b] Labels with autowrapping enabled must have a custom maximum width configured to work correctly, either through the Label\u0027s own [member Control.custom_maximum_size] or as a result of a propagated maximum size from a parent Control with [member Control.propagate_maximum_size] enabled.",
+      "defaultValue": "0",
+      "godotName": "autowrap_mode",
+      "xmlDocId": "P:Godot.Label.AutowrapMode",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "AutowrapTrimFlags",
+      "kind": "Property",
+      "signature": "public int AutowrapTrimFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Autowrap space trimming flags. See [constant TextServer.BREAK_TRIM_START_EDGE_SPACES] and [constant TextServer.BREAK_TRIM_END_EDGE_SPACES] for more info.",
+      "defaultValue": "192",
+      "godotName": "autowrap_trim_flags",
+      "xmlDocId": "P:Godot.Label.AutowrapTrimFlags",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "ClipText",
+      "kind": "Property",
+      "signature": "public bool ClipText { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the Label only shows the text that fits inside its bounding rectangle and will clip text horizontally.",
+      "defaultValue": "false",
+      "godotName": "clip_text",
+      "xmlDocId": "P:Godot.Label.ClipText",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "EllipsisChar",
+      "kind": "Property",
+      "signature": "public String EllipsisChar { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Ellipsis character used for text clipping.",
+      "defaultValue": "\u0022\u2026\u0022",
+      "godotName": "ellipsis_char",
+      "xmlDocId": "P:Godot.Label.EllipsisChar",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "kind": "Property",
+      "signature": "public int HorizontalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s horizontal alignment. Supports left, center, right, and fill (also known as justify).",
+      "defaultValue": "0",
+      "godotName": "horizontal_alignment",
+      "xmlDocId": "P:Godot.Label.HorizontalAlignment",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "JustificationFlags",
+      "kind": "Property",
+      "signature": "public int JustificationFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line fill alignment rules.",
+      "defaultValue": "163",
+      "godotName": "justification_flags",
+      "xmlDocId": "P:Godot.Label.JustificationFlags",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "LabelSettings",
+      "kind": "Property",
+      "signature": "public LabelSettings LabelSettings { get; set; }",
+      "returnType": "LabelSettings",
+      "parameters": [],
+      "summary": "A [LabelSettings] resource that can be shared between multiple [Label] nodes. Takes priority over theme properties.",
+      "godotName": "label_settings",
+      "xmlDocId": "P:Godot.Label.LabelSettings",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.Label.Language",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "LinesSkipped",
+      "kind": "Property",
+      "signature": "public int LinesSkipped { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of the lines ignored and not displayed from the start of the [member text] value.",
+      "defaultValue": "0",
+      "godotName": "lines_skipped",
+      "xmlDocId": "P:Godot.Label.LinesSkipped",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "MaxLinesVisible",
+      "kind": "Property",
+      "signature": "public int MaxLinesVisible { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Limits the lines of text the node shows on screen.",
+      "defaultValue": "-1",
+      "godotName": "max_lines_visible",
+      "xmlDocId": "P:Godot.Label.MaxLinesVisible",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.Label.MouseFilter",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "ParagraphSeparator",
+      "kind": "Property",
+      "signature": "public String ParagraphSeparator { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "String used as a paragraph separator. Each paragraph is processed independently, in its own BiDi context.",
+      "defaultValue": "\u0022\\\\n\u0022",
+      "godotName": "paragraph_separator",
+      "xmlDocId": "P:Godot.Label.ParagraphSeparator",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "4",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.Label.SizeFlagsVertical",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.Label.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.Label.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "TabStops",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array TabStops { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Aligns text to the given tab-stops.",
+      "defaultValue": "PackedFloat32Array()",
+      "godotName": "tab_stops",
+      "xmlDocId": "P:Godot.Label.TabStops",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text to display on screen.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.Label.Text",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.Label.TextDirection",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clipping behavior when the text exceeds the node\u0027s bounding rectangle.",
+      "defaultValue": "0",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.Label.TextOverrunBehavior",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "Uppercase",
+      "kind": "Property",
+      "signature": "public bool Uppercase { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all the text displays as UPPERCASE.",
+      "defaultValue": "false",
+      "godotName": "uppercase",
+      "xmlDocId": "P:Godot.Label.Uppercase",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "VerticalAlignment",
+      "kind": "Property",
+      "signature": "public int VerticalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s vertical alignment. Supports top, center, bottom, and fill.",
+      "defaultValue": "0",
+      "godotName": "vertical_alignment",
+      "xmlDocId": "P:Godot.Label.VerticalAlignment",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "VisibleCharacters",
+      "kind": "Property",
+      "signature": "public int VisibleCharacters { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of characters to display. If set to [code]-1[/code], all characters are displayed. This can be useful when animating the text appearing in a dialog box. [b]Note:[/b] Setting this property updates [member visible_ratio] accordingly. [b]Note:[/b] Characters are counted as Unicode codepoints. A single visible grapheme may contain multiple codepoints (e.g. certain emoji use three codepoints). A single codepoint may contain two UTF-16 characters, which are used in C# strings.",
+      "defaultValue": "-1",
+      "godotName": "visible_characters",
+      "xmlDocId": "P:Godot.Label.VisibleCharacters",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "VisibleCharactersBehavior",
+      "kind": "Property",
+      "signature": "public int VisibleCharactersBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clipping behavior when [member visible_characters] or [member visible_ratio] is set.",
+      "defaultValue": "0",
+      "godotName": "visible_characters_behavior",
+      "xmlDocId": "P:Godot.Label.VisibleCharactersBehavior",
+      "sourcePath": "doc/classes/Label.xml"
+    },
+    {
+      "name": "VisibleRatio",
+      "kind": "Property",
+      "signature": "public float VisibleRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fraction of characters to display, relative to the total number of characters (see [method get_total_character_count]). If set to [code]1.0[/code], all characters are displayed. If set to [code]0.5[/code], only half of the characters will be displayed. This can be useful when animating the text appearing in a dialog box. [b]Note:[/b] Setting this property updates [member visible_characters] accordingly.",
+      "defaultValue": "1.0",
+      "godotName": "visible_ratio",
+      "xmlDocId": "P:Godot.Label.VisibleRatio",
+      "sourcePath": "doc/classes/Label.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Label.xml",
+      "sha256": "42089065f29c53a62b276c65f5890a53f9a3d929347477b8585febe80702553a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

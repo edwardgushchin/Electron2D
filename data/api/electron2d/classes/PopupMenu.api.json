@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PopupMenu",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PopupMenu",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "PopupMenu",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "PopupMenu",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PopupMenu()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.PopupMenu\u0060 class.",
+      "xmlDocId": "M:Electron2D.PopupMenu.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "PopupMenu",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PopupMenu()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.PopupMenu\u0060 class.",
+      "xmlDocId": "M:Electron2D.PopupMenu.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddCheckItem",
+      "kind": "Method",
+      "signature": "public System.Void AddCheckItem(System.String label, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "System.String"
+        },
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a checkable command item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.AddCheckItem(System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddIconCheckItem",
+      "kind": "Method",
+      "signature": "public System.Void AddIconCheckItem(Electron2D.Texture2D texture, System.String label, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "System.String"
+        },
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a checkable command item with an icon.",
+      "xmlDocId": "M:Electron2D.PopupMenu.AddIconCheckItem(Electron2D.Texture2D,System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public System.Void AddIconItem(Electron2D.Texture2D texture, System.String label, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "System.String"
+        },
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a command item with an icon.",
+      "xmlDocId": "M:Electron2D.PopupMenu.AddIconItem(Electron2D.Texture2D,System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public System.Void AddItem(System.String label, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "System.String"
+        },
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a plain text command item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.AddItem(System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddSeparator",
+      "kind": "Method",
+      "signature": "public System.Void AddSeparator(System.String label, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "System.String",
+          "defaultValue": ""
+        },
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a separator item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.AddSeparator(System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes every menu item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this popup menu.",
+      "xmlDocId": "M:Electron2D.PopupMenu._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the menu rows and labels.",
+      "xmlDocId": "M:Electron2D.PopupMenu._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetItemCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of menu items.",
+      "xmlDocId": "M:Electron2D.PopupMenu.GetItemCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetItemIcon(System.Int32 index)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the icon of an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.GetItemIcon(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemId",
+      "kind": "Method",
+      "signature": "public System.Int32 GetItemId(System.Int32 index)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the id stored on an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.GetItemId(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public System.String GetItemText(System.Int32 index)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the text of an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.GetItemText(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this menu.",
+      "xmlDocId": "M:Electron2D.PopupMenu._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsItemChecked",
+      "kind": "Method",
+      "signature": "public System.Boolean IsItemChecked(System.Int32 index)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item is checked.",
+      "xmlDocId": "M:Electron2D.PopupMenu.IsItemChecked(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public System.Boolean IsItemDisabled(System.Int32 index)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item is disabled.",
+      "xmlDocId": "M:Electron2D.PopupMenu.IsItemDisabled(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsItemSeparator",
+      "kind": "Method",
+      "signature": "public System.Boolean IsItemSeparator(System.Int32 index)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether an item is a separator.",
+      "xmlDocId": "M:Electron2D.PopupMenu.IsItemSeparator(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Popup",
+      "kind": "Method",
+      "signature": "public System.Void Popup(Electron2D.Rect2 bounds)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "bounds",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Shows this menu inside a rectangle.",
+      "xmlDocId": "M:Electron2D.PopupMenu.Popup(Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemChecked",
+      "kind": "Method",
+      "signature": "public System.Void SetItemChecked(System.Int32 index, System.Boolean @checked)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "checked",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a checkable item is checked.",
+      "xmlDocId": "M:Electron2D.PopupMenu.SetItemChecked(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public System.Void SetItemDisabled(System.Int32 index, System.Boolean disabled)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "disabled",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether an item ignores activation input.",
+      "xmlDocId": "M:Electron2D.PopupMenu.SetItemDisabled(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public System.Void SetItemIcon(System.Int32 index, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Sets the icon of an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.SetItemIcon(System.Int32,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemId",
+      "kind": "Method",
+      "signature": "public System.Void SetItemId(System.Int32 index, System.Int32 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "id",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Sets the id stored on an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.SetItemId(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public System.Void SetItemText(System.Int32 index, System.String text)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "text",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets the text of an item.",
+      "xmlDocId": "M:Electron2D.PopupMenu.SetItemText(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this popup menu.",
+      "xmlDocId": "M:Electron2D.PopupMenu._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the menu rows and labels.",
+      "xmlDocId": "M:Electron2D.PopupMenu._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this menu.",
+      "xmlDocId": "M:Electron2D.PopupMenu._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

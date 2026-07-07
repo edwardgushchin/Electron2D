@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RayCast2D",
+    "namespace": "Godot",
+    "fullName": "Godot.RayCast2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "RayCast2D",
+    "documentationPath": "doc/classes/RayCast2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_raycast2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddException",
+      "kind": "Method",
+      "signature": "public void AddException(CollisionObject2D node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "CollisionObject2D"
+        }
+      ],
+      "summary": "Adds a collision exception so the ray does not report collisions with the specified [param node].",
+      "godotName": "add_exception",
+      "xmlDocId": "M:Godot.RayCast2D.AddException(CollisionObject2D)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "AddExceptionRid",
+      "kind": "Method",
+      "signature": "public void AddExceptionRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a collision exception so the ray does not report collisions with the specified [RID].",
+      "godotName": "add_exception_rid",
+      "xmlDocId": "M:Godot.RayCast2D.AddExceptionRid(RID)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "ClearExceptions",
+      "kind": "Method",
+      "signature": "public void ClearExceptions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all collision exceptions for this ray.",
+      "godotName": "clear_exceptions",
+      "xmlDocId": "M:Godot.RayCast2D.ClearExceptions",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "ForceRaycastUpdate",
+      "kind": "Method",
+      "signature": "public void ForceRaycastUpdate()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Updates the collision information for the ray immediately, without waiting for the next [code]_physics_process[/code] call. Use this method, for example, when the ray or its parent has changed state. [b]Note:[/b] [member enabled] does not need to be [code]true[/code] for this to work.",
+      "godotName": "force_raycast_update",
+      "xmlDocId": "M:Godot.RayCast2D.ForceRaycastUpdate",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Object GetCollider()",
+      "returnType": "Object",
+      "parameters": [],
+      "summary": "Returns the first object that the ray intersects, or [code]null[/code] if no object is intersecting the ray (i.e. [method is_colliding] returns [code]false[/code]). [b]Note:[/b] This object is not guaranteed to be a [CollisionObject2D]. For example, if the ray intersects a [TileMapLayer], the method will return a [TileMapLayer] instance.",
+      "godotName": "get_collider",
+      "xmlDocId": "M:Godot.RayCast2D.GetCollider",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public RID GetColliderRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the first object that the ray intersects, or an empty [RID] if no object is intersecting the ray (i.e. [method is_colliding] returns [code]false[/code]).",
+      "godotName": "get_collider_rid",
+      "xmlDocId": "M:Godot.RayCast2D.GetColliderRid",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public int GetColliderShape()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the shape ID of the first object that the ray intersects, or [code]0[/code] if no object is intersecting the ray (i.e. [method is_colliding] returns [code]false[/code]). To get the intersected shape node, for a [CollisionObject2D] target, use: [codeblocks] [gdscript] var target = get_collider() # A CollisionObject2D. var shape_id = get_collider_shape() # The shape index in the collider. var owner_id = target.shape_find_owner(shape_id) # The owner ID in the collider. var shape = target.shape_owner_get_owner(owner_id) [/gdscript] [csharp] var target = (CollisionObject2D)GetCollider(); // A CollisionObject2D. var shapeId = GetColliderShape(); // The shape index in the collider. var ownerId = target.ShapeFindOwner(shapeId); // The owner ID in the collider. var shape = target.ShapeOwnerGetOwner(ownerId); [/csharp] [/codeblocks]",
+      "godotName": "get_collider_shape",
+      "xmlDocId": "M:Godot.RayCast2D.GetColliderShape",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.RayCast2D.GetCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetCollisionNormal",
+      "kind": "Method",
+      "signature": "public Vector2 GetCollisionNormal()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the normal of the intersecting object\u0027s shape at the collision point, or [code]Vector2(0, 0)[/code] if the ray starts inside the shape and [member hit_from_inside] is [code]true[/code]. [b]Note:[/b] Check that [method is_colliding] returns [code]true[/code] before calling this method to ensure the returned normal is valid and up-to-date.",
+      "godotName": "get_collision_normal",
+      "xmlDocId": "M:Godot.RayCast2D.GetCollisionNormal",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "GetCollisionPoint",
+      "kind": "Method",
+      "signature": "public Vector2 GetCollisionPoint()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the collision point at which the ray intersects the closest object, in the global coordinate system. If [member hit_from_inside] is [code]true[/code] and the ray starts inside of a collision shape, this function will return the origin point of the ray. [b]Note:[/b] Check that [method is_colliding] returns [code]true[/code] before calling this method to ensure the returned point is valid and up-to-date.",
+      "godotName": "get_collision_point",
+      "xmlDocId": "M:Godot.RayCast2D.GetCollisionPoint",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "IsColliding",
+      "kind": "Method",
+      "signature": "public bool IsColliding()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether any object is intersecting with the ray\u0027s vector (considering the vector length).",
+      "godotName": "is_colliding",
+      "xmlDocId": "M:Godot.RayCast2D.IsColliding",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "RemoveException",
+      "kind": "Method",
+      "signature": "public void RemoveException(CollisionObject2D node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "CollisionObject2D"
+        }
+      ],
+      "summary": "Removes a collision exception so the ray can report collisions with the specified [param node].",
+      "godotName": "remove_exception",
+      "xmlDocId": "M:Godot.RayCast2D.RemoveException(CollisionObject2D)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "RemoveExceptionRid",
+      "kind": "Method",
+      "signature": "public void RemoveExceptionRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes a collision exception so the ray can report collisions with the specified [RID].",
+      "godotName": "remove_exception_rid",
+      "xmlDocId": "M:Godot.RayCast2D.RemoveExceptionRid(RID)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.RayCast2D.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public bool CollideWithAreas { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions with [Area2D]s will be reported.",
+      "defaultValue": "false",
+      "godotName": "collide_with_areas",
+      "xmlDocId": "P:Godot.RayCast2D.CollideWithAreas",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public bool CollideWithBodies { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions with [PhysicsBody2D]s will be reported.",
+      "defaultValue": "true",
+      "godotName": "collide_with_bodies",
+      "xmlDocId": "P:Godot.RayCast2D.CollideWithBodies",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ray\u0027s collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.RayCast2D.CollisionMask",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions will be reported.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.RayCast2D.Enabled",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "ExcludeParent",
+      "kind": "Property",
+      "signature": "public bool ExcludeParent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this raycast will not report collisions with its parent node. This property only has an effect if the parent node is a [CollisionObject2D]. See also [method Node.get_parent] and [method add_exception].",
+      "defaultValue": "true",
+      "godotName": "exclude_parent",
+      "xmlDocId": "P:Godot.RayCast2D.ExcludeParent",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "HitFromInside",
+      "kind": "Property",
+      "signature": "public bool HitFromInside { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the ray will detect a hit when starting inside shapes. In this case the collision normal will be [code]Vector2(0, 0)[/code]. Does not affect concave polygon shapes.",
+      "defaultValue": "false",
+      "godotName": "hit_from_inside",
+      "xmlDocId": "P:Godot.RayCast2D.HitFromInside",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    },
+    {
+      "name": "TargetPosition",
+      "kind": "Property",
+      "signature": "public Vector2 TargetPosition { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The ray\u0027s destination point, relative to this raycast\u0027s [member Node2D.position].",
+      "defaultValue": "Vector2(0, 50)",
+      "godotName": "target_position",
+      "xmlDocId": "P:Godot.RayCast2D.TargetPosition",
+      "sourcePath": "doc/classes/RayCast2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RayCast2D.xml",
+      "sha256": "2e2587f371ff9bad286e48a27e9d0b31bd149694dbfbe198d300db5620a1c0e0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

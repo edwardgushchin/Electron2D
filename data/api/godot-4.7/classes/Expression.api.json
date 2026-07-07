@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Expression",
+    "namespace": "Godot",
+    "fullName": "Godot.Expression",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Expression",
+    "documentationPath": "doc/classes/Expression.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_expression.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Execute",
+      "kind": "Method",
+      "signature": "public Variant Execute(Array inputs, Object baseInstance, bool showError, bool constCallsOnly)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "inputs",
+          "type": "Array",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "base_instance",
+          "type": "Object",
+          "defaultValue": "null"
+        },
+        {
+          "name": "show_error",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "const_calls_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Executes the expression that was previously parsed by [method parse] and returns the result. Before you use the returned object, you should check if the method failed by calling [method has_execute_failed]. If you defined input variables in [method parse], you can specify their values in the inputs array, in the same order.",
+      "godotName": "execute",
+      "xmlDocId": "M:Godot.Expression.Execute(Array,Object,bool,bool)",
+      "sourcePath": "doc/classes/Expression.xml"
+    },
+    {
+      "name": "GetErrorText",
+      "kind": "Method",
+      "signature": "public String GetErrorText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the error text if [method parse] or [method execute] has failed.",
+      "godotName": "get_error_text",
+      "xmlDocId": "M:Godot.Expression.GetErrorText",
+      "sourcePath": "doc/classes/Expression.xml"
+    },
+    {
+      "name": "HasExecuteFailed",
+      "kind": "Method",
+      "signature": "public bool HasExecuteFailed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [method execute] has failed.",
+      "godotName": "has_execute_failed",
+      "xmlDocId": "M:Godot.Expression.HasExecuteFailed",
+      "sourcePath": "doc/classes/Expression.xml"
+    },
+    {
+      "name": "Parse",
+      "kind": "Method",
+      "signature": "public int Parse(String expression, PackedStringArray inputNames)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "expression",
+          "type": "String"
+        },
+        {
+          "name": "input_names",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        }
+      ],
+      "summary": "Parses the expression and returns an [enum Error] code. You can optionally specify names of variables that may appear in the expression with [param input_names], so that you can bind them when it gets executed.",
+      "godotName": "parse",
+      "xmlDocId": "M:Godot.Expression.Parse(String,PackedStringArray)",
+      "sourcePath": "doc/classes/Expression.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Expression.xml",
+      "sha256": "9375eb053ca708cc9aff4cb492d31db6c96c0bc3b077eba254b45776e11204b7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

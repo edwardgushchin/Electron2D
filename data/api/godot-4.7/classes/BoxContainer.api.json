@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoxContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.BoxContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "BoxContainer",
+    "documentationPath": "doc/classes/BoxContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_boxcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddSpacer",
+      "kind": "Method",
+      "signature": "public Control AddSpacer(bool begin)",
+      "returnType": "Control",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds a [Control] node to the box as a spacer. If [param begin] is [code]true[/code], it will insert the [Control] node in front of all other children.",
+      "godotName": "add_spacer",
+      "xmlDocId": "M:Godot.BoxContainer.AddSpacer(bool)",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The alignment of the container\u0027s children (must be one of [constant ALIGNMENT_BEGIN], [constant ALIGNMENT_CENTER], or [constant ALIGNMENT_END]).",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.BoxContainer.Alignment",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    },
+    {
+      "name": "Vertical",
+      "kind": "Property",
+      "signature": "public bool Vertical { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [BoxContainer] will arrange its children vertically, rather than horizontally. Can\u0027t be changed when using [HBoxContainer] and [VBoxContainer].",
+      "defaultValue": "false",
+      "godotName": "vertical",
+      "xmlDocId": "P:Godot.BoxContainer.Vertical",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AlignmentMode",
+      "values": [
+        {
+          "name": "ALIGNMENT_BEGIN",
+          "value": "0",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be arranged at the beginning of the container, i.e. top if orientation is vertical, left if orientation is horizontal (right for RTL layout).",
+          "sourcePath": "doc/classes/BoxContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_CENTER",
+          "value": "1",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be centered in the container.",
+          "sourcePath": "doc/classes/BoxContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_END",
+          "value": "2",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be arranged at the end of the container, i.e. bottom if orientation is vertical, right if orientation is horizontal (left for RTL layout).",
+          "sourcePath": "doc/classes/BoxContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ALIGNMENT_BEGIN",
+      "value": "0",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be arranged at the beginning of the container, i.e. top if orientation is vertical, left if orientation is horizontal (right for RTL layout).",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_CENTER",
+      "value": "1",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be centered in the container.",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_END",
+      "value": "2",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be arranged at the end of the container, i.e. bottom if orientation is vertical, right if orientation is horizontal (left for RTL layout).",
+      "sourcePath": "doc/classes/BoxContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoxContainer.xml",
+      "sha256": "1a2a81025525d1bb44777cde2a4dbc2a0b7aeb83c85aea135abd0b09234145ac"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

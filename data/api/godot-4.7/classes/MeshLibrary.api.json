@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MeshLibrary",
+    "namespace": "Godot",
+    "fullName": "Godot.MeshLibrary",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "MeshLibrary",
+    "documentationPath": "doc/classes/MeshLibrary.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_meshlibrary.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the library.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.MeshLibrary.Clear",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "CreateItem",
+      "kind": "Method",
+      "signature": "public void CreateItem(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a new item in the library with the given ID. You can get an unused ID from [method get_last_unused_item_id].",
+      "godotName": "create_item",
+      "xmlDocId": "M:Godot.MeshLibrary.CreateItem(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "FindItemByName",
+      "kind": "Method",
+      "signature": "public int FindItemByName(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the first item with the given name, or [code]-1[/code] if no item is found.",
+      "godotName": "find_item_by_name",
+      "xmlDocId": "M:Godot.MeshLibrary.FindItemByName(String)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemCount",
+      "kind": "Method",
+      "signature": "public int GetItemCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of items present in the library.",
+      "godotName": "get_item_count",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemCount",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemList",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetItemList()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the list of item IDs in use.",
+      "godotName": "get_item_list",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemList",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemMesh",
+      "kind": "Method",
+      "signature": "public Mesh GetItemMesh(int id)",
+      "returnType": "Mesh",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item\u0027s mesh.",
+      "godotName": "get_item_mesh",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemMesh(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemMeshCastShadow",
+      "kind": "Method",
+      "signature": "public int GetItemMeshCastShadow(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item\u0027s shadow casting mode.",
+      "godotName": "get_item_mesh_cast_shadow",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemMeshCastShadow(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemMeshTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetItemMeshTransform(int id)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform applied to the item\u0027s mesh.",
+      "godotName": "get_item_mesh_transform",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemMeshTransform(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemName",
+      "kind": "Method",
+      "signature": "public String GetItemName(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item\u0027s name.",
+      "godotName": "get_item_name",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemName(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemNavigationLayers",
+      "kind": "Method",
+      "signature": "public int GetItemNavigationLayers(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item\u0027s navigation layers bitmask.",
+      "godotName": "get_item_navigation_layers",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemNavigationLayers(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemNavigationMesh",
+      "kind": "Method",
+      "signature": "public NavigationMesh GetItemNavigationMesh(int id)",
+      "returnType": "NavigationMesh",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item\u0027s navigation mesh.",
+      "godotName": "get_item_navigation_mesh",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemNavigationMesh(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemNavigationMeshTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetItemNavigationMeshTransform(int id)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform applied to the item\u0027s navigation mesh.",
+      "godotName": "get_item_navigation_mesh_transform",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemNavigationMeshTransform(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemPreview",
+      "kind": "Method",
+      "signature": "public Texture2D GetItemPreview(int id)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "When running in the editor, returns a generated item preview (a 3D rendering in isometric perspective). When used in a running project, returns the manually-defined item preview which can be set using [method set_item_preview]. Returns an empty [Texture2D] if no preview was manually set in a running project.",
+      "godotName": "get_item_preview",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemPreview(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetItemShapes",
+      "kind": "Method",
+      "signature": "public Array GetItemShapes(int id)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an item\u0027s collision shapes. The array consists of each [Shape3D] followed by its [Transform3D].",
+      "godotName": "get_item_shapes",
+      "xmlDocId": "M:Godot.MeshLibrary.GetItemShapes(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "GetLastUnusedItemId",
+      "kind": "Method",
+      "signature": "public int GetLastUnusedItemId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets an unused ID for a new item.",
+      "godotName": "get_last_unused_item_id",
+      "xmlDocId": "M:Godot.MeshLibrary.GetLastUnusedItemId",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "RemoveItem",
+      "kind": "Method",
+      "signature": "public void RemoveItem(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the item.",
+      "godotName": "remove_item",
+      "xmlDocId": "M:Godot.MeshLibrary.RemoveItem(int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemMesh",
+      "kind": "Method",
+      "signature": "public void SetItemMesh(int id, Mesh mesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        }
+      ],
+      "summary": "Sets the item\u0027s mesh.",
+      "godotName": "set_item_mesh",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemMesh(int,Mesh)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemMeshCastShadow",
+      "kind": "Method",
+      "signature": "public void SetItemMeshCastShadow(int id, int shadowCastingSetting)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "shadow_casting_setting",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the item\u0027s shadow casting mode to [param shadow_casting_setting].",
+      "godotName": "set_item_mesh_cast_shadow",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemMeshCastShadow(int,int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemMeshTransform",
+      "kind": "Method",
+      "signature": "public void SetItemMeshTransform(int id, Transform3D meshTransform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "mesh_transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the transform to apply to the item\u0027s mesh.",
+      "godotName": "set_item_mesh_transform",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemMeshTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemName",
+      "kind": "Method",
+      "signature": "public void SetItemName(int id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the item\u0027s name. This name is shown in the editor. It can also be used to look up the item later using [method find_item_by_name].",
+      "godotName": "set_item_name",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemName(int,String)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemNavigationLayers",
+      "kind": "Method",
+      "signature": "public void SetItemNavigationLayers(int id, int navigationLayers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the item\u0027s navigation layers bitmask.",
+      "godotName": "set_item_navigation_layers",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemNavigationLayers(int,int)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemNavigationMesh",
+      "kind": "Method",
+      "signature": "public void SetItemNavigationMesh(int id, NavigationMesh navigationMesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        }
+      ],
+      "summary": "Sets the item\u0027s navigation mesh.",
+      "godotName": "set_item_navigation_mesh",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemNavigationMesh(int,NavigationMesh)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemNavigationMeshTransform",
+      "kind": "Method",
+      "signature": "public void SetItemNavigationMeshTransform(int id, Transform3D navigationMesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "navigation_mesh",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the transform to apply to the item\u0027s navigation mesh.",
+      "godotName": "set_item_navigation_mesh_transform",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemNavigationMeshTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemPreview",
+      "kind": "Method",
+      "signature": "public void SetItemPreview(int id, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets a texture to use as the item\u0027s preview icon in the editor.",
+      "godotName": "set_item_preview",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemPreview(int,Texture2D)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    },
+    {
+      "name": "SetItemShapes",
+      "kind": "Method",
+      "signature": "public void SetItemShapes(int id, Array shapes)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "shapes",
+          "type": "Array"
+        }
+      ],
+      "summary": "Sets an item\u0027s collision shapes. The array should consist of [Shape3D] objects, each followed by a [Transform3D] that will be applied to it. For shapes that should not have a transform, use [constant Transform3D.IDENTITY].",
+      "godotName": "set_item_shapes",
+      "xmlDocId": "M:Godot.MeshLibrary.SetItemShapes(int,Array)",
+      "sourcePath": "doc/classes/MeshLibrary.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MeshLibrary.xml",
+      "sha256": "7eafa68fa459f917852e3ab8d4d4f1a1c9ebf3856313653d98bec5cf538f09a2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

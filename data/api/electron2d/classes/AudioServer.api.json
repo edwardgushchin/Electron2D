@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioServer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AudioServer",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "AudioServer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBus",
+      "kind": "Method",
+      "signature": "public static System.Void AddBus(System.Int32 atPosition)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "atPosition",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a user audio bus.",
+      "xmlDocId": "M:Electron2D.AudioServer.AddBus(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusCount",
+      "kind": "Method",
+      "signature": "public static System.Int32 GetBusCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of audio buses available to the server.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusIndex",
+      "kind": "Method",
+      "signature": "public static System.Int32 GetBusIndex(System.String busName)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "busName",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the index of an audio bus by name.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusIndex(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusName",
+      "kind": "Method",
+      "signature": "public static System.String GetBusName(System.Int32 busIdx)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the name of an audio bus by index.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusName(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusSend",
+      "kind": "Method",
+      "signature": "public static Electron2D.StringName GetBusSend(System.Int32 busIdx)",
+      "returnType": "Electron2D.StringName",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the target bus that receives a bus output.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusSend(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusVolumeDb",
+      "kind": "Method",
+      "signature": "public static System.Single GetBusVolumeDb(System.Int32 busIdx)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a bus volume offset in decibels.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusVolumeDb(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetBusVolumeLinear",
+      "kind": "Method",
+      "signature": "public static System.Single GetBusVolumeLinear(System.Int32 busIdx)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a bus volume as linear gain.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetBusVolumeLinear(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMixRate",
+      "kind": "Method",
+      "signature": "public static System.Single GetMixRate()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the audio mix rate in hertz.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetMixRate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetOutputLatency",
+      "kind": "Method",
+      "signature": "public static System.Single GetOutputLatency()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the current audio output latency estimate.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetOutputLatency",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSpeakerMode",
+      "kind": "Method",
+      "signature": "public static Electron2D.AudioServer.SpeakerMode GetSpeakerMode()",
+      "returnType": "Electron2D.AudioServer.SpeakerMode",
+      "parameters": [],
+      "summary": "Gets the speaker layout reported by the active audio output.",
+      "xmlDocId": "M:Electron2D.AudioServer.GetSpeakerMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsBusMute",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsBusMute(System.Int32 busIdx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a bus is muted.",
+      "xmlDocId": "M:Electron2D.AudioServer.IsBusMute(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsBusSolo",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsBusSolo(System.Int32 busIdx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a bus is soloed.",
+      "xmlDocId": "M:Electron2D.AudioServer.IsBusSolo(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Lock",
+      "kind": "Method",
+      "signature": "public static System.Void Lock()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Locks the audio server for a group of audio changes.",
+      "xmlDocId": "M:Electron2D.AudioServer.Lock",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MoveBus",
+      "kind": "Method",
+      "signature": "public static System.Void MoveBus(System.Int32 index, System.Int32 toIndex)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "toIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Moves a user audio bus to a different index.",
+      "xmlDocId": "M:Electron2D.AudioServer.MoveBus(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveBus",
+      "kind": "Method",
+      "signature": "public static System.Void RemoveBus(System.Int32 index)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Removes a user audio bus.",
+      "xmlDocId": "M:Electron2D.AudioServer.RemoveBus(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusCount",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusCount(System.Int32 amount)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Changes the number of audio buses.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusCount(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusMute",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusMute(System.Int32 busIdx, System.Boolean enable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "enable",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Enables or disables mute for a bus.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusMute(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusName",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusName(System.Int32 busIdx, System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Changes the name of a user audio bus.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusName(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusSend",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusSend(System.Int32 busIdx, Electron2D.StringName send)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "send",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Changes the target bus that receives a user bus output.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusSend(System.Int32,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusSolo",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusSolo(System.Int32 busIdx, System.Boolean enable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "enable",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Enables or disables solo for a bus.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusSolo(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusVolumeDb",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusVolumeDb(System.Int32 busIdx, System.Single volumeDb)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "volumeDb",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets a bus volume offset in decibels.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusVolumeDb(System.Int32,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetBusVolumeLinear",
+      "kind": "Method",
+      "signature": "public static System.Void SetBusVolumeLinear(System.Int32 busIdx, System.Single volumeLinear)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "busIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "volumeLinear",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets a bus volume as linear gain.",
+      "xmlDocId": "M:Electron2D.AudioServer.SetBusVolumeLinear(System.Int32,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unlock",
+      "kind": "Method",
+      "signature": "public static System.Void Unlock()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Unlocks the audio server after a grouped audio change.",
+      "xmlDocId": "M:Electron2D.AudioServer.Unlock",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

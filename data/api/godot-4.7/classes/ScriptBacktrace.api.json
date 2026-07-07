@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptBacktrace",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptBacktrace",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ScriptBacktrace",
+    "documentationPath": "doc/classes/ScriptBacktrace.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scriptbacktrace.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Format",
+      "kind": "Method",
+      "signature": "public String Format(int indentAll, int indentFrames)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "indent_all",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "indent_frames",
+          "type": "int",
+          "defaultValue": "4"
+        }
+      ],
+      "summary": "Converts the backtrace to a [String], where the entire string will be indented by [param indent_all] number of spaces, and the individual stack frames will be additionally indented by [param indent_frames] number of spaces. [b]Note:[/b] Calling [method Object.to_string] on a [ScriptBacktrace] will produce the same output as calling [method format] with all parameters left at their default values.",
+      "godotName": "format",
+      "xmlDocId": "M:Godot.ScriptBacktrace.Format(int,int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetFrameCount",
+      "kind": "Method",
+      "signature": "public int GetFrameCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of stack frames in the backtrace.",
+      "godotName": "get_frame_count",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetFrameCount",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetFrameFile",
+      "kind": "Method",
+      "signature": "public String GetFrameFile(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the file name of the call site represented by the stack frame at the specified index.",
+      "godotName": "get_frame_file",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetFrameFile(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetFrameFunction",
+      "kind": "Method",
+      "signature": "public String GetFrameFunction(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the function called at the stack frame at the specified index.",
+      "godotName": "get_frame_function",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetFrameFunction(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetFrameLine",
+      "kind": "Method",
+      "signature": "public int GetFrameLine(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the line number of the call site represented by the stack frame at the specified index.",
+      "godotName": "get_frame_line",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetFrameLine(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetGlobalVariableCount",
+      "kind": "Method",
+      "signature": "public int GetGlobalVariableCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of global variables (e.g. autoload singletons) in the backtrace. [b]Note:[/b] This will be non-zero only if the [code]include_variables[/code] parameter was [code]true[/code] when capturing the backtrace with [method Engine.capture_script_backtraces].",
+      "godotName": "get_global_variable_count",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetGlobalVariableCount",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetGlobalVariableName",
+      "kind": "Method",
+      "signature": "public String GetGlobalVariableName(int variableIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the global variable at the specified index.",
+      "godotName": "get_global_variable_name",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetGlobalVariableName(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetGlobalVariableValue",
+      "kind": "Method",
+      "signature": "public Variant GetGlobalVariableValue(int variableIndex)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the global variable at the specified index. [b]Warning:[/b] With GDScript backtraces, the returned [Variant] will be the variable\u0027s actual value, including any object references. This means that storing the returned [Variant] will prevent any such object from being deallocated, so it\u0027s generally recommended not to do so.",
+      "godotName": "get_global_variable_value",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetGlobalVariableValue(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetLanguageName",
+      "kind": "Method",
+      "signature": "public String GetLanguageName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the script language that this backtrace was captured from.",
+      "godotName": "get_language_name",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetLanguageName",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetLocalVariableCount",
+      "kind": "Method",
+      "signature": "public int GetLocalVariableCount(int frameIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of local variables in the stack frame at the specified index. [b]Note:[/b] This will be non-zero only if the [code]include_variables[/code] parameter was [code]true[/code] when capturing the backtrace with [method Engine.capture_script_backtraces].",
+      "godotName": "get_local_variable_count",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetLocalVariableCount(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetLocalVariableName",
+      "kind": "Method",
+      "signature": "public String GetLocalVariableName(int frameIndex, int variableIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        },
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the local variable at the specified [param variable_index] in the stack frame at the specified [param frame_index].",
+      "godotName": "get_local_variable_name",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetLocalVariableName(int,int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetLocalVariableValue",
+      "kind": "Method",
+      "signature": "public Variant GetLocalVariableValue(int frameIndex, int variableIndex)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        },
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the local variable at the specified [param variable_index] in the stack frame at the specified [param frame_index]. [b]Warning:[/b] With GDScript backtraces, the returned [Variant] will be the variable\u0027s actual value, including any object references. This means that storing the returned [Variant] will prevent any such object from being deallocated, so it\u0027s generally recommended not to do so.",
+      "godotName": "get_local_variable_value",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetLocalVariableValue(int,int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetMemberVariableCount",
+      "kind": "Method",
+      "signature": "public int GetMemberVariableCount(int frameIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of member variables in the stack frame at the specified index. [b]Note:[/b] This will be non-zero only if the [code]include_variables[/code] parameter was [code]true[/code] when capturing the backtrace with [method Engine.capture_script_backtraces].",
+      "godotName": "get_member_variable_count",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetMemberVariableCount(int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetMemberVariableName",
+      "kind": "Method",
+      "signature": "public String GetMemberVariableName(int frameIndex, int variableIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        },
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the member variable at the specified [param variable_index] in the stack frame at the specified [param frame_index].",
+      "godotName": "get_member_variable_name",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetMemberVariableName(int,int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "GetMemberVariableValue",
+      "kind": "Method",
+      "signature": "public Variant GetMemberVariableValue(int frameIndex, int variableIndex)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "frame_index",
+          "type": "int"
+        },
+        {
+          "name": "variable_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the member variable at the specified [param variable_index] in the stack frame at the specified [param frame_index]. [b]Warning:[/b] With GDScript backtraces, the returned [Variant] will be the variable\u0027s actual value, including any object references. This means that storing the returned [Variant] will prevent any such object from being deallocated, so it\u0027s generally recommended not to do so.",
+      "godotName": "get_member_variable_value",
+      "xmlDocId": "M:Godot.ScriptBacktrace.GetMemberVariableValue(int,int)",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the backtrace has no stack frames.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.ScriptBacktrace.IsEmpty",
+      "sourcePath": "doc/classes/ScriptBacktrace.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptBacktrace.xml",
+      "sha256": "41a6745e0f783d326ff704bd5bf68303c417dc600febe21ad7d605088d1c8d31"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

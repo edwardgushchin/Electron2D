@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceFormatSaver",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceFormatSaver",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ResourceFormatSaver",
+    "documentationPath": "doc/classes/ResourceFormatSaver.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceformatsaver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions(Resource resource)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Returns the list of extensions available for saving the resource object, provided it is recognized (see [method _recognize]).",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._GetRecognizedExtensions(Resource)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_Recognize",
+      "kind": "Method",
+      "signature": "public bool _Recognize(Resource resource)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Returns whether the given resource object can be saved by this saver.",
+      "godotName": "_recognize",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._Recognize(Resource)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_RecognizePath",
+      "kind": "Method",
+      "signature": "public bool _RecognizePath(Resource resource, String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this saver handles a given save path and [code]false[/code] otherwise. If this method is not implemented, the default behavior returns whether the path\u0027s extension is within the ones provided by [method _get_recognized_extensions].",
+      "godotName": "_recognize_path",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._RecognizePath(Resource,String)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_Save",
+      "kind": "Method",
+      "signature": "public int _Save(Resource resource, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Saves the given resource object to a file at the target [param path]. [param flags] is a bitmask composed with [enum ResourceSaver.SaverFlags] constants. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_save",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._Save(Resource,String,int)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_SetUid",
+      "kind": "Method",
+      "signature": "public int _SetUid(String path, int uid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "uid",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets a new UID for the resource at the given [param path]. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_set_uid",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._SetUid(String,int)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions(Resource resource)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Returns the list of extensions available for saving the resource object, provided it is recognized (see [method _recognize]).",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._GetRecognizedExtensions(Resource)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_Recognize",
+      "kind": "Method",
+      "signature": "public bool _Recognize(Resource resource)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Returns whether the given resource object can be saved by this saver.",
+      "godotName": "_recognize",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._Recognize(Resource)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_RecognizePath",
+      "kind": "Method",
+      "signature": "public bool _RecognizePath(Resource resource, String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this saver handles a given save path and [code]false[/code] otherwise. If this method is not implemented, the default behavior returns whether the path\u0027s extension is within the ones provided by [method _get_recognized_extensions].",
+      "godotName": "_recognize_path",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._RecognizePath(Resource,String)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_Save",
+      "kind": "Method",
+      "signature": "public int _Save(Resource resource, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Saves the given resource object to a file at the target [param path]. [param flags] is a bitmask composed with [enum ResourceSaver.SaverFlags] constants. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_save",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._Save(Resource,String,int)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    },
+    {
+      "name": "_SetUid",
+      "kind": "Method",
+      "signature": "public int _SetUid(String path, int uid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "uid",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets a new UID for the resource at the given [param path]. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_set_uid",
+      "xmlDocId": "M:Godot.ResourceFormatSaver._SetUid(String,int)",
+      "sourcePath": "doc/classes/ResourceFormatSaver.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceFormatSaver.xml",
+      "sha256": "4155e022aaddc7622ccfd51bf194797532cd1cc70a86c7ea9eb395b874886616"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBox",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.StyleBox",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "StyleBox",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "StyleBox",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StyleBox()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.StyleBox\u0060 class.",
+      "xmlDocId": "M:Electron2D.StyleBox.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "StyleBox",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StyleBox()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.StyleBox\u0060 class.",
+      "xmlDocId": "M:Electron2D.StyleBox.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "canvasItem",
+          "type": "Electron2D.CanvasItem"
+        },
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Draws this style box into a canvas item.",
+      "xmlDocId": "M:Electron2D.StyleBox.Draw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size contributed by content margins.",
+      "xmlDocId": "M:Electron2D.StyleBox.GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContentMarginBottom",
+      "kind": "Property",
+      "signature": "public System.Single ContentMarginBottom { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the bottom content margin.",
+      "xmlDocId": "P:Electron2D.StyleBox.ContentMarginBottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContentMarginLeft",
+      "kind": "Property",
+      "signature": "public System.Single ContentMarginLeft { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the left content margin.",
+      "xmlDocId": "P:Electron2D.StyleBox.ContentMarginLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContentMarginRight",
+      "kind": "Property",
+      "signature": "public System.Single ContentMarginRight { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the right content margin.",
+      "xmlDocId": "P:Electron2D.StyleBox.ContentMarginRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContentMarginTop",
+      "kind": "Property",
+      "signature": "public System.Single ContentMarginTop { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the top content margin.",
+      "xmlDocId": "P:Electron2D.StyleBox.ContentMarginTop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

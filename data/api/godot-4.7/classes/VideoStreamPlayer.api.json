@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VideoStreamPlayer",
+    "namespace": "Godot",
+    "fullName": "Godot.VideoStreamPlayer",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "VideoStreamPlayer",
+    "documentationPath": "doc/classes/VideoStreamPlayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_videostreamplayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetStreamLength",
+      "kind": "Method",
+      "signature": "public float GetStreamLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of the current stream, in seconds.",
+      "godotName": "get_stream_length",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.GetStreamLength",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "GetStreamName",
+      "kind": "Method",
+      "signature": "public String GetStreamName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the video stream\u0027s name, or [code]\u0022\u003CNo Stream\u003E\u0022[/code] if no video stream is assigned.",
+      "godotName": "get_stream_name",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.GetStreamName",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "GetVideoTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetVideoTexture()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Returns the current frame as a [Texture2D].",
+      "godotName": "get_video_texture",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.GetVideoTexture",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public bool IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the video is playing. [b]Note:[/b] The video is still considered playing if paused during playback.",
+      "godotName": "is_playing",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.IsPlaying",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public void Play()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Starts the video playback from the beginning. If the video is paused, this will not unpause the video.",
+      "godotName": "play",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.Play",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the video playback and sets the stream position to 0. [b]Note:[/b] Although the stream position will be set to 0, the first frame of the video stream won\u0027t become the current frame.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.VideoStreamPlayer.Stop",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "AudioTrack",
+      "kind": "Property",
+      "signature": "public int AudioTrack { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The embedded audio track to play.",
+      "defaultValue": "0",
+      "godotName": "audio_track",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.AudioTrack",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public bool Autoplay { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], playback starts when the scene loads.",
+      "defaultValue": "false",
+      "godotName": "autoplay",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Autoplay",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "BufferingMsec",
+      "kind": "Property",
+      "signature": "public int BufferingMsec { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Amount of time in milliseconds to store in buffer while playing.",
+      "defaultValue": "500",
+      "godotName": "buffering_msec",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.BufferingMsec",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Bus",
+      "kind": "Property",
+      "signature": "public StringName Bus { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Audio bus to use for sound playback.",
+      "defaultValue": "\u0026\u0022Master\u0022",
+      "godotName": "bus",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Bus",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Expand",
+      "kind": "Property",
+      "signature": "public bool Expand { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the video scales to the control size. Otherwise, the control minimum size will be automatically adjusted to match the video stream\u0027s dimensions.",
+      "defaultValue": "false",
+      "godotName": "expand",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Expand",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the video restarts when it reaches its end.",
+      "defaultValue": "false",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Loop",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Paused",
+      "kind": "Property",
+      "signature": "public bool Paused { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the video is paused.",
+      "defaultValue": "false",
+      "godotName": "paused",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Paused",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The stream\u0027s current speed scale. [code]1.0[/code] is the normal speed, while [code]2.0[/code] is double speed and [code]0.5[/code] is half speed. A speed scale of [code]0.0[/code] pauses the video, similar to setting [member paused] to [code]true[/code].",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.SpeedScale",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Stream",
+      "kind": "Property",
+      "signature": "public VideoStream Stream { get; set; }",
+      "returnType": "VideoStream",
+      "parameters": [],
+      "summary": "The assigned video stream. See description for supported formats.",
+      "godotName": "stream",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Stream",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "StreamPosition",
+      "kind": "Property",
+      "signature": "public float StreamPosition { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The current position of the stream, in seconds.",
+      "godotName": "stream_position",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.StreamPosition",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "Volume",
+      "kind": "Property",
+      "signature": "public float Volume { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Audio volume as a linear value.",
+      "godotName": "volume",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.Volume",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    },
+    {
+      "name": "VolumeDb",
+      "kind": "Property",
+      "signature": "public float VolumeDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Audio volume in dB.",
+      "defaultValue": "0.0",
+      "godotName": "volume_db",
+      "xmlDocId": "P:Godot.VideoStreamPlayer.VolumeDb",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when playback is finished.",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.VideoStreamPlayer.Finished",
+      "sourcePath": "doc/classes/VideoStreamPlayer.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VideoStreamPlayer.xml",
+      "sha256": "fe888effc59b4ed63d145ee8e763ed20025a1de7c91438f31877706ebcc93c51"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

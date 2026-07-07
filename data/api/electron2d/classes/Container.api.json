@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Container",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Container",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "Container",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Container",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Container()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Container\u0060 type.",
+      "xmlDocId": "M:Electron2D.Container.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Container",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Container()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Container\u0060 type.",
+      "xmlDocId": "M:Electron2D.Container.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitChildInRect",
+      "kind": "Method",
+      "signature": "public System.Void FitChildInRect(Electron2D.Control child, Electron2D.Rect2 rect)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "child",
+          "type": "Electron2D.Control"
+        },
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Fits a direct child control inside a local rectangle.",
+      "xmlDocId": "M:Electron2D.Container.FitChildInRect(Electron2D.Control,Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called every process frame to recalculate queued container layout.",
+      "xmlDocId": "M:Electron2D.Container._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "QueueSort",
+      "kind": "Method",
+      "signature": "public System.Void QueueSort()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Queues this container for a layout recalculation.",
+      "xmlDocId": "M:Electron2D.Container.QueueSort",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called every process frame to recalculate queued container layout.",
+      "xmlDocId": "M:Electron2D.Container._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRFrameSynthesisExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRFrameSynthesisExtension",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRFrameSynthesisExtension",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrframesynthesisextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsAvailable",
+      "kind": "Method",
+      "signature": "public bool IsAvailable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if frame synthesis is enabled in the project settings and the current XR runtime supports frame synthesis. The value returned will only be valid once OpenXR has been initialized.",
+      "godotName": "is_available",
+      "xmlDocId": "M:Godot.OpenXRFrameSynthesisExtension.IsAvailable",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml"
+    },
+    {
+      "name": "SkipNextFrame",
+      "kind": "Method",
+      "signature": "public void SkipNextFrame()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Queues the next frame to be skipped when supplying motion vector and depth data. Call this after teleporting your player or a similar action has moved the player to prevent incorrect reprojection results due to this movement.",
+      "godotName": "skip_next_frame",
+      "xmlDocId": "M:Godot.OpenXRFrameSynthesisExtension.SkipNextFrame",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enable frame synthesis. When [code]true[/code] motion vector and depth data is provided to the XR runtime.",
+      "defaultValue": "false",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.OpenXRFrameSynthesisExtension.Enabled",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml"
+    },
+    {
+      "name": "RelaxFrameInterval",
+      "kind": "Property",
+      "signature": "public bool RelaxFrameInterval { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] this informs the XR runtime we will be providing frames at a greatly reduced rate. Enable this when you expect your application to run at low framerates and wish to inject multiple reprojected frames.",
+      "defaultValue": "false",
+      "godotName": "relax_frame_interval",
+      "xmlDocId": "P:Godot.OpenXRFrameSynthesisExtension.RelaxFrameInterval",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRFrameSynthesisExtension.xml",
+      "sha256": "d2b6a14baa85f9be3bd41c5bed215724534bc968891c7abda9e4719a852b376e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

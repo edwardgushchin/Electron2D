@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Node2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Node2D",
+    "kind": "class",
+    "baseType": "CanvasItem",
+    "interfaces": [],
+    "godotReference": "Node2D",
+    "documentationPath": "doc/classes/Node2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_node2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ApplyScale",
+      "kind": "Method",
+      "signature": "public void ApplyScale(Vector2 ratio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "ratio",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Multiplies the current scale by the [param ratio] vector.",
+      "godotName": "apply_scale",
+      "xmlDocId": "M:Godot.Node2D.ApplyScale(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GetAngleTo",
+      "kind": "Method",
+      "signature": "public float GetAngleTo(Vector2 point)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the angle between the node and the [param point] in radians. See also [method look_at]. [url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/node2d_get_angle_to.png]Illustration of the returned angle.[/url]",
+      "godotName": "get_angle_to",
+      "xmlDocId": "M:Godot.Node2D.GetAngleTo(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GetRelativeTransformToParent",
+      "kind": "Method",
+      "signature": "public Transform2D GetRelativeTransformToParent(Node parent)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "parent",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns the [Transform2D] relative to this node\u0027s parent.",
+      "godotName": "get_relative_transform_to_parent",
+      "xmlDocId": "M:Godot.Node2D.GetRelativeTransformToParent(Node)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalTranslate",
+      "kind": "Method",
+      "signature": "public void GlobalTranslate(Vector2 offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Adds the [param offset] vector to the node\u0027s global position.",
+      "godotName": "global_translate",
+      "xmlDocId": "M:Godot.Node2D.GlobalTranslate(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "LookAt",
+      "kind": "Method",
+      "signature": "public void LookAt(Vector2 point)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Rotates the node so that its local \u002BX axis points towards the [param point], which is expected to use global coordinates. This method is a combination of both [method rotate] and [method get_angle_to]. [param point] should not be the same as the node\u0027s position, otherwise the node always looks to the right.",
+      "godotName": "look_at",
+      "xmlDocId": "M:Godot.Node2D.LookAt(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "MoveLocalX",
+      "kind": "Method",
+      "signature": "public void MoveLocalX(float delta, bool scaled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        },
+        {
+          "name": "scaled",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Applies a local translation on the node\u0027s X axis with the amount specified in [param delta]. If [param scaled] is [code]false[/code], normalizes the movement to occur independently of the node\u0027s [member scale].",
+      "godotName": "move_local_x",
+      "xmlDocId": "M:Godot.Node2D.MoveLocalX(float,bool)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "MoveLocalY",
+      "kind": "Method",
+      "signature": "public void MoveLocalY(float delta, bool scaled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        },
+        {
+          "name": "scaled",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Applies a local translation on the node\u0027s Y axis with the amount specified in [param delta]. If [param scaled] is [code]false[/code], normalizes the movement to occur independently of the node\u0027s [member scale].",
+      "godotName": "move_local_y",
+      "xmlDocId": "M:Godot.Node2D.MoveLocalY(float,bool)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Rotate",
+      "kind": "Method",
+      "signature": "public void Rotate(float radians)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "radians",
+          "type": "float"
+        }
+      ],
+      "summary": "Applies a rotation to the node, in radians, starting from its current rotation. This is equivalent to [code]rotation \u002B= radians[/code].",
+      "godotName": "rotate",
+      "xmlDocId": "M:Godot.Node2D.Rotate(float)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "ToGlobal",
+      "kind": "Method",
+      "signature": "public Vector2 ToGlobal(Vector2 localPoint)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "local_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Transforms the provided local position into a position in global coordinate space. The input is expected to be local relative to the [Node2D] it is called on. e.g. Applying this method to the positions of child nodes will correctly transform their positions into the global coordinate space, but applying it to a node\u0027s own position will give an incorrect result, as it will incorporate the node\u0027s own transformation into its global position.",
+      "godotName": "to_global",
+      "xmlDocId": "M:Godot.Node2D.ToGlobal(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "ToLocal",
+      "kind": "Method",
+      "signature": "public Vector2 ToLocal(Vector2 globalPoint)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "global_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Transforms the provided global position into a position in local coordinate space. The output will be local relative to the [Node2D] it is called on. e.g. It is appropriate for determining the positions of child nodes, but it is not appropriate for determining its own position relative to its parent.",
+      "godotName": "to_local",
+      "xmlDocId": "M:Godot.Node2D.ToLocal(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Translate",
+      "kind": "Method",
+      "signature": "public void Translate(Vector2 offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Translates the node by the given [param offset] in local coordinates. This is equivalent to [code]position \u002B= offset[/code].",
+      "godotName": "translate",
+      "xmlDocId": "M:Godot.Node2D.Translate(Vector2)",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalPosition",
+      "kind": "Property",
+      "signature": "public Vector2 GlobalPosition { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Global position. See also [member position].",
+      "godotName": "global_position",
+      "xmlDocId": "P:Godot.Node2D.GlobalPosition",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalRotation",
+      "kind": "Property",
+      "signature": "public float GlobalRotation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Global rotation in radians. See also [member rotation].",
+      "godotName": "global_rotation",
+      "xmlDocId": "P:Godot.Node2D.GlobalRotation",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalRotationDegrees",
+      "kind": "Property",
+      "signature": "public float GlobalRotationDegrees { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Helper property to access [member global_rotation] in degrees instead of radians. See also [member rotation_degrees].",
+      "godotName": "global_rotation_degrees",
+      "xmlDocId": "P:Godot.Node2D.GlobalRotationDegrees",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalScale",
+      "kind": "Property",
+      "signature": "public Vector2 GlobalScale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Global scale. See also [member scale].",
+      "godotName": "global_scale",
+      "xmlDocId": "P:Godot.Node2D.GlobalScale",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalSkew",
+      "kind": "Property",
+      "signature": "public float GlobalSkew { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Global skew in radians. See also [member skew].",
+      "godotName": "global_skew",
+      "xmlDocId": "P:Godot.Node2D.GlobalSkew",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "GlobalTransform",
+      "kind": "Property",
+      "signature": "public Transform2D GlobalTransform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Global [Transform2D]. See also [member transform].",
+      "godotName": "global_transform",
+      "xmlDocId": "P:Godot.Node2D.GlobalTransform",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Position, relative to the node\u0027s parent. See also [member global_position].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.Node2D.Position",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Rotation",
+      "kind": "Property",
+      "signature": "public float Rotation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Rotation in radians, relative to the node\u0027s parent. See also [member global_rotation]. [b]Note:[/b] This property is edited in the inspector in degrees. If you want to use degrees in a script, use [member rotation_degrees].",
+      "defaultValue": "0.0",
+      "godotName": "rotation",
+      "xmlDocId": "P:Godot.Node2D.Rotation",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "RotationDegrees",
+      "kind": "Property",
+      "signature": "public float RotationDegrees { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Helper property to access [member rotation] in degrees instead of radians. See also [member global_rotation_degrees].",
+      "godotName": "rotation_degrees",
+      "xmlDocId": "P:Godot.Node2D.RotationDegrees",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Scale",
+      "kind": "Property",
+      "signature": "public Vector2 Scale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The node\u0027s scale, relative to the node\u0027s parent. Unscaled value: [code](1, 1)[/code]. See also [member global_scale]. [b]Note:[/b] Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "scale",
+      "xmlDocId": "P:Godot.Node2D.Scale",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Skew",
+      "kind": "Property",
+      "signature": "public float Skew { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set to a non-zero value, slants the node in one direction or another. This can be used for pseudo-3D effects. See also [member global_skew]. [b]Note:[/b] Skew is performed on the X axis only, and [i]between[/i] rotation and scaling. [b]Note:[/b] This property is edited in the inspector in degrees. If you want to use degrees in a script, use [code]skew = deg_to_rad(value_in_degrees)[/code].",
+      "defaultValue": "0.0",
+      "godotName": "skew",
+      "xmlDocId": "P:Godot.Node2D.Skew",
+      "sourcePath": "doc/classes/Node2D.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform2D Transform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "The node\u0027s [Transform2D], relative to the node\u0027s parent. See also [member global_transform].",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.Node2D.Transform",
+      "sourcePath": "doc/classes/Node2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Node2D.xml",
+      "sha256": "e6f7b946198741119eda7b11837caddb035d484c67eb305b2e1ab804400def76"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

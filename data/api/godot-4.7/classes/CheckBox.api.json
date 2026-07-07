@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CheckBox",
+    "namespace": "Godot",
+    "fullName": "Godot.CheckBox",
+    "kind": "class",
+    "baseType": "Button",
+    "interfaces": [],
+    "godotReference": "CheckBox",
+    "documentationPath": "doc/classes/CheckBox.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_checkbox.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.CheckBox.Alignment",
+      "sourcePath": "doc/classes/CheckBox.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.CheckBox.ToggleMode",
+      "sourcePath": "doc/classes/CheckBox.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CheckBox.xml",
+      "sha256": "6a00db3d1c40b2d1ec39bbe1e7dad7dfeb92b502377432cf826ef18eef9f962c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

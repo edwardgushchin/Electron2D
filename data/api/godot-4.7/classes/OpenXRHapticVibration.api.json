@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRHapticVibration",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRHapticVibration",
+    "kind": "class",
+    "baseType": "OpenXRHapticBase",
+    "interfaces": [],
+    "godotReference": "OpenXRHapticVibration",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRHapticVibration.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrhapticvibration.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Amplitude",
+      "kind": "Property",
+      "signature": "public float Amplitude { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amplitude of the pulse between [code]0.0[/code] and [code]1.0[/code].",
+      "defaultValue": "1.0",
+      "godotName": "amplitude",
+      "xmlDocId": "P:Godot.OpenXRHapticVibration.Amplitude",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHapticVibration.xml"
+    },
+    {
+      "name": "Duration",
+      "kind": "Property",
+      "signature": "public int Duration { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The duration of the pulse in nanoseconds. Use [code]-1[/code] for a minimum duration pulse for the current XR runtime.",
+      "defaultValue": "-1",
+      "godotName": "duration",
+      "xmlDocId": "P:Godot.OpenXRHapticVibration.Duration",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHapticVibration.xml"
+    },
+    {
+      "name": "Frequency",
+      "kind": "Property",
+      "signature": "public float Frequency { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency of the pulse in Hz. [code]0.0[/code] will let the XR runtime chose an optimal frequency for the device used.",
+      "defaultValue": "0.0",
+      "godotName": "frequency",
+      "xmlDocId": "P:Godot.OpenXRHapticVibration.Frequency",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRHapticVibration.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRHapticVibration.xml",
+      "sha256": "593b6476741cb3c0d4ae74b9c08a51d09aa1fb62629ea2ce50c0b2358dea3ac4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

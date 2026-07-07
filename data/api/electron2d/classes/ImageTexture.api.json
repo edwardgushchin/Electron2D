@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImageTexture",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ImageTexture",
+    "kind": "class",
+    "baseType": "Electron2D.Texture2D",
+    "interfaces": [],
+    "godotReference": "ImageTexture",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHeight()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the decoded image height in pixels.",
+      "xmlDocId": "M:Electron2D.ImageTexture.GetHeight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public System.Int32 GetWidth()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the decoded image width in pixels.",
+      "xmlDocId": "M:Electron2D.ImageTexture.GetWidth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAlpha",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAlpha()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the decoded image contains transparent pixels or alpha metadata.",
+      "xmlDocId": "M:Electron2D.ImageTexture.HasAlpha",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Int32"
+        },
+        {
+          "name": "y",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a decoded image pixel is fully opaque.",
+      "xmlDocId": "M:Electron2D.ImageTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public static Electron2D.ImageTexture LoadFromFile(System.String path)",
+      "returnType": "Electron2D.ImageTexture",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Loads an \u0060Electron2D.ImageTexture\u0060 from a PNG file or project resource path.",
+      "xmlDocId": "M:Electron2D.ImageTexture.LoadFromFile(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

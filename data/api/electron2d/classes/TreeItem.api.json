@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TreeItem",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TreeItem",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "TreeItem",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TreeItem",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TreeItem()",
+      "parameters": [],
+      "summary": "Initializes a new standalone instance of the \u0060Electron2D.TreeItem\u0060 class.",
+      "xmlDocId": "M:Electron2D.TreeItem.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TreeItem",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TreeItem()",
+      "parameters": [],
+      "summary": "Initializes a new standalone instance of the \u0060Electron2D.TreeItem\u0060 class.",
+      "xmlDocId": "M:Electron2D.TreeItem.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Deselect",
+      "kind": "Method",
+      "signature": "public System.Void Deselect(System.Int32 column)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Clears selection for one column.",
+      "xmlDocId": "M:Electron2D.TreeItem.Deselect(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetChild",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetChild(System.Int32 index)",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a direct child item.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetChild(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetChildCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetChildCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of direct child items.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetChildCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetIcon(System.Int32 column)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets an icon from a column.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetIcon(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNext",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetNext()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the next sibling item.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetNext",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNextVisible",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetNextVisible()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the next visible item in owning tree traversal order.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetNextVisible",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetParent",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetParent()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the parent item.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetParent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPrevious",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetPrevious()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the previous sibling item.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetPrevious",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetText",
+      "kind": "Method",
+      "signature": "public System.String GetText(System.Int32 column)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets text from a column.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetText(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTree",
+      "kind": "Method",
+      "signature": "public Electron2D.Tree GetTree()",
+      "returnType": "Electron2D.Tree",
+      "parameters": [],
+      "summary": "Gets the tree that owns this item.",
+      "xmlDocId": "M:Electron2D.TreeItem.GetTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsCollapsed",
+      "kind": "Method",
+      "signature": "public System.Boolean IsCollapsed()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Reports whether this item is collapsed.",
+      "xmlDocId": "M:Electron2D.TreeItem.IsCollapsed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsSelectable",
+      "kind": "Method",
+      "signature": "public System.Boolean IsSelectable(System.Int32 column)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether a column can be selected.",
+      "xmlDocId": "M:Electron2D.TreeItem.IsSelectable(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsSelected",
+      "kind": "Method",
+      "signature": "public System.Boolean IsSelected(System.Int32 column)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether one column is selected.",
+      "xmlDocId": "M:Electron2D.TreeItem.IsSelected(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public System.Void Select(System.Int32 column, System.Boolean setAsCursor)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        },
+        {
+          "name": "setAsCursor",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Selects this item in its owning tree.",
+      "xmlDocId": "M:Electron2D.TreeItem.Select(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollapsed",
+      "kind": "Method",
+      "signature": "public System.Void SetCollapsed(System.Boolean enable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether this item hides its descendants in visible traversal.",
+      "xmlDocId": "M:Electron2D.TreeItem.SetCollapsed(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetIcon",
+      "kind": "Method",
+      "signature": "public System.Void SetIcon(System.Int32 column, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Sets an icon for a column.",
+      "xmlDocId": "M:Electron2D.TreeItem.SetIcon(System.Int32,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetSelectable",
+      "kind": "Method",
+      "signature": "public System.Void SetSelectable(System.Int32 column, System.Boolean selectable)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        },
+        {
+          "name": "selectable",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a column can be selected.",
+      "xmlDocId": "M:Electron2D.TreeItem.SetSelectable(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetText",
+      "kind": "Method",
+      "signature": "public System.Void SetText(System.Int32 column, System.String text)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        },
+        {
+          "name": "text",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets text for a column.",
+      "xmlDocId": "M:Electron2D.TreeItem.SetText(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

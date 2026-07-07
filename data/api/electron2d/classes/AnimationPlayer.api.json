@@ -1,0 +1,346 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationPlayer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AnimationPlayer",
+    "kind": "class",
+    "baseType": "Electron2D.Node",
+    "interfaces": [],
+    "godotReference": "AnimationPlayer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "AnimationPlayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AnimationPlayer()",
+      "parameters": [],
+      "summary": "Creates an animation player with the default root node path.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "AnimationPlayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AnimationPlayer()",
+      "parameters": [],
+      "summary": "Creates an animation player with the default root node path.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddAnimationLibrary",
+      "kind": "Method",
+      "signature": "public Electron2D.Error AddAnimationLibrary(Electron2D.StringName name, Electron2D.AnimationLibrary library)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "library",
+          "type": "Electron2D.AnimationLibrary"
+        }
+      ],
+      "summary": "Adds an animation library.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.AddAnimationLibrary(Electron2D.StringName,Electron2D.AnimationLibrary)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Advance",
+      "kind": "Method",
+      "signature": "public System.Void Advance(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Advances playback by a time delta.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.Advance(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearQueue",
+      "kind": "Method",
+      "signature": "public System.Void ClearQueue()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Clears the playback queue.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.ClearQueue",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationLibrary",
+      "kind": "Method",
+      "signature": "public Electron2D.AnimationLibrary GetAnimationLibrary(Electron2D.StringName name)",
+      "returnType": "Electron2D.AnimationLibrary",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets an animation library.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.GetAnimationLibrary(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationLibraryList",
+      "kind": "Method",
+      "signature": "public Electron2D.StringName[] GetAnimationLibraryList()",
+      "returnType": "Electron2D.StringName[]",
+      "parameters": [],
+      "summary": "Gets mounted library names in deterministic alphabetical order.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.GetAnimationLibraryList",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetQueue",
+      "kind": "Method",
+      "signature": "public Electron2D.StringName[] GetQueue()",
+      "returnType": "Electron2D.StringName[]",
+      "parameters": [],
+      "summary": "Gets queued animation names.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.GetQueue",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAnimation(Electron2D.StringName name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Checks whether an animation name resolves through mounted libraries.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.HasAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAnimationLibrary",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAnimationLibrary(Electron2D.StringName name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Checks whether an animation library is mounted.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.HasAnimationLibrary(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public System.Boolean IsPlaying()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets whether playback is active.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.IsPlaying",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public System.Void Pause()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Pauses playback at the current position.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.Pause",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public System.Void Play(Electron2D.StringName name, System.Double customBlend, System.Single customSpeed, System.Boolean fromEnd)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "customBlend",
+          "type": "System.Double",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "customSpeed",
+          "type": "System.Single",
+          "defaultValue": "1"
+        },
+        {
+          "name": "fromEnd",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Starts playback of an animation.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.Play(Electron2D.StringName,System.Double,System.Single,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Queue",
+      "kind": "Method",
+      "signature": "public System.Void Queue(Electron2D.StringName name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Appends an animation to the playback queue.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.Queue(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ready",
+      "kind": "Method",
+      "signature": "public System.Void Ready()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Starts autoplay after the player becomes ready.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer._Ready",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveAnimationLibrary",
+      "kind": "Method",
+      "signature": "public System.Void RemoveAnimationLibrary(Electron2D.StringName name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Removes an animation library.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.RemoveAnimationLibrary(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public System.Void Stop(System.Boolean keepState)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "keepState",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Stops playback.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer.Stop(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AssignedAnimation",
+      "kind": "Property",
+      "signature": "public Electron2D.StringName AssignedAnimation { get; set; }",
+      "returnType": "Electron2D.StringName",
+      "parameters": [],
+      "summary": "Gets or sets the animation selected for calls to \u0060Electron2D.AnimationPlayer.Play(Electron2D.StringName,System.Double,System.Single,System.Boolean)\u0060 with an empty name.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.AssignedAnimation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public Electron2D.StringName Autoplay { get; set; }",
+      "returnType": "Electron2D.StringName",
+      "parameters": [],
+      "summary": "Gets or sets the animation to play automatically when the node is ready.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.Autoplay",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentAnimation",
+      "kind": "Property",
+      "signature": "public Electron2D.StringName CurrentAnimation { get; }",
+      "returnType": "Electron2D.StringName",
+      "parameters": [],
+      "summary": "Gets the animation currently controlled by playback.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.CurrentAnimation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentAnimationLength",
+      "kind": "Property",
+      "signature": "public System.Double CurrentAnimationLength { get; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets the length of the current animation in seconds.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.CurrentAnimationLength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentAnimationPosition",
+      "kind": "Property",
+      "signature": "public System.Double CurrentAnimationPosition { get; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets the current playback position in seconds.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.CurrentAnimationPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RootNode",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath RootNode { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the node path used as the base for animation track paths.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.RootNode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public System.Single SpeedScale { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the global playback speed multiplier.",
+      "xmlDocId": "P:Electron2D.AnimationPlayer.SpeedScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "Ready",
+      "kind": "Method",
+      "signature": "public System.Void Ready()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Starts autoplay after the player becomes ready.",
+      "xmlDocId": "M:Electron2D.AnimationPlayer._Ready",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

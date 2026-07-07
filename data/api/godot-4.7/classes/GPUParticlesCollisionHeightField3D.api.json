@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GPUParticlesCollisionHeightField3D",
+    "namespace": "Godot",
+    "fullName": "Godot.GPUParticlesCollisionHeightField3D",
+    "kind": "class",
+    "baseType": "GPUParticlesCollision3D",
+    "interfaces": [],
+    "godotReference": "GPUParticlesCollisionHeightField3D",
+    "documentationPath": "doc/classes/GPUParticlesCollisionHeightField3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gpuparticlescollisionheightfield3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHeightfieldMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetHeightfieldMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified layer of the [member heightfield_mask] is enabled, given a [param layer_number] between [code]1[/code] and [code]20[/code], inclusive.",
+      "godotName": "get_heightfield_mask_value",
+      "xmlDocId": "M:Godot.GPUParticlesCollisionHeightField3D.GetHeightfieldMaskValue(int)",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "SetHeightfieldMaskValue",
+      "kind": "Method",
+      "signature": "public void SetHeightfieldMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member heightfield_mask], given a [param layer_number] between [code]1[/code] and [code]20[/code], inclusive.",
+      "godotName": "set_heightfield_mask_value",
+      "xmlDocId": "M:Godot.GPUParticlesCollisionHeightField3D.SetHeightfieldMaskValue(int,bool)",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "FollowCameraEnabled",
+      "kind": "Property",
+      "signature": "public bool FollowCameraEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [GPUParticlesCollisionHeightField3D] will follow the current camera in global space. The [GPUParticlesCollisionHeightField3D] does not need to be a child of the [Camera3D] node for this to work. Following the camera has a performance cost, as it will force the heightmap to update whenever the camera moves. Consider lowering [member resolution] to improve performance if [member follow_camera_enabled] is [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "follow_camera_enabled",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionHeightField3D.FollowCameraEnabled",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "HeightfieldMask",
+      "kind": "Property",
+      "signature": "public int HeightfieldMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The visual layers to account for when updating the heightmap. Only [MeshInstance3D]s whose [member VisualInstance3D.layers] match with this [member heightfield_mask] will be included in the heightmap collision update. By default, all 20 user-visible layers are taken into account for updating the heightmap collision. [b]Note:[/b] Since the [member heightfield_mask] allows for 32 layers to be stored in total, there are an additional 12 layers that are only used internally by the engine and aren\u0027t exposed in the editor. Setting [member heightfield_mask] using a script allows you to toggle those reserved layers, which can be useful for editor plugins. To adjust [member heightfield_mask] more easily using a script, use [method get_heightfield_mask_value] and [method set_heightfield_mask_value].",
+      "defaultValue": "1048575",
+      "godotName": "heightfield_mask",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionHeightField3D.HeightfieldMask",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "Resolution",
+      "kind": "Property",
+      "signature": "public int Resolution { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Higher resolutions can represent small details more accurately in large scenes, at the cost of lower performance. If [member update_mode] is [constant UPDATE_MODE_ALWAYS], consider using the lowest resolution possible.",
+      "defaultValue": "2",
+      "godotName": "resolution",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionHeightField3D.Resolution",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The collision heightmap\u0027s size in 3D units. To improve heightmap quality, [member size] should be set as small as possible while covering the parts of the scene you need.",
+      "defaultValue": "Vector3(2, 2, 2)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionHeightField3D.Size",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "UpdateMode",
+      "kind": "Property",
+      "signature": "public int UpdateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The update policy to use for the generated heightmap.",
+      "defaultValue": "0",
+      "godotName": "update_mode",
+      "xmlDocId": "P:Godot.GPUParticlesCollisionHeightField3D.UpdateMode",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Resolution",
+      "values": [
+        {
+          "name": "RESOLUTION_1024",
+          "value": "2",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 1024\u00D71024 heightmap. Intended for large scenes with distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_2048",
+          "value": "3",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 2048\u00D72048 heightmap. Intended for very large scenes with distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_256",
+          "value": "0",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 256\u00D7256 heightmap. Intended for small-scale scenes, or larger scenes with no distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_4096",
+          "value": "4",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 4096\u00D74096 heightmap. Intended for huge scenes with distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_512",
+          "value": "1",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 512\u00D7512 heightmap. Intended for medium-scale scenes, or larger scenes with no distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_8192",
+          "value": "5",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Generate a 8192\u00D78192 heightmap. Intended for gigantic scenes with distant particles.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "RESOLUTION_MAX",
+          "value": "6",
+          "enum": "Resolution",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Resolution] enum.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "UpdateMode",
+      "values": [
+        {
+          "name": "UPDATE_MODE_ALWAYS",
+          "value": "1",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the heightmap every frame. This has a significant performance cost. This update should only be used when geometry that particles can collide with changes significantly during gameplay.",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        },
+        {
+          "name": "UPDATE_MODE_WHEN_MOVED",
+          "value": "0",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Only update the heightmap when the [GPUParticlesCollisionHeightField3D] node is moved, or when the camera moves if [member follow_camera_enabled] is [code]true[/code]. An update can be forced by slightly moving the [GPUParticlesCollisionHeightField3D] in any direction, or by calling [method RenderingServer.particles_collision_height_field_update].",
+          "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RESOLUTION_256",
+      "value": "0",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 256\u00D7256 heightmap. Intended for small-scale scenes, or larger scenes with no distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_512",
+      "value": "1",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 512\u00D7512 heightmap. Intended for medium-scale scenes, or larger scenes with no distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_1024",
+      "value": "2",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 1024\u00D71024 heightmap. Intended for large scenes with distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_2048",
+      "value": "3",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 2048\u00D72048 heightmap. Intended for very large scenes with distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_4096",
+      "value": "4",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 4096\u00D74096 heightmap. Intended for huge scenes with distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_8192",
+      "value": "5",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Generate a 8192\u00D78192 heightmap. Intended for gigantic scenes with distant particles.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "RESOLUTION_MAX",
+      "value": "6",
+      "enum": "Resolution",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Resolution] enum.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "UPDATE_MODE_WHEN_MOVED",
+      "value": "0",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Only update the heightmap when the [GPUParticlesCollisionHeightField3D] node is moved, or when the camera moves if [member follow_camera_enabled] is [code]true[/code]. An update can be forced by slightly moving the [GPUParticlesCollisionHeightField3D] in any direction, or by calling [method RenderingServer.particles_collision_height_field_update].",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    },
+    {
+      "name": "UPDATE_MODE_ALWAYS",
+      "value": "1",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the heightmap every frame. This has a significant performance cost. This update should only be used when geometry that particles can collide with changes significantly during gameplay.",
+      "sourcePath": "doc/classes/GPUParticlesCollisionHeightField3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GPUParticlesCollisionHeightField3D.xml",
+      "sha256": "46735f5760dd9174d4ad71b31886e711cde8c19a196207b5ae1105188a5ba46f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

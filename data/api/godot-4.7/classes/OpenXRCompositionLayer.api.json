@@ -1,0 +1,652 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRCompositionLayer",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRCompositionLayer",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "OpenXRCompositionLayer",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrcompositionlayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAndroidSurface",
+      "kind": "Method",
+      "signature": "public JavaObject GetAndroidSurface()",
+      "returnType": "JavaObject",
+      "parameters": [],
+      "summary": "Returns a [JavaObject] representing an [code]android.view.Surface[/code] if [member use_android_surface] is enabled and OpenXR has created the surface. Otherwise, this will return [code]null[/code]. [b]Note:[/b] The surface can only be created during an active OpenXR session. So, if [member use_android_surface] is enabled outside of an OpenXR session, it won\u0027t be created until a new session fully starts.",
+      "godotName": "get_android_surface",
+      "xmlDocId": "M:Godot.OpenXRCompositionLayer.GetAndroidSurface",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "IntersectsRay",
+      "kind": "Method",
+      "signature": "public Vector2 IntersectsRay(Vector3 origin, Vector3 direction)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "Vector3"
+        },
+        {
+          "name": "direction",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns UV coordinates where the given ray intersects with the composition layer. [param origin] and [param direction] must be in global space. Returns [code]Vector2(-1.0, -1.0)[/code] if the ray doesn\u0027t intersect.",
+      "godotName": "intersects_ray",
+      "xmlDocId": "M:Godot.OpenXRCompositionLayer.IntersectsRay(Vector3,Vector3)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "IsNativelySupported",
+      "kind": "Method",
+      "signature": "public bool IsNativelySupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the OpenXR runtime natively supports this composition layer type. [b]Note:[/b] This will only return an accurate result after the OpenXR session has started.",
+      "godotName": "is_natively_supported",
+      "xmlDocId": "M:Godot.OpenXRCompositionLayer.IsNativelySupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "AlphaBlend",
+      "kind": "Property",
+      "signature": "public bool AlphaBlend { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables the blending the layer using its alpha channel. Can be combined with [member Viewport.transparent_bg] to give the layer a transparent background.",
+      "defaultValue": "false",
+      "godotName": "alpha_blend",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.AlphaBlend",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "AndroidSurfaceSize",
+      "kind": "Property",
+      "signature": "public Vector2i AndroidSurfaceSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The size of the Android surface to create if [member use_android_surface] is enabled.",
+      "defaultValue": "Vector2i(1024, 1024)",
+      "godotName": "android_surface_size",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.AndroidSurfaceSize",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "EnableHolePunch",
+      "kind": "Property",
+      "signature": "public bool EnableHolePunch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables a technique called \u0022hole punching\u0022, which allows putting the composition layer behind the main projection layer (i.e. setting [member sort_order] to a negative value) while \u0022punching a hole\u0022 through everything rendered by Godot so that the layer is still visible. This can be used to create the illusion that the composition layer exists in the same 3D space as everything rendered by Godot, allowing objects to appear to pass both behind or in front of the composition layer.",
+      "defaultValue": "false",
+      "godotName": "enable_hole_punch",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.EnableHolePunch",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "EyeVisibility",
+      "kind": "Property",
+      "signature": "public int EyeVisibility { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The eye(s) the composition layer is visible to. [b]Note:[/b] Not all composition layer types or runtimes support restricting visibility to a single eye.",
+      "defaultValue": "0",
+      "godotName": "eye_visibility",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.EyeVisibility",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "LayerViewport",
+      "kind": "Property",
+      "signature": "public SubViewport LayerViewport { get; set; }",
+      "returnType": "SubViewport",
+      "parameters": [],
+      "summary": "The [SubViewport] to render on the composition layer.",
+      "godotName": "layer_viewport",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.LayerViewport",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "ProtectedContent",
+      "kind": "Property",
+      "signature": "public bool ProtectedContent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, the OpenXR swapchain will be created with the [code]XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT[/code] flag, which will protect its contents from CPU access. When used with an Android Surface, this may allow DRM content to be presented, and will only take effect when the Surface is first created; later changes to this property will have no effect.",
+      "defaultValue": "false",
+      "godotName": "protected_content",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.ProtectedContent",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SortOrder",
+      "kind": "Property",
+      "signature": "public int SortOrder { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The sort order for this composition layer. Higher numbers will be shown in front of lower numbers. [b]Note:[/b] This will have no effect if a fallback mesh is being used.",
+      "defaultValue": "1",
+      "godotName": "sort_order",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SortOrder",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateAlphaSwizzle",
+      "kind": "Property",
+      "signature": "public int SwapchainStateAlphaSwizzle { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The swizzle value for the alpha channel of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "3",
+      "godotName": "swapchain_state_alpha_swizzle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateAlphaSwizzle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateBlueSwizzle",
+      "kind": "Property",
+      "signature": "public int SwapchainStateBlueSwizzle { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The swizzle value for the blue channel of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "2",
+      "godotName": "swapchain_state_blue_swizzle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateBlueSwizzle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateBorderColor",
+      "kind": "Property",
+      "signature": "public Color SwapchainStateBorderColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The border color of the swapchain state that is used when the wrap mode clamps to the border. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "Color(0, 0, 0, 0)",
+      "godotName": "swapchain_state_border_color",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateBorderColor",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateGreenSwizzle",
+      "kind": "Property",
+      "signature": "public int SwapchainStateGreenSwizzle { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The swizzle value for the green channel of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "1",
+      "godotName": "swapchain_state_green_swizzle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateGreenSwizzle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateHorizontalWrap",
+      "kind": "Property",
+      "signature": "public int SwapchainStateHorizontalWrap { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The horizontal wrap mode of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "0",
+      "godotName": "swapchain_state_horizontal_wrap",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateHorizontalWrap",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateMagFilter",
+      "kind": "Property",
+      "signature": "public int SwapchainStateMagFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The magnification filter of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "1",
+      "godotName": "swapchain_state_mag_filter",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateMagFilter",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateMaxAnisotropy",
+      "kind": "Property",
+      "signature": "public float SwapchainStateMaxAnisotropy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The max anisotropy of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "1.0",
+      "godotName": "swapchain_state_max_anisotropy",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateMaxAnisotropy",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateMinFilter",
+      "kind": "Property",
+      "signature": "public int SwapchainStateMinFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The minification filter of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "1",
+      "godotName": "swapchain_state_min_filter",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateMinFilter",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateMipmapMode",
+      "kind": "Property",
+      "signature": "public int SwapchainStateMipmapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The mipmap mode of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "2",
+      "godotName": "swapchain_state_mipmap_mode",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateMipmapMode",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateRedSwizzle",
+      "kind": "Property",
+      "signature": "public int SwapchainStateRedSwizzle { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The swizzle value for the red channel of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "0",
+      "godotName": "swapchain_state_red_swizzle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateRedSwizzle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SwapchainStateVerticalWrap",
+      "kind": "Property",
+      "signature": "public int SwapchainStateVerticalWrap { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The vertical wrap mode of the swapchain state. [b]Note:[/b] This property only has an effect on devices that support the OpenXR XR_FB_swapchain_update_state OpenGLES/Vulkan extensions.",
+      "defaultValue": "0",
+      "godotName": "swapchain_state_vertical_wrap",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.SwapchainStateVerticalWrap",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "UseAndroidSurface",
+      "kind": "Property",
+      "signature": "public bool UseAndroidSurface { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, an Android surface will be created (with the dimensions from [member android_surface_size]) which will provide the 2D content for the composition layer, rather than using [member layer_viewport]. See [method get_android_surface] for information about how to get the surface so that your application can draw to it. [b]Note:[/b] This will only work in Android builds.",
+      "defaultValue": "false",
+      "godotName": "use_android_surface",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayer.UseAndroidSurface",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "EyeVisibility",
+      "values": [
+        {
+          "name": "EYE_VISIBILITY_BOTH",
+          "value": "0",
+          "enum": "EyeVisibility",
+          "kind": "EnumValue",
+          "summary": "The layer is visible to both the left and right eyes.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "EYE_VISIBILITY_LEFT",
+          "value": "1",
+          "enum": "EyeVisibility",
+          "kind": "EnumValue",
+          "summary": "The layer is visible only to the left eye.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "EYE_VISIBILITY_RIGHT",
+          "value": "2",
+          "enum": "EyeVisibility",
+          "kind": "EnumValue",
+          "summary": "The layer is visible only to the right eye.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        }
+      ]
+    },
+    {
+      "name": "Filter",
+      "values": [
+        {
+          "name": "FILTER_CUBIC",
+          "value": "2",
+          "enum": "Filter",
+          "kind": "EnumValue",
+          "summary": "Perform cubic filtering when sampling the texture.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "FILTER_LINEAR",
+          "value": "1",
+          "enum": "Filter",
+          "kind": "EnumValue",
+          "summary": "Perform linear filtering when sampling the texture.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "FILTER_NEAREST",
+          "value": "0",
+          "enum": "Filter",
+          "kind": "EnumValue",
+          "summary": "Perform nearest-neighbor filtering when sampling the texture.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        }
+      ]
+    },
+    {
+      "name": "MipmapMode",
+      "values": [
+        {
+          "name": "MIPMAP_MODE_DISABLED",
+          "value": "0",
+          "enum": "MipmapMode",
+          "kind": "EnumValue",
+          "summary": "Disable mipmapping. [b]Note:[/b] Mipmapping can only be disabled in the Compatibility renderer.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "MIPMAP_MODE_LINEAR",
+          "value": "2",
+          "enum": "MipmapMode",
+          "kind": "EnumValue",
+          "summary": "Use linear interpolation of the two mipmaps of the nearest resolution.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "MIPMAP_MODE_NEAREST",
+          "value": "1",
+          "enum": "MipmapMode",
+          "kind": "EnumValue",
+          "summary": "Use the mipmap of the nearest resolution.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        }
+      ]
+    },
+    {
+      "name": "Swizzle",
+      "values": [
+        {
+          "name": "SWIZZLE_ALPHA",
+          "value": "3",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of the alpha channel.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "SWIZZLE_BLUE",
+          "value": "2",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of the blue channel.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "SWIZZLE_GREEN",
+          "value": "1",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of the green channel.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "SWIZZLE_ONE",
+          "value": "5",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of one.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "SWIZZLE_RED",
+          "value": "0",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of the red channel.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "SWIZZLE_ZERO",
+          "value": "4",
+          "enum": "Swizzle",
+          "kind": "EnumValue",
+          "summary": "Maps a color channel to the value of zero.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        }
+      ]
+    },
+    {
+      "name": "Wrap",
+      "values": [
+        {
+          "name": "WRAP_CLAMP_TO_BORDER",
+          "value": "0",
+          "enum": "Wrap",
+          "kind": "EnumValue",
+          "summary": "Clamp the texture to its specified border color.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "WRAP_CLAMP_TO_EDGE",
+          "value": "1",
+          "enum": "Wrap",
+          "kind": "EnumValue",
+          "summary": "Clamp the texture to its edge color.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "WRAP_MIRRORED_REPEAT",
+          "value": "3",
+          "enum": "Wrap",
+          "kind": "EnumValue",
+          "summary": "Repeat the texture infinitely, mirroring it on each repeat.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "WRAP_MIRROR_CLAMP_TO_EDGE",
+          "value": "4",
+          "enum": "Wrap",
+          "kind": "EnumValue",
+          "summary": "Mirror the texture once and then clamp the texture to its edge color. [b]Note:[/b] This wrap mode is not available in the Compatibility renderer.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        },
+        {
+          "name": "WRAP_REPEAT",
+          "value": "2",
+          "enum": "Wrap",
+          "kind": "EnumValue",
+          "summary": "Repeat the texture infinitely.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILTER_NEAREST",
+      "value": "0",
+      "enum": "Filter",
+      "kind": "EnumValue",
+      "summary": "Perform nearest-neighbor filtering when sampling the texture.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "FILTER_LINEAR",
+      "value": "1",
+      "enum": "Filter",
+      "kind": "EnumValue",
+      "summary": "Perform linear filtering when sampling the texture.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "FILTER_CUBIC",
+      "value": "2",
+      "enum": "Filter",
+      "kind": "EnumValue",
+      "summary": "Perform cubic filtering when sampling the texture.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "MIPMAP_MODE_DISABLED",
+      "value": "0",
+      "enum": "MipmapMode",
+      "kind": "EnumValue",
+      "summary": "Disable mipmapping. [b]Note:[/b] Mipmapping can only be disabled in the Compatibility renderer.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "MIPMAP_MODE_NEAREST",
+      "value": "1",
+      "enum": "MipmapMode",
+      "kind": "EnumValue",
+      "summary": "Use the mipmap of the nearest resolution.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "MIPMAP_MODE_LINEAR",
+      "value": "2",
+      "enum": "MipmapMode",
+      "kind": "EnumValue",
+      "summary": "Use linear interpolation of the two mipmaps of the nearest resolution.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "WRAP_CLAMP_TO_BORDER",
+      "value": "0",
+      "enum": "Wrap",
+      "kind": "EnumValue",
+      "summary": "Clamp the texture to its specified border color.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "WRAP_CLAMP_TO_EDGE",
+      "value": "1",
+      "enum": "Wrap",
+      "kind": "EnumValue",
+      "summary": "Clamp the texture to its edge color.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "WRAP_REPEAT",
+      "value": "2",
+      "enum": "Wrap",
+      "kind": "EnumValue",
+      "summary": "Repeat the texture infinitely.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "WRAP_MIRRORED_REPEAT",
+      "value": "3",
+      "enum": "Wrap",
+      "kind": "EnumValue",
+      "summary": "Repeat the texture infinitely, mirroring it on each repeat.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "WRAP_MIRROR_CLAMP_TO_EDGE",
+      "value": "4",
+      "enum": "Wrap",
+      "kind": "EnumValue",
+      "summary": "Mirror the texture once and then clamp the texture to its edge color. [b]Note:[/b] This wrap mode is not available in the Compatibility renderer.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_RED",
+      "value": "0",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of the red channel.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_GREEN",
+      "value": "1",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of the green channel.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_BLUE",
+      "value": "2",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of the blue channel.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_ALPHA",
+      "value": "3",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of the alpha channel.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_ZERO",
+      "value": "4",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of zero.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "SWIZZLE_ONE",
+      "value": "5",
+      "enum": "Swizzle",
+      "kind": "EnumValue",
+      "summary": "Maps a color channel to the value of one.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "EYE_VISIBILITY_BOTH",
+      "value": "0",
+      "enum": "EyeVisibility",
+      "kind": "EnumValue",
+      "summary": "The layer is visible to both the left and right eyes.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "EYE_VISIBILITY_LEFT",
+      "value": "1",
+      "enum": "EyeVisibility",
+      "kind": "EnumValue",
+      "summary": "The layer is visible only to the left eye.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    },
+    {
+      "name": "EYE_VISIBILITY_RIGHT",
+      "value": "2",
+      "enum": "EyeVisibility",
+      "kind": "EnumValue",
+      "summary": "The layer is visible only to the right eye.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRCompositionLayer.xml",
+      "sha256": "13af4557ee590ea877ac02611eabe7f274917d106aa4f3938fce1b93e08038bc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

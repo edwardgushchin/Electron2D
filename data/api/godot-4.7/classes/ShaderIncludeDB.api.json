@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ShaderIncludeDB",
+    "namespace": "Godot",
+    "fullName": "Godot.ShaderIncludeDB",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ShaderIncludeDB",
+    "documentationPath": "doc/classes/ShaderIncludeDB.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_shaderincludedb.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBuiltInIncludeFile",
+      "kind": "Method",
+      "signature": "public String GetBuiltInIncludeFile(String filename)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "filename",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the code for the built-in shader fragment. You can also access this in your shader code through [code]#include \u0022filename\u0022[/code].",
+      "godotName": "get_built_in_include_file",
+      "xmlDocId": "M:Godot.ShaderIncludeDB.GetBuiltInIncludeFile(String)",
+      "sourcePath": "doc/classes/ShaderIncludeDB.xml"
+    },
+    {
+      "name": "HasBuiltInIncludeFile",
+      "kind": "Method",
+      "signature": "public bool HasBuiltInIncludeFile(String filename)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "filename",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if an include file with this name exists.",
+      "godotName": "has_built_in_include_file",
+      "xmlDocId": "M:Godot.ShaderIncludeDB.HasBuiltInIncludeFile(String)",
+      "sourcePath": "doc/classes/ShaderIncludeDB.xml"
+    },
+    {
+      "name": "ListBuiltInIncludeFiles",
+      "kind": "Method",
+      "signature": "public PackedStringArray ListBuiltInIncludeFiles()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of built-in include files that are currently registered.",
+      "godotName": "list_built_in_include_files",
+      "xmlDocId": "M:Godot.ShaderIncludeDB.ListBuiltInIncludeFiles",
+      "sourcePath": "doc/classes/ShaderIncludeDB.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ShaderIncludeDB.xml",
+      "sha256": "f99d37cc11e17dfcea427be993d8fcb0158dc751e72b62499c89fe071c6ff501"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

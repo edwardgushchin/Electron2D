@@ -1,0 +1,637 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModifier3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "SkeletonModifier3D",
+    "documentationPath": "doc/classes/SkeletonModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ProcessModification",
+      "kind": "Method",
+      "signature": "public void _ProcessModification()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this virtual method to implement a custom skeleton modifier. You should do things like get the [Skeleton3D]\u0027s current pose and apply the pose here. [method _process_modification] must not apply [member influence] to bone poses because the [Skeleton3D] automatically applies influence to all bone poses set by the modifier.",
+      "godotName": "_process_modification",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ProcessModification",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_ProcessModificationWithDelta",
+      "kind": "Method",
+      "signature": "public void _ProcessModificationWithDelta(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this virtual method to implement a custom skeleton modifier. You should do things like get the [Skeleton3D]\u0027s current pose and apply the pose here. [method _process_modification_with_delta] must not apply [member influence] to bone poses because the [Skeleton3D] automatically applies influence to all bone poses set by the modifier. [param delta] is passed from parent [Skeleton3D]. See also [method Skeleton3D.advance]. [b]Note:[/b] This method may be called outside [method Node._process] and [method Node._physics_process] with [param delta] is [code]0.0[/code], since the modification should be processed immediately after initialization of the [Skeleton3D].",
+      "godotName": "_process_modification_with_delta",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ProcessModificationWithDelta(float)",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_SkeletonChanged",
+      "kind": "Method",
+      "signature": "public void _SkeletonChanged(Skeleton3D oldSkeleton, Skeleton3D newSkeleton)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_skeleton",
+          "type": "Skeleton3D"
+        },
+        {
+          "name": "new_skeleton",
+          "type": "Skeleton3D"
+        }
+      ],
+      "summary": "Called when the skeleton is changed.",
+      "godotName": "_skeleton_changed",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._SkeletonChanged(Skeleton3D,Skeleton3D)",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_ValidateBoneNames",
+      "kind": "Method",
+      "signature": "public void _ValidateBoneNames()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when bone names and indices need to be validated, such as when entering the scene tree or changing skeleton.",
+      "godotName": "_validate_bone_names",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ValidateBoneNames",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton3D GetSkeleton()",
+      "returnType": "Skeleton3D",
+      "parameters": [],
+      "summary": "Returns the parent [Skeleton3D] node if it exists. Otherwise, returns [code]null[/code].",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.SkeletonModifier3D.GetSkeleton",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "Active",
+      "kind": "Property",
+      "signature": "public bool Active { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [SkeletonModifier3D] will be processing.",
+      "defaultValue": "true",
+      "godotName": "active",
+      "xmlDocId": "P:Godot.SkeletonModifier3D.Active",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "Influence",
+      "kind": "Property",
+      "signature": "public float Influence { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the influence of the modification. [b]Note:[/b] This value is used by [Skeleton3D] to blend, so the [SkeletonModifier3D] should always apply only 100% of the result without interpolation.",
+      "defaultValue": "1.0",
+      "godotName": "influence",
+      "xmlDocId": "P:Godot.SkeletonModifier3D.Influence",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ModificationProcessed",
+      "kind": "Signal",
+      "signature": "public event ModificationProcessedHandler ModificationProcessed",
+      "parameters": [],
+      "summary": "Notifies when the modification have been finished. [b]Note:[/b] If you want to get the modified bone pose by the modifier, you must use [method Skeleton3D.get_bone_pose] or [method Skeleton3D.get_bone_global_pose] at the moment this signal is fired.",
+      "godotName": "modification_processed",
+      "xmlDocId": "E:Godot.SkeletonModifier3D.ModificationProcessed",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "BoneAxis",
+      "values": [
+        {
+          "name": "BONE_AXIS_MINUS_X",
+          "value": "1",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -X axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_AXIS_MINUS_Y",
+          "value": "3",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Y axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_AXIS_MINUS_Z",
+          "value": "5",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Z axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_AXIS_PLUS_X",
+          "value": "0",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BX axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_AXIS_PLUS_Y",
+          "value": "2",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BY axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_AXIS_PLUS_Z",
+          "value": "4",
+          "enum": "BoneAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BZ axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BoneDirection",
+      "values": [
+        {
+          "name": "BONE_DIRECTION_FROM_PARENT",
+          "value": "6",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the axis from a parent bone to the child bone.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_MINUS_X",
+          "value": "1",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -X axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_MINUS_Y",
+          "value": "3",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Y axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_MINUS_Z",
+          "value": "5",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Z axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_PLUS_X",
+          "value": "0",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BX axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_PLUS_Y",
+          "value": "2",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BY axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "BONE_DIRECTION_PLUS_Z",
+          "value": "4",
+          "enum": "BoneDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BZ axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "RotationAxis",
+      "values": [
+        {
+          "name": "ROTATION_AXIS_ALL",
+          "value": "3",
+          "enum": "RotationAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the unconstrained rotation.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "ROTATION_AXIS_CUSTOM",
+          "value": "4",
+          "enum": "RotationAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for an optional rotation axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "ROTATION_AXIS_X",
+          "value": "0",
+          "enum": "RotationAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the rotation of the X axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "ROTATION_AXIS_Y",
+          "value": "1",
+          "enum": "RotationAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the rotation of the Y axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "ROTATION_AXIS_Z",
+          "value": "2",
+          "enum": "RotationAxis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the rotation of the Z axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "SecondaryDirection",
+      "values": [
+        {
+          "name": "SECONDARY_DIRECTION_CUSTOM",
+          "value": "7",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for an optional axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_MINUS_X",
+          "value": "2",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -X axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_MINUS_Y",
+          "value": "4",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Y axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_MINUS_Z",
+          "value": "6",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the -Z axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_NONE",
+          "value": "0",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the case when the axis is undefined.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_PLUS_X",
+          "value": "1",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BX axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_PLUS_Y",
+          "value": "3",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BY axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        },
+        {
+          "name": "SECONDARY_DIRECTION_PLUS_Z",
+          "value": "5",
+          "enum": "SecondaryDirection",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the \u002BZ axis.",
+          "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BONE_AXIS_PLUS_X",
+      "value": "0",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BX axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_AXIS_MINUS_X",
+      "value": "1",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -X axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_AXIS_PLUS_Y",
+      "value": "2",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BY axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_AXIS_MINUS_Y",
+      "value": "3",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Y axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_AXIS_PLUS_Z",
+      "value": "4",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BZ axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_AXIS_MINUS_Z",
+      "value": "5",
+      "enum": "BoneAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Z axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_PLUS_X",
+      "value": "0",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BX axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_MINUS_X",
+      "value": "1",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -X axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_PLUS_Y",
+      "value": "2",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BY axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_MINUS_Y",
+      "value": "3",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Y axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_PLUS_Z",
+      "value": "4",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BZ axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_MINUS_Z",
+      "value": "5",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Z axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "BONE_DIRECTION_FROM_PARENT",
+      "value": "6",
+      "enum": "BoneDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the axis from a parent bone to the child bone.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_NONE",
+      "value": "0",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the case when the axis is undefined.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_PLUS_X",
+      "value": "1",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BX axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_MINUS_X",
+      "value": "2",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -X axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_PLUS_Y",
+      "value": "3",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BY axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_MINUS_Y",
+      "value": "4",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Y axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_PLUS_Z",
+      "value": "5",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the \u002BZ axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_MINUS_Z",
+      "value": "6",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the -Z axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "SECONDARY_DIRECTION_CUSTOM",
+      "value": "7",
+      "enum": "SecondaryDirection",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for an optional axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "ROTATION_AXIS_X",
+      "value": "0",
+      "enum": "RotationAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the rotation of the X axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "ROTATION_AXIS_Y",
+      "value": "1",
+      "enum": "RotationAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the rotation of the Y axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "ROTATION_AXIS_Z",
+      "value": "2",
+      "enum": "RotationAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the rotation of the Z axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "ROTATION_AXIS_ALL",
+      "value": "3",
+      "enum": "RotationAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the unconstrained rotation.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "ROTATION_AXIS_CUSTOM",
+      "value": "4",
+      "enum": "RotationAxis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for an optional rotation axis.",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ProcessModification",
+      "kind": "Method",
+      "signature": "public void _ProcessModification()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this virtual method to implement a custom skeleton modifier. You should do things like get the [Skeleton3D]\u0027s current pose and apply the pose here. [method _process_modification] must not apply [member influence] to bone poses because the [Skeleton3D] automatically applies influence to all bone poses set by the modifier.",
+      "godotName": "_process_modification",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ProcessModification",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_ProcessModificationWithDelta",
+      "kind": "Method",
+      "signature": "public void _ProcessModificationWithDelta(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Override this virtual method to implement a custom skeleton modifier. You should do things like get the [Skeleton3D]\u0027s current pose and apply the pose here. [method _process_modification_with_delta] must not apply [member influence] to bone poses because the [Skeleton3D] automatically applies influence to all bone poses set by the modifier. [param delta] is passed from parent [Skeleton3D]. See also [method Skeleton3D.advance]. [b]Note:[/b] This method may be called outside [method Node._process] and [method Node._physics_process] with [param delta] is [code]0.0[/code], since the modification should be processed immediately after initialization of the [Skeleton3D].",
+      "godotName": "_process_modification_with_delta",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ProcessModificationWithDelta(float)",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_SkeletonChanged",
+      "kind": "Method",
+      "signature": "public void _SkeletonChanged(Skeleton3D oldSkeleton, Skeleton3D newSkeleton)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_skeleton",
+          "type": "Skeleton3D"
+        },
+        {
+          "name": "new_skeleton",
+          "type": "Skeleton3D"
+        }
+      ],
+      "summary": "Called when the skeleton is changed.",
+      "godotName": "_skeleton_changed",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._SkeletonChanged(Skeleton3D,Skeleton3D)",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    },
+    {
+      "name": "_ValidateBoneNames",
+      "kind": "Method",
+      "signature": "public void _ValidateBoneNames()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when bone names and indices need to be validated, such as when entering the scene tree or changing skeleton.",
+      "godotName": "_validate_bone_names",
+      "xmlDocId": "M:Godot.SkeletonModifier3D._ValidateBoneNames",
+      "sourcePath": "doc/classes/SkeletonModifier3D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModifier3D.xml",
+      "sha256": "5e93be78f298fade3cf87c75a2dae0cdc79b7c0ff19bd3d345b048119c132395"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

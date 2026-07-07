@@ -1,0 +1,1159 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Variant",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Variant",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Variant\u003E"
+    ],
+    "godotReference": "Variant",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "As",
+      "kind": "Method",
+      "signature": "public T As()",
+      "returnType": "T",
+      "parameters": [],
+      "summary": "Converts this variant to a supported C# type.",
+      "xmlDocId": "M:Electron2D.Variant.As\u0060\u00601",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsArray",
+      "kind": "Method",
+      "signature": "public Electron2D.Collections.Array AsArray()",
+      "returnType": "Electron2D.Collections.Array",
+      "parameters": [],
+      "summary": "Reads the stored Electron2D array reference.",
+      "xmlDocId": "M:Electron2D.Variant.AsArray",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsBool",
+      "kind": "Method",
+      "signature": "public System.Boolean AsBool()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Reads the stored Boolean value.",
+      "xmlDocId": "M:Electron2D.Variant.AsBool",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsCallable",
+      "kind": "Method",
+      "signature": "public Electron2D.Callable AsCallable()",
+      "returnType": "Electron2D.Callable",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Callable\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsCallable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsColor",
+      "kind": "Method",
+      "signature": "public Electron2D.Color AsColor()",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Color\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsColor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsDictionary",
+      "kind": "Method",
+      "signature": "public Electron2D.Collections.Dictionary AsDictionary()",
+      "returnType": "Electron2D.Collections.Dictionary",
+      "parameters": [],
+      "summary": "Reads the stored Electron2D dictionary reference.",
+      "xmlDocId": "M:Electron2D.Variant.AsDictionary",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsDouble",
+      "kind": "Method",
+      "signature": "public System.Double AsDouble()",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Reads the stored 64-bit floating-point value.",
+      "xmlDocId": "M:Electron2D.Variant.AsDouble",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsInt32",
+      "kind": "Method",
+      "signature": "public System.Int32 AsInt32()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Reads the stored integer value as a signed 32-bit integer.",
+      "xmlDocId": "M:Electron2D.Variant.AsInt32",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsInt64",
+      "kind": "Method",
+      "signature": "public System.Int64 AsInt64()",
+      "returnType": "System.Int64",
+      "parameters": [],
+      "summary": "Reads the stored signed 64-bit integer value.",
+      "xmlDocId": "M:Electron2D.Variant.AsInt64",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsNodePath",
+      "kind": "Method",
+      "signature": "public Electron2D.NodePath AsNodePath()",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.NodePath\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsNodePath",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsObject",
+      "kind": "Method",
+      "signature": "public Electron2D.Object AsObject()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Reads the stored object reference.",
+      "xmlDocId": "M:Electron2D.Variant.AsObject",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsRect2",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 AsRect2()",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Rect2\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsRect2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsRect2I",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I AsRect2I()",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Rect2I\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsRect2I",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Rid AsRid()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Rid\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsString",
+      "kind": "Method",
+      "signature": "public System.String AsString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Reads the stored string value.",
+      "xmlDocId": "M:Electron2D.Variant.AsString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsStringName",
+      "kind": "Method",
+      "signature": "public Electron2D.StringName AsStringName()",
+      "returnType": "Electron2D.StringName",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.StringName\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsStringName",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsTransform2D",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D AsTransform2D()",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Transform2D\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsTransform2D",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsVector2",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 AsVector2()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Vector2\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsVector2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AsVector2I",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I AsVector2I()",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Reads the stored \u0060Electron2D.Vector2I\u0060 value.",
+      "xmlDocId": "M:Electron2D.Variant.AsVector2I",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateFrom",
+      "kind": "Method",
+      "signature": "public static Electron2D.Variant CreateFrom(System.Object value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Creates a Variant from any supported Electron2D 0.1-preview value.",
+      "xmlDocId": "M:Electron2D.Variant.CreateFrom(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Variant other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Tests two variants for equality.",
+      "xmlDocId": "M:Electron2D.Variant.Equals(Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Tests whether an object is an equal Variant.",
+      "xmlDocId": "M:Electron2D.Variant.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "From",
+      "kind": "Method",
+      "signature": "public static Electron2D.Variant From(T value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "T"
+        }
+      ],
+      "summary": "Creates a Variant from a supported value while preserving generic call sites.",
+      "xmlDocId": "M:Electron2D.Variant.From\u0060\u00601(\u00600)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Returns a hash code for this Variant.",
+      "xmlDocId": "M:Electron2D.Variant.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsNil",
+      "kind": "Method",
+      "signature": "public System.Boolean IsNil()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Returns whether this variant stores \u0060Electron2D.Variant.Type.Nil\u0060.",
+      "xmlDocId": "M:Electron2D.Variant.IsNil",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Returns a diagnostic string representation of the stored value.",
+      "xmlDocId": "M:Electron2D.Variant.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Variant left, Electron2D.Variant right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Tests two variants for equality.",
+      "xmlDocId": "M:Electron2D.Variant.op_Equality(Electron2D.Variant,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Callable value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Collections.Array value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Collections.Array"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Collections.Array)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Collections.Dictionary value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Collections.Dictionary"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Collections.Dictionary)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Color value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.NodePath value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.NodePath"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.NodePath)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Object value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Object"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rect2 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rect2I value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rid value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.StringName value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Transform2D value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Vector2I value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Boolean value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Byte value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Byte"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Byte)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Double value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int16 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int16"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int16)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int32 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int64 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.SByte value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.SByte"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.SByte)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Single value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.String value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt16 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt16"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt16)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt32 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt32"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt64 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt64"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Variant left, Electron2D.Variant right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Tests two variants for inequality.",
+      "xmlDocId": "M:Electron2D.Variant.op_Inequality(Electron2D.Variant,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Obj",
+      "kind": "Property",
+      "signature": "public System.Object Obj { get; }",
+      "returnType": "System.Object",
+      "parameters": [],
+      "summary": "Gets the boxed value stored in this variant.",
+      "xmlDocId": "P:Electron2D.Variant.Obj",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VariantType",
+      "kind": "Property",
+      "signature": "public Electron2D.Variant.Type VariantType { get; }",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Gets the type stored in this variant.",
+      "xmlDocId": "P:Electron2D.Variant.VariantType",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Variant left, Electron2D.Variant right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Tests two variants for equality.",
+      "xmlDocId": "M:Electron2D.Variant.op_Equality(Electron2D.Variant,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Callable value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Collections.Array value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Collections.Array"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Collections.Array)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Collections.Dictionary value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Collections.Dictionary"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Collections.Dictionary)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Color value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.NodePath value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.NodePath"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.NodePath)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Object value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Object"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rect2 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rect2I value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Rid value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.StringName value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Transform2D value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(Electron2D.Vector2I value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Boolean value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Byte value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Byte"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Byte)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Double value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int16 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int16"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int16)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int32 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Int64 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.SByte value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.SByte"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.SByte)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.Single value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.String value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt16 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt16"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt16)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt32 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt32"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Variant op_Implicit(System.UInt64 value)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.UInt64"
+        }
+      ],
+      "summary": "Converts a Boolean value to a Variant.",
+      "xmlDocId": "M:Electron2D.Variant.op_Implicit(System.UInt64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Variant left, Electron2D.Variant right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Tests two variants for inequality.",
+      "xmlDocId": "M:Electron2D.Variant.op_Inequality(Electron2D.Variant,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

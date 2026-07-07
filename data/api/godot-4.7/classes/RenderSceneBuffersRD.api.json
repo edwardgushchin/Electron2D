@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneBuffersRD",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneBuffersRD",
+    "kind": "class",
+    "baseType": "RenderSceneBuffers",
+    "interfaces": [],
+    "godotReference": "RenderSceneBuffersRD",
+    "documentationPath": "doc/classes/RenderSceneBuffersRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenebuffersrd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearContext",
+      "kind": "Method",
+      "signature": "public void ClearContext(StringName context)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Frees all buffers related to this context.",
+      "godotName": "clear_context",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.ClearContext(StringName)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "CreateTexture",
+      "kind": "Method",
+      "signature": "public RID CreateTexture(StringName context, StringName name, int dataFormat, int usageBits, int textureSamples, Vector2i size, int layers, int mipmaps, bool unique, bool discardable)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "data_format",
+          "type": "int"
+        },
+        {
+          "name": "usage_bits",
+          "type": "int"
+        },
+        {
+          "name": "texture_samples",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        },
+        {
+          "name": "mipmaps",
+          "type": "int"
+        },
+        {
+          "name": "unique",
+          "type": "bool"
+        },
+        {
+          "name": "discardable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Create a new texture with the given definition and cache this under the given name. Will return the existing texture if it already exists.",
+      "godotName": "create_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.CreateTexture(StringName,StringName,int,int,int,Vector2i,int,int,bool,bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "CreateTextureFromFormat",
+      "kind": "Method",
+      "signature": "public RID CreateTextureFromFormat(StringName context, StringName name, RDTextureFormat format, RDTextureView view, bool unique)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "format",
+          "type": "RDTextureFormat"
+        },
+        {
+          "name": "view",
+          "type": "RDTextureView"
+        },
+        {
+          "name": "unique",
+          "type": "bool"
+        }
+      ],
+      "summary": "Create a new texture using the given format and view and cache this under the given name. Will return the existing texture if it already exists.",
+      "godotName": "create_texture_from_format",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.CreateTextureFromFormat(StringName,StringName,RDTextureFormat,RDTextureView,bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "CreateTextureView",
+      "kind": "Method",
+      "signature": "public RID CreateTextureView(StringName context, StringName name, StringName viewName, RDTextureView view)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "view_name",
+          "type": "StringName"
+        },
+        {
+          "name": "view",
+          "type": "RDTextureView"
+        }
+      ],
+      "summary": "Create a new texture view for an existing texture and cache this under the given [param view_name]. Will return the existing texture view if it already exists. Will error if the source texture doesn\u0027t exist.",
+      "godotName": "create_texture_view",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.CreateTextureView(StringName,StringName,StringName,RDTextureView)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetColorLayer",
+      "kind": "Method",
+      "signature": "public RID GetColorLayer(int layer, bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the specified layer from the color texture we are rendering 3D content to. If [param msaa] is [code]true[/code] and MSAA is enabled, this returns the MSAA variant of the buffer.",
+      "godotName": "get_color_layer",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetColorLayer(int,bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetColorTexture",
+      "kind": "Method",
+      "signature": "public RID GetColorTexture(bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the color texture we are rendering 3D content to. If multiview is used this will be a texture array with all views. If [param msaa] is [code]true[/code] and MSAA is enabled, this returns the MSAA variant of the buffer.",
+      "godotName": "get_color_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetColorTexture(bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetDepthLayer",
+      "kind": "Method",
+      "signature": "public RID GetDepthLayer(int layer, bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the specified layer from the depth texture we are rendering 3D content to. If [param msaa] is [code]true[/code] and MSAA is enabled, this returns the MSAA variant of the buffer.",
+      "godotName": "get_depth_layer",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetDepthLayer(int,bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetDepthTexture",
+      "kind": "Method",
+      "signature": "public RID GetDepthTexture(bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the depth texture we are rendering 3D content to. If multiview is used this will be a texture array with all views. If [param msaa] is [code]true[/code] and MSAA is enabled, this returns the MSAA variant of the buffer.",
+      "godotName": "get_depth_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetDepthTexture(bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetFsrSharpness",
+      "kind": "Method",
+      "signature": "public float GetFsrSharpness()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the FSR sharpness value used while rendering the 3D content (if [method get_scaling_3d_mode] is an FSR mode).",
+      "godotName": "get_fsr_sharpness",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetFsrSharpness",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetInternalSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetInternalSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the internal size of the render buffer (size before upscaling) with which textures are created by default.",
+      "godotName": "get_internal_size",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetInternalSize",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetMsaa3d",
+      "kind": "Method",
+      "signature": "public int GetMsaa3d()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the applied 3D MSAA mode for this viewport.",
+      "godotName": "get_msaa_3d",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetMsaa3d",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetRenderTarget",
+      "kind": "Method",
+      "signature": "public RID GetRenderTarget()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the render target associated with this buffers object.",
+      "godotName": "get_render_target",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetRenderTarget",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetScaling3dMode",
+      "kind": "Method",
+      "signature": "public int GetScaling3dMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the scaling mode used for upscaling.",
+      "godotName": "get_scaling_3d_mode",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetScaling3dMode",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetScreenSpaceAa",
+      "kind": "Method",
+      "signature": "public int GetScreenSpaceAa()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the screen-space antialiasing method applied.",
+      "godotName": "get_screen_space_aa",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetScreenSpaceAa",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTargetSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetTargetSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the target size of the render buffer (size after upscaling).",
+      "godotName": "get_target_size",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTargetSize",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTexture",
+      "kind": "Method",
+      "signature": "public RID GetTexture(StringName context, StringName name)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a cached texture with this name.",
+      "godotName": "get_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTexture(StringName,StringName)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTextureFormat",
+      "kind": "Method",
+      "signature": "public RDTextureFormat GetTextureFormat(StringName context, StringName name)",
+      "returnType": "RDTextureFormat",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the texture format information with which a cached texture was created.",
+      "godotName": "get_texture_format",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTextureFormat(StringName,StringName)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTextureSamples",
+      "kind": "Method",
+      "signature": "public int GetTextureSamples()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of MSAA samples used.",
+      "godotName": "get_texture_samples",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTextureSamples",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTextureSlice",
+      "kind": "Method",
+      "signature": "public RID GetTextureSlice(StringName context, StringName name, int layer, int mipmap, int layers, int mipmaps)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "mipmap",
+          "type": "int"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        },
+        {
+          "name": "mipmaps",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a specific slice (layer or mipmap) for a cached texture.",
+      "godotName": "get_texture_slice",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTextureSlice(StringName,StringName,int,int,int,int)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTextureSliceSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetTextureSliceSize(StringName context, StringName name, int mipmap)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "mipmap",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the texture size of a given slice of a cached texture.",
+      "godotName": "get_texture_slice_size",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTextureSliceSize(StringName,StringName,int)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetTextureSliceView",
+      "kind": "Method",
+      "signature": "public RID GetTextureSliceView(StringName context, StringName name, int layer, int mipmap, int layers, int mipmaps, RDTextureView view)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "mipmap",
+          "type": "int"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        },
+        {
+          "name": "mipmaps",
+          "type": "int"
+        },
+        {
+          "name": "view",
+          "type": "RDTextureView"
+        }
+      ],
+      "summary": "Returns a specific view of a slice (layer or mipmap) for a cached texture.",
+      "godotName": "get_texture_slice_view",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetTextureSliceView(StringName,StringName,int,int,int,int,RDTextureView)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetUseDebanding",
+      "kind": "Method",
+      "signature": "public bool GetUseDebanding()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if debanding is enabled.",
+      "godotName": "get_use_debanding",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetUseDebanding",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetUseTaa",
+      "kind": "Method",
+      "signature": "public bool GetUseTaa()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if TAA is enabled.",
+      "godotName": "get_use_taa",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetUseTaa",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetVelocityLayer",
+      "kind": "Method",
+      "signature": "public RID GetVelocityLayer(int layer, bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the specified layer from the velocity texture we are rendering 3D content to.",
+      "godotName": "get_velocity_layer",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetVelocityLayer(int,bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetVelocityTexture",
+      "kind": "Method",
+      "signature": "public RID GetVelocityTexture(bool msaa)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "msaa",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the velocity texture we are rendering 3D content to. If multiview is used this will be a texture array with all views. If [param msaa] is [b]true[/b] and MSAA is enabled, this returns the MSAA variant of the buffer.",
+      "godotName": "get_velocity_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetVelocityTexture(bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "GetViewCount",
+      "kind": "Method",
+      "signature": "public int GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the view count for the associated viewport.",
+      "godotName": "get_view_count",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.GetViewCount",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    },
+    {
+      "name": "HasTexture",
+      "kind": "Method",
+      "signature": "public bool HasTexture(StringName context, StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "context",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a cached texture exists for this name.",
+      "godotName": "has_texture",
+      "xmlDocId": "M:Godot.RenderSceneBuffersRD.HasTexture(StringName,StringName)",
+      "sourcePath": "doc/classes/RenderSceneBuffersRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneBuffersRD.xml",
+      "sha256": "38ed253ce99039d41c96341f98a22769c31d40ca543ea4b703cc5379dc402ee1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

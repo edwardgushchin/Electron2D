@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSceneFormatImporterGLTF",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSceneFormatImporterGLTF",
+    "kind": "class",
+    "baseType": "EditorSceneFormatImporter",
+    "interfaces": [],
+    "godotReference": "EditorSceneFormatImporterGLTF",
+    "documentationPath": "modules/gltf/doc_classes/EditorSceneFormatImporterGLTF.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorsceneformatimportergltf.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/EditorSceneFormatImporterGLTF.xml",
+      "sha256": "e6c2d3211362f198ad627f9e2c267f0a5f6c0bffef93c03c42787de4b5263b2a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

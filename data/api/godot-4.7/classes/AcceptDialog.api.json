@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AcceptDialog",
+    "namespace": "Godot",
+    "fullName": "Godot.AcceptDialog",
+    "kind": "class",
+    "baseType": "Window",
+    "interfaces": [],
+    "godotReference": "AcceptDialog",
+    "documentationPath": "doc/classes/AcceptDialog.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_acceptdialog.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddButton",
+      "kind": "Method",
+      "signature": "public Button AddButton(String text, bool right, String action)",
+      "returnType": "Button",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "right",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "action",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a button with label [param text] and a custom [param action] to the dialog and returns the created button. If [param action] is not empty, pressing the button will emit the [signal custom_action] signal with the specified action string. If [code]true[/code], [param right] will place the button to the right of any sibling buttons. You can use [method remove_button] method to remove a button created with this method from the dialog.",
+      "godotName": "add_button",
+      "xmlDocId": "M:Godot.AcceptDialog.AddButton(String,bool,String)",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "AddCancelButton",
+      "kind": "Method",
+      "signature": "public Button AddCancelButton(String name)",
+      "returnType": "Button",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a button with label [param name] and a cancel action to the dialog and returns the created button. You can use [method remove_button] method to remove a button created with this method from the dialog.",
+      "godotName": "add_cancel_button",
+      "xmlDocId": "M:Godot.AcceptDialog.AddCancelButton(String)",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "GetLabel",
+      "kind": "Method",
+      "signature": "public Label GetLabel()",
+      "returnType": "Label",
+      "parameters": [],
+      "summary": "Returns the label used for built-in text. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_label",
+      "xmlDocId": "M:Godot.AcceptDialog.GetLabel",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "GetOkButton",
+      "kind": "Method",
+      "signature": "public Button GetOkButton()",
+      "returnType": "Button",
+      "parameters": [],
+      "summary": "Returns the OK [Button] instance. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_ok_button",
+      "xmlDocId": "M:Godot.AcceptDialog.GetOkButton",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "RegisterTextEnter",
+      "kind": "Method",
+      "signature": "public void RegisterTextEnter(LineEdit lineEdit)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line_edit",
+          "type": "LineEdit"
+        }
+      ],
+      "summary": "Registers a [LineEdit] in the dialog. When the enter key is pressed, the dialog will be accepted.",
+      "godotName": "register_text_enter",
+      "xmlDocId": "M:Godot.AcceptDialog.RegisterTextEnter(LineEdit)",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "RemoveButton",
+      "kind": "Method",
+      "signature": "public void RemoveButton(Button button)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "button",
+          "type": "Button"
+        }
+      ],
+      "summary": "Removes the [param button] from the dialog. Does NOT free the [param button]. The [param button] must be a [Button] added with [method add_button] or [method add_cancel_button] method. After removal, pressing the [param button] will no longer emit this dialog\u0027s [signal custom_action] or [signal canceled] signals.",
+      "godotName": "remove_button",
+      "xmlDocId": "M:Godot.AcceptDialog.RemoveButton(Button)",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "DialogAutowrap",
+      "kind": "Property",
+      "signature": "public bool DialogAutowrap { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Sets autowrapping for the text in the dialog.",
+      "defaultValue": "false",
+      "godotName": "dialog_autowrap",
+      "xmlDocId": "P:Godot.AcceptDialog.DialogAutowrap",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "DialogCloseOnEscape",
+      "kind": "Property",
+      "signature": "public bool DialogCloseOnEscape { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the dialog will be hidden when the [code]ui_close_dialog[/code] action is pressed (by default, this action is bound to [kbd]Escape[/kbd], or [kbd]Cmd \u002B W[/kbd] on macOS).",
+      "defaultValue": "true",
+      "godotName": "dialog_close_on_escape",
+      "xmlDocId": "P:Godot.AcceptDialog.DialogCloseOnEscape",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "DialogHideOnOk",
+      "kind": "Property",
+      "signature": "public bool DialogHideOnOk { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the dialog is hidden when the OK button is pressed. You can set it to [code]false[/code] if you want to do e.g. input validation when receiving the [signal confirmed] signal, and handle hiding the dialog in your own logic. [b]Note:[/b] Some nodes derived from this class can have a different default value, and potentially their own built-in logic overriding this setting. For example [FileDialog] defaults to [code]false[/code], and has its own input validation code that is called when you press OK, which eventually hides the dialog if the input is valid. As such, this property can\u0027t be used in [FileDialog] to disable hiding the dialog when pressing OK.",
+      "defaultValue": "true",
+      "godotName": "dialog_hide_on_ok",
+      "xmlDocId": "P:Godot.AcceptDialog.DialogHideOnOk",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "DialogText",
+      "kind": "Property",
+      "signature": "public String DialogText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text displayed by the dialog.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "dialog_text",
+      "xmlDocId": "P:Godot.AcceptDialog.DialogText",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "Exclusive",
+      "kind": "Property",
+      "signature": "public bool Exclusive { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "exclusive",
+      "xmlDocId": "P:Godot.AcceptDialog.Exclusive",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "KeepTitleVisible",
+      "kind": "Property",
+      "signature": "public bool KeepTitleVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "keep_title_visible",
+      "xmlDocId": "P:Godot.AcceptDialog.KeepTitleVisible",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "MaximizeDisabled",
+      "kind": "Property",
+      "signature": "public bool MaximizeDisabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "maximize_disabled",
+      "xmlDocId": "P:Godot.AcceptDialog.MaximizeDisabled",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "MinimizeDisabled",
+      "kind": "Property",
+      "signature": "public bool MinimizeDisabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "minimize_disabled",
+      "xmlDocId": "P:Godot.AcceptDialog.MinimizeDisabled",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "OkButtonText",
+      "kind": "Property",
+      "signature": "public String OkButtonText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text displayed by the OK button (see [method get_ok_button]). If empty, a default text will be used.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "ok_button_text",
+      "xmlDocId": "P:Godot.AcceptDialog.OkButtonText",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0022Alert!\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.AcceptDialog.Title",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "Transient",
+      "kind": "Property",
+      "signature": "public bool Transient { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transient",
+      "xmlDocId": "P:Godot.AcceptDialog.Transient",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.AcceptDialog.Visible",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "WrapControls",
+      "kind": "Property",
+      "signature": "public bool WrapControls { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "wrap_controls",
+      "xmlDocId": "P:Godot.AcceptDialog.WrapControls",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Canceled",
+      "kind": "Signal",
+      "signature": "public event CanceledHandler Canceled",
+      "parameters": [],
+      "summary": "Emitted when the dialog is closed or the button created with [method add_cancel_button] is pressed.",
+      "godotName": "canceled",
+      "xmlDocId": "E:Godot.AcceptDialog.Canceled",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "Confirmed",
+      "kind": "Signal",
+      "signature": "public event ConfirmedHandler Confirmed",
+      "parameters": [],
+      "summary": "Emitted when the dialog is accepted, i.e. the OK button is pressed.",
+      "godotName": "confirmed",
+      "xmlDocId": "E:Godot.AcceptDialog.Confirmed",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    },
+    {
+      "name": "CustomAction",
+      "kind": "Signal",
+      "signature": "public event CustomActionHandler CustomAction",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when a custom button with an action is pressed. See [method add_button].",
+      "godotName": "custom_action",
+      "xmlDocId": "E:Godot.AcceptDialog.CustomAction(StringName)",
+      "sourcePath": "doc/classes/AcceptDialog.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AcceptDialog.xml",
+      "sha256": "6935675463a433492ea5b1c978525bd564943e2ec3a5af070c187490133b8fdb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

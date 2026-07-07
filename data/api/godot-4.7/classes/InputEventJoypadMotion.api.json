@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventJoypadMotion",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventJoypadMotion",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventJoypadMotion",
+    "documentationPath": "doc/classes/InputEventJoypadMotion.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventjoypadmotion.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Axis",
+      "kind": "Property",
+      "signature": "public int Axis { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Axis identifier.",
+      "defaultValue": "0",
+      "godotName": "axis",
+      "xmlDocId": "P:Godot.InputEventJoypadMotion.Axis",
+      "sourcePath": "doc/classes/InputEventJoypadMotion.xml"
+    },
+    {
+      "name": "AxisValue",
+      "kind": "Property",
+      "signature": "public float AxisValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Current position of the joystick on the given axis. The value ranges from [code]-1.0[/code] to [code]1.0[/code]. A value of [code]0[/code] means the axis is in its resting position.",
+      "defaultValue": "0.0",
+      "godotName": "axis_value",
+      "xmlDocId": "P:Godot.InputEventJoypadMotion.AxisValue",
+      "sourcePath": "doc/classes/InputEventJoypadMotion.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventJoypadMotion.xml",
+      "sha256": "155597d0eab22f23108aa2c941382f2258f2791940acc2d365a4549e1fd9e952"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

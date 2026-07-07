@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Color",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Color",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Color\u003E"
+    ],
+    "godotReference": "Color",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Color(System.Single r, System.Single g, System.Single b, System.Single a)",
+      "parameters": [
+        {
+          "name": "r",
+          "type": "System.Single"
+        },
+        {
+          "name": "g",
+          "type": "System.Single"
+        },
+        {
+          "name": "b",
+          "type": "System.Single"
+        },
+        {
+          "name": "a",
+          "type": "System.Single",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Initializes a new instance of the Color type.",
+      "xmlDocId": "M:Electron2D.Color.#ctor(System.Single,System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Color(System.Single r, System.Single g, System.Single b, System.Single a)",
+      "parameters": [
+        {
+          "name": "r",
+          "type": "System.Single"
+        },
+        {
+          "name": "g",
+          "type": "System.Single"
+        },
+        {
+          "name": "b",
+          "type": "System.Single"
+        },
+        {
+          "name": "a",
+          "type": "System.Single",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Initializes a new instance of the Color type.",
+      "xmlDocId": "M:Electron2D.Color.#ctor(System.Single,System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Black",
+      "kind": "Field",
+      "signature": "public static Electron2D.Color Black",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Represents the black value.",
+      "value": "(0, 0, 0, 1)",
+      "xmlDocId": "F:Electron2D.Color.Black",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transparent",
+      "kind": "Field",
+      "signature": "public static Electron2D.Color Transparent",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Represents the transparent value.",
+      "value": "(0, 0, 0, 0)",
+      "xmlDocId": "F:Electron2D.Color.Transparent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "White",
+      "kind": "Field",
+      "signature": "public static Electron2D.Color White",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Represents the white value.",
+      "value": "(1, 1, 1, 1)",
+      "xmlDocId": "F:Electron2D.Color.White",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public Electron2D.Color Clamp(Electron2D.Color min, Electron2D.Color max)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "max",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Executes the clamp operation.",
+      "xmlDocId": "M:Electron2D.Color.Clamp(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Darkened",
+      "kind": "Method",
+      "signature": "public Electron2D.Color Darkened(System.Single amount)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the darkened operation.",
+      "xmlDocId": "M:Electron2D.Color.Darkened(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Color other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Color.Equals(Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Color.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FromHtml",
+      "kind": "Method",
+      "signature": "public static Electron2D.Color FromHtml(System.String html)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "html",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Executes the from html operation.",
+      "xmlDocId": "M:Electron2D.Color.FromHtml(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.Color.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public System.Boolean IsEqualApprox(Electron2D.Color color)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Checks whether equal approx is true.",
+      "xmlDocId": "M:Electron2D.Color.IsEqualApprox(Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Lerp",
+      "kind": "Method",
+      "signature": "public Electron2D.Color Lerp(Electron2D.Color to, System.Single weight)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "weight",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the lerp operation.",
+      "xmlDocId": "M:Electron2D.Color.Lerp(Electron2D.Color,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Lightened",
+      "kind": "Method",
+      "signature": "public Electron2D.Color Lightened(System.Single amount)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the lightened operation.",
+      "xmlDocId": "M:Electron2D.Color.Lightened(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToHtml",
+      "kind": "Method",
+      "signature": "public System.String ToHtml(System.Boolean includeAlpha)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "includeAlpha",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Executes the to html operation.",
+      "xmlDocId": "M:Electron2D.Color.ToHtml(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.Color.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Addition",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Addition(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060\u002B\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Addition(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Division(Electron2D.Color color, System.Single scalar)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Division(Electron2D.Color,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Equality(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Inequality(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(Electron2D.Color color, System.Single scalar)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(Electron2D.Color,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(System.Single scalar, Electron2D.Color color)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(System.Single,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Subtraction",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Subtraction(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Subtraction(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "A",
+      "kind": "Property",
+      "signature": "public System.Single A { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the a value.",
+      "xmlDocId": "P:Electron2D.Color.A",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "kind": "Property",
+      "signature": "public System.Single B { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the b value.",
+      "xmlDocId": "P:Electron2D.Color.B",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "G",
+      "kind": "Property",
+      "signature": "public System.Single G { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the g value.",
+      "xmlDocId": "P:Electron2D.Color.G",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "R",
+      "kind": "Property",
+      "signature": "public System.Single R { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the r value.",
+      "xmlDocId": "P:Electron2D.Color.R",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Black",
+      "value": "(0, 0, 0, 1)",
+      "kind": "Field",
+      "summary": "Represents the black value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transparent",
+      "value": "(0, 0, 0, 0)",
+      "kind": "Field",
+      "summary": "Represents the transparent value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "White",
+      "value": "(1, 1, 1, 1)",
+      "kind": "Field",
+      "summary": "Represents the white value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [
+    {
+      "name": "op_Addition",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Addition(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060\u002B\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Addition(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Division(Electron2D.Color color, System.Single scalar)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Division(Electron2D.Color,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Equality(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Inequality(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(Electron2D.Color color, System.Single scalar)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(Electron2D.Color,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Multiply(System.Single scalar, Electron2D.Color color)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Multiply(System.Single,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Subtraction",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Color op_Subtraction(Electron2D.Color left, Electron2D.Color right)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Color.op_Subtraction(Electron2D.Color,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

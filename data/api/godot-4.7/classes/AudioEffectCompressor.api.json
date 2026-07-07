@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectCompressor",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectCompressor",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectCompressor",
+    "documentationPath": "doc/classes/AudioEffectCompressor.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectcompressor.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AttackUs",
+      "kind": "Property",
+      "signature": "public float AttackUs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Compressor\u0027s reaction time when the audio exceeds the volume threshold level, in microseconds. Value can range from 20 to 2000.",
+      "defaultValue": "20.0",
+      "godotName": "attack_us",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.AttackUs",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "Gain",
+      "kind": "Property",
+      "signature": "public float Gain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain of the audio signal, in dB. Value can range from -20 to 20.",
+      "defaultValue": "0.0",
+      "godotName": "gain",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.Gain",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "Mix",
+      "kind": "Property",
+      "signature": "public float Mix { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Balance between the original audio and the compressed audio. Value can range from 0 (totally dry) to 1 (totally wet).",
+      "defaultValue": "1.0",
+      "godotName": "mix",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.Mix",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "Ratio",
+      "kind": "Property",
+      "signature": "public float Ratio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of compression applied to the audio once it passes the volume threshold level. The higher the ratio, the stronger the compression applied to audio signals that pass the volume threshold level. Value can range from 1 to 48.",
+      "defaultValue": "4.0",
+      "godotName": "ratio",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.Ratio",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "ReleaseMs",
+      "kind": "Property",
+      "signature": "public float ReleaseMs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Compressor\u0027s delay time to stop decreasing the volume after the it falls below the volume threshold level, in milliseconds. Value can range from 20 to 2000.",
+      "defaultValue": "250.0",
+      "godotName": "release_ms",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.ReleaseMs",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "Sidechain",
+      "kind": "Property",
+      "signature": "public StringName Sidechain { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Audio bus to use for the volume threshold detection.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "sidechain",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.Sidechain",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    },
+    {
+      "name": "Threshold",
+      "kind": "Property",
+      "signature": "public float Threshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume level above which compression is applied to the audio, in dB. Value can range from -60 to 0.",
+      "defaultValue": "0.0",
+      "godotName": "threshold",
+      "xmlDocId": "P:Godot.AudioEffectCompressor.Threshold",
+      "sourcePath": "doc/classes/AudioEffectCompressor.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectCompressor.xml",
+      "sha256": "7911a948f006f54c56f24825ca8c59099f6e048141f2412321ab4d3f0d212d5e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

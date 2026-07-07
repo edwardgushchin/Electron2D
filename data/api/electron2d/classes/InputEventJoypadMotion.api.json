@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventJoypadMotion",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventJoypadMotion",
+    "kind": "class",
+    "baseType": "Electron2D.InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventJoypadMotion",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventJoypadMotion",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventJoypadMotion()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventJoypadMotion type.",
+      "xmlDocId": "M:Electron2D.InputEventJoypadMotion.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventJoypadMotion",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventJoypadMotion()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventJoypadMotion type.",
+      "xmlDocId": "M:Electron2D.InputEventJoypadMotion.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Axis",
+      "kind": "Property",
+      "signature": "public Electron2D.JoyAxis Axis { get; set; }",
+      "returnType": "Electron2D.JoyAxis",
+      "parameters": [],
+      "summary": "Gets or sets the gamepad axis represented by this event.",
+      "xmlDocId": "P:Electron2D.InputEventJoypadMotion.Axis",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AxisValue",
+      "kind": "Property",
+      "signature": "public System.Single AxisValue { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the normalized axis value.",
+      "xmlDocId": "P:Electron2D.InputEventJoypadMotion.AxisValue",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

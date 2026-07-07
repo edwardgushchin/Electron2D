@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeRemap",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeRemap",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeRemap",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernoderemap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeRemap.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "7",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_SCALAR",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D_SCALAR",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]value[/code] port uses a 2D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D_SCALAR",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]value[/code] port uses a 3D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D_SCALAR",
+          "value": "6",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]value[/code] port uses a 4D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_SCALAR",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D_SCALAR",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]value[/code] port uses a 2D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D_SCALAR",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]value[/code] port uses a 3D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D_SCALAR",
+      "value": "6",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]value[/code] port uses a 4D vector type, while the [code]input min[/code], [code]input max[/code], [code]output min[/code], and [code]output max[/code] ports use a floating-point scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "7",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeRemap.xml",
+      "sha256": "89c5a8eb167b60b7730933a15d2d015c4da91db6fe08c8f2b623dac1b45280c9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

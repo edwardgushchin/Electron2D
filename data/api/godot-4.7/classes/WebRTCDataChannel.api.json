@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WebRTCDataChannel",
+    "namespace": "Godot",
+    "fullName": "Godot.WebRTCDataChannel",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "WebRTCDataChannel",
+    "documentationPath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_webrtcdatachannel.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public void Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Closes this data channel, notifying the other peer.",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.Close",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetBufferedAmount",
+      "kind": "Method",
+      "signature": "public int GetBufferedAmount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bytes currently queued to be sent over this channel.",
+      "godotName": "get_buffered_amount",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetBufferedAmount",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetId",
+      "kind": "Method",
+      "signature": "public int GetId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID assigned to this channel during creation (or auto-assigned during negotiation). If the channel is not negotiated out-of-band the ID will only be available after the connection is established (will return [code]65535[/code] until then).",
+      "godotName": "get_id",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetId",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetLabel",
+      "kind": "Method",
+      "signature": "public String GetLabel()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the label assigned to this channel during creation.",
+      "godotName": "get_label",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetLabel",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetMaxPacketLifeTime",
+      "kind": "Method",
+      "signature": "public int GetMaxPacketLifeTime()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [code]maxPacketLifeTime[/code] value assigned to this channel during creation. Will be [code]65535[/code] if not specified.",
+      "godotName": "get_max_packet_life_time",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetMaxPacketLifeTime",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetMaxRetransmits",
+      "kind": "Method",
+      "signature": "public int GetMaxRetransmits()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [code]maxRetransmits[/code] value assigned to this channel during creation. Will be [code]65535[/code] if not specified.",
+      "godotName": "get_max_retransmits",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetMaxRetransmits",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetProtocol",
+      "kind": "Method",
+      "signature": "public String GetProtocol()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the sub-protocol assigned to this channel during creation. An empty string if not specified.",
+      "godotName": "get_protocol",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetProtocol",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "GetReadyState",
+      "kind": "Method",
+      "signature": "public int GetReadyState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current state of this channel.",
+      "godotName": "get_ready_state",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.GetReadyState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "IsNegotiated",
+      "kind": "Method",
+      "signature": "public bool IsNegotiated()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this channel was created with out-of-band configuration.",
+      "godotName": "is_negotiated",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.IsNegotiated",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "IsOrdered",
+      "kind": "Method",
+      "signature": "public bool IsOrdered()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this channel was created with ordering enabled (default).",
+      "godotName": "is_ordered",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.IsOrdered",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public int Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Reserved, but not used for now.",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.Poll",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "WasStringPacket",
+      "kind": "Method",
+      "signature": "public bool WasStringPacket()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the last received packet was transferred as text. See [member write_mode].",
+      "godotName": "was_string_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannel.WasStringPacket",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "WriteMode",
+      "kind": "Property",
+      "signature": "public int WriteMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The transfer mode to use when sending outgoing packet. Either text or binary.",
+      "defaultValue": "1",
+      "godotName": "write_mode",
+      "xmlDocId": "P:Godot.WebRTCDataChannel.WriteMode",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ChannelState",
+      "values": [
+        {
+          "name": "STATE_CLOSED",
+          "value": "3",
+          "enum": "ChannelState",
+          "kind": "EnumValue",
+          "summary": "The channel was closed, or connection failed.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        },
+        {
+          "name": "STATE_CLOSING",
+          "value": "2",
+          "enum": "ChannelState",
+          "kind": "EnumValue",
+          "summary": "The channel is being closed, no new messages will be accepted, but those already in queue will be flushed.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        },
+        {
+          "name": "STATE_CONNECTING",
+          "value": "0",
+          "enum": "ChannelState",
+          "kind": "EnumValue",
+          "summary": "The channel was created, but it\u0027s still trying to connect.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        },
+        {
+          "name": "STATE_OPEN",
+          "value": "1",
+          "enum": "ChannelState",
+          "kind": "EnumValue",
+          "summary": "The channel is currently open, and data can flow over it.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        }
+      ]
+    },
+    {
+      "name": "WriteMode",
+      "values": [
+        {
+          "name": "WRITE_MODE_BINARY",
+          "value": "1",
+          "enum": "WriteMode",
+          "kind": "EnumValue",
+          "summary": "Tells the channel to send data over this channel as binary. An external peer (non-Godot) would receive this as array buffer or blob.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        },
+        {
+          "name": "WRITE_MODE_TEXT",
+          "value": "0",
+          "enum": "WriteMode",
+          "kind": "EnumValue",
+          "summary": "Tells the channel to send data over this channel as text. An external peer (non-Godot) would receive this as a string.",
+          "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "WRITE_MODE_TEXT",
+      "value": "0",
+      "enum": "WriteMode",
+      "kind": "EnumValue",
+      "summary": "Tells the channel to send data over this channel as text. An external peer (non-Godot) would receive this as a string.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "WRITE_MODE_BINARY",
+      "value": "1",
+      "enum": "WriteMode",
+      "kind": "EnumValue",
+      "summary": "Tells the channel to send data over this channel as binary. An external peer (non-Godot) would receive this as array buffer or blob.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "STATE_CONNECTING",
+      "value": "0",
+      "enum": "ChannelState",
+      "kind": "EnumValue",
+      "summary": "The channel was created, but it\u0027s still trying to connect.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "STATE_OPEN",
+      "value": "1",
+      "enum": "ChannelState",
+      "kind": "EnumValue",
+      "summary": "The channel is currently open, and data can flow over it.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "STATE_CLOSING",
+      "value": "2",
+      "enum": "ChannelState",
+      "kind": "EnumValue",
+      "summary": "The channel is being closed, no new messages will be accepted, but those already in queue will be flushed.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    },
+    {
+      "name": "STATE_CLOSED",
+      "value": "3",
+      "enum": "ChannelState",
+      "kind": "EnumValue",
+      "summary": "The channel was closed, or connection failed.",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannel.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/webrtc/doc_classes/WebRTCDataChannel.xml",
+      "sha256": "99c80b78d7f4e3228af5058574955ba1aacddcc5fe3e97efdfffb0aca5e7503a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

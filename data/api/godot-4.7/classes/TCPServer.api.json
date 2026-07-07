@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TCPServer",
+    "namespace": "Godot",
+    "fullName": "Godot.TCPServer",
+    "kind": "class",
+    "baseType": "SocketServer",
+    "interfaces": [],
+    "godotReference": "TCPServer",
+    "documentationPath": "doc/classes/TCPServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tcpserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetLocalPort",
+      "kind": "Method",
+      "signature": "public int GetLocalPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the local port this server is listening to.",
+      "godotName": "get_local_port",
+      "xmlDocId": "M:Godot.TCPServer.GetLocalPort",
+      "sourcePath": "doc/classes/TCPServer.xml"
+    },
+    {
+      "name": "Listen",
+      "kind": "Method",
+      "signature": "public int Listen(int port, String bindAddress)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "bind_address",
+          "type": "String",
+          "defaultValue": "\u0022*\u0022"
+        }
+      ],
+      "summary": "Listen on the [param port] binding to [param bind_address]. If [param bind_address] is set as [code]\u0022*\u0022[/code] (default), the server will listen on all available addresses (both IPv4 and IPv6). If [param bind_address] is set as [code]\u00220.0.0.0\u0022[/code] (for IPv4) or [code]\u0022::\u0022[/code] (for IPv6), the server will listen on all available addresses matching that IP type. If [param bind_address] is set to any valid address (e.g. [code]\u0022192.168.1.101\u0022[/code], [code]\u0022::1\u0022[/code], etc.), the server will only listen on the interface with that address (or fail if no interface with the given address exists).",
+      "godotName": "listen",
+      "xmlDocId": "M:Godot.TCPServer.Listen(int,String)",
+      "sourcePath": "doc/classes/TCPServer.xml"
+    },
+    {
+      "name": "TakeConnection",
+      "kind": "Method",
+      "signature": "public StreamPeerTCP TakeConnection()",
+      "returnType": "StreamPeerTCP",
+      "parameters": [],
+      "summary": "If a connection is available, returns a StreamPeerTCP with the connection.",
+      "godotName": "take_connection",
+      "xmlDocId": "M:Godot.TCPServer.TakeConnection",
+      "sourcePath": "doc/classes/TCPServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TCPServer.xml",
+      "sha256": "987101c7fd5571f732c8d7d954a857dfdb38fbc37b7bf09878ae2eb9a3cd6f1d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

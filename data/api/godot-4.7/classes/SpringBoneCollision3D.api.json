@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpringBoneCollision3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SpringBoneCollision3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "SpringBoneCollision3D",
+    "documentationPath": "doc/classes/SpringBoneCollision3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_springbonecollision3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton3D GetSkeleton()",
+      "returnType": "Skeleton3D",
+      "parameters": [],
+      "summary": "Get parent [Skeleton3D] node of the parent [SpringBoneSimulator3D] if found.",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.SpringBoneCollision3D.GetSkeleton",
+      "sourcePath": "doc/classes/SpringBoneCollision3D.xml"
+    },
+    {
+      "name": "Bone",
+      "kind": "Property",
+      "signature": "public int Bone { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the attached bone.",
+      "defaultValue": "-1",
+      "godotName": "bone",
+      "xmlDocId": "P:Godot.SpringBoneCollision3D.Bone",
+      "sourcePath": "doc/classes/SpringBoneCollision3D.xml"
+    },
+    {
+      "name": "BoneName",
+      "kind": "Property",
+      "signature": "public String BoneName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the attached bone.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "bone_name",
+      "xmlDocId": "P:Godot.SpringBoneCollision3D.BoneName",
+      "sourcePath": "doc/classes/SpringBoneCollision3D.xml"
+    },
+    {
+      "name": "PositionOffset",
+      "kind": "Property",
+      "signature": "public Vector3 PositionOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The offset of the position from [Skeleton3D]\u0027s [member bone] pose position.",
+      "godotName": "position_offset",
+      "xmlDocId": "P:Godot.SpringBoneCollision3D.PositionOffset",
+      "sourcePath": "doc/classes/SpringBoneCollision3D.xml"
+    },
+    {
+      "name": "RotationOffset",
+      "kind": "Property",
+      "signature": "public Quaternion RotationOffset { get; set; }",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "The offset of the rotation from [Skeleton3D]\u0027s [member bone] pose rotation.",
+      "godotName": "rotation_offset",
+      "xmlDocId": "P:Godot.SpringBoneCollision3D.RotationOffset",
+      "sourcePath": "doc/classes/SpringBoneCollision3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpringBoneCollision3D.xml",
+      "sha256": "b49122c140c521920ce7b99b6f96f534775845ca0c521aba25ff569fdc032678"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

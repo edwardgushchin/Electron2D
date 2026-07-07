@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationMeshGenerator",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationMeshGenerator",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "NavigationMeshGenerator",
+    "documentationPath": "doc/classes/NavigationMeshGenerator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationmeshgenerator.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bake",
+      "kind": "Method",
+      "signature": "public void Bake(NavigationMesh navigationMesh, Node rootNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "root_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Bakes the [param navigation_mesh] with source geometry collected starting from the [param root_node].",
+      "godotName": "bake",
+      "xmlDocId": "M:Godot.NavigationMeshGenerator.Bake(NavigationMesh,Node)",
+      "sourcePath": "doc/classes/NavigationMeshGenerator.xml"
+    },
+    {
+      "name": "BakeFromSourceGeometryData",
+      "kind": "Method",
+      "signature": "public void BakeFromSourceGeometryData(NavigationMesh navigationMesh, NavigationMeshSourceGeometryData3D sourceGeometryData, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "source_geometry_data",
+          "type": "NavigationMeshSourceGeometryData3D"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Bakes the provided [param navigation_mesh] with the data from the provided [param source_geometry_data]. After the process is finished the optional [param callback] will be called.",
+      "godotName": "bake_from_source_geometry_data",
+      "xmlDocId": "M:Godot.NavigationMeshGenerator.BakeFromSourceGeometryData(NavigationMesh,NavigationMeshSourceGeometryData3D,Callable)",
+      "sourcePath": "doc/classes/NavigationMeshGenerator.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear(NavigationMesh navigationMesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        }
+      ],
+      "summary": "Removes all polygons and vertices from the provided [param navigation_mesh] resource.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NavigationMeshGenerator.Clear(NavigationMesh)",
+      "sourcePath": "doc/classes/NavigationMeshGenerator.xml"
+    },
+    {
+      "name": "ParseSourceGeometryData",
+      "kind": "Method",
+      "signature": "public void ParseSourceGeometryData(NavigationMesh navigationMesh, NavigationMeshSourceGeometryData3D sourceGeometryData, Node rootNode, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "source_geometry_data",
+          "type": "NavigationMeshSourceGeometryData3D"
+        },
+        {
+          "name": "root_node",
+          "type": "Node"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Parses the [SceneTree] for source geometry according to the properties of [param navigation_mesh]. Updates the provided [param source_geometry_data] resource with the resulting data. The resource can then be used to bake a navigation mesh with [method bake_from_source_geometry_data]. After the process is finished the optional [param callback] will be called. [b]Note:[/b] This function needs to run on the main thread or with a deferred call as the SceneTree is not thread-safe. [b]Performance:[/b] While convenient, reading data arrays from [Mesh] resources can affect the frame rate negatively. The data needs to be received from the GPU, stalling the [RenderingServer] in the process. For performance prefer the use of e.g. collision shapes or creating the data arrays entirely in code.",
+      "godotName": "parse_source_geometry_data",
+      "xmlDocId": "M:Godot.NavigationMeshGenerator.ParseSourceGeometryData(NavigationMesh,NavigationMeshSourceGeometryData3D,Node,Callable)",
+      "sourcePath": "doc/classes/NavigationMeshGenerator.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationMeshGenerator.xml",
+      "sha256": "55e1d909a23e8c8ceacb7121bffc1710f8fbfc535e7d3b5bb609c0722645d5f9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

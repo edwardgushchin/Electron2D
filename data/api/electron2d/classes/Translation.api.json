@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Translation",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Translation",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Translation",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Translation",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Translation()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Translation type.",
+      "xmlDocId": "M:Electron2D.Translation.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Translation",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Translation()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Translation type.",
+      "xmlDocId": "M:Electron2D.Translation.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddMessage",
+      "kind": "Method",
+      "signature": "public System.Void AddMessage(System.String srcMessage, System.String xlatedMessage, System.String context)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "srcMessage",
+          "type": "System.String"
+        },
+        {
+          "name": "xlatedMessage",
+          "type": "System.String"
+        },
+        {
+          "name": "context",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Adds or replaces a translated message.",
+      "xmlDocId": "M:Electron2D.Translation.AddMessage(System.String,System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EraseMessage",
+      "kind": "Method",
+      "signature": "public System.Void EraseMessage(System.String srcMessage, System.String context)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "srcMessage",
+          "type": "System.String"
+        },
+        {
+          "name": "context",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Removes a translated message if it exists.",
+      "xmlDocId": "M:Electron2D.Translation.EraseMessage(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMessage",
+      "kind": "Method",
+      "signature": "public System.String GetMessage(System.String srcMessage, System.String context)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "srcMessage",
+          "type": "System.String"
+        },
+        {
+          "name": "context",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets a translated message by source key and context.",
+      "xmlDocId": "M:Electron2D.Translation.GetMessage(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMessageList",
+      "kind": "Method",
+      "signature": "public System.String[] GetMessageList()",
+      "returnType": "System.String[]",
+      "parameters": [],
+      "summary": "Gets the source message keys stored by this translation.",
+      "xmlDocId": "M:Electron2D.Translation.GetMessageList",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Locale",
+      "kind": "Property",
+      "signature": "public System.String Locale { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the locale represented by this translation.",
+      "xmlDocId": "P:Electron2D.Translation.Locale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

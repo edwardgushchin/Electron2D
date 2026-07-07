@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.TextMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "TextMesh",
+    "documentationPath": "doc/classes/TextMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AutowrapMode",
+      "kind": "Property",
+      "signature": "public int AutowrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If set to something other than [constant TextServer.AUTOWRAP_OFF], the text gets wrapped inside the node\u0027s bounding rectangle. If you resize the node, it will change its height automatically to show all the text.",
+      "defaultValue": "0",
+      "godotName": "autowrap_mode",
+      "xmlDocId": "P:Godot.TextMesh.AutowrapMode",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "CurveStep",
+      "kind": "Property",
+      "signature": "public float CurveStep { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Step (in pixels) used to approximate B\u00E9zier curves. Lower values result in smoother curves, but is slower to generate and render. Consider adjusting this according to the font size and the typical viewing distance. [b]Note:[/b] Changing this property will regenerate the mesh, which is a slow operation, especially with large font sizes and long texts.",
+      "defaultValue": "0.5",
+      "godotName": "curve_step",
+      "xmlDocId": "P:Godot.TextMesh.CurveStep",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Depth",
+      "kind": "Property",
+      "signature": "public float Depth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Depths of the mesh, if set to [code]0.0[/code] only front surface, is generated, and UV layout is changed to use full texture for the front face only.",
+      "defaultValue": "0.05",
+      "godotName": "depth",
+      "xmlDocId": "P:Godot.TextMesh.Depth",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Font",
+      "kind": "Property",
+      "signature": "public Font Font { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "Font configuration used to display text.",
+      "godotName": "font",
+      "xmlDocId": "P:Godot.TextMesh.Font",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "FontSize",
+      "kind": "Property",
+      "signature": "public int FontSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font size of the [TextMesh]\u0027s text. This property works in tandem with [member pixel_size]. Higher values will result in a more detailed font, regardless of [member curve_step] and [member pixel_size]. Consider keeping this value below 63 (inclusive) for good performance, and adjust [member pixel_size] as needed to enlarge text. [b]Note:[/b] Changing this property will regenerate the mesh, which is a slow operation, especially with large font sizes and long texts. To change the text\u0027s size in real-time efficiently, change the node\u0027s [member Node3D.scale] instead.",
+      "defaultValue": "16",
+      "godotName": "font_size",
+      "xmlDocId": "P:Godot.TextMesh.FontSize",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "kind": "Property",
+      "signature": "public int HorizontalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s horizontal alignment. Supports left, center, right, and fill (also known as justify).",
+      "defaultValue": "1",
+      "godotName": "horizontal_alignment",
+      "xmlDocId": "P:Godot.TextMesh.HorizontalAlignment",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "JustificationFlags",
+      "kind": "Property",
+      "signature": "public int JustificationFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line fill alignment rules.",
+      "defaultValue": "163",
+      "godotName": "justification_flags",
+      "xmlDocId": "P:Godot.TextMesh.JustificationFlags",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.TextMesh.Language",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "LineSpacing",
+      "kind": "Property",
+      "signature": "public float LineSpacing { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Additional vertical spacing between lines (in pixels), spacing is added to line descent. This value can be negative.",
+      "defaultValue": "0.0",
+      "godotName": "line_spacing",
+      "xmlDocId": "P:Godot.TextMesh.LineSpacing",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The text drawing offset (in pixels). [b]Note:[/b] Changing this property will regenerate the mesh, which is a slow operation. To change the text\u0027s position in real-time efficiently, change the node\u0027s [member Node3D.position] instead.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.TextMesh.Offset",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "PixelSize",
+      "kind": "Property",
+      "signature": "public float PixelSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of one pixel\u0027s width on the text to scale it in 3D. This property works in tandem with [member font_size]. [b]Note:[/b] Changing this property will regenerate the mesh, which is a slow operation, especially with large font sizes and long texts. To change the text\u0027s size in real-time efficiently, change the node\u0027s [member Node3D.scale] instead.",
+      "defaultValue": "0.01",
+      "godotName": "pixel_size",
+      "xmlDocId": "P:Godot.TextMesh.PixelSize",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.TextMesh.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.TextMesh.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text to generate mesh from. [b]Note:[/b] Due to being a [Resource], it doesn\u0027t follow the rules of [member Node.auto_translate_mode]. If disabling translation is desired, it should be done manually with [method Object.set_message_translation].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.TextMesh.Text",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.TextMesh.TextDirection",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Uppercase",
+      "kind": "Property",
+      "signature": "public bool Uppercase { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all the text displays as UPPERCASE.",
+      "defaultValue": "false",
+      "godotName": "uppercase",
+      "xmlDocId": "P:Godot.TextMesh.Uppercase",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "VerticalAlignment",
+      "kind": "Property",
+      "signature": "public int VerticalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s vertical alignment. Supports top, center, and bottom.",
+      "defaultValue": "1",
+      "godotName": "vertical_alignment",
+      "xmlDocId": "P:Godot.TextMesh.VerticalAlignment",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public float Width { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Text width (in pixels), used for fill alignment.",
+      "defaultValue": "500.0",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.TextMesh.Width",
+      "sourcePath": "doc/classes/TextMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextMesh.xml",
+      "sha256": "2ff2e1501162cd1756d6cb57954d50ed0fbb64614a171fc79a84e1f057448e64"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

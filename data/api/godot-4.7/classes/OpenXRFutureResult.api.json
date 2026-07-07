@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRFutureResult",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRFutureResult",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "OpenXRFutureResult",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRFutureResult.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrfutureresult.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CancelFuture",
+      "kind": "Method",
+      "signature": "public void CancelFuture()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Cancel this future, this will interrupt and stop the asynchronous function.",
+      "godotName": "cancel_future",
+      "xmlDocId": "M:Godot.OpenXRFutureResult.CancelFuture",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "GetFuture",
+      "kind": "Method",
+      "signature": "public int GetFuture()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Return the [code]XrFutureEXT[/code] value this result relates to.",
+      "godotName": "get_future",
+      "xmlDocId": "M:Godot.OpenXRFutureResult.GetFuture",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "GetResultValue",
+      "kind": "Method",
+      "signature": "public Variant GetResultValue()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the result value of our asynchronous function (if set by the extension). The type of this result value depends on the function being called. Consult the documentation of the relevant function.",
+      "godotName": "get_result_value",
+      "xmlDocId": "M:Godot.OpenXRFutureResult.GetResultValue",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "GetStatus",
+      "kind": "Method",
+      "signature": "public int GetStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the status of this result.",
+      "godotName": "get_status",
+      "xmlDocId": "M:Godot.OpenXRFutureResult.GetStatus",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "SetResultValue",
+      "kind": "Method",
+      "signature": "public void SetResultValue(Variant resultValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "result_value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Stores the result value we expose to the user. [b]Note:[/b] This method should only be called by an OpenXR extension that implements an asynchronous function.",
+      "godotName": "set_result_value",
+      "xmlDocId": "M:Godot.OpenXRFutureResult.SetResultValue(Variant)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Completed",
+      "kind": "Signal",
+      "signature": "public event CompletedHandler Completed",
+      "parameters": [
+        {
+          "name": "result",
+          "type": "OpenXRFutureResult"
+        }
+      ],
+      "summary": "Emitted when the asynchronous function is finished or has been cancelled.",
+      "godotName": "completed",
+      "xmlDocId": "E:Godot.OpenXRFutureResult.Completed(OpenXRFutureResult)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ResultStatus",
+      "values": [
+        {
+          "name": "RESULT_CANCELLED",
+          "value": "2",
+          "enum": "ResultStatus",
+          "kind": "EnumValue",
+          "summary": "The asynchronous function has been cancelled.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+        },
+        {
+          "name": "RESULT_FINISHED",
+          "value": "1",
+          "enum": "ResultStatus",
+          "kind": "EnumValue",
+          "summary": "The asynchronous function has finished.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+        },
+        {
+          "name": "RESULT_RUNNING",
+          "value": "0",
+          "enum": "ResultStatus",
+          "kind": "EnumValue",
+          "summary": "The asynchronous function is running.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RESULT_RUNNING",
+      "value": "0",
+      "enum": "ResultStatus",
+      "kind": "EnumValue",
+      "summary": "The asynchronous function is running.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "RESULT_FINISHED",
+      "value": "1",
+      "enum": "ResultStatus",
+      "kind": "EnumValue",
+      "summary": "The asynchronous function has finished.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    },
+    {
+      "name": "RESULT_CANCELLED",
+      "value": "2",
+      "enum": "ResultStatus",
+      "kind": "EnumValue",
+      "summary": "The asynchronous function has been cancelled.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureResult.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRFutureResult.xml",
+      "sha256": "e47136186be9769e733e6aa494ca3d7754808f894d78017b1831f1ce5c078900"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

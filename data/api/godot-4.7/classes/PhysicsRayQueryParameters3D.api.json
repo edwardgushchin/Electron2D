@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsRayQueryParameters3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsRayQueryParameters3D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PhysicsRayQueryParameters3D",
+    "documentationPath": "doc/classes/PhysicsRayQueryParameters3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsrayqueryparameters3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Create",
+      "kind": "Method",
+      "signature": "public PhysicsRayQueryParameters3D Create(Vector3 from, Vector3 to, int collisionMask, RID[] exclude)",
+      "returnType": "PhysicsRayQueryParameters3D",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "to",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision_mask",
+          "type": "int",
+          "defaultValue": "4294967295"
+        },
+        {
+          "name": "exclude",
+          "type": "RID[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Returns a new, pre-configured [PhysicsRayQueryParameters3D] object. Use it to quickly create query parameters using the most common options. [codeblock] var query = PhysicsRayQueryParameters3D.create(position, position \u002B Vector3(0, -10, 0)) var collision = get_world_3d().direct_space_state.intersect_ray(query) [/codeblock]",
+      "godotName": "create",
+      "xmlDocId": "M:Godot.PhysicsRayQueryParameters3D.Create(Vector3,Vector3,int,RID[])",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public bool CollideWithAreas { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will take [Area3D]s into account.",
+      "defaultValue": "false",
+      "godotName": "collide_with_areas",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.CollideWithAreas",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public bool CollideWithBodies { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will take [PhysicsBody3D]s into account.",
+      "defaultValue": "true",
+      "godotName": "collide_with_bodies",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.CollideWithBodies",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers the query will detect (as a bitmask). By default, all collision layers are detected. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "4294967295",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.CollisionMask",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "Exclude",
+      "kind": "Property",
+      "signature": "public RID[] Exclude { get; set; }",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "The list of object [RID]s that will be excluded from collisions. Use [method CollisionObject3D.get_rid] to get the [RID] associated with a [CollisionObject3D]-derived node. [b]Note:[/b] The returned array is copied and any changes to it will not update the original property value. To update the value you need to modify the returned array, and then assign it to the property again.",
+      "defaultValue": "[]",
+      "godotName": "exclude",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.Exclude",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "From",
+      "kind": "Property",
+      "signature": "public Vector3 From { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The starting point of the ray being queried for, in global coordinates.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "from",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.From",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "HitBackFaces",
+      "kind": "Property",
+      "signature": "public bool HitBackFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will hit back faces with concave polygon shapes with back face enabled or heightmap shapes.",
+      "defaultValue": "true",
+      "godotName": "hit_back_faces",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.HitBackFaces",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "HitFromInside",
+      "kind": "Property",
+      "signature": "public bool HitFromInside { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will detect a hit when starting inside shapes. In this case the collision normal will be [code]Vector3(0, 0, 0)[/code]. Does not affect concave polygon shapes or heightmap shapes.",
+      "defaultValue": "false",
+      "godotName": "hit_from_inside",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.HitFromInside",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    },
+    {
+      "name": "To",
+      "kind": "Property",
+      "signature": "public Vector3 To { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The ending point of the ray being queried for, in global coordinates.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "to",
+      "xmlDocId": "P:Godot.PhysicsRayQueryParameters3D.To",
+      "sourcePath": "doc/classes/PhysicsRayQueryParameters3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsRayQueryParameters3D.xml",
+      "sha256": "55e342f86a4004698063014a04158f25f5f7e441f309f961e073e237b989b89f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ProceduralSkyMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.ProceduralSkyMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "ProceduralSkyMaterial",
+    "documentationPath": "doc/classes/ProceduralSkyMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_proceduralskymaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float EnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sky\u0027s overall brightness multiplier. Higher values result in a brighter sky.",
+      "defaultValue": "1.0",
+      "godotName": "energy_multiplier",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.EnergyMultiplier",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "GroundBottomColor",
+      "kind": "Property",
+      "signature": "public Color GroundBottomColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the ground at the bottom. Blends with [member ground_horizon_color].",
+      "defaultValue": "Color(0.2, 0.169, 0.133, 1)",
+      "godotName": "ground_bottom_color",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.GroundBottomColor",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "GroundCurve",
+      "kind": "Property",
+      "signature": "public float GroundCurve { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "How quickly the [member ground_horizon_color] fades into the [member ground_bottom_color].",
+      "defaultValue": "0.02",
+      "godotName": "ground_curve",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.GroundCurve",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "GroundEnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float GroundEnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplier for ground color. A higher value will make the ground brighter.",
+      "defaultValue": "1.0",
+      "godotName": "ground_energy_multiplier",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.GroundEnergyMultiplier",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "GroundHorizonColor",
+      "kind": "Property",
+      "signature": "public Color GroundHorizonColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the ground at the horizon. Blends with [member ground_bottom_color].",
+      "defaultValue": "Color(0.6463, 0.6558, 0.6708, 1)",
+      "godotName": "ground_horizon_color",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.GroundHorizonColor",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyCover",
+      "kind": "Property",
+      "signature": "public Texture2D SkyCover { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The sky cover texture to use. This texture must use an equirectangular projection (similar to [PanoramaSkyMaterial]). The texture\u0027s colors will be [i]added[/i] to the existing sky color, and will be multiplied by [member sky_energy_multiplier] and [member sky_cover_modulate]. This is mainly suited to displaying stars at night, but it can also be used to display clouds at day or night (with a non-physically-accurate look).",
+      "godotName": "sky_cover",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyCover",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyCoverModulate",
+      "kind": "Property",
+      "signature": "public Color SkyCoverModulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The tint to apply to the [member sky_cover] texture. This can be used to change the sky cover\u0027s colors or opacity independently of the sky energy, which is useful for day/night or weather transitions. Only effective if a texture is defined in [member sky_cover].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "sky_cover_modulate",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyCoverModulate",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyCurve",
+      "kind": "Property",
+      "signature": "public float SkyCurve { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "How quickly the [member sky_horizon_color] fades into the [member sky_top_color].",
+      "defaultValue": "0.15",
+      "godotName": "sky_curve",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyCurve",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyEnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float SkyEnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplier for sky color. A higher value will make the sky brighter.",
+      "defaultValue": "1.0",
+      "godotName": "sky_energy_multiplier",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyEnergyMultiplier",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyHorizonColor",
+      "kind": "Property",
+      "signature": "public Color SkyHorizonColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the sky at the horizon. Blends with [member sky_top_color].",
+      "defaultValue": "Color(0.6463, 0.6558, 0.6708, 1)",
+      "godotName": "sky_horizon_color",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyHorizonColor",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SkyTopColor",
+      "kind": "Property",
+      "signature": "public Color SkyTopColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color of the sky at the top. Blends with [member sky_horizon_color].",
+      "defaultValue": "Color(0.385, 0.454, 0.55, 1)",
+      "godotName": "sky_top_color",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SkyTopColor",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SunAngleMax",
+      "kind": "Property",
+      "signature": "public float SunAngleMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance from center of sun where it fades out completely.",
+      "defaultValue": "30.0",
+      "godotName": "sun_angle_max",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SunAngleMax",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "SunCurve",
+      "kind": "Property",
+      "signature": "public float SunCurve { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "How quickly the sun fades away between the edge of the sun disk and [member sun_angle_max].",
+      "defaultValue": "0.15",
+      "godotName": "sun_curve",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.SunCurve",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    },
+    {
+      "name": "UseDebanding",
+      "kind": "Property",
+      "signature": "public bool UseDebanding { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables debanding. Debanding adds a small amount of noise which helps reduce banding that appears from the smooth changes in color in the sky.",
+      "defaultValue": "true",
+      "godotName": "use_debanding",
+      "xmlDocId": "P:Godot.ProceduralSkyMaterial.UseDebanding",
+      "sourcePath": "doc/classes/ProceduralSkyMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ProceduralSkyMaterial.xml",
+      "sha256": "d36f91a27f7fc62ffb5e82a1e6c45eb5e59159f353cbaa86e71431bf2b6f7d1b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

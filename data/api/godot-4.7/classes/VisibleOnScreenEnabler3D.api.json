@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisibleOnScreenEnabler3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisibleOnScreenEnabler3D",
+    "kind": "class",
+    "baseType": "VisibleOnScreenNotifier3D",
+    "interfaces": [],
+    "godotReference": "VisibleOnScreenEnabler3D",
+    "documentationPath": "doc/classes/VisibleOnScreenEnabler3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visibleonscreenenabler3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EnableMode",
+      "kind": "Property",
+      "signature": "public int EnableMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines how the target node is enabled. Corresponds to [enum Node.ProcessMode]. When the node is disabled, it always uses [constant Node.PROCESS_MODE_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "enable_mode",
+      "xmlDocId": "P:Godot.VisibleOnScreenEnabler3D.EnableMode",
+      "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+    },
+    {
+      "name": "EnableNodePath",
+      "kind": "Property",
+      "signature": "public NodePath EnableNodePath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The path to the target node, relative to the [VisibleOnScreenEnabler3D]. The target node is cached; it\u0027s only assigned when setting this property (if the [VisibleOnScreenEnabler3D] is inside the scene tree) and every time the [VisibleOnScreenEnabler3D] enters the scene tree. If the path is empty, no node will be affected. If the path is invalid, an error is also generated.",
+      "defaultValue": "NodePath(\u0022..\u0022)",
+      "godotName": "enable_node_path",
+      "xmlDocId": "P:Godot.VisibleOnScreenEnabler3D.EnableNodePath",
+      "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "EnableMode",
+      "values": [
+        {
+          "name": "ENABLE_MODE_ALWAYS",
+          "value": "1",
+          "enum": "EnableMode",
+          "kind": "EnumValue",
+          "summary": "Corresponds to [constant Node.PROCESS_MODE_ALWAYS].",
+          "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+        },
+        {
+          "name": "ENABLE_MODE_INHERIT",
+          "value": "0",
+          "enum": "EnableMode",
+          "kind": "EnumValue",
+          "summary": "Corresponds to [constant Node.PROCESS_MODE_INHERIT].",
+          "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+        },
+        {
+          "name": "ENABLE_MODE_WHEN_PAUSED",
+          "value": "2",
+          "enum": "EnableMode",
+          "kind": "EnumValue",
+          "summary": "Corresponds to [constant Node.PROCESS_MODE_WHEN_PAUSED].",
+          "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ENABLE_MODE_INHERIT",
+      "value": "0",
+      "enum": "EnableMode",
+      "kind": "EnumValue",
+      "summary": "Corresponds to [constant Node.PROCESS_MODE_INHERIT].",
+      "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+    },
+    {
+      "name": "ENABLE_MODE_ALWAYS",
+      "value": "1",
+      "enum": "EnableMode",
+      "kind": "EnumValue",
+      "summary": "Corresponds to [constant Node.PROCESS_MODE_ALWAYS].",
+      "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+    },
+    {
+      "name": "ENABLE_MODE_WHEN_PAUSED",
+      "value": "2",
+      "enum": "EnableMode",
+      "kind": "EnumValue",
+      "summary": "Corresponds to [constant Node.PROCESS_MODE_WHEN_PAUSED].",
+      "sourcePath": "doc/classes/VisibleOnScreenEnabler3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VisibleOnScreenEnabler3D.xml",
+      "sha256": "8ba0be9a9572b1b5705ae978f3fef0124df4df3a0ef72271dc9e908dad63f5ef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

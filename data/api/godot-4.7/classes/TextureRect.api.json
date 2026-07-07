@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureRect",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureRect",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "TextureRect",
+    "documentationPath": "doc/classes/TextureRect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texturerect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ExpandMode",
+      "kind": "Property",
+      "signature": "public int ExpandMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines how minimum size is determined based on the texture\u0027s size.",
+      "defaultValue": "0",
+      "godotName": "expand_mode",
+      "xmlDocId": "P:Godot.TextureRect.ExpandMode",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public bool FlipH { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped horizontally.",
+      "defaultValue": "false",
+      "godotName": "flip_h",
+      "xmlDocId": "P:Godot.TextureRect.FlipH",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public bool FlipV { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped vertically.",
+      "defaultValue": "false",
+      "godotName": "flip_v",
+      "xmlDocId": "P:Godot.TextureRect.FlipV",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.TextureRect.MouseFilter",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "StretchMode",
+      "kind": "Property",
+      "signature": "public int StretchMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the texture\u0027s behavior when resizing the node\u0027s bounding rectangle.",
+      "defaultValue": "0",
+      "godotName": "stretch_mode",
+      "xmlDocId": "P:Godot.TextureRect.StretchMode",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The node\u0027s [Texture2D] resource.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.TextureRect.Texture",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ExpandMode",
+      "values": [
+        {
+          "name": "EXPAND_FIT_HEIGHT",
+          "value": "4",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "The width of the texture will be ignored. Minimum height will be equal to the current width. Useful for vertical layouts, e.g. inside [VBoxContainer].",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "EXPAND_FIT_HEIGHT_PROPORTIONAL",
+          "value": "5",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "Same as [constant EXPAND_FIT_HEIGHT], but keeps texture\u0027s aspect ratio.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "EXPAND_FIT_WIDTH",
+          "value": "2",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "The height of the texture will be ignored. Minimum width will be equal to the current height. Useful for horizontal layouts, e.g. inside [HBoxContainer].",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "EXPAND_FIT_WIDTH_PROPORTIONAL",
+          "value": "3",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "Same as [constant EXPAND_FIT_WIDTH], but keeps texture\u0027s aspect ratio.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "EXPAND_IGNORE_SIZE",
+          "value": "1",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "The size of the texture won\u0027t be considered for minimum size calculation, so the [TextureRect] can be shrunk down past the texture size.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "EXPAND_KEEP_SIZE",
+          "value": "0",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "The minimum size will be equal to texture size, i.e. [TextureRect] can\u0027t be smaller than the texture.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        }
+      ]
+    },
+    {
+      "name": "StretchMode",
+      "values": [
+        {
+          "name": "STRETCH_KEEP",
+          "value": "2",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The texture keeps its original size and stays in the bounding rectangle\u0027s top-left corner.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT",
+          "value": "4",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture to fit the node\u0027s bounding rectangle, but maintain the texture\u0027s aspect ratio.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT_CENTERED",
+          "value": "5",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture to fit the node\u0027s bounding rectangle, center it and maintain its aspect ratio.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT_COVERED",
+          "value": "6",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to the node\u0027s limits.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_CENTERED",
+          "value": "3",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The texture keeps its original size and stays centered in the node\u0027s bounding rectangle.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_SCALE",
+          "value": "0",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale to fit the node\u0027s bounding rectangle.",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        },
+        {
+          "name": "STRETCH_TILE",
+          "value": "1",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Tile inside the node\u0027s bounding rectangle. [b]Note:[/b] [constant STRETCH_TILE] mode is not supported for [member texture] set to an [AtlasTexture] with non-zero [member AtlasTexture.margin].",
+          "sourcePath": "doc/classes/TextureRect.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "EXPAND_KEEP_SIZE",
+      "value": "0",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "The minimum size will be equal to texture size, i.e. [TextureRect] can\u0027t be smaller than the texture.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "EXPAND_IGNORE_SIZE",
+      "value": "1",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "The size of the texture won\u0027t be considered for minimum size calculation, so the [TextureRect] can be shrunk down past the texture size.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "EXPAND_FIT_WIDTH",
+      "value": "2",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "The height of the texture will be ignored. Minimum width will be equal to the current height. Useful for horizontal layouts, e.g. inside [HBoxContainer].",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "EXPAND_FIT_WIDTH_PROPORTIONAL",
+      "value": "3",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "Same as [constant EXPAND_FIT_WIDTH], but keeps texture\u0027s aspect ratio.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "EXPAND_FIT_HEIGHT",
+      "value": "4",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "The width of the texture will be ignored. Minimum height will be equal to the current width. Useful for vertical layouts, e.g. inside [VBoxContainer].",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "EXPAND_FIT_HEIGHT_PROPORTIONAL",
+      "value": "5",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "Same as [constant EXPAND_FIT_HEIGHT], but keeps texture\u0027s aspect ratio.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_SCALE",
+      "value": "0",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale to fit the node\u0027s bounding rectangle.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_TILE",
+      "value": "1",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Tile inside the node\u0027s bounding rectangle. [b]Note:[/b] [constant STRETCH_TILE] mode is not supported for [member texture] set to an [AtlasTexture] with non-zero [member AtlasTexture.margin].",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_KEEP",
+      "value": "2",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The texture keeps its original size and stays in the bounding rectangle\u0027s top-left corner.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_CENTERED",
+      "value": "3",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The texture keeps its original size and stays centered in the node\u0027s bounding rectangle.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT",
+      "value": "4",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture to fit the node\u0027s bounding rectangle, but maintain the texture\u0027s aspect ratio.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT_CENTERED",
+      "value": "5",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture to fit the node\u0027s bounding rectangle, center it and maintain its aspect ratio.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT_COVERED",
+      "value": "6",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to the node\u0027s limits.",
+      "sourcePath": "doc/classes/TextureRect.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureRect.xml",
+      "sha256": "739d6c86a871476b8bb29206663eb295b7b06f9f02daba75bf7c801533ea3f65"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

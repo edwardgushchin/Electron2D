@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioSample",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioSample",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AudioSample",
+    "documentationPath": "doc/classes/AudioSample.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiosample.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioSample.xml",
+      "sha256": "1b09cbb9dd633eaeebaabe7ac1fab67ef2abad489f38c071be90b44c009801c6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

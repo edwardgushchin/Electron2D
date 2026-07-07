@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WorkerThreadPool",
+    "namespace": "Godot",
+    "fullName": "Godot.WorkerThreadPool",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "WorkerThreadPool",
+    "documentationPath": "doc/classes/WorkerThreadPool.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_workerthreadpool.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddGroupTask",
+      "kind": "Method",
+      "signature": "public int AddGroupTask(Callable action, int elements, int tasksNeeded, bool highPriority, String description)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "Callable"
+        },
+        {
+          "name": "elements",
+          "type": "int"
+        },
+        {
+          "name": "tasks_needed",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "high_priority",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds [param action] as a group task to be executed by the worker threads. The [Callable] will be called a number of times based on [param elements], with the first thread calling it with the value [code]0[/code] as a parameter, and each consecutive execution incrementing this value by 1 until it reaches [code]element - 1[/code]. The number of threads the task is distributed to is defined by [param tasks_needed], where the default value [code]-1[/code] means it is distributed to all worker threads. [param high_priority] determines if the task has a high priority or a low priority (default). You can optionally provide a [param description] to help with debugging. Returns a group task ID that can be used by other methods. [b]Warning:[/b] Every task must be waited for completion using [method wait_for_task_completion] or [method wait_for_group_task_completion] at some point so that any allocated resources inside the task can be cleaned up.",
+      "godotName": "add_group_task",
+      "xmlDocId": "M:Godot.WorkerThreadPool.AddGroupTask(Callable,int,int,bool,String)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "AddTask",
+      "kind": "Method",
+      "signature": "public int AddTask(Callable action, bool highPriority, String description)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "Callable"
+        },
+        {
+          "name": "high_priority",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds [param action] as a task to be executed by a worker thread. [param high_priority] determines if the task has a high priority or a low priority (default). You can optionally provide a [param description] to help with debugging. Returns a task ID that can be used by other methods. [b]Warning:[/b] Every task must be waited for completion using [method wait_for_task_completion] or [method wait_for_group_task_completion] at some point so that any allocated resources inside the task can be cleaned up.",
+      "godotName": "add_task",
+      "xmlDocId": "M:Godot.WorkerThreadPool.AddTask(Callable,bool,String)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "GetCallerGroupId",
+      "kind": "Method",
+      "signature": "public int GetCallerGroupId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the task group ID of the current thread calling this method, or [code]-1[/code] if invalid or the current thread is not part of a task group.",
+      "godotName": "get_caller_group_id",
+      "xmlDocId": "M:Godot.WorkerThreadPool.GetCallerGroupId",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "GetCallerTaskId",
+      "kind": "Method",
+      "signature": "public int GetCallerTaskId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the task ID of the current thread calling this method, or [code]-1[/code] if the task is a group task, invalid or the current thread is not part of the thread pool (e.g. the main thread). Can be used by a task to get its own task ID, or to determine whether the current code is running inside the worker thread pool. [b]Note:[/b] Group tasks have their own IDs, so this method will return [code]-1[/code] for group tasks.",
+      "godotName": "get_caller_task_id",
+      "xmlDocId": "M:Godot.WorkerThreadPool.GetCallerTaskId",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "GetGroupProcessedElementCount",
+      "kind": "Method",
+      "signature": "public int GetGroupProcessedElementCount(int groupId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "group_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns how many times the [Callable] of the group task with the given ID has already been executed by the worker threads. [b]Note:[/b] If a thread has started executing the [Callable] but is yet to finish, it won\u0027t be counted.",
+      "godotName": "get_group_processed_element_count",
+      "xmlDocId": "M:Godot.WorkerThreadPool.GetGroupProcessedElementCount(int)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "IsGroupTaskCompleted",
+      "kind": "Method",
+      "signature": "public bool IsGroupTaskCompleted(int groupId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "group_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the group task with the given ID is completed. [b]Note:[/b] You should only call this method between adding the group task and awaiting its completion.",
+      "godotName": "is_group_task_completed",
+      "xmlDocId": "M:Godot.WorkerThreadPool.IsGroupTaskCompleted(int)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "IsTaskCompleted",
+      "kind": "Method",
+      "signature": "public bool IsTaskCompleted(int taskId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the task with the given ID is completed. [b]Note:[/b] You should only call this method between adding the task and awaiting its completion.",
+      "godotName": "is_task_completed",
+      "xmlDocId": "M:Godot.WorkerThreadPool.IsTaskCompleted(int)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "WaitForGroupTaskCompletion",
+      "kind": "Method",
+      "signature": "public void WaitForGroupTaskCompletion(int groupId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Pauses the thread that calls this method until the group task with the given ID is completed.",
+      "godotName": "wait_for_group_task_completion",
+      "xmlDocId": "M:Godot.WorkerThreadPool.WaitForGroupTaskCompletion(int)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    },
+    {
+      "name": "WaitForTaskCompletion",
+      "kind": "Method",
+      "signature": "public int WaitForTaskCompletion(int taskId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Pauses the thread that calls this method until the task with the given ID is completed. Returns [constant @GlobalScope.OK] if the task could be successfully awaited. Returns [constant @GlobalScope.ERR_INVALID_PARAMETER] if a task with the passed ID does not exist (maybe because it was already awaited and disposed of). Returns [constant @GlobalScope.ERR_BUSY] if the call is made from another running task and, due to task scheduling, there\u0027s potential for deadlocking (e.g., the task to await may be at a lower level in the call stack and therefore can\u0027t progress). This is an advanced situation that should only matter when some tasks depend on others (in the current implementation, the tricky case is a task trying to wait on an older one).",
+      "godotName": "wait_for_task_completion",
+      "xmlDocId": "M:Godot.WorkerThreadPool.WaitForTaskCompletion(int)",
+      "sourcePath": "doc/classes/WorkerThreadPool.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/WorkerThreadPool.xml",
+      "sha256": "beffaf15cc8b467e2ed4c8d49b608dceb13484e47f0c86c331d77e49dd073c23"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

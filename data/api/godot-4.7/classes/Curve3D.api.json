@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Curve3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Curve3D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Curve3D",
+    "documentationPath": "doc/classes/Curve3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_curve3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPoint",
+      "kind": "Method",
+      "signature": "public void AddPoint(Vector3 position, Vector3 @in, Vector3 @out, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        },
+        {
+          "name": "in",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        },
+        {
+          "name": "out",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a point with the specified [param position] relative to the curve\u0027s own position, with control points [param in] and [param out]. Appends the new point at the end of the point list. If [param index] is given, the new point is inserted before the existing point identified by index [param index]. Every existing point starting from [param index] is shifted further down the list of points. The index must be greater than or equal to [code]0[/code] and must not exceed the number of existing points in the line. See [member point_count].",
+      "godotName": "add_point",
+      "xmlDocId": "M:Godot.Curve3D.AddPoint(Vector3,Vector3,Vector3,int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "ClearPoints",
+      "kind": "Method",
+      "signature": "public void ClearPoints()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all points from the curve.",
+      "godotName": "clear_points",
+      "xmlDocId": "M:Godot.Curve3D.ClearPoints",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetBakedLength",
+      "kind": "Method",
+      "signature": "public float GetBakedLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the total length of the curve, based on the cached points. Given enough density (see [member bake_interval]), it should be approximate enough.",
+      "godotName": "get_baked_length",
+      "xmlDocId": "M:Godot.Curve3D.GetBakedLength",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetBakedPoints",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetBakedPoints()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns the cache of points as a [PackedVector3Array].",
+      "godotName": "get_baked_points",
+      "xmlDocId": "M:Godot.Curve3D.GetBakedPoints",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetBakedTilts",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array GetBakedTilts()",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Returns the cache of tilts as a [PackedFloat32Array].",
+      "godotName": "get_baked_tilts",
+      "xmlDocId": "M:Godot.Curve3D.GetBakedTilts",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetBakedUpVectors",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetBakedUpVectors()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns the cache of up vectors as a [PackedVector3Array]. If [member up_vector_enabled] is [code]false[/code], the cache will be empty.",
+      "godotName": "get_baked_up_vectors",
+      "xmlDocId": "M:Godot.Curve3D.GetBakedUpVectors",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetClosestOffset",
+      "kind": "Method",
+      "signature": "public float GetClosestOffset(Vector3 toPoint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the closest offset to [param to_point]. This offset is meant to be used in [method sample_baked] or [method sample_baked_up_vector]. [param to_point] must be in this curve\u0027s local space.",
+      "godotName": "get_closest_offset",
+      "xmlDocId": "M:Godot.Curve3D.GetClosestOffset(Vector3)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetClosestPoint",
+      "kind": "Method",
+      "signature": "public Vector3 GetClosestPoint(Vector3 toPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the closest point on baked segments (in curve\u0027s local space) to [param to_point]. [param to_point] must be in this curve\u0027s local space.",
+      "godotName": "get_closest_point",
+      "xmlDocId": "M:Godot.Curve3D.GetClosestPoint(Vector3)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetPointIn",
+      "kind": "Method",
+      "signature": "public Vector3 GetPointIn(int idx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the control point leading to the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].",
+      "godotName": "get_point_in",
+      "xmlDocId": "M:Godot.Curve3D.GetPointIn(int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetPointOut",
+      "kind": "Method",
+      "signature": "public Vector3 GetPointOut(int idx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the control point leading out of the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].",
+      "godotName": "get_point_out",
+      "xmlDocId": "M:Godot.Curve3D.GetPointOut(int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetPointPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetPointPosition(int idx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].",
+      "godotName": "get_point_position",
+      "xmlDocId": "M:Godot.Curve3D.GetPointPosition(int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "GetPointTilt",
+      "kind": "Method",
+      "signature": "public float GetPointTilt(int idx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tilt angle in radians for the point [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code]0[/code].",
+      "godotName": "get_point_tilt",
+      "xmlDocId": "M:Godot.Curve3D.GetPointTilt(int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "RemovePoint",
+      "kind": "Method",
+      "signature": "public void RemovePoint(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Deletes the point [param idx] from the curve. Sends an error to the console if [param idx] is out of bounds.",
+      "godotName": "remove_point",
+      "xmlDocId": "M:Godot.Curve3D.RemovePoint(int)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "Sample",
+      "kind": "Method",
+      "signature": "public Vector3 Sample(int idx, float t)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "t",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the position between the vertex [param idx] and the vertex [code]idx \u002B 1[/code], where [param t] controls if the point is the first vertex ([code]t = 0.0[/code]), the last vertex ([code]t = 1.0[/code]), or in between. Values of [param t] outside the range ([code]0.0 \u003E= t \u003C=1[/code]) give strange, but predictable results. If [param idx] is out of bounds it is truncated to the first or last vertex, and [param t] is ignored. If the curve has no points, the function sends an error to the console, and returns [code](0, 0, 0)[/code].",
+      "godotName": "sample",
+      "xmlDocId": "M:Godot.Curve3D.Sample(int,float)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SampleBaked",
+      "kind": "Method",
+      "signature": "public Vector3 SampleBaked(float offset, bool cubic)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "cubic",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a point within the curve at position [param offset], where [param offset] is measured as a distance in 3D units along the curve. To do that, it finds the two cached points where the [param offset] lies between, then interpolates the values. This interpolation is cubic if [param cubic] is set to [code]true[/code], or linear if set to [code]false[/code]. Cubic interpolation tends to follow the curves better, but linear is faster (and often, precise enough).",
+      "godotName": "sample_baked",
+      "xmlDocId": "M:Godot.Curve3D.SampleBaked(float,bool)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SampleBakedUpVector",
+      "kind": "Method",
+      "signature": "public Vector3 SampleBakedUpVector(float offset, bool applyTilt)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        },
+        {
+          "name": "apply_tilt",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an up vector within the curve at position [param offset], where [param offset] is measured as a distance in 3D units along the curve. To do that, it finds the two cached up vectors where the [param offset] lies between, then interpolates the values. If [param apply_tilt] is [code]true[/code], an interpolated tilt is applied to the interpolated up vector. If the curve has no up vectors, the function sends an error to the console, and returns [code](0, 1, 0)[/code].",
+      "godotName": "sample_baked_up_vector",
+      "xmlDocId": "M:Godot.Curve3D.SampleBakedUpVector(float,bool)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SampleBakedWithRotation",
+      "kind": "Method",
+      "signature": "public Transform3D SampleBakedWithRotation(float offset, bool cubic, bool applyTilt)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "cubic",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "apply_tilt",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a [Transform3D] with [code]origin[/code] as point position, [code]basis.x[/code] as sideway vector, [code]basis.y[/code] as up vector, [code]basis.z[/code] as forward vector. When the curve length is 0, there is no reasonable way to calculate the rotation, all vectors aligned with global space axes. See also [method sample_baked].",
+      "godotName": "sample_baked_with_rotation",
+      "xmlDocId": "M:Godot.Curve3D.SampleBakedWithRotation(float,bool,bool)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "Samplef",
+      "kind": "Method",
+      "signature": "public Vector3 Samplef(float fofs)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "fofs",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the position at the vertex [param fofs]. It calls [method sample] using the integer part of [param fofs] as [code]idx[/code], and its fractional part as [code]t[/code].",
+      "godotName": "samplef",
+      "xmlDocId": "M:Godot.Curve3D.Samplef(float)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SetPointIn",
+      "kind": "Method",
+      "signature": "public void SetPointIn(int idx, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the position of the control point leading to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.",
+      "godotName": "set_point_in",
+      "xmlDocId": "M:Godot.Curve3D.SetPointIn(int,Vector3)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SetPointOut",
+      "kind": "Method",
+      "signature": "public void SetPointOut(int idx, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the position of the control point leading out of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.",
+      "godotName": "set_point_out",
+      "xmlDocId": "M:Godot.Curve3D.SetPointOut(int,Vector3)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SetPointPosition",
+      "kind": "Method",
+      "signature": "public void SetPointPosition(int idx, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the position for the vertex [param idx]. If the index is out of bounds, the function sends an error to the console.",
+      "godotName": "set_point_position",
+      "xmlDocId": "M:Godot.Curve3D.SetPointPosition(int,Vector3)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "SetPointTilt",
+      "kind": "Method",
+      "signature": "public void SetPointTilt(int idx, float tilt)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "tilt",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the tilt angle in radians for the point [param idx]. If the index is out of bounds, the function sends an error to the console. The tilt controls the rotation along the look-at axis an object traveling the path would have. In the case of a curve controlling a [PathFollow3D], this tilt is an offset over the natural tilt the [PathFollow3D] calculates.",
+      "godotName": "set_point_tilt",
+      "xmlDocId": "M:Godot.Curve3D.SetPointTilt(int,float)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "Tessellate",
+      "kind": "Method",
+      "signature": "public PackedVector3Array Tessellate(int maxStages, float toleranceDegrees)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "max_stages",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "tolerance_degrees",
+          "type": "float",
+          "defaultValue": "4"
+        }
+      ],
+      "summary": "Returns a list of points along the curve, with a curvature controlled point density. That is, the curvier parts will have more points than the straighter parts. This approximation makes straight segments between each point, then subdivides those segments until the resulting shape is similar enough. [param max_stages] controls how many subdivisions a curve segment may face before it is considered approximate enough. Each subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions per curve segment. Increase with care! [param tolerance_degrees] controls how many degrees the midpoint of a segment may deviate from the real curve, before the segment has to be subdivided.",
+      "godotName": "tessellate",
+      "xmlDocId": "M:Godot.Curve3D.Tessellate(int,float)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "TessellateEvenLength",
+      "kind": "Method",
+      "signature": "public PackedVector3Array TessellateEvenLength(int maxStages, float toleranceLength)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "max_stages",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "tolerance_length",
+          "type": "float",
+          "defaultValue": "0.2"
+        }
+      ],
+      "summary": "Returns a list of points along the curve, with almost uniform density. [param max_stages] controls how many subdivisions a curve segment may face before it is considered approximate enough. Each subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions per curve segment. Increase with care! [param tolerance_length] controls the maximal distance between two neighboring points, before the segment has to be subdivided.",
+      "godotName": "tessellate_even_length",
+      "xmlDocId": "M:Godot.Curve3D.TessellateEvenLength(int,float)",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "BakeInterval",
+      "kind": "Property",
+      "signature": "public float BakeInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance in meters between two adjacent cached points. Changing it forces the cache to be recomputed the next time the [method get_baked_points] or [method get_baked_length] function is called. The smaller the distance, the more points in the cache and the more memory it will consume, so use with care.",
+      "defaultValue": "0.2",
+      "godotName": "bake_interval",
+      "xmlDocId": "P:Godot.Curve3D.BakeInterval",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "Closed",
+      "kind": "Property",
+      "signature": "public bool Closed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], and the curve has more than 2 control points, the last point and the first one will be connected in a loop.",
+      "defaultValue": "false",
+      "godotName": "closed",
+      "xmlDocId": "P:Godot.Curve3D.Closed",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "PointCount",
+      "kind": "Property",
+      "signature": "public int PointCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of points describing the curve.",
+      "defaultValue": "0",
+      "godotName": "point_count",
+      "xmlDocId": "P:Godot.Curve3D.PointCount",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "UpVectorEnabled",
+      "kind": "Property",
+      "signature": "public bool UpVectorEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the curve will bake up vectors used for orientation. This is used when [member PathFollow3D.rotation_mode] is set to [constant PathFollow3D.ROTATION_ORIENTED]. Changing it forces the cache to be recomputed.",
+      "defaultValue": "true",
+      "godotName": "up_vector_enabled",
+      "xmlDocId": "P:Godot.Curve3D.UpVectorEnabled",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "point_{index}/in",
+      "kind": "RawProperty",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position of the control point leading to the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "point_{index}/in",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "point_{index}/out",
+      "kind": "RawProperty",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position of the control point leading out of the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "point_{index}/out",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "point_{index}/position",
+      "kind": "RawProperty",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position of for the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "point_{index}/position",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    },
+    {
+      "name": "point_{index}/tilt",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The tilt angle in radians for the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "0.0",
+      "godotName": "point_{index}/tilt",
+      "sourcePath": "doc/classes/Curve3D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Curve3D.xml",
+      "sha256": "c91ed57674c70a9876dfea2479f9e85f140ad5195267df4c945eea407cc1424f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

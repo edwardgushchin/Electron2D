@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGShape3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "CSGShape3D",
+    "documentationPath": "modules/csg/doc_classes/CSGShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BakeCollisionShape",
+      "kind": "Method",
+      "signature": "public ConcavePolygonShape3D BakeCollisionShape()",
+      "returnType": "ConcavePolygonShape3D",
+      "parameters": [],
+      "summary": "Returns a baked physics [ConcavePolygonShape3D] of this node\u0027s CSG operation result. Returns an empty shape if the node is not a CSG root node or has no valid geometry. [b]Performance:[/b] If the CSG operation results in a very detailed geometry with many faces physics performance will be very slow. Concave shapes should in general only be used for static level geometry and not with dynamic objects that are moving. [b]Note:[/b] CSG mesh data updates are deferred, which means they are updated with a delay of one rendered frame. To avoid getting an empty shape or outdated mesh data, make sure to call [code]await get_tree().process_frame[/code] before using [method bake_collision_shape] in [method Node._ready] or after changing properties on the [CSGShape3D].",
+      "godotName": "bake_collision_shape",
+      "xmlDocId": "M:Godot.CSGShape3D.BakeCollisionShape",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "BakeStaticMesh",
+      "kind": "Method",
+      "signature": "public ArrayMesh BakeStaticMesh()",
+      "returnType": "ArrayMesh",
+      "parameters": [],
+      "summary": "Returns a baked static [ArrayMesh] of this node\u0027s CSG operation result. Materials from involved CSG nodes are added as extra mesh surfaces. Returns an empty mesh if the node is not a CSG root node or has no valid geometry. [b]Note:[/b] CSG mesh data updates are deferred, which means they are updated with a delay of one rendered frame. To avoid getting an empty mesh or outdated mesh data, make sure to call [code]await get_tree().process_frame[/code] before using [method bake_static_mesh] in [method Node._ready] or after changing properties on the [CSGShape3D].",
+      "godotName": "bake_static_mesh",
+      "xmlDocId": "M:Godot.CSGShape3D.BakeStaticMesh",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "GetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_layer] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_layer_value",
+      "xmlDocId": "M:Godot.CSGShape3D.GetCollisionLayerValue(int)",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.CSGShape3D.GetCollisionMaskValue(int)",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "GetMeshes",
+      "kind": "Method",
+      "signature": "public Array GetMeshes()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an [Array] with two elements, the first is the [Transform3D] of this node and the second is the root [Mesh] of this node. Only works when this node is the root shape. [b]Note:[/b] CSG mesh data updates are deferred, which means they are updated with a delay of one rendered frame. To avoid getting an empty shape or outdated mesh data, make sure to call [code]await get_tree().process_frame[/code] before using [method get_meshes] in [method Node._ready] or after changing properties on the [CSGShape3D].",
+      "godotName": "get_meshes",
+      "xmlDocId": "M:Godot.CSGShape3D.GetMeshes",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "IsRootShape",
+      "kind": "Method",
+      "signature": "public bool IsRootShape()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this is a root shape and is thus the object that is rendered.",
+      "godotName": "is_root_shape",
+      "xmlDocId": "M:Godot.CSGShape3D.IsRootShape",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "SetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_layer], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_layer_value",
+      "xmlDocId": "M:Godot.CSGShape3D.SetCollisionLayerValue(int,bool)",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.CSGShape3D.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "Autosmooth",
+      "kind": "Property",
+      "signature": "public bool Autosmooth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables automatic smoothing. This overrides any smoothing on the CSG node and instead uses [member smoothing_angle] to calculate normals based on the angle between faces. Children of a [CSGCombiner3D] node will be treated as a single mesh.",
+      "defaultValue": "false",
+      "godotName": "autosmooth",
+      "xmlDocId": "P:Godot.CSGShape3D.Autosmooth",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "CalculateTangents",
+      "kind": "Property",
+      "signature": "public bool CalculateTangents { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Calculate tangents for the CSG shape which allows the use of normal and height maps. This is only applied on the root shape, this setting is ignored on any child. Setting this to [code]false[/code] can speed up shape generation slightly.",
+      "defaultValue": "true",
+      "godotName": "calculate_tangents",
+      "xmlDocId": "P:Godot.CSGShape3D.CalculateTangents",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public int CollisionLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this area is in. Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property. A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_layer",
+      "xmlDocId": "P:Godot.CSGShape3D.CollisionLayer",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this CSG shape scans for collisions. Only effective if [member use_collision] is [code]true[/code]. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.CSGShape3D.CollisionMask",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "CollisionPriority",
+      "kind": "Property",
+      "signature": "public float CollisionPriority { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The priority used to solve colliding when occurring penetration. Only effective if [member use_collision] is [code]true[/code]. The higher the priority is, the lower the penetration into the object will be. This can for example be used to prevent the player from breaking through the boundaries of a level.",
+      "defaultValue": "1.0",
+      "godotName": "collision_priority",
+      "xmlDocId": "P:Godot.CSGShape3D.CollisionPriority",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "Operation",
+      "kind": "Property",
+      "signature": "public int Operation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The operation that is performed on this shape. This is ignored for the first CSG child node as the operation is between this node and the previous child of this nodes parent.",
+      "defaultValue": "0",
+      "godotName": "operation",
+      "xmlDocId": "P:Godot.CSGShape3D.Operation",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "SmoothingAngle",
+      "kind": "Property",
+      "signature": "public float SmoothingAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When autosmooth is enabled, faces with an angle between them greater than this will be smoothed, while faces with a smaller angle will remain sharp. Note: An angle lower than 0.1 will cause all smoothing to be disabled, this can be used to increase performance.",
+      "defaultValue": "50.0",
+      "godotName": "smoothing_angle",
+      "xmlDocId": "P:Godot.CSGShape3D.SmoothingAngle",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "Snap",
+      "kind": "Property",
+      "signature": "public float Snap { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This property does nothing.",
+      "godotName": "snap",
+      "xmlDocId": "P:Godot.CSGShape3D.Snap",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "UseCollision",
+      "kind": "Property",
+      "signature": "public bool UseCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Adds a collision shape to the physics engine for our CSG shape. This will always act like a static body. Note that the collision shape is still active even if the CSG shape itself is hidden. See also [member collision_mask] and [member collision_priority].",
+      "defaultValue": "false",
+      "godotName": "use_collision",
+      "xmlDocId": "P:Godot.CSGShape3D.UseCollision",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operation",
+      "values": [
+        {
+          "name": "OPERATION_INTERSECTION",
+          "value": "1",
+          "enum": "Operation",
+          "kind": "EnumValue",
+          "summary": "Only intersecting geometry remains, the rest is removed.",
+          "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+        },
+        {
+          "name": "OPERATION_SUBTRACTION",
+          "value": "2",
+          "enum": "Operation",
+          "kind": "EnumValue",
+          "summary": "The second shape is subtracted from the first, leaving a dent with its shape.",
+          "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+        },
+        {
+          "name": "OPERATION_UNION",
+          "value": "0",
+          "enum": "Operation",
+          "kind": "EnumValue",
+          "summary": "Geometry of both primitives is merged, intersecting geometry is removed.",
+          "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OPERATION_UNION",
+      "value": "0",
+      "enum": "Operation",
+      "kind": "EnumValue",
+      "summary": "Geometry of both primitives is merged, intersecting geometry is removed.",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "OPERATION_INTERSECTION",
+      "value": "1",
+      "enum": "Operation",
+      "kind": "EnumValue",
+      "summary": "Only intersecting geometry remains, the rest is removed.",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    },
+    {
+      "name": "OPERATION_SUBTRACTION",
+      "value": "2",
+      "enum": "Operation",
+      "kind": "EnumValue",
+      "summary": "The second shape is subtracted from the first, leaving a dent with its shape.",
+      "sourcePath": "modules/csg/doc_classes/CSGShape3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGShape3D.xml",
+      "sha256": "6494170103f4be0e0e891902ab172e99ba86a4967054f50b32f4bdfbd98b162e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

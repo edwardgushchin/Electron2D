@@ -803,6 +803,833 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task ApiFetchGodotFromSourceCopiesOnlyApiInputs()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        WriteText(godotSource.Root, "modules/audio/doc_classes/AudioEffectLowShelfFilter.xml", GodotClassXml("AudioEffectLowShelfFilter"));
+        WriteText(godotSource.Root, "extension_api.json", "{}\n");
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "Node",
+              "csharpName": "Node",
+              "members": [
+                {
+                  "godotName": "_ready",
+                  "name": "PreservedReady",
+                  "kind": "Method",
+                  "signature": "public void PreservedReady()",
+                  "parameters": []
+                }
+              ]
+            }
+          ]
+        }
+        """);
+        WriteText(godotSource.Root, "README.md", "This file must not be copied into the API snapshot.\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        AssertCommandSucceeded(result, "api fetch-godot fixture");
+        AssertDiagnosticCode(result, "E2D-BUILD-API-GODOT-FETCHED", "Godot API source fetch");
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "doc", "classes", "Node.xml")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "modules", "audio", "doc_classes", "AudioEffectLowShelfFilter.xml")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "extension_api.json")));
+        var copiedSnapshot = File.ReadAllText(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json"), Encoding.UTF8);
+        Assert.Contains("PreservedReady", copiedSnapshot, StringComparison.Ordinal);
+        Assert.False(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "README.md")));
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsIncompatibleExistingCSharpSnapshot()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-bad-csharp-snapshot");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-bad-csharp-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.6-stable",
+          "classes": []
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "incompatible source C# snapshot");
+        var copiedSnapshot = File.ReadAllText(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json"), Encoding.UTF8);
+        Assert.Contains("\"baseline\": \"4.6-stable\"", copiedSnapshot, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsDuplicateCSharpSnapshotClasses()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-duplicate-csharp-class");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-duplicate-csharp-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "Node",
+              "csharpName": "Node",
+              "members": []
+            },
+            {
+              "name": "Node",
+              "csharpName": "NodeDuplicate",
+              "members": []
+            }
+          ]
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "duplicate C# snapshot class");
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsDuplicateCSharpSnapshotClassProjections()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-duplicate-csharp-class-projection");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-duplicate-csharp-projection-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        WriteText(godotSource.Root, "doc/classes/Sprite2D.xml", GodotClassXml("Sprite2D"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "Node",
+              "csharpName": "Node",
+              "members": []
+            },
+            {
+              "name": "Sprite2D",
+              "csharpName": "Node",
+              "members": []
+            }
+          ]
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "duplicate C# class projection");
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsBlankCSharpSnapshotClassProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-blank-csharp-class-projection");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-blank-csharp-projection-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "Node",
+              "csharpName": " ",
+              "members": []
+            }
+          ]
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "blank C# class projection");
+    }
+
+    [Theory]
+    [InlineData("../Escaped")]
+    [InlineData("../../../../Escaped")]
+    [InlineData("A/B")]
+    [InlineData("A\\B")]
+    [InlineData(" Node")]
+    [InlineData("Node ")]
+    [InlineData("A..B")]
+    public async Task ApiFetchGodotRejectsUnsafeCSharpSnapshotClassProjection(string csharpName)
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-unsafe-csharp-class-projection");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-unsafe-csharp-projection-source");
+        WriteText(godotSource.Root, "doc/classes/Node.xml", GodotClassXml("Node"));
+        var classes = new JsonArray();
+        classes.Add(new JsonObject
+        {
+            ["name"] = "Node",
+            ["csharpName"] = csharpName,
+            ["members"] = new JsonArray()
+        });
+        WriteText(godotSource.Root, "csharp_api.json", new JsonObject
+        {
+            ["baseline"] = "4.7-stable",
+            ["classes"] = classes
+        }.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "unsafe C# class projection");
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsUnsafeFallbackGodotClassName()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-unsafe-fallback-class-name");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-unsafe-fallback-source");
+        WriteText(godotSource.Root, "doc/classes/Escaped.xml", GodotClassXml("../Escaped"));
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-GODOT-SOURCE-INVALID", "unsafe fallback Godot class name");
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotSyntheticSnapshotOmitsUnmappableXmlMemberProjections()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-unmappable-xml-members");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-unmappable-xml-source");
+        WriteText(godotSource.Root, "doc/classes/RawPropertyOwner.xml", """
+        <class name="RawPropertyOwner">
+          <members>
+            <member name="safe_value" type="int">Safe property.</member>
+            <member name="voice/1/cutoff_hz" type="float">Raw inspector property.</member>
+          </members>
+        </class>
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        AssertCommandSucceeded(result, "api fetch-godot synthetic raw member fixture");
+        var snapshot = File.ReadAllText(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json"), Encoding.UTF8);
+        Assert.Contains("SafeValue", snapshot, StringComparison.Ordinal);
+        Assert.DoesNotContain("Voice/1/cutoffHz", snapshot, StringComparison.Ordinal);
+        Assert.DoesNotContain("voice/1/cutoff_hz", snapshot, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsUnsafeCSharpSnapshotMemberProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-unsafe-csharp-member-projection");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-unsafe-csharp-member-source");
+        WriteText(godotSource.Root, "doc/classes/RawPropertyOwner.xml", GodotClassXml("RawPropertyOwner"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "RawPropertyOwner",
+              "csharpName": "RawPropertyOwner",
+              "members": [
+                {
+                  "godotName": "voice/1/cutoff_hz",
+                  "name": "Voice/1/cutoffHz",
+                  "kind": "Property",
+                  "signature": "public float Voice/1/cutoffHz { get; set; }",
+                  "parameters": []
+                }
+              ]
+            }
+          ]
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "unsafe C# member projection");
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotSyntheticSnapshotEscapesCSharpKeywordParameterNames()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-keyword-parameters");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-keyword-parameters-source");
+        WriteText(godotSource.Root, "doc/classes/KeywordOwner.xml", """
+        <class name="KeywordOwner">
+          <methods>
+            <method name="keyword_method">
+              <return type="float" />
+              <param index="0" name="base" type="float" />
+              <param index="1" name="class" type="StringName" />
+              <param index="2" name="enum" type="StringName" />
+              <param index="3" name="default" type="Color" />
+              <param index="4" name="in" type="Vector2" />
+              <param index="5" name="out" type="Vector2" />
+              <param index="6" name="event" type="String" />
+            </method>
+          </methods>
+        </class>
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        AssertCommandSucceeded(result, "api fetch-godot keyword parameter fixture");
+        var snapshot = File.ReadAllText(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json"), Encoding.UTF8);
+        Assert.Contains("float @base", snapshot, StringComparison.Ordinal);
+        Assert.Contains("StringName @class", snapshot, StringComparison.Ordinal);
+        Assert.Contains("StringName @enum", snapshot, StringComparison.Ordinal);
+        Assert.Contains("Color @default", snapshot, StringComparison.Ordinal);
+        Assert.Contains("Vector2 @in", snapshot, StringComparison.Ordinal);
+        Assert.Contains("Vector2 @out", snapshot, StringComparison.Ordinal);
+        Assert.Contains("String @event", snapshot, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ApiFetchGodotRejectsUnescapedKeywordCSharpSnapshotParameterProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-fetch-godot-unescaped-keyword-csharp-member");
+        using var godotSource = TemporaryDirectory.Create("api-fetch-godot-unescaped-keyword-csharp-member-source");
+        WriteText(godotSource.Root, "doc/classes/KeywordOwner.xml", GodotClassXml("KeywordOwner"));
+        WriteText(godotSource.Root, "csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "KeywordOwner",
+              "csharpName": "KeywordOwner",
+              "members": [
+                {
+                  "godotName": "pow",
+                  "name": "Pow",
+                  "kind": "Method",
+                  "signature": "public float Pow(float base, float exp)",
+                  "parameters": [
+                    {
+                      "name": "base",
+                      "type": "float"
+                    },
+                    {
+                      "name": "exp",
+                      "type": "float"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        """);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "api",
+            "fetch-godot",
+            "--version",
+            "4.7-stable",
+            "--source",
+            godotSource.Root,
+            "--output",
+            "data/api/godot-4.7/source");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "unescaped keyword C# member projection");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsCreatesGodotAndElectron2DPackets()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        AssertCommandSucceeded(result, "api generate-class-packets fixture");
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CLASS-PACKETS-GENERATED", "class packet generation");
+
+        var texturePath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "classes", "Texture2D.api.json");
+        Assert.True(File.Exists(texturePath), $"Godot Texture2D packet was not generated: {texturePath}");
+        Assert.False(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "classes", "Texture2D.api.md")));
+        Assert.False(File.Exists(Path.Combine(workspace.Root, "data", "api", "electron2d", "classes", "TextureRect.api.md")));
+
+        using (var packet = JsonDocument.Parse(File.ReadAllText(texturePath)))
+        {
+            var root = packet.RootElement;
+            Assert.Equal("https://docs.godotengine.org/en/4.7/classes/class_texture2d.html", root.GetProperty("class").GetProperty("documentationUrl").GetString());
+            Assert.NotEmpty(root.GetProperty("constructors").EnumerateArray());
+            Assert.NotEmpty(root.GetProperty("operators").EnumerateArray());
+
+            var virtualMethodNames = root.GetProperty("virtualMethods").EnumerateArray()
+                .Select(member => member.GetProperty("name").GetString())
+                .ToArray();
+            Assert.Contains("_Draw", virtualMethodNames);
+            Assert.Contains("_DrawRect", virtualMethodNames);
+
+            var drawMembers = root.GetProperty("members").EnumerateArray()
+                .Where(member => member.GetProperty("godotName").GetString() is "_draw" or "draw")
+                .Select(member => new
+                {
+                    GodotName = member.GetProperty("godotName").GetString(),
+                    Name = member.GetProperty("name").GetString(),
+                    XmlDocId = member.GetProperty("xmlDocId").GetString()
+                })
+                .ToArray();
+            Assert.Contains(drawMembers, member => member.GodotName == "_draw" && member.Name == "_Draw" && member.XmlDocId == "M:Godot.Texture2D._Draw");
+            Assert.Contains(drawMembers, member => member.GodotName == "draw" && member.Name == "Draw" && member.XmlDocId == "M:Godot.Texture2D.Draw");
+        }
+
+        using (var index = JsonDocument.Parse(ReadText(workspace.Root, "data/api/godot-4.7/index/classes.json")))
+        {
+            var textureIndex = index.RootElement.GetProperty("classes").EnumerateArray()
+                .Single(item => item.GetProperty("name").GetString() == "Texture2D");
+            Assert.Equal("data/api/godot-4.7/classes/Texture2D.api.json", textureIndex.GetProperty("jsonPath").GetString());
+            Assert.False(textureIndex.TryGetProperty("markdownPath", out _));
+        }
+
+        using (var electronPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/TextureRect.api.json")))
+        {
+            var textureVirtualMethods = electronPacket.RootElement.GetProperty("virtualMethods").EnumerateArray()
+                .Select(member => member.GetProperty("name").GetString())
+                .ToArray();
+            Assert.Contains("Draw", textureVirtualMethods);
+            Assert.Contains("ComputeMinimumSize", textureVirtualMethods);
+
+            var stretchMode = electronPacket.RootElement.GetProperty("members").EnumerateArray()
+                .Single(member => member.GetProperty("name").GetString() == "StretchMode");
+            Assert.Equal("Electron2D.TextureRect.StretchMode", stretchMode.GetProperty("returnType").GetString());
+            Assert.DoesNotContain("StretchModeEnum", stretchMode.GetProperty("signature").GetString(), StringComparison.Ordinal);
+
+            var draw = electronPacket.RootElement.GetProperty("members").EnumerateArray()
+                .Single(member => member.GetProperty("xmlDocId").GetString() == "M:Electron2D.TextureRect._Draw");
+            Assert.Equal("Draw", draw.GetProperty("name").GetString());
+            Assert.Equal("public System.Void Draw()", draw.GetProperty("signature").GetString());
+        }
+
+        using (var nodePacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/Node.api.json")))
+        {
+            var nodeVirtualMethods = nodePacket.RootElement.GetProperty("virtualMethods").EnumerateArray()
+                .Select(member => member.GetProperty("name").GetString())
+                .ToArray();
+            Assert.Contains("Ready", nodeVirtualMethods);
+            Assert.Contains("Process", nodeVirtualMethods);
+            Assert.Contains("PhysicsProcess", nodeVirtualMethods);
+        }
+
+        using (var canvasItemPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/CanvasItem.api.json")))
+        {
+            var canvasVirtualMethods = canvasItemPacket.RootElement.GetProperty("virtualMethods").EnumerateArray()
+                .Select(member => member.GetProperty("name").GetString())
+                .ToArray();
+            Assert.Contains("Draw", canvasVirtualMethods);
+        }
+
+        using (var vectorPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/Vector2.api.json")))
+        {
+            var vectorOperators = vectorPacket.RootElement.GetProperty("operators").EnumerateArray()
+                .Select(member => member.GetProperty("name").GetString())
+                .ToArray();
+            Assert.Contains("op_Addition", vectorOperators);
+
+            var vectorConstants = vectorPacket.RootElement.GetProperty("constants").EnumerateArray().ToArray();
+            AssertConstantValue(vectorConstants, "Zero", "(0, 0)", "Field");
+            AssertConstantValue(vectorConstants, "One", "(1, 1)", "Field");
+
+            var vectorMembers = vectorPacket.RootElement.GetProperty("members").EnumerateArray().ToArray();
+            Assert.Contains(vectorMembers, member =>
+                member.GetProperty("kind").GetString() == "Field" &&
+                member.GetProperty("name").GetString() == "Zero");
+        }
+
+        using (var colorPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/Color.api.json")))
+        {
+            var colorConstants = colorPacket.RootElement.GetProperty("constants").EnumerateArray().ToArray();
+            AssertConstantValue(colorConstants, "White", "(1, 1, 1, 1)");
+        }
+
+        using (var mathPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/Mathf.api.json")))
+        {
+            var mathConstants = mathPacket.RootElement.GetProperty("constants").EnumerateArray().ToArray();
+            AssertConstantValue(mathConstants, "Epsilon", "1E-05", "Constant");
+            AssertConstantValue(mathConstants, "Pi", "3.1415927", "Constant");
+            AssertConstantValue(mathConstants, "Tau", "6.2831855", "Constant");
+        }
+
+        using (var resourceUidPacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/ResourceUid.api.json")))
+        {
+            var constants = resourceUidPacket.RootElement.GetProperty("constants").EnumerateArray().ToArray();
+            AssertConstantValue(constants, "InvalidId", "-1", "Constant");
+        }
+
+        using (var stretchModePacket = JsonDocument.Parse(ReadText(workspace.Root, "data/api/electron2d/classes/TextureRect.StretchMode.api.json")))
+        {
+            var constants = stretchModePacket.RootElement.GetProperty("constants").EnumerateArray().ToArray();
+            AssertConstantValue(constants, "Keep", "2", "EnumValue");
+        }
+
+        WriteText(workspace.Root, "data/api/godot-4.7/classes/AudioEffectLowShelfFilter.api.md", "# stale generated Markdown\n");
+        var staleCheck = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets", "--check");
+
+        Assert.NotEqual(0, staleCheck.ExitCode);
+        AssertDiagnosticCode(staleCheck, "E2D-BUILD-API-CLASS-PACKET-EXTRA", "stale per-class Markdown packet");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsIncompatibleGodotCSharpSnapshot()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-bad-snapshot");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        ReplaceInFile(
+            workspace.Root,
+            "data/api/godot-4.7/source/csharp_api.json",
+            "\"baseline\": \"4.7-stable\"",
+            "\"baseline\": \"4.6-stable\"");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "incompatible Godot C# snapshot");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsConflictingGodotCSharpMemberProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-conflicting-csharp-member");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        var csharpSnapshotPath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json");
+        var snapshot = JsonNode.Parse(File.ReadAllText(csharpSnapshotPath, Encoding.UTF8))!.AsObject();
+        var members = snapshot["classes"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["name"]!.GetValue<string>() == "Texture2D")["members"]!.AsArray();
+        members.Insert(1, JsonNode.Parse("""
+        {
+          "godotName": "_draw",
+          "name": "DrawWithoutUnderscore",
+          "kind": "Method",
+          "signature": "public void DrawWithoutUnderscore()",
+          "parameters": []
+        }
+        """)!);
+        File.WriteAllText(csharpSnapshotPath, snapshot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "conflicting Godot C# member projection");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsGodotCSharpSnapshotLooseParameterMismatch()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-csharp-parameter-mismatch");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        var csharpSnapshotPath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json");
+        var snapshot = JsonNode.Parse(File.ReadAllText(csharpSnapshotPath, Encoding.UTF8))!.AsObject();
+        var member = snapshot["classes"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["name"]!.GetValue<string>() == "Texture2D")["members"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["godotName"]!.GetValue<string>() == "draw_rect");
+        member["signature"] = "public void DrawRect(Vector2 rect)";
+        member["parameters"]!.AsArray()[0]!["type"] = "Vector2";
+        File.WriteAllText(csharpSnapshotPath, snapshot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "Godot C# member parameter mismatch");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsDuplicateGodotCSharpClassProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-duplicate-csharp-class-projection");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        var csharpSnapshotPath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json");
+        var snapshot = JsonNode.Parse(File.ReadAllText(csharpSnapshotPath, Encoding.UTF8))!.AsObject();
+        var vectorClass = snapshot["classes"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["name"]!.GetValue<string>() == "Vector2");
+        vectorClass["csharpName"] = "Texture2D";
+        File.WriteAllText(csharpSnapshotPath, snapshot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "duplicate generated C# class projection");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsUnsafeGodotCSharpClassProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-unsafe-csharp-class-projection");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        var csharpSnapshotPath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json");
+        var snapshot = JsonNode.Parse(File.ReadAllText(csharpSnapshotPath, Encoding.UTF8))!.AsObject();
+        var textureClass = snapshot["classes"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["name"]!.GetValue<string>() == "Texture2D");
+        textureClass["csharpName"] = "../Escaped";
+        File.WriteAllText(csharpSnapshotPath, snapshot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "unsafe generated C# class projection");
+        Assert.False(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "Escaped.api.json")));
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsUnsafeFallbackGodotClassName()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-unsafe-fallback-class-name");
+        WriteText(workspace.Root, "data/api/godot-4.7/source/doc/classes/Escaped.xml", GodotClassXml("../Escaped"));
+        WriteElectron2DApiManifestFixture(workspace.Root);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-GODOT-SOURCE-INVALID", "unsafe fallback Godot class name");
+        Assert.False(File.Exists(Path.Combine(workspace.Root, "data", "api", "godot-4.7", "Escaped.api.json")));
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsSeparatesUnmappableGodotXmlMembersFromCSharpMembers()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-unmappable-xml-members");
+        WriteText(workspace.Root, "data/api/godot-4.7/source/doc/classes/RawPropertyOwner.xml", """
+        <class name="RawPropertyOwner">
+          <members>
+            <member name="safe_value" type="int">Safe property.</member>
+            <member name="voice/1/cutoff_hz" type="float" default="500">Raw inspector property.</member>
+            <member name="stream_{index}/stream" type="AudioStream">Indexed raw property.</member>
+          </members>
+        </class>
+        """);
+        WriteElectron2DApiManifestFixture(workspace.Root);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        AssertCommandSucceeded(result, "api generate-class-packets raw member fixture");
+        using var packet = JsonDocument.Parse(ReadText(workspace.Root, "data/api/godot-4.7/classes/RawPropertyOwner.api.json"));
+        var members = packet.RootElement.GetProperty("members").EnumerateArray().ToArray();
+        Assert.Contains(members, member => member.GetProperty("name").GetString() == "SafeValue");
+        Assert.DoesNotContain(members, member => member.GetProperty("godotName").GetString() == "voice/1/cutoff_hz");
+        Assert.DoesNotContain(members, member => member.GetProperty("signature").GetString()?.Contains('/', StringComparison.Ordinal) == true);
+
+        var rawMembers = packet.RootElement.GetProperty("rawMembers").EnumerateArray().ToArray();
+        Assert.Contains(rawMembers, member =>
+            member.GetProperty("kind").GetString() == "RawProperty" &&
+            member.GetProperty("godotName").GetString() == "voice/1/cutoff_hz" &&
+            member.GetProperty("returnType").GetString() == "float" &&
+            member.GetProperty("defaultValue").GetString() == "500");
+        Assert.Contains(rawMembers, member => member.GetProperty("godotName").GetString() == "stream_{index}/stream");
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsMasksWindowsPathsWithoutCorruptingDocumentationPunctuation()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-documentation-path-masking");
+        var windowsPath = "C:" + "\\" + "Users" + "\\" + "name" + "\\" + "file.gd";
+        var windowsRootBackslash = "C:" + "\\";
+        var windowsRootSlash = "C:" + "/";
+        var programFilesPath = "C:" + "\\" + "Program Files" + "\\" + "Blender Foundation" + "\\" + "blender.exe";
+        var programFilesX86Path = "C:" + "\\" + "Program Files (x86)" + "\\" + "Blender Foundation" + "\\" + "blender.exe";
+        WriteText(workspace.Root, "data/api/godot-4.7/source/doc/classes/DocumentationOwner.xml", """
+        <class name="DocumentationOwner">
+          <methods>
+            <method name="range_like">
+              <return type="void" />
+              <description>Keeps range(n: int), var x: int = 1, A:4, given X:Y aspect ratio, and D:" while masking {{windowsPath}}, [code]{{windowsRootBackslash}}[/code], [code]{{windowsRootSlash}}[/code], {{programFilesPath}}, and {{programFilesX86Path}}.</description>
+            </method>
+          </methods>
+        </class>
+        """.Replace("{{windowsPath}}", windowsPath, StringComparison.Ordinal)
+            .Replace("{{windowsRootBackslash}}", windowsRootBackslash, StringComparison.Ordinal)
+            .Replace("{{windowsRootSlash}}", windowsRootSlash, StringComparison.Ordinal)
+            .Replace("{{programFilesPath}}", programFilesPath, StringComparison.Ordinal)
+            .Replace("{{programFilesX86Path}}", programFilesX86Path, StringComparison.Ordinal));
+        WriteElectron2DApiManifestFixture(workspace.Root);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        AssertCommandSucceeded(result, "api generate-class-packets documentation path masking fixture");
+        using var packet = JsonDocument.Parse(ReadText(workspace.Root, "data/api/godot-4.7/classes/DocumentationOwner.api.json"));
+        var summary = packet.RootElement.GetProperty("members").EnumerateArray()
+            .Single(member => member.GetProperty("godotName").GetString() == "range_like")
+            .GetProperty("summary")
+            .GetString();
+        Assert.Contains("range(n: int)", summary, StringComparison.Ordinal);
+        Assert.Contains("var x: int = 1", summary, StringComparison.Ordinal);
+        Assert.Contains("A:4", summary, StringComparison.Ordinal);
+        Assert.Contains("given X:Y aspect ratio", summary, StringComparison.Ordinal);
+        Assert.Contains("D:" + "\"", summary, StringComparison.Ordinal);
+        Assert.Contains("[code]<windows-absolute-path>[/code]", summary, StringComparison.Ordinal);
+        Assert.Contains("<windows-absolute-path>", summary, StringComparison.Ordinal);
+        Assert.DoesNotContain(windowsPath, summary, StringComparison.Ordinal);
+        Assert.DoesNotContain(windowsRootBackslash, summary, StringComparison.Ordinal);
+        Assert.DoesNotContain(windowsRootSlash, summary, StringComparison.Ordinal);
+        Assert.DoesNotContain(programFilesPath, summary, StringComparison.Ordinal);
+        Assert.DoesNotContain(programFilesX86Path, summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("[code]<windows-absolute-path>]", summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("<windows-absolute-path> Files", summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("Blender Foundation", summary, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsEscapesGodotCSharpKeywordParameterNames()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-keyword-parameters");
+        WriteText(workspace.Root, "data/api/godot-4.7/source/doc/classes/KeywordOwner.xml", """
+        <class name="KeywordOwner">
+          <methods>
+            <method name="keyword_method">
+              <return type="float" />
+              <param index="0" name="base" type="float" />
+              <param index="1" name="class" type="StringName" />
+              <param index="2" name="enum" type="StringName" />
+              <param index="3" name="default" type="Color" />
+              <param index="4" name="in" type="Vector2" />
+              <param index="5" name="out" type="Vector2" />
+              <param index="6" name="event" type="String" />
+            </method>
+          </methods>
+        </class>
+        """);
+        WriteElectron2DApiManifestFixture(workspace.Root);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        AssertCommandSucceeded(result, "api generate-class-packets keyword parameter fixture");
+        using var packet = JsonDocument.Parse(ReadText(workspace.Root, "data/api/godot-4.7/classes/KeywordOwner.api.json"));
+        var method = packet.RootElement.GetProperty("members").EnumerateArray()
+            .Single(member => member.GetProperty("godotName").GetString() == "keyword_method");
+        Assert.Equal(
+            "public float KeywordMethod(float @base, StringName @class, StringName @enum, Color @default, Vector2 @in, Vector2 @out, String @event)",
+            method.GetProperty("signature").GetString());
+    }
+
+    [Fact]
+    public async Task ApiGenerateClassPacketsRejectsDuplicateGodotCSharpMemberProjection()
+    {
+        using var workspace = CreateApiMatrixFixture("api-generate-class-packets-duplicate-csharp-member-projection");
+        WriteGodotApiSourceFixture(workspace.Root, "data/api/godot-4.7/source");
+        WriteElectron2DApiManifestFixture(workspace.Root);
+        var csharpSnapshotPath = Path.Combine(workspace.Root, "data", "api", "godot-4.7", "source", "csharp_api.json");
+        var snapshot = JsonNode.Parse(File.ReadAllText(csharpSnapshotPath, Encoding.UTF8))!.AsObject();
+        var member = snapshot["classes"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["name"]!.GetValue<string>() == "Texture2D")["members"]!.AsArray()
+            .Select(item => item!.AsObject())
+            .Single(item => item["godotName"]!.GetValue<string>() == "_draw");
+        member["name"] = "Draw";
+        member["signature"] = "public void Draw()";
+        File.WriteAllText(csharpSnapshotPath, snapshot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "api", "generate-class-packets");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID", "duplicate generated C# member projection");
+    }
+
+    [Fact]
     public async Task UpdateWikiCheckRunsApiManifestAndWikiOutputVerification()
     {
         using var workspace = CreateApiWikiFixture("api-wiki-valid");
@@ -860,6 +1687,42 @@ public sealed class RepositoryBuildToolTests
 
         AssertCommandSucceeded(check, "update wiki --check --output .github/wiki");
         AssertDiagnosticCode(check, "E2D-BUILD-WIKI-CHECK-PASSED", "Wiki check after update");
+    }
+
+    [Fact]
+    public async Task WikiReflectionRendererEscapesCSharpKeywordParameterNames()
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var verifierType = assembly.GetType("Electron2D.Build.ApiWikiCommand", throwOnError: true)!;
+        var methodSignature = verifierType.GetMethod("MethodSignature", BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        var setItemChecked = typeof(Electron2D.PopupMenu).GetMethod(nameof(Electron2D.PopupMenu.SetItemChecked), [typeof(int), typeof(bool)])!;
+        var setItemCheckedSignature = (string)methodSignature.Invoke(null, [setItemChecked])!;
+        Assert.Contains("System.Boolean @checked", setItemCheckedSignature, StringComparison.Ordinal);
+        Assert.DoesNotContain("System.Boolean checked", setItemCheckedSignature, StringComparison.Ordinal);
+
+        var tweenProperty = typeof(Electron2D.Tween).GetMethods()
+            .Single(method =>
+                method.Name == nameof(Electron2D.Tween.TweenProperty) &&
+                method.GetParameters().Length == 4);
+        var tweenPropertySignature = (string)methodSignature.Invoke(null, [tweenProperty])!;
+        Assert.Contains("Electron2D.Object @object", tweenPropertySignature, StringComparison.Ordinal);
+        Assert.DoesNotContain("Electron2D.Object object", tweenPropertySignature, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task WikiReflectionRendererPreservesStaticPropertySignatures()
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var verifierType = assembly.GetType("Electron2D.Build.ApiWikiCommand", throwOnError: true)!;
+        var propertySignature = verifierType.GetMethod("PropertySignature", BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        var currentProfile = typeof(Electron2D.RenderingServer).GetProperty(nameof(Electron2D.RenderingServer.CurrentProfile))!;
+        var currentProfileSignature = (string)propertySignature.Invoke(null, [currentProfile])!;
+
+        Assert.Equal(
+            "public static Electron2D.RenderingServer.RenderingProfile CurrentProfile { get; }",
+            currentProfileSignature);
     }
 
     [Fact]
@@ -2739,7 +3602,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("commands=2", summaryMessage, StringComparison.Ordinal);
         Assert.Contains("audit-package-message", summaryMessage, StringComparison.Ordinal);
         Assert.Contains("audit-package-verify", summaryMessage, StringComparison.Ordinal);
-        Assert.Contains("timeoutSeconds=180", summaryMessage, StringComparison.Ordinal);
+        Assert.Contains("timeoutSeconds=600", summaryMessage, StringComparison.Ordinal);
         var zipPath = fixture.ZipPath(taskId);
         var sidecarPath = fixture.OperatorWorkflowZipPath(taskId);
         var verifyRoot = $"evidence/{taskId}-r01/checks/audit-package-verify";
@@ -2822,10 +3685,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal("subprocess", messageMetadata.RootElement.GetProperty("executionMode").GetString());
         Assert.True(verifyMetadata.RootElement.GetProperty("durationMs").GetDouble() > 0);
         Assert.True(messageMetadata.RootElement.GetProperty("durationMs").GetDouble() > 0);
-        Assert.Equal("180\n", ReadZipEntryText(sidecarPath, $"{verifyRoot}/timeout-seconds.txt"));
-        Assert.Equal("180\n", ReadZipEntryText(sidecarPath, $"{messageRoot}/timeout-seconds.txt"));
-        Assert.Equal(180, verifyMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
-        Assert.Equal(180, messageMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
+        Assert.Equal("600\n", ReadZipEntryText(sidecarPath, $"{verifyRoot}/timeout-seconds.txt"));
+        Assert.Equal("600\n", ReadZipEntryText(sidecarPath, $"{messageRoot}/timeout-seconds.txt"));
+        Assert.Equal(600, verifyMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
+        Assert.Equal(600, messageMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
         Assert.Equal(Sha256ZipEntry(sidecarPath, $"{verifyRoot}/stdout.txt"), verifyMetadata.RootElement.GetProperty("stdoutSha256").GetString());
         Assert.Equal(Sha256ZipEntry(sidecarPath, $"{messageRoot}/stdout.txt"), messageMetadata.RootElement.GetProperty("stdoutSha256").GetString());
     }
@@ -9188,7 +10051,9 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        Assert.True(
+            package.ExitCode == 0,
+            $"audit package failed with exit code {package.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{package.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{package.Stderr}");
         var patch = ReadZipEntryText(fixture.ZipPath(taskId), $"{taskId}.patch");
         Assert.Contains($"rename from {oldDiaryPath}", patch, StringComparison.Ordinal);
         Assert.Contains($"rename to {newDiaryPath}", patch, StringComparison.Ordinal);
@@ -9542,7 +10407,9 @@ public sealed class RepositoryBuildToolTests
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-unicode-archive-entry");
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
 
-        Assert.Equal(0, verify.ExitCode);
+        Assert.True(
+            verify.ExitCode == 0,
+            $"audit package verify failed with exit code {verify.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{verify.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{verify.Stderr}");
     }
 
     [Fact]
@@ -10241,6 +11108,27 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, package.ExitCode);
         AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageAllowsJsonEscapedQuotedTextAfterDriveLikePunctuation()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-json-escaped-punctuation");
+        const string taskId = "T-0001";
+        var escapedQuote = string.Concat("D", ":", "\\", "u0022");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        JSON generated from source documentation may contain strings like `{escapedQuote}` after emoticon-like punctuation.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.True(
+            package.ExitCode == 0,
+            $"audit package failed with exit code {package.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{package.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{package.Stderr}");
     }
 
     [Theory]
@@ -10950,6 +11838,49 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageAllowsBackslashWindowsPathsInPreviousVerdictPatchBlocks()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-patch-path");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var reviewerPath = string.Concat("C", ":", "\\", "Users", "\\", "name", "\\", "file");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        BLOCKERS:
+        - B1
+          - Внешний отчёт цитирует синтетический пример Windows path:
+            `{reviewerPath}`
+
+        EVIDENCE_REVIEW:
+        - Fixture evidence.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: [$"{previousVerdictPath} B1 closed: check git-status covers previous verdict patch path omission."]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.True(
+            package.ExitCode == 0,
+            $"audit package failed with exit code {package.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{package.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{package.Stderr}");
+        var zipPath = fixture.ZipPath(taskId);
+        Assert.Contains(reviewerPath, ReadZipEntryText(zipPath, $"{taskId}.patch"), StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-previous-verdict-patch-path");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageAllowsPlaceholderSecretValuesInPreviousVerdicts()
     {
@@ -11011,6 +11942,24 @@ public sealed class RepositoryBuildToolTests
         var redactedConcreteValue = TokenSecretAssignment(string.Concat("<redacted> concrete-value или ", "token", "=<non-placeholder> concrete-value, и убедиться, что packaging/verify завершается с E2D-BUILD-AUDIT-SECRET-DETECTED. Положительный тест с одиночным ", "token", "=<non-placeholder> может остаться, если проект осознанно считает это redacted placeholder."));
         var r60ReviewerExample = TokenSecretAssignment("<redacted> concrete-secret additional-value проходит через тот же путь, что и точная reviewer-фраза.");
         var r60ReviewerVerification = TokenSecretAssignment("<redacted> concrete-secret additional-value или аналогичную строку с reviewer-префиксом и suffix. Packaging/verify должен отказать с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельный тест должен подтвердить, что точная reviewer-фраза допускается только в previous verdict-файле, если это остаётся частью контракта.");
+        var reviewerPasswordPlaceholder = SecretAssignment(string.Concat("pass", "word"), "pass", separator: ": ");
+        var reviewerPasswordPlaceholderPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` относятся к документационным примерам Godot API, а тестовые Windows paths являются синтетическими fixtures.");
+        var reviewerPasswordPlaceholderAuditPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` присутствует только как историческое упоминание в прошлом verdict report.");
+        var reviewerPasswordPlaceholderScopedPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` присутствует только как историческое упоминание в прошлом verdict report и покрыта заявленной областью `T-0985`.");
+        var reviewerPasswordPlaceholderScopeBoundaryPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` находится в прошлом verdict report и теперь явно ограничена `T-0985`; task-owned files и текущая evidence-поверхность не используют её как реальный секрет.");
+        var reviewerPasswordPlaceholderPreviousVerdictContextPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` находятся только в previous verdict context и покрываются областью `T-0985`.");
+        var reviewerPasswordPlaceholderControlLines = new[]
+        {
+            string.Concat("* Что не так: audit package scanner разрешает bare-секретоподобное значение `", reviewerPasswordPlaceholder, "` в предыдущих verdict-файлах. Это не ограничено полной исторической фразой reviewer-а: в allowlist добавлено само значение `pass`, а проверка previous verdict включает это исключение для всего файла. Тест прямо фиксирует, что строка с `", reviewerPasswordPlaceholder, "` в previous verdict проходит package и verify."),
+            string.Concat("* Почему это важно: текущая объединённая область включает `reviewer-placeholder boundary checks` и secret scanning. Предыдущий verdict-файл всё равно является частью audit ZIP и может быть перенесён в новый пакет. Если сканер разрешает любое `", reviewerPasswordPlaceholder, "` в таком файле, он перестаёт отличать историческую цитату от реального секретного присваивания с тем же значением. Это не просто слабая проверка: тестовая поверхность закрепляет небезопасное поведение как ожидаемое."),
+            string.Concat("* Что исправить: убрать самостоятельное значение `pass` из общего allowlist-а previous verdict placeholders. Если нужно сохранить конкретную историческую reviewer-фразу, исключение должно матчиться по полному контексту строки, конкретному сохранённому verdict-пути и/или устойчивому хэшу известного исторического текста, а не по одному захваченному значению секрета. Добавить отрицательный тест, где standalone `", reviewerPasswordPlaceholder, "` в previous verdict отклоняется, и отдельный положительный тест только для действительно нужной полной исторической фразы."),
+            string.Concat("* Как проверить исправление: запустить targeted тесты для previous verdict placeholder scanner, затем `verify audit-contracts` и локальную упаковку/verify fixture-а с previous verdict, где standalone `", reviewerPasswordPlaceholder, "` должен завершаться `E2D-BUILD-AUDIT-SECRET-DETECTED`."),
+            string.Concat("* `File/symbol`: `repo-after/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`, `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts`, строки 11918-11984; особенно построение `", reviewerPasswordPlaceholder, "` на строках 11930-11935, запись standalone строки в previous verdict на строках 11959-11965 и ожидание успешных package/verify на строках 11972-11983."),
+            string.Concat("* `Evidence`: allowlist содержит bare `pass`; previous verdict-файлы получают `allowPreviousVerdictReviewerPhrases: true`; тест доказывает успешную упаковку и verify для previous verdict с `", reviewerPasswordPlaceholder, "`."),
+            string.Concat("* `Fix`: ограничить exception полным историческим контекстом или убрать его; standalone `", reviewerPasswordPlaceholder, "` должен отклоняться."),
+            string.Concat("* Тесты проверены по полным файлам. `ApiManifestTests.cs` покрывает public runtime surface, stable identifiers, projected enum names, virtual method projection, operators, constants, enum values и keyword escaping в manifest. `RepositoryBuildToolTests.cs` покрывает `api fetch-godot`, bad C# snapshots, unsafe class/member projections, generated class packets, `rawMembers`, Windows path masking, keyword parameter escaping, stale Markdown artifacts, Wiki renderer keyword escaping, audit timeout sidecar, previous verdict placeholder boundaries и path scanner regressions. При этом tests также доказывают blocker B1, потому что закрепляют successful package/verify для previous verdict с `", reviewerPasswordPlaceholder, "`, и не закрывают blocker B2, потому что Wiki renderer static property signature не проверяется."),
+            string.Concat("* Задача остаётся открытой. Несмотря на полные snapshots, синхронизированные generated API artifacts и passing evidence, текущая реализация не проходит приёмку из-за B1 и B2. Для закрытия нужно сузить previous verdict secret-placeholder exception так, чтобы bare `", reviewerPasswordPlaceholder, "` не проходил как безопасный previous verdict placeholder, и исправить reflection-based Wiki/public API renderer так, чтобы static properties рендерились с `public static`. После исправления нужны targeted regression tests и повторный full current-scope audit по новому ZIP.")
+        };
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
         # Audit fixture
 
@@ -11018,6 +11967,10 @@ public sealed class RepositoryBuildToolTests
         """);
         fixture.WriteTextFile(previousVerdictPath, $"""
         VERDICT: NEEDS_FIXES
+
+        BLOCKERS:
+        - B1
+          - Fixture blocker for reviewer placeholder scanner coverage.
 
         External reviewer quoted a neutral placeholder phrase:
         {reviewerPhrase}
@@ -11029,20 +11982,68 @@ public sealed class RepositoryBuildToolTests
         External reviewer quoted a later exact blocker example:
         {r60ReviewerExample}
         {r60ReviewerVerification}
+
+        External reviewer quoted generated documentation password placeholder phrases:
+        {reviewerPasswordPlaceholderPhrase}
+        {reviewerPasswordPlaceholderAuditPhrase}
+        {reviewerPasswordPlaceholderScopedPhrase}
+        {reviewerPasswordPlaceholderScopeBoundaryPhrase}
+        {reviewerPasswordPlaceholderPreviousVerdictContextPhrase}
+
+        External reviewer quoted control audit blocker lines:
+        {string.Join(Environment.NewLine, reviewerPasswordPlaceholderControlLines)}
         """);
         var configPath = fixture.WriteConfig(
             taskId,
             previousVerdictChain: [previousVerdictPath],
-            blockerClosureList: ["Fixture closure: check git-status covers reviewer placeholder phrases."]);
+            blockerClosureList: [$"{previousVerdictPath} B1 closed: check git-status covers reviewer placeholder phrases."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        Assert.True(
+            package.ExitCode == 0,
+            $"audit package failed with exit code {package.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{package.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{package.Stderr}");
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-reviewer-placeholder");
         var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
 
-        Assert.Equal(0, verify.ExitCode);
+        Assert.True(
+            verify.ExitCode == 0,
+            $"audit package verify failed with exit code {verify.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{verify.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{verify.Stderr}");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsReviewerPasswordPlaceholderInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-password-placeholder");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var reviewerPasswordPlaceholder = SecretAssignment(string.Concat("pass", "word"), "pass", separator: ": ");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        BLOCKERS:
+        - B1
+          - Fixture blocker for reviewer password placeholder scanner coverage.
+
+        External reviewer quoted an unsafe bare password placeholder:
+        {reviewerPasswordPlaceholder}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: [$"{previousVerdictPath} B1 closed: check git-status reaches reviewer password placeholder scan."]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
     }
 
     [Fact]
@@ -11077,6 +12078,41 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-password-placeholder-suffix");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var reviewerPasswordPlaceholder = SecretAssignment(string.Concat("pass", "word"), "pass", separator: ": ");
+        var secretSuffix = TokenSecretAssignment("arbitrary-reviewer-secret-value");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        BLOCKERS:
+        - B1
+          - Fixture blocker for reviewer password suffix scanner coverage.
+
+        External reviewer quoted an unsafe password placeholder suffix:
+        `{reviewerPasswordPlaceholder}` {secretSuffix}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: [$"{previousVerdictPath} B1 closed: check git-status reaches reviewer password suffix scan."]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsReviewerPlaceholderPhraseInTaskOwnedFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-reviewer-placeholder");
@@ -11087,6 +12123,31 @@ public sealed class RepositoryBuildToolTests
 
         Task-owned files must not use previous-verdict reviewer phrase exceptions:
         {reviewerPhrase}
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-reviewer-password-placeholder");
+        const string taskId = "T-0001";
+        var reviewerPasswordPlaceholder = SecretAssignment(string.Concat("pass", "word"), "pass", separator: ": ");
+        var reviewerPasswordPlaceholderPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` относятся к документационным примерам Godot API, а тестовые Windows paths являются синтетическими fixtures.");
+        var reviewerPasswordPlaceholderAuditPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` присутствует только как историческое упоминание в прошлом verdict report.");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        Task-owned files must not use previous-verdict reviewer password placeholder exceptions:
+        {reviewerPasswordPlaceholder}
+        {reviewerPasswordPlaceholderPhrase}
+        {reviewerPasswordPlaceholderAuditPhrase}
         """);
         var configPath = fixture.WriteConfig(taskId);
 
@@ -14778,6 +15839,488 @@ public sealed class RepositoryBuildToolTests
         return workspace;
     }
 
+    private static TemporaryDirectory CreateApiMatrixFixture(string name)
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        return workspace;
+    }
+
+    private static void WriteGodotApiSourceFixture(string root, string relativeRoot)
+    {
+        WriteText(root, $"{relativeRoot}/doc/classes/Texture2D.xml", """
+        <class name="Texture2D" inherits="Resource">
+          <brief_description>Fixture texture type.</brief_description>
+          <constructors>
+            <constructor name="Texture2D">
+              <return type="Texture2D" />
+              <description>Creates a texture.</description>
+            </constructor>
+          </constructors>
+          <methods>
+            <method name="_draw" qualifiers="virtual">
+              <return type="void" />
+              <description>Virtual draw callback.</description>
+            </method>
+            <method name="draw">
+              <return type="void" />
+              <description>Draws the texture.</description>
+            </method>
+            <method name="_draw_rect" qualifiers="virtual">
+              <return type="void" />
+              <param index="0" name="rect" type="Rect2" />
+              <description>Virtual rectangle draw callback.</description>
+            </method>
+            <method name="draw_rect">
+              <return type="void" />
+              <param index="0" name="rect" type="Rect2" />
+              <description>Draws a rectangle.</description>
+            </method>
+          </methods>
+          <members>
+            <member name="width" type="int" default="0">Texture width.</member>
+          </members>
+          <signals>
+            <signal name="changed">
+              <description>Emitted when changed.</description>
+            </signal>
+          </signals>
+          <constants>
+            <constant name="FLAGS_DEFAULT" value="7" enum="Flags">Default flags.</constant>
+          </constants>
+          <operators>
+            <operator name="operator *">
+              <return type="Texture2D" />
+              <param index="0" name="right" type="float" />
+              <description>Scales the texture.</description>
+            </operator>
+          </operators>
+        </class>
+        """);
+        WriteText(root, $"{relativeRoot}/doc/classes/Vector2.xml", """
+        <class name="Vector2">
+          <constructors>
+            <constructor name="Vector2">
+              <return type="Vector2" />
+            </constructor>
+          </constructors>
+          <operators>
+            <operator name="operator +">
+              <return type="Vector2" />
+              <param index="0" name="right" type="Vector2" />
+            </operator>
+          </operators>
+        </class>
+        """);
+        WriteText(root, $"{relativeRoot}/csharp_api.json", """
+        {
+          "baseline": "4.7-stable",
+          "classes": [
+            {
+              "name": "Texture2D",
+              "csharpName": "Texture2D",
+              "members": [
+                {
+                  "godotName": "Texture2D",
+                  "name": "Texture2D",
+                  "kind": "Constructor",
+                  "signature": "public Texture2D()",
+                  "parameters": []
+                },
+                {
+                  "godotName": "_draw",
+                  "name": "_Draw",
+                  "kind": "Method",
+                  "signature": "public void _Draw()",
+                  "parameters": []
+                },
+                {
+                  "godotName": "draw",
+                  "name": "Draw",
+                  "kind": "Method",
+                  "signature": "public void Draw()",
+                  "parameters": []
+                },
+                {
+                  "godotName": "_draw_rect",
+                  "name": "_DrawRect",
+                  "kind": "Method",
+                  "signature": "public void _DrawRect(Rect2 rect)",
+                  "parameters": [
+                    {
+                      "name": "rect",
+                      "type": "Rect2"
+                    }
+                  ]
+                },
+                {
+                  "godotName": "draw_rect",
+                  "name": "DrawRect",
+                  "kind": "Method",
+                  "signature": "public void DrawRect(Rect2 rect)",
+                  "parameters": [
+                    {
+                      "name": "rect",
+                      "type": "Rect2"
+                    }
+                  ]
+                },
+                {
+                  "godotName": "width",
+                  "name": "Width",
+                  "kind": "Property",
+                  "signature": "public int Width { get; set; }",
+                  "parameters": []
+                },
+                {
+                  "godotName": "changed",
+                  "name": "Changed",
+                  "kind": "Signal",
+                  "signature": "public event ChangedHandler Changed",
+                  "parameters": []
+                },
+                {
+                  "godotName": "operator *",
+                  "name": "operator *",
+                  "kind": "Operator",
+                  "signature": "public Texture2D operator *(float right)",
+                  "parameters": [
+                    {
+                      "name": "right",
+                      "type": "float"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Vector2",
+              "csharpName": "Vector2",
+              "members": [
+                {
+                  "godotName": "Vector2",
+                  "name": "Vector2",
+                  "kind": "Constructor",
+                  "signature": "public Vector2()",
+                  "parameters": []
+                },
+                {
+                  "godotName": "operator +",
+                  "name": "operator +",
+                  "kind": "Operator",
+                  "signature": "public Vector2 operator +(Vector2 right)",
+                  "parameters": [
+                    {
+                      "name": "right",
+                      "type": "Vector2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        """);
+    }
+
+    private static void WriteElectron2DApiManifestFixture(string root)
+    {
+        WriteText(root, "data/api/electron2d-api-manifest.json", """
+        {
+          "schemaVersion": 1,
+          "manifestVersion": "0.1-preview",
+          "godotBaseline": "4.7-stable",
+          "types": [
+            {
+              "id": "electron2d://api/type/Electron2D.Node",
+              "fullName": "Electron2D.Node",
+              "namespace": "Electron2D",
+              "name": "Node",
+              "kind": "class",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "Node"
+              },
+              "members": [
+                {
+                  "name": "Ready",
+                  "kind": "Method",
+                  "signature": "public System.Void Ready()",
+                  "returnType": "System.Void",
+                  "parameters": [],
+                  "summary": "Called when this node is ready.",
+                  "xmlDocId": "M:Electron2D.Node._Ready"
+                },
+                {
+                  "name": "Process",
+                  "kind": "Method",
+                  "signature": "public System.Void Process(System.Double delta)",
+                  "returnType": "System.Void",
+                  "parameters": [
+                    {
+                      "name": "delta",
+                      "type": "System.Double"
+                    }
+                  ],
+                  "summary": "Called every frame.",
+                  "xmlDocId": "M:Electron2D.Node._Process(System.Double)"
+                },
+                {
+                  "name": "PhysicsProcess",
+                  "kind": "Method",
+                  "signature": "public System.Void PhysicsProcess(System.Double delta)",
+                  "returnType": "System.Void",
+                  "parameters": [
+                    {
+                      "name": "delta",
+                      "type": "System.Double"
+                    }
+                  ],
+                  "summary": "Called every physics tick.",
+                  "xmlDocId": "M:Electron2D.Node._PhysicsProcess(System.Double)"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.CanvasItem",
+              "fullName": "Electron2D.CanvasItem",
+              "namespace": "Electron2D",
+              "name": "CanvasItem",
+              "kind": "class",
+              "baseType": "Electron2D.Node",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "CanvasItem"
+              },
+              "members": [
+                {
+                  "name": "Draw",
+                  "kind": "Method",
+                  "signature": "public System.Void Draw()",
+                  "returnType": "System.Void",
+                  "parameters": [],
+                  "summary": "Called when this canvas item should draw.",
+                  "xmlDocId": "M:Electron2D.CanvasItem._Draw"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.TextureRect",
+              "fullName": "Electron2D.TextureRect",
+              "namespace": "Electron2D",
+              "name": "TextureRect",
+              "kind": "class",
+              "baseType": "Electron2D.CanvasItem",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "TextureRect"
+              },
+              "members": [
+                {
+                  "name": "StretchMode",
+                  "kind": "Property",
+                  "signature": "public Electron2D.TextureRect.StretchMode StretchMode { get; set; }",
+                  "returnType": "Electron2D.TextureRect.StretchMode",
+                  "parameters": [],
+                  "summary": "Gets or sets how the texture is drawn.",
+                  "xmlDocId": "P:Electron2D.TextureRect.StretchMode"
+                },
+                {
+                  "name": "Draw",
+                  "kind": "Method",
+                  "signature": "public System.Void Draw()",
+                  "returnType": "System.Void",
+                  "parameters": [],
+                  "summary": "Draws the texture.",
+                  "xmlDocId": "M:Electron2D.TextureRect._Draw"
+                },
+                {
+                  "name": "ComputeMinimumSize",
+                  "kind": "Method",
+                  "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+                  "returnType": "Electron2D.Vector2",
+                  "parameters": [],
+                  "summary": "Computes the minimum texture rectangle size.",
+                  "xmlDocId": "M:Electron2D.TextureRect._GetMinimumSize"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.TextureRect.StretchMode",
+              "fullName": "Electron2D.TextureRect.StretchMode",
+              "namespace": "Electron2D",
+              "name": "TextureRect.StretchMode",
+              "kind": "enum",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "TextureRect.StretchMode"
+              },
+              "members": [
+                {
+                  "name": "Keep",
+                  "kind": "EnumValue",
+                  "signature": "public const Electron2D.TextureRect.StretchMode Keep",
+                  "returnType": "Electron2D.TextureRect.StretchMode",
+                  "value": "2",
+                  "parameters": [],
+                  "xmlDocId": "F:Electron2D.TextureRect.StretchModeEnum.Keep"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.Vector2",
+              "fullName": "Electron2D.Vector2",
+              "namespace": "Electron2D",
+              "name": "Vector2",
+              "kind": "struct",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "Vector2"
+              },
+              "members": [
+                {
+                  "name": "Zero",
+                  "kind": "Field",
+                  "signature": "public static Electron2D.Vector2 Zero",
+                  "returnType": "Electron2D.Vector2",
+                  "value": "(0, 0)",
+                  "parameters": [],
+                  "summary": "Represents the zero value.",
+                  "xmlDocId": "F:Electron2D.Vector2.Zero"
+                },
+                {
+                  "name": "One",
+                  "kind": "Field",
+                  "signature": "public static Electron2D.Vector2 One",
+                  "returnType": "Electron2D.Vector2",
+                  "value": "(1, 1)",
+                  "parameters": [],
+                  "summary": "Represents the one value.",
+                  "xmlDocId": "F:Electron2D.Vector2.One"
+                },
+                {
+                  "name": "op_Addition",
+                  "kind": "Method",
+                  "signature": "public static Electron2D.Vector2 op_Addition(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+                  "returnType": "Electron2D.Vector2",
+                  "parameters": [
+                    {
+                      "name": "left",
+                      "type": "Electron2D.Vector2"
+                    },
+                    {
+                      "name": "right",
+                      "type": "Electron2D.Vector2"
+                    }
+                  ],
+                  "summary": "Applies the addition operator.",
+                  "xmlDocId": "M:Electron2D.Vector2.op_Addition(Electron2D.Vector2,Electron2D.Vector2)"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.Color",
+              "fullName": "Electron2D.Color",
+              "namespace": "Electron2D",
+              "name": "Color",
+              "kind": "struct",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "Color"
+              },
+              "members": [
+                {
+                  "name": "White",
+                  "kind": "Field",
+                  "signature": "public static Electron2D.Color White",
+                  "returnType": "Electron2D.Color",
+                  "value": "(1, 1, 1, 1)",
+                  "parameters": [],
+                  "summary": "Represents the white value.",
+                  "xmlDocId": "F:Electron2D.Color.White"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.Mathf",
+              "fullName": "Electron2D.Mathf",
+              "namespace": "Electron2D",
+              "name": "Mathf",
+              "kind": "class",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "Mathf"
+              },
+              "members": [
+                {
+                  "name": "Epsilon",
+                  "kind": "Field",
+                  "signature": "public const System.Single Epsilon",
+                  "returnType": "System.Single",
+                  "value": "1E-05",
+                  "parameters": [],
+                  "summary": "Represents the tolerance value.",
+                  "xmlDocId": "F:Electron2D.Mathf.Epsilon"
+                },
+                {
+                  "name": "Pi",
+                  "kind": "Field",
+                  "signature": "public const System.Single Pi",
+                  "returnType": "System.Single",
+                  "value": "3.1415927",
+                  "parameters": [],
+                  "summary": "Represents the pi value.",
+                  "xmlDocId": "F:Electron2D.Mathf.Pi"
+                },
+                {
+                  "name": "Tau",
+                  "kind": "Field",
+                  "signature": "public const System.Single Tau",
+                  "returnType": "System.Single",
+                  "value": "6.2831855",
+                  "parameters": [],
+                  "summary": "Represents the tau value.",
+                  "xmlDocId": "F:Electron2D.Mathf.Tau"
+                }
+              ]
+            },
+            {
+              "id": "electron2d://api/type/Electron2D.ResourceUid",
+              "fullName": "Electron2D.ResourceUid",
+              "namespace": "Electron2D",
+              "name": "ResourceUid",
+              "kind": "class",
+              "interfaces": [],
+              "profile": {
+                "godotReference": "ResourceUid"
+              },
+              "members": [
+                {
+                  "name": "InvalidId",
+                  "kind": "Field",
+                  "signature": "public const System.Int64 InvalidId",
+                  "returnType": "System.Int64",
+                  "value": "-1",
+                  "parameters": [],
+                  "summary": "Represents an invalid resource identifier.",
+                  "xmlDocId": "F:Electron2D.ResourceUid.InvalidId"
+                }
+              ]
+            }
+          ]
+        }
+        """);
+    }
+
+    private static string GodotClassXml(string name)
+    {
+        return $$"""
+        <class name="{{name}}">
+          <brief_description>{{name}} fixture.</brief_description>
+        </class>
+        """;
+    }
+
     private static TemporaryDirectory CreateApiWikiFixture(string name)
     {
         var workspace = TemporaryDirectory.Create(name);
@@ -16143,6 +17686,18 @@ public sealed class RepositoryBuildToolTests
         return File.ReadAllText(Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar)), Encoding.UTF8)
             .Replace("\r\n", "\n")
             .Replace('\r', '\n');
+    }
+
+    private static void AssertConstantValue(IEnumerable<JsonElement> constants, string name, string expectedValue, string? expectedKind = null)
+    {
+        var constant = constants.Single(member => member.GetProperty("name").GetString() == name);
+        if (expectedKind is not null)
+        {
+            Assert.Equal(expectedKind, constant.GetProperty("kind").GetString());
+        }
+
+        Assert.True(constant.TryGetProperty("value", out var value), $"Constant {name} must include a value.");
+        Assert.Equal(expectedValue, value.GetString());
     }
 
     private static void AssertShardContract(string root, JsonElement shards, string relativePath, string kind)

@@ -1,0 +1,692 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Time",
+    "namespace": "Godot",
+    "fullName": "Godot.Time",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "Time",
+    "documentationPath": "doc/classes/Time.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_time.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetDateDictFromSystem",
+      "kind": "Method",
+      "signature": "public Dictionary GetDateDictFromSystem(bool utc)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current date as a dictionary of keys: [code]year[/code], [code]month[/code], [code]day[/code], and [code]weekday[/code]. The returned values are in the system\u0027s local time when [param utc] is [code]false[/code], otherwise they are in UTC.",
+      "godotName": "get_date_dict_from_system",
+      "xmlDocId": "M:Godot.Time.GetDateDictFromSystem(bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDateDictFromUnixTime",
+      "kind": "Method",
+      "signature": "public Dictionary GetDateDictFromUnixTime(int unixTimeVal)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given Unix timestamp to a dictionary of keys: [code]year[/code], [code]month[/code], [code]day[/code], and [code]weekday[/code].",
+      "godotName": "get_date_dict_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetDateDictFromUnixTime(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDateStringFromSystem",
+      "kind": "Method",
+      "signature": "public String GetDateStringFromSystem(bool utc)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current date as an ISO 8601 date string (YYYY-MM-DD). The returned values are in the system\u0027s local time when [param utc] is [code]false[/code], otherwise they are in UTC.",
+      "godotName": "get_date_string_from_system",
+      "xmlDocId": "M:Godot.Time.GetDateStringFromSystem(bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDateStringFromUnixTime",
+      "kind": "Method",
+      "signature": "public String GetDateStringFromUnixTime(int unixTimeVal)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given Unix timestamp to an ISO 8601 date string (YYYY-MM-DD).",
+      "godotName": "get_date_string_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetDateStringFromUnixTime(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeDictFromDatetimeString",
+      "kind": "Method",
+      "signature": "public Dictionary GetDatetimeDictFromDatetimeString(String datetime, bool weekday)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "datetime",
+          "type": "String"
+        },
+        {
+          "name": "weekday",
+          "type": "bool"
+        }
+      ],
+      "summary": "Converts the given ISO 8601 date and time string (YYYY-MM-DDTHH:MM:SS) to a dictionary of keys: [code]year[/code], [code]month[/code], [code]day[/code], [code skip-lint]weekday[/code], [code]hour[/code], [code]minute[/code], and [code]second[/code]. If [param weekday] is [code]false[/code], then the [code skip-lint]weekday[/code] entry is excluded (the calculation is relatively expensive). [b]Note:[/b] Any decimal fraction in the time string will be ignored silently.",
+      "godotName": "get_datetime_dict_from_datetime_string",
+      "xmlDocId": "M:Godot.Time.GetDatetimeDictFromDatetimeString(String,bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeDictFromSystem",
+      "kind": "Method",
+      "signature": "public Dictionary GetDatetimeDictFromSystem(bool utc)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current date as a dictionary of keys: [code]year[/code], [code]month[/code], [code]day[/code], [code]weekday[/code], [code]hour[/code], [code]minute[/code], [code]second[/code], and [code]dst[/code] (Daylight Savings Time).",
+      "godotName": "get_datetime_dict_from_system",
+      "xmlDocId": "M:Godot.Time.GetDatetimeDictFromSystem(bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeDictFromUnixTime",
+      "kind": "Method",
+      "signature": "public Dictionary GetDatetimeDictFromUnixTime(int unixTimeVal)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given Unix timestamp to a dictionary of keys: [code]year[/code], [code]month[/code], [code]day[/code], [code]weekday[/code], [code]hour[/code], [code]minute[/code], and [code]second[/code]. The returned Dictionary\u0027s values will be the same as the [method get_datetime_dict_from_system] if the Unix timestamp is the current time, with the exception of Daylight Savings Time as it cannot be determined from the epoch.",
+      "godotName": "get_datetime_dict_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetDatetimeDictFromUnixTime(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeStringFromDatetimeDict",
+      "kind": "Method",
+      "signature": "public String GetDatetimeStringFromDatetimeDict(Dictionary datetime, bool useSpace)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "datetime",
+          "type": "Dictionary"
+        },
+        {
+          "name": "use_space",
+          "type": "bool"
+        }
+      ],
+      "summary": "Converts the given dictionary of keys to an ISO 8601 date and time string (YYYY-MM-DDTHH:MM:SS). The given dictionary can be populated with the following keys: [code]year[/code], [code]month[/code], [code]day[/code], [code]hour[/code], [code]minute[/code], and [code]second[/code]. Any other entries (including [code]dst[/code]) are ignored. If the dictionary is empty, [code]0[/code] is returned. If some keys are omitted, they default to the equivalent values for the Unix epoch timestamp 0 (1970-01-01 at 00:00:00). If [param use_space] is [code]true[/code], the date and time bits are separated by an empty space character instead of the letter T.",
+      "godotName": "get_datetime_string_from_datetime_dict",
+      "xmlDocId": "M:Godot.Time.GetDatetimeStringFromDatetimeDict(Dictionary,bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeStringFromSystem",
+      "kind": "Method",
+      "signature": "public String GetDatetimeStringFromSystem(bool utc, bool useSpace)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "use_space",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current date and time as an ISO 8601 date and time string (YYYY-MM-DDTHH:MM:SS). The returned values are in the system\u0027s local time when [param utc] is [code]false[/code], otherwise they are in UTC. If [param use_space] is [code]true[/code], the date and time bits are separated by an empty space character instead of the letter T.",
+      "godotName": "get_datetime_string_from_system",
+      "xmlDocId": "M:Godot.Time.GetDatetimeStringFromSystem(bool,bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetDatetimeStringFromUnixTime",
+      "kind": "Method",
+      "signature": "public String GetDatetimeStringFromUnixTime(int unixTimeVal, bool useSpace)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        },
+        {
+          "name": "use_space",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Converts the given Unix timestamp to an ISO 8601 date and time string (YYYY-MM-DDTHH:MM:SS). If [param use_space] is [code]true[/code], the date and time bits are separated by an empty space character instead of the letter T.",
+      "godotName": "get_datetime_string_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetDatetimeStringFromUnixTime(int,bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetOffsetStringFromOffsetMinutes",
+      "kind": "Method",
+      "signature": "public String GetOffsetStringFromOffsetMinutes(int offsetMinutes)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "offset_minutes",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given timezone offset in minutes to a timezone offset string. For example, -480 returns \u0022-08:00\u0022, 345 returns \u0022\u002B05:45\u0022, and 0 returns \u0022\u002B00:00\u0022.",
+      "godotName": "get_offset_string_from_offset_minutes",
+      "xmlDocId": "M:Godot.Time.GetOffsetStringFromOffsetMinutes(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTicksMsec",
+      "kind": "Method",
+      "signature": "public int GetTicksMsec()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the amount of time passed in milliseconds since the engine started. Will always be positive or 0 and uses a 64-bit value (it will wrap after roughly 500 million years).",
+      "godotName": "get_ticks_msec",
+      "xmlDocId": "M:Godot.Time.GetTicksMsec",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTicksUsec",
+      "kind": "Method",
+      "signature": "public int GetTicksUsec()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the amount of time passed in microseconds since the engine started. Will always be positive or 0 and uses a 64-bit value (it will wrap after roughly half a million years).",
+      "godotName": "get_ticks_usec",
+      "xmlDocId": "M:Godot.Time.GetTicksUsec",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTimeDictFromSystem",
+      "kind": "Method",
+      "signature": "public Dictionary GetTimeDictFromSystem(bool utc)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current time as a dictionary of keys: [code]hour[/code], [code]minute[/code], and [code]second[/code]. The returned values are in the system\u0027s local time when [param utc] is [code]false[/code], otherwise they are in UTC.",
+      "godotName": "get_time_dict_from_system",
+      "xmlDocId": "M:Godot.Time.GetTimeDictFromSystem(bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTimeDictFromUnixTime",
+      "kind": "Method",
+      "signature": "public Dictionary GetTimeDictFromUnixTime(int unixTimeVal)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given time to a dictionary of keys: [code]hour[/code], [code]minute[/code], and [code]second[/code].",
+      "godotName": "get_time_dict_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetTimeDictFromUnixTime(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTimeStringFromSystem",
+      "kind": "Method",
+      "signature": "public String GetTimeStringFromSystem(bool utc)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "utc",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the current time as an ISO 8601 time string (HH:MM:SS). The returned values are in the system\u0027s local time when [param utc] is [code]false[/code], otherwise they are in UTC.",
+      "godotName": "get_time_string_from_system",
+      "xmlDocId": "M:Godot.Time.GetTimeStringFromSystem(bool)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTimeStringFromUnixTime",
+      "kind": "Method",
+      "signature": "public String GetTimeStringFromUnixTime(int unixTimeVal)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "unix_time_val",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given Unix timestamp to an ISO 8601 time string (HH:MM:SS).",
+      "godotName": "get_time_string_from_unix_time",
+      "xmlDocId": "M:Godot.Time.GetTimeStringFromUnixTime(int)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetTimeZoneFromSystem",
+      "kind": "Method",
+      "signature": "public Dictionary GetTimeZoneFromSystem()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns the current time zone as a dictionary of keys: [code]bias[/code] and [code]name[/code]. - [code]bias[/code] is the offset from UTC in minutes, since not all time zones are multiples of an hour from UTC. - [code]name[/code] is the localized name of the time zone, according to the OS locale settings of the current user.",
+      "godotName": "get_time_zone_from_system",
+      "xmlDocId": "M:Godot.Time.GetTimeZoneFromSystem",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetUnixTimeFromDatetimeDict",
+      "kind": "Method",
+      "signature": "public int GetUnixTimeFromDatetimeDict(Dictionary datetime)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "datetime",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Converts a dictionary of time values to a Unix timestamp. The given dictionary can be populated with the following keys: [code]year[/code], [code]month[/code], [code]day[/code], [code]hour[/code], [code]minute[/code], and [code]second[/code]. Any other entries (including [code]dst[/code]) are ignored. If the dictionary is empty, [code]0[/code] is returned. If some keys are omitted, they default to the equivalent values for the Unix epoch timestamp 0 (1970-01-01 at 00:00:00). You can pass the output from [method get_datetime_dict_from_unix_time] directly into this function and get the same as what was put in. [b]Note:[/b] Unix timestamps are often in UTC. This method does not do any timezone conversion, so the timestamp will be in the same timezone as the given datetime dictionary.",
+      "godotName": "get_unix_time_from_datetime_dict",
+      "xmlDocId": "M:Godot.Time.GetUnixTimeFromDatetimeDict(Dictionary)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetUnixTimeFromDatetimeString",
+      "kind": "Method",
+      "signature": "public int GetUnixTimeFromDatetimeString(String datetime)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "datetime",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts the given ISO 8601 date and/or time string to a Unix timestamp. The string can contain a date only, a time only, or both. [b]Note:[/b] Unix timestamps are often in UTC. This method does not do any timezone conversion, so the timestamp will be in the same timezone as the given datetime string. [b]Note:[/b] Any decimal fraction in the time string will be ignored silently.",
+      "godotName": "get_unix_time_from_datetime_string",
+      "xmlDocId": "M:Godot.Time.GetUnixTimeFromDatetimeString(String)",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "GetUnixTimeFromSystem",
+      "kind": "Method",
+      "signature": "public float GetUnixTimeFromSystem()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the current Unix timestamp in seconds based on the system time in UTC. This method is implemented by the operating system and always returns the time in UTC. The Unix timestamp is the number of seconds passed since 1970-01-01 at 00:00:00, the [url=https://en.wikipedia.org/wiki/Unix_time]Unix epoch[/url]. [b]Note:[/b] Unlike other methods that use integer timestamps, this method returns the timestamp as a [float] for sub-second precision.",
+      "godotName": "get_unix_time_from_system",
+      "xmlDocId": "M:Godot.Time.GetUnixTimeFromSystem",
+      "sourcePath": "doc/classes/Time.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Month",
+      "values": [
+        {
+          "name": "MONTH_APRIL",
+          "value": "4",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of April, represented numerically as [code]04[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_AUGUST",
+          "value": "8",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of August, represented numerically as [code]08[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_DECEMBER",
+          "value": "12",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of December, represented numerically as [code]12[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_FEBRUARY",
+          "value": "2",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of February, represented numerically as [code]02[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_JANUARY",
+          "value": "1",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of January, represented numerically as [code]01[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_JULY",
+          "value": "7",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of July, represented numerically as [code]07[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_JUNE",
+          "value": "6",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of June, represented numerically as [code]06[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_MARCH",
+          "value": "3",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of March, represented numerically as [code]03[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_MAY",
+          "value": "5",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of May, represented numerically as [code]05[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_NOVEMBER",
+          "value": "11",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of November, represented numerically as [code]11[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_OCTOBER",
+          "value": "10",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of October, represented numerically as [code]10[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "MONTH_SEPTEMBER",
+          "value": "9",
+          "enum": "Month",
+          "kind": "EnumValue",
+          "summary": "The month of September, represented numerically as [code]09[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        }
+      ]
+    },
+    {
+      "name": "Weekday",
+      "values": [
+        {
+          "name": "WEEKDAY_FRIDAY",
+          "value": "5",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Friday, represented numerically as [code]5[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_MONDAY",
+          "value": "1",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Monday, represented numerically as [code]1[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_SATURDAY",
+          "value": "6",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Saturday, represented numerically as [code]6[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_SUNDAY",
+          "value": "0",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Sunday, represented numerically as [code]0[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_THURSDAY",
+          "value": "4",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Thursday, represented numerically as [code]4[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_TUESDAY",
+          "value": "2",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Tuesday, represented numerically as [code]2[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        },
+        {
+          "name": "WEEKDAY_WEDNESDAY",
+          "value": "3",
+          "enum": "Weekday",
+          "kind": "EnumValue",
+          "summary": "The day of the week Wednesday, represented numerically as [code]3[/code].",
+          "sourcePath": "doc/classes/Time.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MONTH_JANUARY",
+      "value": "1",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of January, represented numerically as [code]01[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_FEBRUARY",
+      "value": "2",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of February, represented numerically as [code]02[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_MARCH",
+      "value": "3",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of March, represented numerically as [code]03[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_APRIL",
+      "value": "4",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of April, represented numerically as [code]04[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_MAY",
+      "value": "5",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of May, represented numerically as [code]05[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_JUNE",
+      "value": "6",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of June, represented numerically as [code]06[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_JULY",
+      "value": "7",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of July, represented numerically as [code]07[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_AUGUST",
+      "value": "8",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of August, represented numerically as [code]08[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_SEPTEMBER",
+      "value": "9",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of September, represented numerically as [code]09[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_OCTOBER",
+      "value": "10",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of October, represented numerically as [code]10[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_NOVEMBER",
+      "value": "11",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of November, represented numerically as [code]11[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "MONTH_DECEMBER",
+      "value": "12",
+      "enum": "Month",
+      "kind": "EnumValue",
+      "summary": "The month of December, represented numerically as [code]12[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_SUNDAY",
+      "value": "0",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Sunday, represented numerically as [code]0[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_MONDAY",
+      "value": "1",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Monday, represented numerically as [code]1[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_TUESDAY",
+      "value": "2",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Tuesday, represented numerically as [code]2[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_WEDNESDAY",
+      "value": "3",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Wednesday, represented numerically as [code]3[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_THURSDAY",
+      "value": "4",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Thursday, represented numerically as [code]4[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_FRIDAY",
+      "value": "5",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Friday, represented numerically as [code]5[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    },
+    {
+      "name": "WEEKDAY_SATURDAY",
+      "value": "6",
+      "enum": "Weekday",
+      "kind": "EnumValue",
+      "summary": "The day of the week Saturday, represented numerically as [code]6[/code].",
+      "sourcePath": "doc/classes/Time.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Time.xml",
+      "sha256": "e54a2584f5fc00094809bb856949cd76b818d3e084b7c5b8adb31b43ad16825b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

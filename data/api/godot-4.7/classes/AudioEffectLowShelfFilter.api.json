@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectLowShelfFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectLowShelfFilter",
+    "kind": "class",
+    "baseType": "AudioEffectFilter",
+    "interfaces": [],
+    "godotReference": "AudioEffectLowShelfFilter",
+    "documentationPath": "doc/classes/AudioEffectLowShelfFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectlowshelffilter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectLowShelfFilter.xml",
+      "sha256": "f3d4e4431befb9224a9dc77af5a054fc370c31018246e4a00e2f9ea41f441125"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

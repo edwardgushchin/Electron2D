@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CapsuleShape2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CapsuleShape2D",
+    "kind": "class",
+    "baseType": "Electron2D.Shape2D",
+    "interfaces": [],
+    "godotReference": "CapsuleShape2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CapsuleShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CapsuleShape2D()",
+      "parameters": [],
+      "summary": "Creates a capsule shape with Electron2D preview defaults.",
+      "xmlDocId": "M:Electron2D.CapsuleShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CapsuleShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CapsuleShape2D()",
+      "parameters": [],
+      "summary": "Creates a capsule shape with Electron2D preview defaults.",
+      "xmlDocId": "M:Electron2D.CapsuleShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public System.Single Height { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the full capsule height.",
+      "xmlDocId": "P:Electron2D.CapsuleShape2D.Height",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public System.Single Radius { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the capsule radius.",
+      "xmlDocId": "P:Electron2D.CapsuleShape2D.Radius",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

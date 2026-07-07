@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsTestMotionParameters2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsTestMotionParameters2D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PhysicsTestMotionParameters2D",
+    "documentationPath": "doc/classes/PhysicsTestMotionParameters2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicstestmotionparameters2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CollideSeparationRay",
+      "kind": "Property",
+      "signature": "public bool CollideSeparationRay { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], shapes of type [constant PhysicsServer2D.SHAPE_SEPARATION_RAY] are used to detect collisions and can stop the motion. Can be useful when snapping to the ground. If set to [code]false[/code], shapes of type [constant PhysicsServer2D.SHAPE_SEPARATION_RAY] are only used for separation when overlapping with other bodies. That\u0027s the main use for separation ray shapes.",
+      "defaultValue": "false",
+      "godotName": "collide_separation_ray",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.CollideSeparationRay",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "ExcludeBodies",
+      "kind": "Property",
+      "signature": "public RID[] ExcludeBodies { get; set; }",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "Optional array of body [RID] to exclude from collision. Use [method CollisionObject2D.get_rid] to get the [RID] associated with a [CollisionObject2D]-derived node.",
+      "defaultValue": "[]",
+      "godotName": "exclude_bodies",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.ExcludeBodies",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "ExcludeObjects",
+      "kind": "Property",
+      "signature": "public int[] ExcludeObjects { get; set; }",
+      "returnType": "int[]",
+      "parameters": [],
+      "summary": "Optional array of object unique instance ID to exclude from collision. See [method Object.get_instance_id].",
+      "defaultValue": "[]",
+      "godotName": "exclude_objects",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.ExcludeObjects",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "From",
+      "kind": "Property",
+      "signature": "public Transform2D From { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Transform in global space where the motion should start. Usually set to [member Node2D.global_transform] for the current body\u0027s transform.",
+      "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)",
+      "godotName": "from",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.From",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "Margin",
+      "kind": "Property",
+      "signature": "public float Margin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increases the size of the shapes involved in the collision detection.",
+      "defaultValue": "0.08",
+      "godotName": "margin",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.Margin",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "Motion",
+      "kind": "Property",
+      "signature": "public Vector2 Motion { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Motion vector to define the length and direction of the motion to test.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "motion",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.Motion",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    },
+    {
+      "name": "RecoveryAsCollision",
+      "kind": "Property",
+      "signature": "public bool RecoveryAsCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], any depenetration from the recovery phase is reported as a collision; this is used e.g. by [CharacterBody2D] for improving floor detection during floor snapping. If set to [code]false[/code], only collisions resulting from the motion are reported, which is generally the desired behavior.",
+      "defaultValue": "false",
+      "godotName": "recovery_as_collision",
+      "xmlDocId": "P:Godot.PhysicsTestMotionParameters2D.RecoveryAsCollision",
+      "sourcePath": "doc/classes/PhysicsTestMotionParameters2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsTestMotionParameters2D.xml",
+      "sha256": "38b991228698c599f58dc7521cd75d09233cdc220e5fd0d5e44df614c99a7107"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

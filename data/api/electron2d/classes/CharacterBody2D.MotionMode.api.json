@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CharacterBody2D.MotionMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CharacterBody2D.MotionMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "CharacterBody2D.MotionMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Floating",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.CharacterBody2D.MotionMode Floating",
+      "returnType": "Electron2D.CharacterBody2D.MotionMode",
+      "parameters": [],
+      "summary": "Classifies all slide collisions as walls.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.CharacterBody2D.MotionModeEnum.Floating",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Grounded",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.CharacterBody2D.MotionMode Grounded",
+      "returnType": "Electron2D.CharacterBody2D.MotionMode",
+      "parameters": [],
+      "summary": "Classifies collisions as floor, wall or ceiling using \u0060Electron2D.CharacterBody2D.UpDirection\u0060.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.CharacterBody2D.MotionModeEnum.Grounded",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Floating",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Classifies all slide collisions as walls.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Grounded",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Classifies collisions as floor, wall or ceiling using \u0060Electron2D.CharacterBody2D.UpDirection\u0060.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

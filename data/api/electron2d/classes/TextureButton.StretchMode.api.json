@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureButton.StretchMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TextureButton.StretchMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "TextureButton.StretchMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Keep",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode Keep",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Keeps the texture size at the top-left corner.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.Keep",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspect",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode KeepAspect",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Fits the texture inside the control while preserving aspect ratio.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.KeepAspect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspectCentered",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode KeepAspectCentered",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Fits the texture inside the control and centers it.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.KeepAspectCentered",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspectCovered",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode KeepAspectCovered",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Covers the control while preserving aspect ratio.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.KeepAspectCovered",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepCentered",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode KeepCentered",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Keeps the texture size and centers it.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.KeepCentered",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scale",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode Scale",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Scales the texture to the control rectangle.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.Scale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tile",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureButton.StretchMode Tile",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Draws the texture in the control rectangle.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.TextureButton.StretchModeEnum.Tile",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Keep",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Keeps the texture size at the top-left corner.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspect",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Fits the texture inside the control while preserving aspect ratio.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspectCentered",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Fits the texture inside the control and centers it.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepAspectCovered",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Covers the control while preserving aspect ratio.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepCentered",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Keeps the texture size and centers it.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scale",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Scales the texture to the control rectangle.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tile",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Draws the texture in the control rectangle.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

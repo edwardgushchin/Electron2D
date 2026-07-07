@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MissingResource",
+    "namespace": "Godot",
+    "fullName": "Godot.MissingResource",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "MissingResource",
+    "documentationPath": "doc/classes/MissingResource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_missingresource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OriginalClass",
+      "kind": "Property",
+      "signature": "public String OriginalClass { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the class this resource was supposed to be (see [method Object.get_class]).",
+      "godotName": "original_class",
+      "xmlDocId": "P:Godot.MissingResource.OriginalClass",
+      "sourcePath": "doc/classes/MissingResource.xml"
+    },
+    {
+      "name": "RecordingProperties",
+      "kind": "Property",
+      "signature": "public bool RecordingProperties { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], allows new properties to be added on top of the existing ones with [method Object.set].",
+      "godotName": "recording_properties",
+      "xmlDocId": "P:Godot.MissingResource.RecordingProperties",
+      "sourcePath": "doc/classes/MissingResource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MissingResource.xml",
+      "sha256": "8c81dfb8f082e8bcfff87d94b7976636fb029d5422337e20f0472570a5a884c8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRIPBinding",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRIPBinding",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRIPBinding",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRIPBinding.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxripbinding.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPath",
+      "kind": "Method",
+      "signature": "public void AddPath(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Add an input/output path to this binding.",
+      "godotName": "add_path",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.AddPath(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "GetBindingModifier",
+      "kind": "Method",
+      "signature": "public OpenXRActionBindingModifier GetBindingModifier(int index)",
+      "returnType": "OpenXRActionBindingModifier",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Get the [OpenXRBindingModifier] at this index.",
+      "godotName": "get_binding_modifier",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.GetBindingModifier(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "GetBindingModifierCount",
+      "kind": "Method",
+      "signature": "public int GetBindingModifierCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Get the number of binding modifiers for this binding.",
+      "godotName": "get_binding_modifier_count",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.GetBindingModifierCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "GetPathCount",
+      "kind": "Method",
+      "signature": "public int GetPathCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Get the number of input/output paths in this binding.",
+      "godotName": "get_path_count",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.GetPathCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "HasPath",
+      "kind": "Method",
+      "signature": "public bool HasPath(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this input/output path is part of this binding.",
+      "godotName": "has_path",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.HasPath(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "RemovePath",
+      "kind": "Method",
+      "signature": "public void RemovePath(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes this input/output path from this binding.",
+      "godotName": "remove_path",
+      "xmlDocId": "M:Godot.OpenXRIPBinding.RemovePath(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "Action",
+      "kind": "Property",
+      "signature": "public OpenXRAction Action { get; set; }",
+      "returnType": "OpenXRAction",
+      "parameters": [],
+      "summary": "[OpenXRAction] that is bound to [member binding_path].",
+      "godotName": "action",
+      "xmlDocId": "P:Godot.OpenXRIPBinding.Action",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "BindingModifiers",
+      "kind": "Property",
+      "signature": "public Array BindingModifiers { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Binding modifiers for this binding.",
+      "defaultValue": "[]",
+      "godotName": "binding_modifiers",
+      "xmlDocId": "P:Godot.OpenXRIPBinding.BindingModifiers",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "BindingPath",
+      "kind": "Property",
+      "signature": "public String BindingPath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Binding path that defines the input or output bound to [member action]. [b]Note:[/b] Binding paths are suggestions, an XR runtime may choose to bind the action to a different input or output emulating this input or output.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "binding_path",
+      "xmlDocId": "P:Godot.OpenXRIPBinding.BindingPath",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    },
+    {
+      "name": "Paths",
+      "kind": "Property",
+      "signature": "public PackedStringArray Paths { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Paths that define the inputs or outputs bound on the device.",
+      "godotName": "paths",
+      "xmlDocId": "P:Godot.OpenXRIPBinding.Paths",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRIPBinding.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRIPBinding.xml",
+      "sha256": "fa428c63afda778792f9f9eb45742de617039e2d6bcd8d80c416771c9e3e1590"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

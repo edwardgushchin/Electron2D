@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeIntParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeIntParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeIntParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeintparameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DefaultValue",
+      "kind": "Property",
+      "signature": "public int DefaultValue { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Default value of this parameter, which will be used if not set externally. [member default_value_enabled] must be enabled; defaults to [code]0[/code] otherwise.",
+      "defaultValue": "0",
+      "godotName": "default_value",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.DefaultValue",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "DefaultValueEnabled",
+      "kind": "Property",
+      "signature": "public bool DefaultValueEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the node will have a custom default value.",
+      "defaultValue": "false",
+      "godotName": "default_value_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.DefaultValueEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "EnumNames",
+      "kind": "Property",
+      "signature": "public PackedStringArray EnumNames { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The names used for the enum select in the editor. [member hint] must be [constant HINT_ENUM] for this to take effect.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "enum_names",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.EnumNames",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "Hint",
+      "kind": "Property",
+      "signature": "public int Hint { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Range hint of this node. Use it to customize valid parameter range.",
+      "defaultValue": "0",
+      "godotName": "hint",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.Hint",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Property",
+      "signature": "public int Max { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum value this parameter can take. [member hint] must be either [constant HINT_RANGE] or [constant HINT_RANGE_STEP] for this to take effect.",
+      "defaultValue": "100",
+      "godotName": "max",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.Max",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Property",
+      "signature": "public int Min { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The minimum value this parameter can take. [member hint] must be either [constant HINT_RANGE] or [constant HINT_RANGE_STEP] for this to take effect.",
+      "defaultValue": "0",
+      "godotName": "min",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.Min",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public int Step { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The step between parameter\u0027s values. Forces the parameter to be a multiple of the given value. [member hint] must be [constant HINT_RANGE_STEP] for this to take effect.",
+      "defaultValue": "1",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.VisualShaderNodeIntParameter.Step",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Hint",
+      "values": [
+        {
+          "name": "HINT_ENUM",
+          "value": "3",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "The parameter uses an enum to associate preset values to names in the editor.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+        },
+        {
+          "name": "HINT_MAX",
+          "value": "4",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Hint] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+        },
+        {
+          "name": "HINT_NONE",
+          "value": "0",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "The parameter will not constrain its value.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+        },
+        {
+          "name": "HINT_RANGE",
+          "value": "1",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "The parameter\u0027s value must be within the specified [member min]/[member max] range.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+        },
+        {
+          "name": "HINT_RANGE_STEP",
+          "value": "2",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "The parameter\u0027s value must be within the specified range, with the given [member step] between values.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HINT_NONE",
+      "value": "0",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "The parameter will not constrain its value.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "HINT_RANGE",
+      "value": "1",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "The parameter\u0027s value must be within the specified [member min]/[member max] range.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "HINT_RANGE_STEP",
+      "value": "2",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "The parameter\u0027s value must be within the specified range, with the given [member step] between values.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "HINT_ENUM",
+      "value": "3",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "The parameter uses an enum to associate preset values to names in the editor.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    },
+    {
+      "name": "HINT_MAX",
+      "value": "4",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Hint] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeIntParameter.xml",
+      "sha256": "beec0a0e76a922f7e2c3c3c308ab66feb2c1f96a36da3453f3c77a87fc889708"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

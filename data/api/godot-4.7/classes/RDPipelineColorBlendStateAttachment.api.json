@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDPipelineColorBlendStateAttachment",
+    "namespace": "Godot",
+    "fullName": "Godot.RDPipelineColorBlendStateAttachment",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDPipelineColorBlendStateAttachment",
+    "documentationPath": "doc/classes/RDPipelineColorBlendStateAttachment.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdpipelinecolorblendstateattachment.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetAsMix",
+      "kind": "Method",
+      "signature": "public void SetAsMix()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Convenience method to perform standard mix blending with straight (non-premultiplied) alpha. This sets [member enable_blend] to [code]true[/code], [member src_color_blend_factor] to [constant RenderingDevice.BLEND_FACTOR_SRC_ALPHA], [member dst_color_blend_factor] to [constant RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA], [member src_alpha_blend_factor] to [constant RenderingDevice.BLEND_FACTOR_SRC_ALPHA] and [member dst_alpha_blend_factor] to [constant RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA].",
+      "godotName": "set_as_mix",
+      "xmlDocId": "M:Godot.RDPipelineColorBlendStateAttachment.SetAsMix",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "AlphaBlendOp",
+      "kind": "Property",
+      "signature": "public int AlphaBlendOp { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The blend mode to use for the alpha channel.",
+      "defaultValue": "0",
+      "godotName": "alpha_blend_op",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.AlphaBlendOp",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "ColorBlendOp",
+      "kind": "Property",
+      "signature": "public int ColorBlendOp { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The blend mode to use for the red/green/blue color channels.",
+      "defaultValue": "0",
+      "godotName": "color_blend_op",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.ColorBlendOp",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "DstAlphaBlendFactor",
+      "kind": "Property",
+      "signature": "public int DstAlphaBlendFactor { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the blend factor for the alpha channel is determined based on the destination\u0027s fragments.",
+      "defaultValue": "0",
+      "godotName": "dst_alpha_blend_factor",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.DstAlphaBlendFactor",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "DstColorBlendFactor",
+      "kind": "Property",
+      "signature": "public int DstColorBlendFactor { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the blend factor for the color channels is determined based on the destination\u0027s fragments.",
+      "defaultValue": "0",
+      "godotName": "dst_color_blend_factor",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.DstColorBlendFactor",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "EnableBlend",
+      "kind": "Property",
+      "signature": "public bool EnableBlend { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], performs blending between the source and destination according to the factors defined in [member src_color_blend_factor], [member dst_color_blend_factor], [member src_alpha_blend_factor] and [member dst_alpha_blend_factor]. The blend modes [member color_blend_op] and [member alpha_blend_op] are also taken into account, with [member write_r], [member write_g], [member write_b] and [member write_a] controlling the output.",
+      "defaultValue": "false",
+      "godotName": "enable_blend",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.EnableBlend",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "SrcAlphaBlendFactor",
+      "kind": "Property",
+      "signature": "public int SrcAlphaBlendFactor { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the blend factor for the alpha channel is determined based on the source\u0027s fragments.",
+      "defaultValue": "0",
+      "godotName": "src_alpha_blend_factor",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.SrcAlphaBlendFactor",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "SrcColorBlendFactor",
+      "kind": "Property",
+      "signature": "public int SrcColorBlendFactor { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the blend factor for the color channels is determined based on the source\u0027s fragments.",
+      "defaultValue": "0",
+      "godotName": "src_color_blend_factor",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.SrcColorBlendFactor",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "WriteA",
+      "kind": "Property",
+      "signature": "public bool WriteA { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], writes the new alpha channel to the final result.",
+      "defaultValue": "true",
+      "godotName": "write_a",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.WriteA",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "WriteB",
+      "kind": "Property",
+      "signature": "public bool WriteB { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], writes the new blue color channel to the final result.",
+      "defaultValue": "true",
+      "godotName": "write_b",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.WriteB",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "WriteG",
+      "kind": "Property",
+      "signature": "public bool WriteG { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], writes the new green color channel to the final result.",
+      "defaultValue": "true",
+      "godotName": "write_g",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.WriteG",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    },
+    {
+      "name": "WriteR",
+      "kind": "Property",
+      "signature": "public bool WriteR { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], writes the new red color channel to the final result.",
+      "defaultValue": "true",
+      "godotName": "write_r",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendStateAttachment.WriteR",
+      "sourcePath": "doc/classes/RDPipelineColorBlendStateAttachment.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDPipelineColorBlendStateAttachment.xml",
+      "sha256": "e83451096ba100b6ab3f3c6c07df5b54e787b3c530ac8f029d1990c1944b8830"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

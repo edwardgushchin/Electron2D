@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Collections.Array",
+    "namespace": "Electron2D.Collections",
+    "fullName": "Electron2D.Collections.Array",
+    "kind": "class",
+    "interfaces": [
+      "System.Collections.Generic.IEnumerable\u003CElectron2D.Variant\u003E",
+      "System.Collections.IEnumerable"
+    ],
+    "godotReference": "Array",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Collections.Array()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Array type.",
+      "xmlDocId": "M:Electron2D.Collections.Array.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Array",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Collections.Array()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Array type.",
+      "xmlDocId": "M:Electron2D.Collections.Array.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Add",
+      "kind": "Method",
+      "signature": "public System.Void Add(Electron2D.Variant value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Appends a value to the end of the array.",
+      "xmlDocId": "M:Electron2D.Collections.Array.Add(Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all values from the array.",
+      "xmlDocId": "M:Electron2D.Collections.Array.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetEnumerator",
+      "kind": "Method",
+      "signature": "public System.Collections.Generic.IEnumerator\u003CElectron2D.Variant\u003E GetEnumerator()",
+      "returnType": "System.Collections.Generic.IEnumerator\u003CElectron2D.Variant\u003E",
+      "parameters": [],
+      "summary": "Returns an enumerator over the current values.",
+      "xmlDocId": "M:Electron2D.Collections.Array.GetEnumerator",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public System.Void RemoveAt(System.Int32 index)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Removes the value at the specified index.",
+      "xmlDocId": "M:Electron2D.Collections.Array.RemoveAt(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToArray",
+      "kind": "Method",
+      "signature": "public Electron2D.Variant[] ToArray()",
+      "returnType": "Electron2D.Variant[]",
+      "parameters": [],
+      "summary": "Returns a snapshot of the current array values.",
+      "xmlDocId": "M:Electron2D.Collections.Array.ToArray",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Returns a diagnostic string representation of this array.",
+      "xmlDocId": "M:Electron2D.Collections.Array.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Count",
+      "kind": "Property",
+      "signature": "public System.Int32 Count { get; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of values stored in the array.",
+      "xmlDocId": "P:Electron2D.Collections.Array.Count",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Item",
+      "kind": "Property",
+      "signature": "public Electron2D.Variant this[System.Int32 index] { get; set; }",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets or sets the value at the specified index.",
+      "xmlDocId": "P:Electron2D.Collections.Array.Item",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

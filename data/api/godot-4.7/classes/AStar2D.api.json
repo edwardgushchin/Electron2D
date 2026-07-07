@@ -1,0 +1,584 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AStar2D",
+    "namespace": "Godot",
+    "fullName": "Godot.AStar2D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AStar2D",
+    "documentationPath": "doc/classes/AStar2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_astar2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ComputeCost",
+      "kind": "Method",
+      "signature": "public float _ComputeCost(int fromId, int toId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when computing the cost between two connected points. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_compute_cost",
+      "xmlDocId": "M:Godot.AStar2D._ComputeCost(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "_EstimateCost",
+      "kind": "Method",
+      "signature": "public float _EstimateCost(int fromId, int endId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "end_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when estimating the cost between a point and the path\u0027s ending point. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_estimate_cost",
+      "xmlDocId": "M:Godot.AStar2D._EstimateCost(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "_FilterNeighbor",
+      "kind": "Method",
+      "signature": "public bool _FilterNeighbor(int fromId, int neighborId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "neighbor_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when neighboring enters processing and if [member neighbor_filter_enabled] is [code]true[/code]. If [code]true[/code] is returned the point will not be processed. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_filter_neighbor",
+      "xmlDocId": "M:Godot.AStar2D._FilterNeighbor(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "AddPoint",
+      "kind": "Method",
+      "signature": "public void AddPoint(int id, Vector2 position, float weightScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "weight_scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Adds a new point at the given position with the given identifier. The [param id] must be 0 or larger, and the [param weight_scale] must be 0.0 or greater. The [param weight_scale] is multiplied by the result of [method _compute_cost] when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower [param weight_scale]s to form a path. [codeblocks] [gdscript] var astar = AStar2D.new() astar.add_point(1, Vector2(1, 0), 4) # Adds the point (1, 0) with weight_scale 4 and id 1 [/gdscript] [csharp] var astar = new AStar2D(); astar.AddPoint(1, new Vector2(1, 0), 4); // Adds the point (1, 0) with weight_scale 4 and id 1 [/csharp] [/codeblocks] If there already exists a point for the given [param id], its position and weight scale are updated to the given values.",
+      "godotName": "add_point",
+      "xmlDocId": "M:Godot.AStar2D.AddPoint(int,Vector2,float)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "ArePointsConnected",
+      "kind": "Method",
+      "signature": "public bool ArePointsConnected(int id, int toId, bool bidirectional)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        },
+        {
+          "name": "bidirectional",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns whether there is a connection/segment between the given points. If [param bidirectional] is [code]false[/code], returns whether movement from [param id] to [param to_id] is possible through this segment.",
+      "godotName": "are_points_connected",
+      "xmlDocId": "M:Godot.AStar2D.ArePointsConnected(int,int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all the points and segments.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.AStar2D.Clear",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "ConnectPoints",
+      "kind": "Method",
+      "signature": "public void ConnectPoints(int id, int toId, bool bidirectional)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        },
+        {
+          "name": "bidirectional",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Creates a segment between the given points. If [param bidirectional] is [code]false[/code], only movement from [param id] to [param to_id] is allowed, not the reverse direction. [codeblocks] [gdscript] var astar = AStar2D.new() astar.add_point(1, Vector2(1, 1)) astar.add_point(2, Vector2(0, 5)) astar.connect_points(1, 2, false) [/gdscript] [csharp] var astar = new AStar2D(); astar.AddPoint(1, new Vector2(1, 1)); astar.AddPoint(2, new Vector2(0, 5)); astar.ConnectPoints(1, 2, false); [/csharp] [/codeblocks]",
+      "godotName": "connect_points",
+      "xmlDocId": "M:Godot.AStar2D.ConnectPoints(int,int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "DisconnectPoints",
+      "kind": "Method",
+      "signature": "public void DisconnectPoints(int id, int toId, bool bidirectional)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        },
+        {
+          "name": "bidirectional",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Deletes the segment between the given points. If [param bidirectional] is [code]false[/code], only movement from [param id] to [param to_id] is prevented, and a unidirectional segment possibly remains.",
+      "godotName": "disconnect_points",
+      "xmlDocId": "M:Godot.AStar2D.DisconnectPoints(int,int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetAvailablePointId",
+      "kind": "Method",
+      "signature": "public int GetAvailablePointId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the next available point ID with no point associated to it.",
+      "godotName": "get_available_point_id",
+      "xmlDocId": "M:Godot.AStar2D.GetAvailablePointId",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetClosestPoint",
+      "kind": "Method",
+      "signature": "public int GetClosestPoint(Vector2 toPosition, bool includeDisabled)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "Vector2"
+        },
+        {
+          "name": "include_disabled",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the ID of the closest point to [param to_position], optionally taking disabled points into account. Returns [code]-1[/code] if there are no points in the points pool. [b]Note:[/b] If several points are the closest to [param to_position], the one with the smallest ID will be returned, ensuring a deterministic result.",
+      "godotName": "get_closest_point",
+      "xmlDocId": "M:Godot.AStar2D.GetClosestPoint(Vector2,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetClosestPositionInSegment",
+      "kind": "Method",
+      "signature": "public Vector2 GetClosestPositionInSegment(Vector2 toPosition)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the closest position to [param to_position] that resides inside a segment between two connected points. [codeblocks] [gdscript] var astar = AStar2D.new() astar.add_point(1, Vector2(0, 0)) astar.add_point(2, Vector2(0, 5)) astar.connect_points(1, 2) var res = astar.get_closest_position_in_segment(Vector2(3, 3)) # Returns (0, 3) [/gdscript] [csharp] var astar = new AStar2D(); astar.AddPoint(1, new Vector2(0, 0)); astar.AddPoint(2, new Vector2(0, 5)); astar.ConnectPoints(1, 2); Vector2 res = astar.GetClosestPositionInSegment(new Vector2(3, 3)); // Returns (0, 3) [/csharp] [/codeblocks] The result is in the segment that goes from [code]y = 0[/code] to [code]y = 5[/code]. It\u0027s the closest position in the segment to the given point.",
+      "godotName": "get_closest_position_in_segment",
+      "xmlDocId": "M:Godot.AStar2D.GetClosestPositionInSegment(Vector2)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetIdPath",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetIdPath(int fromId, int toId, bool allowPartialPath)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        },
+        {
+          "name": "allow_partial_path",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with the IDs of the points that form the path found by AStar2D between the given points. The array is ordered from the starting point to the ending point of the path. If [param from_id] point is disabled, returns an empty array (even if [code]from_id == to_id[/code]). If [param from_id] point is not disabled, there is no valid path to the target, and [param allow_partial_path] is [code]true[/code], returns a path to the point closest to the target that can be reached. [b]Note:[/b] When [param allow_partial_path] is [code]true[/code] and [param to_id] is disabled the search may take an unusually long time to finish. [codeblocks] [gdscript] var astar = AStar2D.new() astar.add_point(1, Vector2(0, 0)) astar.add_point(2, Vector2(0, 1), 1) # Default weight is 1 astar.add_point(3, Vector2(1, 1)) astar.add_point(4, Vector2(2, 0)) astar.connect_points(1, 2, false) astar.connect_points(2, 3, false) astar.connect_points(4, 3, false) astar.connect_points(1, 4, false) var res = astar.get_id_path(1, 3) # Returns [1, 2, 3] [/gdscript] [csharp] var astar = new AStar2D(); astar.AddPoint(1, new Vector2(0, 0)); astar.AddPoint(2, new Vector2(0, 1), 1); // Default weight is 1 astar.AddPoint(3, new Vector2(1, 1)); astar.AddPoint(4, new Vector2(2, 0)); astar.ConnectPoints(1, 2, false); astar.ConnectPoints(2, 3, false); astar.ConnectPoints(4, 3, false); astar.ConnectPoints(1, 4, false); long[] res = astar.GetIdPath(1, 3); // Returns [1, 2, 3] [/csharp] [/codeblocks] If you change the 2nd point\u0027s weight to 3, then the result will be [code][1, 4, 3][/code] instead, because now even though the distance is longer, it\u0027s \u0022easier\u0022 to get through point 4 than through point 2.",
+      "godotName": "get_id_path",
+      "xmlDocId": "M:Godot.AStar2D.GetIdPath(int,int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointCapacity",
+      "kind": "Method",
+      "signature": "public int GetPointCapacity()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the capacity of the structure backing the points, useful in conjunction with [method reserve_space].",
+      "godotName": "get_point_capacity",
+      "xmlDocId": "M:Godot.AStar2D.GetPointCapacity",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointConnections",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetPointConnections(int id)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array with the IDs of the points that form the connection with the given point. [codeblocks] [gdscript] var astar = AStar2D.new() astar.add_point(1, Vector2(0, 0)) astar.add_point(2, Vector2(0, 1)) astar.add_point(3, Vector2(1, 1)) astar.add_point(4, Vector2(2, 0)) astar.connect_points(1, 2, true) astar.connect_points(1, 3, true) var neighbors = astar.get_point_connections(1) # Returns [2, 3] [/gdscript] [csharp] var astar = new AStar2D(); astar.AddPoint(1, new Vector2(0, 0)); astar.AddPoint(2, new Vector2(0, 1)); astar.AddPoint(3, new Vector2(1, 1)); astar.AddPoint(4, new Vector2(2, 0)); astar.ConnectPoints(1, 2, true); astar.ConnectPoints(1, 3, true); long[] neighbors = astar.GetPointConnections(1); // Returns [2, 3] [/csharp] [/codeblocks]",
+      "godotName": "get_point_connections",
+      "xmlDocId": "M:Godot.AStar2D.GetPointConnections(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointCount",
+      "kind": "Method",
+      "signature": "public int GetPointCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of points currently in the points pool.",
+      "godotName": "get_point_count",
+      "xmlDocId": "M:Godot.AStar2D.GetPointCount",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointIds",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetPointIds()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns an array of all point IDs.",
+      "godotName": "get_point_ids",
+      "xmlDocId": "M:Godot.AStar2D.GetPointIds",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointPath",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetPointPath(int fromId, int toId, bool allowPartialPath)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        },
+        {
+          "name": "allow_partial_path",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with the points that are in the path found by AStar2D between the given points. The array is ordered from the starting point to the ending point of the path. If [param from_id] point is disabled, returns an empty array (even if [code]from_id == to_id[/code]). If [param from_id] point is not disabled, there is no valid path to the target, and [param allow_partial_path] is [code]true[/code], returns a path to the point closest to the target that can be reached. [b]Note:[/b] This method is not thread-safe; it can only be used from a single [Thread] at a given time. Consider using [Mutex] to ensure exclusive access to one thread to avoid race conditions. Additionally, when [param allow_partial_path] is [code]true[/code] and [param to_id] is disabled the search may take an unusually long time to finish.",
+      "godotName": "get_point_path",
+      "xmlDocId": "M:Godot.AStar2D.GetPointPath(int,int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointPosition(int id)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the point associated with the given [param id].",
+      "godotName": "get_point_position",
+      "xmlDocId": "M:Godot.AStar2D.GetPointPosition(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "GetPointWeightScale",
+      "kind": "Method",
+      "signature": "public float GetPointWeightScale(int id)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the weight scale of the point associated with the given [param id].",
+      "godotName": "get_point_weight_scale",
+      "xmlDocId": "M:Godot.AStar2D.GetPointWeightScale(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public bool HasPoint(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether a point associated with the given [param id] exists.",
+      "godotName": "has_point",
+      "xmlDocId": "M:Godot.AStar2D.HasPoint(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "IsPointDisabled",
+      "kind": "Method",
+      "signature": "public bool IsPointDisabled(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether a point is disabled or not for pathfinding. By default, all points are enabled.",
+      "godotName": "is_point_disabled",
+      "xmlDocId": "M:Godot.AStar2D.IsPointDisabled(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "RemovePoint",
+      "kind": "Method",
+      "signature": "public void RemovePoint(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the point associated with the given [param id] from the points pool.",
+      "godotName": "remove_point",
+      "xmlDocId": "M:Godot.AStar2D.RemovePoint(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "ReserveSpace",
+      "kind": "Method",
+      "signature": "public void ReserveSpace(int numNodes)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "num_nodes",
+          "type": "int"
+        }
+      ],
+      "summary": "Reserves space internally for [param num_nodes] points. Useful if you\u0027re adding a known large number of points at once, such as points on a grid.",
+      "godotName": "reserve_space",
+      "xmlDocId": "M:Godot.AStar2D.ReserveSpace(int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "SetPointDisabled",
+      "kind": "Method",
+      "signature": "public void SetPointDisabled(int id, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Disables or enables the specified point for pathfinding. Useful for making a temporary obstacle.",
+      "godotName": "set_point_disabled",
+      "xmlDocId": "M:Godot.AStar2D.SetPointDisabled(int,bool)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "SetPointPosition",
+      "kind": "Method",
+      "signature": "public void SetPointPosition(int id, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the [param position] for the point with the given [param id].",
+      "godotName": "set_point_position",
+      "xmlDocId": "M:Godot.AStar2D.SetPointPosition(int,Vector2)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "SetPointWeightScale",
+      "kind": "Method",
+      "signature": "public void SetPointWeightScale(int id, float weightScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "weight_scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param weight_scale] for the point with the given [param id]. The [param weight_scale] is multiplied by the result of [method _compute_cost] when determining the overall cost of traveling across a segment from a neighboring point to this point.",
+      "godotName": "set_point_weight_scale",
+      "xmlDocId": "M:Godot.AStar2D.SetPointWeightScale(int,float)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "NeighborFilterEnabled",
+      "kind": "Property",
+      "signature": "public bool NeighborFilterEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] enables the filtering of neighbors via [method _filter_neighbor].",
+      "defaultValue": "false",
+      "godotName": "neighbor_filter_enabled",
+      "xmlDocId": "P:Godot.AStar2D.NeighborFilterEnabled",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ComputeCost",
+      "kind": "Method",
+      "signature": "public float _ComputeCost(int fromId, int toId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "to_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when computing the cost between two connected points. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_compute_cost",
+      "xmlDocId": "M:Godot.AStar2D._ComputeCost(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "_EstimateCost",
+      "kind": "Method",
+      "signature": "public float _EstimateCost(int fromId, int endId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "end_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when estimating the cost between a point and the path\u0027s ending point. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_estimate_cost",
+      "xmlDocId": "M:Godot.AStar2D._EstimateCost(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    },
+    {
+      "name": "_FilterNeighbor",
+      "kind": "Method",
+      "signature": "public bool _FilterNeighbor(int fromId, int neighborId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "int"
+        },
+        {
+          "name": "neighbor_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when neighboring enters processing and if [member neighbor_filter_enabled] is [code]true[/code]. If [code]true[/code] is returned the point will not be processed. Note that this function is hidden in the default [AStar2D] class.",
+      "godotName": "_filter_neighbor",
+      "xmlDocId": "M:Godot.AStar2D._FilterNeighbor(int,int)",
+      "sourcePath": "doc/classes/AStar2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AStar2D.xml",
+      "sha256": "4da4cc52832376cae82783f5f23ac6541e018932d92ccc42067b10607f8d7caa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

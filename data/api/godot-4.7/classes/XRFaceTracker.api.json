@@ -1,0 +1,2407 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRFaceTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.XRFaceTracker",
+    "kind": "class",
+    "baseType": "XRTracker",
+    "interfaces": [],
+    "godotReference": "XRFaceTracker",
+    "documentationPath": "doc/classes/XRFaceTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrfacetracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBlendShape",
+      "kind": "Method",
+      "signature": "public float GetBlendShape(int blendShape)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "blend_shape",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the requested face blend shape weight.",
+      "godotName": "get_blend_shape",
+      "xmlDocId": "M:Godot.XRFaceTracker.GetBlendShape(int)",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "SetBlendShape",
+      "kind": "Method",
+      "signature": "public void SetBlendShape(int blendShape, float weight)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "blend_shape",
+          "type": "int"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets a face blend shape weight.",
+      "godotName": "set_blend_shape",
+      "xmlDocId": "M:Godot.XRFaceTracker.SetBlendShape(int,float)",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "BlendShapes",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array BlendShapes { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "The array of face blend shape weights with indices corresponding to the [enum BlendShapeEntry] enum.",
+      "defaultValue": "PackedFloat32Array()",
+      "godotName": "blend_shapes",
+      "xmlDocId": "P:Godot.XRFaceTracker.BlendShapes",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "64",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.XRFaceTracker.Type",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BlendShapeEntry",
+      "values": [
+        {
+          "name": "FT_BROW_DOWN",
+          "value": "109",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pulls both eyebrows down and in.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_DOWN_LEFT",
+          "value": "108",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pulls the left eyebrow down and in.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_DOWN_RIGHT",
+          "value": "107",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pulls the right eyebrow down and in.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_INNER_UP_LEFT",
+          "value": "23",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Inner left eyebrow pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_INNER_UP_RIGHT",
+          "value": "22",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Inner right eyebrow pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_LOWERER_LEFT",
+          "value": "21",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Outer left eyebrow pulls down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_LOWERER_RIGHT",
+          "value": "20",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Outer right eyebrow pulls down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_OUTER_UP_LEFT",
+          "value": "25",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Outer left eyebrow pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_OUTER_UP_RIGHT",
+          "value": "24",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Outer right eyebrow pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_PINCH_LEFT",
+          "value": "19",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eyebrow pinches in.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_PINCH_RIGHT",
+          "value": "18",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eyebrow pinches in.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_UP",
+          "value": "112",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Both brows appear worried.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_UP_LEFT",
+          "value": "111",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left brow appears worried.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_BROW_UP_RIGHT",
+          "value": "110",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right brow appears worried.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_PUFF",
+          "value": "116",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Puffs both cheeks.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_PUFF_LEFT",
+          "value": "35",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Puffs the left side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_PUFF_RIGHT",
+          "value": "34",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Puffs the right side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SQUINT",
+          "value": "118",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises both cheeks.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SQUINT_LEFT",
+          "value": "33",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises the left side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SQUINT_RIGHT",
+          "value": "32",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises the right side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SUCK",
+          "value": "117",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Sucks in both cheeks.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SUCK_LEFT",
+          "value": "37",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Sucks in the left side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_CHEEK_SUCK_RIGHT",
+          "value": "36",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Sucks in the right side cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CLOSED",
+          "value": "102",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Closes both eye lids.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CLOSED_LEFT",
+          "value": "9",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Closes the left eyelid.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CLOSED_RIGHT",
+          "value": "8",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Closes the right eyelid.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CONSTRICT",
+          "value": "106",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Constricts both pupils.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CONSTRICT_LEFT",
+          "value": "17",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Constricts the left eye pupil.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_CONSTRICT_RIGHT",
+          "value": "16",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Constricts the right eye pupil.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_DILATION",
+          "value": "105",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Dilates both pupils.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_DILATION_LEFT",
+          "value": "15",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Dilates the left eye pupil.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_DILATION_RIGHT",
+          "value": "14",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Dilates the right eye pupil.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_DOWN_LEFT",
+          "value": "7",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eye looks downwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_DOWN_RIGHT",
+          "value": "3",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eye looks downwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_IN_LEFT",
+          "value": "5",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eye looks inwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_IN_RIGHT",
+          "value": "1",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eye looks inwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_OUT_LEFT",
+          "value": "4",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eye looks outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_OUT_RIGHT",
+          "value": "0",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eye looks outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_UP_LEFT",
+          "value": "6",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eye looks upwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_LOOK_UP_RIGHT",
+          "value": "2",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eye looks upwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_SQUINT",
+          "value": "104",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Squints both eye lids.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_SQUINT_LEFT",
+          "value": "11",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Squeezes the left eye socket muscles.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_SQUINT_RIGHT",
+          "value": "10",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Squeezes the right eye socket muscles.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_WIDE",
+          "value": "103",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Widens both eye lids.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_WIDE_LEFT",
+          "value": "13",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left eyelid widens beyond relaxed.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_EYE_WIDE_RIGHT",
+          "value": "12",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right eyelid widens beyond relaxed.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_BACKWARD",
+          "value": "43",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pushes jawbone backward.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_CLENCH",
+          "value": "44",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Flexes jaw muscles.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_FORWARD",
+          "value": "42",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pushes jawbone forward.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_LEFT",
+          "value": "41",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pushes jawbone left.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_MANDIBLE_RAISE",
+          "value": "45",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises the jawbone.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_OPEN",
+          "value": "38",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Opens jawbone.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_JAW_RIGHT",
+          "value": "40",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Pushes jawbone right.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL",
+          "value": "124",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Funnels in both lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_LOWER",
+          "value": "123",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Funnels in the lower lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_LOWER_LEFT",
+          "value": "55",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower left lip part pushes into a funnel.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_LOWER_RIGHT",
+          "value": "54",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower right lip part pushes into a funnel.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_UPPER",
+          "value": "122",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Funnels in the upper lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_UPPER_LEFT",
+          "value": "53",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper left lip part pushes into a funnel.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_FUNNEL_UPPER_RIGHT",
+          "value": "52",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper right lip part pushes into a funnel.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER",
+          "value": "127",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lips push outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_LOWER",
+          "value": "126",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_LOWER_LEFT",
+          "value": "59",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower left lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_LOWER_RIGHT",
+          "value": "58",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower right lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_UPPER",
+          "value": "125",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_UPPER_LEFT",
+          "value": "57",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper left lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_PUCKER_UPPER_RIGHT",
+          "value": "56",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper right lip part pushes outwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK",
+          "value": "121",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tucks in both lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_CORNER_LEFT",
+          "value": "51",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left lip corner folds into the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_CORNER_RIGHT",
+          "value": "50",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right lip corner folds into the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_LOWER",
+          "value": "120",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tucks in the lower lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_LOWER_LEFT",
+          "value": "49",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower left lip part tucks in the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_LOWER_RIGHT",
+          "value": "48",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower right lip part tucks in the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_UPPER",
+          "value": "119",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tucks in the upper lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_UPPER_LEFT",
+          "value": "47",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper left lip part tucks in the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_LIP_SUCK_UPPER_RIGHT",
+          "value": "46",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper right lip part tucks in the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MAX",
+          "value": "143",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BlendShapeEntry] enum.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_CLOSED",
+          "value": "39",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Closes the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_CORNER_PULL_LEFT",
+          "value": "71",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left lip corner pulls diagonally up and out.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_CORNER_PULL_RIGHT",
+          "value": "70",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right lip corner pulls diagonally up and out.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_CORNER_SLANT_LEFT",
+          "value": "73",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left corner lip slants up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_CORNER_SLANT_RIGHT",
+          "value": "72",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right corner lip slants up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_DIMPLE",
+          "value": "140",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lip corners dimple.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_DIMPLE_LEFT",
+          "value": "79",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left lip corner is pushed backwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_DIMPLE_RIGHT",
+          "value": "78",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right lip corner is pushed backwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_FROWN_LEFT",
+          "value": "75",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left corner lip pulls down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_FROWN_RIGHT",
+          "value": "74",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right corner lip pulls down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LEFT",
+          "value": "132",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves mouth left.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LOWER_DOWN",
+          "value": "129",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lowers the lower lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LOWER_DOWN_LEFT",
+          "value": "63",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower left part of the lip pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LOWER_DOWN_RIGHT",
+          "value": "62",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Lower right part of the lip pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LOWER_LEFT",
+          "value": "69",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves lower lip left.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_LOWER_RIGHT",
+          "value": "68",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves lower lip right.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_OPEN",
+          "value": "130",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth opens, revealing teeth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_PRESS",
+          "value": "142",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth presses together.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_PRESS_LEFT",
+          "value": "83",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side lips press and flatten together vertically.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_PRESS_RIGHT",
+          "value": "82",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side lips press and flatten together vertically.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_RAISER_LOWER",
+          "value": "81",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises and slightly pushes out the lower mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_RAISER_UPPER",
+          "value": "80",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises and slightly pushes out the upper mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_RIGHT",
+          "value": "131",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves mouth right.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SAD",
+          "value": "138",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth expresses sadness.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SAD_LEFT",
+          "value": "137",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side of the mouth expresses sadness.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SAD_RIGHT",
+          "value": "136",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side of the mouth expresses sadness.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SMILE",
+          "value": "135",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth expresses a smile.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SMILE_LEFT",
+          "value": "134",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side of the mouth smiles.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_SMILE_RIGHT",
+          "value": "133",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side of the mouth smiles.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_STRETCH",
+          "value": "139",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth stretches.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_STRETCH_LEFT",
+          "value": "77",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth corner lip pulls out and down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_STRETCH_RIGHT",
+          "value": "76",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth corner lip pulls out and down.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_TIGHTENER",
+          "value": "141",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Mouth tightens.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_TIGHTENER_LEFT",
+          "value": "85",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side lips squeeze together horizontally.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_TIGHTENER_RIGHT",
+          "value": "84",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side lips squeeze together horizontally.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_DEEPEN_LEFT",
+          "value": "65",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper left lip part pushes in the cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_DEEPEN_RIGHT",
+          "value": "64",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper right lip part pushes in the cheek.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_LEFT",
+          "value": "67",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves upper lip left.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_RIGHT",
+          "value": "66",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Moves upper lip right.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_UP",
+          "value": "128",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Raises the upper lips.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_UP_LEFT",
+          "value": "61",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper left part of the lip pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_MOUTH_UPPER_UP_RIGHT",
+          "value": "60",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Upper right part of the lip pulls up.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_CONSTRICT",
+          "value": "115",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Both nose canals constrict.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_CONSTRICT_LEFT",
+          "value": "31",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side nose canal constricts.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_CONSTRICT_RIGHT",
+          "value": "30",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side nose canal constricts.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_DILATION",
+          "value": "114",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Both nose canals dilate.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_DILATION_LEFT",
+          "value": "29",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side nose canal dilates.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NASAL_DILATION_RIGHT",
+          "value": "28",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side nose canal dilates.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NECK_FLEX_LEFT",
+          "value": "101",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side neck visibly flexes.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NECK_FLEX_RIGHT",
+          "value": "100",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side neck visibly flexes.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NOSE_SNEER",
+          "value": "113",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Entire face sneers.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NOSE_SNEER_LEFT",
+          "value": "27",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Left side face sneers.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_NOSE_SNEER_RIGHT",
+          "value": "26",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Right side face sneers.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_SOFT_PALATE_CLOSE",
+          "value": "98",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Inner mouth throat closes.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_THROAT_SWALLOW",
+          "value": "99",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "The Adam\u0027s apple visibly swallows.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_BLEND_DOWN",
+          "value": "92",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue arches up then down inside the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_CURL_UP",
+          "value": "93",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue arches down then up inside the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_DOWN",
+          "value": "88",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue points downwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_FLAT",
+          "value": "95",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue flattens and thins out.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_LEFT",
+          "value": "90",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue points left.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_OUT",
+          "value": "86",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue visibly sticks out of the mouth.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_RIGHT",
+          "value": "89",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue points right.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_ROLL",
+          "value": "91",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Sides of the tongue funnel, creating a roll.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_SQUISH",
+          "value": "94",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue squishes together and thickens.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_TWIST_LEFT",
+          "value": "97",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue tip rotates counter-clockwise, with the rest following gradually.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_TWIST_RIGHT",
+          "value": "96",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue tip rotates clockwise, with the rest following gradually.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        },
+        {
+          "name": "FT_TONGUE_UP",
+          "value": "87",
+          "enum": "BlendShapeEntry",
+          "kind": "EnumValue",
+          "summary": "Tongue points upwards.",
+          "sourcePath": "doc/classes/XRFaceTracker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FT_EYE_LOOK_OUT_RIGHT",
+      "value": "0",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eye looks outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_IN_RIGHT",
+      "value": "1",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eye looks inwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_UP_RIGHT",
+      "value": "2",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eye looks upwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_DOWN_RIGHT",
+      "value": "3",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eye looks downwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_OUT_LEFT",
+      "value": "4",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eye looks outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_IN_LEFT",
+      "value": "5",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eye looks inwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_UP_LEFT",
+      "value": "6",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eye looks upwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_LOOK_DOWN_LEFT",
+      "value": "7",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eye looks downwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CLOSED_RIGHT",
+      "value": "8",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Closes the right eyelid.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CLOSED_LEFT",
+      "value": "9",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Closes the left eyelid.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_SQUINT_RIGHT",
+      "value": "10",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Squeezes the right eye socket muscles.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_SQUINT_LEFT",
+      "value": "11",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Squeezes the left eye socket muscles.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_WIDE_RIGHT",
+      "value": "12",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eyelid widens beyond relaxed.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_WIDE_LEFT",
+      "value": "13",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eyelid widens beyond relaxed.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_DILATION_RIGHT",
+      "value": "14",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Dilates the right eye pupil.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_DILATION_LEFT",
+      "value": "15",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Dilates the left eye pupil.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CONSTRICT_RIGHT",
+      "value": "16",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Constricts the right eye pupil.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CONSTRICT_LEFT",
+      "value": "17",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Constricts the left eye pupil.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_PINCH_RIGHT",
+      "value": "18",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right eyebrow pinches in.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_PINCH_LEFT",
+      "value": "19",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left eyebrow pinches in.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_LOWERER_RIGHT",
+      "value": "20",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Outer right eyebrow pulls down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_LOWERER_LEFT",
+      "value": "21",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Outer left eyebrow pulls down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_INNER_UP_RIGHT",
+      "value": "22",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Inner right eyebrow pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_INNER_UP_LEFT",
+      "value": "23",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Inner left eyebrow pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_OUTER_UP_RIGHT",
+      "value": "24",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Outer right eyebrow pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_OUTER_UP_LEFT",
+      "value": "25",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Outer left eyebrow pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NOSE_SNEER_RIGHT",
+      "value": "26",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side face sneers.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NOSE_SNEER_LEFT",
+      "value": "27",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side face sneers.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_DILATION_RIGHT",
+      "value": "28",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side nose canal dilates.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_DILATION_LEFT",
+      "value": "29",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side nose canal dilates.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_CONSTRICT_RIGHT",
+      "value": "30",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side nose canal constricts.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_CONSTRICT_LEFT",
+      "value": "31",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side nose canal constricts.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SQUINT_RIGHT",
+      "value": "32",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises the right side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SQUINT_LEFT",
+      "value": "33",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises the left side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_PUFF_RIGHT",
+      "value": "34",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Puffs the right side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_PUFF_LEFT",
+      "value": "35",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Puffs the left side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SUCK_RIGHT",
+      "value": "36",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Sucks in the right side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SUCK_LEFT",
+      "value": "37",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Sucks in the left side cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_OPEN",
+      "value": "38",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Opens jawbone.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_CLOSED",
+      "value": "39",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Closes the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_RIGHT",
+      "value": "40",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pushes jawbone right.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_LEFT",
+      "value": "41",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pushes jawbone left.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_FORWARD",
+      "value": "42",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pushes jawbone forward.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_BACKWARD",
+      "value": "43",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pushes jawbone backward.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_CLENCH",
+      "value": "44",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Flexes jaw muscles.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_JAW_MANDIBLE_RAISE",
+      "value": "45",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises the jawbone.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_UPPER_RIGHT",
+      "value": "46",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper right lip part tucks in the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_UPPER_LEFT",
+      "value": "47",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper left lip part tucks in the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_LOWER_RIGHT",
+      "value": "48",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower right lip part tucks in the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_LOWER_LEFT",
+      "value": "49",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower left lip part tucks in the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_CORNER_RIGHT",
+      "value": "50",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right lip corner folds into the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_CORNER_LEFT",
+      "value": "51",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left lip corner folds into the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_UPPER_RIGHT",
+      "value": "52",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper right lip part pushes into a funnel.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_UPPER_LEFT",
+      "value": "53",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper left lip part pushes into a funnel.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_LOWER_RIGHT",
+      "value": "54",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower right lip part pushes into a funnel.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_LOWER_LEFT",
+      "value": "55",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower left lip part pushes into a funnel.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_UPPER_RIGHT",
+      "value": "56",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper right lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_UPPER_LEFT",
+      "value": "57",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper left lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_LOWER_RIGHT",
+      "value": "58",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower right lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_LOWER_LEFT",
+      "value": "59",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower left lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_UP_RIGHT",
+      "value": "60",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper right part of the lip pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_UP_LEFT",
+      "value": "61",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper left part of the lip pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LOWER_DOWN_RIGHT",
+      "value": "62",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower right part of the lip pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LOWER_DOWN_LEFT",
+      "value": "63",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower left part of the lip pulls up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_DEEPEN_RIGHT",
+      "value": "64",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper right lip part pushes in the cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_DEEPEN_LEFT",
+      "value": "65",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper left lip part pushes in the cheek.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_RIGHT",
+      "value": "66",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves upper lip right.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_LEFT",
+      "value": "67",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves upper lip left.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LOWER_RIGHT",
+      "value": "68",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves lower lip right.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LOWER_LEFT",
+      "value": "69",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves lower lip left.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_CORNER_PULL_RIGHT",
+      "value": "70",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right lip corner pulls diagonally up and out.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_CORNER_PULL_LEFT",
+      "value": "71",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left lip corner pulls diagonally up and out.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_CORNER_SLANT_RIGHT",
+      "value": "72",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right corner lip slants up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_CORNER_SLANT_LEFT",
+      "value": "73",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left corner lip slants up.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_FROWN_RIGHT",
+      "value": "74",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right corner lip pulls down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_FROWN_LEFT",
+      "value": "75",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left corner lip pulls down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_STRETCH_RIGHT",
+      "value": "76",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth corner lip pulls out and down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_STRETCH_LEFT",
+      "value": "77",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth corner lip pulls out and down.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_DIMPLE_RIGHT",
+      "value": "78",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right lip corner is pushed backwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_DIMPLE_LEFT",
+      "value": "79",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left lip corner is pushed backwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_RAISER_UPPER",
+      "value": "80",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises and slightly pushes out the upper mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_RAISER_LOWER",
+      "value": "81",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises and slightly pushes out the lower mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_PRESS_RIGHT",
+      "value": "82",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side lips press and flatten together vertically.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_PRESS_LEFT",
+      "value": "83",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side lips press and flatten together vertically.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_TIGHTENER_RIGHT",
+      "value": "84",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side lips squeeze together horizontally.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_TIGHTENER_LEFT",
+      "value": "85",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side lips squeeze together horizontally.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_OUT",
+      "value": "86",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue visibly sticks out of the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_UP",
+      "value": "87",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue points upwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_DOWN",
+      "value": "88",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue points downwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_RIGHT",
+      "value": "89",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue points right.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_LEFT",
+      "value": "90",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue points left.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_ROLL",
+      "value": "91",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Sides of the tongue funnel, creating a roll.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_BLEND_DOWN",
+      "value": "92",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue arches up then down inside the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_CURL_UP",
+      "value": "93",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue arches down then up inside the mouth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_SQUISH",
+      "value": "94",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue squishes together and thickens.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_FLAT",
+      "value": "95",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue flattens and thins out.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_TWIST_RIGHT",
+      "value": "96",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue tip rotates clockwise, with the rest following gradually.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_TONGUE_TWIST_LEFT",
+      "value": "97",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tongue tip rotates counter-clockwise, with the rest following gradually.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_SOFT_PALATE_CLOSE",
+      "value": "98",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Inner mouth throat closes.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_THROAT_SWALLOW",
+      "value": "99",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "The Adam\u0027s apple visibly swallows.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NECK_FLEX_RIGHT",
+      "value": "100",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side neck visibly flexes.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NECK_FLEX_LEFT",
+      "value": "101",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side neck visibly flexes.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CLOSED",
+      "value": "102",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Closes both eye lids.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_WIDE",
+      "value": "103",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Widens both eye lids.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_SQUINT",
+      "value": "104",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Squints both eye lids.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_DILATION",
+      "value": "105",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Dilates both pupils.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_EYE_CONSTRICT",
+      "value": "106",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Constricts both pupils.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_DOWN_RIGHT",
+      "value": "107",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pulls the right eyebrow down and in.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_DOWN_LEFT",
+      "value": "108",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pulls the left eyebrow down and in.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_DOWN",
+      "value": "109",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Pulls both eyebrows down and in.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_UP_RIGHT",
+      "value": "110",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right brow appears worried.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_UP_LEFT",
+      "value": "111",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left brow appears worried.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_BROW_UP",
+      "value": "112",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Both brows appear worried.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NOSE_SNEER",
+      "value": "113",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Entire face sneers.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_DILATION",
+      "value": "114",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Both nose canals dilate.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_NASAL_CONSTRICT",
+      "value": "115",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Both nose canals constrict.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_PUFF",
+      "value": "116",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Puffs both cheeks.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SUCK",
+      "value": "117",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Sucks in both cheeks.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_CHEEK_SQUINT",
+      "value": "118",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises both cheeks.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_UPPER",
+      "value": "119",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tucks in the upper lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK_LOWER",
+      "value": "120",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tucks in the lower lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_SUCK",
+      "value": "121",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Tucks in both lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_UPPER",
+      "value": "122",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Funnels in the upper lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL_LOWER",
+      "value": "123",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Funnels in the lower lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_FUNNEL",
+      "value": "124",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Funnels in both lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_UPPER",
+      "value": "125",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Upper lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER_LOWER",
+      "value": "126",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lower lip part pushes outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_LIP_PUCKER",
+      "value": "127",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lips push outwards.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_UPPER_UP",
+      "value": "128",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Raises the upper lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LOWER_DOWN",
+      "value": "129",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lowers the lower lips.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_OPEN",
+      "value": "130",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth opens, revealing teeth.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_RIGHT",
+      "value": "131",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves mouth right.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_LEFT",
+      "value": "132",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Moves mouth left.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SMILE_RIGHT",
+      "value": "133",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side of the mouth smiles.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SMILE_LEFT",
+      "value": "134",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side of the mouth smiles.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SMILE",
+      "value": "135",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth expresses a smile.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SAD_RIGHT",
+      "value": "136",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Right side of the mouth expresses sadness.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SAD_LEFT",
+      "value": "137",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Left side of the mouth expresses sadness.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_SAD",
+      "value": "138",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth expresses sadness.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_STRETCH",
+      "value": "139",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth stretches.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_DIMPLE",
+      "value": "140",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Lip corners dimple.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_TIGHTENER",
+      "value": "141",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth tightens.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MOUTH_PRESS",
+      "value": "142",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Mouth presses together.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    },
+    {
+      "name": "FT_MAX",
+      "value": "143",
+      "enum": "BlendShapeEntry",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BlendShapeEntry] enum.",
+      "sourcePath": "doc/classes/XRFaceTracker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRFaceTracker.xml",
+      "sha256": "4e49ec5ab37e1e54da7988b4560708049e7e13a8d66694a5d305d71e44cae338"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

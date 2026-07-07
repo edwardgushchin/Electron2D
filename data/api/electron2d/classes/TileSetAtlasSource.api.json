@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSetAtlasSource",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TileSetAtlasSource",
+    "kind": "class",
+    "baseType": "Electron2D.TileSetSource",
+    "interfaces": [],
+    "godotReference": "TileSetAtlasSource",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TileSetAtlasSource",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileSetAtlasSource()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileSetAtlasSource\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TileSetAtlasSource",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileSetAtlasSource()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileSetAtlasSource\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateTile",
+      "kind": "Method",
+      "signature": "public System.Void CreateTile(Electron2D.Vector2I atlasCoords, Electron2D.Vector2I sizeInAtlas)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "sizeInAtlas",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Creates tile data for an atlas coordinate.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.CreateTile(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTileData",
+      "kind": "Method",
+      "signature": "public Electron2D.TileData GetTileData(Electron2D.Vector2I atlasCoords, System.Int32 alternativeTile)",
+      "returnType": "Electron2D.TileData",
+      "parameters": [
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "alternativeTile",
+          "type": "System.Int32",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Gets the tile data for an atlas coordinate.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.GetTileData(Electron2D.Vector2I,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTileId",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I GetTileId(System.Int32 index)",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the atlas coordinates of a tile by index.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.GetTileId(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTileTextureRegion",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 GetTileTextureRegion(Electron2D.Vector2I atlasCoords, System.Int32 alternativeTile)",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "alternativeTile",
+          "type": "System.Int32",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Gets the texture region used by a tile.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.GetTileTextureRegion(Electron2D.Vector2I,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTilesCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetTilesCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of tiles stored by this atlas source.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.GetTilesCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasTile",
+      "kind": "Method",
+      "signature": "public System.Boolean HasTile(Electron2D.Vector2I atlasCoords)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Checks whether tile data exists for an atlas coordinate.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.HasTile(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveTile",
+      "kind": "Method",
+      "signature": "public System.Void RemoveTile(Electron2D.Vector2I atlasCoords)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Removes tile data for an atlas coordinate.",
+      "xmlDocId": "M:Electron2D.TileSetAtlasSource.RemoveTile(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D Texture { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the atlas texture sampled by this source.",
+      "xmlDocId": "P:Electron2D.TileSetAtlasSource.Texture",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureRegionSize",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I TextureRegionSize { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the size of one atlas tile region in pixels.",
+      "xmlDocId": "P:Electron2D.TileSetAtlasSource.TextureRegionSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

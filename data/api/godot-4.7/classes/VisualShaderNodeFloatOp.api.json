@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeFloatOp",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeFloatOp",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeFloatOp",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodefloatop.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Operator",
+      "kind": "Property",
+      "signature": "public int Operator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "An operator to be applied to the inputs.",
+      "defaultValue": "0",
+      "godotName": "operator",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatOp.Operator",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operator",
+      "values": [
+        {
+          "name": "OP_ADD",
+          "value": "0",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Sums two numbers using [code]a \u002B b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_ATAN2",
+          "value": "8",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the arc-tangent of the parameters. Translates to [code]atan(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_DIV",
+          "value": "3",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Divides two numbers using [code]a / b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_ENUM_SIZE",
+          "value": "10",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Operator] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_MAX",
+          "value": "6",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the greater of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_MIN",
+          "value": "7",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the lesser of two numbers. Translates to [code]min(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_MOD",
+          "value": "4",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Calculates the remainder of two numbers. Translates to [code]mod(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_MUL",
+          "value": "2",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies two numbers using [code]a * b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_POW",
+          "value": "5",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Raises the [code]a[/code] to the power of [code]b[/code]. Translates to [code]pow(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_STEP",
+          "value": "9",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Generates a step function by comparing [code]b[/code](x) to [code]a[/code](edge). Returns 0.0 if [code]x[/code] is smaller than [code]edge[/code] and otherwise 1.0. Translates to [code]step(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        },
+        {
+          "name": "OP_SUB",
+          "value": "1",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Subtracts two numbers using [code]a - b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_ADD",
+      "value": "0",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Sums two numbers using [code]a \u002B b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_SUB",
+      "value": "1",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Subtracts two numbers using [code]a - b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_MUL",
+      "value": "2",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies two numbers using [code]a * b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_DIV",
+      "value": "3",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Divides two numbers using [code]a / b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_MOD",
+      "value": "4",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Calculates the remainder of two numbers. Translates to [code]mod(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_POW",
+      "value": "5",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Raises the [code]a[/code] to the power of [code]b[/code]. Translates to [code]pow(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_MAX",
+      "value": "6",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the greater of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_MIN",
+      "value": "7",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the lesser of two numbers. Translates to [code]min(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_ATAN2",
+      "value": "8",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the arc-tangent of the parameters. Translates to [code]atan(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_STEP",
+      "value": "9",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Generates a step function by comparing [code]b[/code](x) to [code]a[/code](edge). Returns 0.0 if [code]x[/code] is smaller than [code]edge[/code] and otherwise 1.0. Translates to [code]step(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    },
+    {
+      "name": "OP_ENUM_SIZE",
+      "value": "10",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Operator] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeFloatOp.xml",
+      "sha256": "5a6a83d3011711ad1e4ab681576d8acdd20ab8b247ab0f4a5a284ab5177e55ae"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

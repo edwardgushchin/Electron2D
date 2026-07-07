@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeSub2",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeSub2",
+    "kind": "class",
+    "baseType": "AnimationNodeSync",
+    "interfaces": [],
+    "godotReference": "AnimationNodeSub2",
+    "documentationPath": "doc/classes/AnimationNodeSub2.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodesub2.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeSub2.xml",
+      "sha256": "205bd7b623f6784b9204f53f250de98b61f062b4842defb71963b5d1c13e62dd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

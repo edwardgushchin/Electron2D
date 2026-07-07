@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventJoypadButton",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventJoypadButton",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventJoypadButton",
+    "documentationPath": "doc/classes/InputEventJoypadButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventjoypadbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ButtonIndex",
+      "kind": "Property",
+      "signature": "public int ButtonIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Button identifier. One of the [enum JoyButton] button constants.",
+      "defaultValue": "0",
+      "godotName": "button_index",
+      "xmlDocId": "P:Godot.InputEventJoypadButton.ButtonIndex",
+      "sourcePath": "doc/classes/InputEventJoypadButton.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public bool Pressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button\u0027s state is pressed. If [code]false[/code], the button\u0027s state is released.",
+      "defaultValue": "false",
+      "godotName": "pressed",
+      "xmlDocId": "P:Godot.InputEventJoypadButton.Pressed",
+      "sourcePath": "doc/classes/InputEventJoypadButton.xml"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public float Pressure { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "pressure",
+      "xmlDocId": "P:Godot.InputEventJoypadButton.Pressure",
+      "sourcePath": "doc/classes/InputEventJoypadButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventJoypadButton.xml",
+      "sha256": "9bc437540dc9a1b842a74b9579e2ff1363ab668342e4dac1034ceb8e0466abd0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

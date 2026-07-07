@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SoftBody3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SoftBody3D",
+    "kind": "class",
+    "baseType": "MeshInstance3D",
+    "interfaces": [],
+    "godotReference": "SoftBody3D",
+    "documentationPath": "doc/classes/SoftBody3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_softbody3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void AddCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Adds a body to the list of bodies that this body can\u0027t collide with.",
+      "godotName": "add_collision_exception_with",
+      "xmlDocId": "M:Godot.SoftBody3D.AddCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void ApplyCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Distributes and applies a force to all points. A force is time dependent and meant to be applied every physics update.",
+      "godotName": "apply_central_force",
+      "xmlDocId": "M:Godot.SoftBody3D.ApplyCentralForce(Vector3)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyCentralImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Distributes and applies an impulse to all points. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise).",
+      "godotName": "apply_central_impulse",
+      "xmlDocId": "M:Godot.SoftBody3D.ApplyCentralImpulse(Vector3)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ApplyForce",
+      "kind": "Method",
+      "signature": "public void ApplyForce(int pointIndex, Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point_index",
+          "type": "int"
+        },
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Applies a force to a point. A force is time dependent and meant to be applied every physics update.",
+      "godotName": "apply_force",
+      "xmlDocId": "M:Godot.SoftBody3D.ApplyForce(int,Vector3)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyImpulse(int pointIndex, Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point_index",
+          "type": "int"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Applies an impulse to a point. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise).",
+      "godotName": "apply_impulse",
+      "xmlDocId": "M:Godot.SoftBody3D.ApplyImpulse(int,Vector3)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "GetCollisionExceptions",
+      "kind": "Method",
+      "signature": "public PhysicsBody3D[] GetCollisionExceptions()",
+      "returnType": "PhysicsBody3D[]",
+      "parameters": [],
+      "summary": "Returns an array of nodes that were added as collision exceptions for this body.",
+      "godotName": "get_collision_exceptions",
+      "xmlDocId": "M:Godot.SoftBody3D.GetCollisionExceptions",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "GetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_layer] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_layer_value",
+      "xmlDocId": "M:Godot.SoftBody3D.GetCollisionLayerValue(int)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.SoftBody3D.GetCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "GetPhysicsRid",
+      "kind": "Method",
+      "signature": "public RID GetPhysicsRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the internal [RID] used by the [PhysicsServer3D] for this body.",
+      "godotName": "get_physics_rid",
+      "xmlDocId": "M:Godot.SoftBody3D.GetPhysicsRid",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "GetPointTransform",
+      "kind": "Method",
+      "signature": "public Vector3 GetPointTransform(int pointIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "point_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns local translation of a vertex in the surface array.",
+      "godotName": "get_point_transform",
+      "xmlDocId": "M:Godot.SoftBody3D.GetPointTransform(int)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "IsPointPinned",
+      "kind": "Method",
+      "signature": "public bool IsPointPinned(int pointIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if vertex is set to pinned.",
+      "godotName": "is_point_pinned",
+      "xmlDocId": "M:Godot.SoftBody3D.IsPointPinned(int)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "RemoveCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void RemoveCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Removes a body from the list of bodies that this body can\u0027t collide with.",
+      "godotName": "remove_collision_exception_with",
+      "xmlDocId": "M:Godot.SoftBody3D.RemoveCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "SetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_layer], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_layer_value",
+      "xmlDocId": "M:Godot.SoftBody3D.SetCollisionLayerValue(int,bool)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.SoftBody3D.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "SetPointPinned",
+      "kind": "Method",
+      "signature": "public void SetPointPinned(int pointIndex, bool pinned, NodePath attachmentPath, int insertAt)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point_index",
+          "type": "int"
+        },
+        {
+          "name": "pinned",
+          "type": "bool"
+        },
+        {
+          "name": "attachment_path",
+          "type": "NodePath",
+          "defaultValue": "NodePath(\u0022\u0022)"
+        },
+        {
+          "name": "insert_at",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Sets the pinned state of a surface vertex. When set to [code]true[/code], the optional [param attachment_path] can define a [Node3D] the pinned vertex will be attached to.",
+      "godotName": "set_point_pinned",
+      "xmlDocId": "M:Godot.SoftBody3D.SetPointPinned(int,bool,NodePath,int)",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public int CollisionLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this SoftBody3D [b]is in[/b]. Collision objects can exist in one or more of 32 different layers. See also [member collision_mask]. [b]Note:[/b] Object A can detect a contact with object B only if object B is in any of the layers that object A scans. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_layer",
+      "xmlDocId": "P:Godot.SoftBody3D.CollisionLayer",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this SoftBody3D [b]scans[/b]. Collision objects can scan one or more of 32 different layers. See also [member collision_layer]. [b]Note:[/b] Object A can detect a contact with object B only if object B is in any of the layers that object A scans. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.SoftBody3D.CollisionMask",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "DampingCoefficient",
+      "kind": "Property",
+      "signature": "public float DampingCoefficient { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s damping coefficient. Higher values will slow down the body more noticeably when forces are applied.",
+      "defaultValue": "0.01",
+      "godotName": "damping_coefficient",
+      "xmlDocId": "P:Godot.SoftBody3D.DampingCoefficient",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "DisableMode",
+      "kind": "Property",
+      "signature": "public int DisableMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the behavior in physics when [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "disable_mode",
+      "xmlDocId": "P:Godot.SoftBody3D.DisableMode",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "DragCoefficient",
+      "kind": "Property",
+      "signature": "public float DragCoefficient { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s drag coefficient. Higher values increase this body\u0027s air resistance. [b]Note:[/b] This value is currently unused by Godot\u0027s default physics implementation.",
+      "defaultValue": "0.0",
+      "godotName": "drag_coefficient",
+      "xmlDocId": "P:Godot.SoftBody3D.DragCoefficient",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "LinearStiffness",
+      "kind": "Property",
+      "signature": "public float LinearStiffness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Higher values will result in a stiffer body, while lower values will increase the body\u0027s ability to bend. The value can be between [code]0.0[/code] and [code]1.0[/code] (inclusive).",
+      "defaultValue": "0.5",
+      "godotName": "linear_stiffness",
+      "xmlDocId": "P:Godot.SoftBody3D.LinearStiffness",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ParentCollisionIgnore",
+      "kind": "Property",
+      "signature": "public NodePath ParentCollisionIgnore { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "[NodePath] to a [CollisionObject3D] this SoftBody3D should avoid clipping.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "parent_collision_ignore",
+      "xmlDocId": "P:Godot.SoftBody3D.ParentCollisionIgnore",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "PressureCoefficient",
+      "kind": "Property",
+      "signature": "public float PressureCoefficient { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The pressure coefficient of this soft body. Simulate pressure build-up from inside this body. Higher values increase the strength of this effect.",
+      "defaultValue": "0.0",
+      "godotName": "pressure_coefficient",
+      "xmlDocId": "P:Godot.SoftBody3D.PressureCoefficient",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "RayPickable",
+      "kind": "Property",
+      "signature": "public bool RayPickable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [SoftBody3D] will respond to [RayCast3D]s.",
+      "defaultValue": "true",
+      "godotName": "ray_pickable",
+      "xmlDocId": "P:Godot.SoftBody3D.RayPickable",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "ShrinkingFactor",
+      "kind": "Property",
+      "signature": "public float ShrinkingFactor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the rest lengths of [SoftBody3D]\u0027s edge constraints. Positive values shrink the mesh, while negative values expand it. For example, a value of [code]0.1[/code] shortens the edges of the mesh by 10%, while [code]-0.1[/code] expands the edges by 10%. [b]Note:[/b] [member shrinking_factor] is best used on surface meshes with pinned points.",
+      "defaultValue": "0.0",
+      "godotName": "shrinking_factor",
+      "xmlDocId": "P:Godot.SoftBody3D.ShrinkingFactor",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "SimulationPrecision",
+      "kind": "Property",
+      "signature": "public int SimulationPrecision { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Increasing this value will improve the resulting simulation, but can affect performance. Use with care.",
+      "defaultValue": "5",
+      "godotName": "simulation_precision",
+      "xmlDocId": "P:Godot.SoftBody3D.SimulationPrecision",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "TotalMass",
+      "kind": "Property",
+      "signature": "public float TotalMass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The SoftBody3D\u0027s mass.",
+      "defaultValue": "1.0",
+      "godotName": "total_mass",
+      "xmlDocId": "P:Godot.SoftBody3D.TotalMass",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DisableMode",
+      "values": [
+        {
+          "name": "DISABLE_MODE_KEEP_ACTIVE",
+          "value": "1",
+          "enum": "DisableMode",
+          "kind": "EnumValue",
+          "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], do not affect the physics simulation.",
+          "sourcePath": "doc/classes/SoftBody3D.xml"
+        },
+        {
+          "name": "DISABLE_MODE_REMOVE",
+          "value": "0",
+          "enum": "DisableMode",
+          "kind": "EnumValue",
+          "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], remove from the physics simulation to stop all physics interactions with this [SoftBody3D]. Automatically re-added to the physics simulation when the [Node] is processed again.",
+          "sourcePath": "doc/classes/SoftBody3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DISABLE_MODE_REMOVE",
+      "value": "0",
+      "enum": "DisableMode",
+      "kind": "EnumValue",
+      "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], remove from the physics simulation to stop all physics interactions with this [SoftBody3D]. Automatically re-added to the physics simulation when the [Node] is processed again.",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    },
+    {
+      "name": "DISABLE_MODE_KEEP_ACTIVE",
+      "value": "1",
+      "enum": "DisableMode",
+      "kind": "EnumValue",
+      "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], do not affect the physics simulation.",
+      "sourcePath": "doc/classes/SoftBody3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SoftBody3D.xml",
+      "sha256": "d184b6ab4cfce395dbdd291a14fea0b37aa6b5610d389f6bf0bd9a9d602e4cba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

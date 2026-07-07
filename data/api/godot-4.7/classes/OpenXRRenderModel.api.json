@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRRenderModel",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRRenderModel",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "OpenXRRenderModel",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRRenderModel.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrrendermodel.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetTopLevelPath",
+      "kind": "Method",
+      "signature": "public String GetTopLevelPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the top level path related to this render model.",
+      "godotName": "get_top_level_path",
+      "xmlDocId": "M:Godot.OpenXRRenderModel.GetTopLevelPath",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModel.xml"
+    },
+    {
+      "name": "RenderModel",
+      "kind": "Property",
+      "signature": "public RID RenderModel { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The render model RID for the render model to load, as returned by [method OpenXRRenderModelExtension.render_model_create] or [method OpenXRRenderModelExtension.render_model_get_all].",
+      "defaultValue": "RID()",
+      "godotName": "render_model",
+      "xmlDocId": "P:Godot.OpenXRRenderModel.RenderModel",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModel.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "RenderModelTopLevelPathChanged",
+      "kind": "Signal",
+      "signature": "public event RenderModelTopLevelPathChangedHandler RenderModelTopLevelPathChanged",
+      "parameters": [],
+      "summary": "Emitted when the top level path of this render model has changed.",
+      "godotName": "render_model_top_level_path_changed",
+      "xmlDocId": "E:Godot.OpenXRRenderModel.RenderModelTopLevelPathChanged",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModel.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRRenderModel.xml",
+      "sha256": "862c229995c2bb4614aeaedef8d99fc6e0288df434fc207da56063e90664944e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

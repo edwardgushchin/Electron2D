@@ -1,0 +1,647 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerPeerExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerPeerExtension",
+    "kind": "class",
+    "baseType": "MultiplayerPeer",
+    "interfaces": [],
+    "godotReference": "MultiplayerPeerExtension",
+    "documentationPath": "doc/classes/MultiplayerPeerExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayerpeerextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the multiplayer peer should be immediately closed (see [method MultiplayerPeer.close]).",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._Close",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_DisconnectPeer",
+      "kind": "Method",
+      "signature": "public void _DisconnectPeer(int peer, bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the connected [param peer] should be forcibly disconnected (see [method MultiplayerPeer.disconnect_peer]).",
+      "godotName": "_disconnect_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._DisconnectPeer(int,bool)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the available packet count is internally requested by the [MultiplayerAPI].",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetAvailablePacketCount",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetConnectionStatus",
+      "kind": "Method",
+      "signature": "public int _GetConnectionStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the connection status is requested on the [MultiplayerPeer] (see [method MultiplayerPeer.get_connection_status]).",
+      "godotName": "_get_connection_status",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetConnectionStatus",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the maximum allowed packet size (in bytes) is requested by the [MultiplayerAPI].",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetMaxPacketSize",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Called when a packet needs to be received by the [MultiplayerAPI], with [param r_buffer_size] being the size of the binary [param r_buffer] in bytes.",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketChannel",
+      "kind": "Method",
+      "signature": "public int _GetPacketChannel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called to get the channel over which the next available packet was received. See [method MultiplayerPeer.get_packet_channel].",
+      "godotName": "_get_packet_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketChannel",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketMode",
+      "kind": "Method",
+      "signature": "public int _GetPacketMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called to get the transfer mode the remote peer used to send the next available packet. See [method MultiplayerPeer.get_packet_mode].",
+      "godotName": "_get_packet_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketMode",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketPeer",
+      "kind": "Method",
+      "signature": "public int _GetPacketPeer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the ID of the [MultiplayerPeer] who sent the most recent packet is requested (see [method MultiplayerPeer.get_packet_peer]).",
+      "godotName": "_get_packet_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketPeer",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketScript",
+      "kind": "Method",
+      "signature": "public PackedByteArray _GetPacketScript()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Called when a packet needs to be received by the [MultiplayerAPI], if [method _get_packet] isn\u0027t implemented. Use this when extending this class via GDScript.",
+      "godotName": "_get_packet_script",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketScript",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetTransferChannel",
+      "kind": "Method",
+      "signature": "public int _GetTransferChannel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the transfer channel to use is read on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_channel]).",
+      "godotName": "_get_transfer_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetTransferChannel",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetTransferMode",
+      "kind": "Method",
+      "signature": "public int _GetTransferMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the transfer mode to use is read on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_mode]).",
+      "godotName": "_get_transfer_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetTransferMode",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetUniqueId",
+      "kind": "Method",
+      "signature": "public int _GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the unique ID of this [MultiplayerPeer] is requested (see [method MultiplayerPeer.get_unique_id]). The value must be between [code]1[/code] and [code]2147483647[/code].",
+      "godotName": "_get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsRefusingNewConnections",
+      "kind": "Method",
+      "signature": "public bool _IsRefusingNewConnections()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the \u0022refuse new connections\u0022 status is requested on this [MultiplayerPeer] (see [member MultiplayerPeer.refuse_new_connections]).",
+      "godotName": "_is_refusing_new_connections",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsRefusingNewConnections",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsServer",
+      "kind": "Method",
+      "signature": "public bool _IsServer()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the \u0022is server\u0022 status is requested on the [MultiplayerAPI]. See [method MultiplayerAPI.is_server].",
+      "godotName": "_is_server",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsServer",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsServerRelaySupported",
+      "kind": "Method",
+      "signature": "public bool _IsServerRelaySupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called to check if the server can act as a relay in the current configuration. See [method MultiplayerPeer.is_server_relay_supported].",
+      "godotName": "_is_server_relay_supported",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsServerRelaySupported",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public void _Poll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the [MultiplayerAPI] is polled. See [method MultiplayerAPI.poll].",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._Poll",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when a packet needs to be sent by the [MultiplayerAPI], with [param buffer_size] being the size of the binary [param buffer] in bytes.",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacketScript",
+      "kind": "Method",
+      "signature": "public int _PutPacketScript(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Called when a packet needs to be sent by the [MultiplayerAPI], if [method _put_packet] isn\u0027t implemented. Use this when extending this class via GDScript.",
+      "godotName": "_put_packet_script",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._PutPacketScript(PackedByteArray)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetRefuseNewConnections",
+      "kind": "Method",
+      "signature": "public void _SetRefuseNewConnections(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the \u0022refuse new connections\u0022 status is set on this [MultiplayerPeer] (see [member MultiplayerPeer.refuse_new_connections]).",
+      "godotName": "_set_refuse_new_connections",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetRefuseNewConnections(bool)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTargetPeer",
+      "kind": "Method",
+      "signature": "public void _SetTargetPeer(int peer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the target peer to use is set for this [MultiplayerPeer] (see [method MultiplayerPeer.set_target_peer]).",
+      "godotName": "_set_target_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTargetPeer(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTransferChannel",
+      "kind": "Method",
+      "signature": "public void _SetTransferChannel(int channel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "channel",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the channel to use is set for this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_channel]).",
+      "godotName": "_set_transfer_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTransferChannel(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTransferMode",
+      "kind": "Method",
+      "signature": "public void _SetTransferMode(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the transfer mode is set on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_mode]).",
+      "godotName": "_set_transfer_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTransferMode(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the multiplayer peer should be immediately closed (see [method MultiplayerPeer.close]).",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._Close",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_DisconnectPeer",
+      "kind": "Method",
+      "signature": "public void _DisconnectPeer(int peer, bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the connected [param peer] should be forcibly disconnected (see [method MultiplayerPeer.disconnect_peer]).",
+      "godotName": "_disconnect_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._DisconnectPeer(int,bool)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the available packet count is internally requested by the [MultiplayerAPI].",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetAvailablePacketCount",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetConnectionStatus",
+      "kind": "Method",
+      "signature": "public int _GetConnectionStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the connection status is requested on the [MultiplayerPeer] (see [method MultiplayerPeer.get_connection_status]).",
+      "godotName": "_get_connection_status",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetConnectionStatus",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the maximum allowed packet size (in bytes) is requested by the [MultiplayerAPI].",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetMaxPacketSize",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Called when a packet needs to be received by the [MultiplayerAPI], with [param r_buffer_size] being the size of the binary [param r_buffer] in bytes.",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketChannel",
+      "kind": "Method",
+      "signature": "public int _GetPacketChannel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called to get the channel over which the next available packet was received. See [method MultiplayerPeer.get_packet_channel].",
+      "godotName": "_get_packet_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketChannel",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketMode",
+      "kind": "Method",
+      "signature": "public int _GetPacketMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called to get the transfer mode the remote peer used to send the next available packet. See [method MultiplayerPeer.get_packet_mode].",
+      "godotName": "_get_packet_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketMode",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketPeer",
+      "kind": "Method",
+      "signature": "public int _GetPacketPeer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the ID of the [MultiplayerPeer] who sent the most recent packet is requested (see [method MultiplayerPeer.get_packet_peer]).",
+      "godotName": "_get_packet_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketPeer",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacketScript",
+      "kind": "Method",
+      "signature": "public PackedByteArray _GetPacketScript()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Called when a packet needs to be received by the [MultiplayerAPI], if [method _get_packet] isn\u0027t implemented. Use this when extending this class via GDScript.",
+      "godotName": "_get_packet_script",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetPacketScript",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetTransferChannel",
+      "kind": "Method",
+      "signature": "public int _GetTransferChannel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the transfer channel to use is read on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_channel]).",
+      "godotName": "_get_transfer_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetTransferChannel",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetTransferMode",
+      "kind": "Method",
+      "signature": "public int _GetTransferMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the transfer mode to use is read on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_mode]).",
+      "godotName": "_get_transfer_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetTransferMode",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_GetUniqueId",
+      "kind": "Method",
+      "signature": "public int _GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the unique ID of this [MultiplayerPeer] is requested (see [method MultiplayerPeer.get_unique_id]). The value must be between [code]1[/code] and [code]2147483647[/code].",
+      "godotName": "_get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsRefusingNewConnections",
+      "kind": "Method",
+      "signature": "public bool _IsRefusingNewConnections()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the \u0022refuse new connections\u0022 status is requested on this [MultiplayerPeer] (see [member MultiplayerPeer.refuse_new_connections]).",
+      "godotName": "_is_refusing_new_connections",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsRefusingNewConnections",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsServer",
+      "kind": "Method",
+      "signature": "public bool _IsServer()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the \u0022is server\u0022 status is requested on the [MultiplayerAPI]. See [method MultiplayerAPI.is_server].",
+      "godotName": "_is_server",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsServer",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_IsServerRelaySupported",
+      "kind": "Method",
+      "signature": "public bool _IsServerRelaySupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called to check if the server can act as a relay in the current configuration. See [method MultiplayerPeer.is_server_relay_supported].",
+      "godotName": "_is_server_relay_supported",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._IsServerRelaySupported",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public void _Poll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the [MultiplayerAPI] is polled. See [method MultiplayerAPI.poll].",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._Poll",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when a packet needs to be sent by the [MultiplayerAPI], with [param buffer_size] being the size of the binary [param buffer] in bytes.",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacketScript",
+      "kind": "Method",
+      "signature": "public int _PutPacketScript(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Called when a packet needs to be sent by the [MultiplayerAPI], if [method _put_packet] isn\u0027t implemented. Use this when extending this class via GDScript.",
+      "godotName": "_put_packet_script",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._PutPacketScript(PackedByteArray)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetRefuseNewConnections",
+      "kind": "Method",
+      "signature": "public void _SetRefuseNewConnections(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the \u0022refuse new connections\u0022 status is set on this [MultiplayerPeer] (see [member MultiplayerPeer.refuse_new_connections]).",
+      "godotName": "_set_refuse_new_connections",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetRefuseNewConnections(bool)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTargetPeer",
+      "kind": "Method",
+      "signature": "public void _SetTargetPeer(int peer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the target peer to use is set for this [MultiplayerPeer] (see [method MultiplayerPeer.set_target_peer]).",
+      "godotName": "_set_target_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTargetPeer(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTransferChannel",
+      "kind": "Method",
+      "signature": "public void _SetTransferChannel(int channel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "channel",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the channel to use is set for this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_channel]).",
+      "godotName": "_set_transfer_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTransferChannel(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    },
+    {
+      "name": "_SetTransferMode",
+      "kind": "Method",
+      "signature": "public void _SetTransferMode(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the transfer mode is set on this [MultiplayerPeer] (see [member MultiplayerPeer.transfer_mode]).",
+      "godotName": "_set_transfer_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeerExtension._SetTransferMode(int)",
+      "sourcePath": "doc/classes/MultiplayerPeerExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiplayerPeerExtension.xml",
+      "sha256": "85d89c08823c4a19e043949dabd720ea77bc0031c44793eaebee958e7dd6b862"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

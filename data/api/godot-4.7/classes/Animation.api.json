@@ -1,0 +1,2147 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Animation",
+    "namespace": "Godot",
+    "fullName": "Godot.Animation",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Animation",
+    "documentationPath": "doc/classes/Animation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddMarker",
+      "kind": "Method",
+      "signature": "public void AddMarker(StringName name, float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Adds a marker to this Animation.",
+      "godotName": "add_marker",
+      "xmlDocId": "M:Godot.Animation.AddMarker(StringName,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AddTrack",
+      "kind": "Method",
+      "signature": "public int AddTrack(int type, int atPosition)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "at_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a track to the Animation.",
+      "godotName": "add_track",
+      "xmlDocId": "M:Godot.Animation.AddTrack(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AnimationTrackGetKeyAnimation",
+      "kind": "Method",
+      "signature": "public StringName AnimationTrackGetKeyAnimation(int trackIdx, int keyIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the animation name at the key identified by [param key_idx]. The [param track_idx] must be the index of an Animation Track.",
+      "godotName": "animation_track_get_key_animation",
+      "xmlDocId": "M:Godot.Animation.AnimationTrackGetKeyAnimation(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AnimationTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int AnimationTrackInsertKey(int trackIdx, float time, StringName animation)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "animation",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Inserts a key with value [param animation] at the given [param time] (in seconds). The [param track_idx] must be the index of an Animation Track.",
+      "godotName": "animation_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.AnimationTrackInsertKey(int,float,StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AnimationTrackSetKeyAnimation",
+      "kind": "Method",
+      "signature": "public void AnimationTrackSetKeyAnimation(int trackIdx, int keyIdx, StringName animation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "animation",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the key identified by [param key_idx] to value [param animation]. The [param track_idx] must be the index of an Animation Track.",
+      "godotName": "animation_track_set_key_animation",
+      "xmlDocId": "M:Godot.Animation.AnimationTrackSetKeyAnimation(int,int,StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackGetKeyEndOffset",
+      "kind": "Method",
+      "signature": "public float AudioTrackGetKeyEndOffset(int trackIdx, int keyIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end offset of the key identified by [param key_idx]. The [param track_idx] must be the index of an Audio Track. End offset is the number of seconds cut off at the ending of the audio stream.",
+      "godotName": "audio_track_get_key_end_offset",
+      "xmlDocId": "M:Godot.Animation.AudioTrackGetKeyEndOffset(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackGetKeyStartOffset",
+      "kind": "Method",
+      "signature": "public float AudioTrackGetKeyStartOffset(int trackIdx, int keyIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the start offset of the key identified by [param key_idx]. The [param track_idx] must be the index of an Audio Track. Start offset is the number of seconds cut off at the beginning of the audio stream.",
+      "godotName": "audio_track_get_key_start_offset",
+      "xmlDocId": "M:Godot.Animation.AudioTrackGetKeyStartOffset(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackGetKeyStream",
+      "kind": "Method",
+      "signature": "public Resource AudioTrackGetKeyStream(int trackIdx, int keyIdx)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the audio stream of the key identified by [param key_idx]. The [param track_idx] must be the index of an Audio Track.",
+      "godotName": "audio_track_get_key_stream",
+      "xmlDocId": "M:Godot.Animation.AudioTrackGetKeyStream(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int AudioTrackInsertKey(int trackIdx, float time, Resource stream, float startOffset, float endOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "stream",
+          "type": "Resource"
+        },
+        {
+          "name": "start_offset",
+          "type": "float",
+          "defaultValue": "0"
+        },
+        {
+          "name": "end_offset",
+          "type": "float",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Inserts an Audio Track key at the given [param time] in seconds. The [param track_idx] must be the index of an Audio Track. [param stream] is the [AudioStream] resource to play. [param start_offset] is the number of seconds cut off at the beginning of the audio stream, while [param end_offset] is at the ending.",
+      "godotName": "audio_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.AudioTrackInsertKey(int,float,Resource,float,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackIsUseBlend",
+      "kind": "Method",
+      "signature": "public bool AudioTrackIsUseBlend(int trackIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the track at [param track_idx] will be blended with other animations.",
+      "godotName": "audio_track_is_use_blend",
+      "xmlDocId": "M:Godot.Animation.AudioTrackIsUseBlend(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackSetKeyEndOffset",
+      "kind": "Method",
+      "signature": "public void AudioTrackSetKeyEndOffset(int trackIdx, int keyIdx, float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the end offset of the key identified by [param key_idx] to value [param offset]. The [param track_idx] must be the index of an Audio Track.",
+      "godotName": "audio_track_set_key_end_offset",
+      "xmlDocId": "M:Godot.Animation.AudioTrackSetKeyEndOffset(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackSetKeyStartOffset",
+      "kind": "Method",
+      "signature": "public void AudioTrackSetKeyStartOffset(int trackIdx, int keyIdx, float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the start offset of the key identified by [param key_idx] to value [param offset]. The [param track_idx] must be the index of an Audio Track.",
+      "godotName": "audio_track_set_key_start_offset",
+      "xmlDocId": "M:Godot.Animation.AudioTrackSetKeyStartOffset(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackSetKeyStream",
+      "kind": "Method",
+      "signature": "public void AudioTrackSetKeyStream(int trackIdx, int keyIdx, Resource stream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "stream",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Sets the stream of the key identified by [param key_idx] to value [param stream]. The [param track_idx] must be the index of an Audio Track.",
+      "godotName": "audio_track_set_key_stream",
+      "xmlDocId": "M:Godot.Animation.AudioTrackSetKeyStream(int,int,Resource)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "AudioTrackSetUseBlend",
+      "kind": "Method",
+      "signature": "public void AudioTrackSetUseBlend(int trackIdx, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the track will be blended with other animations. If [code]true[/code], the audio playback volume changes depending on the blend value.",
+      "godotName": "audio_track_set_use_blend",
+      "xmlDocId": "M:Godot.Animation.AudioTrackSetUseBlend(int,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackGetKeyInHandle",
+      "kind": "Method",
+      "signature": "public Vector2 BezierTrackGetKeyInHandle(int trackIdx, int keyIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the in handle of the key identified by [param key_idx]. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_get_key_in_handle",
+      "xmlDocId": "M:Godot.Animation.BezierTrackGetKeyInHandle(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackGetKeyOutHandle",
+      "kind": "Method",
+      "signature": "public Vector2 BezierTrackGetKeyOutHandle(int trackIdx, int keyIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the out handle of the key identified by [param key_idx]. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_get_key_out_handle",
+      "xmlDocId": "M:Godot.Animation.BezierTrackGetKeyOutHandle(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackGetKeyValue",
+      "kind": "Method",
+      "signature": "public float BezierTrackGetKeyValue(int trackIdx, int keyIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the key identified by [param key_idx]. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_get_key_value",
+      "xmlDocId": "M:Godot.Animation.BezierTrackGetKeyValue(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int BezierTrackInsertKey(int trackIdx, float time, float value, Vector2 inHandle, Vector2 outHandle)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        },
+        {
+          "name": "in_handle",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        },
+        {
+          "name": "out_handle",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Inserts a Bezier Track key at the given [param time] in seconds. The [param track_idx] must be the index of a Bezier Track. [param in_handle] is the left-side weight of the added Bezier curve point, [param out_handle] is the right-side one, while [param value] is the actual value at this point.",
+      "godotName": "bezier_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.BezierTrackInsertKey(int,float,float,Vector2,Vector2)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackInterpolate",
+      "kind": "Method",
+      "signature": "public float BezierTrackInterpolate(int trackIdx, float time)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the interpolated value at the given [param time] (in seconds). The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.BezierTrackInterpolate(int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackSetKeyInHandle",
+      "kind": "Method",
+      "signature": "public void BezierTrackSetKeyInHandle(int trackIdx, int keyIdx, Vector2 inHandle, float balancedValueTimeRatio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "in_handle",
+          "type": "Vector2"
+        },
+        {
+          "name": "balanced_value_time_ratio",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Sets the in handle of the key identified by [param key_idx] to value [param in_handle]. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_set_key_in_handle",
+      "xmlDocId": "M:Godot.Animation.BezierTrackSetKeyInHandle(int,int,Vector2,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackSetKeyOutHandle",
+      "kind": "Method",
+      "signature": "public void BezierTrackSetKeyOutHandle(int trackIdx, int keyIdx, Vector2 outHandle, float balancedValueTimeRatio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "out_handle",
+          "type": "Vector2"
+        },
+        {
+          "name": "balanced_value_time_ratio",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Sets the out handle of the key identified by [param key_idx] to value [param out_handle]. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_set_key_out_handle",
+      "xmlDocId": "M:Godot.Animation.BezierTrackSetKeyOutHandle(int,int,Vector2,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BezierTrackSetKeyValue",
+      "kind": "Method",
+      "signature": "public void BezierTrackSetKeyValue(int trackIdx, int keyIdx, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the key identified by [param key_idx] to the given value. The [param track_idx] must be the index of a Bezier Track.",
+      "godotName": "bezier_track_set_key_value",
+      "xmlDocId": "M:Godot.Animation.BezierTrackSetKeyValue(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BlendShapeTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int BlendShapeTrackInsertKey(int trackIdx, float time, float amount)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Inserts a key in a given blend shape track. Returns the key index.",
+      "godotName": "blend_shape_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.BlendShapeTrackInsertKey(int,float,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "BlendShapeTrackInterpolate",
+      "kind": "Method",
+      "signature": "public float BlendShapeTrackInterpolate(int trackIdx, float timeSec, bool backward)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the interpolated blend shape value at the given time (in seconds). The [param track_idx] must be the index of a blend shape track.",
+      "godotName": "blend_shape_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.BlendShapeTrackInterpolate(int,float,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear the animation (clear all tracks and reset all).",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.Animation.Clear",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "Compress",
+      "kind": "Method",
+      "signature": "public void Compress(int pageSize, int fps, float splitTolerance)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "page_size",
+          "type": "int",
+          "defaultValue": "8192"
+        },
+        {
+          "name": "fps",
+          "type": "int",
+          "defaultValue": "120"
+        },
+        {
+          "name": "split_tolerance",
+          "type": "float",
+          "defaultValue": "4.0"
+        }
+      ],
+      "summary": "Compress the animation and all its tracks in-place. This will make [method track_is_compressed] return [code]true[/code] once called on this [Animation]. Compressed tracks require less memory to be played, and are designed to be used for complex 3D animations (such as cutscenes) imported from external 3D software. Compression is lossy, but the difference is usually not noticeable in real world conditions. [b]Note:[/b] Compressed tracks have various limitations (such as not being editable from the editor), so only use compressed animations if you actually need them.",
+      "godotName": "compress",
+      "xmlDocId": "M:Godot.Animation.Compress(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "CopyTrack",
+      "kind": "Method",
+      "signature": "public void CopyTrack(int trackIdx, Animation toAnimation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "to_animation",
+          "type": "Animation"
+        }
+      ],
+      "summary": "Adds a new track to [param to_animation] that is a copy of the given track from this animation.",
+      "godotName": "copy_track",
+      "xmlDocId": "M:Godot.Animation.CopyTrack(int,Animation)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "FindTrack",
+      "kind": "Method",
+      "signature": "public int FindTrack(NodePath path, int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the specified track. If the track is not found, return -1.",
+      "godotName": "find_track",
+      "xmlDocId": "M:Godot.Animation.FindTrack(NodePath,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetMarkerAtTime",
+      "kind": "Method",
+      "signature": "public StringName GetMarkerAtTime(float time)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the name of the marker located at the given time.",
+      "godotName": "get_marker_at_time",
+      "xmlDocId": "M:Godot.Animation.GetMarkerAtTime(float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetMarkerColor",
+      "kind": "Method",
+      "signature": "public Color GetMarkerColor(StringName name)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the given marker\u0027s color.",
+      "godotName": "get_marker_color",
+      "xmlDocId": "M:Godot.Animation.GetMarkerColor(StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetMarkerNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetMarkerNames()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns every marker in this Animation, sorted ascending by time.",
+      "godotName": "get_marker_names",
+      "xmlDocId": "M:Godot.Animation.GetMarkerNames",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetMarkerTime",
+      "kind": "Method",
+      "signature": "public float GetMarkerTime(StringName name)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the given marker\u0027s time.",
+      "godotName": "get_marker_time",
+      "xmlDocId": "M:Godot.Animation.GetMarkerTime(StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetNextMarker",
+      "kind": "Method",
+      "signature": "public StringName GetNextMarker(float time)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the closest marker that comes after the given time. If no such marker exists, an empty string is returned.",
+      "godotName": "get_next_marker",
+      "xmlDocId": "M:Godot.Animation.GetNextMarker(float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetPrevMarker",
+      "kind": "Method",
+      "signature": "public StringName GetPrevMarker(float time)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the closest marker that comes before the given time. If no such marker exists, an empty string is returned.",
+      "godotName": "get_prev_marker",
+      "xmlDocId": "M:Godot.Animation.GetPrevMarker(float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "GetTrackCount",
+      "kind": "Method",
+      "signature": "public int GetTrackCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the amount of tracks in the animation.",
+      "godotName": "get_track_count",
+      "xmlDocId": "M:Godot.Animation.GetTrackCount",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "HasMarker",
+      "kind": "Method",
+      "signature": "public bool HasMarker(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this Animation contains a marker with the given name.",
+      "godotName": "has_marker",
+      "xmlDocId": "M:Godot.Animation.HasMarker(StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "MethodTrackGetName",
+      "kind": "Method",
+      "signature": "public StringName MethodTrackGetName(int trackIdx, int keyIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the method name of a method track.",
+      "godotName": "method_track_get_name",
+      "xmlDocId": "M:Godot.Animation.MethodTrackGetName(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "MethodTrackGetParams",
+      "kind": "Method",
+      "signature": "public Array MethodTrackGetParams(int trackIdx, int keyIdx)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the arguments values to be called on a method track for a given key in a given track.",
+      "godotName": "method_track_get_params",
+      "xmlDocId": "M:Godot.Animation.MethodTrackGetParams(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "Optimize",
+      "kind": "Method",
+      "signature": "public void Optimize(float allowedVelocityErr, float allowedAngularErr, int precision)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "allowed_velocity_err",
+          "type": "float",
+          "defaultValue": "0.01"
+        },
+        {
+          "name": "allowed_angular_err",
+          "type": "float",
+          "defaultValue": "0.01"
+        },
+        {
+          "name": "precision",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Optimize the animation and all its tracks in-place. This will preserve only as many keys as are necessary to keep the animation within the specified bounds.",
+      "godotName": "optimize",
+      "xmlDocId": "M:Godot.Animation.Optimize(float,float,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "PositionTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int PositionTrackInsertKey(int trackIdx, float time, Vector3 position)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Inserts a key in a given 3D position track. Returns the key index.",
+      "godotName": "position_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.PositionTrackInsertKey(int,float,Vector3)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "PositionTrackInterpolate",
+      "kind": "Method",
+      "signature": "public Vector3 PositionTrackInterpolate(int trackIdx, float timeSec, bool backward)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the interpolated position value at the given time (in seconds). The [param track_idx] must be the index of a 3D position track.",
+      "godotName": "position_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.PositionTrackInterpolate(int,float,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "RemoveMarker",
+      "kind": "Method",
+      "signature": "public void RemoveMarker(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the marker with the given name from this Animation.",
+      "godotName": "remove_marker",
+      "xmlDocId": "M:Godot.Animation.RemoveMarker(StringName)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "RemoveTrack",
+      "kind": "Method",
+      "signature": "public void RemoveTrack(int trackIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a track by specifying the track index.",
+      "godotName": "remove_track",
+      "xmlDocId": "M:Godot.Animation.RemoveTrack(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "RotationTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int RotationTrackInsertKey(int trackIdx, float time, Quaternion rotation)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Inserts a key in a given 3D rotation track. Returns the key index.",
+      "godotName": "rotation_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.RotationTrackInsertKey(int,float,Quaternion)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "RotationTrackInterpolate",
+      "kind": "Method",
+      "signature": "public Quaternion RotationTrackInterpolate(int trackIdx, float timeSec, bool backward)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the interpolated rotation value at the given time (in seconds). The [param track_idx] must be the index of a 3D rotation track.",
+      "godotName": "rotation_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.RotationTrackInterpolate(int,float,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "ScaleTrackInsertKey",
+      "kind": "Method",
+      "signature": "public int ScaleTrackInsertKey(int trackIdx, float time, Vector3 scale)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Inserts a key in a given 3D scale track. Returns the key index.",
+      "godotName": "scale_track_insert_key",
+      "xmlDocId": "M:Godot.Animation.ScaleTrackInsertKey(int,float,Vector3)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "ScaleTrackInterpolate",
+      "kind": "Method",
+      "signature": "public Vector3 ScaleTrackInterpolate(int trackIdx, float timeSec, bool backward)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the interpolated scale value at the given time (in seconds). The [param track_idx] must be the index of a 3D scale track.",
+      "godotName": "scale_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.ScaleTrackInterpolate(int,float,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "SetMarkerColor",
+      "kind": "Method",
+      "signature": "public void SetMarkerColor(StringName name, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the given marker\u0027s color.",
+      "godotName": "set_marker_color",
+      "xmlDocId": "M:Godot.Animation.SetMarkerColor(StringName,Color)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackFindKey",
+      "kind": "Method",
+      "signature": "public int TrackFindKey(int trackIdx, float time, int findMode, bool limit, bool backward)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "find_mode",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "limit",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Finds the key index by time in a given track. Optionally, only find it if the approx/exact time is given. If [param limit] is [code]true[/code], it does not return keys outside the animation range. If [param backward] is [code]true[/code], the direction is reversed in methods that rely on one directional processing. For example, in case [param find_mode] is [constant FIND_MODE_NEAREST], if there is no key in the current position just after seeked, the first key found is retrieved by searching before the position, but if [param backward] is [code]true[/code], the first key found is retrieved after the position.",
+      "godotName": "track_find_key",
+      "xmlDocId": "M:Godot.Animation.TrackFindKey(int,float,int,bool,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetInterpolationLoopWrap",
+      "kind": "Method",
+      "signature": "public bool TrackGetInterpolationLoopWrap(int trackIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the track at [param track_idx] wraps the interpolation loop. New tracks wrap the interpolation loop by default.",
+      "godotName": "track_get_interpolation_loop_wrap",
+      "xmlDocId": "M:Godot.Animation.TrackGetInterpolationLoopWrap(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetInterpolationType",
+      "kind": "Method",
+      "signature": "public int TrackGetInterpolationType(int trackIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the interpolation type of a given track.",
+      "godotName": "track_get_interpolation_type",
+      "xmlDocId": "M:Godot.Animation.TrackGetInterpolationType(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetKeyCount",
+      "kind": "Method",
+      "signature": "public int TrackGetKeyCount(int trackIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of keys in a given track.",
+      "godotName": "track_get_key_count",
+      "xmlDocId": "M:Godot.Animation.TrackGetKeyCount(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetKeyTime",
+      "kind": "Method",
+      "signature": "public float TrackGetKeyTime(int trackIdx, int keyIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the time at which the key is located.",
+      "godotName": "track_get_key_time",
+      "xmlDocId": "M:Godot.Animation.TrackGetKeyTime(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetKeyTransition",
+      "kind": "Method",
+      "signature": "public float TrackGetKeyTransition(int trackIdx, int keyIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transition curve (easing) for a specific key (see the built-in math function [method @GlobalScope.ease]).",
+      "godotName": "track_get_key_transition",
+      "xmlDocId": "M:Godot.Animation.TrackGetKeyTransition(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetKeyValue",
+      "kind": "Method",
+      "signature": "public Variant TrackGetKeyValue(int trackIdx, int keyIdx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of a given key in a given track.",
+      "godotName": "track_get_key_value",
+      "xmlDocId": "M:Godot.Animation.TrackGetKeyValue(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetPath",
+      "kind": "Method",
+      "signature": "public NodePath TrackGetPath(int trackIdx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the path of a track. For more information on the path format, see [method track_set_path].",
+      "godotName": "track_get_path",
+      "xmlDocId": "M:Godot.Animation.TrackGetPath(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackGetType",
+      "kind": "Method",
+      "signature": "public int TrackGetType(int trackIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the type of a track.",
+      "godotName": "track_get_type",
+      "xmlDocId": "M:Godot.Animation.TrackGetType(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackInsertKey",
+      "kind": "Method",
+      "signature": "public int TrackInsertKey(int trackIdx, float time, Variant key, float transition)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "transition",
+          "type": "float",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Inserts a generic key in a given track. Returns the key index.",
+      "godotName": "track_insert_key",
+      "xmlDocId": "M:Godot.Animation.TrackInsertKey(int,float,Variant,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackIsCompressed",
+      "kind": "Method",
+      "signature": "public bool TrackIsCompressed(int trackIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the track is compressed, [code]false[/code] otherwise. See also [method compress].",
+      "godotName": "track_is_compressed",
+      "xmlDocId": "M:Godot.Animation.TrackIsCompressed(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackIsEnabled",
+      "kind": "Method",
+      "signature": "public bool TrackIsEnabled(int trackIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the track at index [param track_idx] is enabled.",
+      "godotName": "track_is_enabled",
+      "xmlDocId": "M:Godot.Animation.TrackIsEnabled(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackIsImported",
+      "kind": "Method",
+      "signature": "public bool TrackIsImported(int trackIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given track is imported. Else, return [code]false[/code].",
+      "godotName": "track_is_imported",
+      "xmlDocId": "M:Godot.Animation.TrackIsImported(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackMoveDown",
+      "kind": "Method",
+      "signature": "public void TrackMoveDown(int trackIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves a track down.",
+      "godotName": "track_move_down",
+      "xmlDocId": "M:Godot.Animation.TrackMoveDown(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackMoveTo",
+      "kind": "Method",
+      "signature": "public void TrackMoveTo(int trackIdx, int toIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "to_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes the index position of track [param track_idx] to the one defined in [param to_idx].",
+      "godotName": "track_move_to",
+      "xmlDocId": "M:Godot.Animation.TrackMoveTo(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackMoveUp",
+      "kind": "Method",
+      "signature": "public void TrackMoveUp(int trackIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves a track up.",
+      "godotName": "track_move_up",
+      "xmlDocId": "M:Godot.Animation.TrackMoveUp(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackRemoveKey",
+      "kind": "Method",
+      "signature": "public void TrackRemoveKey(int trackIdx, int keyIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a key by index in a given track.",
+      "godotName": "track_remove_key",
+      "xmlDocId": "M:Godot.Animation.TrackRemoveKey(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackRemoveKeyAtTime",
+      "kind": "Method",
+      "signature": "public void TrackRemoveKeyAtTime(int trackIdx, float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Removes a key at [param time] in a given track.",
+      "godotName": "track_remove_key_at_time",
+      "xmlDocId": "M:Godot.Animation.TrackRemoveKeyAtTime(int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetEnabled",
+      "kind": "Method",
+      "signature": "public void TrackSetEnabled(int trackIdx, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables/disables the given track. Tracks are enabled by default.",
+      "godotName": "track_set_enabled",
+      "xmlDocId": "M:Godot.Animation.TrackSetEnabled(int,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetImported",
+      "kind": "Method",
+      "signature": "public void TrackSetImported(int trackIdx, bool imported)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "imported",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the given track as imported or not.",
+      "godotName": "track_set_imported",
+      "xmlDocId": "M:Godot.Animation.TrackSetImported(int,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetInterpolationLoopWrap",
+      "kind": "Method",
+      "signature": "public void TrackSetInterpolationLoopWrap(int trackIdx, bool interpolation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "interpolation",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the track at [param track_idx] wraps the interpolation loop.",
+      "godotName": "track_set_interpolation_loop_wrap",
+      "xmlDocId": "M:Godot.Animation.TrackSetInterpolationLoopWrap(int,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetInterpolationType",
+      "kind": "Method",
+      "signature": "public void TrackSetInterpolationType(int trackIdx, int interpolation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "interpolation",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the interpolation type of a given track.",
+      "godotName": "track_set_interpolation_type",
+      "xmlDocId": "M:Godot.Animation.TrackSetInterpolationType(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetKeyTime",
+      "kind": "Method",
+      "signature": "public void TrackSetKeyTime(int trackIdx, int keyIdx, float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the time of an existing key.",
+      "godotName": "track_set_key_time",
+      "xmlDocId": "M:Godot.Animation.TrackSetKeyTime(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetKeyTransition",
+      "kind": "Method",
+      "signature": "public void TrackSetKeyTransition(int trackIdx, int keyIdx, float transition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key_idx",
+          "type": "int"
+        },
+        {
+          "name": "transition",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the transition curve (easing) for a specific key (see the built-in math function [method @GlobalScope.ease]).",
+      "godotName": "track_set_key_transition",
+      "xmlDocId": "M:Godot.Animation.TrackSetKeyTransition(int,int,float)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetKeyValue",
+      "kind": "Method",
+      "signature": "public void TrackSetKeyValue(int trackIdx, int key, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of an existing key.",
+      "godotName": "track_set_key_value",
+      "xmlDocId": "M:Godot.Animation.TrackSetKeyValue(int,int,Variant)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSetPath",
+      "kind": "Method",
+      "signature": "public void TrackSetPath(int trackIdx, NodePath path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the path of a track. Paths must be valid scene-tree paths to a node and must be specified starting from the [member AnimationMixer.root_node] that will reproduce the animation. Tracks that control properties or bones must append their name after the path, separated by [code]\u0022:\u0022[/code]. For example, [code]\u0022character/skeleton:ankle\u0022[/code] or [code]\u0022character/mesh:transform/local\u0022[/code].",
+      "godotName": "track_set_path",
+      "xmlDocId": "M:Godot.Animation.TrackSetPath(int,NodePath)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TrackSwap",
+      "kind": "Method",
+      "signature": "public void TrackSwap(int trackIdx, int withIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "with_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Swaps the track [param track_idx]\u0027s index position with the track [param with_idx].",
+      "godotName": "track_swap",
+      "xmlDocId": "M:Godot.Animation.TrackSwap(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "ValueTrackGetUpdateMode",
+      "kind": "Method",
+      "signature": "public int ValueTrackGetUpdateMode(int trackIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the update mode of a value track.",
+      "godotName": "value_track_get_update_mode",
+      "xmlDocId": "M:Godot.Animation.ValueTrackGetUpdateMode(int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "ValueTrackInterpolate",
+      "kind": "Method",
+      "signature": "public Variant ValueTrackInterpolate(int trackIdx, float timeSec, bool backward)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "backward",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the interpolated value at the given time (in seconds). The [param track_idx] must be the index of a value track. A [param backward] mainly affects the direction of key retrieval of the track with [constant UPDATE_DISCRETE] converted by [constant AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS] to match the result with [method track_find_key].",
+      "godotName": "value_track_interpolate",
+      "xmlDocId": "M:Godot.Animation.ValueTrackInterpolate(int,float,bool)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "ValueTrackSetUpdateMode",
+      "kind": "Method",
+      "signature": "public void ValueTrackSetUpdateMode(int trackIdx, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "track_idx",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the update mode of a value track.",
+      "godotName": "value_track_set_update_mode",
+      "xmlDocId": "M:Godot.Animation.ValueTrackSetUpdateMode(int,int)",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "CaptureIncluded",
+      "kind": "Property",
+      "signature": "public bool CaptureIncluded { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the capture track is included. This is a cached readonly value for performance.",
+      "defaultValue": "false",
+      "godotName": "capture_included",
+      "xmlDocId": "P:Godot.Animation.CaptureIncluded",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "Length",
+      "kind": "Property",
+      "signature": "public float Length { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The total length of the animation (in seconds). [b]Note:[/b] Length is not delimited by the last key, as this one may be before or after the end to ensure correct interpolation and looping.",
+      "defaultValue": "1.0",
+      "godotName": "length",
+      "xmlDocId": "P:Godot.Animation.Length",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LoopMode",
+      "kind": "Property",
+      "signature": "public int LoopMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines the behavior of both ends of the animation timeline during animation playback. This indicates whether and how the animation should be restarted, and is also used to correctly interpolate animation cycles.",
+      "defaultValue": "0",
+      "godotName": "loop_mode",
+      "xmlDocId": "P:Godot.Animation.LoopMode",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The animation step value.",
+      "defaultValue": "0.033333335",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.Animation.Step",
+      "sourcePath": "doc/classes/Animation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "FindMode",
+      "values": [
+        {
+          "name": "FIND_MODE_APPROX",
+          "value": "1",
+          "enum": "FindMode",
+          "kind": "EnumValue",
+          "summary": "Finds only the key with approximating the time.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "FIND_MODE_EXACT",
+          "value": "2",
+          "enum": "FindMode",
+          "kind": "EnumValue",
+          "summary": "Finds only the key with matching the time.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "FIND_MODE_NEAREST",
+          "value": "0",
+          "enum": "FindMode",
+          "kind": "EnumValue",
+          "summary": "Finds the nearest time key.",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    },
+    {
+      "name": "InterpolationType",
+      "values": [
+        {
+          "name": "INTERPOLATION_CUBIC",
+          "value": "2",
+          "enum": "InterpolationType",
+          "kind": "EnumValue",
+          "summary": "Cubic interpolation. This looks smoother than linear interpolation, but is more expensive to interpolate. Stick to [constant INTERPOLATION_LINEAR] for complex 3D animations imported from external software, even if it requires using a higher animation framerate in return.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "INTERPOLATION_CUBIC_ANGLE",
+          "value": "4",
+          "enum": "InterpolationType",
+          "kind": "EnumValue",
+          "summary": "Cubic interpolation with shortest path rotation. [b]Note:[/b] The result value is always normalized and may not match the key value.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "INTERPOLATION_LINEAR",
+          "value": "1",
+          "enum": "InterpolationType",
+          "kind": "EnumValue",
+          "summary": "Linear interpolation.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "INTERPOLATION_LINEAR_ANGLE",
+          "value": "3",
+          "enum": "InterpolationType",
+          "kind": "EnumValue",
+          "summary": "Linear interpolation with shortest path rotation. [b]Note:[/b] The result value is always normalized and may not match the key value.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "INTERPOLATION_NEAREST",
+          "value": "0",
+          "enum": "InterpolationType",
+          "kind": "EnumValue",
+          "summary": "No interpolation (nearest value).",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    },
+    {
+      "name": "LoopMode",
+      "values": [
+        {
+          "name": "LOOP_LINEAR",
+          "value": "1",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "At both ends of the animation, the animation will be repeated without changing the playback direction.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "LOOP_NONE",
+          "value": "0",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "At both ends of the animation, the animation will stop playing.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "LOOP_PINGPONG",
+          "value": "2",
+          "enum": "LoopMode",
+          "kind": "EnumValue",
+          "summary": "Repeats playback and reverse playback at both ends of the animation.",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    },
+    {
+      "name": "LoopedFlag",
+      "values": [
+        {
+          "name": "LOOPED_FLAG_END",
+          "value": "1",
+          "enum": "LoopedFlag",
+          "kind": "EnumValue",
+          "summary": "This flag indicates that the animation has reached the end of the animation and just after loop processed.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "LOOPED_FLAG_NONE",
+          "value": "0",
+          "enum": "LoopedFlag",
+          "kind": "EnumValue",
+          "summary": "This flag indicates that the animation proceeds without any looping.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "LOOPED_FLAG_START",
+          "value": "2",
+          "enum": "LoopedFlag",
+          "kind": "EnumValue",
+          "summary": "This flag indicates that the animation has reached the start of the animation and just after loop processed.",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    },
+    {
+      "name": "TrackType",
+      "values": [
+        {
+          "name": "TYPE_ANIMATION",
+          "value": "8",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Animation tracks play animations in other [AnimationPlayer] nodes.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_AUDIO",
+          "value": "7",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Audio tracks are used to play an audio stream with either type of [AudioStreamPlayer]. The stream can be trimmed and previewed in the animation.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_BEZIER",
+          "value": "6",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Bezier tracks are used to interpolate a value using custom curves. They can also be used to animate sub-properties of vectors and colors (e.g. alpha value of a [Color]).",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_BLEND_SHAPE",
+          "value": "4",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Blend shape track.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_METHOD",
+          "value": "5",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Method tracks call functions with given arguments per key.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_POSITION_3D",
+          "value": "1",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "3D position track (values are stored in [Vector3]s).",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_ROTATION_3D",
+          "value": "2",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "3D rotation track (values are stored in [Quaternion]s).",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_SCALE_3D",
+          "value": "3",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "3D scale track (values are stored in [Vector3]s).",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "TYPE_VALUE",
+          "value": "0",
+          "enum": "TrackType",
+          "kind": "EnumValue",
+          "summary": "Value tracks set values in node properties, but only those which can be interpolated. For 3D position/rotation/scale, using the dedicated [constant TYPE_POSITION_3D], [constant TYPE_ROTATION_3D] and [constant TYPE_SCALE_3D] track types instead of [constant TYPE_VALUE] is recommended for performance reasons.",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    },
+    {
+      "name": "UpdateMode",
+      "values": [
+        {
+          "name": "UPDATE_CAPTURE",
+          "value": "2",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Same as [constant UPDATE_CONTINUOUS] but works as a flag to capture the value of the current object and perform interpolation in some methods. See also [method AnimationMixer.capture], [member AnimationPlayer.playback_auto_capture], and [method AnimationPlayer.play_with_capture].",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "UPDATE_CONTINUOUS",
+          "value": "0",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update between keyframes and hold the value.",
+          "sourcePath": "doc/classes/Animation.xml"
+        },
+        {
+          "name": "UPDATE_DISCRETE",
+          "value": "1",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update at the keyframes.",
+          "sourcePath": "doc/classes/Animation.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TYPE_VALUE",
+      "value": "0",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Value tracks set values in node properties, but only those which can be interpolated. For 3D position/rotation/scale, using the dedicated [constant TYPE_POSITION_3D], [constant TYPE_ROTATION_3D] and [constant TYPE_SCALE_3D] track types instead of [constant TYPE_VALUE] is recommended for performance reasons.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_POSITION_3D",
+      "value": "1",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "3D position track (values are stored in [Vector3]s).",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_ROTATION_3D",
+      "value": "2",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "3D rotation track (values are stored in [Quaternion]s).",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_SCALE_3D",
+      "value": "3",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "3D scale track (values are stored in [Vector3]s).",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_BLEND_SHAPE",
+      "value": "4",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Blend shape track.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_METHOD",
+      "value": "5",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Method tracks call functions with given arguments per key.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_BEZIER",
+      "value": "6",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Bezier tracks are used to interpolate a value using custom curves. They can also be used to animate sub-properties of vectors and colors (e.g. alpha value of a [Color]).",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_AUDIO",
+      "value": "7",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Audio tracks are used to play an audio stream with either type of [AudioStreamPlayer]. The stream can be trimmed and previewed in the animation.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "TYPE_ANIMATION",
+      "value": "8",
+      "enum": "TrackType",
+      "kind": "EnumValue",
+      "summary": "Animation tracks play animations in other [AnimationPlayer] nodes.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "INTERPOLATION_NEAREST",
+      "value": "0",
+      "enum": "InterpolationType",
+      "kind": "EnumValue",
+      "summary": "No interpolation (nearest value).",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "INTERPOLATION_LINEAR",
+      "value": "1",
+      "enum": "InterpolationType",
+      "kind": "EnumValue",
+      "summary": "Linear interpolation.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "INTERPOLATION_CUBIC",
+      "value": "2",
+      "enum": "InterpolationType",
+      "kind": "EnumValue",
+      "summary": "Cubic interpolation. This looks smoother than linear interpolation, but is more expensive to interpolate. Stick to [constant INTERPOLATION_LINEAR] for complex 3D animations imported from external software, even if it requires using a higher animation framerate in return.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "INTERPOLATION_LINEAR_ANGLE",
+      "value": "3",
+      "enum": "InterpolationType",
+      "kind": "EnumValue",
+      "summary": "Linear interpolation with shortest path rotation. [b]Note:[/b] The result value is always normalized and may not match the key value.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "INTERPOLATION_CUBIC_ANGLE",
+      "value": "4",
+      "enum": "InterpolationType",
+      "kind": "EnumValue",
+      "summary": "Cubic interpolation with shortest path rotation. [b]Note:[/b] The result value is always normalized and may not match the key value.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "UPDATE_CONTINUOUS",
+      "value": "0",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update between keyframes and hold the value.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "UPDATE_DISCRETE",
+      "value": "1",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update at the keyframes.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "UPDATE_CAPTURE",
+      "value": "2",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Same as [constant UPDATE_CONTINUOUS] but works as a flag to capture the value of the current object and perform interpolation in some methods. See also [method AnimationMixer.capture], [member AnimationPlayer.playback_auto_capture], and [method AnimationPlayer.play_with_capture].",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOP_NONE",
+      "value": "0",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "At both ends of the animation, the animation will stop playing.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOP_LINEAR",
+      "value": "1",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "At both ends of the animation, the animation will be repeated without changing the playback direction.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOP_PINGPONG",
+      "value": "2",
+      "enum": "LoopMode",
+      "kind": "EnumValue",
+      "summary": "Repeats playback and reverse playback at both ends of the animation.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOPED_FLAG_NONE",
+      "value": "0",
+      "enum": "LoopedFlag",
+      "kind": "EnumValue",
+      "summary": "This flag indicates that the animation proceeds without any looping.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOPED_FLAG_END",
+      "value": "1",
+      "enum": "LoopedFlag",
+      "kind": "EnumValue",
+      "summary": "This flag indicates that the animation has reached the end of the animation and just after loop processed.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "LOOPED_FLAG_START",
+      "value": "2",
+      "enum": "LoopedFlag",
+      "kind": "EnumValue",
+      "summary": "This flag indicates that the animation has reached the start of the animation and just after loop processed.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "FIND_MODE_NEAREST",
+      "value": "0",
+      "enum": "FindMode",
+      "kind": "EnumValue",
+      "summary": "Finds the nearest time key.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "FIND_MODE_APPROX",
+      "value": "1",
+      "enum": "FindMode",
+      "kind": "EnumValue",
+      "summary": "Finds only the key with approximating the time.",
+      "sourcePath": "doc/classes/Animation.xml"
+    },
+    {
+      "name": "FIND_MODE_EXACT",
+      "value": "2",
+      "enum": "FindMode",
+      "kind": "EnumValue",
+      "summary": "Finds only the key with matching the time.",
+      "sourcePath": "doc/classes/Animation.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Animation.xml",
+      "sha256": "0b78d775f027a96ba4a2a13625c2023d40e1b7126344ce87c55af10d63f6ab4c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

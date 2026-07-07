@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventJoypadButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventJoypadButton",
+    "kind": "class",
+    "baseType": "Electron2D.InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventJoypadButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventJoypadButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventJoypadButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventJoypadButton type.",
+      "xmlDocId": "M:Electron2D.InputEventJoypadButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventJoypadButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventJoypadButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventJoypadButton type.",
+      "xmlDocId": "M:Electron2D.InputEventJoypadButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ButtonIndex",
+      "kind": "Property",
+      "signature": "public Electron2D.JoyButton ButtonIndex { get; set; }",
+      "returnType": "Electron2D.JoyButton",
+      "parameters": [],
+      "summary": "Gets or sets the gamepad button represented by this event.",
+      "xmlDocId": "P:Electron2D.InputEventJoypadButton.ButtonIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public System.Boolean Pressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the button is pressed.",
+      "xmlDocId": "P:Electron2D.InputEventJoypadButton.Pressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public System.Single Pressure { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the analog pressure for this button event.",
+      "xmlDocId": "P:Electron2D.InputEventJoypadButton.Pressure",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

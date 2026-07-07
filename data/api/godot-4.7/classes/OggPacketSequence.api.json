@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OggPacketSequence",
+    "namespace": "Godot",
+    "fullName": "Godot.OggPacketSequence",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OggPacketSequence",
+    "documentationPath": "modules/ogg/doc_classes/OggPacketSequence.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_oggpacketsequence.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetLength",
+      "kind": "Method",
+      "signature": "public float GetLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of this stream, in seconds.",
+      "godotName": "get_length",
+      "xmlDocId": "M:Godot.OggPacketSequence.GetLength",
+      "sourcePath": "modules/ogg/doc_classes/OggPacketSequence.xml"
+    },
+    {
+      "name": "GranulePositions",
+      "kind": "Property",
+      "signature": "public PackedInt64Array GranulePositions { get; set; }",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Contains the granule positions for each page in this packet sequence.",
+      "defaultValue": "PackedInt64Array()",
+      "godotName": "granule_positions",
+      "xmlDocId": "P:Godot.OggPacketSequence.GranulePositions",
+      "sourcePath": "modules/ogg/doc_classes/OggPacketSequence.xml"
+    },
+    {
+      "name": "PacketData",
+      "kind": "Property",
+      "signature": "public Array[] PacketData { get; set; }",
+      "returnType": "Array[]",
+      "parameters": [],
+      "summary": "Contains the raw packets that make up this OggPacketSequence.",
+      "defaultValue": "[]",
+      "godotName": "packet_data",
+      "xmlDocId": "P:Godot.OggPacketSequence.PacketData",
+      "sourcePath": "modules/ogg/doc_classes/OggPacketSequence.xml"
+    },
+    {
+      "name": "SamplingRate",
+      "kind": "Property",
+      "signature": "public float SamplingRate { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Holds sample rate information about this sequence. Must be set by another class that actually understands the codec.",
+      "defaultValue": "0.0",
+      "godotName": "sampling_rate",
+      "xmlDocId": "P:Godot.OggPacketSequence.SamplingRate",
+      "sourcePath": "modules/ogg/doc_classes/OggPacketSequence.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/ogg/doc_classes/OggPacketSequence.xml",
+      "sha256": "5aabdc139dede9f61454d9427c2dd9826c896942a753f561f33d17b94e38b820"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationMeshSourceGeometryData2D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationMeshSourceGeometryData2D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "NavigationMeshSourceGeometryData2D",
+    "documentationPath": "doc/classes/NavigationMeshSourceGeometryData2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationmeshsourcegeometrydata2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddObstructionOutline",
+      "kind": "Method",
+      "signature": "public void AddObstructionOutline(PackedVector2Array shapeOutline)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_outline",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Adds the outline points of a shape as obstructed area.",
+      "godotName": "add_obstruction_outline",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.AddObstructionOutline(PackedVector2Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "AddProjectedObstruction",
+      "kind": "Method",
+      "signature": "public void AddProjectedObstruction(PackedVector2Array vertices, bool carve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "carve",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds a projected obstruction shape to the source geometry. If [param carve] is [code]true[/code] the carved shape will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking process.",
+      "godotName": "add_projected_obstruction",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.AddProjectedObstruction(PackedVector2Array,bool)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "AddTraversableOutline",
+      "kind": "Method",
+      "signature": "public void AddTraversableOutline(PackedVector2Array shapeOutline)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_outline",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Adds the outline points of a shape as traversable area.",
+      "godotName": "add_traversable_outline",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.AddTraversableOutline(PackedVector2Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "AppendObstructionOutlines",
+      "kind": "Method",
+      "signature": "public void AppendObstructionOutlines(PackedVector2Array[] obstructionOutlines)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstruction_outlines",
+          "type": "PackedVector2Array[]"
+        }
+      ],
+      "summary": "Appends another array of [param obstruction_outlines] at the end of the existing obstruction outlines array.",
+      "godotName": "append_obstruction_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.AppendObstructionOutlines(PackedVector2Array[])",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "AppendTraversableOutlines",
+      "kind": "Method",
+      "signature": "public void AppendTraversableOutlines(PackedVector2Array[] traversableOutlines)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "traversable_outlines",
+          "type": "PackedVector2Array[]"
+        }
+      ],
+      "summary": "Appends another array of [param traversable_outlines] at the end of the existing traversable outlines array.",
+      "godotName": "append_traversable_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.AppendTraversableOutlines(PackedVector2Array[])",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the internal data.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.Clear",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "ClearProjectedObstructions",
+      "kind": "Method",
+      "signature": "public void ClearProjectedObstructions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all projected obstructions.",
+      "godotName": "clear_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.ClearProjectedObstructions",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "GetBounds",
+      "kind": "Method",
+      "signature": "public Rect2 GetBounds()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns an axis-aligned bounding box that covers all the stored geometry data. The bounds are calculated when calling this function with the result cached until further geometry changes are made.",
+      "godotName": "get_bounds",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.GetBounds",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "GetObstructionOutlines",
+      "kind": "Method",
+      "signature": "public PackedVector2Array[] GetObstructionOutlines()",
+      "returnType": "PackedVector2Array[]",
+      "parameters": [],
+      "summary": "Returns all the obstructed area outlines arrays.",
+      "godotName": "get_obstruction_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.GetObstructionOutlines",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "GetProjectedObstructions",
+      "kind": "Method",
+      "signature": "public Array GetProjectedObstructions()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns the projected obstructions as an [Array] of dictionaries. Each [Dictionary] contains the following entries: - [code]vertices[/code] - A [PackedFloat32Array] that defines the outline points of the projected shape. - [code]carve[/code] - A [bool] that defines how the projected shape affects the navigation mesh baking. If [code]true[/code] the projected shape will not be affected by addition offsets, e.g. agent radius.",
+      "godotName": "get_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.GetProjectedObstructions",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "GetTraversableOutlines",
+      "kind": "Method",
+      "signature": "public PackedVector2Array[] GetTraversableOutlines()",
+      "returnType": "PackedVector2Array[]",
+      "parameters": [],
+      "summary": "Returns all the traversable area outlines arrays.",
+      "godotName": "get_traversable_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.GetTraversableOutlines",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "HasData",
+      "kind": "Method",
+      "signature": "public bool HasData()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when parsed source geometry data exists.",
+      "godotName": "has_data",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.HasData",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public void Merge(NavigationMeshSourceGeometryData2D otherGeometry)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "other_geometry",
+          "type": "NavigationMeshSourceGeometryData2D"
+        }
+      ],
+      "summary": "Adds the geometry data of another [NavigationMeshSourceGeometryData2D] to the navigation mesh baking data.",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.Merge(NavigationMeshSourceGeometryData2D)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "SetObstructionOutlines",
+      "kind": "Method",
+      "signature": "public void SetObstructionOutlines(PackedVector2Array[] obstructionOutlines)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstruction_outlines",
+          "type": "PackedVector2Array[]"
+        }
+      ],
+      "summary": "Sets all the obstructed area outlines arrays.",
+      "godotName": "set_obstruction_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.SetObstructionOutlines(PackedVector2Array[])",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "SetProjectedObstructions",
+      "kind": "Method",
+      "signature": "public void SetProjectedObstructions(Array projectedObstructions)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "projected_obstructions",
+          "type": "Array"
+        }
+      ],
+      "summary": "Sets the projected obstructions with an Array of Dictionaries with the following key value pairs: [codeblocks] [gdscript] \u0022vertices\u0022 : PackedFloat32Array \u0022carve\u0022 : bool [/gdscript] [/codeblocks]",
+      "godotName": "set_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.SetProjectedObstructions(Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    },
+    {
+      "name": "SetTraversableOutlines",
+      "kind": "Method",
+      "signature": "public void SetTraversableOutlines(PackedVector2Array[] traversableOutlines)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "traversable_outlines",
+          "type": "PackedVector2Array[]"
+        }
+      ],
+      "summary": "Sets all the traversable area outlines arrays.",
+      "godotName": "set_traversable_outlines",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData2D.SetTraversableOutlines(PackedVector2Array[])",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationMeshSourceGeometryData2D.xml",
+      "sha256": "58bccafbbb14ebfe844ac1cf828c2165c390f05268d4e97a6e9d0ec979a8200c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

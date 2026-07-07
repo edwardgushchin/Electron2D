@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RichTextEffect",
+    "namespace": "Godot",
+    "fullName": "Godot.RichTextEffect",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "RichTextEffect",
+    "documentationPath": "doc/classes/RichTextEffect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_richtexteffect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ProcessCustomFx",
+      "kind": "Method",
+      "signature": "public bool _ProcessCustomFx(CharFXTransform charFx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "char_fx",
+          "type": "CharFXTransform"
+        }
+      ],
+      "summary": "Override this method to modify properties in [param char_fx]. The method must return [code]true[/code] if the character could be transformed successfully. If the method returns [code]false[/code], it will skip transformation to avoid displaying broken text.",
+      "godotName": "_process_custom_fx",
+      "xmlDocId": "M:Godot.RichTextEffect._ProcessCustomFx(CharFXTransform)",
+      "sourcePath": "doc/classes/RichTextEffect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ProcessCustomFx",
+      "kind": "Method",
+      "signature": "public bool _ProcessCustomFx(CharFXTransform charFx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "char_fx",
+          "type": "CharFXTransform"
+        }
+      ],
+      "summary": "Override this method to modify properties in [param char_fx]. The method must return [code]true[/code] if the character could be transformed successfully. If the method returns [code]false[/code], it will skip transformation to avoid displaying broken text.",
+      "godotName": "_process_custom_fx",
+      "xmlDocId": "M:Godot.RichTextEffect._ProcessCustomFx(CharFXTransform)",
+      "sourcePath": "doc/classes/RichTextEffect.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RichTextEffect.xml",
+      "sha256": "cbc420157360f6e3911eb2c4faaa6fe2614fbe9c1f48a1a7ed6298042c6c5aef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

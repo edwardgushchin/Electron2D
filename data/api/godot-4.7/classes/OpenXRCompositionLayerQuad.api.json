@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRCompositionLayerQuad",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRCompositionLayerQuad",
+    "kind": "class",
+    "baseType": "OpenXRCompositionLayer",
+    "interfaces": [],
+    "godotReference": "OpenXRCompositionLayerQuad",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRCompositionLayerQuad.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrcompositionlayerquad.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "QuadSize",
+      "kind": "Property",
+      "signature": "public Vector2 QuadSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The dimensions of the quad.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "quad_size",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerQuad.QuadSize",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerQuad.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRCompositionLayerQuad.xml",
+      "sha256": "02453fa2d98caf0adf0bac66a4f796a302a822cda2a353b61a5748b533a0ae61"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

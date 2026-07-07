@@ -1,0 +1,752 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FastNoiseLite",
+    "namespace": "Godot",
+    "fullName": "Godot.FastNoiseLite",
+    "kind": "class",
+    "baseType": "Noise",
+    "interfaces": [],
+    "godotReference": "FastNoiseLite",
+    "documentationPath": "modules/noise/doc_classes/FastNoiseLite.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fastnoiselite.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CellularDistanceFunction",
+      "kind": "Property",
+      "signature": "public int CellularDistanceFunction { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines how the distance to the nearest/second-nearest point is computed.",
+      "defaultValue": "0",
+      "godotName": "cellular_distance_function",
+      "xmlDocId": "P:Godot.FastNoiseLite.CellularDistanceFunction",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "CellularJitter",
+      "kind": "Property",
+      "signature": "public float CellularJitter { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum distance a point can move off of its grid position. Set to [code]0[/code] for an even grid.",
+      "defaultValue": "1.0",
+      "godotName": "cellular_jitter",
+      "xmlDocId": "P:Godot.FastNoiseLite.CellularJitter",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "CellularReturnType",
+      "kind": "Property",
+      "signature": "public int CellularReturnType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Return type from cellular noise calculations.",
+      "defaultValue": "1",
+      "godotName": "cellular_return_type",
+      "xmlDocId": "P:Godot.FastNoiseLite.CellularReturnType",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpAmplitude",
+      "kind": "Property",
+      "signature": "public float DomainWarpAmplitude { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the maximum warp distance from the origin.",
+      "defaultValue": "30.0",
+      "godotName": "domain_warp_amplitude",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpAmplitude",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpEnabled",
+      "kind": "Property",
+      "signature": "public bool DomainWarpEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, another FastNoiseLite instance is used to warp the space, resulting in a distortion of the noise.",
+      "defaultValue": "false",
+      "godotName": "domain_warp_enabled",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpEnabled",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpFractalGain",
+      "kind": "Property",
+      "signature": "public float DomainWarpFractalGain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Determines the strength of each subsequent layer of the noise which is used to warp the space. A low value places more emphasis on the lower frequency base layers, while a high value puts more emphasis on the higher frequency layers.",
+      "defaultValue": "0.5",
+      "godotName": "domain_warp_fractal_gain",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpFractalGain",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpFractalLacunarity",
+      "kind": "Property",
+      "signature": "public float DomainWarpFractalLacunarity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The change in frequency between octaves, also known as \u0022lacunarity\u0022, of the fractal noise which warps the space. Increasing this value results in higher octaves, producing noise with finer details and a rougher appearance.",
+      "defaultValue": "6.0",
+      "godotName": "domain_warp_fractal_lacunarity",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpFractalLacunarity",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpFractalOctaves",
+      "kind": "Property",
+      "signature": "public int DomainWarpFractalOctaves { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of noise layers that are sampled to get the final value for the fractal noise which warps the space.",
+      "defaultValue": "5",
+      "godotName": "domain_warp_fractal_octaves",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpFractalOctaves",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpFractalType",
+      "kind": "Property",
+      "signature": "public int DomainWarpFractalType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The method for combining octaves into a fractal which is used to warp the space.",
+      "defaultValue": "1",
+      "godotName": "domain_warp_fractal_type",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpFractalType",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpFrequency",
+      "kind": "Property",
+      "signature": "public float DomainWarpFrequency { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Frequency of the noise which warps the space. Low frequency results in smooth noise while high frequency results in rougher, more granular noise.",
+      "defaultValue": "0.05",
+      "godotName": "domain_warp_frequency",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpFrequency",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DomainWarpType",
+      "kind": "Property",
+      "signature": "public int DomainWarpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The warp algorithm.",
+      "defaultValue": "0",
+      "godotName": "domain_warp_type",
+      "xmlDocId": "P:Godot.FastNoiseLite.DomainWarpType",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalGain",
+      "kind": "Property",
+      "signature": "public float FractalGain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Determines the strength of each subsequent layer of noise in fractal noise. A low value places more emphasis on the lower frequency base layers, while a high value puts more emphasis on the higher frequency layers.",
+      "defaultValue": "0.5",
+      "godotName": "fractal_gain",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalGain",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalLacunarity",
+      "kind": "Property",
+      "signature": "public float FractalLacunarity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Frequency multiplier between subsequent octaves. Increasing this value results in higher octaves producing noise with finer details and a rougher appearance.",
+      "defaultValue": "2.0",
+      "godotName": "fractal_lacunarity",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalLacunarity",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalOctaves",
+      "kind": "Property",
+      "signature": "public int FractalOctaves { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of noise layers that are sampled to get the final value for fractal noise types.",
+      "defaultValue": "5",
+      "godotName": "fractal_octaves",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalOctaves",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalPingPongStrength",
+      "kind": "Property",
+      "signature": "public float FractalPingPongStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the strength of the fractal ping pong type.",
+      "defaultValue": "2.0",
+      "godotName": "fractal_ping_pong_strength",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalPingPongStrength",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalType",
+      "kind": "Property",
+      "signature": "public int FractalType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The method for combining octaves into a fractal.",
+      "defaultValue": "1",
+      "godotName": "fractal_type",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalType",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FractalWeightedStrength",
+      "kind": "Property",
+      "signature": "public float FractalWeightedStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Higher weighting means higher octaves have less impact if lower octaves have a large impact.",
+      "defaultValue": "0.0",
+      "godotName": "fractal_weighted_strength",
+      "xmlDocId": "P:Godot.FastNoiseLite.FractalWeightedStrength",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "Frequency",
+      "kind": "Property",
+      "signature": "public float Frequency { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency for all noise types. Low frequency results in smooth noise while high frequency results in rougher, more granular noise.",
+      "defaultValue": "0.01",
+      "godotName": "frequency",
+      "xmlDocId": "P:Godot.FastNoiseLite.Frequency",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "NoiseType",
+      "kind": "Property",
+      "signature": "public int NoiseType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The noise algorithm used.",
+      "defaultValue": "1",
+      "godotName": "noise_type",
+      "xmlDocId": "P:Godot.FastNoiseLite.NoiseType",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector3 Offset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Translate the noise input coordinates by the given [Vector3].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.FastNoiseLite.Offset",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "Seed",
+      "kind": "Property",
+      "signature": "public int Seed { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The random number seed for all noise types.",
+      "defaultValue": "0",
+      "godotName": "seed",
+      "xmlDocId": "P:Godot.FastNoiseLite.Seed",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CellularDistanceFunction",
+      "values": [
+        {
+          "name": "DISTANCE_EUCLIDEAN",
+          "value": "0",
+          "enum": "CellularDistanceFunction",
+          "kind": "EnumValue",
+          "summary": "Euclidean distance to the nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DISTANCE_EUCLIDEAN_SQUARED",
+          "value": "1",
+          "enum": "CellularDistanceFunction",
+          "kind": "EnumValue",
+          "summary": "Squared Euclidean distance to the nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DISTANCE_HYBRID",
+          "value": "3",
+          "enum": "CellularDistanceFunction",
+          "kind": "EnumValue",
+          "summary": "Blend of [constant DISTANCE_EUCLIDEAN] and [constant DISTANCE_MANHATTAN] to give curved cell boundaries.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DISTANCE_MANHATTAN",
+          "value": "2",
+          "enum": "CellularDistanceFunction",
+          "kind": "EnumValue",
+          "summary": "Manhattan distance (taxicab metric) to the nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    },
+    {
+      "name": "CellularReturnType",
+      "values": [
+        {
+          "name": "RETURN_CELL_VALUE",
+          "value": "0",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The cellular distance function will return the same value for all points within a cell.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE",
+          "value": "1",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The cellular distance function will return a value determined by the distance to the nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE2",
+          "value": "2",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The cellular distance function returns the distance to the second-nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE2_ADD",
+          "value": "3",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The distance to the nearest point is added to the distance to the second-nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE2_DIV",
+          "value": "6",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The distance to the nearest point is divided by the distance to the second-nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE2_MUL",
+          "value": "5",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The distance to the nearest point is multiplied with the distance to the second-nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "RETURN_DISTANCE2_SUB",
+          "value": "4",
+          "enum": "CellularReturnType",
+          "kind": "EnumValue",
+          "summary": "The distance to the nearest point is subtracted from the distance to the second-nearest point.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    },
+    {
+      "name": "DomainWarpFractalType",
+      "values": [
+        {
+          "name": "DOMAIN_WARP_FRACTAL_INDEPENDENT",
+          "value": "2",
+          "enum": "DomainWarpFractalType",
+          "kind": "EnumValue",
+          "summary": "Warping the space independently for each octave, resulting in a more chaotic distortion.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DOMAIN_WARP_FRACTAL_NONE",
+          "value": "0",
+          "enum": "DomainWarpFractalType",
+          "kind": "EnumValue",
+          "summary": "No fractal noise for warping the space.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DOMAIN_WARP_FRACTAL_PROGRESSIVE",
+          "value": "1",
+          "enum": "DomainWarpFractalType",
+          "kind": "EnumValue",
+          "summary": "Warping the space progressively, octave for octave, resulting in a more \u0022liquified\u0022 distortion.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    },
+    {
+      "name": "DomainWarpType",
+      "values": [
+        {
+          "name": "DOMAIN_WARP_BASIC_GRID",
+          "value": "2",
+          "enum": "DomainWarpType",
+          "kind": "EnumValue",
+          "summary": "The domain is warped using a simple noise grid (not as smooth as the other methods, but more performant).",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DOMAIN_WARP_SIMPLEX",
+          "value": "0",
+          "enum": "DomainWarpType",
+          "kind": "EnumValue",
+          "summary": "The domain is warped using the simplex noise algorithm.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "DOMAIN_WARP_SIMPLEX_REDUCED",
+          "value": "1",
+          "enum": "DomainWarpType",
+          "kind": "EnumValue",
+          "summary": "The domain is warped using a simplified version of the simplex noise algorithm.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    },
+    {
+      "name": "FractalType",
+      "values": [
+        {
+          "name": "FRACTAL_FBM",
+          "value": "1",
+          "enum": "FractalType",
+          "kind": "EnumValue",
+          "summary": "Method using Fractional Brownian Motion to combine octaves into a fractal.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "FRACTAL_NONE",
+          "value": "0",
+          "enum": "FractalType",
+          "kind": "EnumValue",
+          "summary": "No fractal noise.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "FRACTAL_PING_PONG",
+          "value": "3",
+          "enum": "FractalType",
+          "kind": "EnumValue",
+          "summary": "Method of combining octaves into a fractal with a ping pong effect.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "FRACTAL_RIDGED",
+          "value": "2",
+          "enum": "FractalType",
+          "kind": "EnumValue",
+          "summary": "Method of combining octaves into a fractal resulting in a \u0022ridged\u0022 look.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    },
+    {
+      "name": "NoiseType",
+      "values": [
+        {
+          "name": "TYPE_CELLULAR",
+          "value": "2",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "Cellular includes both Worley noise and Voronoi diagrams which creates various regions of the same value.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "TYPE_PERLIN",
+          "value": "3",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "A lattice of random gradients. Their dot products are interpolated to obtain values in between the lattices.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "TYPE_SIMPLEX",
+          "value": "0",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "As opposed to [constant TYPE_PERLIN], gradients exist in a simplex lattice rather than a grid lattice, avoiding directional artifacts. Internally uses FastNoiseLite\u0027s OpenSimplex2 noise type.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "TYPE_SIMPLEX_SMOOTH",
+          "value": "1",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "Modified, higher quality version of [constant TYPE_SIMPLEX], but slower. Internally uses FastNoiseLite\u0027s OpenSimplex2S noise type.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "TYPE_VALUE",
+          "value": "5",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "A lattice of points are assigned random values then interpolated based on neighboring values.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        },
+        {
+          "name": "TYPE_VALUE_CUBIC",
+          "value": "4",
+          "enum": "NoiseType",
+          "kind": "EnumValue",
+          "summary": "Similar to value noise ([constant TYPE_VALUE]), but slower. Has more variance in peaks and valleys. Cubic noise can be used to avoid certain artifacts when using value noise to create a bumpmap. In general, you should always use this mode if the value noise is being used for a heightmap or bumpmap.",
+          "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TYPE_VALUE",
+      "value": "5",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "A lattice of points are assigned random values then interpolated based on neighboring values.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "TYPE_VALUE_CUBIC",
+      "value": "4",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "Similar to value noise ([constant TYPE_VALUE]), but slower. Has more variance in peaks and valleys. Cubic noise can be used to avoid certain artifacts when using value noise to create a bumpmap. In general, you should always use this mode if the value noise is being used for a heightmap or bumpmap.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "TYPE_PERLIN",
+      "value": "3",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "A lattice of random gradients. Their dot products are interpolated to obtain values in between the lattices.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "TYPE_CELLULAR",
+      "value": "2",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "Cellular includes both Worley noise and Voronoi diagrams which creates various regions of the same value.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "TYPE_SIMPLEX",
+      "value": "0",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "As opposed to [constant TYPE_PERLIN], gradients exist in a simplex lattice rather than a grid lattice, avoiding directional artifacts. Internally uses FastNoiseLite\u0027s OpenSimplex2 noise type.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "TYPE_SIMPLEX_SMOOTH",
+      "value": "1",
+      "enum": "NoiseType",
+      "kind": "EnumValue",
+      "summary": "Modified, higher quality version of [constant TYPE_SIMPLEX], but slower. Internally uses FastNoiseLite\u0027s OpenSimplex2S noise type.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FRACTAL_NONE",
+      "value": "0",
+      "enum": "FractalType",
+      "kind": "EnumValue",
+      "summary": "No fractal noise.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FRACTAL_FBM",
+      "value": "1",
+      "enum": "FractalType",
+      "kind": "EnumValue",
+      "summary": "Method using Fractional Brownian Motion to combine octaves into a fractal.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FRACTAL_RIDGED",
+      "value": "2",
+      "enum": "FractalType",
+      "kind": "EnumValue",
+      "summary": "Method of combining octaves into a fractal resulting in a \u0022ridged\u0022 look.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "FRACTAL_PING_PONG",
+      "value": "3",
+      "enum": "FractalType",
+      "kind": "EnumValue",
+      "summary": "Method of combining octaves into a fractal with a ping pong effect.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DISTANCE_EUCLIDEAN",
+      "value": "0",
+      "enum": "CellularDistanceFunction",
+      "kind": "EnumValue",
+      "summary": "Euclidean distance to the nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DISTANCE_EUCLIDEAN_SQUARED",
+      "value": "1",
+      "enum": "CellularDistanceFunction",
+      "kind": "EnumValue",
+      "summary": "Squared Euclidean distance to the nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DISTANCE_MANHATTAN",
+      "value": "2",
+      "enum": "CellularDistanceFunction",
+      "kind": "EnumValue",
+      "summary": "Manhattan distance (taxicab metric) to the nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DISTANCE_HYBRID",
+      "value": "3",
+      "enum": "CellularDistanceFunction",
+      "kind": "EnumValue",
+      "summary": "Blend of [constant DISTANCE_EUCLIDEAN] and [constant DISTANCE_MANHATTAN] to give curved cell boundaries.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_CELL_VALUE",
+      "value": "0",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The cellular distance function will return the same value for all points within a cell.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE",
+      "value": "1",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The cellular distance function will return a value determined by the distance to the nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE2",
+      "value": "2",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The cellular distance function returns the distance to the second-nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE2_ADD",
+      "value": "3",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The distance to the nearest point is added to the distance to the second-nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE2_SUB",
+      "value": "4",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The distance to the nearest point is subtracted from the distance to the second-nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE2_MUL",
+      "value": "5",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The distance to the nearest point is multiplied with the distance to the second-nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "RETURN_DISTANCE2_DIV",
+      "value": "6",
+      "enum": "CellularReturnType",
+      "kind": "EnumValue",
+      "summary": "The distance to the nearest point is divided by the distance to the second-nearest point.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_SIMPLEX",
+      "value": "0",
+      "enum": "DomainWarpType",
+      "kind": "EnumValue",
+      "summary": "The domain is warped using the simplex noise algorithm.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_SIMPLEX_REDUCED",
+      "value": "1",
+      "enum": "DomainWarpType",
+      "kind": "EnumValue",
+      "summary": "The domain is warped using a simplified version of the simplex noise algorithm.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_BASIC_GRID",
+      "value": "2",
+      "enum": "DomainWarpType",
+      "kind": "EnumValue",
+      "summary": "The domain is warped using a simple noise grid (not as smooth as the other methods, but more performant).",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_FRACTAL_NONE",
+      "value": "0",
+      "enum": "DomainWarpFractalType",
+      "kind": "EnumValue",
+      "summary": "No fractal noise for warping the space.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_FRACTAL_PROGRESSIVE",
+      "value": "1",
+      "enum": "DomainWarpFractalType",
+      "kind": "EnumValue",
+      "summary": "Warping the space progressively, octave for octave, resulting in a more \u0022liquified\u0022 distortion.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    },
+    {
+      "name": "DOMAIN_WARP_FRACTAL_INDEPENDENT",
+      "value": "2",
+      "enum": "DomainWarpFractalType",
+      "kind": "EnumValue",
+      "summary": "Warping the space independently for each octave, resulting in a more chaotic distortion.",
+      "sourcePath": "modules/noise/doc_classes/FastNoiseLite.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/noise/doc_classes/FastNoiseLite.xml",
+      "sha256": "ad4e5da14184b3ae82fd0170560037bb0abfce86d3137d38c96ef6db831b562b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

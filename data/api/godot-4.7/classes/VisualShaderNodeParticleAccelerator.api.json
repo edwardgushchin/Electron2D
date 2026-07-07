@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleAccelerator",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleAccelerator",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleAccelerator",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticleaccelerator.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Mode",
+      "kind": "Property",
+      "signature": "public int Mode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines in what manner the particles will be accelerated.",
+      "defaultValue": "0",
+      "godotName": "mode",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleAccelerator.Mode",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "MODE_LINEAR",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The particles will be accelerated based on their velocity.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+        },
+        {
+          "name": "MODE_MAX",
+          "value": "3",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Mode] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+        },
+        {
+          "name": "MODE_RADIAL",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The particles will be accelerated towards or away from the center.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+        },
+        {
+          "name": "MODE_TANGENTIAL",
+          "value": "2",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "The particles will be accelerated tangentially to the radius vector from center to their position.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_LINEAR",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The particles will be accelerated based on their velocity.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+    },
+    {
+      "name": "MODE_RADIAL",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The particles will be accelerated towards or away from the center.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+    },
+    {
+      "name": "MODE_TANGENTIAL",
+      "value": "2",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "The particles will be accelerated tangentially to the radius vector from center to their position.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+    },
+    {
+      "name": "MODE_MAX",
+      "value": "3",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Mode] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleAccelerator.xml",
+      "sha256": "cc6132845ae151598cb9ab346767b8989b28e823f2e2a78a4b169e46a6374d70"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

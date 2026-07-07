@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDSamplerState",
+    "namespace": "Godot",
+    "fullName": "Godot.RDSamplerState",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDSamplerState",
+    "documentationPath": "doc/classes/RDSamplerState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdsamplerstate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AnisotropyMax",
+      "kind": "Property",
+      "signature": "public float AnisotropyMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum anisotropy that can be used when sampling. Only effective if [member use_anisotropy] is [code]true[/code]. Higher values result in a sharper sampler at oblique angles, at the cost of performance (due to memory bandwidth). This value may be limited by the graphics hardware in use. Most graphics hardware only supports values up to [code]16.0[/code]. If [member anisotropy_max] is [code]1.0[/code], forcibly disables anisotropy even if [member use_anisotropy] is [code]true[/code].",
+      "defaultValue": "1.0",
+      "godotName": "anisotropy_max",
+      "xmlDocId": "P:Godot.RDSamplerState.AnisotropyMax",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "BorderColor",
+      "kind": "Property",
+      "signature": "public int BorderColor { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The border color that will be returned when sampling outside the sampler\u0027s bounds and the [member repeat_u], [member repeat_v] or [member repeat_w] modes have repeating disabled.",
+      "defaultValue": "2",
+      "godotName": "border_color",
+      "xmlDocId": "P:Godot.RDSamplerState.BorderColor",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "CompareOp",
+      "kind": "Property",
+      "signature": "public int CompareOp { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The compare operation to use. Only effective if [member enable_compare] is [code]true[/code].",
+      "defaultValue": "7",
+      "godotName": "compare_op",
+      "xmlDocId": "P:Godot.RDSamplerState.CompareOp",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "EnableCompare",
+      "kind": "Property",
+      "signature": "public bool EnableCompare { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], returned values will be based on the comparison operation defined in [member compare_op]. This is a hardware-based approach and is therefore faster than performing this manually in a shader. For example, compare operations are used for shadow map rendering by comparing depth values from a shadow sampler.",
+      "defaultValue": "false",
+      "godotName": "enable_compare",
+      "xmlDocId": "P:Godot.RDSamplerState.EnableCompare",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "LodBias",
+      "kind": "Property",
+      "signature": "public float LodBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The mipmap LOD bias to use. Positive values will make the sampler blurrier at a given distance, while negative values will make the sampler sharper at a given distance (at the risk of looking grainy). Recommended values are between [code]-0.5[/code] and [code]0.0[/code]. Only effective if the sampler has mipmaps available.",
+      "defaultValue": "0.0",
+      "godotName": "lod_bias",
+      "xmlDocId": "P:Godot.RDSamplerState.LodBias",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "MagFilter",
+      "kind": "Property",
+      "signature": "public int MagFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The sampler\u0027s magnification filter. It is the filtering method used when sampling texels that appear bigger than on-screen pixels.",
+      "defaultValue": "0",
+      "godotName": "mag_filter",
+      "xmlDocId": "P:Godot.RDSamplerState.MagFilter",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "MaxLod",
+      "kind": "Property",
+      "signature": "public float MaxLod { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum mipmap LOD bias to display (lowest resolution). Only effective if the sampler has mipmaps available.",
+      "defaultValue": "1e\u002B20",
+      "godotName": "max_lod",
+      "xmlDocId": "P:Godot.RDSamplerState.MaxLod",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "MinFilter",
+      "kind": "Property",
+      "signature": "public int MinFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The sampler\u0027s minification filter. It is the filtering method used when sampling texels that appear smaller than on-screen pixels.",
+      "defaultValue": "0",
+      "godotName": "min_filter",
+      "xmlDocId": "P:Godot.RDSamplerState.MinFilter",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "MinLod",
+      "kind": "Property",
+      "signature": "public float MinLod { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum mipmap LOD bias to display (highest resolution). Only effective if the sampler has mipmaps available.",
+      "defaultValue": "0.0",
+      "godotName": "min_lod",
+      "xmlDocId": "P:Godot.RDSamplerState.MinLod",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "MipFilter",
+      "kind": "Property",
+      "signature": "public int MipFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The filtering method to use for mipmaps.",
+      "defaultValue": "0",
+      "godotName": "mip_filter",
+      "xmlDocId": "P:Godot.RDSamplerState.MipFilter",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "RepeatU",
+      "kind": "Property",
+      "signature": "public int RepeatU { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The repeat mode to use along the U axis of UV coordinates. This affects the returned values if sampling outside the UV bounds.",
+      "defaultValue": "2",
+      "godotName": "repeat_u",
+      "xmlDocId": "P:Godot.RDSamplerState.RepeatU",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "RepeatV",
+      "kind": "Property",
+      "signature": "public int RepeatV { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The repeat mode to use along the V axis of UV coordinates. This affects the returned values if sampling outside the UV bounds.",
+      "defaultValue": "2",
+      "godotName": "repeat_v",
+      "xmlDocId": "P:Godot.RDSamplerState.RepeatV",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "RepeatW",
+      "kind": "Property",
+      "signature": "public int RepeatW { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The repeat mode to use along the W axis of UV coordinates. This affects the returned values if sampling outside the UV bounds. Only effective for 3D samplers.",
+      "defaultValue": "2",
+      "godotName": "repeat_w",
+      "xmlDocId": "P:Godot.RDSamplerState.RepeatW",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "UnnormalizedUvw",
+      "kind": "Property",
+      "signature": "public bool UnnormalizedUvw { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the texture will be sampled with coordinates ranging from 0 to the texture\u0027s resolution. Otherwise, the coordinates will be normalized and range from 0 to 1.",
+      "defaultValue": "false",
+      "godotName": "unnormalized_uvw",
+      "xmlDocId": "P:Godot.RDSamplerState.UnnormalizedUvw",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    },
+    {
+      "name": "UseAnisotropy",
+      "kind": "Property",
+      "signature": "public bool UseAnisotropy { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], perform anisotropic sampling. See [member anisotropy_max].",
+      "defaultValue": "false",
+      "godotName": "use_anisotropy",
+      "xmlDocId": "P:Godot.RDSamplerState.UseAnisotropy",
+      "sourcePath": "doc/classes/RDSamplerState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDSamplerState.xml",
+      "sha256": "10db87a63f590f95c6e3e0e9c8a962a41288a30068938c1d8321d9b18bb50f40"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

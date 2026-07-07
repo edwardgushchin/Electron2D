@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Transform2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Transform2D",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Transform2D",
+    "documentationPath": "doc/classes/Transform2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_transform2d.html"
+  },
+  "constructors": [
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Transform2D()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Constructs a [Transform2D] identical to [constant IDENTITY]. [b]Note:[/b] In C#, this constructs a [Transform2D] with all of its components set to [constant Vector2.ZERO].",
+      "godotName": "Transform2D",
+      "xmlDocId": "M:Godot.Transform2D.#ctor",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Transform2D(Transform2D from)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Constructs a [Transform2D] as a copy of the given [Transform2D].",
+      "godotName": "Transform2D",
+      "xmlDocId": "M:Godot.Transform2D.#ctor(Transform2D)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Transform2D(float rotation, Vector2 position)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "rotation",
+          "type": "float"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Constructs a [Transform2D] from a given angle (in radians) and position.",
+      "godotName": "Transform2D",
+      "xmlDocId": "M:Godot.Transform2D.#ctor(float,Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Transform2D(float rotation, Vector2 scale, float skew, Vector2 position)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "rotation",
+          "type": "float"
+        },
+        {
+          "name": "scale",
+          "type": "Vector2"
+        },
+        {
+          "name": "skew",
+          "type": "float"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Constructs a [Transform2D] from a given angle (in radians), scale, skew (in radians), and position.",
+      "godotName": "Transform2D",
+      "xmlDocId": "M:Godot.Transform2D.#ctor(float,Vector2,float,Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Transform2D(Vector2 xAxis, Vector2 yAxis, Vector2 origin)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "x_axis",
+          "type": "Vector2"
+        },
+        {
+          "name": "y_axis",
+          "type": "Vector2"
+        },
+        {
+          "name": "origin",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Constructs a [Transform2D] from 3 [Vector2] values representing [member x], [member y], and the [member origin] (the three matrix columns).",
+      "godotName": "Transform2D",
+      "xmlDocId": "M:Godot.Transform2D.#ctor(Vector2,Vector2,Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "AffineInverse",
+      "kind": "Method",
+      "signature": "public Transform2D AffineInverse()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the inverted version of this transform. Unlike [method inverse], this method works with almost any basis, including non-uniform ones, but is slower. [b]Note:[/b] For this method to return correctly, the transform\u0027s basis needs to have a determinant that is not exactly [code]0.0[/code] (see [method determinant]).",
+      "godotName": "affine_inverse",
+      "xmlDocId": "M:Godot.Transform2D.AffineInverse",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "BasisXform",
+      "kind": "Method",
+      "signature": "public Vector2 BasisXform(Vector2 v)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "v",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the [param v] vector, transformed (multiplied) by the transform basis\u0027s matrix. Unlike the multiplication operator ([code]*[/code]), this method ignores the [member origin].",
+      "godotName": "basis_xform",
+      "xmlDocId": "M:Godot.Transform2D.BasisXform(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "BasisXformInv",
+      "kind": "Method",
+      "signature": "public Vector2 BasisXformInv(Vector2 v)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "v",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the [param v] vector, transformed (multiplied) by the inverse transform basis\u0027s matrix (see [method inverse]). This method ignores the [member origin]. [b]Note:[/b] This method assumes that this transform\u0027s basis is [i]orthonormal[/i] (see [method orthonormalized]). If the basis is not orthonormal, [code]transform.affine_inverse().basis_xform(vector)[/code] should be used instead (see [method affine_inverse]).",
+      "godotName": "basis_xform_inv",
+      "xmlDocId": "M:Godot.Transform2D.BasisXformInv(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Determinant",
+      "kind": "Method",
+      "signature": "public float Determinant()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Determinant]determinant[/url] of this transform basis\u0027s matrix. For advanced math, this number can be used to determine a few attributes: - If the determinant is exactly [code]0.0[/code], the basis is not invertible (see [method inverse]). - If the determinant is a negative number, the basis represents a negative scale. [b]Note:[/b] If the basis\u0027s scale is the same for every axis, its determinant is always that scale by the power of 2.",
+      "godotName": "determinant",
+      "xmlDocId": "M:Godot.Transform2D.Determinant",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "GetOrigin",
+      "kind": "Method",
+      "signature": "public Vector2 GetOrigin()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns this transform\u0027s translation. Equivalent to [member origin].",
+      "godotName": "get_origin",
+      "xmlDocId": "M:Godot.Transform2D.GetOrigin",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "GetRotation",
+      "kind": "Method",
+      "signature": "public float GetRotation()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns this transform\u0027s rotation (in radians). This is equivalent to [member x]\u0027s angle (see [method Vector2.angle]).",
+      "godotName": "get_rotation",
+      "xmlDocId": "M:Godot.Transform2D.GetRotation",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "GetScale",
+      "kind": "Method",
+      "signature": "public Vector2 GetScale()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the length of both [member x] and [member y], as a [Vector2]. If this transform\u0027s basis is not skewed, this value is the scaling factor. It is not affected by rotation. [codeblocks] [gdscript] var my_transform = Transform2D( Vector2(2, 0), Vector2(0, 4), Vector2(0, 0) ) # Rotating the Transform2D in any way preserves its scale. my_transform = my_transform.rotated(TAU / 2) print(my_transform.get_scale()) # Prints (2.0, 4.0) [/gdscript] [csharp] var myTransform = new Transform2D( Vector3(2.0f, 0.0f), Vector3(0.0f, 4.0f), Vector3(0.0f, 0.0f) ); // Rotating the Transform2D in any way preserves its scale. myTransform = myTransform.Rotated(Mathf.Tau / 2.0f); GD.Print(myTransform.GetScale()); // Prints (2, 4) [/csharp] [/codeblocks] [b]Note:[/b] If the value returned by [method determinant] is negative, the scale is also negative.",
+      "godotName": "get_scale",
+      "xmlDocId": "M:Godot.Transform2D.GetScale",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "GetSkew",
+      "kind": "Method",
+      "signature": "public float GetSkew()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns this transform\u0027s skew (in radians).",
+      "godotName": "get_skew",
+      "xmlDocId": "M:Godot.Transform2D.GetSkew",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "InterpolateWith",
+      "kind": "Method",
+      "signature": "public Transform2D InterpolateWith(Transform2D xform, float weight)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the result of the linear interpolation between this transform and [param xform] by the given [param weight]. The [param weight] should be between [code]0.0[/code] and [code]1.0[/code] (inclusive). Values outside this range are allowed and can be used to perform [i]extrapolation[/i] instead.",
+      "godotName": "interpolate_with",
+      "xmlDocId": "M:Godot.Transform2D.InterpolateWith(Transform2D,float)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Transform2D Inverse()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Invertible_matrix]inverted version of this transform[/url]. [b]Note:[/b] For this method to return correctly, the transform\u0027s basis needs to be [i]orthonormal[/i] (see [method orthonormalized]). That means the basis should only represent a rotation. If it does not, use [method affine_inverse] instead.",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Transform2D.Inverse",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "IsConformal",
+      "kind": "Method",
+      "signature": "public bool IsConformal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this transform\u0027s basis is conformal. A conformal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]uniform[/i] (the axes share the same length). This method can be especially useful during physics calculations.",
+      "godotName": "is_conformal",
+      "xmlDocId": "M:Godot.Transform2D.IsConformal",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Transform2D xform)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this transform and [param xform] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Transform2D.IsEqualApprox(Transform2D)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this transform is finite, by calling [method @GlobalScope.is_finite] on each component.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Transform2D.IsFinite",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "LookingAt",
+      "kind": "Method",
+      "signature": "public Transform2D LookingAt(Vector2 target)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Returns a copy of the transform rotated such that the rotated X-axis points towards the [param target] position, in global space.",
+      "godotName": "looking_at",
+      "xmlDocId": "M:Godot.Transform2D.LookingAt(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Orthonormalized",
+      "kind": "Method",
+      "signature": "public Transform2D Orthonormalized()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns a copy of this transform with its basis orthonormalized. An orthonormal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]normalized[/i] (the axes have a length of [code]1.0[/code]), which also means it can only represent a rotation.",
+      "godotName": "orthonormalized",
+      "xmlDocId": "M:Godot.Transform2D.Orthonormalized",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Rotated",
+      "kind": "Method",
+      "signature": "public Transform2D Rotated(float angle)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this transform rotated by the given [param angle] (in radians). If [param angle] is positive, the transform is rotated clockwise. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the left, i.e., [code]R * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "rotated",
+      "xmlDocId": "M:Godot.Transform2D.Rotated(float)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "RotatedLocal",
+      "kind": "Method",
+      "signature": "public Transform2D RotatedLocal(float angle)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of the transform rotated by the given [param angle] (in radians). This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the right, i.e., [code]X * R[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "rotated_local",
+      "xmlDocId": "M:Godot.Transform2D.RotatedLocal(float)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Scaled",
+      "kind": "Method",
+      "signature": "public Transform2D Scaled(Vector2 scale)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the transform scaled by the given [param scale] factor. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the left, i.e., [code]S * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "scaled",
+      "xmlDocId": "M:Godot.Transform2D.Scaled(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "ScaledLocal",
+      "kind": "Method",
+      "signature": "public Transform2D ScaledLocal(Vector2 scale)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the transform scaled by the given [param scale] factor. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the right, i.e., [code]X * S[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "scaled_local",
+      "xmlDocId": "M:Godot.Transform2D.ScaledLocal(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Translated",
+      "kind": "Method",
+      "signature": "public Transform2D Translated(Vector2 offset)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the transform translated by the given [param offset]. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the left, i.e., [code]T * X[/code]. This can be seen as transforming with respect to the global/parent frame.",
+      "godotName": "translated",
+      "xmlDocId": "M:Godot.Transform2D.Translated(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "TranslatedLocal",
+      "kind": "Method",
+      "signature": "public Transform2D TranslatedLocal(Vector2 offset)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of the transform translated by the given [param offset]. This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the right, i.e., [code]X * T[/code]. This can be seen as transforming with respect to the local frame.",
+      "godotName": "translated_local",
+      "xmlDocId": "M:Godot.Transform2D.TranslatedLocal(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Origin",
+      "kind": "Property",
+      "signature": "public Vector2 Origin { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The translation offset of this transform, and the column [code]2[/code] of the matrix. In 2D space, this can be seen as the position.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "origin",
+      "xmlDocId": "P:Godot.Transform2D.Origin",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public Vector2 X { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The transform basis\u0027s X axis, and the column [code]0[/code] of the matrix. Combined with [member y], this represents the transform\u0027s rotation, scale, and skew. On the identity transform, this vector points right ([constant Vector2.RIGHT]).",
+      "defaultValue": "Vector2(1, 0)",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Transform2D.X",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public Vector2 Y { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The transform basis\u0027s Y axis, and the column [code]1[/code] of the matrix. Combined with [member x], this represents the transform\u0027s rotation, scale, and skew. On the identity transform, this vector points down ([constant Vector2.DOWN]).",
+      "defaultValue": "Vector2(0, 1)",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Transform2D.Y",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "IDENTITY",
+      "value": "Transform2D(1, 0, 0, 1, 0, 0)",
+      "kind": "Constant",
+      "summary": "The identity [Transform2D]. This is a transform with no translation, no rotation, and a scale of [constant Vector2.ONE]. This also means that: - The [member x] points right ([constant Vector2.RIGHT]); - The [member y] points down ([constant Vector2.DOWN]). [codeblock] var transform = Transform2D.IDENTITY print(\u0022| X | Y | Origin\u0022) print(\u0022| %.f | %.f | %.f\u0022 % [transform.x.x, transform.y.x, transform.origin.x]) print(\u0022| %.f | %.f | %.f\u0022 % [transform.x.y, transform.y.y, transform.origin.y]) # Prints: # | X | Y | Origin # | 1 | 0 | 0 # | 0 | 1 | 0 [/codeblock] If a [Vector2], a [Rect2], a [PackedVector2Array], or another [Transform2D] is transformed (multiplied) by this constant, no transformation occurs. [b]Note:[/b] In GDScript, this constant is equivalent to creating a [constructor Transform2D] without any arguments. It can be used to make your code clearer, and for consistency with C#.",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "FLIP_X",
+      "value": "Transform2D(-1, 0, 0, 1, 0, 0)",
+      "kind": "Constant",
+      "summary": "When any transform is multiplied by [constant FLIP_X], it negates all components of the [member x] axis (the X column). When [constant FLIP_X] is multiplied by any transform, it negates the [member Vector2.x] component of all axes (the X row).",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "FLIP_Y",
+      "value": "Transform2D(1, 0, 0, -1, 0, 0)",
+      "kind": "Constant",
+      "summary": "When any transform is multiplied by [constant FLIP_Y], it negates all components of the [member y] axis (the Y column). When [constant FLIP_Y] is multiplied by any transform, it negates the [member Vector2.y] component of all axes (the Y row).",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Transform2D right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both transforms are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Transform2D.operator !=(Transform2D)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public PackedVector2Array operator *(PackedVector2Array right)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Transforms (multiplies) every [Vector2] element of the given [PackedVector2Array] by this transformation matrix. On larger arrays, this operation is much faster than transforming each [Vector2] individually.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(PackedVector2Array)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Rect2 operator *(Rect2 right)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [Rect2] by this transformation matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(Rect2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform2D operator *(Transform2D right)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Transforms (multiplies) this transform by the [param right] transform. This is the operation performed between parent and child [CanvasItem] nodes. [b]Note:[/b] If you need to only modify one attribute of this transform, consider using one of the following methods, instead: - For translation, see [method translated] or [method translated_local]. - For rotation, see [method rotated] or [method rotated_local]. - For scale, see [method scaled] or [method scaled_local].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(Transform2D)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2 operator *(Vector2 right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [Vector2] by this transformation matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(Vector2)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform2D operator *(float right)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies all components of the [Transform2D] by the given [float], including the [member origin]. This affects the transform\u0027s scale uniformly.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(float)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Transform2D operator *(int right)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies all components of the [Transform2D] by the given [int], including the [member origin]. This affects the transform\u0027s scale uniformly.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Transform2D.operator *(int)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Transform2D operator /(float right)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides all components of the [Transform2D] by the given [float], including the [member origin]. This affects the transform\u0027s scale uniformly.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Transform2D.operator /(float)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Transform2D operator /(int right)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides all components of the [Transform2D] by the given [int], including the [member origin]. This affects the transform\u0027s scale uniformly.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Transform2D.operator /(int)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Transform2D right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both transforms are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Transform2D.operator ==(Transform2D)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Vector2 operator [](int index)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Accesses each axis (column) of this transform by their index. Index [code]0[/code] is the same as [member x], index [code]1[/code] is the same as [member y], and index [code]2[/code] is the same as [member origin].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Transform2D.operator [](int)",
+      "sourcePath": "doc/classes/Transform2D.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Transform2D.xml",
+      "sha256": "eb85de36c78ea0ae3e10d92f877bf6c4de78a514c28bb3e04745e1afe7532d04"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

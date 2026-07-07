@@ -1,0 +1,727 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OptionButton",
+    "namespace": "Godot",
+    "fullName": "Godot.OptionButton",
+    "kind": "class",
+    "baseType": "Button",
+    "interfaces": [],
+    "godotReference": "OptionButton",
+    "documentationPath": "doc/classes/OptionButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_optionbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public void AddIconItem(Texture2D texture, String label, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an item, with a [param texture] icon, text [param label] and (optionally) [param id]. If no [param id] is passed, the item index will be used as the item\u0027s ID. New items are appended at the end. [b]Note:[/b] The item will be selected if there are no other items.",
+      "godotName": "add_icon_item",
+      "xmlDocId": "M:Godot.OptionButton.AddIconItem(Texture2D,String,int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public void AddItem(String label, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an item, with text [param label] and (optionally) [param id]. If no [param id] is passed, the item index will be used as the item\u0027s ID. New items are appended at the end. [b]Note:[/b] The item will be selected if there are no other items.",
+      "godotName": "add_item",
+      "xmlDocId": "M:Godot.OptionButton.AddItem(String,int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "AddSeparator",
+      "kind": "Method",
+      "signature": "public void AddSeparator(String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a separator to the list of items. Separators help to group items, and can optionally be given a [param text] header. A separator also gets an index assigned, and is appended at the end of the item list.",
+      "godotName": "add_separator",
+      "xmlDocId": "M:Godot.OptionButton.AddSeparator(String)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all the items in the [OptionButton].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.OptionButton.Clear",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public int GetItemAutoTranslateMode(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the auto translate mode of the item at index [param idx].",
+      "godotName": "get_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.OptionButton.GetItemAutoTranslateMode(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetItemIcon(int idx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the icon of the item at index [param idx].",
+      "godotName": "get_item_icon",
+      "xmlDocId": "M:Godot.OptionButton.GetItemIcon(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemId",
+      "kind": "Method",
+      "signature": "public int GetItemId(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the ID of the item at index [param idx].",
+      "godotName": "get_item_id",
+      "xmlDocId": "M:Godot.OptionButton.GetItemId(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemIndex",
+      "kind": "Method",
+      "signature": "public int GetItemIndex(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the item with the given [param id].",
+      "godotName": "get_item_index",
+      "xmlDocId": "M:Godot.OptionButton.GetItemIndex(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetItemMetadata(int idx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Retrieves the metadata of an item. Metadata may be any type and can be used to store extra information about an item, such as an external string ID.",
+      "godotName": "get_item_metadata",
+      "xmlDocId": "M:Godot.OptionButton.GetItemMetadata(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public String GetItemText(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text of the item at index [param idx].",
+      "godotName": "get_item_text",
+      "xmlDocId": "M:Godot.OptionButton.GetItemText(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetItemTooltip",
+      "kind": "Method",
+      "signature": "public String GetItemTooltip(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tooltip of the item at index [param idx].",
+      "godotName": "get_item_tooltip",
+      "xmlDocId": "M:Godot.OptionButton.GetItemTooltip(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetPopup",
+      "kind": "Method",
+      "signature": "public PopupMenu GetPopup()",
+      "returnType": "PopupMenu",
+      "parameters": [],
+      "summary": "Returns the [PopupMenu] contained in this button. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_popup",
+      "xmlDocId": "M:Godot.OptionButton.GetPopup",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetSelectableItem",
+      "kind": "Method",
+      "signature": "public int GetSelectableItem(bool fromLast)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from_last",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the index of the first item which is not disabled, or marked as a separator. If [param from_last] is [code]true[/code], the items will be searched in reverse order. Returns [code]-1[/code] if no item is found.",
+      "godotName": "get_selectable_item",
+      "xmlDocId": "M:Godot.OptionButton.GetSelectableItem(bool)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetSelectedId",
+      "kind": "Method",
+      "signature": "public int GetSelectedId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the selected item, or [code]-1[/code] if no item is selected.",
+      "godotName": "get_selected_id",
+      "xmlDocId": "M:Godot.OptionButton.GetSelectedId",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "GetSelectedMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetSelectedMetadata()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Gets the metadata of the selected item. Metadata for items can be set using [method set_item_metadata].",
+      "godotName": "get_selected_metadata",
+      "xmlDocId": "M:Godot.OptionButton.GetSelectedMetadata",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "HasSelectableItems",
+      "kind": "Method",
+      "signature": "public bool HasSelectableItems()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this button contains at least one item which is not disabled, or marked as a separator.",
+      "godotName": "has_selectable_items",
+      "xmlDocId": "M:Godot.OptionButton.HasSelectableItems",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public bool IsItemDisabled(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is disabled.",
+      "godotName": "is_item_disabled",
+      "xmlDocId": "M:Godot.OptionButton.IsItemDisabled(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "IsItemSeparator",
+      "kind": "Method",
+      "signature": "public bool IsItemSeparator(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is marked as a separator.",
+      "godotName": "is_item_separator",
+      "xmlDocId": "M:Godot.OptionButton.IsItemSeparator(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "RemoveItem",
+      "kind": "Method",
+      "signature": "public void RemoveItem(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the item at index [param idx].",
+      "godotName": "remove_item",
+      "xmlDocId": "M:Godot.OptionButton.RemoveItem(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public void Select(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Selects an item by index and makes it the current item. This will work even if the item is disabled. Passing [code]-1[/code] as the index deselects any currently selected item.",
+      "godotName": "select",
+      "xmlDocId": "M:Godot.OptionButton.Select(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetDisableShortcuts",
+      "kind": "Method",
+      "signature": "public void SetDisableShortcuts(bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], shortcuts are disabled and cannot be used to trigger the button.",
+      "godotName": "set_disable_shortcuts",
+      "xmlDocId": "M:Godot.OptionButton.SetDisableShortcuts(bool)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public void SetItemAutoTranslateMode(int idx, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the auto translate mode of the item at index [param idx]. Items use [constant Node.AUTO_TRANSLATE_MODE_INHERIT] by default, which uses the same auto translate mode as the [OptionButton] itself.",
+      "godotName": "set_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.OptionButton.SetItemAutoTranslateMode(int,int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public void SetItemDisabled(int idx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the item at index [param idx] is disabled. Disabled items are drawn differently in the dropdown and are not selectable by the user. If the current selected item is set as disabled, it will remain selected.",
+      "godotName": "set_item_disabled",
+      "xmlDocId": "M:Godot.OptionButton.SetItemDisabled(int,bool)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public void SetItemIcon(int idx, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the icon of the item at index [param idx].",
+      "godotName": "set_item_icon",
+      "xmlDocId": "M:Godot.OptionButton.SetItemIcon(int,Texture2D)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemId",
+      "kind": "Method",
+      "signature": "public void SetItemId(int idx, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the ID of the item at index [param idx].",
+      "godotName": "set_item_id",
+      "xmlDocId": "M:Godot.OptionButton.SetItemId(int,int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemMetadata",
+      "kind": "Method",
+      "signature": "public void SetItemMetadata(int idx, Variant metadata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "metadata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata of an item. Metadata may be of any type and can be used to store extra information about an item, such as an external string ID.",
+      "godotName": "set_item_metadata",
+      "xmlDocId": "M:Godot.OptionButton.SetItemMetadata(int,Variant)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public void SetItemText(int idx, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text of the item at index [param idx].",
+      "godotName": "set_item_text",
+      "xmlDocId": "M:Godot.OptionButton.SetItemText(int,String)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SetItemTooltip",
+      "kind": "Method",
+      "signature": "public void SetItemTooltip(int idx, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the tooltip of the item at index [param idx].",
+      "godotName": "set_item_tooltip",
+      "xmlDocId": "M:Godot.OptionButton.SetItemTooltip(int,String)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "ShowPopup",
+      "kind": "Method",
+      "signature": "public void ShowPopup()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Adjusts popup position and sizing for the [OptionButton], then shows the [PopupMenu]. Prefer this over using [code]get_popup().popup()[/code].",
+      "godotName": "show_popup",
+      "xmlDocId": "M:Godot.OptionButton.ShowPopup",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "ActionMode",
+      "kind": "Property",
+      "signature": "public int ActionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "action_mode",
+      "xmlDocId": "P:Godot.OptionButton.ActionMode",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.OptionButton.Alignment",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "AllowReselect",
+      "kind": "Property",
+      "signature": "public bool AllowReselect { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the currently selected item can be selected again.",
+      "defaultValue": "false",
+      "godotName": "allow_reselect",
+      "xmlDocId": "P:Godot.OptionButton.AllowReselect",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "FitToLongestItem",
+      "kind": "Property",
+      "signature": "public bool FitToLongestItem { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], minimum size will be determined by the longest item\u0027s text, instead of the currently selected one\u0027s. [b]Note:[/b] For performance reasons, the minimum size doesn\u0027t update immediately when adding, removing or modifying items.",
+      "defaultValue": "true",
+      "godotName": "fit_to_longest_item",
+      "xmlDocId": "P:Godot.OptionButton.FitToLongestItem",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "ItemCount",
+      "kind": "Property",
+      "signature": "public int ItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of items to select from.",
+      "defaultValue": "0",
+      "godotName": "item_count",
+      "xmlDocId": "P:Godot.OptionButton.ItemCount",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SearchBarEnabled",
+      "kind": "Property",
+      "signature": "public bool SearchBarEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows a search bar at the top of the [PopupMenu] for filtering items. See [member search_bar_min_item_count] for dynamically controlling its visibility based on the number of items.",
+      "defaultValue": "false",
+      "godotName": "search_bar_enabled",
+      "xmlDocId": "P:Godot.OptionButton.SearchBarEnabled",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SearchBarFuzzySearchEnabled",
+      "kind": "Property",
+      "signature": "public bool SearchBarFuzzySearchEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables fuzzy searching in the [PopupMenu] search bar. This allows the search results to include items that almost match the search query, as well items that match the individual characters of the search query, but not in sequence. Use [member search_bar_fuzzy_search_max_misses] to set the maximum number of mismatches allowed in the search results.",
+      "defaultValue": "true",
+      "godotName": "search_bar_fuzzy_search_enabled",
+      "xmlDocId": "P:Godot.OptionButton.SearchBarFuzzySearchEnabled",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SearchBarFuzzySearchMaxMisses",
+      "kind": "Property",
+      "signature": "public int SearchBarFuzzySearchMaxMisses { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the maximum number of mismatches allowed in each search result when fuzzy searching is enabled for the [PopupMenu] search bar. Any item with more mismatches will be hidden from the search results.",
+      "defaultValue": "2",
+      "godotName": "search_bar_fuzzy_search_max_misses",
+      "xmlDocId": "P:Godot.OptionButton.SearchBarFuzzySearchMaxMisses",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "SearchBarMinItemCount",
+      "kind": "Property",
+      "signature": "public int SearchBarMinItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the minimum number of items required for the [PopupMenu] search bar to be visible. [member search_bar_enabled] must be [code]true[/code] for this to have any effect.",
+      "defaultValue": "0",
+      "godotName": "search_bar_min_item_count",
+      "xmlDocId": "P:Godot.OptionButton.SearchBarMinItemCount",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "Selected",
+      "kind": "Property",
+      "signature": "public int Selected { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the currently selected item, or [code]-1[/code] if no item is selected.",
+      "defaultValue": "-1",
+      "godotName": "selected",
+      "xmlDocId": "P:Godot.OptionButton.Selected",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.OptionButton.ToggleMode",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "popup/item_{index}/disabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is disabled. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "popup/item_{index}/disabled",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/icon",
+      "kind": "RawProperty",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The icon of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "godotName": "popup/item_{index}/icon",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/id",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "popup/item_{index}/id",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/separator",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is a separator. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "popup/item_{index}/separator",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "popup/item_{index}/text",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "popup/item_{index}/text",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "ItemFocused",
+      "kind": "Signal",
+      "signature": "public event ItemFocusedHandler ItemFocused",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user navigates to an item using the [member ProjectSettings.input/ui_up] or [member ProjectSettings.input/ui_down] input actions. The index of the item focused is passed as argument.",
+      "godotName": "item_focused",
+      "xmlDocId": "E:Godot.OptionButton.ItemFocused(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    },
+    {
+      "name": "ItemSelected",
+      "kind": "Signal",
+      "signature": "public event ItemSelectedHandler ItemSelected",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the current item has been changed by the user. The index of the item selected is passed as argument. [member allow_reselect] must be enabled to reselect an item.",
+      "godotName": "item_selected",
+      "xmlDocId": "E:Godot.OptionButton.ItemSelected(int)",
+      "sourcePath": "doc/classes/OptionButton.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OptionButton.xml",
+      "sha256": "ed87872e4393ca46230899c27ca006a93a0639e32ddb44289c51715093519734"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

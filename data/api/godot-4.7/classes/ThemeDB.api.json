@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ThemeDB",
+    "namespace": "Godot",
+    "fullName": "Godot.ThemeDB",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ThemeDB",
+    "documentationPath": "doc/classes/ThemeDB.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_themedb.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetDefaultTheme",
+      "kind": "Method",
+      "signature": "public Theme GetDefaultTheme()",
+      "returnType": "Theme",
+      "parameters": [],
+      "summary": "Returns a reference to the default engine [Theme]. This theme resource is responsible for the out-of-the-box look of [Control] nodes and cannot be overridden.",
+      "godotName": "get_default_theme",
+      "xmlDocId": "M:Godot.ThemeDB.GetDefaultTheme",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "GetProjectTheme",
+      "kind": "Method",
+      "signature": "public Theme GetProjectTheme()",
+      "returnType": "Theme",
+      "parameters": [],
+      "summary": "Returns a reference to the custom project [Theme]. This theme resources allows to override the default engine theme for every control node in the project. To set the project theme, see [member ProjectSettings.gui/theme/custom].",
+      "godotName": "get_project_theme",
+      "xmlDocId": "M:Godot.ThemeDB.GetProjectTheme",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "FallbackBaseScale",
+      "kind": "Property",
+      "signature": "public float FallbackBaseScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fallback base scale factor of every [Control] node and [Theme] resource. Used when no other value is available to the control. See also [member Theme.default_base_scale].",
+      "defaultValue": "1.0",
+      "godotName": "fallback_base_scale",
+      "xmlDocId": "P:Godot.ThemeDB.FallbackBaseScale",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "FallbackFont",
+      "kind": "Property",
+      "signature": "public Font FallbackFont { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "The fallback font of every [Control] node and [Theme] resource. Used when no other value is available to the control. See also [member Theme.default_font].",
+      "godotName": "fallback_font",
+      "xmlDocId": "P:Godot.ThemeDB.FallbackFont",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "FallbackFontSize",
+      "kind": "Property",
+      "signature": "public int FallbackFontSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The fallback font size of every [Control] node and [Theme] resource. Used when no other value is available to the control. See also [member Theme.default_font_size].",
+      "defaultValue": "16",
+      "godotName": "fallback_font_size",
+      "xmlDocId": "P:Godot.ThemeDB.FallbackFontSize",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "FallbackIcon",
+      "kind": "Property",
+      "signature": "public Texture2D FallbackIcon { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The fallback icon of every [Control] node and [Theme] resource. Used when no other value is available to the control.",
+      "godotName": "fallback_icon",
+      "xmlDocId": "P:Godot.ThemeDB.FallbackIcon",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    },
+    {
+      "name": "FallbackStylebox",
+      "kind": "Property",
+      "signature": "public StyleBox FallbackStylebox { get; set; }",
+      "returnType": "StyleBox",
+      "parameters": [],
+      "summary": "The fallback stylebox of every [Control] node and [Theme] resource. Used when no other value is available to the control.",
+      "godotName": "fallback_stylebox",
+      "xmlDocId": "P:Godot.ThemeDB.FallbackStylebox",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FallbackChanged",
+      "kind": "Signal",
+      "signature": "public event FallbackChangedHandler FallbackChanged",
+      "parameters": [],
+      "summary": "Emitted when one of the fallback values had been changed. Use it to refresh the look of controls that may rely on the fallback theme items.",
+      "godotName": "fallback_changed",
+      "xmlDocId": "E:Godot.ThemeDB.FallbackChanged",
+      "sourcePath": "doc/classes/ThemeDB.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ThemeDB.xml",
+      "sha256": "475747ae9df94f1de6aa8cf64dfc490e84efc6992d2017b4dc4233083c7d9118"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRInteractionProfileMetadata",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRInteractionProfileMetadata",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "OpenXRInteractionProfileMetadata",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrinteractionprofilemetadata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "RegisterInteractionProfile",
+      "kind": "Method",
+      "signature": "public void RegisterInteractionProfile(String displayName, String openxrPath, String openxrExtensionNames)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "display_name",
+          "type": "String"
+        },
+        {
+          "name": "openxr_path",
+          "type": "String"
+        },
+        {
+          "name": "openxr_extension_names",
+          "type": "String"
+        }
+      ],
+      "summary": "Registers an interaction profile using its OpenXR designation (e.g. [code]/interaction_profiles/khr/simple_controller[/code] is the profile for OpenXR\u0027s simple controller profile). [param display_name] is the description shown to the user. [param openxr_path] is the interaction profile path being registered. [param openxr_extension_names] optionally restricts this profile to the given extension being enabled/available. If the extension is not available, the profile and all related entries used in an action map are filtered out.",
+      "godotName": "register_interaction_profile",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfileMetadata.RegisterInteractionProfile(String,String,String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml"
+    },
+    {
+      "name": "RegisterIoPath",
+      "kind": "Method",
+      "signature": "public void RegisterIoPath(String interactionProfile, String displayName, String toplevelPath, String openxrPath, String openxrExtensionNames, int actionType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interaction_profile",
+          "type": "String"
+        },
+        {
+          "name": "display_name",
+          "type": "String"
+        },
+        {
+          "name": "toplevel_path",
+          "type": "String"
+        },
+        {
+          "name": "openxr_path",
+          "type": "String"
+        },
+        {
+          "name": "openxr_extension_names",
+          "type": "String"
+        },
+        {
+          "name": "action_type",
+          "type": "int"
+        }
+      ],
+      "summary": "Registers an input/output path for the given [param interaction_profile]. The profile should previously have been registered using [method register_interaction_profile]. [param display_name] is the description shown to the user. [param toplevel_path] specifies the bind path this input/output can be bound to (e.g. [code]/user/hand/left[/code] or [code]/user/hand/right[/code]). [param openxr_path] is the action input/output being registered (e.g. [code]/user/hand/left/input/aim/pose[/code]). [param openxr_extension_names] restricts this input/output to an enabled/available extension, this doesn\u0027t need to repeat the extension on the profile but relates to overlapping extension (e.g. [code]XR_EXT_palm_pose[/code] that introduces [code]\u2026/input/palm_ext/pose[/code] input paths). [param action_type] defines the type of input or output provided by OpenXR.",
+      "godotName": "register_io_path",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfileMetadata.RegisterIoPath(String,String,String,String,String,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml"
+    },
+    {
+      "name": "RegisterPathRename",
+      "kind": "Method",
+      "signature": "public void RegisterPathRename(String oldName, String newName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "String"
+        },
+        {
+          "name": "new_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Allows for renaming old input/output paths to new paths in order to load and process older action maps.",
+      "godotName": "register_path_rename",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfileMetadata.RegisterPathRename(String,String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml"
+    },
+    {
+      "name": "RegisterProfileRename",
+      "kind": "Method",
+      "signature": "public void RegisterProfileRename(String oldName, String newName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "String"
+        },
+        {
+          "name": "new_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Allows for renaming old interaction profile paths to new paths in order to load and process older action maps.",
+      "godotName": "register_profile_rename",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfileMetadata.RegisterProfileRename(String,String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml"
+    },
+    {
+      "name": "RegisterTopLevelPath",
+      "kind": "Method",
+      "signature": "public void RegisterTopLevelPath(String displayName, String openxrPath, String openxrExtensionNames)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "display_name",
+          "type": "String"
+        },
+        {
+          "name": "openxr_path",
+          "type": "String"
+        },
+        {
+          "name": "openxr_extension_names",
+          "type": "String"
+        }
+      ],
+      "summary": "Registers a top level path to which profiles can be bound. For instance [code]/user/hand/left[/code] refers to the bind point for the player\u0027s left hand. Extensions can register additional top level paths, for instance a haptic vest extension might register [code]/user/body/vest[/code]. [param display_name] is the name shown to the user. [param openxr_path] is the top level path being registered. [param openxr_extension_names] is optional and ensures the top level path is only used if the specified extension is available/enabled. When a top level path ends up being bound by OpenXR, an [XRPositionalTracker] is instantiated to manage the state of the device.",
+      "godotName": "register_top_level_path",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfileMetadata.RegisterTopLevelPath(String,String,String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRInteractionProfileMetadata.xml",
+      "sha256": "9bf7a149286522dc9a4c41ccc641389b20c18b86d9636734bb09dea836ca56ba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

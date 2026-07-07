@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRInterfaceExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.XRInterfaceExtension",
+    "kind": "class",
+    "baseType": "XRInterface",
+    "interfaces": [],
+    "godotReference": "XRInterfaceExtension",
+    "documentationPath": "doc/classes/XRInterfaceExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrinterfaceextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_EndFrame",
+      "kind": "Method",
+      "signature": "public void _EndFrame()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if interface is active and queues have been submitted.",
+      "godotName": "_end_frame",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._EndFrame",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetAnchorDetectionIsEnabled",
+      "kind": "Method",
+      "signature": "public bool _GetAnchorDetectionIsEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Return [code]true[/code] if anchor detection is enabled for this interface.",
+      "godotName": "_get_anchor_detection_is_enabled",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetAnchorDetectionIsEnabled",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCameraFeedId",
+      "kind": "Method",
+      "signature": "public int _GetCameraFeedId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the camera feed ID for the [CameraFeed] registered with the [CameraServer] that should be presented as the background on an AR capable device (if applicable).",
+      "godotName": "_get_camera_feed_id",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCameraFeedId",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCameraTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetCameraTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the [Transform3D] that positions the [XRCamera3D] in the world.",
+      "godotName": "_get_camera_transform",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCameraTransform",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCapabilities",
+      "kind": "Method",
+      "signature": "public int _GetCapabilities()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the capabilities of this interface.",
+      "godotName": "_get_capabilities",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCapabilities",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetColorTexture",
+      "kind": "Method",
+      "signature": "public RID _GetColorTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return color texture into which to render (if applicable).",
+      "godotName": "_get_color_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetColorTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetDepthTexture",
+      "kind": "Method",
+      "signature": "public RID _GetDepthTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return depth texture into which to render (if applicable).",
+      "godotName": "_get_depth_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetDepthTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public StringName _GetName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the name of this interface.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetName",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetPlayArea",
+      "kind": "Method",
+      "signature": "public PackedVector3Array _GetPlayArea()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns a [PackedVector3Array] that represents the play areas boundaries (if applicable).",
+      "godotName": "_get_play_area",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetPlayArea",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetPlayAreaMode",
+      "kind": "Method",
+      "signature": "public int _GetPlayAreaMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the play area mode that sets up our play area.",
+      "godotName": "_get_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetPlayAreaMode",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetProjectionForView",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array _GetProjectionForView(int view, float aspect, float zNear, float zFar)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the projection matrix for the given view as a [PackedFloat64Array].",
+      "godotName": "_get_projection_for_view",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetProjectionForView(int,float,float,float)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetRenderTargetSize",
+      "kind": "Method",
+      "signature": "public Vector2 _GetRenderTargetSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the size of our render target for this interface, this overrides the size of the [Viewport] marked as the xr viewport.",
+      "godotName": "_get_render_target_size",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetRenderTargetSize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSuggestedPoseNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSuggestedPoseNames(StringName trackerName)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "tracker_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a [PackedStringArray] with pose names configured by this interface. Note that user configuration can override this list.",
+      "godotName": "_get_suggested_pose_names",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSuggestedPoseNames(StringName)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSuggestedTrackerNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSuggestedTrackerNames()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a [PackedStringArray] with tracker names configured by this interface. Note that user configuration can override this list.",
+      "godotName": "_get_suggested_tracker_names",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSuggestedTrackerNames",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSystemInfo",
+      "kind": "Method",
+      "signature": "public Dictionary _GetSystemInfo()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] with system information related to this interface.",
+      "godotName": "_get_system_info",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSystemInfo",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetTrackingStatus",
+      "kind": "Method",
+      "signature": "public int _GetTrackingStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current status of our tracking.",
+      "godotName": "_get_tracking_status",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetTrackingStatus",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetTransformForView",
+      "kind": "Method",
+      "signature": "public Transform3D _GetTransformForView(int view, Transform3D camTransform)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        },
+        {
+          "name": "cam_transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Returns a [Transform3D] for a given view.",
+      "godotName": "_get_transform_for_view",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetTransformForView(int,Transform3D)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVelocityTexture",
+      "kind": "Method",
+      "signature": "public RID _GetVelocityTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return velocity texture into which to render (if applicable).",
+      "godotName": "_get_velocity_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVelocityTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetViewCount",
+      "kind": "Method",
+      "signature": "public int _GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of views this interface requires, 1 for mono, 2 for stereoscopic.",
+      "godotName": "_get_view_count",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetViewCount",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVrsTexture",
+      "kind": "Method",
+      "signature": "public RID _GetVrsTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_vrs_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVrsTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVrsTextureFormat",
+      "kind": "Method",
+      "signature": "public int _GetVrsTextureFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the format of the texture returned by [method _get_vrs_texture].",
+      "godotName": "_get_vrs_texture_format",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVrsTextureFormat",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public bool _Initialize()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Initializes the interface, returns [code]true[/code] on success.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Initialize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_IsInitialized",
+      "kind": "Method",
+      "signature": "public bool _IsInitialized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this interface has been initialized.",
+      "godotName": "_is_initialized",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._IsInitialized",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PostDrawViewport",
+      "kind": "Method",
+      "signature": "public void _PostDrawViewport(RID renderTarget, Rect2 screenRect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        },
+        {
+          "name": "screen_rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Called after the XR [Viewport] draw logic has completed.",
+      "godotName": "_post_draw_viewport",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PostDrawViewport(RID,Rect2)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PreDrawViewport",
+      "kind": "Method",
+      "signature": "public bool _PreDrawViewport(RID renderTarget)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        }
+      ],
+      "summary": "Called if this is our primary [XRInterfaceExtension] before we start processing a [Viewport] for every active XR [Viewport], returns [code]true[/code] if that viewport should be rendered. An XR interface may return [code]false[/code] if the user has taken off their headset and we can pause rendering.",
+      "godotName": "_pre_draw_viewport",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PreDrawViewport(RID)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PreRender",
+      "kind": "Method",
+      "signature": "public void _PreRender()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if this [XRInterfaceExtension] is active before rendering starts. Most XR interfaces will sync tracking at this point in time.",
+      "godotName": "_pre_render",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PreRender",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if this [XRInterfaceExtension] is active before our physics and game process is called. Most XR interfaces will update its [XRPositionalTracker]s at this point in time.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Process",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SetAnchorDetectionIsEnabled",
+      "kind": "Method",
+      "signature": "public void _SetAnchorDetectionIsEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables anchor detection on this interface if supported.",
+      "godotName": "_set_anchor_detection_is_enabled",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SetAnchorDetectionIsEnabled(bool)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SetPlayAreaMode",
+      "kind": "Method",
+      "signature": "public bool _SetPlayAreaMode(int mode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the play area mode for this interface.",
+      "godotName": "_set_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SetPlayAreaMode(int)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SupportsPlayAreaMode",
+      "kind": "Method",
+      "signature": "public bool _SupportsPlayAreaMode(int mode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this interface supports this play area mode.",
+      "godotName": "_supports_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SupportsPlayAreaMode(int)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_TriggerHapticPulse",
+      "kind": "Method",
+      "signature": "public void _TriggerHapticPulse(String actionName, StringName trackerName, float frequency, float amplitude, float durationSec, float delaySec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        },
+        {
+          "name": "tracker_name",
+          "type": "StringName"
+        },
+        {
+          "name": "frequency",
+          "type": "float"
+        },
+        {
+          "name": "amplitude",
+          "type": "float"
+        },
+        {
+          "name": "duration_sec",
+          "type": "float"
+        },
+        {
+          "name": "delay_sec",
+          "type": "float"
+        }
+      ],
+      "summary": "Triggers a haptic pulse to be emitted on the specified tracker.",
+      "godotName": "_trigger_haptic_pulse",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._TriggerHapticPulse(String,StringName,float,float,float,float)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Uninitialize",
+      "kind": "Method",
+      "signature": "public void _Uninitialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Uninitialize the interface.",
+      "godotName": "_uninitialize",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Uninitialize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "AddBlit",
+      "kind": "Method",
+      "signature": "public void AddBlit(RID renderTarget, Rect2 srcRect, Rect2i dstRect, bool useLayer, int layer, bool applyLensDistortion, Vector2 eyeCenter, float k1, float k2, float upscale, float aspectRatio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "dst_rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "use_layer",
+          "type": "bool"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "apply_lens_distortion",
+          "type": "bool"
+        },
+        {
+          "name": "eye_center",
+          "type": "Vector2"
+        },
+        {
+          "name": "k1",
+          "type": "float"
+        },
+        {
+          "name": "k2",
+          "type": "float"
+        },
+        {
+          "name": "upscale",
+          "type": "float"
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "float"
+        }
+      ],
+      "summary": "Blits our render results to screen optionally applying lens distortion. This can only be called while processing [code]_commit_views[/code].",
+      "godotName": "add_blit",
+      "xmlDocId": "M:Godot.XRInterfaceExtension.AddBlit(RID,Rect2,Rect2i,bool,int,bool,Vector2,float,float,float,float)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "GetColorTexture",
+      "kind": "Method",
+      "signature": "public RID GetColorTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_color_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension.GetColorTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "GetDepthTexture",
+      "kind": "Method",
+      "signature": "public RID GetDepthTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_depth_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension.GetDepthTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "GetRenderTargetTexture",
+      "kind": "Method",
+      "signature": "public RID GetRenderTargetTexture(RID renderTarget)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns a valid [RID] for a texture to which we should render the current frame if supported by the interface.",
+      "godotName": "get_render_target_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension.GetRenderTargetTexture(RID)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "GetVelocityTexture",
+      "kind": "Method",
+      "signature": "public RID GetVelocityTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_velocity_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension.GetVelocityTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_EndFrame",
+      "kind": "Method",
+      "signature": "public void _EndFrame()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if interface is active and queues have been submitted.",
+      "godotName": "_end_frame",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._EndFrame",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetAnchorDetectionIsEnabled",
+      "kind": "Method",
+      "signature": "public bool _GetAnchorDetectionIsEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Return [code]true[/code] if anchor detection is enabled for this interface.",
+      "godotName": "_get_anchor_detection_is_enabled",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetAnchorDetectionIsEnabled",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCameraFeedId",
+      "kind": "Method",
+      "signature": "public int _GetCameraFeedId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the camera feed ID for the [CameraFeed] registered with the [CameraServer] that should be presented as the background on an AR capable device (if applicable).",
+      "godotName": "_get_camera_feed_id",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCameraFeedId",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCameraTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetCameraTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the [Transform3D] that positions the [XRCamera3D] in the world.",
+      "godotName": "_get_camera_transform",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCameraTransform",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetCapabilities",
+      "kind": "Method",
+      "signature": "public int _GetCapabilities()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the capabilities of this interface.",
+      "godotName": "_get_capabilities",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetCapabilities",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetColorTexture",
+      "kind": "Method",
+      "signature": "public RID _GetColorTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return color texture into which to render (if applicable).",
+      "godotName": "_get_color_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetColorTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetDepthTexture",
+      "kind": "Method",
+      "signature": "public RID _GetDepthTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return depth texture into which to render (if applicable).",
+      "godotName": "_get_depth_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetDepthTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public StringName _GetName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the name of this interface.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetName",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetPlayArea",
+      "kind": "Method",
+      "signature": "public PackedVector3Array _GetPlayArea()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns a [PackedVector3Array] that represents the play areas boundaries (if applicable).",
+      "godotName": "_get_play_area",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetPlayArea",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetPlayAreaMode",
+      "kind": "Method",
+      "signature": "public int _GetPlayAreaMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the play area mode that sets up our play area.",
+      "godotName": "_get_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetPlayAreaMode",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetProjectionForView",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array _GetProjectionForView(int view, float aspect, float zNear, float zFar)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the projection matrix for the given view as a [PackedFloat64Array].",
+      "godotName": "_get_projection_for_view",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetProjectionForView(int,float,float,float)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetRenderTargetSize",
+      "kind": "Method",
+      "signature": "public Vector2 _GetRenderTargetSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the size of our render target for this interface, this overrides the size of the [Viewport] marked as the xr viewport.",
+      "godotName": "_get_render_target_size",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetRenderTargetSize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSuggestedPoseNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSuggestedPoseNames(StringName trackerName)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "tracker_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a [PackedStringArray] with pose names configured by this interface. Note that user configuration can override this list.",
+      "godotName": "_get_suggested_pose_names",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSuggestedPoseNames(StringName)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSuggestedTrackerNames",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSuggestedTrackerNames()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a [PackedStringArray] with tracker names configured by this interface. Note that user configuration can override this list.",
+      "godotName": "_get_suggested_tracker_names",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSuggestedTrackerNames",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetSystemInfo",
+      "kind": "Method",
+      "signature": "public Dictionary _GetSystemInfo()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] with system information related to this interface.",
+      "godotName": "_get_system_info",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetSystemInfo",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetTrackingStatus",
+      "kind": "Method",
+      "signature": "public int _GetTrackingStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current status of our tracking.",
+      "godotName": "_get_tracking_status",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetTrackingStatus",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetTransformForView",
+      "kind": "Method",
+      "signature": "public Transform3D _GetTransformForView(int view, Transform3D camTransform)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        },
+        {
+          "name": "cam_transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Returns a [Transform3D] for a given view.",
+      "godotName": "_get_transform_for_view",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetTransformForView(int,Transform3D)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVelocityTexture",
+      "kind": "Method",
+      "signature": "public RID _GetVelocityTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return velocity texture into which to render (if applicable).",
+      "godotName": "_get_velocity_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVelocityTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetViewCount",
+      "kind": "Method",
+      "signature": "public int _GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of views this interface requires, 1 for mono, 2 for stereoscopic.",
+      "godotName": "_get_view_count",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetViewCount",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVrsTexture",
+      "kind": "Method",
+      "signature": "public RID _GetVrsTexture()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_vrs_texture",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVrsTexture",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_GetVrsTextureFormat",
+      "kind": "Method",
+      "signature": "public int _GetVrsTextureFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the format of the texture returned by [method _get_vrs_texture].",
+      "godotName": "_get_vrs_texture_format",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._GetVrsTextureFormat",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public bool _Initialize()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Initializes the interface, returns [code]true[/code] on success.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Initialize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_IsInitialized",
+      "kind": "Method",
+      "signature": "public bool _IsInitialized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this interface has been initialized.",
+      "godotName": "_is_initialized",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._IsInitialized",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PostDrawViewport",
+      "kind": "Method",
+      "signature": "public void _PostDrawViewport(RID renderTarget, Rect2 screenRect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        },
+        {
+          "name": "screen_rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Called after the XR [Viewport] draw logic has completed.",
+      "godotName": "_post_draw_viewport",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PostDrawViewport(RID,Rect2)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PreDrawViewport",
+      "kind": "Method",
+      "signature": "public bool _PreDrawViewport(RID renderTarget)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        }
+      ],
+      "summary": "Called if this is our primary [XRInterfaceExtension] before we start processing a [Viewport] for every active XR [Viewport], returns [code]true[/code] if that viewport should be rendered. An XR interface may return [code]false[/code] if the user has taken off their headset and we can pause rendering.",
+      "godotName": "_pre_draw_viewport",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PreDrawViewport(RID)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_PreRender",
+      "kind": "Method",
+      "signature": "public void _PreRender()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if this [XRInterfaceExtension] is active before rendering starts. Most XR interfaces will sync tracking at this point in time.",
+      "godotName": "_pre_render",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._PreRender",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called if this [XRInterfaceExtension] is active before our physics and game process is called. Most XR interfaces will update its [XRPositionalTracker]s at this point in time.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Process",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SetAnchorDetectionIsEnabled",
+      "kind": "Method",
+      "signature": "public void _SetAnchorDetectionIsEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables anchor detection on this interface if supported.",
+      "godotName": "_set_anchor_detection_is_enabled",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SetAnchorDetectionIsEnabled(bool)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SetPlayAreaMode",
+      "kind": "Method",
+      "signature": "public bool _SetPlayAreaMode(int mode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the play area mode for this interface.",
+      "godotName": "_set_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SetPlayAreaMode(int)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_SupportsPlayAreaMode",
+      "kind": "Method",
+      "signature": "public bool _SupportsPlayAreaMode(int mode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this interface supports this play area mode.",
+      "godotName": "_supports_play_area_mode",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._SupportsPlayAreaMode(int)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_TriggerHapticPulse",
+      "kind": "Method",
+      "signature": "public void _TriggerHapticPulse(String actionName, StringName trackerName, float frequency, float amplitude, float durationSec, float delaySec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        },
+        {
+          "name": "tracker_name",
+          "type": "StringName"
+        },
+        {
+          "name": "frequency",
+          "type": "float"
+        },
+        {
+          "name": "amplitude",
+          "type": "float"
+        },
+        {
+          "name": "duration_sec",
+          "type": "float"
+        },
+        {
+          "name": "delay_sec",
+          "type": "float"
+        }
+      ],
+      "summary": "Triggers a haptic pulse to be emitted on the specified tracker.",
+      "godotName": "_trigger_haptic_pulse",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._TriggerHapticPulse(String,StringName,float,float,float,float)",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    },
+    {
+      "name": "_Uninitialize",
+      "kind": "Method",
+      "signature": "public void _Uninitialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Uninitialize the interface.",
+      "godotName": "_uninitialize",
+      "xmlDocId": "M:Godot.XRInterfaceExtension._Uninitialize",
+      "sourcePath": "doc/classes/XRInterfaceExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRInterfaceExtension.xml",
+      "sha256": "c404cd23ea458a253d74276c9ddaf3f29bd8c1966e2d335d59fe112b7201cdef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

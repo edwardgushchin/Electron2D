@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tween.TransitionType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Tween.TransitionType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Tween.TransitionType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Back",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Back",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a backtracking overshoot curve.",
+      "value": "10",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Back",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bounce",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Bounce",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a bounce curve.",
+      "value": "9",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Bounce",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Circ",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Circ",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a circular curve.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Circ",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Cubic",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Cubic",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a cubic curve.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Cubic",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Elastic",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Elastic",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses an elastic overshoot curve.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Elastic",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Expo",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Expo",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses an exponential curve.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Expo",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Linear",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Linear",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses the normalized time without curve shaping.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Linear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quad",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Quad",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a quadratic curve.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Quad",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quart",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Quart",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a fourth-power curve.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Quart",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quint",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Quint",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a fifth-power curve.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Quint",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sine",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Sine",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a sine-shaped curve.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Sine",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Spring",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Tween.TransitionType Spring",
+      "returnType": "Electron2D.Tween.TransitionType",
+      "parameters": [],
+      "summary": "Uses a smooth spring-style curve.",
+      "value": "11",
+      "xmlDocId": "F:Electron2D.Tween.TransitionType.Spring",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Back",
+      "value": "10",
+      "kind": "EnumValue",
+      "summary": "Uses a backtracking overshoot curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bounce",
+      "value": "9",
+      "kind": "EnumValue",
+      "summary": "Uses a bounce curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Circ",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Uses a circular curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Cubic",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Uses a cubic curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Elastic",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Uses an elastic overshoot curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Expo",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Uses an exponential curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Linear",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Uses the normalized time without curve shaping.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quad",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Uses a quadratic curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quart",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Uses a fourth-power curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quint",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Uses a fifth-power curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sine",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Uses a sine-shaped curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Spring",
+      "value": "11",
+      "kind": "EnumValue",
+      "summary": "Uses a smooth spring-style curve.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

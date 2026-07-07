@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRRenderModelManager",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRRenderModelManager",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "OpenXRRenderModelManager",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrrendermodelmanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MakeLocalToPose",
+      "kind": "Property",
+      "signature": "public String MakeLocalToPose { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Position render models local to this pose (this will adjust the position of the render models container node).",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "make_local_to_pose",
+      "xmlDocId": "P:Godot.OpenXRRenderModelManager.MakeLocalToPose",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    },
+    {
+      "name": "Tracker",
+      "kind": "Property",
+      "signature": "public int Tracker { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Limits render models to the specified tracker. Include: 0 = All render models, 1 = Render models not related to a tracker, 2 = Render models related to the left hand tracker, 3 = Render models related to the right hand tracker.",
+      "defaultValue": "0",
+      "godotName": "tracker",
+      "xmlDocId": "P:Godot.OpenXRRenderModelManager.Tracker",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "RenderModelAdded",
+      "kind": "Signal",
+      "signature": "public event RenderModelAddedHandler RenderModelAdded",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "OpenXRRenderModel"
+        }
+      ],
+      "summary": "Emitted when a render model node is added as a child to this node.",
+      "godotName": "render_model_added",
+      "xmlDocId": "E:Godot.OpenXRRenderModelManager.RenderModelAdded(OpenXRRenderModel)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    },
+    {
+      "name": "RenderModelRemoved",
+      "kind": "Signal",
+      "signature": "public event RenderModelRemovedHandler RenderModelRemoved",
+      "parameters": [
+        {
+          "name": "render_model",
+          "type": "OpenXRRenderModel"
+        }
+      ],
+      "summary": "Emitted when a render model child node is about to be removed from this node.",
+      "godotName": "render_model_removed",
+      "xmlDocId": "E:Godot.OpenXRRenderModelManager.RenderModelRemoved(OpenXRRenderModel)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "RenderModelTracker",
+      "values": [
+        {
+          "name": "RENDER_MODEL_TRACKER_ANY",
+          "value": "0",
+          "enum": "RenderModelTracker",
+          "kind": "EnumValue",
+          "summary": "All active render models are shown regardless of what tracker they relate to.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+        },
+        {
+          "name": "RENDER_MODEL_TRACKER_LEFT_HAND",
+          "value": "2",
+          "enum": "RenderModelTracker",
+          "kind": "EnumValue",
+          "summary": "Only active render models are shown that are related to the left hand tracker.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+        },
+        {
+          "name": "RENDER_MODEL_TRACKER_NONE_SET",
+          "value": "1",
+          "enum": "RenderModelTracker",
+          "kind": "EnumValue",
+          "summary": "Only active render models are shown that are not related to any tracker we manage.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+        },
+        {
+          "name": "RENDER_MODEL_TRACKER_RIGHT_HAND",
+          "value": "3",
+          "enum": "RenderModelTracker",
+          "kind": "EnumValue",
+          "summary": "Only active render models are shown that are related to the right hand tracker.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RENDER_MODEL_TRACKER_ANY",
+      "value": "0",
+      "enum": "RenderModelTracker",
+      "kind": "EnumValue",
+      "summary": "All active render models are shown regardless of what tracker they relate to.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    },
+    {
+      "name": "RENDER_MODEL_TRACKER_NONE_SET",
+      "value": "1",
+      "enum": "RenderModelTracker",
+      "kind": "EnumValue",
+      "summary": "Only active render models are shown that are not related to any tracker we manage.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    },
+    {
+      "name": "RENDER_MODEL_TRACKER_LEFT_HAND",
+      "value": "2",
+      "enum": "RenderModelTracker",
+      "kind": "EnumValue",
+      "summary": "Only active render models are shown that are related to the left hand tracker.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    },
+    {
+      "name": "RENDER_MODEL_TRACKER_RIGHT_HAND",
+      "value": "3",
+      "enum": "RenderModelTracker",
+      "kind": "EnumValue",
+      "summary": "Only active render models are shown that are related to the right hand tracker.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRRenderModelManager.xml",
+      "sha256": "b533fef423da4407dffb3386de64a752c922e14b947e3ad9b07954025129c539"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventPanGesture",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventPanGesture",
+    "kind": "class",
+    "baseType": "InputEventGesture",
+    "interfaces": [],
+    "godotReference": "InputEventPanGesture",
+    "documentationPath": "doc/classes/InputEventPanGesture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventpangesture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Delta",
+      "kind": "Property",
+      "signature": "public Vector2 Delta { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Panning amount since last pan event.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "delta",
+      "xmlDocId": "P:Godot.InputEventPanGesture.Delta",
+      "sourcePath": "doc/classes/InputEventPanGesture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventPanGesture.xml",
+      "sha256": "cbd467791a0980f24c81e162866cb2f4edb0f5a4259440729739b7a8fb3afef3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

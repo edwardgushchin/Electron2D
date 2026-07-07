@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ColorRect",
+    "namespace": "Godot",
+    "fullName": "Godot.ColorRect",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "ColorRect",
+    "documentationPath": "doc/classes/ColorRect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_colorrect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The fill color of the rectangle.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.ColorRect.Color",
+      "sourcePath": "doc/classes/ColorRect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ColorRect.xml",
+      "sha256": "fe697504fd945bfba3a5aa6894101c1461aa38112146fe9f787f4e04e86cf9f7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

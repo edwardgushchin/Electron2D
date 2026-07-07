@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SplitContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.SplitContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "SplitContainer",
+    "documentationPath": "doc/classes/SplitContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_splitcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClampSplitOffset",
+      "kind": "Method",
+      "signature": "public void ClampSplitOffset(int priorityIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "priority_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Clamps the [member split_offsets] values to ensure they are within valid ranges and do not overlap with each other. When overlaps occur, this method prioritizes one split offset (at index [param priority_index]) by clamping any overlapping split offsets to it.",
+      "godotName": "clamp_split_offset",
+      "xmlDocId": "M:Godot.SplitContainer.ClampSplitOffset(int)",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "GetDragAreaControl",
+      "kind": "Method",
+      "signature": "public Control GetDragAreaControl()",
+      "returnType": "Control",
+      "parameters": [],
+      "summary": "Returns the drag area [Control]. For example, you can move a pre-configured button into the drag area [Control] so that it rides along with the split bar. Try setting the [Button] anchors to [code]center[/code] prior to the [code]reparent()[/code] call. [codeblock] $BarnacleButton.reparent($SplitContainer.get_drag_area_control()) [/codeblock] [b]Note:[/b] The drag area [Control] is drawn over the [SplitContainer]\u0027s children, so [CanvasItem] draw objects called from the [Control] and children added to the [Control] will also appear over the [SplitContainer]\u0027s children. Try setting [member Control.mouse_filter] of custom children to [constant Control.MOUSE_FILTER_IGNORE] to prevent blocking the mouse from dragging if desired. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash.",
+      "godotName": "get_drag_area_control",
+      "xmlDocId": "M:Godot.SplitContainer.GetDragAreaControl",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "GetDragAreaControls",
+      "kind": "Method",
+      "signature": "public Control[] GetDragAreaControls()",
+      "returnType": "Control[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of the drag area [Control]s. These are the interactable [Control] nodes between each child. For example, this can be used to add a pre-configured button to a drag area [Control] so that it rides along with the split bar. Try setting the [Button] anchors to [code]center[/code] prior to the [method Node.reparent] call. [codeblock] $BarnacleButton.reparent($SplitContainer.get_drag_area_controls()[0]) [/codeblock] [b]Note:[/b] The drag area [Control]s are drawn over the [SplitContainer]\u0027s children, so [CanvasItem] draw objects called from a drag area and children added to it will also appear over the [SplitContainer]\u0027s children. Try setting [member Control.mouse_filter] of custom children to [constant Control.MOUSE_FILTER_IGNORE] to prevent blocking the mouse from dragging if desired. [b]Warning:[/b] These are required internal nodes, removing or freeing them may cause a crash.",
+      "godotName": "get_drag_area_controls",
+      "xmlDocId": "M:Godot.SplitContainer.GetDragAreaControls",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "Collapsed",
+      "kind": "Property",
+      "signature": "public bool Collapsed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the draggers will be disabled and the children will be sized as if all [member split_offsets] were [code]0[/code].",
+      "defaultValue": "false",
+      "godotName": "collapsed",
+      "xmlDocId": "P:Godot.SplitContainer.Collapsed",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragAreaHighlightInEditor",
+      "kind": "Property",
+      "signature": "public bool DragAreaHighlightInEditor { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Highlights the drag area [Rect2] so you can see where it is during development. The drag area is gold if [member dragging_enabled] is [code]true[/code], and red if [code]false[/code].",
+      "defaultValue": "false",
+      "godotName": "drag_area_highlight_in_editor",
+      "xmlDocId": "P:Godot.SplitContainer.DragAreaHighlightInEditor",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragAreaMarginBegin",
+      "kind": "Property",
+      "signature": "public int DragAreaMarginBegin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Reduces the size of the drag area and split bar [theme_item split_bar_background] at the beginning of the container.",
+      "defaultValue": "0",
+      "godotName": "drag_area_margin_begin",
+      "xmlDocId": "P:Godot.SplitContainer.DragAreaMarginBegin",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragAreaMarginEnd",
+      "kind": "Property",
+      "signature": "public int DragAreaMarginEnd { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Reduces the size of the drag area and split bar [theme_item split_bar_background] at the end of the container.",
+      "defaultValue": "0",
+      "godotName": "drag_area_margin_end",
+      "xmlDocId": "P:Godot.SplitContainer.DragAreaMarginEnd",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragAreaOffset",
+      "kind": "Property",
+      "signature": "public int DragAreaOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Shifts the drag area in the axis of the container to prevent the drag area from overlapping the [ScrollBar] or other selectable [Control] of a child node.",
+      "defaultValue": "0",
+      "godotName": "drag_area_offset",
+      "xmlDocId": "P:Godot.SplitContainer.DragAreaOffset",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragNestedIntersections",
+      "kind": "Property",
+      "signature": "public bool DragNestedIntersections { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Adds extra draggers at the intersection of the draggers of two SplitContainers to allow dragging both at once. This must be set to [code]true[/code] for both SplitContainers, and one needs to be a descendant of the other. They also must be orthogonal (their [member vertical] are different) and the descendant must be next to at least one of the ancestor\u0027s draggers (within [theme_item minimum_grab_thickness]).",
+      "defaultValue": "false",
+      "godotName": "drag_nested_intersections",
+      "xmlDocId": "P:Godot.SplitContainer.DragNestedIntersections",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DraggerVisibility",
+      "kind": "Property",
+      "signature": "public int DraggerVisibility { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines the dragger\u0027s visibility. This property does not determine whether dragging is enabled or not. Use [member dragging_enabled] for that.",
+      "defaultValue": "0",
+      "godotName": "dragger_visibility",
+      "xmlDocId": "P:Godot.SplitContainer.DraggerVisibility",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DraggingEnabled",
+      "kind": "Property",
+      "signature": "public bool DraggingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables or disables split dragging.",
+      "defaultValue": "true",
+      "godotName": "dragging_enabled",
+      "xmlDocId": "P:Godot.SplitContainer.DraggingEnabled",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "SplitOffset",
+      "kind": "Property",
+      "signature": "public int SplitOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The first element of [member split_offsets].",
+      "defaultValue": "0",
+      "godotName": "split_offset",
+      "xmlDocId": "P:Godot.SplitContainer.SplitOffset",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "SplitOffsets",
+      "kind": "Property",
+      "signature": "public PackedInt32Array SplitOffsets { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Offsets for each dragger in pixels. Each one is the offset of the split between the [Control] nodes before and after the dragger, with [code]0[/code] being the default position. The default position is based on the [Control] nodes expand flags and minimum sizes. See [member Control.size_flags_horizontal], [member Control.size_flags_vertical], and [member Control.size_flags_stretch_ratio]. If none of the [Control] nodes before the dragger are expanded, the default position will be at the start of the [SplitContainer]. If none of the [Control] nodes after the dragger are expanded, the default position will be at the end of the [SplitContainer]. If the dragger is in between expanded [Control] nodes, the default position will be in the middle, based on the [member Control.size_flags_stretch_ratio]s and minimum sizes. [b]Note:[/b] If the split offsets cause [Control] nodes to overlap, the first split will take priority when resolving the positions.",
+      "defaultValue": "PackedInt32Array(0)",
+      "godotName": "split_offsets",
+      "xmlDocId": "P:Godot.SplitContainer.SplitOffsets",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "TouchDraggerEnabled",
+      "kind": "Property",
+      "signature": "public bool TouchDraggerEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a touch-friendly drag handle will be enabled for better usability on smaller screens. Unlike the standard grabber, this drag handle overlaps the [SplitContainer]\u0027s children and does not affect their minimum separation. The standard grabber will no longer be drawn when this option is enabled.",
+      "defaultValue": "false",
+      "godotName": "touch_dragger_enabled",
+      "xmlDocId": "P:Godot.SplitContainer.TouchDraggerEnabled",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "Vertical",
+      "kind": "Property",
+      "signature": "public bool Vertical { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [SplitContainer] will arrange its children vertically, rather than horizontally. Can\u0027t be changed when using [HSplitContainer] and [VSplitContainer].",
+      "defaultValue": "false",
+      "godotName": "vertical",
+      "xmlDocId": "P:Godot.SplitContainer.Vertical",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "DragEnded",
+      "kind": "Signal",
+      "signature": "public event DragEndedHandler DragEnded",
+      "parameters": [],
+      "summary": "Emitted when the user ends dragging.",
+      "godotName": "drag_ended",
+      "xmlDocId": "E:Godot.SplitContainer.DragEnded",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DragStarted",
+      "kind": "Signal",
+      "signature": "public event DragStartedHandler DragStarted",
+      "parameters": [],
+      "summary": "Emitted when the user starts dragging.",
+      "godotName": "drag_started",
+      "xmlDocId": "E:Godot.SplitContainer.DragStarted",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "Dragged",
+      "kind": "Signal",
+      "signature": "public event DraggedHandler Dragged",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when any dragger is dragged by user.",
+      "godotName": "dragged",
+      "xmlDocId": "E:Godot.SplitContainer.Dragged(int)",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DraggerVisibility",
+      "values": [
+        {
+          "name": "DRAGGER_HIDDEN",
+          "value": "1",
+          "enum": "DraggerVisibility",
+          "kind": "EnumValue",
+          "summary": "The split dragger icon is never visible regardless of the value of [theme_item autohide]. The size of the grabber icon determines the minimum [theme_item separation].",
+          "sourcePath": "doc/classes/SplitContainer.xml"
+        },
+        {
+          "name": "DRAGGER_HIDDEN_COLLAPSED",
+          "value": "2",
+          "enum": "DraggerVisibility",
+          "kind": "EnumValue",
+          "summary": "The split dragger icon is not visible, and the split bar is collapsed to zero thickness.",
+          "sourcePath": "doc/classes/SplitContainer.xml"
+        },
+        {
+          "name": "DRAGGER_VISIBLE",
+          "value": "0",
+          "enum": "DraggerVisibility",
+          "kind": "EnumValue",
+          "summary": "The split dragger icon is always visible when [theme_item autohide] is [code]false[/code], otherwise visible only when the cursor hovers it. The size of the grabber icon determines the minimum [theme_item separation]. The dragger icon is automatically hidden if the length of the grabber icon is longer than the split bar.",
+          "sourcePath": "doc/classes/SplitContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DRAGGER_VISIBLE",
+      "value": "0",
+      "enum": "DraggerVisibility",
+      "kind": "EnumValue",
+      "summary": "The split dragger icon is always visible when [theme_item autohide] is [code]false[/code], otherwise visible only when the cursor hovers it. The size of the grabber icon determines the minimum [theme_item separation]. The dragger icon is automatically hidden if the length of the grabber icon is longer than the split bar.",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DRAGGER_HIDDEN",
+      "value": "1",
+      "enum": "DraggerVisibility",
+      "kind": "EnumValue",
+      "summary": "The split dragger icon is never visible regardless of the value of [theme_item autohide]. The size of the grabber icon determines the minimum [theme_item separation].",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    },
+    {
+      "name": "DRAGGER_HIDDEN_COLLAPSED",
+      "value": "2",
+      "enum": "DraggerVisibility",
+      "kind": "EnumValue",
+      "summary": "The split dragger icon is not visible, and the split bar is collapsed to zero thickness.",
+      "sourcePath": "doc/classes/SplitContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SplitContainer.xml",
+      "sha256": "00c625ded8facc96485efca70a7970dcf9dc4413124a1a3957c8ef6ff11d9d8b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

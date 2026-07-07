@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationPolygon",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationPolygon",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "NavigationPolygon",
+    "documentationPath": "doc/classes/NavigationPolygon.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationpolygon.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddOutline",
+      "kind": "Method",
+      "signature": "public void AddOutline(PackedVector2Array outline)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "outline",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Appends a [PackedVector2Array] that contains the vertices of an outline to the internal array that contains all the outlines.",
+      "godotName": "add_outline",
+      "xmlDocId": "M:Godot.NavigationPolygon.AddOutline(PackedVector2Array)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "AddOutlineAtIndex",
+      "kind": "Method",
+      "signature": "public void AddOutlineAtIndex(PackedVector2Array outline, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "outline",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a [PackedVector2Array] that contains the vertices of an outline to the internal array that contains all the outlines at a fixed position.",
+      "godotName": "add_outline_at_index",
+      "xmlDocId": "M:Godot.NavigationPolygon.AddOutlineAtIndex(PackedVector2Array,int)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "AddPolygon",
+      "kind": "Method",
+      "signature": "public void AddPolygon(PackedInt32Array polygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "polygon",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Adds a polygon using the indices of the vertices you get when calling [method get_vertices].",
+      "godotName": "add_polygon",
+      "xmlDocId": "M:Godot.NavigationPolygon.AddPolygon(PackedInt32Array)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the internal arrays for vertices and polygon indices.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NavigationPolygon.Clear",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "ClearOutlines",
+      "kind": "Method",
+      "signature": "public void ClearOutlines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array of the outlines, but it doesn\u0027t clear the vertices and the polygons that were created by them.",
+      "godotName": "clear_outlines",
+      "xmlDocId": "M:Godot.NavigationPolygon.ClearOutlines",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "ClearPolygons",
+      "kind": "Method",
+      "signature": "public void ClearPolygons()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array of polygons, but it doesn\u0027t clear the array of outlines and vertices.",
+      "godotName": "clear_polygons",
+      "xmlDocId": "M:Godot.NavigationPolygon.ClearPolygons",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetNavigationMesh",
+      "kind": "Method",
+      "signature": "public NavigationMesh GetNavigationMesh()",
+      "returnType": "NavigationMesh",
+      "parameters": [],
+      "summary": "Returns the [NavigationMesh] resulting from this navigation polygon. This navigation mesh can be used to update the navigation mesh of a region with the [method NavigationServer3D.region_set_navigation_mesh] API directly.",
+      "godotName": "get_navigation_mesh",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetNavigationMesh",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetOutline",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetOutline(int idx)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [PackedVector2Array] containing the vertices of an outline that was created in the editor or by script.",
+      "godotName": "get_outline",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetOutline(int)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetOutlineCount",
+      "kind": "Method",
+      "signature": "public int GetOutlineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of outlines that were created in the editor or by script.",
+      "godotName": "get_outline_count",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetOutlineCount",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetParsedCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetParsedCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member parsed_collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_parsed_collision_mask_value",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetParsedCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetPolygon",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetPolygon(int idx)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [PackedInt32Array] containing the indices of the vertices of a created polygon.",
+      "godotName": "get_polygon",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetPolygon(int)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetPolygonCount",
+      "kind": "Method",
+      "signature": "public int GetPolygonCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the count of all polygons.",
+      "godotName": "get_polygon_count",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetPolygonCount",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetVertices()",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Returns a [PackedVector2Array] containing all the vertices being used to create the polygons.",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.NavigationPolygon.GetVertices",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "MakePolygonsFromOutlines",
+      "kind": "Method",
+      "signature": "public void MakePolygonsFromOutlines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Creates polygons from the outlines added in the editor or by script.",
+      "godotName": "make_polygons_from_outlines",
+      "xmlDocId": "M:Godot.NavigationPolygon.MakePolygonsFromOutlines",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "RemoveOutline",
+      "kind": "Method",
+      "signature": "public void RemoveOutline(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an outline created in the editor or by script. You have to call [method make_polygons_from_outlines] for the polygons to update.",
+      "godotName": "remove_outline",
+      "xmlDocId": "M:Godot.NavigationPolygon.RemoveOutline(int)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SetOutline",
+      "kind": "Method",
+      "signature": "public void SetOutline(int idx, PackedVector2Array outline)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "outline",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Changes an outline created in the editor or by script. You have to call [method make_polygons_from_outlines] for the polygons to update.",
+      "godotName": "set_outline",
+      "xmlDocId": "M:Godot.NavigationPolygon.SetOutline(int,PackedVector2Array)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SetParsedCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetParsedCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member parsed_collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_parsed_collision_mask_value",
+      "xmlDocId": "M:Godot.NavigationPolygon.SetParsedCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SetVertices",
+      "kind": "Method",
+      "signature": "public void SetVertices(PackedVector2Array vertices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Sets the vertices that can be then indexed to create polygons with the [method add_polygon] method.",
+      "godotName": "set_vertices",
+      "xmlDocId": "M:Godot.NavigationPolygon.SetVertices(PackedVector2Array)",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "AgentRadius",
+      "kind": "Property",
+      "signature": "public float AgentRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to erode/shrink the walkable surface when baking the navigation mesh. [b]Note:[/b] The radius must be equal or higher than [code]0.0[/code]. If the radius is [code]0.0[/code], it won\u0027t be possible to fix invalid outline overlaps and other precision errors during the baking process. As a result, some obstacles may be excluded incorrectly from the final navigation mesh, or may delete the navigation mesh\u0027s polygons.",
+      "defaultValue": "10.0",
+      "godotName": "agent_radius",
+      "xmlDocId": "P:Godot.NavigationPolygon.AgentRadius",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "BakingRect",
+      "kind": "Property",
+      "signature": "public Rect2 BakingRect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "If the baking [Rect2] has an area the navigation mesh baking will be restricted to its enclosing area.",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "baking_rect",
+      "xmlDocId": "P:Godot.NavigationPolygon.BakingRect",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "BakingRectOffset",
+      "kind": "Property",
+      "signature": "public Vector2 BakingRectOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position offset applied to the [member baking_rect] [Rect2].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "baking_rect_offset",
+      "xmlDocId": "P:Godot.NavigationPolygon.BakingRectOffset",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "BorderSize",
+      "kind": "Property",
+      "signature": "public float BorderSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of the non-navigable border around the bake bounding area defined by the [member baking_rect] [Rect2]. In conjunction with the [member baking_rect] the border size can be used to bake tile aligned navigation meshes without the tile edges being shrunk by [member agent_radius].",
+      "defaultValue": "0.0",
+      "godotName": "border_size",
+      "xmlDocId": "P:Godot.NavigationPolygon.BorderSize",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "CellSize",
+      "kind": "Property",
+      "signature": "public float CellSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The cell size used to rasterize the navigation mesh vertices. Must match with the cell size on the navigation map.",
+      "defaultValue": "1.0",
+      "godotName": "cell_size",
+      "xmlDocId": "P:Godot.NavigationPolygon.CellSize",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "ParsedCollisionMask",
+      "kind": "Property",
+      "signature": "public int ParsedCollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers to scan for static colliders. Only used when [member parsed_geometry_type] is [constant PARSED_GEOMETRY_STATIC_COLLIDERS] or [constant PARSED_GEOMETRY_BOTH].",
+      "defaultValue": "4294967295",
+      "godotName": "parsed_collision_mask",
+      "xmlDocId": "P:Godot.NavigationPolygon.ParsedCollisionMask",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "ParsedGeometryType",
+      "kind": "Property",
+      "signature": "public int ParsedGeometryType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines which type of nodes will be parsed as geometry.",
+      "defaultValue": "2",
+      "godotName": "parsed_geometry_type",
+      "xmlDocId": "P:Godot.NavigationPolygon.ParsedGeometryType",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SamplePartitionType",
+      "kind": "Property",
+      "signature": "public int SamplePartitionType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Partitioning algorithm for creating the navigation mesh polys.",
+      "defaultValue": "0",
+      "godotName": "sample_partition_type",
+      "xmlDocId": "P:Godot.NavigationPolygon.SamplePartitionType",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SourceGeometryGroupName",
+      "kind": "Property",
+      "signature": "public StringName SourceGeometryGroupName { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The group name of nodes that should be parsed for baking source geometry. Only used when [member source_geometry_mode] is [constant SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN] or [constant SOURCE_GEOMETRY_GROUPS_EXPLICIT].",
+      "defaultValue": "\u0026\u0022navigation_polygon_source_geometry_group\u0022",
+      "godotName": "source_geometry_group_name",
+      "xmlDocId": "P:Godot.NavigationPolygon.SourceGeometryGroupName",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SourceGeometryMode",
+      "kind": "Property",
+      "signature": "public int SourceGeometryMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The source of the geometry used when baking.",
+      "defaultValue": "0",
+      "godotName": "source_geometry_mode",
+      "xmlDocId": "P:Godot.NavigationPolygon.SourceGeometryMode",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ParsedGeometryType",
+      "values": [
+        {
+          "name": "PARSED_GEOMETRY_BOTH",
+          "value": "2",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Both [constant PARSED_GEOMETRY_MESH_INSTANCES] and [constant PARSED_GEOMETRY_STATIC_COLLIDERS].",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_MAX",
+          "value": "3",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ParsedGeometryType] enum.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_MESH_INSTANCES",
+          "value": "0",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Parses mesh instances as obstruction geometry. This includes [Polygon2D], [MeshInstance2D], [MultiMeshInstance2D], and [TileMap] nodes. Meshes are only parsed when they use a 2D vertices surface format.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_STATIC_COLLIDERS",
+          "value": "1",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Parses [StaticBody2D] and [TileMap] colliders as obstruction geometry. The collider should be in any of the layers specified by [member parsed_collision_mask].",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        }
+      ]
+    },
+    {
+      "name": "SamplePartitionType",
+      "values": [
+        {
+          "name": "SAMPLE_PARTITION_CONVEX_PARTITION",
+          "value": "0",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Convex partitioning that results in a navigation mesh with convex polygons.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "SAMPLE_PARTITION_MAX",
+          "value": "2",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum SamplePartitionType] enum.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "SAMPLE_PARTITION_TRIANGULATE",
+          "value": "1",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Triangulation partitioning that results in a navigation mesh with triangle polygons.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        }
+      ]
+    },
+    {
+      "name": "SourceGeometryMode",
+      "values": [
+        {
+          "name": "SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+          "value": "2",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Uses nodes in a group for geometry. The group is specified by [member source_geometry_group_name].",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+          "value": "1",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Scans nodes in a group and their child nodes recursively for geometry. The group is specified by [member source_geometry_group_name].",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_MAX",
+          "value": "3",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum SourceGeometryMode] enum.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+          "value": "0",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Scans the child nodes of the root node recursively for geometry.",
+          "sourcePath": "doc/classes/NavigationPolygon.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SAMPLE_PARTITION_CONVEX_PARTITION",
+      "value": "0",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Convex partitioning that results in a navigation mesh with convex polygons.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SAMPLE_PARTITION_TRIANGULATE",
+      "value": "1",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Triangulation partitioning that results in a navigation mesh with triangle polygons.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SAMPLE_PARTITION_MAX",
+      "value": "2",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum SamplePartitionType] enum.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_MESH_INSTANCES",
+      "value": "0",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Parses mesh instances as obstruction geometry. This includes [Polygon2D], [MeshInstance2D], [MultiMeshInstance2D], and [TileMap] nodes. Meshes are only parsed when they use a 2D vertices surface format.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_STATIC_COLLIDERS",
+      "value": "1",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Parses [StaticBody2D] and [TileMap] colliders as obstruction geometry. The collider should be in any of the layers specified by [member parsed_collision_mask].",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_BOTH",
+      "value": "2",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Both [constant PARSED_GEOMETRY_MESH_INSTANCES] and [constant PARSED_GEOMETRY_STATIC_COLLIDERS].",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_MAX",
+      "value": "3",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ParsedGeometryType] enum.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+      "value": "0",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Scans the child nodes of the root node recursively for geometry.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+      "value": "1",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Scans nodes in a group and their child nodes recursively for geometry. The group is specified by [member source_geometry_group_name].",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+      "value": "2",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Uses nodes in a group for geometry. The group is specified by [member source_geometry_group_name].",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_MAX",
+      "value": "3",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum SourceGeometryMode] enum.",
+      "sourcePath": "doc/classes/NavigationPolygon.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationPolygon.xml",
+      "sha256": "e9702795086992966ec6571250439eefd4c4d96a7a70f051cf9d617869953d2e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

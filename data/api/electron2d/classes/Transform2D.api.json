@@ -1,0 +1,637 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Transform2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Transform2D",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Transform2D\u003E"
+    ],
+    "godotReference": "Transform2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(Electron2D.Vector2 xAxis, Electron2D.Vector2 yAxis, Electron2D.Vector2 origin)",
+      "parameters": [
+        {
+          "name": "xAxis",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "yAxis",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "origin",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(System.Single rotation, Electron2D.Vector2 origin)",
+      "parameters": [
+        {
+          "name": "rotation",
+          "type": "System.Single"
+        },
+        {
+          "name": "origin",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(System.Single,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(System.Single xx, System.Single xy, System.Single yx, System.Single yy, System.Single ox, System.Single oy)",
+      "parameters": [
+        {
+          "name": "xx",
+          "type": "System.Single"
+        },
+        {
+          "name": "xy",
+          "type": "System.Single"
+        },
+        {
+          "name": "yx",
+          "type": "System.Single"
+        },
+        {
+          "name": "yy",
+          "type": "System.Single"
+        },
+        {
+          "name": "ox",
+          "type": "System.Single"
+        },
+        {
+          "name": "oy",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(Electron2D.Vector2 xAxis, Electron2D.Vector2 yAxis, Electron2D.Vector2 origin)",
+      "parameters": [
+        {
+          "name": "xAxis",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "yAxis",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "origin",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(System.Single rotation, Electron2D.Vector2 origin)",
+      "parameters": [
+        {
+          "name": "rotation",
+          "type": "System.Single"
+        },
+        {
+          "name": "origin",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(System.Single,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Transform2D(System.Single xx, System.Single xy, System.Single yx, System.Single yy, System.Single ox, System.Single oy)",
+      "parameters": [
+        {
+          "name": "xx",
+          "type": "System.Single"
+        },
+        {
+          "name": "xy",
+          "type": "System.Single"
+        },
+        {
+          "name": "yx",
+          "type": "System.Single"
+        },
+        {
+          "name": "yy",
+          "type": "System.Single"
+        },
+        {
+          "name": "ox",
+          "type": "System.Single"
+        },
+        {
+          "name": "oy",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Initializes a new instance of the Transform2D type.",
+      "xmlDocId": "M:Electron2D.Transform2D.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipX",
+      "kind": "Field",
+      "signature": "public static Electron2D.Transform2D FlipX",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Represents the flip x value.",
+      "value": "[X: (-1, 0), Y: (0, 1), O: (0, 0)]",
+      "xmlDocId": "F:Electron2D.Transform2D.FlipX",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipY",
+      "kind": "Field",
+      "signature": "public static Electron2D.Transform2D FlipY",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Represents the flip y value.",
+      "value": "[X: (1, 0), Y: (0, -1), O: (0, 0)]",
+      "xmlDocId": "F:Electron2D.Transform2D.FlipY",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Identity",
+      "kind": "Field",
+      "signature": "public static Electron2D.Transform2D Identity",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Represents the identity value.",
+      "value": "[X: (1, 0), Y: (0, 1), O: (0, 0)]",
+      "xmlDocId": "F:Electron2D.Transform2D.Identity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AffineInverse",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D AffineInverse()",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Executes the affine inverse operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.AffineInverse",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BasisXform",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 BasisXform(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the basis xform operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.BasisXform(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Determinant",
+      "kind": "Method",
+      "signature": "public System.Single Determinant()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Executes the determinant operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Determinant",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Transform2D other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Equals(Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.Transform2D.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D Inverse()",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Executes the inverse operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Inverse",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public System.Boolean IsEqualApprox(Electron2D.Transform2D transform)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Checks whether equal approx is true.",
+      "xmlDocId": "M:Electron2D.Transform2D.IsEqualApprox(Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public System.Boolean IsFinite()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether finite is true.",
+      "xmlDocId": "M:Electron2D.Transform2D.IsFinite",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rotated",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D Rotated(System.Single angle)",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the rotated operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Rotated(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scaled",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D Scaled(Electron2D.Vector2 scale)",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the scaled operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Scaled(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Translated",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D Translated(Electron2D.Vector2 offset)",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the translated operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Translated(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xform",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Xform(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the xform operation.",
+      "xmlDocId": "M:Electron2D.Transform2D.Xform(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Equality(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Inequality(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Rect2 op_Multiply(Electron2D.Transform2D transform, Electron2D.Rect2 rect)",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Transform2D op_Multiply(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Transform2D transform, Electron2D.Vector2 vector)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "vector",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Origin",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Origin { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the origin value.",
+      "xmlDocId": "P:Electron2D.Transform2D.Origin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 X { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the x value.",
+      "xmlDocId": "P:Electron2D.Transform2D.X",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Y { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the y value.",
+      "xmlDocId": "P:Electron2D.Transform2D.Y",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "FlipX",
+      "value": "[X: (-1, 0), Y: (0, 1), O: (0, 0)]",
+      "kind": "Field",
+      "summary": "Represents the flip x value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipY",
+      "value": "[X: (1, 0), Y: (0, -1), O: (0, 0)]",
+      "kind": "Field",
+      "summary": "Represents the flip y value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Identity",
+      "value": "[X: (1, 0), Y: (0, 1), O: (0, 0)]",
+      "kind": "Field",
+      "summary": "Represents the identity value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Equality(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Inequality(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Rect2 op_Multiply(Electron2D.Transform2D transform, Electron2D.Rect2 rect)",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Rect2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Transform2D op_Multiply(Electron2D.Transform2D left, Electron2D.Transform2D right)",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Transform2D"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Transform2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Transform2D transform, Electron2D.Vector2 vector)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Electron2D.Transform2D"
+        },
+        {
+          "name": "vector",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Transform2D.op_Multiply(Electron2D.Transform2D,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

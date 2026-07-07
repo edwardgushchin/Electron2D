@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonIK3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "SkeletonIK3D",
+    "documentationPath": "doc/classes/SkeletonIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonik3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParentSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton3D GetParentSkeleton()",
+      "returnType": "Skeleton3D",
+      "parameters": [],
+      "summary": "Returns the parent [Skeleton3D] node that was present when SkeletonIK entered the scene tree. Returns [code]null[/code] if the parent node was not a [Skeleton3D] node when SkeletonIK3D entered the scene tree.",
+      "godotName": "get_parent_skeleton",
+      "xmlDocId": "M:Godot.SkeletonIK3D.GetParentSkeleton",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "IsRunning",
+      "kind": "Method",
+      "signature": "public bool IsRunning()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if SkeletonIK is applying IK effects on continues frames to the [Skeleton3D] bones. Returns [code]false[/code] if SkeletonIK is stopped or [method start] was used with the [code]one_time[/code] parameter set to [code]true[/code].",
+      "godotName": "is_running",
+      "xmlDocId": "M:Godot.SkeletonIK3D.IsRunning",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public void Start(bool oneTime)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "one_time",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Starts applying IK effects on each frame to the [Skeleton3D] bones but will only take effect starting on the next frame. If [param one_time] is [code]true[/code], this will take effect immediately but also reset on the next frame.",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.SkeletonIK3D.Start(bool)",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops applying IK effects on each frame to the [Skeleton3D] bones and also calls [method Skeleton3D.clear_bones_global_pose_override] to remove existing overrides on all bones.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.SkeletonIK3D.Stop",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "Interpolation",
+      "kind": "Property",
+      "signature": "public float Interpolation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Interpolation value for how much the IK results are applied to the current skeleton bone chain. A value of [code]1.0[/code] will overwrite all skeleton bone transforms completely while a value of [code]0.0[/code] will visually disable the SkeletonIK.",
+      "godotName": "interpolation",
+      "xmlDocId": "P:Godot.SkeletonIK3D.Interpolation",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "Magnet",
+      "kind": "Property",
+      "signature": "public Vector3 Magnet { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Secondary target position (first is [member target] property or [member target_node]) for the IK chain. Use magnet position (pole target) to control the bending of the IK chain. Only works if the bone chain has more than 2 bones. The middle chain bone position will be linearly interpolated with the magnet position.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "magnet",
+      "xmlDocId": "P:Godot.SkeletonIK3D.Magnet",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "MaxIterations",
+      "kind": "Property",
+      "signature": "public int MaxIterations { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of iteration loops used by the IK solver to produce more accurate (and elegant) bone chain results.",
+      "defaultValue": "10",
+      "godotName": "max_iterations",
+      "xmlDocId": "P:Godot.SkeletonIK3D.MaxIterations",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "MinDistance",
+      "kind": "Property",
+      "signature": "public float MinDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum distance between bone and goal target. If the distance is below this value, the IK solver stops further iterations.",
+      "defaultValue": "0.01",
+      "godotName": "min_distance",
+      "xmlDocId": "P:Godot.SkeletonIK3D.MinDistance",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "OverrideTipBasis",
+      "kind": "Property",
+      "signature": "public bool OverrideTipBasis { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] overwrites the rotation of the tip bone with the rotation of the [member target] (or [member target_node] if defined).",
+      "defaultValue": "true",
+      "godotName": "override_tip_basis",
+      "xmlDocId": "P:Godot.SkeletonIK3D.OverrideTipBasis",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "RootBone",
+      "kind": "Property",
+      "signature": "public StringName RootBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the current root bone, the first bone in the IK chain.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "root_bone",
+      "xmlDocId": "P:Godot.SkeletonIK3D.RootBone",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "Target",
+      "kind": "Property",
+      "signature": "public Transform3D Target { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "First target of the IK chain where the tip bone is placed and, if [member override_tip_basis] is [code]true[/code], how the tip bone is rotated. If a [member target_node] path is available the nodes transform is used instead and this property is ignored.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "target",
+      "xmlDocId": "P:Godot.SkeletonIK3D.Target",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "TargetNode",
+      "kind": "Property",
+      "signature": "public NodePath TargetNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Target node [NodePath] for the IK chain. If available, the node\u0027s current [Transform3D] is used instead of the [member target] property.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_node",
+      "xmlDocId": "P:Godot.SkeletonIK3D.TargetNode",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "TipBone",
+      "kind": "Property",
+      "signature": "public StringName TipBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the current tip bone, the last bone in the IK chain placed at the [member target] transform (or [member target_node] if defined).",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "tip_bone",
+      "xmlDocId": "P:Godot.SkeletonIK3D.TipBone",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    },
+    {
+      "name": "UseMagnet",
+      "kind": "Property",
+      "signature": "public bool UseMagnet { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], instructs the IK solver to consider the secondary magnet target (pole target) when calculating the bone chain. Use the magnet position (pole target) to control the bending of the IK chain.",
+      "defaultValue": "false",
+      "godotName": "use_magnet",
+      "xmlDocId": "P:Godot.SkeletonIK3D.UseMagnet",
+      "sourcePath": "doc/classes/SkeletonIK3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonIK3D.xml",
+      "sha256": "b320a0a1eb4f81d52c5b9b6578df24ca92853a35663fea0196f8f6767911af81"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

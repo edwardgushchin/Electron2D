@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMouseMotion",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventMouseMotion",
+    "kind": "class",
+    "baseType": "InputEventMouse",
+    "interfaces": [],
+    "godotReference": "InputEventMouseMotion",
+    "documentationPath": "doc/classes/InputEventMouseMotion.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventmousemotion.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "PenInverted",
+      "kind": "Property",
+      "signature": "public bool PenInverted { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when using the eraser end of a stylus pen. [b]Note:[/b] This property is implemented on Linux, macOS and Windows.",
+      "defaultValue": "false",
+      "godotName": "pen_inverted",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.PenInverted",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public float Pressure { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Represents the pressure the user puts on the pen. Ranges from [code]0.0[/code] to [code]1.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "pressure",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.Pressure",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "Relative",
+      "kind": "Property",
+      "signature": "public Vector2 Relative { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The mouse position relative to the previous position (position at the last frame). [b]Note:[/b] Since [InputEventMouseMotion] may only be emitted when the mouse moves, it is not possible to reliably detect when the mouse has stopped moving by checking this property. A separate, short timer may be necessary. [b]Note:[/b] [member relative] is automatically scaled according to the content scale factor, which is defined by the project\u0027s stretch mode settings. This means mouse sensitivity will appear different depending on resolution when using [member relative] in a script that handles mouse aiming with the [constant Input.MOUSE_MODE_CAPTURED] mouse mode. To avoid this, use [member screen_relative] instead.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "relative",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.Relative",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "ScreenRelative",
+      "kind": "Property",
+      "signature": "public Vector2 ScreenRelative { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The unscaled mouse position relative to the previous position in the coordinate system of the screen (position at the last frame). [b]Note:[/b] Since [InputEventMouseMotion] may only be emitted when the mouse moves, it is not possible to reliably detect when the mouse has stopped moving by checking this property. A separate, short timer may be necessary. [b]Note:[/b] This coordinate is [i]not[/i] scaled according to the content scale factor or calls to [method InputEvent.xformed_by]. This should be preferred over [member relative] for mouse aiming when using the [constant Input.MOUSE_MODE_CAPTURED] mouse mode, regardless of the project\u0027s stretch mode.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "screen_relative",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.ScreenRelative",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "ScreenVelocity",
+      "kind": "Property",
+      "signature": "public Vector2 ScreenVelocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The unscaled mouse velocity in pixels per second in screen coordinates. This velocity is [i]not[/i] scaled according to the content scale factor or calls to [method InputEvent.xformed_by]. [b]Note:[/b] In [constant Input.MOUSE_MODE_CAPTURED] mode, [member screen_velocity] returns [code](0, 0)[/code] because the mouse cursor is hidden and locked. Use [member screen_relative] for mouse aiming using the [constant Input.MOUSE_MODE_CAPTURED] mouse mode.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "screen_velocity",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.ScreenVelocity",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "Tilt",
+      "kind": "Property",
+      "signature": "public Vector2 Tilt { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Represents the angles of tilt of the pen. Positive X-coordinate value indicates a tilt to the right. Positive Y-coordinate value indicates a tilt toward the user. Ranges from [code]-1.0[/code] to [code]1.0[/code] for both axes.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "tilt",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.Tilt",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Vector2 Velocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The mouse velocity in pixels per second. [b]Note:[/b] [member velocity] is automatically scaled according to the content scale factor, which is defined by the project\u0027s stretch mode settings. That means mouse sensitivity may appear different depending on resolution. [b]Note:[/b] In [constant Input.MOUSE_MODE_CAPTURED] mode, [member velocity] returns [code](0, 0)[/code] because the mouse cursor is hidden and locked. Use [member screen_relative] for mouse aiming using the [constant Input.MOUSE_MODE_CAPTURED] mouse mode.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "velocity",
+      "xmlDocId": "P:Godot.InputEventMouseMotion.Velocity",
+      "sourcePath": "doc/classes/InputEventMouseMotion.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventMouseMotion.xml",
+      "sha256": "e80331a5d5e284490d850d75789b1b5a9696877247afac44804e827bedc082ee"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

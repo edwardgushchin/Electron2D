@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeSync",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeSync",
+    "kind": "class",
+    "baseType": "AnimationNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeSync",
+    "documentationPath": "doc/classes/AnimationNodeSync.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodesync.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Sync",
+      "kind": "Property",
+      "signature": "public bool Sync { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], the blended animations\u0027 frame are stopped when the blend value is [code]0[/code]. If [code]true[/code], forcing the blended animations to advance frame.",
+      "defaultValue": "false",
+      "godotName": "sync",
+      "xmlDocId": "P:Godot.AnimationNodeSync.Sync",
+      "sourcePath": "doc/classes/AnimationNodeSync.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeSync.xml",
+      "sha256": "434bfedd4b7f6bd229452dd69ec4b89c801f23c6a1794d0d85ac48fa5c08e31e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

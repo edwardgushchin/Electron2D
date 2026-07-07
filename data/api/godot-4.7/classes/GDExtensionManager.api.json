@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDExtensionManager",
+    "namespace": "Godot",
+    "fullName": "Godot.GDExtensionManager",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "GDExtensionManager",
+    "documentationPath": "doc/classes/GDExtensionManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdextensionmanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetExtension",
+      "kind": "Method",
+      "signature": "public GDExtension GetExtension(String path)",
+      "returnType": "GDExtension",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the [GDExtension] at the given file [param path], or [code]null[/code] if it has not been loaded or does not exist.",
+      "godotName": "get_extension",
+      "xmlDocId": "M:Godot.GDExtensionManager.GetExtension(String)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "GetLoadedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetLoadedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the file paths of all currently loaded extensions.",
+      "godotName": "get_loaded_extensions",
+      "xmlDocId": "M:Godot.GDExtensionManager.GetLoadedExtensions",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "IsExtensionLoaded",
+      "kind": "Method",
+      "signature": "public bool IsExtensionLoaded(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the extension at the given file [param path] has already been loaded successfully. See also [method get_loaded_extensions].",
+      "godotName": "is_extension_loaded",
+      "xmlDocId": "M:Godot.GDExtensionManager.IsExtensionLoaded(String)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LoadExtension",
+      "kind": "Method",
+      "signature": "public int LoadExtension(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads an extension by absolute file path. The [param path] needs to point to a valid [GDExtension]. Returns [constant LOAD_STATUS_OK] if successful.",
+      "godotName": "load_extension",
+      "xmlDocId": "M:Godot.GDExtensionManager.LoadExtension(String)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LoadExtensionFromFunction",
+      "kind": "Method",
+      "signature": "public int LoadExtensionFromFunction(String path, const GDExtensionInitializationFunction* initFunc)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "init_func",
+          "type": "const GDExtensionInitializationFunction*"
+        }
+      ],
+      "summary": "Loads the extension already in address space via the given path and initialization function. The [param path] needs to be unique and start with [code]\u0022libgodot://\u0022[/code]. Returns [constant LOAD_STATUS_OK] if successful.",
+      "godotName": "load_extension_from_function",
+      "xmlDocId": "M:Godot.GDExtensionManager.LoadExtensionFromFunction(String,const GDExtensionInitializationFunction*)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "ReloadExtension",
+      "kind": "Method",
+      "signature": "public int ReloadExtension(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Reloads the extension at the given file path. The [param path] needs to point to a valid [GDExtension], otherwise this method may return either [constant LOAD_STATUS_NOT_LOADED] or [constant LOAD_STATUS_FAILED]. [b]Note:[/b] You can only reload extensions in the editor. In release builds, this method always fails and returns [constant LOAD_STATUS_FAILED].",
+      "godotName": "reload_extension",
+      "xmlDocId": "M:Godot.GDExtensionManager.ReloadExtension(String)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "UnloadExtension",
+      "kind": "Method",
+      "signature": "public int UnloadExtension(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Unloads an extension by file path. The [param path] needs to point to an already loaded [GDExtension], otherwise this method returns [constant LOAD_STATUS_NOT_LOADED].",
+      "godotName": "unload_extension",
+      "xmlDocId": "M:Godot.GDExtensionManager.UnloadExtension(String)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ExtensionLoaded",
+      "kind": "Signal",
+      "signature": "public event ExtensionLoadedHandler ExtensionLoaded",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "GDExtension"
+        }
+      ],
+      "summary": "Emitted after the editor has finished loading a new extension. [b]Note:[/b] This signal is only emitted in editor builds.",
+      "godotName": "extension_loaded",
+      "xmlDocId": "E:Godot.GDExtensionManager.ExtensionLoaded(GDExtension)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "ExtensionUnloading",
+      "kind": "Signal",
+      "signature": "public event ExtensionUnloadingHandler ExtensionUnloading",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "GDExtension"
+        }
+      ],
+      "summary": "Emitted before the editor starts unloading an extension. [b]Note:[/b] This signal is only emitted in editor builds.",
+      "godotName": "extension_unloading",
+      "xmlDocId": "E:Godot.GDExtensionManager.ExtensionUnloading(GDExtension)",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "ExtensionsReloaded",
+      "kind": "Signal",
+      "signature": "public event ExtensionsReloadedHandler ExtensionsReloaded",
+      "parameters": [],
+      "summary": "Emitted after the editor has finished reloading one or more extensions.",
+      "godotName": "extensions_reloaded",
+      "xmlDocId": "E:Godot.GDExtensionManager.ExtensionsReloaded",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "LoadStatus",
+      "values": [
+        {
+          "name": "LOAD_STATUS_ALREADY_LOADED",
+          "value": "2",
+          "enum": "LoadStatus",
+          "kind": "EnumValue",
+          "summary": "The extension has already been loaded.",
+          "sourcePath": "doc/classes/GDExtensionManager.xml"
+        },
+        {
+          "name": "LOAD_STATUS_FAILED",
+          "value": "1",
+          "enum": "LoadStatus",
+          "kind": "EnumValue",
+          "summary": "The extension has failed to load, possibly because it does not exist or has missing dependencies.",
+          "sourcePath": "doc/classes/GDExtensionManager.xml"
+        },
+        {
+          "name": "LOAD_STATUS_NEEDS_RESTART",
+          "value": "4",
+          "enum": "LoadStatus",
+          "kind": "EnumValue",
+          "summary": "The extension requires the application to restart to fully load.",
+          "sourcePath": "doc/classes/GDExtensionManager.xml"
+        },
+        {
+          "name": "LOAD_STATUS_NOT_LOADED",
+          "value": "3",
+          "enum": "LoadStatus",
+          "kind": "EnumValue",
+          "summary": "The extension has not been loaded.",
+          "sourcePath": "doc/classes/GDExtensionManager.xml"
+        },
+        {
+          "name": "LOAD_STATUS_OK",
+          "value": "0",
+          "enum": "LoadStatus",
+          "kind": "EnumValue",
+          "summary": "The extension has loaded successfully.",
+          "sourcePath": "doc/classes/GDExtensionManager.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "LOAD_STATUS_OK",
+      "value": "0",
+      "enum": "LoadStatus",
+      "kind": "EnumValue",
+      "summary": "The extension has loaded successfully.",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LOAD_STATUS_FAILED",
+      "value": "1",
+      "enum": "LoadStatus",
+      "kind": "EnumValue",
+      "summary": "The extension has failed to load, possibly because it does not exist or has missing dependencies.",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LOAD_STATUS_ALREADY_LOADED",
+      "value": "2",
+      "enum": "LoadStatus",
+      "kind": "EnumValue",
+      "summary": "The extension has already been loaded.",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LOAD_STATUS_NOT_LOADED",
+      "value": "3",
+      "enum": "LoadStatus",
+      "kind": "EnumValue",
+      "summary": "The extension has not been loaded.",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    },
+    {
+      "name": "LOAD_STATUS_NEEDS_RESTART",
+      "value": "4",
+      "enum": "LoadStatus",
+      "kind": "EnumValue",
+      "summary": "The extension requires the application to restart to fully load.",
+      "sourcePath": "doc/classes/GDExtensionManager.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GDExtensionManager.xml",
+      "sha256": "8cbd491acff40539d8bff4421d9e893f7d870fc6fb55ac19fa6a721aaffccb81"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

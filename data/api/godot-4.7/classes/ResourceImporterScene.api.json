@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterScene",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterScene",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterScene",
+    "documentationPath": "doc/classes/ResourceImporterScene.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterscene.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Subresources",
+      "kind": "Property",
+      "signature": "public Dictionary _Subresources { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Contains properties for the scene\u0027s subresources. This is an internal option which is not visible in the Import dock.",
+      "defaultValue": "{}",
+      "godotName": "_subresources",
+      "xmlDocId": "P:Godot.ResourceImporterScene._Subresources",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "animation/fps",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The number of frames per second to use for baking animation curves to a series of points with linear interpolation. It\u0027s recommended to configure this value to match the value you\u0027re using as a baseline in your 3D modeling software. Higher values result in more precise animation with fast movement changes, at the cost of higher file sizes and memory usage. Thanks to interpolation, there is usually not much benefit in going above 30 FPS (as the animation will still appear smooth at higher rendering framerates).",
+      "defaultValue": "30",
+      "godotName": "animation/fps",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "animation/import",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], import animations from the 3D scene.",
+      "defaultValue": "true",
+      "godotName": "animation/import",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "animation/import_rest_as_RESET",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], adds an [Animation] named [code]RESET[/code], containing the [method Skeleton3D.get_bone_rest] from [Skeleton3D] nodes. This can be useful to extract an animation in the reference pose.",
+      "defaultValue": "false",
+      "godotName": "animation/import_rest_as_RESET",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "animation/remove_immutable_tracks",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], remove animation tracks that only contain default values. This can reduce output file size and memory usage with certain 3D scenes, depending on the contents of their animation tracks.",
+      "defaultValue": "true",
+      "godotName": "animation/remove_immutable_tracks",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "animation/trimming",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], trim the beginning and end of animations if there are no keyframe changes. This can reduce output file size and memory usage with certain 3D scenes, depending on the contents of their animation tracks.",
+      "defaultValue": "false",
+      "godotName": "animation/trimming",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "array_mesh/deduplicate_surfaces",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If the 3D model file contains only one mesh, this option has no effect. If [code]true[/code] and the 3D model file contains multiple meshes with the same surface names and formats, the surfaces will be merged together when the meshes are merged. This is useful for reducing the number of surfaces in the resulting mesh, and avoids duplicating materials. If [code]false[/code] and the 3D model file contains multiple meshes, the surfaces will always be kept separate.",
+      "defaultValue": "true",
+      "godotName": "array_mesh/deduplicate_surfaces",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "import_script/path",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Path to an import script, which can run code after the import process has completed for custom processing. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_3d_scenes/import_configuration.html#using-import-scripts-for-automation]Using import scripts for automation[/url] for more information.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "import_script/path",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "materials/extract",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Material extraction mode. - [code]0 (Keep Internal)[/code], materials are not extracted. - [code]1 (Extract Once)[/code], materials are extracted once and reused on subsequent import. - [code]2 (Extract and Overwrite)[/code], materials are extracted and overwritten on every import.",
+      "defaultValue": "0",
+      "godotName": "materials/extract",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "materials/extract_format",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extracted material file format. - [code]0 (Text)[/code], text file format ([code]*.tres[/code]). - [code]1 (Binary)[/code], binary file format ([code]*.res[/code]). - [code]2 (Material)[/code], binary file format ([code]*.material[/code]).",
+      "defaultValue": "0",
+      "godotName": "materials/extract_format",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "materials/extract_path",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Path extracted materials are saved to. If empty, source scene path is used.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "materials/extract_path",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "mesh_library/use_node_names_as_mesh_names",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the mesh names will be set to the names of the nodes in the 3D model file. If [code]false[/code], the mesh names will be set to the names of the meshes in the 3D model file. Enabling this is a common work-around when the author of the 3D model file did not properly set the mesh names in Blender or other 3D modeling apps. For example, a file may have a node named \u0022Turret\u0022 with a mesh named \u0022Cube.002\u0022, so enabling this option will set the mesh name to \u0022Turret\u0022 instead of \u0022Cube_002\u0022.",
+      "defaultValue": "false",
+      "godotName": "mesh_library/use_node_names_as_mesh_names",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/create_shadow_meshes",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the generation of shadow meshes on import. This optimizes shadow rendering without reducing quality by welding vertices together when possible. This in turn reduces the memory bandwidth required to render shadows. Shadow mesh generation currently doesn\u0027t support using a lower detail level than the source mesh (but shadow rendering will make use of LODs when relevant).",
+      "defaultValue": "true",
+      "godotName": "meshes/create_shadow_meshes",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/ensure_tangents",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the input meshes don\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+      "defaultValue": "true",
+      "godotName": "meshes/ensure_tangents",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/force_disable_compression",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+      "defaultValue": "false",
+      "godotName": "meshes/force_disable_compression",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/generate_lods",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates lower detail variants of the mesh which will be displayed in the distance to improve rendering performance. Not all meshes benefit from LOD, especially if they are never rendered from far away. Disabling this can reduce output file size and speed up importing. See [url=$DOCS_URL/tutorials/3d/mesh_lod.html#doc-mesh-lod]Mesh level of detail (LOD)[/url] for more information.",
+      "defaultValue": "true",
+      "godotName": "meshes/generate_lods",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/light_baking",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Configures the meshes\u0027 [member GeometryInstance3D.gi_mode] in the 3D scene. If set to [b]Static Lightmaps[/b], sets the meshes\u0027 GI mode to Static and generates UV2 on import for [LightmapGI] baking.",
+      "defaultValue": "1",
+      "godotName": "meshes/light_baking",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "meshes/lightmap_texel_size",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the size of each texel on the baked lightmap. A smaller value results in more precise lightmaps, at the cost of larger lightmap sizes and longer bake times. [b]Note:[/b] Only effective if [member meshes/light_baking] is set to [b]Static Lightmaps[/b].",
+      "defaultValue": "0.2",
+      "godotName": "meshes/lightmap_texel_size",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/apply_root_scale",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member nodes/root_scale] will be applied to the descendant nodes, meshes, animations, bones, etc. This means that if you add a child node later on within the imported scene, it won\u0027t be scaled. If [code]false[/code], [member nodes/root_scale] will multiply the scale of the root node instead.",
+      "defaultValue": "true",
+      "godotName": "nodes/apply_root_scale",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/import_as_skeleton_bones",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Treat all nodes in the imported scene as if they are bones within a single [Skeleton3D]. Can be used to guarantee that imported animations target skeleton bones rather than nodes. May also be used to assign the [code]\u0022Root\u0022[/code] bone in a [BoneMap]. See [url=$DOCS_URL/tutorials/assets_pipeline/retargeting_3d_skeletons.html]Retargeting 3D Skeletons[/url] for more information.",
+      "defaultValue": "false",
+      "godotName": "nodes/import_as_skeleton_bones",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/root_name",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override for the root node name. If empty, the root node will use what the scene specifies, or the file name if the scene does not specify a root name.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "nodes/root_name",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/root_scale",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The uniform scale to use for the scene root. The default value of [code]1.0[/code] will not perform any rescaling. See [member nodes/apply_root_scale] for details of how this scale is applied.",
+      "defaultValue": "1.0",
+      "godotName": "nodes/root_scale",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/root_script",
+      "kind": "RawProperty",
+      "returnType": "Script",
+      "parameters": [],
+      "summary": "If set to a valid script, attaches the script to the root node of the imported scene. If the type of the root node is not compatible with the script, the root node will be replaced with a type that is compatible with the script. This setting can also be used on other non-mesh nodes in the scene to attach scripts to them.",
+      "defaultValue": "null",
+      "godotName": "nodes/root_script",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/root_type",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override for the root node type. If empty, the root node will use what the scene specifies, or [Node3D] if the scene does not specify a root type. Using a node type that inherits from [Node3D] is recommended. Otherwise, you\u0027ll lose the ability to position the node directly in the 3D editor.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "nodes/root_type",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/use_name_suffixes",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], will use suffixes in the names of imported objects such as nodes and resources to determine types and properties, such as [code]-noimp[/code] to skip import of a node or animation, [code]-alpha[/code] to enable alpha transparency on a material, and [code]-vcol[/code] to enable vertex colors on a material. Disabling this makes editor-imported files more similar to the original files, and more similar to files imported at runtime. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_3d_scenes/node_type_customization.html]Node type customization using name suffixes[/url] for more information.",
+      "defaultValue": "true",
+      "godotName": "nodes/use_name_suffixes",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "nodes/use_node_type_suffixes",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], will use suffixes in the node names to determine the node type, such as [code]-col[/code] for collision shapes. This is only used when [member nodes/use_name_suffixes] is [code]true[/code]. Disabling this makes editor-imported files more similar to the original files, and more similar to files imported at runtime. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_3d_scenes/node_type_customization.html]Node type customization using name suffixes[/url] for more information.",
+      "defaultValue": "true",
+      "godotName": "nodes/use_node_type_suffixes",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    },
+    {
+      "name": "skins/use_named_skins",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If checked, use named [Skin]s for animation. The [MeshInstance3D] node contains 3 properties of relevance here: a skeleton [NodePath] pointing to the [Skeleton3D] node (usually [code]..[/code]), a mesh, and a skin: - The [Skeleton3D] node contains a list of bones with names, their pose and rest, a name, and a parent bone. - The mesh is all of the raw vertex data needed to display a mesh. In terms of the mesh, it knows how vertices are weight-painted and uses some internal numbering often imported from 3D modeling software. - The skin contains the information necessary to bind this mesh onto this Skeleton3D. For each of the internal bone IDs chosen by the 3D modeling software, it contains two things. Firstly, a matrix known as the Bind Pose Matrix, Inverse Bind Matrix, or IBM for short. Secondly, the [Skin] contains each bone\u0027s name (if [member skins/use_named_skins] is [code]true[/code]), or the bone\u0027s index within the [Skeleton3D] list (if [member skins/use_named_skins] is [code]false[/code]). Together, this information is enough to tell Godot how to use the bone poses in the [Skeleton3D] node to render the mesh from each [MeshInstance3D]. Note that each [MeshInstance3D] may share binds, as is common in models exported from Blender, or each [MeshInstance3D] may use a separate [Skin] object, as is common in models exported from other tools such as Maya.",
+      "defaultValue": "true",
+      "godotName": "skins/use_named_skins",
+      "sourcePath": "doc/classes/ResourceImporterScene.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterScene.xml",
+      "sha256": "3030260f86e0dcbfe760aaa618ad983fe50f130a36123f77fbd4cfafd7e562e7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

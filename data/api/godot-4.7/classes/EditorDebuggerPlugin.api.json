@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorDebuggerPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorDebuggerPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorDebuggerPlugin",
+    "documentationPath": "doc/classes/EditorDebuggerPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editordebuggerplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_BreakpointSetInTree",
+      "kind": "Method",
+      "signature": "public void _BreakpointSetInTree(Script script, int line, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to be notified when a breakpoint is set in the editor.",
+      "godotName": "_breakpoint_set_in_tree",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._BreakpointSetInTree(Script,int,bool)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_BreakpointsClearedInTree",
+      "kind": "Method",
+      "signature": "public void _BreakpointsClearedInTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to be notified when all breakpoints are cleared in the editor.",
+      "godotName": "_breakpoints_cleared_in_tree",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._BreakpointsClearedInTree",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_Capture",
+      "kind": "Method",
+      "signature": "public bool _Capture(String message, Array data, int sessionId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "Array"
+        },
+        {
+          "name": "session_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to process incoming messages. The [param session_id] is the ID of the [EditorDebuggerSession] that received the [param message]. Use [method get_session] to retrieve the session. This method should return [code]true[/code] if the message is recognized.",
+      "godotName": "_capture",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._Capture(String,Array,int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_GotoScriptLine",
+      "kind": "Method",
+      "signature": "public void _GotoScriptLine(Script script, int line)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to be notified when a breakpoint line has been clicked in the debugger breakpoint panel.",
+      "godotName": "_goto_script_line",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._GotoScriptLine(Script,int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_HasCapture",
+      "kind": "Method",
+      "signature": "public bool _HasCapture(String capture)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "capture",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to enable receiving messages from the debugger. If [param capture] is \u0022my_message\u0022 then messages starting with \u0022my_message:\u0022 will be passed to the [method _capture] method.",
+      "godotName": "_has_capture",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._HasCapture(String)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_SetupSession",
+      "kind": "Method",
+      "signature": "public void _SetupSession(int sessionId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "session_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to be notified whenever a new [EditorDebuggerSession] is created. Note that the session may be inactive during this stage.",
+      "godotName": "_setup_session",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._SetupSession(int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "GetSession",
+      "kind": "Method",
+      "signature": "public EditorDebuggerSession GetSession(int id)",
+      "returnType": "EditorDebuggerSession",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [EditorDebuggerSession] with the given [param id].",
+      "godotName": "get_session",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin.GetSession(int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "GetSessions",
+      "kind": "Method",
+      "signature": "public Array GetSessions()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array of [EditorDebuggerSession] currently available to this debugger plugin. [b]Note:[/b] Sessions in the array may be inactive, check their state via [method EditorDebuggerSession.is_active].",
+      "godotName": "get_sessions",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin.GetSessions",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_BreakpointSetInTree",
+      "kind": "Method",
+      "signature": "public void _BreakpointSetInTree(Script script, int line, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to be notified when a breakpoint is set in the editor.",
+      "godotName": "_breakpoint_set_in_tree",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._BreakpointSetInTree(Script,int,bool)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_BreakpointsClearedInTree",
+      "kind": "Method",
+      "signature": "public void _BreakpointsClearedInTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to be notified when all breakpoints are cleared in the editor.",
+      "godotName": "_breakpoints_cleared_in_tree",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._BreakpointsClearedInTree",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_Capture",
+      "kind": "Method",
+      "signature": "public bool _Capture(String message, Array data, int sessionId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "Array"
+        },
+        {
+          "name": "session_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to process incoming messages. The [param session_id] is the ID of the [EditorDebuggerSession] that received the [param message]. Use [method get_session] to retrieve the session. This method should return [code]true[/code] if the message is recognized.",
+      "godotName": "_capture",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._Capture(String,Array,int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_GotoScriptLine",
+      "kind": "Method",
+      "signature": "public void _GotoScriptLine(Script script, int line)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to be notified when a breakpoint line has been clicked in the debugger breakpoint panel.",
+      "godotName": "_goto_script_line",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._GotoScriptLine(Script,int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_HasCapture",
+      "kind": "Method",
+      "signature": "public bool _HasCapture(String capture)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "capture",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to enable receiving messages from the debugger. If [param capture] is \u0022my_message\u0022 then messages starting with \u0022my_message:\u0022 will be passed to the [method _capture] method.",
+      "godotName": "_has_capture",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._HasCapture(String)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    },
+    {
+      "name": "_SetupSession",
+      "kind": "Method",
+      "signature": "public void _SetupSession(int sessionId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "session_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to be notified whenever a new [EditorDebuggerSession] is created. Note that the session may be inactive during this stage.",
+      "godotName": "_setup_session",
+      "xmlDocId": "M:Godot.EditorDebuggerPlugin._SetupSession(int)",
+      "sourcePath": "doc/classes/EditorDebuggerPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorDebuggerPlugin.xml",
+      "sha256": "59248bdd477bcdb071bdcb10d754811ab694346abdbf1b39f8c2b7c40041b673"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

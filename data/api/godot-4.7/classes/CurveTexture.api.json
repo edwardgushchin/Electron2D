@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CurveTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.CurveTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "CurveTexture",
+    "documentationPath": "doc/classes/CurveTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_curvetexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Curve",
+      "kind": "Property",
+      "signature": "public Curve Curve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "The [Curve] that is rendered onto the texture. Should be a unit [Curve].",
+      "godotName": "curve",
+      "xmlDocId": "P:Godot.CurveTexture.Curve",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.CurveTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    },
+    {
+      "name": "TextureMode",
+      "kind": "Property",
+      "signature": "public int TextureMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The format the texture should be generated with. When passing a CurveTexture as an input to a [Shader], this may need to be adjusted.",
+      "defaultValue": "0",
+      "godotName": "texture_mode",
+      "xmlDocId": "P:Godot.CurveTexture.TextureMode",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.",
+      "defaultValue": "256",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.CurveTexture.Width",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "TextureMode",
+      "values": [
+        {
+          "name": "TEXTURE_MODE_RED",
+          "value": "1",
+          "enum": "TextureMode",
+          "kind": "EnumValue",
+          "summary": "Store the curve only in the red channel. This saves video memory, but some custom shaders may not be able to work with this.",
+          "sourcePath": "doc/classes/CurveTexture.xml"
+        },
+        {
+          "name": "TEXTURE_MODE_RGB",
+          "value": "0",
+          "enum": "TextureMode",
+          "kind": "EnumValue",
+          "summary": "Store the curve equally across the red, green and blue channels. This uses more video memory, but is more compatible with shaders that only read the green and blue values.",
+          "sourcePath": "doc/classes/CurveTexture.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TEXTURE_MODE_RGB",
+      "value": "0",
+      "enum": "TextureMode",
+      "kind": "EnumValue",
+      "summary": "Store the curve equally across the red, green and blue channels. This uses more video memory, but is more compatible with shaders that only read the green and blue values.",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    },
+    {
+      "name": "TEXTURE_MODE_RED",
+      "value": "1",
+      "enum": "TextureMode",
+      "kind": "EnumValue",
+      "summary": "Store the curve only in the red channel. This saves video memory, but some custom shaders may not be able to work with this.",
+      "sourcePath": "doc/classes/CurveTexture.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CurveTexture.xml",
+      "sha256": "14633c5ff82e601b84887d5234292d07e88fe71777a4c619a9d66046c6773a2c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

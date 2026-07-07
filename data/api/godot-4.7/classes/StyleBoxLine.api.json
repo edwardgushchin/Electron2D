@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBoxLine",
+    "namespace": "Godot",
+    "fullName": "Godot.StyleBoxLine",
+    "kind": "class",
+    "baseType": "StyleBox",
+    "interfaces": [],
+    "godotReference": "StyleBoxLine",
+    "documentationPath": "doc/classes/StyleBoxLine.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_styleboxline.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The line\u0027s color.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.StyleBoxLine.Color",
+      "sourcePath": "doc/classes/StyleBoxLine.xml"
+    },
+    {
+      "name": "GrowBegin",
+      "kind": "Property",
+      "signature": "public float GrowBegin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The number of pixels the line will extend before the [StyleBoxLine]\u0027s bounds. If set to a negative value, the line will begin inside the [StyleBoxLine]\u0027s bounds.",
+      "defaultValue": "1.0",
+      "godotName": "grow_begin",
+      "xmlDocId": "P:Godot.StyleBoxLine.GrowBegin",
+      "sourcePath": "doc/classes/StyleBoxLine.xml"
+    },
+    {
+      "name": "GrowEnd",
+      "kind": "Property",
+      "signature": "public float GrowEnd { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The number of pixels the line will extend past the [StyleBoxLine]\u0027s bounds. If set to a negative value, the line will end inside the [StyleBoxLine]\u0027s bounds.",
+      "defaultValue": "1.0",
+      "godotName": "grow_end",
+      "xmlDocId": "P:Godot.StyleBoxLine.GrowEnd",
+      "sourcePath": "doc/classes/StyleBoxLine.xml"
+    },
+    {
+      "name": "Thickness",
+      "kind": "Property",
+      "signature": "public int Thickness { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The line\u0027s thickness in pixels.",
+      "defaultValue": "1",
+      "godotName": "thickness",
+      "xmlDocId": "P:Godot.StyleBoxLine.Thickness",
+      "sourcePath": "doc/classes/StyleBoxLine.xml"
+    },
+    {
+      "name": "Vertical",
+      "kind": "Property",
+      "signature": "public bool Vertical { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the line will be vertical. If [code]false[/code], the line will be horizontal.",
+      "defaultValue": "false",
+      "godotName": "vertical",
+      "xmlDocId": "P:Godot.StyleBoxLine.Vertical",
+      "sourcePath": "doc/classes/StyleBoxLine.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StyleBoxLine.xml",
+      "sha256": "caf8a2563f9a512c2aea5b820dbd100ca100c638f6c3e47785f7d80b2da9e0c5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

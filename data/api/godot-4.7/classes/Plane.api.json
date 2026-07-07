@@ -1,0 +1,502 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Plane",
+    "namespace": "Godot",
+    "fullName": "Godot.Plane",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Plane",
+    "documentationPath": "doc/classes/Plane.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_plane.html"
+  },
+  "constructors": [
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane()",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "Constructs a default-initialized [Plane] with all components set to [code]0[/code].",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(Plane from)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Constructs a [Plane] as a copy of the given [Plane].",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(Plane)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(float a, float b, float c, float d)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "a",
+          "type": "float"
+        },
+        {
+          "name": "b",
+          "type": "float"
+        },
+        {
+          "name": "c",
+          "type": "float"
+        },
+        {
+          "name": "d",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a plane from the four parameters. The three components of the resulting plane\u0027s [member normal] are [param a], [param b] and [param c], and the plane has a distance of [param d] from the origin.",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(float,float,float,float)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(Vector3 normal)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Creates a plane from the normal vector. The plane will intersect the origin. The [param normal] of the plane must be a unit vector.",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(Vector3 normal, float d)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "normal",
+          "type": "Vector3"
+        },
+        {
+          "name": "d",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a plane from the normal vector and the plane\u0027s distance from the origin. The [param normal] of the plane must be a unit vector.",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(Vector3,float)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(Vector3 normal, Vector3 point)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "normal",
+          "type": "Vector3"
+        },
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Creates a plane from the normal vector and a point on the plane. The [param normal] of the plane must be a unit vector.",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(Vector3,Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Plane",
+      "kind": "Constructor",
+      "signature": "public Plane(Vector3 point1, Vector3 point2, Vector3 point3)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "point1",
+          "type": "Vector3"
+        },
+        {
+          "name": "point2",
+          "type": "Vector3"
+        },
+        {
+          "name": "point3",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Creates a plane from the three points, given in clockwise order.",
+      "godotName": "Plane",
+      "xmlDocId": "M:Godot.Plane.#ctor(Vector3,Vector3,Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "DistanceTo",
+      "kind": "Method",
+      "signature": "public float DistanceTo(Vector3 point)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the shortest distance from the plane to the position [param point]. If the point is above the plane, the distance will be positive. If below, the distance will be negative.",
+      "godotName": "distance_to",
+      "xmlDocId": "M:Godot.Plane.DistanceTo(Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "GetCenter",
+      "kind": "Method",
+      "signature": "public Vector3 GetCenter()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the center of the plane.",
+      "godotName": "get_center",
+      "xmlDocId": "M:Godot.Plane.GetCenter",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public bool HasPoint(Vector3 point, float tolerance)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector3"
+        },
+        {
+          "name": "tolerance",
+          "type": "float",
+          "defaultValue": "1e-05"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param point] is inside the plane. Comparison uses a custom minimum [param tolerance] threshold.",
+      "godotName": "has_point",
+      "xmlDocId": "M:Godot.Plane.HasPoint(Vector3,float)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Intersect3",
+      "kind": "Method",
+      "signature": "public Variant Intersect3(Plane b, Plane c)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Plane"
+        },
+        {
+          "name": "c",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Returns the intersection point of the three planes [param b], [param c] and this plane. If no intersection is found, [code]null[/code] is returned.",
+      "godotName": "intersect_3",
+      "xmlDocId": "M:Godot.Plane.Intersect3(Plane,Plane)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "IntersectsRay",
+      "kind": "Method",
+      "signature": "public Variant IntersectsRay(Vector3 from, Vector3 dir)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "dir",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the intersection point of a ray consisting of the position [param from] and the direction normal [param dir] with this plane. If no intersection is found, [code]null[/code] is returned.",
+      "godotName": "intersects_ray",
+      "xmlDocId": "M:Godot.Plane.IntersectsRay(Vector3,Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "IntersectsSegment",
+      "kind": "Method",
+      "signature": "public Variant IntersectsSegment(Vector3 from, Vector3 to)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "to",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the intersection point of a segment from position [param from] to position [param to] with this plane. If no intersection is found, [code]null[/code] is returned.",
+      "godotName": "intersects_segment",
+      "xmlDocId": "M:Godot.Plane.IntersectsSegment(Vector3,Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Plane toPlane)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "to_plane",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this plane and [param to_plane] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Plane.IsEqualApprox(Plane)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this plane is finite, by calling [method @GlobalScope.is_finite] on each component.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Plane.IsFinite",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "IsPointOver",
+      "kind": "Method",
+      "signature": "public bool IsPointOver(Vector3 point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param point] is located above the plane.",
+      "godotName": "is_point_over",
+      "xmlDocId": "M:Godot.Plane.IsPointOver(Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Normalized",
+      "kind": "Method",
+      "signature": "public Plane Normalized()",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "Returns a copy of the plane, with normalized [member normal] (so it\u0027s a unit vector). Returns [code]Plane(0, 0, 0, 0)[/code] if [member normal] can\u0027t be normalized (it has zero length).",
+      "godotName": "normalized",
+      "xmlDocId": "M:Godot.Plane.Normalized",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Project",
+      "kind": "Method",
+      "signature": "public Vector3 Project(Vector3 point)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the orthogonal projection of [param point] into a point in the plane.",
+      "godotName": "project",
+      "xmlDocId": "M:Godot.Plane.Project(Vector3)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "D",
+      "kind": "Property",
+      "signature": "public float D { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from the origin to the plane, expressed in terms of [member normal] (according to its direction and magnitude). Actual absolute distance from the origin to the plane can be calculated as [code]abs(d) / normal.length()[/code] (if [member normal] has zero length then this [Plane] does not represent a valid plane). In the scalar equation of the plane [code]ax \u002B by \u002B cz = d[/code], this is [code skip-lint]d[/code], while the [code](a, b, c)[/code] coordinates are represented by the [member normal] property.",
+      "defaultValue": "0.0",
+      "godotName": "d",
+      "xmlDocId": "P:Godot.Plane.D",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Normal",
+      "kind": "Property",
+      "signature": "public Vector3 Normal { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The normal of the plane, typically a unit vector. Shouldn\u0027t be a zero vector as [Plane] with such [member normal] does not represent a valid plane. In the scalar equation of the plane [code]ax \u002B by \u002B cz = d[/code], this is the vector [code](a, b, c)[/code], where [code skip-lint]d[/code] is the [member d] property.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "normal",
+      "xmlDocId": "P:Godot.Plane.Normal",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public float X { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The X component of the plane\u0027s [member normal] vector.",
+      "defaultValue": "0.0",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Plane.X",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public float Y { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The Y component of the plane\u0027s [member normal] vector.",
+      "defaultValue": "0.0",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Plane.Y",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "Z",
+      "kind": "Property",
+      "signature": "public float Z { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The Z component of the plane\u0027s [member normal] vector.",
+      "defaultValue": "0.0",
+      "godotName": "z",
+      "xmlDocId": "P:Godot.Plane.Z",
+      "sourcePath": "doc/classes/Plane.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "PLANE_YZ",
+      "value": "Plane(1, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "A plane that extends in the Y and Z axes (normal vector points \u002BX).",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "PLANE_XZ",
+      "value": "Plane(0, 1, 0, 0)",
+      "kind": "Constant",
+      "summary": "A plane that extends in the X and Z axes (normal vector points \u002BY).",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "PLANE_XY",
+      "value": "Plane(0, 0, 1, 0)",
+      "kind": "Constant",
+      "summary": "A plane that extends in the X and Y axes (normal vector points \u002BZ).",
+      "sourcePath": "doc/classes/Plane.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Plane right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the planes are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Plane.operator !=(Plane)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Plane operator *(Transform3D right)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Inversely transforms (multiplies) the [Plane] by the given [Transform3D] transformation matrix. [code]plane * transform[/code] is equivalent to [code]transform.affine_inverse() * plane[/code]. See [method Transform3D.affine_inverse].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Plane.operator *(Transform3D)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Plane right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the planes are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Plane.operator ==(Plane)",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public Plane operator unary\u002B()",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.Plane.operator unary\u002B",
+      "sourcePath": "doc/classes/Plane.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public Plane operator unary-()",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "Returns the negative value of the [Plane]. This is the same as writing [code]Plane(-p.normal, -p.d)[/code]. This operation flips the direction of the normal vector and also flips the distance value, resulting in a Plane that is in the same place, but facing the opposite direction.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.Plane.operator unary-",
+      "sourcePath": "doc/classes/Plane.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Plane.xml",
+      "sha256": "443529b698cc800f443bd7175958006b9e1cf9f73f7fbfa12cf20f901187becb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

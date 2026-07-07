@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorFeatureProfile",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorFeatureProfile",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorFeatureProfile",
+    "documentationPath": "doc/classes/EditorFeatureProfile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorfeatureprofile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFeatureName",
+      "kind": "Method",
+      "signature": "public String GetFeatureName(int feature)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the specified [param feature]\u0027s human-readable name.",
+      "godotName": "get_feature_name",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.GetFeatureName(int)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "IsClassDisabled",
+      "kind": "Method",
+      "signature": "public bool IsClassDisabled(StringName className)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the class specified by [param class_name] is disabled. When disabled, the class won\u0027t appear in the Create New Node dialog.",
+      "godotName": "is_class_disabled",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.IsClassDisabled(StringName)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "IsClassEditorDisabled",
+      "kind": "Method",
+      "signature": "public bool IsClassEditorDisabled(StringName className)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if editing for the class specified by [param class_name] is disabled. When disabled, the class will still appear in the Create New Node dialog but the Inspector will be read-only when selecting a node that extends the class.",
+      "godotName": "is_class_editor_disabled",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.IsClassEditorDisabled(StringName)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "IsClassPropertyDisabled",
+      "kind": "Method",
+      "signature": "public bool IsClassPropertyDisabled(StringName className, StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param property] is disabled in the class specified by [param class_name]. When a property is disabled, it won\u0027t appear in the Inspector when selecting a node that extends the class specified by [param class_name].",
+      "godotName": "is_class_property_disabled",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.IsClassPropertyDisabled(StringName,StringName)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "IsFeatureDisabled",
+      "kind": "Method",
+      "signature": "public bool IsFeatureDisabled(int feature)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param feature] is disabled. When a feature is disabled, it will disappear from the editor entirely.",
+      "godotName": "is_feature_disabled",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.IsFeatureDisabled(int)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public int LoadFromFile(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads an editor feature profile from a file. The file must follow the JSON format obtained by using the feature profile manager\u0027s [b]Export[/b] button or the [method save_to_file] method. [b]Note:[/b] Feature profiles created via the user interface are loaded from the [code]feature_profiles[/code] directory, as a file with the [code].profile[/code] extension. The editor configuration folder can be found by using [method EditorPaths.get_config_dir].",
+      "godotName": "load_from_file",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.LoadFromFile(String)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "SaveToFile",
+      "kind": "Method",
+      "signature": "public int SaveToFile(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the editor feature profile to a file in JSON format. It can then be imported using the feature profile manager\u0027s [b]Import[/b] button or the [method load_from_file] method. [b]Note:[/b] Feature profiles created via the user interface are saved in the [code]feature_profiles[/code] directory, as a file with the [code].profile[/code] extension. The editor configuration folder can be found by using [method EditorPaths.get_config_dir].",
+      "godotName": "save_to_file",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.SaveToFile(String)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "SetDisableClass",
+      "kind": "Method",
+      "signature": "public void SetDisableClass(StringName className, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param disable] is [code]true[/code], disables the class specified by [param class_name]. When disabled, the class won\u0027t appear in the Create New Node dialog.",
+      "godotName": "set_disable_class",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.SetDisableClass(StringName,bool)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "SetDisableClassEditor",
+      "kind": "Method",
+      "signature": "public void SetDisableClassEditor(StringName className, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param disable] is [code]true[/code], disables editing for the class specified by [param class_name]. When disabled, the class will still appear in the Create New Node dialog but the Inspector will be read-only when selecting a node that extends the class.",
+      "godotName": "set_disable_class_editor",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.SetDisableClassEditor(StringName,bool)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "SetDisableClassProperty",
+      "kind": "Method",
+      "signature": "public void SetDisableClassProperty(StringName className, StringName property, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param disable] is [code]true[/code], disables editing for [param property] in the class specified by [param class_name]. When a property is disabled, it won\u0027t appear in the Inspector when selecting a node that extends the class specified by [param class_name].",
+      "godotName": "set_disable_class_property",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.SetDisableClassProperty(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "SetDisableFeature",
+      "kind": "Method",
+      "signature": "public void SetDisableFeature(int feature, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param disable] is [code]true[/code], disables the editor feature specified in [param feature]. When a feature is disabled, it will disappear from the editor entirely.",
+      "godotName": "set_disable_feature",
+      "xmlDocId": "M:Godot.EditorFeatureProfile.SetDisableFeature(int,bool)",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Feature",
+      "values": [
+        {
+          "name": "FEATURE_3D",
+          "value": "0",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The 3D editor. If this feature is disabled, the 3D editor won\u0027t display but 3D nodes will still display in the Create New Node dialog.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_ASSET_LIB",
+          "value": "2",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Asset Store tab. If this feature is disabled, the Asset Store tab won\u0027t display.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_FILESYSTEM_DOCK",
+          "value": "5",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The FileSystem dock. If this feature is disabled, the FileSystem dock won\u0027t be visible.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_GAME",
+          "value": "8",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Game tab, which allows embedding the game window and selecting nodes by clicking inside of it. If this feature is disabled, the Game tab won\u0027t display.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_GROUPS_DOCK",
+          "value": "10",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Groups dock. If this feature is disabled, groups won\u0027t be visible and modifiable from the editor.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_HISTORY_DOCK",
+          "value": "7",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The History dock. If this feature is disabled, the History dock won\u0027t be visible.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_IMPORT_DOCK",
+          "value": "6",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Import dock. If this feature is disabled, the Import dock won\u0027t be visible.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_MAX",
+          "value": "11",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Feature] enum.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_NODE_DOCK",
+          "value": "4",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Node dock. If this feature is disabled, signals and groups won\u0027t be visible and modifiable from the editor.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_SCENE_TREE",
+          "value": "3",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Scene tree editing. If this feature is disabled, the Scene tree dock will still be visible but will be read-only.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_SCRIPT",
+          "value": "1",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Script tab, which contains the script editor and class reference browser. If this feature is disabled, the Script tab won\u0027t display.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        },
+        {
+          "name": "FEATURE_SIGNALS_DOCK",
+          "value": "9",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "The Signals dock. If this feature is disabled, signals won\u0027t be visible and modifiable from the editor.",
+          "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FEATURE_3D",
+      "value": "0",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The 3D editor. If this feature is disabled, the 3D editor won\u0027t display but 3D nodes will still display in the Create New Node dialog.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_SCRIPT",
+      "value": "1",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Script tab, which contains the script editor and class reference browser. If this feature is disabled, the Script tab won\u0027t display.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_ASSET_LIB",
+      "value": "2",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Asset Store tab. If this feature is disabled, the Asset Store tab won\u0027t display.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_SCENE_TREE",
+      "value": "3",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Scene tree editing. If this feature is disabled, the Scene tree dock will still be visible but will be read-only.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_NODE_DOCK",
+      "value": "4",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Node dock. If this feature is disabled, signals and groups won\u0027t be visible and modifiable from the editor.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_FILESYSTEM_DOCK",
+      "value": "5",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The FileSystem dock. If this feature is disabled, the FileSystem dock won\u0027t be visible.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_IMPORT_DOCK",
+      "value": "6",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Import dock. If this feature is disabled, the Import dock won\u0027t be visible.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_HISTORY_DOCK",
+      "value": "7",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The History dock. If this feature is disabled, the History dock won\u0027t be visible.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_GAME",
+      "value": "8",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Game tab, which allows embedding the game window and selecting nodes by clicking inside of it. If this feature is disabled, the Game tab won\u0027t display.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_SIGNALS_DOCK",
+      "value": "9",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Signals dock. If this feature is disabled, signals won\u0027t be visible and modifiable from the editor.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_GROUPS_DOCK",
+      "value": "10",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "The Groups dock. If this feature is disabled, groups won\u0027t be visible and modifiable from the editor.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    },
+    {
+      "name": "FEATURE_MAX",
+      "value": "11",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Feature] enum.",
+      "sourcePath": "doc/classes/EditorFeatureProfile.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorFeatureProfile.xml",
+      "sha256": "e37eae7cc2e98b3d7016ca78b213096758efc31dd0736fa1f75c3f3a82f0443a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRCompositionLayerCylinder",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRCompositionLayerCylinder",
+    "kind": "class",
+    "baseType": "OpenXRCompositionLayer",
+    "interfaces": [],
+    "godotReference": "OpenXRCompositionLayerCylinder",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrcompositionlayercylinder.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AspectRatio",
+      "kind": "Property",
+      "signature": "public float AspectRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The aspect ratio of the slice. Used to set the height relative to the width.",
+      "defaultValue": "1.0",
+      "godotName": "aspect_ratio",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerCylinder.AspectRatio",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml"
+    },
+    {
+      "name": "CentralAngle",
+      "kind": "Property",
+      "signature": "public float CentralAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The central angle of the cylinder. Used to set the width.",
+      "defaultValue": "1.5707964",
+      "godotName": "central_angle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerCylinder.CentralAngle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml"
+    },
+    {
+      "name": "FallbackSegments",
+      "kind": "Property",
+      "signature": "public int FallbackSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of segments to use in the fallback mesh.",
+      "defaultValue": "10",
+      "godotName": "fallback_segments",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerCylinder.FallbackSegments",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the cylinder.",
+      "defaultValue": "1.0",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerCylinder.Radius",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRCompositionLayerCylinder.xml",
+      "sha256": "5a7f652b365f7c2bd15e6868583531e1c7429c3f06849de77094de10341a386f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,1242 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileMap",
+    "namespace": "Godot",
+    "fullName": "Godot.TileMap",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "TileMap",
+    "documentationPath": "doc/classes/TileMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tilemap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_TileDataRuntimeUpdate",
+      "kind": "Method",
+      "signature": "public void _TileDataRuntimeUpdate(int layer, Vector2i coords, TileData tileData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "tile_data",
+          "type": "TileData"
+        }
+      ],
+      "summary": "Called with a TileData object about to be used internally by the TileMap, allowing its modification at runtime. This method is only called if [method _use_tile_data_runtime_update] is implemented and returns [code]true[/code] for the given tile [param coords] and [param layer]. [b]Warning:[/b] The [param tile_data] object\u0027s sub-resources are the same as the one in the TileSet. Modifying them might impact the whole TileSet. Instead, make sure to duplicate those resources. [b]Note:[/b] If the properties of [param tile_data] object should change over time, use [method notify_runtime_tile_data_update] to notify the TileMap it needs an update.",
+      "godotName": "_tile_data_runtime_update",
+      "xmlDocId": "M:Godot.TileMap._TileDataRuntimeUpdate(int,Vector2i,TileData)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "_UseTileDataRuntimeUpdate",
+      "kind": "Method",
+      "signature": "public bool _UseTileDataRuntimeUpdate(int layer, Vector2i coords)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Should return [code]true[/code] if the tile at coordinates [param coords] on layer [param layer] requires a runtime update. [b]Warning:[/b] Make sure this function only return [code]true[/code] when needed. Any tile processed at runtime without a need for it will imply a significant performance penalty. [b]Note:[/b] If the result of this function should changed, use [method notify_runtime_tile_data_update] to notify the TileMap it needs an update.",
+      "godotName": "_use_tile_data_runtime_update",
+      "xmlDocId": "M:Godot.TileMap._UseTileDataRuntimeUpdate(int,Vector2i)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "AddLayer",
+      "kind": "Method",
+      "signature": "public void AddLayer(int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a layer at the given position [param to_position] in the array. If [param to_position] is negative, the position is counted from the end, with [code]-1[/code] adding the layer at the end of the array.",
+      "godotName": "add_layer",
+      "xmlDocId": "M:Godot.TileMap.AddLayer(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all cells.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TileMap.Clear",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "ClearLayer",
+      "kind": "Method",
+      "signature": "public void ClearLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Clears all cells on the given layer. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "clear_layer",
+      "xmlDocId": "M:Godot.TileMap.ClearLayer(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "EraseCell",
+      "kind": "Method",
+      "signature": "public void EraseCell(int layer, Vector2i coords)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Erases the cell on layer [param layer] at coordinates [param coords]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "erase_cell",
+      "xmlDocId": "M:Godot.TileMap.EraseCell(int,Vector2i)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "FixInvalidTiles",
+      "kind": "Method",
+      "signature": "public void FixInvalidTiles()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears cells that do not exist in the tileset.",
+      "godotName": "fix_invalid_tiles",
+      "xmlDocId": "M:Godot.TileMap.FixInvalidTiles",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "ForceUpdate",
+      "kind": "Method",
+      "signature": "public void ForceUpdate(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Forces the TileMap and the layer [param layer] to update.",
+      "godotName": "force_update",
+      "xmlDocId": "M:Godot.TileMap.ForceUpdate(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetCellAlternativeTile",
+      "kind": "Method",
+      "signature": "public int GetCellAlternativeTile(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the tile alternative ID of the cell on layer [param layer] at [param coords]. If [param use_proxies] is [code]false[/code], ignores the [TileSet]\u0027s tile proxies, returning the raw alternative identifier. See [method TileSet.map_tile_proxy]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_cell_alternative_tile",
+      "xmlDocId": "M:Godot.TileMap.GetCellAlternativeTile(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetCellAtlasCoords",
+      "kind": "Method",
+      "signature": "public Vector2i GetCellAtlasCoords(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the tile atlas coordinates ID of the cell on layer [param layer] at coordinates [param coords]. Returns [code]Vector2i(-1, -1)[/code] if the cell does not exist. If [param use_proxies] is [code]false[/code], ignores the [TileSet]\u0027s tile proxies, returning the raw atlas coordinate identifier. See [method TileSet.map_tile_proxy]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_cell_atlas_coords",
+      "xmlDocId": "M:Godot.TileMap.GetCellAtlasCoords(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetCellSourceId",
+      "kind": "Method",
+      "signature": "public int GetCellSourceId(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the tile source ID of the cell on layer [param layer] at coordinates [param coords]. Returns [code]-1[/code] if the cell does not exist. If [param use_proxies] is [code]false[/code], ignores the [TileSet]\u0027s tile proxies, returning the raw source identifier. See [method TileSet.map_tile_proxy]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_cell_source_id",
+      "xmlDocId": "M:Godot.TileMap.GetCellSourceId(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetCellTileData",
+      "kind": "Method",
+      "signature": "public TileData GetCellTileData(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "TileData",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the [TileData] object associated with the given cell, or [code]null[/code] if the cell does not exist or is not a [TileSetAtlasSource]. If [param layer] is negative, the layers are accessed from the last one. [codeblock] func get_clicked_tile_power(): var clicked_cell = tile_map.local_to_map(tile_map.get_local_mouse_position()) var data = tile_map.get_cell_tile_data(0, clicked_cell) if data: return data.get_custom_data(\u0022power\u0022) else: return 0 [/codeblock] If [param use_proxies] is [code]false[/code], ignores the [TileSet]\u0027s tile proxies. See [method TileSet.map_tile_proxy].",
+      "godotName": "get_cell_tile_data",
+      "xmlDocId": "M:Godot.TileMap.GetCellTileData(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetCoordsForBodyRid",
+      "kind": "Method",
+      "signature": "public Vector2i GetCoordsForBodyRid(RID body)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the coordinates of the tile for given physics body RID. Such RID can be retrieved from [method KinematicCollision2D.get_collider_rid], when colliding with a tile.",
+      "godotName": "get_coords_for_body_rid",
+      "xmlDocId": "M:Godot.TileMap.GetCoordsForBodyRid(RID)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerForBodyRid",
+      "kind": "Method",
+      "signature": "public int GetLayerForBodyRid(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the tilemap layer of the tile for given physics body RID. Such RID can be retrieved from [method KinematicCollision2D.get_collider_rid], when colliding with a tile.",
+      "godotName": "get_layer_for_body_rid",
+      "xmlDocId": "M:Godot.TileMap.GetLayerForBodyRid(RID)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerModulate",
+      "kind": "Method",
+      "signature": "public Color GetLayerModulate(int layer)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a TileMap layer\u0027s modulate. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_layer_modulate",
+      "xmlDocId": "M:Godot.TileMap.GetLayerModulate(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerName",
+      "kind": "Method",
+      "signature": "public String GetLayerName(int layer)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a TileMap layer\u0027s name. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_layer_name",
+      "xmlDocId": "M:Godot.TileMap.GetLayerName(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetLayerNavigationMap(int layer)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [RID] of the [NavigationServer2D] navigation map assigned to the specified TileMap layer [param layer]. By default the TileMap uses the default [World2D] navigation map for the first TileMap layer. For each additional TileMap layer a new navigation map is created for the additional layer. In order to make [NavigationAgent2D] switch between TileMap layer navigation maps use [method NavigationAgent2D.set_navigation_map] with the navigation map received from [method get_layer_navigation_map]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_layer_navigation_map",
+      "xmlDocId": "M:Godot.TileMap.GetLayerNavigationMap(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerYSortOrigin",
+      "kind": "Method",
+      "signature": "public int GetLayerYSortOrigin(int layer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a TileMap layer\u0027s Y sort origin. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_layer_y_sort_origin",
+      "xmlDocId": "M:Godot.TileMap.GetLayerYSortOrigin(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayerZIndex",
+      "kind": "Method",
+      "signature": "public int GetLayerZIndex(int layer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a TileMap layer\u0027s Z-index value. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_layer_z_index",
+      "xmlDocId": "M:Godot.TileMap.GetLayerZIndex(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetLayersCount",
+      "kind": "Method",
+      "signature": "public int GetLayersCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of layers in the TileMap.",
+      "godotName": "get_layers_count",
+      "xmlDocId": "M:Godot.TileMap.GetLayersCount",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetNavigationMap(int layer)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [RID] of the [NavigationServer2D] navigation map assigned to the specified TileMap layer [param layer].",
+      "godotName": "get_navigation_map",
+      "xmlDocId": "M:Godot.TileMap.GetNavigationMap(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetNeighborCell",
+      "kind": "Method",
+      "signature": "public Vector2i GetNeighborCell(Vector2i coords, int neighbor)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "neighbor",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the neighboring cell to the one at coordinates [param coords], identified by the [param neighbor] direction. This method takes into account the different layouts a TileMap can take.",
+      "godotName": "get_neighbor_cell",
+      "xmlDocId": "M:Godot.TileMap.GetNeighborCell(Vector2i,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetPattern",
+      "kind": "Method",
+      "signature": "public TileMapPattern GetPattern(int layer, Vector2i[] coordsArray)",
+      "returnType": "TileMapPattern",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords_array",
+          "type": "Vector2i[]"
+        }
+      ],
+      "summary": "Creates a new [TileMapPattern] from the given layer and set of cells. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_pattern",
+      "xmlDocId": "M:Godot.TileMap.GetPattern(int,Vector2i[])",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetSurroundingCells",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetSurroundingCells(Vector2i coords)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the list of all neighbourings cells to the one at [param coords].",
+      "godotName": "get_surrounding_cells",
+      "xmlDocId": "M:Godot.TileMap.GetSurroundingCells(Vector2i)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetUsedCells",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetUsedCells(int layer)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Vector2i] array with the positions of all cells containing a tile in the given layer. A cell is considered empty if its source identifier equals -1, its atlas coordinates identifiers is [code]Vector2(-1, -1)[/code] and its alternative identifier is -1. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_used_cells",
+      "xmlDocId": "M:Godot.TileMap.GetUsedCells(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetUsedCellsById",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetUsedCellsById(int layer, int sourceId, Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "source_id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns a [Vector2i] array with the positions of all cells containing a tile in the given layer. Tiles may be filtered according to their source ([param source_id]), their atlas coordinates ([param atlas_coords]) or alternative id ([param alternative_tile]). If a parameter has its value set to the default one, this parameter is not used to filter a cell. Thus, if all parameters have their respective default value, this method returns the same result as [method get_used_cells]. A cell is considered empty if its source identifier equals -1, its atlas coordinates identifiers is [code]Vector2(-1, -1)[/code] and its alternative identifier is -1. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "get_used_cells_by_id",
+      "xmlDocId": "M:Godot.TileMap.GetUsedCellsById(int,int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "GetUsedRect",
+      "kind": "Method",
+      "signature": "public Rect2i GetUsedRect()",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "Returns a rectangle enclosing the used (non-empty) tiles of the map, including all layers.",
+      "godotName": "get_used_rect",
+      "xmlDocId": "M:Godot.TileMap.GetUsedRect",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsCellFlippedH",
+      "kind": "Method",
+      "signature": "public bool IsCellFlippedH(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the cell on layer [param layer] at coordinates [param coords] is flipped horizontally. The result is valid only for atlas sources.",
+      "godotName": "is_cell_flipped_h",
+      "xmlDocId": "M:Godot.TileMap.IsCellFlippedH(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsCellFlippedV",
+      "kind": "Method",
+      "signature": "public bool IsCellFlippedV(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the cell on layer [param layer] at coordinates [param coords] is flipped vertically. The result is valid only for atlas sources.",
+      "godotName": "is_cell_flipped_v",
+      "xmlDocId": "M:Godot.TileMap.IsCellFlippedV(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsCellTransposed",
+      "kind": "Method",
+      "signature": "public bool IsCellTransposed(int layer, Vector2i coords, bool useProxies)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "use_proxies",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the cell on layer [param layer] at coordinates [param coords] is transposed. The result is valid only for atlas sources.",
+      "godotName": "is_cell_transposed",
+      "xmlDocId": "M:Godot.TileMap.IsCellTransposed(int,Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsLayerEnabled",
+      "kind": "Method",
+      "signature": "public bool IsLayerEnabled(int layer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if a layer is enabled. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "is_layer_enabled",
+      "xmlDocId": "M:Godot.TileMap.IsLayerEnabled(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsLayerNavigationEnabled",
+      "kind": "Method",
+      "signature": "public bool IsLayerNavigationEnabled(int layer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if a layer\u0027s built-in navigation regions generation is enabled.",
+      "godotName": "is_layer_navigation_enabled",
+      "xmlDocId": "M:Godot.TileMap.IsLayerNavigationEnabled(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "IsLayerYSortEnabled",
+      "kind": "Method",
+      "signature": "public bool IsLayerYSortEnabled(int layer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if a layer Y-sorts its tiles. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "is_layer_y_sort_enabled",
+      "xmlDocId": "M:Godot.TileMap.IsLayerYSortEnabled(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "LocalToMap",
+      "kind": "Method",
+      "signature": "public Vector2i LocalToMap(Vector2 localPosition)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the map coordinates of the cell containing the given [param local_position]. If [param local_position] is in global coordinates, consider using [method Node2D.to_local] before passing it to this method. See also [method map_to_local].",
+      "godotName": "local_to_map",
+      "xmlDocId": "M:Godot.TileMap.LocalToMap(Vector2)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "MapPattern",
+      "kind": "Method",
+      "signature": "public Vector2i MapPattern(Vector2i positionInTilemap, Vector2i coordsInPattern, TileMapPattern pattern)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "position_in_tilemap",
+          "type": "Vector2i"
+        },
+        {
+          "name": "coords_in_pattern",
+          "type": "Vector2i"
+        },
+        {
+          "name": "pattern",
+          "type": "TileMapPattern"
+        }
+      ],
+      "summary": "Returns for the given coordinate [param coords_in_pattern] in a [TileMapPattern] the corresponding cell coordinates if the pattern was pasted at the [param position_in_tilemap] coordinates (see [method set_pattern]). This mapping is required as in half-offset tile shapes, the mapping might not work by calculating [code]position_in_tile_map \u002B coords_in_pattern[/code].",
+      "godotName": "map_pattern",
+      "xmlDocId": "M:Godot.TileMap.MapPattern(Vector2i,Vector2i,TileMapPattern)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "MapToLocal",
+      "kind": "Method",
+      "signature": "public Vector2 MapToLocal(Vector2i mapPosition)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "map_position",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the centered position of a cell in the TileMap\u0027s local coordinate space. To convert the returned value into global coordinates, use [method Node2D.to_global]. See also [method local_to_map]. [b]Note:[/b] This may not correspond to the visual position of the tile, i.e. it ignores the [member TileData.texture_origin] property of individual tiles.",
+      "godotName": "map_to_local",
+      "xmlDocId": "M:Godot.TileMap.MapToLocal(Vector2i)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "MoveLayer",
+      "kind": "Method",
+      "signature": "public void MoveLayer(int layer, int toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "to_position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the layer at index [param layer] to the given position [param to_position] in the array.",
+      "godotName": "move_layer",
+      "xmlDocId": "M:Godot.TileMap.MoveLayer(int,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "NotifyRuntimeTileDataUpdate",
+      "kind": "Method",
+      "signature": "public void NotifyRuntimeTileDataUpdate(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Notifies the TileMap node that calls to [method _use_tile_data_runtime_update] or [method _tile_data_runtime_update] will lead to different results. This will thus trigger a TileMap update. If [param layer] is provided, only notifies changes for the given layer. Providing the [param layer] argument (when applicable) is usually preferred for performance reasons. [b]Warning:[/b] Updating the TileMap is computationally expensive and may impact performance. Try to limit the number of calls to this function to avoid unnecessary update. [b]Note:[/b] This does not trigger a direct update of the TileMap, the update will be done at the end of the frame as usual (unless you call [method update_internals]).",
+      "godotName": "notify_runtime_tile_data_update",
+      "xmlDocId": "M:Godot.TileMap.NotifyRuntimeTileDataUpdate(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "RemoveLayer",
+      "kind": "Method",
+      "signature": "public void RemoveLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the layer at index [param layer].",
+      "godotName": "remove_layer",
+      "xmlDocId": "M:Godot.TileMap.RemoveLayer(int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetCell",
+      "kind": "Method",
+      "signature": "public void SetCell(int layer, Vector2i coords, int sourceId, Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "source_id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the tile identifiers for the cell on layer [param layer] at coordinates [param coords]. Each tile of the [TileSet] is identified using three parts: - The source identifier [param source_id] identifies a [TileSetSource] identifier. See [method TileSet.set_source_id], - The atlas coordinates identifier [param atlas_coords] identifies a tile coordinates in the atlas (if the source is a [TileSetAtlasSource]). For [TileSetScenesCollectionSource] it should always be [code]Vector2i(0, 0)[/code]), - The alternative tile identifier [param alternative_tile] identifies a tile alternative in the atlas (if the source is a [TileSetAtlasSource]), and the scene for a [TileSetScenesCollectionSource]. If [param source_id] is set to [code]-1[/code], [param atlas_coords] to [code]Vector2i(-1, -1)[/code] or [param alternative_tile] to [code]-1[/code], the cell will be erased. An erased cell gets [b]all[/b] its identifiers automatically set to their respective invalid values, namely [code]-1[/code], [code]Vector2i(-1, -1)[/code] and [code]-1[/code]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_cell",
+      "xmlDocId": "M:Godot.TileMap.SetCell(int,Vector2i,int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetCellsTerrainConnect",
+      "kind": "Method",
+      "signature": "public void SetCellsTerrainConnect(int layer, Vector2i[] cells, int terrainSet, int terrain, bool ignoreEmptyTerrains)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "cells",
+          "type": "Vector2i[]"
+        },
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain",
+          "type": "int"
+        },
+        {
+          "name": "ignore_empty_terrains",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Update all the cells in the [param cells] coordinates array so that they use the given [param terrain] for the given [param terrain_set]. If an updated cell has the same terrain as one of its neighboring cells, this function tries to join the two. This function might update neighboring tiles if needed to create correct terrain transitions. If [param ignore_empty_terrains] is [code]true[/code], empty terrains will be ignored when trying to find the best fitting tile for the given terrain constraints. If [param layer] is negative, the layers are accessed from the last one. [b]Note:[/b] To work correctly, this method requires the TileMap\u0027s TileSet to have terrains set up with all required terrain combinations. Otherwise, it may produce unexpected results.",
+      "godotName": "set_cells_terrain_connect",
+      "xmlDocId": "M:Godot.TileMap.SetCellsTerrainConnect(int,Vector2i[],int,int,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetCellsTerrainPath",
+      "kind": "Method",
+      "signature": "public void SetCellsTerrainPath(int layer, Vector2i[] path, int terrainSet, int terrain, bool ignoreEmptyTerrains)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "Vector2i[]"
+        },
+        {
+          "name": "terrain_set",
+          "type": "int"
+        },
+        {
+          "name": "terrain",
+          "type": "int"
+        },
+        {
+          "name": "ignore_empty_terrains",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Update all the cells in the [param path] coordinates array so that they use the given [param terrain] for the given [param terrain_set]. The function will also connect two successive cell in the path with the same terrain. This function might update neighboring tiles if needed to create correct terrain transitions. If [param ignore_empty_terrains] is [code]true[/code], empty terrains will be ignored when trying to find the best fitting tile for the given terrain constraints. If [param layer] is negative, the layers are accessed from the last one. [b]Note:[/b] To work correctly, this method requires the TileMap\u0027s TileSet to have terrains set up with all required terrain combinations. Otherwise, it may produce unexpected results.",
+      "godotName": "set_cells_terrain_path",
+      "xmlDocId": "M:Godot.TileMap.SetCellsTerrainPath(int,Vector2i[],int,int,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerEnabled",
+      "kind": "Method",
+      "signature": "public void SetLayerEnabled(int layer, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables the layer [param layer]. A disabled layer is not processed at all (no rendering, no physics, etc.). If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_enabled",
+      "xmlDocId": "M:Godot.TileMap.SetLayerEnabled(int,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerModulate",
+      "kind": "Method",
+      "signature": "public void SetLayerModulate(int layer, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets a layer\u0027s color. It will be multiplied by tile\u0027s color and TileMap\u0027s modulate. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_modulate",
+      "xmlDocId": "M:Godot.TileMap.SetLayerModulate(int,Color)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerName",
+      "kind": "Method",
+      "signature": "public void SetLayerName(int layer, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets a layer\u0027s name. This is mostly useful in the editor. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_name",
+      "xmlDocId": "M:Godot.TileMap.SetLayerName(int,String)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerNavigationEnabled",
+      "kind": "Method",
+      "signature": "public void SetLayerNavigationEnabled(int layer, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables a layer\u0027s built-in navigation regions generation. Disable this if you need to bake navigation regions from a TileMap using a [NavigationRegion2D] node.",
+      "godotName": "set_layer_navigation_enabled",
+      "xmlDocId": "M:Godot.TileMap.SetLayerNavigationEnabled(int,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetLayerNavigationMap(int layer, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Assigns [param map] as a [NavigationServer2D] navigation map for the specified TileMap layer [param layer]. By default the TileMap uses the default [World2D] navigation map for the first TileMap layer. For each additional TileMap layer a new navigation map is created for the additional layer. In order to make [NavigationAgent2D] switch between TileMap layer navigation maps use [method NavigationAgent2D.set_navigation_map] with the navigation map received from [method get_layer_navigation_map]. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_navigation_map",
+      "xmlDocId": "M:Godot.TileMap.SetLayerNavigationMap(int,RID)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerYSortEnabled",
+      "kind": "Method",
+      "signature": "public void SetLayerYSortEnabled(int layer, bool ySortEnabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "y_sort_enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables a layer\u0027s Y-sorting. If a layer is Y-sorted, the layer will behave as a CanvasItem node where each of its tile gets Y-sorted. Y-sorted layers should usually be on different Z-index values than not Y-sorted layers, otherwise, each of those layer will be Y-sorted as whole with the Y-sorted one. This is usually an undesired behavior. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_y_sort_enabled",
+      "xmlDocId": "M:Godot.TileMap.SetLayerYSortEnabled(int,bool)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerYSortOrigin",
+      "kind": "Method",
+      "signature": "public void SetLayerYSortOrigin(int layer, int ySortOrigin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "y_sort_origin",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets a layer\u0027s Y-sort origin value. This Y-sort origin value is added to each tile\u0027s Y-sort origin value. This allows, for example, to fake a different height level on each layer. This can be useful for top-down view games. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_y_sort_origin",
+      "xmlDocId": "M:Godot.TileMap.SetLayerYSortOrigin(int,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetLayerZIndex",
+      "kind": "Method",
+      "signature": "public void SetLayerZIndex(int layer, int zIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "z_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets a layers Z-index value. This Z-index is added to each tile\u0027s Z-index value. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_layer_z_index",
+      "xmlDocId": "M:Godot.TileMap.SetLayerZIndex(int,int)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetNavigationMap(int layer, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Assigns [param map] as a [NavigationServer2D] navigation map for the specified TileMap layer [param layer].",
+      "godotName": "set_navigation_map",
+      "xmlDocId": "M:Godot.TileMap.SetNavigationMap(int,RID)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "SetPattern",
+      "kind": "Method",
+      "signature": "public void SetPattern(int layer, Vector2i position, TileMapPattern pattern)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "pattern",
+          "type": "TileMapPattern"
+        }
+      ],
+      "summary": "Paste the given [TileMapPattern] at the given [param position] and [param layer] in the tile map. If [param layer] is negative, the layers are accessed from the last one.",
+      "godotName": "set_pattern",
+      "xmlDocId": "M:Godot.TileMap.SetPattern(int,Vector2i,TileMapPattern)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "UpdateInternals",
+      "kind": "Method",
+      "signature": "public void UpdateInternals()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Triggers a direct update of the TileMap. Usually, calling this function is not needed, as TileMap node updates automatically when one of its properties or cells is modified. However, for performance reasons, those updates are batched and delayed to the end of the frame. Calling this function will force the TileMap to update right away instead. [b]Warning:[/b] Updating the TileMap is computationally expensive and may impact performance. Try to limit the number of updates and how many tiles they impact.",
+      "godotName": "update_internals",
+      "xmlDocId": "M:Godot.TileMap.UpdateInternals",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "CollisionAnimatable",
+      "kind": "Property",
+      "signature": "public bool CollisionAnimatable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, the TileMap will see its collisions synced to the physics tick and change its collision type from static to kinematic. This is required to create TileMap-based moving platform. [b]Note:[/b] Enabling [member collision_animatable] may have a small performance impact, only do it if the TileMap is moving and has colliding tiles.",
+      "defaultValue": "false",
+      "godotName": "collision_animatable",
+      "xmlDocId": "P:Godot.TileMap.CollisionAnimatable",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "CollisionVisibilityMode",
+      "kind": "Property",
+      "signature": "public int CollisionVisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Show or hide the TileMap\u0027s collision shapes. If set to [constant VISIBILITY_MODE_DEFAULT], this depends on the show collision debug settings.",
+      "defaultValue": "0",
+      "godotName": "collision_visibility_mode",
+      "xmlDocId": "P:Godot.TileMap.CollisionVisibilityMode",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "NavigationVisibilityMode",
+      "kind": "Property",
+      "signature": "public int NavigationVisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Show or hide the TileMap\u0027s navigation meshes. If set to [constant VISIBILITY_MODE_DEFAULT], this depends on the show navigation debug settings.",
+      "defaultValue": "0",
+      "godotName": "navigation_visibility_mode",
+      "xmlDocId": "P:Godot.TileMap.NavigationVisibilityMode",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "RenderingQuadrantSize",
+      "kind": "Property",
+      "signature": "public int RenderingQuadrantSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The TileMap\u0027s quadrant size. A quadrant is a group of tiles to be drawn together on a single canvas item, for optimization purposes. [member rendering_quadrant_size] defines the length of a square\u0027s side, in the map\u0027s coordinate system, that forms the quadrant. Thus, the default quadrant size groups together [code]16 * 16 = 256[/code] tiles. The quadrant size does not apply on Y-sorted layers, as tiles are grouped by Y position instead in that case. [b]Note:[/b] As quadrants are created according to the map\u0027s coordinate system, the quadrant\u0027s \u0022square shape\u0022 might not look like square in the TileMap\u0027s local coordinate system.",
+      "defaultValue": "16",
+      "godotName": "rendering_quadrant_size",
+      "xmlDocId": "P:Godot.TileMap.RenderingQuadrantSize",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "TileSet",
+      "kind": "Property",
+      "signature": "public TileSet TileSet { get; set; }",
+      "returnType": "TileSet",
+      "parameters": [],
+      "summary": "The [TileSet] used by this [TileMap]. The textures, collisions, and additional behavior of all available tiles are stored here.",
+      "godotName": "tile_set",
+      "xmlDocId": "P:Godot.TileMap.TileSet",
+      "sourcePath": "doc/classes/TileMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Changed",
+      "kind": "Signal",
+      "signature": "public event ChangedHandler Changed",
+      "parameters": [],
+      "summary": "Emitted when the [TileSet] of this TileMap changes.",
+      "godotName": "changed",
+      "xmlDocId": "E:Godot.TileMap.Changed",
+      "sourcePath": "doc/classes/TileMap.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "VisibilityMode",
+      "values": [
+        {
+          "name": "VISIBILITY_MODE_DEFAULT",
+          "value": "0",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Use the debug settings to determine visibility.",
+          "sourcePath": "doc/classes/TileMap.xml"
+        },
+        {
+          "name": "VISIBILITY_MODE_FORCE_HIDE",
+          "value": "2",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Always hide.",
+          "sourcePath": "doc/classes/TileMap.xml"
+        },
+        {
+          "name": "VISIBILITY_MODE_FORCE_SHOW",
+          "value": "1",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Always show.",
+          "sourcePath": "doc/classes/TileMap.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "VISIBILITY_MODE_DEFAULT",
+      "value": "0",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Use the debug settings to determine visibility.",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "VISIBILITY_MODE_FORCE_HIDE",
+      "value": "2",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Always hide.",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "VISIBILITY_MODE_FORCE_SHOW",
+      "value": "1",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Always show.",
+      "sourcePath": "doc/classes/TileMap.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_TileDataRuntimeUpdate",
+      "kind": "Method",
+      "signature": "public void _TileDataRuntimeUpdate(int layer, Vector2i coords, TileData tileData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "tile_data",
+          "type": "TileData"
+        }
+      ],
+      "summary": "Called with a TileData object about to be used internally by the TileMap, allowing its modification at runtime. This method is only called if [method _use_tile_data_runtime_update] is implemented and returns [code]true[/code] for the given tile [param coords] and [param layer]. [b]Warning:[/b] The [param tile_data] object\u0027s sub-resources are the same as the one in the TileSet. Modifying them might impact the whole TileSet. Instead, make sure to duplicate those resources. [b]Note:[/b] If the properties of [param tile_data] object should change over time, use [method notify_runtime_tile_data_update] to notify the TileMap it needs an update.",
+      "godotName": "_tile_data_runtime_update",
+      "xmlDocId": "M:Godot.TileMap._TileDataRuntimeUpdate(int,Vector2i,TileData)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    },
+    {
+      "name": "_UseTileDataRuntimeUpdate",
+      "kind": "Method",
+      "signature": "public bool _UseTileDataRuntimeUpdate(int layer, Vector2i coords)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Should return [code]true[/code] if the tile at coordinates [param coords] on layer [param layer] requires a runtime update. [b]Warning:[/b] Make sure this function only return [code]true[/code] when needed. Any tile processed at runtime without a need for it will imply a significant performance penalty. [b]Note:[/b] If the result of this function should changed, use [method notify_runtime_tile_data_update] to notify the TileMap it needs an update.",
+      "godotName": "_use_tile_data_runtime_update",
+      "xmlDocId": "M:Godot.TileMap._UseTileDataRuntimeUpdate(int,Vector2i)",
+      "sourcePath": "doc/classes/TileMap.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileMap.xml",
+      "sha256": "9a646be14d9e2cd25751884d81184c9ac1cb38a77ffe50938e16e50e9ed75e7f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

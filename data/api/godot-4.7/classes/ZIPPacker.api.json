@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ZIPPacker",
+    "namespace": "Godot",
+    "fullName": "Godot.ZIPPacker",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ZIPPacker",
+    "documentationPath": "modules/zip/doc_classes/ZIPPacker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_zippacker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddDirectory",
+      "kind": "Method",
+      "signature": "public int AddDirectory(String path, int permissions, int modifiedTime)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "permissions",
+          "type": "int",
+          "defaultValue": "493"
+        },
+        {
+          "name": "modified_time",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds directory to the archive. If [param modified_time] is set to [code]0[/code], current system time is used. [b]Note:[/b] Directories are automatically created when [method start_file] is called, use this function before adding files to create directories with custom permissions and modification time.",
+      "godotName": "add_directory",
+      "xmlDocId": "M:Godot.ZIPPacker.AddDirectory(String,int,int)",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public int Close()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Closes the underlying resources used by this instance.",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.ZIPPacker.Close",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "CloseFile",
+      "kind": "Method",
+      "signature": "public int CloseFile()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Stops writing to a file within the archive. It will fail if there is no open file.",
+      "godotName": "close_file",
+      "xmlDocId": "M:Godot.ZIPPacker.CloseFile",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "Open",
+      "kind": "Method",
+      "signature": "public int Open(String path, int append)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "append",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Opens a zip file for writing at the given path using the specified write mode. This must be called before everything else.",
+      "godotName": "open",
+      "xmlDocId": "M:Godot.ZIPPacker.Open(String,int)",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "StartFile",
+      "kind": "Method",
+      "signature": "public int StartFile(String path, int permissions, int modifiedTime)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "permissions",
+          "type": "int",
+          "defaultValue": "420"
+        },
+        {
+          "name": "modified_time",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Starts writing to a file within the archive. Only one file can be written at the same time. If [param modified_time] is set to [code]0[/code], current system time is used. Must be called after [method open].",
+      "godotName": "start_file",
+      "xmlDocId": "M:Godot.ZIPPacker.StartFile(String,int,int)",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "WriteFile",
+      "kind": "Method",
+      "signature": "public int WriteFile(PackedByteArray data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Write the given [param data] to the file. Needs to be called after [method start_file].",
+      "godotName": "write_file",
+      "xmlDocId": "M:Godot.ZIPPacker.WriteFile(PackedByteArray)",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "CompressionLevel",
+      "kind": "Property",
+      "signature": "public int CompressionLevel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The compression level used when [method start_file] is called. Use [enum ZIPPacker.CompressionLevel] as a reference.",
+      "defaultValue": "-1",
+      "godotName": "compression_level",
+      "xmlDocId": "P:Godot.ZIPPacker.CompressionLevel",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CompressionLevel",
+      "values": [
+        {
+          "name": "COMPRESSION_BEST",
+          "value": "9",
+          "enum": "CompressionLevel",
+          "kind": "EnumValue",
+          "summary": "Start a file with the best Deflate compression level ([code]9[/code]). This is slow to compress, but results in smaller file sizes than [constant COMPRESSION_DEFAULT]. Decompression speed is generally unaffected by the chosen compression level.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        },
+        {
+          "name": "COMPRESSION_DEFAULT",
+          "value": "-1",
+          "enum": "CompressionLevel",
+          "kind": "EnumValue",
+          "summary": "Start a file with the default Deflate compression level ([code]6[/code]). This is a good compromise between speed and file size.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        },
+        {
+          "name": "COMPRESSION_FAST",
+          "value": "1",
+          "enum": "CompressionLevel",
+          "kind": "EnumValue",
+          "summary": "Start a file with the fastest Deflate compression level ([code]1[/code]). This is fast to compress, but results in larger file sizes than [constant COMPRESSION_DEFAULT]. Decompression speed is generally unaffected by the chosen compression level.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        },
+        {
+          "name": "COMPRESSION_NONE",
+          "value": "0",
+          "enum": "CompressionLevel",
+          "kind": "EnumValue",
+          "summary": "Start a file with no compression. This is also known as the \u0022Store\u0022 compression mode and is the fastest method of packing files inside a ZIP archive. Consider using this mode for files that are already compressed (such as JPEG, PNG, MP3, or Ogg Vorbis files).",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        }
+      ]
+    },
+    {
+      "name": "ZipAppend",
+      "values": [
+        {
+          "name": "APPEND_ADDINZIP",
+          "value": "2",
+          "enum": "ZipAppend",
+          "kind": "EnumValue",
+          "summary": "Add new files to the existing zip archive at the given path.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        },
+        {
+          "name": "APPEND_CREATE",
+          "value": "0",
+          "enum": "ZipAppend",
+          "kind": "EnumValue",
+          "summary": "Create a new zip archive at the given path.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        },
+        {
+          "name": "APPEND_CREATEAFTER",
+          "value": "1",
+          "enum": "ZipAppend",
+          "kind": "EnumValue",
+          "summary": "Append a new zip archive to the end of the already existing file at the given path.",
+          "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "APPEND_CREATE",
+      "value": "0",
+      "enum": "ZipAppend",
+      "kind": "EnumValue",
+      "summary": "Create a new zip archive at the given path.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "APPEND_CREATEAFTER",
+      "value": "1",
+      "enum": "ZipAppend",
+      "kind": "EnumValue",
+      "summary": "Append a new zip archive to the end of the already existing file at the given path.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "APPEND_ADDINZIP",
+      "value": "2",
+      "enum": "ZipAppend",
+      "kind": "EnumValue",
+      "summary": "Add new files to the existing zip archive at the given path.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "COMPRESSION_DEFAULT",
+      "value": "-1",
+      "enum": "CompressionLevel",
+      "kind": "EnumValue",
+      "summary": "Start a file with the default Deflate compression level ([code]6[/code]). This is a good compromise between speed and file size.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "COMPRESSION_NONE",
+      "value": "0",
+      "enum": "CompressionLevel",
+      "kind": "EnumValue",
+      "summary": "Start a file with no compression. This is also known as the \u0022Store\u0022 compression mode and is the fastest method of packing files inside a ZIP archive. Consider using this mode for files that are already compressed (such as JPEG, PNG, MP3, or Ogg Vorbis files).",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "COMPRESSION_FAST",
+      "value": "1",
+      "enum": "CompressionLevel",
+      "kind": "EnumValue",
+      "summary": "Start a file with the fastest Deflate compression level ([code]1[/code]). This is fast to compress, but results in larger file sizes than [constant COMPRESSION_DEFAULT]. Decompression speed is generally unaffected by the chosen compression level.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    },
+    {
+      "name": "COMPRESSION_BEST",
+      "value": "9",
+      "enum": "CompressionLevel",
+      "kind": "EnumValue",
+      "summary": "Start a file with the best Deflate compression level ([code]9[/code]). This is slow to compress, but results in smaller file sizes than [constant COMPRESSION_DEFAULT]. Decompression speed is generally unaffected by the chosen compression level.",
+      "sourcePath": "modules/zip/doc_classes/ZIPPacker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/zip/doc_classes/ZIPPacker.xml",
+      "sha256": "b0e75737d58535a37c9932cbd9277af833e73feb3a05e47541b474f02e703314"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

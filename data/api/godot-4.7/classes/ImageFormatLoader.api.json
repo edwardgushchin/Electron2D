@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImageFormatLoader",
+    "namespace": "Godot",
+    "fullName": "Godot.ImageFormatLoader",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ImageFormatLoader",
+    "documentationPath": "doc/classes/ImageFormatLoader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_imageformatloader.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "LoaderFlags",
+      "values": [
+        {
+          "name": "FLAG_CONVERT_COLORS",
+          "value": "2",
+          "enum": "LoaderFlags",
+          "kind": "EnumValue",
+          "summary": "If set, a predefined color map is applied to the image. Used when [member ResourceImporterTexture.editor/convert_colors_with_editor_theme] is [code]true[/code].",
+          "sourcePath": "doc/classes/ImageFormatLoader.xml"
+        },
+        {
+          "name": "FLAG_FORCE_LINEAR",
+          "value": "1",
+          "enum": "LoaderFlags",
+          "kind": "EnumValue",
+          "summary": "If set, the image is converted from sRGB to linear encoding.",
+          "sourcePath": "doc/classes/ImageFormatLoader.xml"
+        },
+        {
+          "name": "FLAG_NONE",
+          "value": "0",
+          "enum": "LoaderFlags",
+          "kind": "EnumValue",
+          "summary": "Default loading behavior. No processing is applied to the image.",
+          "sourcePath": "doc/classes/ImageFormatLoader.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FLAG_NONE",
+      "value": "0",
+      "enum": "LoaderFlags",
+      "kind": "EnumValue",
+      "summary": "Default loading behavior. No processing is applied to the image.",
+      "sourcePath": "doc/classes/ImageFormatLoader.xml"
+    },
+    {
+      "name": "FLAG_FORCE_LINEAR",
+      "value": "1",
+      "enum": "LoaderFlags",
+      "kind": "EnumValue",
+      "summary": "If set, the image is converted from sRGB to linear encoding.",
+      "sourcePath": "doc/classes/ImageFormatLoader.xml"
+    },
+    {
+      "name": "FLAG_CONVERT_COLORS",
+      "value": "2",
+      "enum": "LoaderFlags",
+      "kind": "EnumValue",
+      "summary": "If set, a predefined color map is applied to the image. Used when [member ResourceImporterTexture.editor/convert_colors_with_editor_theme] is [code]true[/code].",
+      "sourcePath": "doc/classes/ImageFormatLoader.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ImageFormatLoader.xml",
+      "sha256": "b85e022af21abea627cd934ef291a7b8fa489ab8e3fa95ba707e4dc554627e27"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

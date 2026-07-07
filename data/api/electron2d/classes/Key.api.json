@@ -1,0 +1,1836 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Key",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Key",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Key",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "A",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key A",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "A key.",
+      "value": "65",
+      "xmlDocId": "F:Electron2D.Key.A",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Alt",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Alt",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Alt key.",
+      "value": "4194328",
+      "xmlDocId": "F:Electron2D.Key.Alt",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ampersand",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Ampersand",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Ampersand key.",
+      "value": "38",
+      "xmlDocId": "F:Electron2D.Key.Ampersand",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Apostrophe",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Apostrophe",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Apostrophe key.",
+      "value": "39",
+      "xmlDocId": "F:Electron2D.Key.Apostrophe",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Asterisk",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Asterisk",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Asterisk key.",
+      "value": "42",
+      "xmlDocId": "F:Electron2D.Key.Asterisk",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "At",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key At",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "At sign key.",
+      "value": "64",
+      "xmlDocId": "F:Electron2D.Key.At",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key B",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "B key.",
+      "value": "66",
+      "xmlDocId": "F:Electron2D.Key.B",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Back",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Back",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Mobile or application back navigation key.",
+      "value": "4194344",
+      "xmlDocId": "F:Electron2D.Key.Back",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Backspace",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Backspace",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Backspace key.",
+      "value": "4194308",
+      "xmlDocId": "F:Electron2D.Key.Backspace",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Backtab",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Backtab",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Shift \u002B Tab key.",
+      "value": "4194307",
+      "xmlDocId": "F:Electron2D.Key.Backtab",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "C",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key C",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "C key.",
+      "value": "67",
+      "xmlDocId": "F:Electron2D.Key.C",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Capslock",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Capslock",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Caps Lock key.",
+      "value": "4194329",
+      "xmlDocId": "F:Electron2D.Key.Capslock",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Colon",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Colon",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Colon key.",
+      "value": "58",
+      "xmlDocId": "F:Electron2D.Key.Colon",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Comma",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Comma",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Comma key.",
+      "value": "44",
+      "xmlDocId": "F:Electron2D.Key.Comma",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ctrl",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Ctrl",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Control key.",
+      "value": "4194326",
+      "xmlDocId": "F:Electron2D.Key.Ctrl",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "D",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key D",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "D key.",
+      "value": "68",
+      "xmlDocId": "F:Electron2D.Key.D",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Delete",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Delete",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Delete key.",
+      "value": "4194312",
+      "xmlDocId": "F:Electron2D.Key.Delete",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Dollar",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Dollar",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Dollar sign key.",
+      "value": "36",
+      "xmlDocId": "F:Electron2D.Key.Dollar",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Down",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Down",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Down arrow key.",
+      "value": "4194322",
+      "xmlDocId": "F:Electron2D.Key.Down",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "E",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key E",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "E key.",
+      "value": "69",
+      "xmlDocId": "F:Electron2D.Key.E",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key End",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "End key.",
+      "value": "4194318",
+      "xmlDocId": "F:Electron2D.Key.End",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Enter",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Enter",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Enter key on the main keyboard.",
+      "value": "4194309",
+      "xmlDocId": "F:Electron2D.Key.Enter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equal",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Equal",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Equals key.",
+      "value": "61",
+      "xmlDocId": "F:Electron2D.Key.Equal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Escape",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Escape",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Escape key.",
+      "value": "4194305",
+      "xmlDocId": "F:Electron2D.Key.Escape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Exclam",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Exclam",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Exclamation mark key.",
+      "value": "33",
+      "xmlDocId": "F:Electron2D.Key.Exclam",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F key.",
+      "value": "70",
+      "xmlDocId": "F:Electron2D.Key.F",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F1",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F1 key.",
+      "value": "4194332",
+      "xmlDocId": "F:Electron2D.Key.F1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F10",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F10",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F10 key.",
+      "value": "4194341",
+      "xmlDocId": "F:Electron2D.Key.F10",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F11",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F11",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F11 key.",
+      "value": "4194342",
+      "xmlDocId": "F:Electron2D.Key.F11",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F12",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F12",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F12 key.",
+      "value": "4194343",
+      "xmlDocId": "F:Electron2D.Key.F12",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F2",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F2 key.",
+      "value": "4194333",
+      "xmlDocId": "F:Electron2D.Key.F2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F3",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F3",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F3 key.",
+      "value": "4194334",
+      "xmlDocId": "F:Electron2D.Key.F3",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F4",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F4",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F4 key.",
+      "value": "4194335",
+      "xmlDocId": "F:Electron2D.Key.F4",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F5",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F5",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F5 key.",
+      "value": "4194336",
+      "xmlDocId": "F:Electron2D.Key.F5",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F6",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F6",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F6 key.",
+      "value": "4194337",
+      "xmlDocId": "F:Electron2D.Key.F6",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F7",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F7",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F7 key.",
+      "value": "4194338",
+      "xmlDocId": "F:Electron2D.Key.F7",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F8",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F8",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F8 key.",
+      "value": "4194339",
+      "xmlDocId": "F:Electron2D.Key.F8",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F9",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key F9",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "F9 key.",
+      "value": "4194340",
+      "xmlDocId": "F:Electron2D.Key.F9",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "G",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key G",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "G key.",
+      "value": "71",
+      "xmlDocId": "F:Electron2D.Key.G",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Greater",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Greater",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Greater-than key.",
+      "value": "62",
+      "xmlDocId": "F:Electron2D.Key.Greater",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "H",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key H",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "H key.",
+      "value": "72",
+      "xmlDocId": "F:Electron2D.Key.H",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Home",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Home",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Home key.",
+      "value": "4194317",
+      "xmlDocId": "F:Electron2D.Key.Home",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "I",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key I",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "I key.",
+      "value": "73",
+      "xmlDocId": "F:Electron2D.Key.I",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Insert",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Insert",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Insert key.",
+      "value": "4194311",
+      "xmlDocId": "F:Electron2D.Key.Insert",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "J",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key J",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "J key.",
+      "value": "74",
+      "xmlDocId": "F:Electron2D.Key.J",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "K",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key K",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "K key.",
+      "value": "75",
+      "xmlDocId": "F:Electron2D.Key.K",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key0",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key0",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 0 key.",
+      "value": "48",
+      "xmlDocId": "F:Electron2D.Key.Key0",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key1",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 1 key.",
+      "value": "49",
+      "xmlDocId": "F:Electron2D.Key.Key1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key2",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 2 key.",
+      "value": "50",
+      "xmlDocId": "F:Electron2D.Key.Key2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key3",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key3",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 3 key.",
+      "value": "51",
+      "xmlDocId": "F:Electron2D.Key.Key3",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key4",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key4",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 4 key.",
+      "value": "52",
+      "xmlDocId": "F:Electron2D.Key.Key4",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key5",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key5",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 5 key.",
+      "value": "53",
+      "xmlDocId": "F:Electron2D.Key.Key5",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key6",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key6",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 6 key.",
+      "value": "54",
+      "xmlDocId": "F:Electron2D.Key.Key6",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key7",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key7",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 7 key.",
+      "value": "55",
+      "xmlDocId": "F:Electron2D.Key.Key7",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key8",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key8",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 8 key.",
+      "value": "56",
+      "xmlDocId": "F:Electron2D.Key.Key8",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key9",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Key9",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number 9 key.",
+      "value": "57",
+      "xmlDocId": "F:Electron2D.Key.Key9",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KpEnter",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key KpEnter",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Enter key on the numeric keypad.",
+      "value": "4194310",
+      "xmlDocId": "F:Electron2D.Key.KpEnter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "L",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key L",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "L key.",
+      "value": "76",
+      "xmlDocId": "F:Electron2D.Key.L",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Left",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Left arrow key.",
+      "value": "4194319",
+      "xmlDocId": "F:Electron2D.Key.Left",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Less",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Less",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Less-than key.",
+      "value": "60",
+      "xmlDocId": "F:Electron2D.Key.Less",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "M",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key M",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "M key.",
+      "value": "77",
+      "xmlDocId": "F:Electron2D.Key.M",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Menu",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Menu",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Mobile or application menu navigation key.",
+      "value": "4194345",
+      "xmlDocId": "F:Electron2D.Key.Menu",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Meta",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Meta",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Meta key.",
+      "value": "4194327",
+      "xmlDocId": "F:Electron2D.Key.Meta",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Minus",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Minus",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Minus key.",
+      "value": "45",
+      "xmlDocId": "F:Electron2D.Key.Minus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "N",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key N",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "N key.",
+      "value": "78",
+      "xmlDocId": "F:Electron2D.Key.N",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key None",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "No key.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Key.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Numbersign",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Numbersign",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Number sign key.",
+      "value": "35",
+      "xmlDocId": "F:Electron2D.Key.Numbersign",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Numlock",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Numlock",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Num Lock key.",
+      "value": "4194330",
+      "xmlDocId": "F:Electron2D.Key.Numlock",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "O",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key O",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "O key.",
+      "value": "79",
+      "xmlDocId": "F:Electron2D.Key.O",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "P",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key P",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "P key.",
+      "value": "80",
+      "xmlDocId": "F:Electron2D.Key.P",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pagedown",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Pagedown",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Page Down key.",
+      "value": "4194324",
+      "xmlDocId": "F:Electron2D.Key.Pagedown",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pageup",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Pageup",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Page Up key.",
+      "value": "4194323",
+      "xmlDocId": "F:Electron2D.Key.Pageup",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Parenleft",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Parenleft",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Left parenthesis key.",
+      "value": "40",
+      "xmlDocId": "F:Electron2D.Key.Parenleft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Parenright",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Parenright",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Right parenthesis key.",
+      "value": "41",
+      "xmlDocId": "F:Electron2D.Key.Parenright",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pause",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Pause",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Pause key.",
+      "value": "4194313",
+      "xmlDocId": "F:Electron2D.Key.Pause",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Percent",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Percent",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Percent sign key.",
+      "value": "37",
+      "xmlDocId": "F:Electron2D.Key.Percent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Period",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Period",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Period key.",
+      "value": "46",
+      "xmlDocId": "F:Electron2D.Key.Period",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Plus",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Plus",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Plus key.",
+      "value": "43",
+      "xmlDocId": "F:Electron2D.Key.Plus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Print",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Print",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Print screen key.",
+      "value": "4194314",
+      "xmlDocId": "F:Electron2D.Key.Print",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Q",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Q",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Q key.",
+      "value": "81",
+      "xmlDocId": "F:Electron2D.Key.Q",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Question",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Question",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Question mark key.",
+      "value": "63",
+      "xmlDocId": "F:Electron2D.Key.Question",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quotedbl",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Quotedbl",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Double quotation mark key.",
+      "value": "34",
+      "xmlDocId": "F:Electron2D.Key.Quotedbl",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "R",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key R",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "R key.",
+      "value": "82",
+      "xmlDocId": "F:Electron2D.Key.R",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Right",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Right arrow key.",
+      "value": "4194321",
+      "xmlDocId": "F:Electron2D.Key.Right",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "S",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key S",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "S key.",
+      "value": "83",
+      "xmlDocId": "F:Electron2D.Key.S",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scrolllock",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Scrolllock",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Scroll Lock key.",
+      "value": "4194331",
+      "xmlDocId": "F:Electron2D.Key.Scrolllock",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Semicolon",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Semicolon",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Semicolon key.",
+      "value": "59",
+      "xmlDocId": "F:Electron2D.Key.Semicolon",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Shift",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Shift",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Shift key.",
+      "value": "4194325",
+      "xmlDocId": "F:Electron2D.Key.Shift",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Slash",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Slash",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Slash key.",
+      "value": "47",
+      "xmlDocId": "F:Electron2D.Key.Slash",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Space",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Space",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Space key.",
+      "value": "32",
+      "xmlDocId": "F:Electron2D.Key.Space",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "T",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key T",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "T key.",
+      "value": "84",
+      "xmlDocId": "F:Electron2D.Key.T",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tab",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Tab",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Tab key.",
+      "value": "4194306",
+      "xmlDocId": "F:Electron2D.Key.Tab",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "U",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key U",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "U key.",
+      "value": "85",
+      "xmlDocId": "F:Electron2D.Key.U",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unknown",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Unknown",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Unknown key.",
+      "value": "8388607",
+      "xmlDocId": "F:Electron2D.Key.Unknown",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Up",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Up",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Up arrow key.",
+      "value": "4194320",
+      "xmlDocId": "F:Electron2D.Key.Up",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "V",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key V",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "V key.",
+      "value": "86",
+      "xmlDocId": "F:Electron2D.Key.V",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "W",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key W",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "W key.",
+      "value": "87",
+      "xmlDocId": "F:Electron2D.Key.W",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key X",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "X key.",
+      "value": "88",
+      "xmlDocId": "F:Electron2D.Key.X",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Y",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Y key.",
+      "value": "89",
+      "xmlDocId": "F:Electron2D.Key.Y",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Z",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Key Z",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Z key.",
+      "value": "90",
+      "xmlDocId": "F:Electron2D.Key.Z",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "A",
+      "value": "65",
+      "kind": "EnumValue",
+      "summary": "A key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Alt",
+      "value": "4194328",
+      "kind": "EnumValue",
+      "summary": "Alt key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ampersand",
+      "value": "38",
+      "kind": "EnumValue",
+      "summary": "Ampersand key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Apostrophe",
+      "value": "39",
+      "kind": "EnumValue",
+      "summary": "Apostrophe key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Asterisk",
+      "value": "42",
+      "kind": "EnumValue",
+      "summary": "Asterisk key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "At",
+      "value": "64",
+      "kind": "EnumValue",
+      "summary": "At sign key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "value": "66",
+      "kind": "EnumValue",
+      "summary": "B key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Back",
+      "value": "4194344",
+      "kind": "EnumValue",
+      "summary": "Mobile or application back navigation key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Backspace",
+      "value": "4194308",
+      "kind": "EnumValue",
+      "summary": "Backspace key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Backtab",
+      "value": "4194307",
+      "kind": "EnumValue",
+      "summary": "Shift \u002B Tab key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "C",
+      "value": "67",
+      "kind": "EnumValue",
+      "summary": "C key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Capslock",
+      "value": "4194329",
+      "kind": "EnumValue",
+      "summary": "Caps Lock key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Colon",
+      "value": "58",
+      "kind": "EnumValue",
+      "summary": "Colon key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Comma",
+      "value": "44",
+      "kind": "EnumValue",
+      "summary": "Comma key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ctrl",
+      "value": "4194326",
+      "kind": "EnumValue",
+      "summary": "Control key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "D",
+      "value": "68",
+      "kind": "EnumValue",
+      "summary": "D key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Delete",
+      "value": "4194312",
+      "kind": "EnumValue",
+      "summary": "Delete key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Dollar",
+      "value": "36",
+      "kind": "EnumValue",
+      "summary": "Dollar sign key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Down",
+      "value": "4194322",
+      "kind": "EnumValue",
+      "summary": "Down arrow key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "E",
+      "value": "69",
+      "kind": "EnumValue",
+      "summary": "E key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "value": "4194318",
+      "kind": "EnumValue",
+      "summary": "End key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Enter",
+      "value": "4194309",
+      "kind": "EnumValue",
+      "summary": "Enter key on the main keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equal",
+      "value": "61",
+      "kind": "EnumValue",
+      "summary": "Equals key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Escape",
+      "value": "4194305",
+      "kind": "EnumValue",
+      "summary": "Escape key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Exclam",
+      "value": "33",
+      "kind": "EnumValue",
+      "summary": "Exclamation mark key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F",
+      "value": "70",
+      "kind": "EnumValue",
+      "summary": "F key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F1",
+      "value": "4194332",
+      "kind": "EnumValue",
+      "summary": "F1 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F10",
+      "value": "4194341",
+      "kind": "EnumValue",
+      "summary": "F10 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F11",
+      "value": "4194342",
+      "kind": "EnumValue",
+      "summary": "F11 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F12",
+      "value": "4194343",
+      "kind": "EnumValue",
+      "summary": "F12 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F2",
+      "value": "4194333",
+      "kind": "EnumValue",
+      "summary": "F2 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F3",
+      "value": "4194334",
+      "kind": "EnumValue",
+      "summary": "F3 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F4",
+      "value": "4194335",
+      "kind": "EnumValue",
+      "summary": "F4 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F5",
+      "value": "4194336",
+      "kind": "EnumValue",
+      "summary": "F5 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F6",
+      "value": "4194337",
+      "kind": "EnumValue",
+      "summary": "F6 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F7",
+      "value": "4194338",
+      "kind": "EnumValue",
+      "summary": "F7 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F8",
+      "value": "4194339",
+      "kind": "EnumValue",
+      "summary": "F8 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "F9",
+      "value": "4194340",
+      "kind": "EnumValue",
+      "summary": "F9 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "G",
+      "value": "71",
+      "kind": "EnumValue",
+      "summary": "G key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Greater",
+      "value": "62",
+      "kind": "EnumValue",
+      "summary": "Greater-than key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "H",
+      "value": "72",
+      "kind": "EnumValue",
+      "summary": "H key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Home",
+      "value": "4194317",
+      "kind": "EnumValue",
+      "summary": "Home key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "I",
+      "value": "73",
+      "kind": "EnumValue",
+      "summary": "I key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Insert",
+      "value": "4194311",
+      "kind": "EnumValue",
+      "summary": "Insert key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "J",
+      "value": "74",
+      "kind": "EnumValue",
+      "summary": "J key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "K",
+      "value": "75",
+      "kind": "EnumValue",
+      "summary": "K key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key0",
+      "value": "48",
+      "kind": "EnumValue",
+      "summary": "Number 0 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key1",
+      "value": "49",
+      "kind": "EnumValue",
+      "summary": "Number 1 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key2",
+      "value": "50",
+      "kind": "EnumValue",
+      "summary": "Number 2 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key3",
+      "value": "51",
+      "kind": "EnumValue",
+      "summary": "Number 3 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key4",
+      "value": "52",
+      "kind": "EnumValue",
+      "summary": "Number 4 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key5",
+      "value": "53",
+      "kind": "EnumValue",
+      "summary": "Number 5 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key6",
+      "value": "54",
+      "kind": "EnumValue",
+      "summary": "Number 6 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key7",
+      "value": "55",
+      "kind": "EnumValue",
+      "summary": "Number 7 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key8",
+      "value": "56",
+      "kind": "EnumValue",
+      "summary": "Number 8 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Key9",
+      "value": "57",
+      "kind": "EnumValue",
+      "summary": "Number 9 key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KpEnter",
+      "value": "4194310",
+      "kind": "EnumValue",
+      "summary": "Enter key on the numeric keypad.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "L",
+      "value": "76",
+      "kind": "EnumValue",
+      "summary": "L key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "value": "4194319",
+      "kind": "EnumValue",
+      "summary": "Left arrow key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Less",
+      "value": "60",
+      "kind": "EnumValue",
+      "summary": "Less-than key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "M",
+      "value": "77",
+      "kind": "EnumValue",
+      "summary": "M key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Menu",
+      "value": "4194345",
+      "kind": "EnumValue",
+      "summary": "Mobile or application menu navigation key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Meta",
+      "value": "4194327",
+      "kind": "EnumValue",
+      "summary": "Meta key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Minus",
+      "value": "45",
+      "kind": "EnumValue",
+      "summary": "Minus key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "N",
+      "value": "78",
+      "kind": "EnumValue",
+      "summary": "N key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "No key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Numbersign",
+      "value": "35",
+      "kind": "EnumValue",
+      "summary": "Number sign key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Numlock",
+      "value": "4194330",
+      "kind": "EnumValue",
+      "summary": "Num Lock key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "O",
+      "value": "79",
+      "kind": "EnumValue",
+      "summary": "O key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "P",
+      "value": "80",
+      "kind": "EnumValue",
+      "summary": "P key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pagedown",
+      "value": "4194324",
+      "kind": "EnumValue",
+      "summary": "Page Down key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pageup",
+      "value": "4194323",
+      "kind": "EnumValue",
+      "summary": "Page Up key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Parenleft",
+      "value": "40",
+      "kind": "EnumValue",
+      "summary": "Left parenthesis key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Parenright",
+      "value": "41",
+      "kind": "EnumValue",
+      "summary": "Right parenthesis key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pause",
+      "value": "4194313",
+      "kind": "EnumValue",
+      "summary": "Pause key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Percent",
+      "value": "37",
+      "kind": "EnumValue",
+      "summary": "Percent sign key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Period",
+      "value": "46",
+      "kind": "EnumValue",
+      "summary": "Period key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Plus",
+      "value": "43",
+      "kind": "EnumValue",
+      "summary": "Plus key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Print",
+      "value": "4194314",
+      "kind": "EnumValue",
+      "summary": "Print screen key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Q",
+      "value": "81",
+      "kind": "EnumValue",
+      "summary": "Q key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Question",
+      "value": "63",
+      "kind": "EnumValue",
+      "summary": "Question mark key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Quotedbl",
+      "value": "34",
+      "kind": "EnumValue",
+      "summary": "Double quotation mark key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "R",
+      "value": "82",
+      "kind": "EnumValue",
+      "summary": "R key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "value": "4194321",
+      "kind": "EnumValue",
+      "summary": "Right arrow key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "S",
+      "value": "83",
+      "kind": "EnumValue",
+      "summary": "S key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scrolllock",
+      "value": "4194331",
+      "kind": "EnumValue",
+      "summary": "Scroll Lock key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Semicolon",
+      "value": "59",
+      "kind": "EnumValue",
+      "summary": "Semicolon key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Shift",
+      "value": "4194325",
+      "kind": "EnumValue",
+      "summary": "Shift key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Slash",
+      "value": "47",
+      "kind": "EnumValue",
+      "summary": "Slash key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Space",
+      "value": "32",
+      "kind": "EnumValue",
+      "summary": "Space key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "T",
+      "value": "84",
+      "kind": "EnumValue",
+      "summary": "T key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tab",
+      "value": "4194306",
+      "kind": "EnumValue",
+      "summary": "Tab key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "U",
+      "value": "85",
+      "kind": "EnumValue",
+      "summary": "U key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unknown",
+      "value": "8388607",
+      "kind": "EnumValue",
+      "summary": "Unknown key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Up",
+      "value": "4194320",
+      "kind": "EnumValue",
+      "summary": "Up arrow key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "V",
+      "value": "86",
+      "kind": "EnumValue",
+      "summary": "V key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "W",
+      "value": "87",
+      "kind": "EnumValue",
+      "summary": "W key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "value": "88",
+      "kind": "EnumValue",
+      "summary": "X key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "value": "89",
+      "kind": "EnumValue",
+      "summary": "Y key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Z",
+      "value": "90",
+      "kind": "EnumValue",
+      "summary": "Z key.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

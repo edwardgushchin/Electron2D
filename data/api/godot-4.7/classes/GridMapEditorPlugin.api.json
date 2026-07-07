@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GridMapEditorPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.GridMapEditorPlugin",
+    "kind": "class",
+    "baseType": "EditorPlugin",
+    "interfaces": [],
+    "godotReference": "GridMapEditorPlugin",
+    "documentationPath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gridmapeditorplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearSelection",
+      "kind": "Method",
+      "signature": "public void ClearSelection()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Deselects any currently selected cells.",
+      "godotName": "clear_selection",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.ClearSelection",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "GetCurrentGridMap",
+      "kind": "Method",
+      "signature": "public GridMap GetCurrentGridMap()",
+      "returnType": "GridMap",
+      "parameters": [],
+      "summary": "Returns the [GridMap] node currently edited by the grid map editor.",
+      "godotName": "get_current_grid_map",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.GetCurrentGridMap",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "GetSelectedCells",
+      "kind": "Method",
+      "signature": "public Array GetSelectedCells()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array of [Vector3i]s with the selected cells\u0027 coordinates.",
+      "godotName": "get_selected_cells",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.GetSelectedCells",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "GetSelectedPaletteItem",
+      "kind": "Method",
+      "signature": "public int GetSelectedPaletteItem()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index of the selected [MeshLibrary] item in the grid map editor\u0027s palette or [code]-1[/code] if no item is selected. [b]Note:[/b] The indices might not be in the same order as they appear in the editor\u0027s interface.",
+      "godotName": "get_selected_palette_item",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.GetSelectedPaletteItem",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "GetSelection",
+      "kind": "Method",
+      "signature": "public AABB GetSelection()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the cell coordinate bounds of the current selection. Use [method has_selection] to check if there is an active selection.",
+      "godotName": "get_selection",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.GetSelection",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "HasSelection",
+      "kind": "Method",
+      "signature": "public bool HasSelection()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if there are selected cells.",
+      "godotName": "has_selection",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.HasSelection",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "SetSelectedPaletteItem",
+      "kind": "Method",
+      "signature": "public void SetSelectedPaletteItem(int item)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "item",
+          "type": "int"
+        }
+      ],
+      "summary": "Selects the [MeshLibrary] item with the given index in the grid map editor\u0027s palette. If a negative index is given, no item will be selected. If a value greater than the last index is given, the last item will be selected. [b]Note:[/b] The indices might not be in the same order as they appear in the editor\u0027s interface.",
+      "godotName": "set_selected_palette_item",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.SetSelectedPaletteItem(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    },
+    {
+      "name": "SetSelection",
+      "kind": "Method",
+      "signature": "public void SetSelection(Vector3i begin, Vector3i end)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "Vector3i"
+        },
+        {
+          "name": "end",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Selects the cells inside the given bounds from [param begin] to [param end].",
+      "godotName": "set_selection",
+      "xmlDocId": "M:Godot.GridMapEditorPlugin.SetSelection(Vector3i,Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gridmap/doc_classes/GridMapEditorPlugin.xml",
+      "sha256": "2e489a7349eb7a6fad5354794a48c044e9d7fd7a52b63c40c80220ae6d5298a7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

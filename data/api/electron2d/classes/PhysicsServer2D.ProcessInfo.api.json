@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2D.ProcessInfo",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsServer2D.ProcessInfo",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "PhysicsServer2D.ProcessInfo",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActiveObjects",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ProcessInfo ActiveObjects",
+      "returnType": "Electron2D.PhysicsServer2D.ProcessInfo",
+      "parameters": [],
+      "summary": "Number of active physics objects.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ProcessInfo.ActiveObjects",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionPairs",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ProcessInfo CollisionPairs",
+      "returnType": "Electron2D.PhysicsServer2D.ProcessInfo",
+      "parameters": [],
+      "summary": "Number of possible collision pairs.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ProcessInfo.CollisionPairs",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IslandCount",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ProcessInfo IslandCount",
+      "returnType": "Electron2D.PhysicsServer2D.ProcessInfo",
+      "parameters": [],
+      "summary": "Number of active simulation islands.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ProcessInfo.IslandCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "ActiveObjects",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Number of active physics objects.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionPairs",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Number of possible collision pairs.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IslandCount",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Number of active simulation islands.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

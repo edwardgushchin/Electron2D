@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RefCounted",
+    "namespace": "Godot",
+    "fullName": "Godot.RefCounted",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "RefCounted",
+    "documentationPath": "doc/classes/RefCounted.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_refcounted.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetReferenceCount",
+      "kind": "Method",
+      "signature": "public int GetReferenceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current reference count.",
+      "godotName": "get_reference_count",
+      "xmlDocId": "M:Godot.RefCounted.GetReferenceCount",
+      "sourcePath": "doc/classes/RefCounted.xml"
+    },
+    {
+      "name": "InitRef",
+      "kind": "Method",
+      "signature": "public bool InitRef()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Initializes the internal reference counter. Use this only if you really know what you are doing. Returns whether the initialization was successful.",
+      "godotName": "init_ref",
+      "xmlDocId": "M:Godot.RefCounted.InitRef",
+      "sourcePath": "doc/classes/RefCounted.xml"
+    },
+    {
+      "name": "Reference",
+      "kind": "Method",
+      "signature": "public bool Reference()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Increments the internal reference counter. Use this only if you really know what you are doing. Returns [code]true[/code] if the increment was successful, [code]false[/code] otherwise.",
+      "godotName": "reference",
+      "xmlDocId": "M:Godot.RefCounted.Reference",
+      "sourcePath": "doc/classes/RefCounted.xml"
+    },
+    {
+      "name": "Unreference",
+      "kind": "Method",
+      "signature": "public bool Unreference()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Decrements the internal reference counter. Use this only if you really know what you are doing. Returns [code]true[/code] if the object should be freed after the decrement, [code]false[/code] otherwise.",
+      "godotName": "unreference",
+      "xmlDocId": "M:Godot.RefCounted.Unreference",
+      "sourcePath": "doc/classes/RefCounted.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RefCounted.xml",
+      "sha256": "26212be0a4db625db26aec0da3629c4c805e84184d91398957c542c1530153e8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

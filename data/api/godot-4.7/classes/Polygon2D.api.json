@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Polygon2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Polygon2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Polygon2D",
+    "documentationPath": "doc/classes/Polygon2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_polygon2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBone",
+      "kind": "Method",
+      "signature": "public void AddBone(NodePath path, PackedFloat32Array weights)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "weights",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Adds a bone with the specified [param path] and [param weights].",
+      "godotName": "add_bone",
+      "xmlDocId": "M:Godot.Polygon2D.AddBone(NodePath,PackedFloat32Array)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "ClearBones",
+      "kind": "Method",
+      "signature": "public void ClearBones()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all bones from this [Polygon2D].",
+      "godotName": "clear_bones",
+      "xmlDocId": "M:Godot.Polygon2D.ClearBones",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "EraseBone",
+      "kind": "Method",
+      "signature": "public void EraseBone(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the specified bone from this [Polygon2D].",
+      "godotName": "erase_bone",
+      "xmlDocId": "M:Godot.Polygon2D.EraseBone(int)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "GetBoneCount",
+      "kind": "Method",
+      "signature": "public int GetBoneCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bones in this [Polygon2D].",
+      "godotName": "get_bone_count",
+      "xmlDocId": "M:Godot.Polygon2D.GetBoneCount",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "GetBonePath",
+      "kind": "Method",
+      "signature": "public NodePath GetBonePath(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the node associated with the specified bone.",
+      "godotName": "get_bone_path",
+      "xmlDocId": "M:Godot.Polygon2D.GetBonePath(int)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "GetBoneWeights",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array GetBoneWeights(int index)",
+      "returnType": "PackedFloat32Array",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the weight values of the specified bone.",
+      "godotName": "get_bone_weights",
+      "xmlDocId": "M:Godot.Polygon2D.GetBoneWeights(int)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "SetBonePath",
+      "kind": "Method",
+      "signature": "public void SetBonePath(int index, NodePath path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the path to the node associated with the specified bone.",
+      "godotName": "set_bone_path",
+      "xmlDocId": "M:Godot.Polygon2D.SetBonePath(int,NodePath)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "SetBoneWeights",
+      "kind": "Method",
+      "signature": "public void SetBoneWeights(int index, PackedFloat32Array weights)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "weights",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Sets the weight values for the specified bone.",
+      "godotName": "set_bone_weights",
+      "xmlDocId": "M:Godot.Polygon2D.SetBoneWeights(int,PackedFloat32Array)",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Antialiased",
+      "kind": "Property",
+      "signature": "public bool Antialiased { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], polygon edges will be anti-aliased.",
+      "defaultValue": "false",
+      "godotName": "antialiased",
+      "xmlDocId": "P:Godot.Polygon2D.Antialiased",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The polygon\u0027s fill color. If [member texture] is set, it will be multiplied by this color. It will also be the default color for vertices not set in [member vertex_colors].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.Polygon2D.Color",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "InternalVertexCount",
+      "kind": "Property",
+      "signature": "public int InternalVertexCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of internal vertices, used for UV mapping.",
+      "defaultValue": "0",
+      "godotName": "internal_vertex_count",
+      "xmlDocId": "P:Godot.Polygon2D.InternalVertexCount",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "InvertBorder",
+      "kind": "Property",
+      "signature": "public float InvertBorder { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Added padding applied to the bounding box when [member invert_enabled] is set to [code]true[/code]. Setting this value too small may result in a \u0022Bad Polygon\u0022 error.",
+      "defaultValue": "100.0",
+      "godotName": "invert_border",
+      "xmlDocId": "P:Godot.Polygon2D.InvertBorder",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "InvertEnabled",
+      "kind": "Property",
+      "signature": "public bool InvertEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the polygon will be inverted, containing the area outside the defined points and extending to the [member invert_border].",
+      "defaultValue": "false",
+      "godotName": "invert_enabled",
+      "xmlDocId": "P:Godot.Polygon2D.InvertEnabled",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The offset applied to each vertex.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.Polygon2D.Offset",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Polygon",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Polygon { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "The polygon\u0027s list of vertices. The final point will be connected to the first.",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "polygon",
+      "xmlDocId": "P:Godot.Polygon2D.Polygon",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Polygons",
+      "kind": "Property",
+      "signature": "public Array Polygons { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "The list of polygons, in case more than one is being represented. Every individual polygon is stored as a [PackedInt32Array] where each [int] is an index to a point in [member polygon]. If empty, this property will be ignored, and the resulting single polygon will be composed of all points in [member polygon], using the order they are stored in.",
+      "defaultValue": "[]",
+      "godotName": "polygons",
+      "xmlDocId": "P:Godot.Polygon2D.Polygons",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Skeleton",
+      "kind": "Property",
+      "signature": "public NodePath Skeleton { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to a [Skeleton2D] node used for skeleton-based deformations of this polygon. If empty or invalid, skeletal deformations will not be used.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "skeleton",
+      "xmlDocId": "P:Godot.Polygon2D.Skeleton",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The polygon\u0027s fill texture. Use [member uv] to set texture coordinates.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.Polygon2D.Texture",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "TextureOffset",
+      "kind": "Property",
+      "signature": "public Vector2 TextureOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Amount to offset the polygon\u0027s [member texture]. If set to [code]Vector2(0, 0)[/code], the texture\u0027s origin (its top-left corner) will be placed at the polygon\u0027s position.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "texture_offset",
+      "xmlDocId": "P:Godot.Polygon2D.TextureOffset",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "TextureRotation",
+      "kind": "Property",
+      "signature": "public float TextureRotation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The texture\u0027s rotation in radians.",
+      "defaultValue": "0.0",
+      "godotName": "texture_rotation",
+      "xmlDocId": "P:Godot.Polygon2D.TextureRotation",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "TextureScale",
+      "kind": "Property",
+      "signature": "public Vector2 TextureScale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Amount to multiply the [member uv] coordinates when using [member texture]. Larger values make the texture smaller, and vice versa.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "texture_scale",
+      "xmlDocId": "P:Godot.Polygon2D.TextureScale",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "Uv",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Uv { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Texture coordinates for each vertex of the polygon. There should be one UV value per polygon vertex. If there are fewer, undefined vertices will use [code]Vector2(0, 0)[/code].",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "uv",
+      "xmlDocId": "P:Godot.Polygon2D.Uv",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    },
+    {
+      "name": "VertexColors",
+      "kind": "Property",
+      "signature": "public PackedColorArray VertexColors { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Color for each vertex. Colors are interpolated between vertices, resulting in smooth gradients. There should be one per polygon vertex. If there are fewer, undefined vertices will use [member color].",
+      "defaultValue": "PackedColorArray()",
+      "godotName": "vertex_colors",
+      "xmlDocId": "P:Godot.Polygon2D.VertexColors",
+      "sourcePath": "doc/classes/Polygon2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Polygon2D.xml",
+      "sha256": "0333b0552c99b4afa0a7afd29061cc8a0717d72c3cc6eb5e363fd78708cb36c9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

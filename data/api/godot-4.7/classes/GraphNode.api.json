@@ -1,0 +1,818 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GraphNode",
+    "namespace": "Godot",
+    "fullName": "Godot.GraphNode",
+    "kind": "class",
+    "baseType": "GraphElement",
+    "interfaces": [],
+    "godotReference": "GraphNode",
+    "documentationPath": "doc/classes/GraphNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_graphnode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_DrawPort",
+      "kind": "Method",
+      "signature": "public void _DrawPort(int slotIndex, Vector2i position, bool left, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "left",
+          "type": "bool"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "",
+      "godotName": "_draw_port",
+      "xmlDocId": "M:Godot.GraphNode._DrawPort(int,Vector2i,bool,Color)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "ClearAllSlots",
+      "kind": "Method",
+      "signature": "public void ClearAllSlots()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disables all slots of the GraphNode. This will remove all input/output ports from the GraphNode.",
+      "godotName": "clear_all_slots",
+      "xmlDocId": "M:Godot.GraphNode.ClearAllSlots",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "ClearSlot",
+      "kind": "Method",
+      "signature": "public void ClearSlot(int slotIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Disables the slot with the given [param slot_index]. This will remove the corresponding input and output port from the GraphNode.",
+      "godotName": "clear_slot",
+      "xmlDocId": "M:Godot.GraphNode.ClearSlot(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetInputPortColor",
+      "kind": "Method",
+      "signature": "public Color GetInputPortColor(int portIdx)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] of the input port with the given [param port_idx].",
+      "godotName": "get_input_port_color",
+      "xmlDocId": "M:Godot.GraphNode.GetInputPortColor(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetInputPortCount",
+      "kind": "Method",
+      "signature": "public int GetInputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of slots with an enabled input port.",
+      "godotName": "get_input_port_count",
+      "xmlDocId": "M:Godot.GraphNode.GetInputPortCount",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetInputPortPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetInputPortPosition(int portIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the input port with the given [param port_idx].",
+      "godotName": "get_input_port_position",
+      "xmlDocId": "M:Godot.GraphNode.GetInputPortPosition(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetInputPortSlot",
+      "kind": "Method",
+      "signature": "public int GetInputPortSlot(int portIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the corresponding slot index of the input port with the given [param port_idx].",
+      "godotName": "get_input_port_slot",
+      "xmlDocId": "M:Godot.GraphNode.GetInputPortSlot(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetInputPortType",
+      "kind": "Method",
+      "signature": "public int GetInputPortType(int portIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type of the input port with the given [param port_idx].",
+      "godotName": "get_input_port_type",
+      "xmlDocId": "M:Godot.GraphNode.GetInputPortType(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetOutputPortColor",
+      "kind": "Method",
+      "signature": "public Color GetOutputPortColor(int portIdx)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] of the output port with the given [param port_idx].",
+      "godotName": "get_output_port_color",
+      "xmlDocId": "M:Godot.GraphNode.GetOutputPortColor(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetOutputPortCount",
+      "kind": "Method",
+      "signature": "public int GetOutputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of slots with an enabled output port.",
+      "godotName": "get_output_port_count",
+      "xmlDocId": "M:Godot.GraphNode.GetOutputPortCount",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetOutputPortPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetOutputPortPosition(int portIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the output port with the given [param port_idx].",
+      "godotName": "get_output_port_position",
+      "xmlDocId": "M:Godot.GraphNode.GetOutputPortPosition(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetOutputPortSlot",
+      "kind": "Method",
+      "signature": "public int GetOutputPortSlot(int portIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the corresponding slot index of the output port with the given [param port_idx].",
+      "godotName": "get_output_port_slot",
+      "xmlDocId": "M:Godot.GraphNode.GetOutputPortSlot(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetOutputPortType",
+      "kind": "Method",
+      "signature": "public int GetOutputPortType(int portIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type of the output port with the given [param port_idx].",
+      "godotName": "get_output_port_type",
+      "xmlDocId": "M:Godot.GraphNode.GetOutputPortType(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotColorLeft",
+      "kind": "Method",
+      "signature": "public Color GetSlotColorLeft(int slotIndex)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left (input) [Color] of the slot with the given [param slot_index].",
+      "godotName": "get_slot_color_left",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotColorLeft(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotColorRight",
+      "kind": "Method",
+      "signature": "public Color GetSlotColorRight(int slotIndex)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right (output) [Color] of the slot with the given [param slot_index].",
+      "godotName": "get_slot_color_right",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotColorRight(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotCustomIconLeft",
+      "kind": "Method",
+      "signature": "public Texture2D GetSlotCustomIconLeft(int slotIndex)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left (input) custom [Texture2D] of the slot with the given [param slot_index].",
+      "godotName": "get_slot_custom_icon_left",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotCustomIconLeft(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotCustomIconRight",
+      "kind": "Method",
+      "signature": "public Texture2D GetSlotCustomIconRight(int slotIndex)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right (output) custom [Texture2D] of the slot with the given [param slot_index].",
+      "godotName": "get_slot_custom_icon_right",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotCustomIconRight(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotMetadataLeft",
+      "kind": "Method",
+      "signature": "public Variant GetSlotMetadataLeft(int slotIndex)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left (input) metadata of the slot with the given [param slot_index].",
+      "godotName": "get_slot_metadata_left",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotMetadataLeft(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotMetadataRight",
+      "kind": "Method",
+      "signature": "public Variant GetSlotMetadataRight(int slotIndex)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right (output) metadata of the slot with the given [param slot_index].",
+      "godotName": "get_slot_metadata_right",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotMetadataRight(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotTypeLeft",
+      "kind": "Method",
+      "signature": "public int GetSlotTypeLeft(int slotIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left (input) type of the slot with the given [param slot_index].",
+      "godotName": "get_slot_type_left",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotTypeLeft(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetSlotTypeRight",
+      "kind": "Method",
+      "signature": "public int GetSlotTypeRight(int slotIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right (output) type of the slot with the given [param slot_index].",
+      "godotName": "get_slot_type_right",
+      "xmlDocId": "M:Godot.GraphNode.GetSlotTypeRight(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "GetTitlebarHbox",
+      "kind": "Method",
+      "signature": "public HBoxContainer GetTitlebarHbox()",
+      "returnType": "HBoxContainer",
+      "parameters": [],
+      "summary": "Returns the [HBoxContainer] used for the title bar, only containing a [Label] for displaying the title by default. This can be used to add custom controls to the title bar such as option or close buttons.",
+      "godotName": "get_titlebar_hbox",
+      "xmlDocId": "M:Godot.GraphNode.GetTitlebarHbox",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "IsSlotDrawStylebox",
+      "kind": "Method",
+      "signature": "public bool IsSlotDrawStylebox(int slotIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the background [StyleBox] of the slot with the given [param slot_index] is drawn.",
+      "godotName": "is_slot_draw_stylebox",
+      "xmlDocId": "M:Godot.GraphNode.IsSlotDrawStylebox(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "IsSlotEnabledLeft",
+      "kind": "Method",
+      "signature": "public bool IsSlotEnabledLeft(int slotIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if left (input) side of the slot with the given [param slot_index] is enabled.",
+      "godotName": "is_slot_enabled_left",
+      "xmlDocId": "M:Godot.GraphNode.IsSlotEnabledLeft(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "IsSlotEnabledRight",
+      "kind": "Method",
+      "signature": "public bool IsSlotEnabledRight(int slotIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if right (output) side of the slot with the given [param slot_index] is enabled.",
+      "godotName": "is_slot_enabled_right",
+      "xmlDocId": "M:Godot.GraphNode.IsSlotEnabledRight(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlot",
+      "kind": "Method",
+      "signature": "public void SetSlot(int slotIndex, bool enableLeftPort, int typeLeft, Color colorLeft, bool enableRightPort, int typeRight, Color colorRight, Texture2D customIconLeft, Texture2D customIconRight, bool drawStylebox)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "enable_left_port",
+          "type": "bool"
+        },
+        {
+          "name": "type_left",
+          "type": "int"
+        },
+        {
+          "name": "color_left",
+          "type": "Color"
+        },
+        {
+          "name": "enable_right_port",
+          "type": "bool"
+        },
+        {
+          "name": "type_right",
+          "type": "int"
+        },
+        {
+          "name": "color_right",
+          "type": "Color"
+        },
+        {
+          "name": "custom_icon_left",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        },
+        {
+          "name": "custom_icon_right",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        },
+        {
+          "name": "draw_stylebox",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Sets properties of the slot with the given [param slot_index]. If [param enable_left_port]/[param enable_right_port] is [code]true[/code], a port will appear and the slot will be able to be connected from this side. With [param type_left]/[param type_right] an arbitrary type can be assigned to each port. Two ports can be connected if they share the same type, or if the connection between their types is allowed in the parent [GraphEdit] (see [method GraphEdit.add_valid_connection_type]). Keep in mind that the [GraphEdit] has the final say in accepting the connection. Type compatibility simply allows the [signal GraphEdit.connection_request] signal to be emitted. Ports can be further customized using [param color_left]/[param color_right] and [param custom_icon_left]/[param custom_icon_right]. The color parameter adds a tint to the icon. The custom icon can be used to override the default port dot. Additionally, [param draw_stylebox] can be used to enable or disable drawing of the background stylebox for each slot. See [theme_item slot]. Individual properties can also be set using one of the [code]set_slot_*[/code] methods. [b]Note:[/b] This method only sets properties of the slot. To create the slot itself, add a [Control]-derived child to the GraphNode.",
+      "godotName": "set_slot",
+      "xmlDocId": "M:Godot.GraphNode.SetSlot(int,bool,int,Color,bool,int,Color,Texture2D,Texture2D,bool)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotColorLeft",
+      "kind": "Method",
+      "signature": "public void SetSlotColorLeft(int slotIndex, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the [Color] of the left (input) side of the slot with the given [param slot_index] to [param color].",
+      "godotName": "set_slot_color_left",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotColorLeft(int,Color)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotColorRight",
+      "kind": "Method",
+      "signature": "public void SetSlotColorRight(int slotIndex, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the [Color] of the right (output) side of the slot with the given [param slot_index] to [param color].",
+      "godotName": "set_slot_color_right",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotColorRight(int,Color)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotCustomIconLeft",
+      "kind": "Method",
+      "signature": "public void SetSlotCustomIconLeft(int slotIndex, Texture2D customIcon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "custom_icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the custom [Texture2D] of the left (input) side of the slot with the given [param slot_index] to [param custom_icon].",
+      "godotName": "set_slot_custom_icon_left",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotCustomIconLeft(int,Texture2D)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotCustomIconRight",
+      "kind": "Method",
+      "signature": "public void SetSlotCustomIconRight(int slotIndex, Texture2D customIcon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "custom_icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the custom [Texture2D] of the right (output) side of the slot with the given [param slot_index] to [param custom_icon].",
+      "godotName": "set_slot_custom_icon_right",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotCustomIconRight(int,Texture2D)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotDrawStylebox",
+      "kind": "Method",
+      "signature": "public void SetSlotDrawStylebox(int slotIndex, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Toggles the background [StyleBox] of the slot with the given [param slot_index].",
+      "godotName": "set_slot_draw_stylebox",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotDrawStylebox(int,bool)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotEnabledLeft",
+      "kind": "Method",
+      "signature": "public void SetSlotEnabledLeft(int slotIndex, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Toggles the left (input) side of the slot with the given [param slot_index]. If [param enable] is [code]true[/code], a port will appear on the left side and the slot will be able to be connected from this side.",
+      "godotName": "set_slot_enabled_left",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotEnabledLeft(int,bool)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotEnabledRight",
+      "kind": "Method",
+      "signature": "public void SetSlotEnabledRight(int slotIndex, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Toggles the right (output) side of the slot with the given [param slot_index]. If [param enable] is [code]true[/code], a port will appear on the right side and the slot will be able to be connected from this side.",
+      "godotName": "set_slot_enabled_right",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotEnabledRight(int,bool)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotMetadataLeft",
+      "kind": "Method",
+      "signature": "public void SetSlotMetadataLeft(int slotIndex, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the custom metadata for the left (input) side of the slot with the given [param slot_index] to [param value].",
+      "godotName": "set_slot_metadata_left",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotMetadataLeft(int,Variant)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotMetadataRight",
+      "kind": "Method",
+      "signature": "public void SetSlotMetadataRight(int slotIndex, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the custom metadata for the right (output) side of the slot with the given [param slot_index] to [param value].",
+      "godotName": "set_slot_metadata_right",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotMetadataRight(int,Variant)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotTypeLeft",
+      "kind": "Method",
+      "signature": "public void SetSlotTypeLeft(int slotIndex, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the left (input) type of the slot with the given [param slot_index] to [param type]. If the value is negative, all connections will be disallowed to be created via user inputs.",
+      "godotName": "set_slot_type_left",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotTypeLeft(int,int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SetSlotTypeRight",
+      "kind": "Method",
+      "signature": "public void SetSlotTypeRight(int slotIndex, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the right (output) type of the slot with the given [param slot_index] to [param type]. If the value is negative, all connections will be disallowed to be created via user inputs.",
+      "godotName": "set_slot_type_right",
+      "xmlDocId": "M:Godot.GraphNode.SetSlotTypeRight(int,int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.GraphNode.FocusMode",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "IgnoreInvalidConnectionType",
+      "kind": "Property",
+      "signature": "public bool IgnoreInvalidConnectionType { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], you can connect ports with different types, even if the connection was not explicitly allowed in the parent [GraphEdit].",
+      "defaultValue": "false",
+      "godotName": "ignore_invalid_connection_type",
+      "xmlDocId": "P:Godot.GraphNode.IgnoreInvalidConnectionType",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.GraphNode.MouseFilter",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SlotsFocusMode",
+      "kind": "Property",
+      "signature": "public int SlotsFocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines how connection slots can be focused. - If set to [constant Control.FOCUS_CLICK], connections can only be made with the mouse. - If set to [constant Control.FOCUS_ALL], slots can also be focused using the [member ProjectSettings.input/ui_up] and [member ProjectSettings.input/ui_down] and connected using [member ProjectSettings.input/ui_left] and [member ProjectSettings.input/ui_right] input actions. - If set to [constant Control.FOCUS_ACCESSIBILITY], slot input actions are only enabled when the screen reader is active.",
+      "defaultValue": "3",
+      "godotName": "slots_focus_mode",
+      "xmlDocId": "P:Godot.GraphNode.SlotsFocusMode",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text displayed in the GraphNode\u0027s title bar.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.GraphNode.Title",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "SlotSizesChanged",
+      "kind": "Signal",
+      "signature": "public event SlotSizesChangedHandler SlotSizesChanged",
+      "parameters": [],
+      "summary": "Emitted when any slot\u0027s size might have changed.",
+      "godotName": "slot_sizes_changed",
+      "xmlDocId": "E:Godot.GraphNode.SlotSizesChanged",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    },
+    {
+      "name": "SlotUpdated",
+      "kind": "Signal",
+      "signature": "public event SlotUpdatedHandler SlotUpdated",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when any GraphNode\u0027s slot is updated.",
+      "godotName": "slot_updated",
+      "xmlDocId": "E:Godot.GraphNode.SlotUpdated(int)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_DrawPort",
+      "kind": "Method",
+      "signature": "public void _DrawPort(int slotIndex, Vector2i position, bool left, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "left",
+          "type": "bool"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "",
+      "godotName": "_draw_port",
+      "xmlDocId": "M:Godot.GraphNode._DrawPort(int,Vector2i,bool,Color)",
+      "sourcePath": "doc/classes/GraphNode.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GraphNode.xml",
+      "sha256": "9c48d1837dc6a556c226a683339b71a8b3900be46820a240dec70c17736d9c7a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

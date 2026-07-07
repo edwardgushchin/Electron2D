@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDVertexAttribute",
+    "namespace": "Godot",
+    "fullName": "Godot.RDVertexAttribute",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDVertexAttribute",
+    "documentationPath": "doc/classes/RDVertexAttribute.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdvertexattribute.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Binding",
+      "kind": "Property",
+      "signature": "public int Binding { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the buffer in the vertex buffer array to bind this vertex attribute. When set to [code]-1[/code], it defaults to the index of the attribute. [b]Note:[/b] You cannot mix binding explicitly assigned attributes with implicitly assigned ones (i.e. [code]-1[/code]). Either all attributes must have their binding set to [code]-1[/code], or all must have explicit bindings.",
+      "defaultValue": "4294967295",
+      "godotName": "binding",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Binding",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    },
+    {
+      "name": "Format",
+      "kind": "Property",
+      "signature": "public int Format { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The way that this attribute\u0027s data is interpreted when sent to a shader.",
+      "defaultValue": "232",
+      "godotName": "format",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Format",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    },
+    {
+      "name": "Frequency",
+      "kind": "Property",
+      "signature": "public int Frequency { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The rate at which this attribute is pulled from its vertex buffer.",
+      "defaultValue": "0",
+      "godotName": "frequency",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Frequency",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    },
+    {
+      "name": "Location",
+      "kind": "Property",
+      "signature": "public int Location { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The location in the shader that this attribute is bound to.",
+      "defaultValue": "0",
+      "godotName": "location",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Location",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public int Offset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of bytes between the start of the vertex buffer and the first instance of this attribute.",
+      "defaultValue": "0",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Offset",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    },
+    {
+      "name": "Stride",
+      "kind": "Property",
+      "signature": "public int Stride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of bytes between the starts of consecutive instances of this attribute.",
+      "defaultValue": "0",
+      "godotName": "stride",
+      "xmlDocId": "P:Godot.RDVertexAttribute.Stride",
+      "sourcePath": "doc/classes/RDVertexAttribute.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDVertexAttribute.xml",
+      "sha256": "e5cbb14121bca2a49c3efd35e5bff3a8aad82e05787ed657822869d351defe7c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

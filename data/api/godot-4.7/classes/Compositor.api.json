@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Compositor",
+    "namespace": "Godot",
+    "fullName": "Godot.Compositor",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Compositor",
+    "documentationPath": "doc/classes/Compositor.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_compositor.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CompositorEffects",
+      "kind": "Property",
+      "signature": "public CompositorEffect[] CompositorEffects { get; set; }",
+      "returnType": "CompositorEffect[]",
+      "parameters": [],
+      "summary": "The custom [CompositorEffect]s that are applied during rendering of viewports using this compositor.",
+      "defaultValue": "[]",
+      "godotName": "compositor_effects",
+      "xmlDocId": "P:Godot.Compositor.CompositorEffects",
+      "sourcePath": "doc/classes/Compositor.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Compositor.xml",
+      "sha256": "e274546f5ba7e47bf7d12b0fe4255491f90c99f2fdb6a37bc9950998e8573223"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

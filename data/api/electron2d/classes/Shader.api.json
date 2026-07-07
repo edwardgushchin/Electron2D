@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Shader",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Shader",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Shader",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Shader",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Shader()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Shader type.",
+      "xmlDocId": "M:Electron2D.Shader.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Shader",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Shader()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Shader type.",
+      "xmlDocId": "M:Electron2D.Shader.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMode",
+      "kind": "Method",
+      "signature": "public Electron2D.Shader.Mode GetMode()",
+      "returnType": "Electron2D.Shader.Mode",
+      "parameters": [],
+      "summary": "Gets the shader mode.",
+      "xmlDocId": "M:Electron2D.Shader.GetMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Code",
+      "kind": "Property",
+      "signature": "public System.String Code { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the shader source code.",
+      "xmlDocId": "P:Electron2D.Shader.Code",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

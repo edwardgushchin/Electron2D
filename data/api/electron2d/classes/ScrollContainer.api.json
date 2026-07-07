@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScrollContainer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ScrollContainer",
+    "kind": "class",
+    "baseType": "Electron2D.Container",
+    "interfaces": [],
+    "godotReference": "ScrollContainer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "ScrollContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ScrollContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ScrollContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.ScrollContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "ScrollContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ScrollContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ScrollContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.ScrollContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EnsureControlVisible",
+      "kind": "Method",
+      "signature": "public System.Void EnsureControlVisible(Electron2D.Control control)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Electron2D.Control"
+        }
+      ],
+      "summary": "Scrolls until the specified descendant control is visible.",
+      "xmlDocId": "M:Electron2D.ScrollContainer.EnsureControlVisible(Electron2D.Control)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawFocusBorder",
+      "kind": "Property",
+      "signature": "public System.Boolean DrawFocusBorder { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether a focus border should be drawn by future widget renderers.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.DrawFocusBorder",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FollowFocus",
+      "kind": "Property",
+      "signature": "public System.Boolean FollowFocus { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether focused descendant controls should be revealed automatically.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.FollowFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HorizontalScrollMode",
+      "kind": "Property",
+      "signature": "public Electron2D.ScrollMode HorizontalScrollMode { get; set; }",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal scroll mode.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.HorizontalScrollMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollDeadzone",
+      "kind": "Property",
+      "signature": "public System.Int32 ScrollDeadzone { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the deadzone used by future drag-scroll handling.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollDeadzone",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollHintMode",
+      "kind": "Property",
+      "signature": "public Electron2D.ScrollHintMode ScrollHintMode { get; set; }",
+      "returnType": "Electron2D.ScrollHintMode",
+      "parameters": [],
+      "summary": "Gets or sets the scroll hint mode.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollHintMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollHorizontal",
+      "kind": "Property",
+      "signature": "public System.Int32 ScrollHorizontal { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal scroll offset.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollHorizontal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollHorizontalByDefault",
+      "kind": "Property",
+      "signature": "public System.Boolean ScrollHorizontalByDefault { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether horizontal scrolling is preferred by default.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollHorizontalByDefault",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollHorizontalCustomStep",
+      "kind": "Property",
+      "signature": "public System.Single ScrollHorizontalCustomStep { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the custom horizontal scroll step.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollHorizontalCustomStep",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollVertical",
+      "kind": "Property",
+      "signature": "public System.Int32 ScrollVertical { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the vertical scroll offset.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollVertical",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScrollVerticalCustomStep",
+      "kind": "Property",
+      "signature": "public System.Single ScrollVerticalCustomStep { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the custom vertical scroll step.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.ScrollVerticalCustomStep",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileScrollHint",
+      "kind": "Property",
+      "signature": "public System.Boolean TileScrollHint { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether scroll hints should be tiled by future renderers.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.TileScrollHint",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VerticalScrollMode",
+      "kind": "Property",
+      "signature": "public Electron2D.ScrollMode VerticalScrollMode { get; set; }",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Gets or sets the vertical scroll mode.",
+      "xmlDocId": "P:Electron2D.ScrollContainer.VerticalScrollMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

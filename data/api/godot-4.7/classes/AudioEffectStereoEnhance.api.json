@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectStereoEnhance",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectStereoEnhance",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectStereoEnhance",
+    "documentationPath": "doc/classes/AudioEffectStereoEnhance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectstereoenhance.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "PanPullout",
+      "kind": "Property",
+      "signature": "public float PanPullout { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain of the side channels, if they exist. A value of 0 will downmix stereo to mono. Value can range from 0 to 4.",
+      "defaultValue": "1.0",
+      "godotName": "pan_pullout",
+      "xmlDocId": "P:Godot.AudioEffectStereoEnhance.PanPullout",
+      "sourcePath": "doc/classes/AudioEffectStereoEnhance.xml"
+    },
+    {
+      "name": "Surround",
+      "kind": "Property",
+      "signature": "public float Surround { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Widens the stereo image through phase shifting in conjunction with [member time_pullout_ms]. Just pans sound to the left channel if [member time_pullout_ms] is 0. Value can range from 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "surround",
+      "xmlDocId": "P:Godot.AudioEffectStereoEnhance.Surround",
+      "sourcePath": "doc/classes/AudioEffectStereoEnhance.xml"
+    },
+    {
+      "name": "TimePulloutMs",
+      "kind": "Property",
+      "signature": "public float TimePulloutMs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Widens the stereo image through phase shifting in conjunction with [member surround]. Just delays the right channel if [member surround] is 0. Value is in milliseconds, and can range from 0 to 50.",
+      "defaultValue": "0.0",
+      "godotName": "time_pullout_ms",
+      "xmlDocId": "P:Godot.AudioEffectStereoEnhance.TimePulloutMs",
+      "sourcePath": "doc/classes/AudioEffectStereoEnhance.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectStereoEnhance.xml",
+      "sha256": "e669468d1b4c206389c7244f88da53afd40b9185f6f3ab8e484c34030942ecae"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

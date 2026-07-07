@@ -1,0 +1,1681 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRBodyTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.XRBodyTracker",
+    "kind": "class",
+    "baseType": "XRPositionalTracker",
+    "interfaces": [],
+    "godotReference": "XRBodyTracker",
+    "documentationPath": "doc/classes/XRBodyTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrbodytracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetJointFlags",
+      "kind": "Method",
+      "signature": "public int GetJointFlags(int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns flags about the validity of the tracking data for the given body joint.",
+      "godotName": "get_joint_flags",
+      "xmlDocId": "M:Godot.XRBodyTracker.GetJointFlags(int)",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "GetJointTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetJointTransform(int joint)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for the given body joint.",
+      "godotName": "get_joint_transform",
+      "xmlDocId": "M:Godot.XRBodyTracker.GetJointTransform(int)",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "SetJointFlags",
+      "kind": "Method",
+      "signature": "public void SetJointFlags(int joint, int flags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets flags about the validity of the tracking data for the given body joint.",
+      "godotName": "set_joint_flags",
+      "xmlDocId": "M:Godot.XRBodyTracker.SetJointFlags(int,int)",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "SetJointTransform",
+      "kind": "Method",
+      "signature": "public void SetJointTransform(int joint, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the transform for the given body joint.",
+      "godotName": "set_joint_transform",
+      "xmlDocId": "M:Godot.XRBodyTracker.SetJointTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "BodyFlags",
+      "kind": "Property",
+      "signature": "public int BodyFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of body tracking data captured.",
+      "defaultValue": "0",
+      "godotName": "body_flags",
+      "xmlDocId": "P:Godot.XRBodyTracker.BodyFlags",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "HasTrackingData",
+      "kind": "Property",
+      "signature": "public bool HasTrackingData { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body tracking data is valid.",
+      "defaultValue": "false",
+      "godotName": "has_tracking_data",
+      "xmlDocId": "P:Godot.XRBodyTracker.HasTrackingData",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "32",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.XRBodyTracker.Type",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BodyFlags",
+      "values": [
+        {
+          "name": "BODY_FLAG_HANDS_SUPPORTED",
+          "value": "4",
+          "enum": "BodyFlags",
+          "kind": "EnumValue",
+          "summary": "Hand tracking supported.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "BODY_FLAG_LOWER_BODY_SUPPORTED",
+          "value": "2",
+          "enum": "BodyFlags",
+          "kind": "EnumValue",
+          "summary": "Lower body tracking supported.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "BODY_FLAG_UPPER_BODY_SUPPORTED",
+          "value": "1",
+          "enum": "BodyFlags",
+          "kind": "EnumValue",
+          "summary": "Upper body tracking supported.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        }
+      ]
+    },
+    {
+      "name": "Joint",
+      "values": [
+        {
+          "name": "JOINT_CHEST",
+          "value": "3",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Chest joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_HEAD",
+          "value": "6",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Head joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_HEAD_TIP",
+          "value": "7",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Head tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_HIPS",
+          "value": "1",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Hips joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_FOOT",
+          "value": "16",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left foot joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_FOOT_TWIST",
+          "value": "81",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left foot twist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_HAND",
+          "value": "22",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left hand joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_HEEL",
+          "value": "82",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left heel joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_INDEX_FINGER_METACARPAL",
+          "value": "29",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left index finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_DISTAL",
+          "value": "32",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left index finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+          "value": "31",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left index finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_PROXIMAL",
+          "value": "30",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left index finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_INDEX_FINGER_TIP",
+          "value": "33",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left index finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_LOWER_ARM",
+          "value": "10",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left lower arm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_LOWER_LEG",
+          "value": "15",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left lower leg joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FINGER_METACARPAL",
+          "value": "34",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_DISTAL",
+          "value": "37",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+          "value": "36",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+          "value": "35",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FINGER_TIP",
+          "value": "38",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_MIDDLE_FOOT",
+          "value": "83",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left middle foot joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PALM",
+          "value": "23",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left palm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PINKY_FINGER_METACARPAL",
+          "value": "44",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left pinky finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_DISTAL",
+          "value": "47",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left pinky finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+          "value": "46",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left pinky finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_PROXIMAL",
+          "value": "45",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left pinky finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_PINKY_FINGER_TIP",
+          "value": "48",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left pinky finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_RING_FINGER_METACARPAL",
+          "value": "39",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left ring finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_RING_FINGER_PHALANX_DISTAL",
+          "value": "42",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left ring finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_RING_FINGER_PHALANX_INTERMEDIATE",
+          "value": "41",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left ring finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_RING_FINGER_PHALANX_PROXIMAL",
+          "value": "40",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left ring finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_RING_FINGER_TIP",
+          "value": "43",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left ring finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_SCAPULA",
+          "value": "77",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left scapula joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_SHOULDER",
+          "value": "8",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left shoulder joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_THUMB_METACARPAL",
+          "value": "25",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left thumb metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_THUMB_PHALANX_DISTAL",
+          "value": "27",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left thumb phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_THUMB_PHALANX_PROXIMAL",
+          "value": "26",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left thumb phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_THUMB_TIP",
+          "value": "28",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left thumb tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_TOES",
+          "value": "17",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left toes joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_UPPER_ARM",
+          "value": "9",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left upper arm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_UPPER_LEG",
+          "value": "14",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left upper leg joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_WRIST",
+          "value": "24",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left wrist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LEFT_WRIST_TWIST",
+          "value": "78",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Left wrist twist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_LOWER_CHEST",
+          "value": "76",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Lower chest joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_MAX",
+          "value": "87",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Joint] enum.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_NECK",
+          "value": "5",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Neck joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_FOOT",
+          "value": "20",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right foot joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_FOOT_TWIST",
+          "value": "84",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right foot twist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_HAND",
+          "value": "49",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right hand joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_HEEL",
+          "value": "85",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right heel joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_INDEX_FINGER_METACARPAL",
+          "value": "56",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right index finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_DISTAL",
+          "value": "59",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right index finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+          "value": "58",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right index finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_PROXIMAL",
+          "value": "57",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right index finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_INDEX_FINGER_TIP",
+          "value": "60",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right index finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_LOWER_ARM",
+          "value": "13",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right lower arm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_LOWER_LEG",
+          "value": "19",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right lower leg joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FINGER_METACARPAL",
+          "value": "61",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_DISTAL",
+          "value": "64",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+          "value": "63",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+          "value": "62",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FINGER_TIP",
+          "value": "65",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_MIDDLE_FOOT",
+          "value": "86",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right middle foot joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PALM",
+          "value": "50",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right palm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PINKY_FINGER_METACARPAL",
+          "value": "71",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right pinky finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_DISTAL",
+          "value": "74",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right pinky finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+          "value": "73",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right pinky finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_PROXIMAL",
+          "value": "72",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right pinky finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_PINKY_FINGER_TIP",
+          "value": "75",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right pinky finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_RING_FINGER_METACARPAL",
+          "value": "66",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right ring finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_RING_FINGER_PHALANX_DISTAL",
+          "value": "69",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right ring finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_RING_FINGER_PHALANX_INTERMEDIATE",
+          "value": "68",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right ring finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_RING_FINGER_PHALANX_PROXIMAL",
+          "value": "67",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right ring finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_RING_FINGER_TIP",
+          "value": "70",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right ring finger tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_SCAPULA",
+          "value": "79",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right scapula joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_SHOULDER",
+          "value": "11",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right shoulder joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_THUMB_METACARPAL",
+          "value": "52",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right thumb metacarpal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_THUMB_PHALANX_DISTAL",
+          "value": "54",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right thumb phalanx distal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_THUMB_PHALANX_PROXIMAL",
+          "value": "53",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right thumb phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_THUMB_TIP",
+          "value": "55",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right thumb tip joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_TOES",
+          "value": "21",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right toes joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_UPPER_ARM",
+          "value": "12",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right upper arm joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_UPPER_LEG",
+          "value": "18",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right upper leg joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_WRIST",
+          "value": "51",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right wrist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_RIGHT_WRIST_TWIST",
+          "value": "80",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Right wrist twist joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_ROOT",
+          "value": "0",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Root joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_SPINE",
+          "value": "2",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Spine joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_UPPER_CHEST",
+          "value": "4",
+          "enum": "Joint",
+          "kind": "EnumValue",
+          "summary": "Upper chest joint.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        }
+      ]
+    },
+    {
+      "name": "JointFlags",
+      "values": [
+        {
+          "name": "JOINT_FLAG_ORIENTATION_TRACKED",
+          "value": "2",
+          "enum": "JointFlags",
+          "kind": "EnumValue",
+          "summary": "The joint\u0027s orientation is actively tracked. May not be set if tracking has been temporarily lost.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_FLAG_ORIENTATION_VALID",
+          "value": "1",
+          "enum": "JointFlags",
+          "kind": "EnumValue",
+          "summary": "The joint\u0027s orientation data is valid.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_FLAG_POSITION_TRACKED",
+          "value": "8",
+          "enum": "JointFlags",
+          "kind": "EnumValue",
+          "summary": "The joint\u0027s position is actively tracked. May not be set if tracking has been temporarily lost.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        },
+        {
+          "name": "JOINT_FLAG_POSITION_VALID",
+          "value": "4",
+          "enum": "JointFlags",
+          "kind": "EnumValue",
+          "summary": "The joint\u0027s position data is valid.",
+          "sourcePath": "doc/classes/XRBodyTracker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BODY_FLAG_UPPER_BODY_SUPPORTED",
+      "value": "1",
+      "enum": "BodyFlags",
+      "kind": "EnumValue",
+      "summary": "Upper body tracking supported.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "BODY_FLAG_LOWER_BODY_SUPPORTED",
+      "value": "2",
+      "enum": "BodyFlags",
+      "kind": "EnumValue",
+      "summary": "Lower body tracking supported.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "BODY_FLAG_HANDS_SUPPORTED",
+      "value": "4",
+      "enum": "BodyFlags",
+      "kind": "EnumValue",
+      "summary": "Hand tracking supported.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_ROOT",
+      "value": "0",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Root joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_HIPS",
+      "value": "1",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Hips joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_SPINE",
+      "value": "2",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Spine joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_CHEST",
+      "value": "3",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Chest joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_UPPER_CHEST",
+      "value": "4",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Upper chest joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_NECK",
+      "value": "5",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Neck joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_HEAD",
+      "value": "6",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Head joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_HEAD_TIP",
+      "value": "7",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Head tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_SHOULDER",
+      "value": "8",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left shoulder joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_UPPER_ARM",
+      "value": "9",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left upper arm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_LOWER_ARM",
+      "value": "10",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left lower arm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_SHOULDER",
+      "value": "11",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right shoulder joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_UPPER_ARM",
+      "value": "12",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right upper arm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_LOWER_ARM",
+      "value": "13",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right lower arm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_UPPER_LEG",
+      "value": "14",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left upper leg joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_LOWER_LEG",
+      "value": "15",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left lower leg joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_FOOT",
+      "value": "16",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left foot joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_TOES",
+      "value": "17",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left toes joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_UPPER_LEG",
+      "value": "18",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right upper leg joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_LOWER_LEG",
+      "value": "19",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right lower leg joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_FOOT",
+      "value": "20",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right foot joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_TOES",
+      "value": "21",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right toes joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_HAND",
+      "value": "22",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left hand joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PALM",
+      "value": "23",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left palm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_WRIST",
+      "value": "24",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left wrist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_THUMB_METACARPAL",
+      "value": "25",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left thumb metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_THUMB_PHALANX_PROXIMAL",
+      "value": "26",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left thumb phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_THUMB_PHALANX_DISTAL",
+      "value": "27",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left thumb phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_THUMB_TIP",
+      "value": "28",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left thumb tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_INDEX_FINGER_METACARPAL",
+      "value": "29",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left index finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_PROXIMAL",
+      "value": "30",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left index finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+      "value": "31",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left index finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_INDEX_FINGER_PHALANX_DISTAL",
+      "value": "32",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left index finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_INDEX_FINGER_TIP",
+      "value": "33",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left index finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FINGER_METACARPAL",
+      "value": "34",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+      "value": "35",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+      "value": "36",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FINGER_PHALANX_DISTAL",
+      "value": "37",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FINGER_TIP",
+      "value": "38",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_RING_FINGER_METACARPAL",
+      "value": "39",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left ring finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_RING_FINGER_PHALANX_PROXIMAL",
+      "value": "40",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left ring finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_RING_FINGER_PHALANX_INTERMEDIATE",
+      "value": "41",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left ring finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_RING_FINGER_PHALANX_DISTAL",
+      "value": "42",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left ring finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_RING_FINGER_TIP",
+      "value": "43",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left ring finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PINKY_FINGER_METACARPAL",
+      "value": "44",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left pinky finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_PROXIMAL",
+      "value": "45",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left pinky finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+      "value": "46",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left pinky finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PINKY_FINGER_PHALANX_DISTAL",
+      "value": "47",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left pinky finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_PINKY_FINGER_TIP",
+      "value": "48",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left pinky finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_HAND",
+      "value": "49",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right hand joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PALM",
+      "value": "50",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right palm joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_WRIST",
+      "value": "51",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right wrist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_THUMB_METACARPAL",
+      "value": "52",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right thumb metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_THUMB_PHALANX_PROXIMAL",
+      "value": "53",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right thumb phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_THUMB_PHALANX_DISTAL",
+      "value": "54",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right thumb phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_THUMB_TIP",
+      "value": "55",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right thumb tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_INDEX_FINGER_METACARPAL",
+      "value": "56",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right index finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_PROXIMAL",
+      "value": "57",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right index finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+      "value": "58",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right index finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_INDEX_FINGER_PHALANX_DISTAL",
+      "value": "59",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right index finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_INDEX_FINGER_TIP",
+      "value": "60",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right index finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FINGER_METACARPAL",
+      "value": "61",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+      "value": "62",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+      "value": "63",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FINGER_PHALANX_DISTAL",
+      "value": "64",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FINGER_TIP",
+      "value": "65",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_RING_FINGER_METACARPAL",
+      "value": "66",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right ring finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_RING_FINGER_PHALANX_PROXIMAL",
+      "value": "67",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right ring finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_RING_FINGER_PHALANX_INTERMEDIATE",
+      "value": "68",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right ring finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_RING_FINGER_PHALANX_DISTAL",
+      "value": "69",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right ring finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_RING_FINGER_TIP",
+      "value": "70",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right ring finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PINKY_FINGER_METACARPAL",
+      "value": "71",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right pinky finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_PROXIMAL",
+      "value": "72",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right pinky finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+      "value": "73",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right pinky finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PINKY_FINGER_PHALANX_DISTAL",
+      "value": "74",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right pinky finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_PINKY_FINGER_TIP",
+      "value": "75",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right pinky finger tip joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LOWER_CHEST",
+      "value": "76",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Lower chest joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_SCAPULA",
+      "value": "77",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left scapula joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_WRIST_TWIST",
+      "value": "78",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left wrist twist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_SCAPULA",
+      "value": "79",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right scapula joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_WRIST_TWIST",
+      "value": "80",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right wrist twist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_FOOT_TWIST",
+      "value": "81",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left foot twist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_HEEL",
+      "value": "82",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left heel joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_LEFT_MIDDLE_FOOT",
+      "value": "83",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Left middle foot joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_FOOT_TWIST",
+      "value": "84",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right foot twist joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_HEEL",
+      "value": "85",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right heel joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_RIGHT_MIDDLE_FOOT",
+      "value": "86",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Right middle foot joint.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_MAX",
+      "value": "87",
+      "enum": "Joint",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Joint] enum.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_FLAG_ORIENTATION_VALID",
+      "value": "1",
+      "enum": "JointFlags",
+      "kind": "EnumValue",
+      "summary": "The joint\u0027s orientation data is valid.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_FLAG_ORIENTATION_TRACKED",
+      "value": "2",
+      "enum": "JointFlags",
+      "kind": "EnumValue",
+      "summary": "The joint\u0027s orientation is actively tracked. May not be set if tracking has been temporarily lost.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_FLAG_POSITION_VALID",
+      "value": "4",
+      "enum": "JointFlags",
+      "kind": "EnumValue",
+      "summary": "The joint\u0027s position data is valid.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    },
+    {
+      "name": "JOINT_FLAG_POSITION_TRACKED",
+      "value": "8",
+      "enum": "JointFlags",
+      "kind": "EnumValue",
+      "summary": "The joint\u0027s position is actively tracked. May not be set if tracking has been temporarily lost.",
+      "sourcePath": "doc/classes/XRBodyTracker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRBodyTracker.xml",
+      "sha256": "c2dc940a249199872fcb43897eedb91af0aea01acbb182face10ff6e619e37c3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

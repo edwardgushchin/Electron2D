@@ -1,0 +1,1578 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LineEdit",
+    "namespace": "Godot",
+    "fullName": "Godot.LineEdit",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "LineEdit",
+    "documentationPath": "doc/classes/LineEdit.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_lineedit.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ApplyIme",
+      "kind": "Method",
+      "signature": "public void ApplyIme()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Applies text from the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME) and closes the IME if it is open.",
+      "godotName": "apply_ime",
+      "xmlDocId": "M:Godot.LineEdit.ApplyIme",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CancelIme",
+      "kind": "Method",
+      "signature": "public void CancelIme()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Closes the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME) if it is open. Any text in the IME will be lost.",
+      "godotName": "cancel_ime",
+      "xmlDocId": "M:Godot.LineEdit.CancelIme",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Erases the [LineEdit]\u0027s [member text].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.LineEdit.Clear",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "DeleteCharAtCaret",
+      "kind": "Method",
+      "signature": "public void DeleteCharAtCaret()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Deletes one character at the caret\u0027s current position (equivalent to pressing [kbd]Delete[/kbd]).",
+      "godotName": "delete_char_at_caret",
+      "xmlDocId": "M:Godot.LineEdit.DeleteCharAtCaret",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "DeleteText",
+      "kind": "Method",
+      "signature": "public void DeleteText(int fromColumn, int toColumn)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_column",
+          "type": "int"
+        },
+        {
+          "name": "to_column",
+          "type": "int"
+        }
+      ],
+      "summary": "Deletes a section of the [member text] going from position [param from_column] to [param to_column]. Both parameters should be within the text\u0027s length.",
+      "godotName": "delete_text",
+      "xmlDocId": "M:Godot.LineEdit.DeleteText(int,int)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Deselect",
+      "kind": "Method",
+      "signature": "public void Deselect()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the current selection.",
+      "godotName": "deselect",
+      "xmlDocId": "M:Godot.LineEdit.Deselect",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Edit",
+      "kind": "Method",
+      "signature": "public void Edit(bool hideFocus)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "hide_focus",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Allows entering edit mode whether the [LineEdit] is focused or not. If [param hide_focus] is [code]true[/code], the focused state will not be shown (see [method Control.grab_focus]). See also [member keep_editing_on_text_submit].",
+      "godotName": "edit",
+      "xmlDocId": "M:Godot.LineEdit.Edit(bool)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetMenu",
+      "kind": "Method",
+      "signature": "public PopupMenu GetMenu()",
+      "returnType": "PopupMenu",
+      "parameters": [],
+      "summary": "Returns the [PopupMenu] of this [LineEdit]. By default, this menu is displayed when right-clicking on the [LineEdit]. You can add custom menu items or remove standard ones. Make sure your IDs don\u0027t conflict with the standard ones (see [enum MenuItems]). For example: [codeblocks] [gdscript] func _ready(): var menu = get_menu() # Remove all items after \u0022Redo\u0022. menu.item_count = menu.get_item_index(MENU_REDO) \u002B 1 # Add custom items. menu.add_separator() menu.add_item(\u0022Insert Date\u0022, MENU_MAX \u002B 1) # Connect callback. menu.id_pressed.connect(_on_item_pressed) func _on_item_pressed(id): if id == MENU_MAX \u002B 1: insert_text_at_caret(Time.get_date_string_from_system()) [/gdscript] [csharp] public override void _Ready() { var menu = GetMenu(); // Remove all items after \u0022Redo\u0022. menu.ItemCount = menu.GetItemIndex(LineEdit.MenuItems.Redo) \u002B 1; // Add custom items. menu.AddSeparator(); menu.AddItem(\u0022Insert Date\u0022, LineEdit.MenuItems.Max \u002B 1); // Add event handler. menu.IdPressed \u002B= OnItemPressed; } public void OnItemPressed(int id) { if (id == LineEdit.MenuItems.Max \u002B 1) { InsertTextAtCaret(Time.GetDateStringFromSystem()); } } [/csharp] [/codeblocks] [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_menu",
+      "xmlDocId": "M:Godot.LineEdit.GetMenu",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetNextCompositeCharacterColumn",
+      "kind": "Method",
+      "signature": "public int GetNextCompositeCharacterColumn(int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the correct column at the end of a composite character like \u2764\uFE0F\u200D\uD83E\uDE79 (mending heart; Unicode: [code]U\u002B2764 U\u002BFE0F U\u002B200D U\u002B1FA79[/code]) which is comprised of more than one Unicode code point, if the caret is at the start of the composite character. Also returns the correct column with the caret at mid grapheme and for non-composite characters. [b]Note:[/b] To check at caret location use [code]get_next_composite_character_column(get_caret_column())[/code]",
+      "godotName": "get_next_composite_character_column",
+      "xmlDocId": "M:Godot.LineEdit.GetNextCompositeCharacterColumn(int)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetPreviousCompositeCharacterColumn",
+      "kind": "Method",
+      "signature": "public int GetPreviousCompositeCharacterColumn(int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the correct column at the start of a composite character like \u2764\uFE0F\u200D\uD83E\uDE79 (mending heart; Unicode: [code]U\u002B2764 U\u002BFE0F U\u002B200D U\u002B1FA79[/code]) which is comprised of more than one Unicode code point, if the caret is at the end of the composite character. Also returns the correct column with the caret at mid grapheme and for non-composite characters. [b]Note:[/b] To check at caret location use [code]get_previous_composite_character_column(get_caret_column())[/code]",
+      "godotName": "get_previous_composite_character_column",
+      "xmlDocId": "M:Godot.LineEdit.GetPreviousCompositeCharacterColumn(int)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetScrollOffset",
+      "kind": "Method",
+      "signature": "public float GetScrollOffset()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the scroll offset due to [member caret_column], as a number of characters.",
+      "godotName": "get_scroll_offset",
+      "xmlDocId": "M:Godot.LineEdit.GetScrollOffset",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetSelectedText",
+      "kind": "Method",
+      "signature": "public String GetSelectedText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the text inside the selection.",
+      "godotName": "get_selected_text",
+      "xmlDocId": "M:Godot.LineEdit.GetSelectedText",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetSelectionFromColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionFromColumn()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the selection begin column.",
+      "godotName": "get_selection_from_column",
+      "xmlDocId": "M:Godot.LineEdit.GetSelectionFromColumn",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "GetSelectionToColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionToColumn()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the selection end column.",
+      "godotName": "get_selection_to_column",
+      "xmlDocId": "M:Godot.LineEdit.GetSelectionToColumn",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "HasImeText",
+      "kind": "Method",
+      "signature": "public bool HasImeText()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the user has text in the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME).",
+      "godotName": "has_ime_text",
+      "xmlDocId": "M:Godot.LineEdit.HasImeText",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "HasRedo",
+      "kind": "Method",
+      "signature": "public bool HasRedo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a \u0022redo\u0022 action is available.",
+      "godotName": "has_redo",
+      "xmlDocId": "M:Godot.LineEdit.HasRedo",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "HasSelection",
+      "kind": "Method",
+      "signature": "public bool HasSelection()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the user has selected text.",
+      "godotName": "has_selection",
+      "xmlDocId": "M:Godot.LineEdit.HasSelection",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "HasUndo",
+      "kind": "Method",
+      "signature": "public bool HasUndo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an \u0022undo\u0022 action is available.",
+      "godotName": "has_undo",
+      "xmlDocId": "M:Godot.LineEdit.HasUndo",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "InsertTextAtCaret",
+      "kind": "Method",
+      "signature": "public void InsertTextAtCaret(String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Inserts [param text] at the caret. If the resulting value is longer than [member max_length], nothing happens.",
+      "godotName": "insert_text_at_caret",
+      "xmlDocId": "M:Godot.LineEdit.InsertTextAtCaret(String)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "IsEditing",
+      "kind": "Method",
+      "signature": "public bool IsEditing()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the [LineEdit] is being edited.",
+      "godotName": "is_editing",
+      "xmlDocId": "M:Godot.LineEdit.IsEditing",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "IsMenuVisible",
+      "kind": "Method",
+      "signature": "public bool IsMenuVisible()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the menu is visible. Use this instead of [code]get_menu().visible[/code] to improve performance (so the creation of the menu is avoided).",
+      "godotName": "is_menu_visible",
+      "xmlDocId": "M:Godot.LineEdit.IsMenuVisible",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MenuOption",
+      "kind": "Method",
+      "signature": "public void MenuOption(int option)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Executes a given action as defined in the [enum MenuItems] enum.",
+      "godotName": "menu_option",
+      "xmlDocId": "M:Godot.LineEdit.MenuOption(int)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public void Select(int from, int to)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "to",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Selects characters inside [LineEdit] between [param from] and [param to]. By default, [param from] is at the beginning and [param to] at the end. [codeblocks] [gdscript] text = \u0022Welcome\u0022 select() # Will select \u0022Welcome\u0022. select(4) # Will select \u0022ome\u0022. select(2, 5) # Will select \u0022lco\u0022. [/gdscript] [csharp] Text = \u0022Welcome\u0022; Select(); // Will select \u0022Welcome\u0022. Select(4); // Will select \u0022ome\u0022. Select(2, 5); // Will select \u0022lco\u0022. [/csharp] [/codeblocks]",
+      "godotName": "select",
+      "xmlDocId": "M:Godot.LineEdit.Select(int,int)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "SelectAll",
+      "kind": "Method",
+      "signature": "public void SelectAll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Selects the whole [String].",
+      "godotName": "select_all",
+      "xmlDocId": "M:Godot.LineEdit.SelectAll",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Unedit",
+      "kind": "Method",
+      "signature": "public void Unedit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Allows exiting edit mode while preserving focus.",
+      "godotName": "unedit",
+      "xmlDocId": "M:Godot.LineEdit.Unedit",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The text\u0027s horizontal alignment.",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.LineEdit.Alignment",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "BackspaceDeletesCompositeCharacterEnabled",
+      "kind": "Property",
+      "signature": "public bool BackspaceDeletesCompositeCharacterEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] and [member caret_mid_grapheme] is [code]false[/code], backspace deletes an entire composite character such as \u2764\uFE0F\u200D\uD83E\uDE79, instead of deleting part of the composite character.",
+      "defaultValue": "false",
+      "godotName": "backspace_deletes_composite_character_enabled",
+      "xmlDocId": "P:Godot.LineEdit.BackspaceDeletesCompositeCharacterEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CaretBlink",
+      "kind": "Property",
+      "signature": "public bool CaretBlink { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], makes the caret blink.",
+      "defaultValue": "false",
+      "godotName": "caret_blink",
+      "xmlDocId": "P:Godot.LineEdit.CaretBlink",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CaretBlinkInterval",
+      "kind": "Property",
+      "signature": "public float CaretBlinkInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The interval at which the caret blinks (in seconds).",
+      "defaultValue": "0.65",
+      "godotName": "caret_blink_interval",
+      "xmlDocId": "P:Godot.LineEdit.CaretBlinkInterval",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CaretColumn",
+      "kind": "Property",
+      "signature": "public int CaretColumn { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The caret\u0027s column position inside the [LineEdit]. When set, the text may scroll to accommodate it.",
+      "defaultValue": "0",
+      "godotName": "caret_column",
+      "xmlDocId": "P:Godot.LineEdit.CaretColumn",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CaretForceDisplayed",
+      "kind": "Property",
+      "signature": "public bool CaretForceDisplayed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] will always show the caret, even if not editing or focus is lost.",
+      "defaultValue": "false",
+      "godotName": "caret_force_displayed",
+      "xmlDocId": "P:Godot.LineEdit.CaretForceDisplayed",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "CaretMidGrapheme",
+      "kind": "Property",
+      "signature": "public bool CaretMidGrapheme { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Allow moving caret, selecting and removing the individual composite character components. [b]Note:[/b] [kbd]Backspace[/kbd] is always removing individual composite character components.",
+      "defaultValue": "false",
+      "godotName": "caret_mid_grapheme",
+      "xmlDocId": "P:Godot.LineEdit.CaretMidGrapheme",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "ClearButtonEnabled",
+      "kind": "Property",
+      "signature": "public bool ClearButtonEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] will show a clear button if [member text] is not empty, which can be used to clear the text quickly.",
+      "defaultValue": "false",
+      "godotName": "clear_button_enabled",
+      "xmlDocId": "P:Godot.LineEdit.ClearButtonEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "ContextMenuEnabled",
+      "kind": "Property",
+      "signature": "public bool ContextMenuEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the context menu will appear when right-clicked.",
+      "defaultValue": "true",
+      "godotName": "context_menu_enabled",
+      "xmlDocId": "P:Godot.LineEdit.ContextMenuEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "DeselectOnFocusLossEnabled",
+      "kind": "Property",
+      "signature": "public bool DeselectOnFocusLossEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the selected text will be deselected when focus is lost.",
+      "defaultValue": "true",
+      "godotName": "deselect_on_focus_loss_enabled",
+      "xmlDocId": "P:Godot.LineEdit.DeselectOnFocusLossEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "DragAndDropSelectionEnabled",
+      "kind": "Property",
+      "signature": "public bool DragAndDropSelectionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allow drag and drop of selected text.",
+      "defaultValue": "true",
+      "godotName": "drag_and_drop_selection_enabled",
+      "xmlDocId": "P:Godot.LineEdit.DragAndDropSelectionEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "DrawControlChars",
+      "kind": "Property",
+      "signature": "public bool DrawControlChars { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], control characters are displayed.",
+      "defaultValue": "false",
+      "godotName": "draw_control_chars",
+      "xmlDocId": "P:Godot.LineEdit.DrawControlChars",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public bool Editable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], existing text cannot be modified and new text cannot be added.",
+      "defaultValue": "true",
+      "godotName": "editable",
+      "xmlDocId": "P:Godot.LineEdit.Editable",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "EmojiMenuEnabled",
+      "kind": "Property",
+      "signature": "public bool EmojiMenuEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], \u0022Emoji and Symbols\u0022 menu is enabled.",
+      "defaultValue": "true",
+      "godotName": "emoji_menu_enabled",
+      "xmlDocId": "P:Godot.LineEdit.EmojiMenuEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "ExpandToTextLength",
+      "kind": "Property",
+      "signature": "public bool ExpandToTextLength { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] width will increase to stay longer than the [member text]. It will [b]not[/b] compress if the [member text] is shortened.",
+      "defaultValue": "false",
+      "godotName": "expand_to_text_length",
+      "xmlDocId": "P:Godot.LineEdit.ExpandToTextLength",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Flat",
+      "kind": "Property",
+      "signature": "public bool Flat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] doesn\u0027t display decoration.",
+      "defaultValue": "false",
+      "godotName": "flat",
+      "xmlDocId": "P:Godot.LineEdit.Flat",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.LineEdit.FocusMode",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "IconExpandMode",
+      "kind": "Property",
+      "signature": "public int IconExpandMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Define the scaling behavior of the [member right_icon].",
+      "defaultValue": "0",
+      "godotName": "icon_expand_mode",
+      "xmlDocId": "P:Godot.LineEdit.IconExpandMode",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KeepEditingOnTextSubmit",
+      "kind": "Property",
+      "signature": "public bool KeepEditingOnTextSubmit { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] will not exit edit mode when text is submitted by pressing [code]ui_text_submit[/code] action (by default: [kbd]Enter[/kbd] or [kbd]Kp Enter[/kbd]).",
+      "defaultValue": "false",
+      "godotName": "keep_editing_on_text_submit",
+      "xmlDocId": "P:Godot.LineEdit.KeepEditingOnTextSubmit",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.LineEdit.Language",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MaxLength",
+      "kind": "Property",
+      "signature": "public int MaxLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum number of characters that can be entered inside the [LineEdit]. If [code]0[/code], there is no limit. When a limit is defined, characters that would exceed [member max_length] are truncated. This happens both for existing [member text] contents when setting the max length, or for new text inserted in the [LineEdit], including pasting. If any input text is truncated, the [signal text_change_rejected] signal is emitted with the truncated substring as a parameter: [codeblocks] [gdscript] text = \u0022Hello world\u0022 max_length = 5 # \u0060text\u0060 becomes \u0022Hello\u0022. max_length = 10 text \u002B= \u0022 goodbye\u0022 # \u0060text\u0060 becomes \u0022Hello good\u0022. # \u0060text_change_rejected\u0060 is emitted with \u0022bye\u0022 as a parameter. [/gdscript] [csharp] Text = \u0022Hello world\u0022; MaxLength = 5; // \u0060Text\u0060 becomes \u0022Hello\u0022. MaxLength = 10; Text \u002B= \u0022 goodbye\u0022; // \u0060Text\u0060 becomes \u0022Hello good\u0022. // \u0060text_change_rejected\u0060 is emitted with \u0022bye\u0022 as a parameter. [/csharp] [/codeblocks]",
+      "defaultValue": "0",
+      "godotName": "max_length",
+      "xmlDocId": "P:Godot.LineEdit.MaxLength",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MiddleMousePasteEnabled",
+      "kind": "Property",
+      "signature": "public bool MiddleMousePasteEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], using middle mouse button to paste clipboard will be disabled. [b]Note:[/b] This method is only implemented on Linux.",
+      "defaultValue": "true",
+      "godotName": "middle_mouse_paste_enabled",
+      "xmlDocId": "P:Godot.LineEdit.MiddleMousePasteEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MouseDefaultCursorShape",
+      "kind": "Property",
+      "signature": "public int MouseDefaultCursorShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "mouse_default_cursor_shape",
+      "xmlDocId": "P:Godot.LineEdit.MouseDefaultCursorShape",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "PlaceholderText",
+      "kind": "Property",
+      "signature": "public String PlaceholderText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Text shown when the [LineEdit] is empty. It is [b]not[/b] the [LineEdit]\u0027s default value (see [member text]).",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "placeholder_text",
+      "xmlDocId": "P:Godot.LineEdit.PlaceholderText",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "RightIcon",
+      "kind": "Property",
+      "signature": "public Texture2D RightIcon { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Sets the icon that will appear in the right end of the [LineEdit] if there\u0027s no [member text], or always, if [member clear_button_enabled] is set to [code]false[/code].",
+      "godotName": "right_icon",
+      "xmlDocId": "P:Godot.LineEdit.RightIcon",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "RightIconScale",
+      "kind": "Property",
+      "signature": "public float RightIconScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scale ratio of the icon when [member icon_expand_mode] is set to [constant EXPAND_MODE_FIT_TO_LINE_EDIT].",
+      "defaultValue": "1.0",
+      "godotName": "right_icon_scale",
+      "xmlDocId": "P:Godot.LineEdit.RightIconScale",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Secret",
+      "kind": "Property",
+      "signature": "public bool Secret { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], every character is replaced with the secret character (see [member secret_character]).",
+      "defaultValue": "false",
+      "godotName": "secret",
+      "xmlDocId": "P:Godot.LineEdit.Secret",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "SecretCharacter",
+      "kind": "Property",
+      "signature": "public String SecretCharacter { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The character to use to mask secret input. Only a single character can be used as the secret character. If it is longer than one character, only the first one will be used. If it is empty, a space will be used instead.",
+      "defaultValue": "\u0022\u2022\u0022",
+      "godotName": "secret_character",
+      "xmlDocId": "P:Godot.LineEdit.SecretCharacter",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "SelectAllOnFocus",
+      "kind": "Property",
+      "signature": "public bool SelectAllOnFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [LineEdit] will select the whole text when it gains focus.",
+      "defaultValue": "false",
+      "godotName": "select_all_on_focus",
+      "xmlDocId": "P:Godot.LineEdit.SelectAllOnFocus",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "SelectingEnabled",
+      "kind": "Property",
+      "signature": "public bool SelectingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], it\u0027s impossible to select the text using mouse nor keyboard.",
+      "defaultValue": "true",
+      "godotName": "selecting_enabled",
+      "xmlDocId": "P:Godot.LineEdit.SelectingEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "ShortcutKeysEnabled",
+      "kind": "Property",
+      "signature": "public bool ShortcutKeysEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shortcut keys for context menu items are enabled, even if the context menu is disabled.",
+      "defaultValue": "true",
+      "godotName": "shortcut_keys_enabled",
+      "xmlDocId": "P:Godot.LineEdit.ShortcutKeysEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.LineEdit.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.LineEdit.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "String value of the [LineEdit]. [b]Note:[/b] Changing text using this property won\u0027t emit the [signal text_changed] signal.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.LineEdit.Text",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.LineEdit.TextDirection",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "VirtualKeyboardEnabled",
+      "kind": "Property",
+      "signature": "public bool VirtualKeyboardEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the native virtual keyboard is enabled on platforms that support it.",
+      "defaultValue": "true",
+      "godotName": "virtual_keyboard_enabled",
+      "xmlDocId": "P:Godot.LineEdit.VirtualKeyboardEnabled",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "VirtualKeyboardShowOnFocus",
+      "kind": "Property",
+      "signature": "public bool VirtualKeyboardShowOnFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the native virtual keyboard is shown on focus events on platforms that support it.",
+      "defaultValue": "true",
+      "godotName": "virtual_keyboard_show_on_focus",
+      "xmlDocId": "P:Godot.LineEdit.VirtualKeyboardShowOnFocus",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "VirtualKeyboardType",
+      "kind": "Property",
+      "signature": "public int VirtualKeyboardType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the type of virtual keyboard to show.",
+      "defaultValue": "0",
+      "godotName": "virtual_keyboard_type",
+      "xmlDocId": "P:Godot.LineEdit.VirtualKeyboardType",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "EditingToggled",
+      "kind": "Signal",
+      "signature": "public event EditingToggledHandler EditingToggled",
+      "parameters": [
+        {
+          "name": "toggled_on",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the [LineEdit] switches in or out of edit mode.",
+      "godotName": "editing_toggled",
+      "xmlDocId": "E:Godot.LineEdit.EditingToggled(bool)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "TextChangeRejected",
+      "kind": "Signal",
+      "signature": "public event TextChangeRejectedHandler TextChangeRejected",
+      "parameters": [
+        {
+          "name": "rejected_substring",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when appending text that overflows the [member max_length]. The appended text is truncated to fit [member max_length], and the part that couldn\u0027t fit is passed as the [param rejected_substring] argument.",
+      "godotName": "text_change_rejected",
+      "xmlDocId": "E:Godot.LineEdit.TextChangeRejected(String)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "TextChanged",
+      "kind": "Signal",
+      "signature": "public event TextChangedHandler TextChanged",
+      "parameters": [
+        {
+          "name": "new_text",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the text changes.",
+      "godotName": "text_changed",
+      "xmlDocId": "E:Godot.LineEdit.TextChanged(String)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "TextSubmitted",
+      "kind": "Signal",
+      "signature": "public event TextSubmittedHandler TextSubmitted",
+      "parameters": [
+        {
+          "name": "new_text",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user presses the [code]ui_text_submit[/code] action (by default: [kbd]Enter[/kbd] or [kbd]Kp Enter[/kbd]) while the [LineEdit] has focus.",
+      "godotName": "text_submitted",
+      "xmlDocId": "E:Godot.LineEdit.TextSubmitted(String)",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ExpandMode",
+      "values": [
+        {
+          "name": "EXPAND_MODE_FIT_TO_LINE_EDIT",
+          "value": "2",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "Scale the right icon to fit the LineEdit.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "EXPAND_MODE_FIT_TO_TEXT",
+          "value": "1",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "Scale the right icon\u0027s size to match the size of the text.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "EXPAND_MODE_ORIGINAL_SIZE",
+          "value": "0",
+          "enum": "ExpandMode",
+          "kind": "EnumValue",
+          "summary": "Use the original size for the right icon.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "MenuItems",
+      "values": [
+        {
+          "name": "MENU_CLEAR",
+          "value": "3",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Erases the whole [LineEdit] text.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_COPY",
+          "value": "1",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Copies the selected text.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_CUT",
+          "value": "0",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Cuts (copies and clears) the selected text.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_AUTO",
+          "value": "9",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to automatic.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_INHERITED",
+          "value": "8",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to inherited.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_LTR",
+          "value": "10",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to left-to-right.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_RTL",
+          "value": "11",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to right-to-left.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_DISPLAY_UCC",
+          "value": "12",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Toggles control character display.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_EMOJI_AND_SYMBOL",
+          "value": "30",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Opens system emoji and symbol picker.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ALM",
+          "value": "21",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts Arabic letter mark (ALM) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_FSI",
+          "value": "24",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts first strong isolate (FSI) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRE",
+          "value": "16",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of left-to-right embedding (LRE) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRI",
+          "value": "22",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts left-to-right isolate (LRI) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRM",
+          "value": "14",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts left-to-right mark (LRM) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRO",
+          "value": "18",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of left-to-right override (LRO) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_PDF",
+          "value": "20",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts pop direction formatting (PDF) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_PDI",
+          "value": "25",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts pop direction isolate (PDI) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLE",
+          "value": "17",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of right-to-left embedding (RLE) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLI",
+          "value": "23",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts right-to-left isolate (RLI) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLM",
+          "value": "15",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts right-to-left mark (RLM) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLO",
+          "value": "19",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of right-to-left override (RLO) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_SHY",
+          "value": "29",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts soft hyphen (SHY) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_WJ",
+          "value": "28",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts word joiner (WJ) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ZWJ",
+          "value": "26",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts zero width joiner (ZWJ) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ZWNJ",
+          "value": "27",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts zero width non-joiner (ZWNJ) character.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_MAX",
+          "value": "31",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum MenuItems] enum.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_PASTE",
+          "value": "2",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Pastes the clipboard text over the selected text (or at the caret\u0027s position). Non-printable escape characters are automatically stripped from the OS clipboard via [method String.strip_escapes].",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_REDO",
+          "value": "6",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Reverse the last undo action.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_SELECT_ALL",
+          "value": "4",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Selects the whole [LineEdit] text.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_SUBMENU_INSERT_UCC",
+          "value": "13",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "ID of \u0022Insert Control Character\u0022 submenu.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_SUBMENU_TEXT_DIR",
+          "value": "7",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "ID of \u0022Text Writing Direction\u0022 submenu.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "MENU_UNDO",
+          "value": "5",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Undoes the previous action.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "VirtualKeyboardType",
+      "values": [
+        {
+          "name": "KEYBOARD_TYPE_DEFAULT",
+          "value": "0",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Default text virtual keyboard.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_EMAIL_ADDRESS",
+          "value": "5",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual keyboard with additional keys to assist with typing email addresses.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_MULTILINE",
+          "value": "1",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Multiline virtual keyboard.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_NUMBER",
+          "value": "2",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual number keypad, useful for PIN entry.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_NUMBER_DECIMAL",
+          "value": "3",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual number keypad, useful for entering fractional numbers.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_PASSWORD",
+          "value": "6",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual keyboard for entering a password. On most platforms, this should disable autocomplete and autocapitalization. [b]Note:[/b] This is not supported on Web. Instead, this behaves identically to [constant KEYBOARD_TYPE_DEFAULT].",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_PHONE",
+          "value": "4",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual phone number keypad.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        },
+        {
+          "name": "KEYBOARD_TYPE_URL",
+          "value": "7",
+          "enum": "VirtualKeyboardType",
+          "kind": "EnumValue",
+          "summary": "Virtual keyboard with additional keys to assist with typing URLs.",
+          "sourcePath": "doc/classes/LineEdit.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MENU_CUT",
+      "value": "0",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Cuts (copies and clears) the selected text.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_COPY",
+      "value": "1",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Copies the selected text.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_PASTE",
+      "value": "2",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Pastes the clipboard text over the selected text (or at the caret\u0027s position). Non-printable escape characters are automatically stripped from the OS clipboard via [method String.strip_escapes].",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_CLEAR",
+      "value": "3",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Erases the whole [LineEdit] text.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_SELECT_ALL",
+      "value": "4",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Selects the whole [LineEdit] text.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_UNDO",
+      "value": "5",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Undoes the previous action.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_REDO",
+      "value": "6",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Reverse the last undo action.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_SUBMENU_TEXT_DIR",
+      "value": "7",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "ID of \u0022Text Writing Direction\u0022 submenu.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_INHERITED",
+      "value": "8",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to inherited.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_AUTO",
+      "value": "9",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to automatic.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_LTR",
+      "value": "10",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to left-to-right.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_RTL",
+      "value": "11",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to right-to-left.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_DISPLAY_UCC",
+      "value": "12",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Toggles control character display.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_SUBMENU_INSERT_UCC",
+      "value": "13",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "ID of \u0022Insert Control Character\u0022 submenu.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRM",
+      "value": "14",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts left-to-right mark (LRM) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLM",
+      "value": "15",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts right-to-left mark (RLM) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRE",
+      "value": "16",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of left-to-right embedding (LRE) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLE",
+      "value": "17",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of right-to-left embedding (RLE) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRO",
+      "value": "18",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of left-to-right override (LRO) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLO",
+      "value": "19",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of right-to-left override (RLO) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_PDF",
+      "value": "20",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts pop direction formatting (PDF) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ALM",
+      "value": "21",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts Arabic letter mark (ALM) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRI",
+      "value": "22",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts left-to-right isolate (LRI) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLI",
+      "value": "23",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts right-to-left isolate (RLI) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_FSI",
+      "value": "24",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts first strong isolate (FSI) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_PDI",
+      "value": "25",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts pop direction isolate (PDI) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ZWJ",
+      "value": "26",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts zero width joiner (ZWJ) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ZWNJ",
+      "value": "27",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts zero width non-joiner (ZWNJ) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_WJ",
+      "value": "28",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts word joiner (WJ) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_SHY",
+      "value": "29",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts soft hyphen (SHY) character.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_EMOJI_AND_SYMBOL",
+      "value": "30",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Opens system emoji and symbol picker.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "MENU_MAX",
+      "value": "31",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum MenuItems] enum.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_DEFAULT",
+      "value": "0",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Default text virtual keyboard.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_MULTILINE",
+      "value": "1",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Multiline virtual keyboard.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_NUMBER",
+      "value": "2",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual number keypad, useful for PIN entry.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_NUMBER_DECIMAL",
+      "value": "3",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual number keypad, useful for entering fractional numbers.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_PHONE",
+      "value": "4",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual phone number keypad.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_EMAIL_ADDRESS",
+      "value": "5",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual keyboard with additional keys to assist with typing email addresses.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_PASSWORD",
+      "value": "6",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual keyboard for entering a password. On most platforms, this should disable autocomplete and autocapitalization. [b]Note:[/b] This is not supported on Web. Instead, this behaves identically to [constant KEYBOARD_TYPE_DEFAULT].",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "KEYBOARD_TYPE_URL",
+      "value": "7",
+      "enum": "VirtualKeyboardType",
+      "kind": "EnumValue",
+      "summary": "Virtual keyboard with additional keys to assist with typing URLs.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "EXPAND_MODE_ORIGINAL_SIZE",
+      "value": "0",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "Use the original size for the right icon.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "EXPAND_MODE_FIT_TO_TEXT",
+      "value": "1",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "Scale the right icon\u0027s size to match the size of the text.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    },
+    {
+      "name": "EXPAND_MODE_FIT_TO_LINE_EDIT",
+      "value": "2",
+      "enum": "ExpandMode",
+      "kind": "EnumValue",
+      "summary": "Scale the right icon to fit the LineEdit.",
+      "sourcePath": "doc/classes/LineEdit.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LineEdit.xml",
+      "sha256": "0ed75f6ae801f69876e4ef35559d609954d8a012878d3bc304fe5acdde4d1eac"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

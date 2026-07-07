@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicalSkyMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicalSkyMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "PhysicalSkyMaterial",
+    "documentationPath": "doc/classes/PhysicalSkyMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicalskymaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float EnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sky\u0027s overall brightness multiplier. Higher values result in a brighter sky.",
+      "defaultValue": "1.0",
+      "godotName": "energy_multiplier",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.EnergyMultiplier",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "GroundColor",
+      "kind": "Property",
+      "signature": "public Color GroundColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Modulates the [Color] on the bottom half of the sky to represent the ground.",
+      "defaultValue": "Color(0.1, 0.07, 0.034, 1)",
+      "godotName": "ground_color",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.GroundColor",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "MieCoefficient",
+      "kind": "Property",
+      "signature": "public float MieCoefficient { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the strength of [url=https://en.wikipedia.org/wiki/Mie_scattering]Mie scattering[/url] for the sky. Mie scattering results from light colliding with larger particles (like water). On earth, Mie scattering results in a whitish color around the sun and horizon.",
+      "defaultValue": "0.005",
+      "godotName": "mie_coefficient",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.MieCoefficient",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "MieColor",
+      "kind": "Property",
+      "signature": "public Color MieColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Controls the [Color] of the [url=https://en.wikipedia.org/wiki/Mie_scattering]Mie scattering[/url] effect. While not physically accurate, this allows for the creation of alien-looking planets.",
+      "defaultValue": "Color(0.69, 0.729, 0.812, 1)",
+      "godotName": "mie_color",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.MieColor",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "MieEccentricity",
+      "kind": "Property",
+      "signature": "public float MieEccentricity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the direction of the [url=https://en.wikipedia.org/wiki/Mie_scattering]Mie scattering[/url]. A value of [code]1[/code] means that when light hits a particle it\u0027s passing through straight forward. A value of [code]-1[/code] means that all light is scatter backwards.",
+      "defaultValue": "0.8",
+      "godotName": "mie_eccentricity",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.MieEccentricity",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "NightSky",
+      "kind": "Property",
+      "signature": "public Texture2D NightSky { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] for the night sky. This is added to the sky, so if it is bright enough, it may be visible during the day.",
+      "godotName": "night_sky",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.NightSky",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "RayleighCoefficient",
+      "kind": "Property",
+      "signature": "public float RayleighCoefficient { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the strength of the [url=https://en.wikipedia.org/wiki/Rayleigh_scattering]Rayleigh scattering[/url]. Rayleigh scattering results from light colliding with small particles. It is responsible for the blue color of the sky.",
+      "defaultValue": "2.0",
+      "godotName": "rayleigh_coefficient",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.RayleighCoefficient",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "RayleighColor",
+      "kind": "Property",
+      "signature": "public Color RayleighColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Controls the [Color] of the [url=https://en.wikipedia.org/wiki/Rayleigh_scattering]Rayleigh scattering[/url]. While not physically accurate, this allows for the creation of alien-looking planets. For example, setting this to a red [Color] results in a Mars-looking atmosphere with a corresponding blue sunset.",
+      "defaultValue": "Color(0.3, 0.405, 0.6, 1)",
+      "godotName": "rayleigh_color",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.RayleighColor",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "SunDiskScale",
+      "kind": "Property",
+      "signature": "public float SunDiskScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the size of the sun disk. Default value is based on Sol\u0027s perceived size from Earth.",
+      "defaultValue": "1.0",
+      "godotName": "sun_disk_scale",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.SunDiskScale",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "Turbidity",
+      "kind": "Property",
+      "signature": "public float Turbidity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the thickness of the atmosphere. High turbidity creates a foggy-looking atmosphere, while a low turbidity results in a clearer atmosphere.",
+      "defaultValue": "10.0",
+      "godotName": "turbidity",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.Turbidity",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    },
+    {
+      "name": "UseDebanding",
+      "kind": "Property",
+      "signature": "public bool UseDebanding { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables debanding. Debanding adds a small amount of noise which helps reduce banding that appears from the smooth changes in color in the sky.",
+      "defaultValue": "true",
+      "godotName": "use_debanding",
+      "xmlDocId": "P:Godot.PhysicalSkyMaterial.UseDebanding",
+      "sourcePath": "doc/classes/PhysicalSkyMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicalSkyMaterial.xml",
+      "sha256": "badec4c7fdb3df831ac64e71c41d0b6be89e6d1fcef6ae4022834f902f389d4a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

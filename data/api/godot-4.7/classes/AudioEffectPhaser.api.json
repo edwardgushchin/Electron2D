@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectPhaser",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectPhaser",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectPhaser",
+    "documentationPath": "doc/classes/AudioEffectPhaser.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectphaser.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Depth",
+      "kind": "Property",
+      "signature": "public float Depth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Intensity of the effect. Value can range from 0.1 to 4.0.",
+      "defaultValue": "1.0",
+      "godotName": "depth",
+      "xmlDocId": "P:Godot.AudioEffectPhaser.Depth",
+      "sourcePath": "doc/classes/AudioEffectPhaser.xml"
+    },
+    {
+      "name": "Feedback",
+      "kind": "Property",
+      "signature": "public float Feedback { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of the filtered audio that is fed back to the all-pass filters. The higher the value, the sharper and louder the peak filters created by the effect. Value can range from 0.1 to 0.9.",
+      "defaultValue": "0.7",
+      "godotName": "feedback",
+      "xmlDocId": "P:Godot.AudioEffectPhaser.Feedback",
+      "sourcePath": "doc/classes/AudioEffectPhaser.xml"
+    },
+    {
+      "name": "RangeMaxHz",
+      "kind": "Property",
+      "signature": "public float RangeMaxHz { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Determines the maximum frequency affected by the low-frequency oscillator modulations, in Hz. Value can range from 10 to 10000.",
+      "defaultValue": "1600.0",
+      "godotName": "range_max_hz",
+      "xmlDocId": "P:Godot.AudioEffectPhaser.RangeMaxHz",
+      "sourcePath": "doc/classes/AudioEffectPhaser.xml"
+    },
+    {
+      "name": "RangeMinHz",
+      "kind": "Property",
+      "signature": "public float RangeMinHz { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Determines the minimum frequency affected by the low-frequency oscillator modulations, in Hz. Value can range from 10 to 10000.",
+      "defaultValue": "440.0",
+      "godotName": "range_min_hz",
+      "xmlDocId": "P:Godot.AudioEffectPhaser.RangeMinHz",
+      "sourcePath": "doc/classes/AudioEffectPhaser.xml"
+    },
+    {
+      "name": "RateHz",
+      "kind": "Property",
+      "signature": "public float RateHz { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Adjusts the rate in Hz at which the effect sweeps up and down across the frequency range. Value can range from 0.01 to 20.",
+      "defaultValue": "0.5",
+      "godotName": "rate_hz",
+      "xmlDocId": "P:Godot.AudioEffectPhaser.RateHz",
+      "sourcePath": "doc/classes/AudioEffectPhaser.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectPhaser.xml",
+      "sha256": "cdf53add0ccc83b7f1deafcb6fb8f622b07f357c59e521248758da63d0246fc1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

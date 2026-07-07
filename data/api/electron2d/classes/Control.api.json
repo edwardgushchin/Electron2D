@@ -1,0 +1,1105 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Control",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Control",
+    "kind": "class",
+    "baseType": "Electron2D.CanvasItem",
+    "interfaces": [],
+    "godotReference": "Control",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Control",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Control()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Control type.",
+      "xmlDocId": "M:Electron2D.Control.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Control",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Control()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Control type.",
+      "xmlDocId": "M:Electron2D.Control.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AcceptEvent",
+      "kind": "Method",
+      "signature": "public System.Void AcceptEvent()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Marks the current GUI input event as handled.",
+      "xmlDocId": "M:Electron2D.Control.AcceptEvent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeColorOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeColorOverride(System.String name, Electron2D.Color color)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Adds or replaces a color theme override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeColorOverride(System.String,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeConstantOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeConstantOverride(System.String name, System.Int32 constant)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "constant",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Adds or replaces an integer theme constant override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeConstantOverride(System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeFontOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeFontOverride(System.String name, Electron2D.Font font)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "font",
+          "type": "Electron2D.Font"
+        }
+      ],
+      "summary": "Adds or replaces a font theme override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeFontOverride(System.String,Electron2D.Font)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeFontSizeOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeFontSizeOverride(System.String name, System.Int32 fontSize)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "fontSize",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Adds or replaces a font size theme override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeFontSizeOverride(System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeIconOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeIconOverride(System.String name, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Adds or replaces an icon theme override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeIconOverride(System.String,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddThemeStyleBoxOverride",
+      "kind": "Method",
+      "signature": "public System.Void AddThemeStyleBoxOverride(System.String name, Electron2D.StyleBox styleBox)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "styleBox",
+          "type": "Electron2D.StyleBox"
+        }
+      ],
+      "summary": "Adds or replaces a style box theme override for this control.",
+      "xmlDocId": "M:Electron2D.Control.AddThemeStyleBoxOverride(System.String,Electron2D.StyleBox)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Called to compute the control-specific minimum size.",
+      "xmlDocId": "M:Electron2D.Control._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FindNextValidFocus",
+      "kind": "Method",
+      "signature": "public Electron2D.Control FindNextValidFocus()",
+      "returnType": "Electron2D.Control",
+      "parameters": [],
+      "summary": "Finds the next focusable control in this viewport.",
+      "xmlDocId": "M:Electron2D.Control.FindNextValidFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FindPrevValidFocus",
+      "kind": "Method",
+      "signature": "public Electron2D.Control FindPrevValidFocus()",
+      "returnType": "Electron2D.Control",
+      "parameters": [],
+      "summary": "Finds the previous focusable control in this viewport.",
+      "xmlDocId": "M:Electron2D.Control.FindPrevValidFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCombinedMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetCombinedMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size used by layout calculations.",
+      "xmlDocId": "M:Electron2D.Control.GetCombinedMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetGlobalRect",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 GetGlobalRect()",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets the rectangle occupied by this control in root viewport coordinates.",
+      "xmlDocId": "M:Electron2D.Control.GetGlobalRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this control.",
+      "xmlDocId": "M:Electron2D.Control.GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRect",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 GetRect()",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets the local rectangle occupied by this control.",
+      "xmlDocId": "M:Electron2D.Control.GetRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeColor",
+      "kind": "Method",
+      "signature": "public Electron2D.Color GetThemeColor(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets a color from local overrides or inherited themes.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeConstant",
+      "kind": "Method",
+      "signature": "public System.Int32 GetThemeConstant(System.String name, System.String themeType)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets an integer theme constant override by name.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeDefaultBaseScale",
+      "kind": "Method",
+      "signature": "public System.Single GetThemeDefaultBaseScale()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the resolved theme base scale.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeDefaultBaseScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeDefaultFont",
+      "kind": "Method",
+      "signature": "public Electron2D.Font GetThemeDefaultFont()",
+      "returnType": "Electron2D.Font",
+      "parameters": [],
+      "summary": "Gets the resolved default theme font.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeDefaultFont",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeDefaultFontSize",
+      "kind": "Method",
+      "signature": "public System.Int32 GetThemeDefaultFontSize()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the resolved default theme font size.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeDefaultFontSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeFont",
+      "kind": "Method",
+      "signature": "public Electron2D.Font GetThemeFont(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Font",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets a font from local overrides, inherited themes or the default theme font.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeFontSize",
+      "kind": "Method",
+      "signature": "public System.Int32 GetThemeFontSize(System.String name, System.String themeType)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets a scaled font size from local overrides, inherited themes or fallback values.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetThemeIcon(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets an icon from local overrides or inherited themes.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetThemeStyleBox",
+      "kind": "Method",
+      "signature": "public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType)",
+      "returnType": "Electron2D.StyleBox",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Gets a style box from local overrides or inherited themes.",
+      "xmlDocId": "M:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTooltip",
+      "kind": "Method",
+      "signature": "public System.String GetTooltip(Electron2D.Vector2 atPosition)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "atPosition",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Gets tooltip text for a local pointer position.",
+      "xmlDocId": "M:Electron2D.Control.GetTooltip(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTooltipText",
+      "kind": "Method",
+      "signature": "public System.String GetTooltipText(Electron2D.Vector2 atPosition)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "atPosition",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Called to resolve tooltip text for a local pointer position.",
+      "xmlDocId": "M:Electron2D.Control._GetTooltip(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GrabFocus",
+      "kind": "Method",
+      "signature": "public System.Void GrabFocus()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Gives keyboard and gamepad focus to this control.",
+      "xmlDocId": "M:Electron2D.Control.GrabFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Called when a GUI input event is delivered to this control.",
+      "xmlDocId": "M:Electron2D.Control._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasFocus",
+      "kind": "Method",
+      "signature": "public System.Boolean HasFocus()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this control currently owns focus in its viewport.",
+      "xmlDocId": "M:Electron2D.Control.HasFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeColor",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeColor(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Reports whether a color can be resolved.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeColor(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeColorOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeColorOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a local color override.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeColorOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeConstant",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeConstant(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Reports whether a constant can be resolved.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeConstant(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeConstantOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeConstantOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a theme constant override by name.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeConstantOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeFontOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeFontOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a local font override.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeFontOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeFontSizeOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeFontSizeOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a local font size override.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeFontSizeOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeIcon",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeIcon(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Reports whether an icon can be resolved.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeIcon(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeIconOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeIconOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a local icon override.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeIconOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeStyleBox",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeStyleBox(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Reports whether a style box can be resolved.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeStyleBox(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasThemeStyleBoxOverride",
+      "kind": "Method",
+      "signature": "public System.Boolean HasThemeStyleBoxOverride(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether this control has a local style box override.",
+      "xmlDocId": "M:Electron2D.Control.HasThemeStyleBoxOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MakeCustomTooltip",
+      "kind": "Method",
+      "signature": "public Electron2D.Control MakeCustomTooltip(System.String forText)",
+      "returnType": "Electron2D.Control",
+      "parameters": [
+        {
+          "name": "forText",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Called to create a custom tooltip control for resolved text.",
+      "xmlDocId": "M:Electron2D.Control._MakeCustomTooltip(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReleaseFocus",
+      "kind": "Method",
+      "signature": "public System.Void ReleaseFocus()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Releases focus from this control when it currently owns it.",
+      "xmlDocId": "M:Electron2D.Control.ReleaseFocus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeColorOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeColorOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a color theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeColorOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeConstantOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeConstantOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a constant theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeConstantOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeFontOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeFontOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a font theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeFontOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeFontSizeOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeFontSizeOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a font size theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeFontSizeOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeIconOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeIconOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes an icon theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeIconOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveThemeStyleBoxOverride",
+      "kind": "Method",
+      "signature": "public System.Void RemoveThemeStyleBoxOverride(System.String name)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a style box theme override from this control.",
+      "xmlDocId": "M:Electron2D.Control.RemoveThemeStyleBoxOverride(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ResetSize",
+      "kind": "Method",
+      "signature": "public System.Void ResetSize()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Resets this control size to its combined minimum size.",
+      "xmlDocId": "M:Electron2D.Control.ResetSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetSize",
+      "kind": "Method",
+      "signature": "public System.Void SetSize(Electron2D.Vector2 size)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Sets the computed size of this control.",
+      "xmlDocId": "M:Electron2D.Control.SetSize(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AnchorBottom",
+      "kind": "Property",
+      "signature": "public System.Single AnchorBottom { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the bottom anchor of this control.",
+      "xmlDocId": "P:Electron2D.Control.AnchorBottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AnchorLeft",
+      "kind": "Property",
+      "signature": "public System.Single AnchorLeft { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the left anchor of this control.",
+      "xmlDocId": "P:Electron2D.Control.AnchorLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AnchorRight",
+      "kind": "Property",
+      "signature": "public System.Single AnchorRight { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the right anchor of this control.",
+      "xmlDocId": "P:Electron2D.Control.AnchorRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AnchorTop",
+      "kind": "Property",
+      "signature": "public System.Single AnchorTop { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the top anchor of this control.",
+      "xmlDocId": "P:Electron2D.Control.AnchorTop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClipContents",
+      "kind": "Property",
+      "signature": "public System.Boolean ClipContents { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this control clips GUI hit-testing for its descendants.",
+      "xmlDocId": "P:Electron2D.Control.ClipContents",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CustomMinimumSize",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 CustomMinimumSize { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the custom minimum size of this control.",
+      "xmlDocId": "P:Electron2D.Control.CustomMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public Electron2D.FocusMode FocusMode { get; set; }",
+      "returnType": "Electron2D.FocusMode",
+      "parameters": [],
+      "summary": "Gets or sets how this control can receive focus.",
+      "xmlDocId": "P:Electron2D.Control.FocusMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusNeighborBottom",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusNeighborBottom { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used for bottom-direction navigation.",
+      "xmlDocId": "P:Electron2D.Control.FocusNeighborBottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusNeighborLeft",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusNeighborLeft { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used for left-direction navigation.",
+      "xmlDocId": "P:Electron2D.Control.FocusNeighborLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusNeighborRight",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusNeighborRight { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used for right-direction navigation.",
+      "xmlDocId": "P:Electron2D.Control.FocusNeighborRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusNeighborTop",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusNeighborTop { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used for top-direction navigation.",
+      "xmlDocId": "P:Electron2D.Control.FocusNeighborTop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusNext",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusNext { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used when navigating to the next control.",
+      "xmlDocId": "P:Electron2D.Control.FocusNext",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FocusPrevious",
+      "kind": "Property",
+      "signature": "public Electron2D.NodePath FocusPrevious { get; set; }",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [],
+      "summary": "Gets or sets the explicit focus target used when navigating to the previous control.",
+      "xmlDocId": "P:Electron2D.Control.FocusPrevious",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GrowHorizontal",
+      "kind": "Property",
+      "signature": "public Electron2D.GrowDirection GrowHorizontal { get; set; }",
+      "returnType": "Electron2D.GrowDirection",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal grow direction used when minimum size expands this control.",
+      "xmlDocId": "P:Electron2D.Control.GrowHorizontal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GrowVertical",
+      "kind": "Property",
+      "signature": "public Electron2D.GrowDirection GrowVertical { get; set; }",
+      "returnType": "Electron2D.GrowDirection",
+      "parameters": [],
+      "summary": "Gets or sets the vertical grow direction used when minimum size expands this control.",
+      "xmlDocId": "P:Electron2D.Control.GrowVertical",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public Electron2D.MouseFilter MouseFilter { get; set; }",
+      "returnType": "Electron2D.MouseFilter",
+      "parameters": [],
+      "summary": "Gets or sets how this control receives and consumes mouse input.",
+      "xmlDocId": "P:Electron2D.Control.MouseFilter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OffsetBottom",
+      "kind": "Property",
+      "signature": "public System.Single OffsetBottom { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the bottom offset of this control.",
+      "xmlDocId": "P:Electron2D.Control.OffsetBottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OffsetLeft",
+      "kind": "Property",
+      "signature": "public System.Single OffsetLeft { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the left offset of this control.",
+      "xmlDocId": "P:Electron2D.Control.OffsetLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OffsetRight",
+      "kind": "Property",
+      "signature": "public System.Single OffsetRight { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the right offset of this control.",
+      "xmlDocId": "P:Electron2D.Control.OffsetRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OffsetTop",
+      "kind": "Property",
+      "signature": "public System.Single OffsetTop { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the top offset of this control.",
+      "xmlDocId": "P:Electron2D.Control.OffsetTop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Position { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the local position of this control.",
+      "xmlDocId": "P:Electron2D.Control.Position",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Size { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the local size of this control.",
+      "xmlDocId": "P:Electron2D.Control.Size",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SizeFlagsHorizontal",
+      "kind": "Property",
+      "signature": "public Electron2D.SizeFlags SizeFlagsHorizontal { get; set; }",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal size flags used by a parent \u0060Electron2D.Container\u0060.",
+      "xmlDocId": "P:Electron2D.Control.SizeFlagsHorizontal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SizeFlagsStretchRatio",
+      "kind": "Property",
+      "signature": "public System.Single SizeFlagsStretchRatio { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the expansion weight used by a parent \u0060Electron2D.Container\u0060.",
+      "xmlDocId": "P:Electron2D.Control.SizeFlagsStretchRatio",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public Electron2D.SizeFlags SizeFlagsVertical { get; set; }",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "Gets or sets the vertical size flags used by a parent \u0060Electron2D.Container\u0060.",
+      "xmlDocId": "P:Electron2D.Control.SizeFlagsVertical",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Theme",
+      "kind": "Property",
+      "signature": "public Electron2D.Theme Theme { get; set; }",
+      "returnType": "Electron2D.Theme",
+      "parameters": [],
+      "summary": "Gets or sets the theme resource applied to this control branch.",
+      "xmlDocId": "P:Electron2D.Control.Theme",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ThemeTypeVariation",
+      "kind": "Property",
+      "signature": "public System.String ThemeTypeVariation { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the theme type variation used before this control type.",
+      "xmlDocId": "P:Electron2D.Control.ThemeTypeVariation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TooltipText",
+      "kind": "Property",
+      "signature": "public System.String TooltipText { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the default tooltip text for this control.",
+      "xmlDocId": "P:Electron2D.Control.TooltipText",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Called to compute the control-specific minimum size.",
+      "xmlDocId": "M:Electron2D.Control._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTooltipText",
+      "kind": "Method",
+      "signature": "public System.String GetTooltipText(Electron2D.Vector2 atPosition)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "atPosition",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Called to resolve tooltip text for a local pointer position.",
+      "xmlDocId": "M:Electron2D.Control._GetTooltip(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Called when a GUI input event is delivered to this control.",
+      "xmlDocId": "M:Electron2D.Control._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MakeCustomTooltip",
+      "kind": "Method",
+      "signature": "public Electron2D.Control MakeCustomTooltip(System.String forText)",
+      "returnType": "Electron2D.Control",
+      "parameters": [
+        {
+          "name": "forText",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Called to create a custom tooltip control for resolved text.",
+      "xmlDocId": "M:Electron2D.Control._MakeCustomTooltip(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

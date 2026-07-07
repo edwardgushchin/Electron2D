@@ -1,0 +1,1453 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FileAccess",
+    "namespace": "Godot",
+    "fullName": "Godot.FileAccess",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "FileAccess",
+    "documentationPath": "doc/classes/FileAccess.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fileaccess.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public void Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Closes the currently opened file and prevents subsequent read/write operations. Use [method flush] to persist the data to disk without closing the file. [b]Note:[/b] [FileAccess] will automatically close when it\u0027s freed, which happens when it goes out of scope or when it gets assigned with [code]null[/code]. In C# the reference must be disposed after we are done using it, this can be done with the [code]using[/code] statement or calling the [code]Dispose[/code] method directly.",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.FileAccess.Close",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "CreateTemp",
+      "kind": "Method",
+      "signature": "public FileAccess CreateTemp(int modeFlags, String prefix, String extension, bool keep)",
+      "returnType": "FileAccess",
+      "parameters": [
+        {
+          "name": "mode_flags",
+          "type": "int"
+        },
+        {
+          "name": "prefix",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "extension",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "keep",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a temporary file. This file will be freed when the returned [FileAccess] is freed. If [param prefix] is not empty, it will be prefixed to the file name, separated by a [code]-[/code]. If [param extension] is not empty, it will be appended to the temporary file name. If [param keep] is [code]true[/code], the file is not deleted when the returned [FileAccess] is freed. Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "create_temp",
+      "xmlDocId": "M:Godot.FileAccess.CreateTemp(int,String,String,bool)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "EofReached",
+      "kind": "Method",
+      "signature": "public bool EofReached()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the file cursor has already read past the end of the file. [b]Note:[/b] [code]eof_reached() == false[/code] cannot be used to check whether there is more data available. To loop while there is more data available, use: [codeblocks] [gdscript] while file.get_position() \u003C file.get_length(): # Read data [/gdscript] [csharp] while (file.GetPosition() \u003C file.GetLength()) { // Read data } [/csharp] [/codeblocks]",
+      "godotName": "eof_reached",
+      "xmlDocId": "M:Godot.FileAccess.EofReached",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "FileExists",
+      "kind": "Method",
+      "signature": "public bool FileExists(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the file exists in the given path. [b]Note:[/b] Many resources types are imported (e.g. textures or sound files), and their source asset will not be included in the exported game, as only the imported version is used. See [method ResourceLoader.exists] for an alternative approach that takes resource remapping into account. For a non-static, relative equivalent, use [method DirAccess.file_exists].",
+      "godotName": "file_exists",
+      "xmlDocId": "M:Godot.FileAccess.FileExists(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Flush",
+      "kind": "Method",
+      "signature": "public void Flush()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Writes the file\u0027s buffer to disk. Flushing is automatically performed when the file is closed. This means you don\u0027t need to call [method flush] manually before closing a file. Still, calling [method flush] can be used to ensure the data is safe even if the project crashes instead of being closed gracefully. [b]Note:[/b] Only call [method flush] when you actually need it. Otherwise, it will decrease performance due to constant disk writes.",
+      "godotName": "flush",
+      "xmlDocId": "M:Godot.FileAccess.Flush",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Get8",
+      "kind": "Method",
+      "signature": "public int Get8()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the next 8 bits from the file as an integer. This advances the file cursor by 1 byte. See [method store_8] for details on what values can be stored and retrieved this way.",
+      "godotName": "get_8",
+      "xmlDocId": "M:Godot.FileAccess.Get8",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Get16",
+      "kind": "Method",
+      "signature": "public int Get16()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the next 16 bits from the file as an integer. This advances the file cursor by 2 bytes. See [method store_16] for details on what values can be stored and retrieved this way.",
+      "godotName": "get_16",
+      "xmlDocId": "M:Godot.FileAccess.Get16",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Get32",
+      "kind": "Method",
+      "signature": "public int Get32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the next 32 bits from the file as an integer. This advances the file cursor by 4 bytes. See [method store_32] for details on what values can be stored and retrieved this way.",
+      "godotName": "get_32",
+      "xmlDocId": "M:Godot.FileAccess.Get32",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Get64",
+      "kind": "Method",
+      "signature": "public int Get64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the next 64 bits from the file as an integer. This advances the file cursor by 8 bytes. See [method store_64] for details on what values can be stored and retrieved this way.",
+      "godotName": "get_64",
+      "xmlDocId": "M:Godot.FileAccess.Get64",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetAccessTime",
+      "kind": "Method",
+      "signature": "public int GetAccessTime(String file)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the last time the [param file] was accessed in Unix timestamp format, or [code]0[/code] on error. This Unix timestamp can be converted to another format using the [Time] singleton.",
+      "godotName": "get_access_time",
+      "xmlDocId": "M:Godot.FileAccess.GetAccessTime(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetAsText",
+      "kind": "Method",
+      "signature": "public String GetAsText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the whole file as a [String]. Text is interpreted as being UTF-8 encoded. This ignores the file cursor and does not affect it.",
+      "godotName": "get_as_text",
+      "xmlDocId": "M:Godot.FileAccess.GetAsText",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetBuffer(int length)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns next [param length] bytes of the file as a [PackedByteArray]. This advances the file cursor by [param length] bytes.",
+      "godotName": "get_buffer",
+      "xmlDocId": "M:Godot.FileAccess.GetBuffer(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetCsvLine",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetCsvLine(String delim)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "delim",
+          "type": "String",
+          "defaultValue": "\u0022,\u0022"
+        }
+      ],
+      "summary": "Returns the next value of the file in CSV (Comma-Separated Values) format. You can pass a different delimiter [param delim] to use other than the default [code]\u0022,\u0022[/code] (comma). This delimiter must be one-character long, and cannot be a double quotation mark. Text is interpreted as being UTF-8 encoded. Text values must be enclosed in double quotes if they include the delimiter character. Double quotes within a text value can be escaped by doubling their occurrence. This advances the file cursor to after the newline character at the end of the line. For example, the following CSV lines are valid and will be properly parsed as two strings each: [codeblock lang=text] Alice,\u0022Hello, Bob!\u0022 Bob,Alice! What a surprise! Alice,\u0022I thought you\u0027d reply with \u0022\u0022Hello, world\u0022\u0022.\u0022 [/codeblock] Note how the second line can omit the enclosing quotes as it does not include the delimiter. However it [i]could[/i] very well use quotes, it was only written without for demonstration purposes. The third line must use [code]\u0022\u0022[/code] for each quotation mark that needs to be interpreted as such instead of the end of a text value.",
+      "godotName": "get_csv_line",
+      "xmlDocId": "M:Godot.FileAccess.GetCsvLine(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetDouble",
+      "kind": "Method",
+      "signature": "public float GetDouble()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the next 64 bits from the file as a floating-point number. This advances the file cursor by 8 bytes.",
+      "godotName": "get_double",
+      "xmlDocId": "M:Godot.FileAccess.GetDouble",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetError",
+      "kind": "Method",
+      "signature": "public int GetError()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the last error that happened when trying to perform operations. Compare with the [code]ERR_FILE_*[/code] constants from [enum Error].",
+      "godotName": "get_error",
+      "xmlDocId": "M:Godot.FileAccess.GetError",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetExtendedAttribute",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetExtendedAttribute(String file, String attributeName)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "attribute_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Reads the file extended attribute with name [param attribute_name] as a byte array. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "get_extended_attribute",
+      "xmlDocId": "M:Godot.FileAccess.GetExtendedAttribute(String,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetExtendedAttributeString",
+      "kind": "Method",
+      "signature": "public String GetExtendedAttributeString(String file, String attributeName)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "attribute_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Reads the file extended attribute with name [param attribute_name] as a UTF-8 encoded string. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "get_extended_attribute_string",
+      "xmlDocId": "M:Godot.FileAccess.GetExtendedAttributeString(String,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetExtendedAttributesList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetExtendedAttributesList(String file)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of file extended attributes. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "get_extended_attributes_list",
+      "xmlDocId": "M:Godot.FileAccess.GetExtendedAttributesList(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetFileAsBytes",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetFileAsBytes(String path)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the whole [param path] file contents as a [PackedByteArray] without any decoding. Returns an empty [PackedByteArray] if an error occurred while opening the file. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "get_file_as_bytes",
+      "xmlDocId": "M:Godot.FileAccess.GetFileAsBytes(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetFileAsString",
+      "kind": "Method",
+      "signature": "public String GetFileAsString(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the whole [param path] file contents as a [String]. Text is interpreted as being UTF-8 encoded. Returns an empty [String] if an error occurred while opening the file. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "get_file_as_string",
+      "xmlDocId": "M:Godot.FileAccess.GetFileAsString(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetFloat",
+      "kind": "Method",
+      "signature": "public float GetFloat()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the next 32 bits from the file as a floating-point number. This advances the file cursor by 4 bytes.",
+      "godotName": "get_float",
+      "xmlDocId": "M:Godot.FileAccess.GetFloat",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetHalf",
+      "kind": "Method",
+      "signature": "public float GetHalf()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the next 16 bits from the file as a half-precision floating-point number. This advances the file cursor by 2 bytes.",
+      "godotName": "get_half",
+      "xmlDocId": "M:Godot.FileAccess.GetHalf",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetHiddenAttribute",
+      "kind": "Method",
+      "signature": "public bool GetHiddenAttribute(String file)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [b]hidden[/b] attribute is set on the file at the given path. [b]Note:[/b] This method is implemented on iOS, BSD, macOS, and Windows.",
+      "godotName": "get_hidden_attribute",
+      "xmlDocId": "M:Godot.FileAccess.GetHiddenAttribute(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetLength",
+      "kind": "Method",
+      "signature": "public int GetLength()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the size of the file in bytes. For a pipe, returns the number of bytes available for reading from the pipe.",
+      "godotName": "get_length",
+      "xmlDocId": "M:Godot.FileAccess.GetLength",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetLine",
+      "kind": "Method",
+      "signature": "public String GetLine()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the next line of the file as a [String]. The returned string doesn\u0027t include newline ([code]\\n[/code]) or carriage return ([code]\\r[/code]) characters, but does include any other leading or trailing whitespace. This advances the file cursor to after the newline character at the end of the line. Text is interpreted as being UTF-8 encoded.",
+      "godotName": "get_line",
+      "xmlDocId": "M:Godot.FileAccess.GetLine",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetMd5",
+      "kind": "Method",
+      "signature": "public String GetMd5(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an MD5 String representing the file at the given path or an empty [String] on failure.",
+      "godotName": "get_md5",
+      "xmlDocId": "M:Godot.FileAccess.GetMd5(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetModifiedTime",
+      "kind": "Method",
+      "signature": "public int GetModifiedTime(String file)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the last time the [param file] was modified in Unix timestamp format, or [code]0[/code] on error. This Unix timestamp can be converted to another format using the [Time] singleton.",
+      "godotName": "get_modified_time",
+      "xmlDocId": "M:Godot.FileAccess.GetModifiedTime(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetOpenError",
+      "kind": "Method",
+      "signature": "public int GetOpenError()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the result of the last [method open] call in the current thread.",
+      "godotName": "get_open_error",
+      "xmlDocId": "M:Godot.FileAccess.GetOpenError",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetPascalString",
+      "kind": "Method",
+      "signature": "public String GetPascalString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] saved in Pascal format from the file, meaning that the length of the string is explicitly stored at the start. See [method store_pascal_string]. This may include newline characters. The file cursor is advanced after the bytes read. Text is interpreted as being UTF-8 encoded.",
+      "godotName": "get_pascal_string",
+      "xmlDocId": "M:Godot.FileAccess.GetPascalString",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetPath",
+      "kind": "Method",
+      "signature": "public String GetPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the path as a [String] for the current open file.",
+      "godotName": "get_path",
+      "xmlDocId": "M:Godot.FileAccess.GetPath",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetPathAbsolute",
+      "kind": "Method",
+      "signature": "public String GetPathAbsolute()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute path as a [String] for the current open file.",
+      "godotName": "get_path_absolute",
+      "xmlDocId": "M:Godot.FileAccess.GetPathAbsolute",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetPosition",
+      "kind": "Method",
+      "signature": "public int GetPosition()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the file cursor\u0027s position in bytes from the beginning of the file. This is the file reading/writing cursor set by [method seek] or [method seek_end] and advanced by read/write operations.",
+      "godotName": "get_position",
+      "xmlDocId": "M:Godot.FileAccess.GetPosition",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetReadOnlyAttribute",
+      "kind": "Method",
+      "signature": "public bool GetReadOnlyAttribute(String file)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [b]read only[/b] attribute is set on the file at the given path. [b]Note:[/b] This method is implemented on iOS, BSD, macOS, and Windows.",
+      "godotName": "get_read_only_attribute",
+      "xmlDocId": "M:Godot.FileAccess.GetReadOnlyAttribute(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetReal",
+      "kind": "Method",
+      "signature": "public float GetReal()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the next bits from the file as a floating-point number. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the Godot build that saved the file. If the file was saved by a Godot build compiled with the [code]precision=single[/code] option (the default), the number of read bits for that file is 32. Otherwise, if compiled with the [code]precision=double[/code] option, the number of read bits is 64.",
+      "godotName": "get_real",
+      "xmlDocId": "M:Godot.FileAccess.GetReal",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetSha256",
+      "kind": "Method",
+      "signature": "public String GetSha256(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an SHA-256 [String] representing the file at the given path or an empty [String] on failure.",
+      "godotName": "get_sha256",
+      "xmlDocId": "M:Godot.FileAccess.GetSha256(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public int GetSize(String file)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the size of the file at the given path, in bytes, or [code]-1[/code] on error.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.FileAccess.GetSize(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetUnixPermissions",
+      "kind": "Method",
+      "signature": "public int GetUnixPermissions(String file)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the UNIX permissions of the file at the given path. [b]Note:[/b] This method is implemented on iOS, Linux/BSD, and macOS.",
+      "godotName": "get_unix_permissions",
+      "xmlDocId": "M:Godot.FileAccess.GetUnixPermissions(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "GetVar",
+      "kind": "Method",
+      "signature": "public Variant GetVar(bool allowObjects)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the next [Variant] value from the file. If [param allow_objects] is [code]true[/code], decoding objects is allowed. This advances the file cursor by the number of bytes read. Internally, this uses the same decoding mechanism as the [method @GlobalScope.bytes_to_var] method, as described in the [url=$DOCS_URL/tutorials/io/binary_serialization_api.html]Binary serialization API[/url] documentation. [b]Warning:[/b] Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threats such as remote code execution.",
+      "godotName": "get_var",
+      "xmlDocId": "M:Godot.FileAccess.GetVar(bool)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "IsOpen",
+      "kind": "Method",
+      "signature": "public bool IsOpen()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the file is currently opened.",
+      "godotName": "is_open",
+      "xmlDocId": "M:Godot.FileAccess.IsOpen",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Open",
+      "kind": "Method",
+      "signature": "public FileAccess Open(String path, int flags)",
+      "returnType": "FileAccess",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a new [FileAccess] object and opens the file for writing or reading, depending on the flags. Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "open",
+      "xmlDocId": "M:Godot.FileAccess.Open(String,int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "OpenCompressed",
+      "kind": "Method",
+      "signature": "public FileAccess OpenCompressed(String path, int modeFlags, int compressionMode)",
+      "returnType": "FileAccess",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "mode_flags",
+          "type": "int"
+        },
+        {
+          "name": "compression_mode",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Creates a new [FileAccess] object and opens a compressed file for reading or writing. [b]Note:[/b] [method open_compressed] can only read files that were saved by Godot, not third-party compression formats. See [url=https://github.com/godotengine/godot/issues/28999]GitHub issue #28999[/url] for a workaround. Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "open_compressed",
+      "xmlDocId": "M:Godot.FileAccess.OpenCompressed(String,int,int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "OpenEncrypted",
+      "kind": "Method",
+      "signature": "public FileAccess OpenEncrypted(String path, int modeFlags, PackedByteArray key, PackedByteArray iv)",
+      "returnType": "FileAccess",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "mode_flags",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "iv",
+          "type": "PackedByteArray",
+          "defaultValue": "PackedByteArray()"
+        }
+      ],
+      "summary": "Creates a new [FileAccess] object and opens an encrypted file in write or read mode. You need to pass a binary key to encrypt/decrypt it. [b]Note:[/b] The provided key must be 32 bytes long. Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "open_encrypted",
+      "xmlDocId": "M:Godot.FileAccess.OpenEncrypted(String,int,PackedByteArray,PackedByteArray)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "OpenEncryptedWithPass",
+      "kind": "Method",
+      "signature": "public FileAccess OpenEncryptedWithPass(String path, int modeFlags, String pass)",
+      "returnType": "FileAccess",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "mode_flags",
+          "type": "int"
+        },
+        {
+          "name": "pass",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new [FileAccess] object and opens an encrypted file in write or read mode. You need to pass a password to encrypt/decrypt it. Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.",
+      "godotName": "open_encrypted_with_pass",
+      "xmlDocId": "M:Godot.FileAccess.OpenEncryptedWithPass(String,int,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "RemoveExtendedAttribute",
+      "kind": "Method",
+      "signature": "public int RemoveExtendedAttribute(String file, String attributeName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "attribute_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes file extended attribute with name [param attribute_name]. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "remove_extended_attribute",
+      "xmlDocId": "M:Godot.FileAccess.RemoveExtendedAttribute(String,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int length)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "int"
+        }
+      ],
+      "summary": "Resizes the file to a specified length. The file must be open in a mode that permits writing. If the file is extended, NUL characters are appended. If the file is truncated, all data from the end file to the original length of the file is lost.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.FileAccess.Resize(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public void Seek(int position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the file cursor to the specified position in bytes, from the beginning of the file. This changes the value returned by [method get_position].",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.FileAccess.Seek(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SeekEnd",
+      "kind": "Method",
+      "signature": "public void SeekEnd(int position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the file cursor to the specified position in bytes, from the end of the file. This changes the value returned by [method get_position]. [b]Note:[/b] This is an offset, so you should use negative numbers otherwise the file cursor will move past the end of the file.",
+      "godotName": "seek_end",
+      "xmlDocId": "M:Godot.FileAccess.SeekEnd(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SetExtendedAttribute",
+      "kind": "Method",
+      "signature": "public int SetExtendedAttribute(String file, String attributeName, PackedByteArray data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "attribute_name",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Writes file extended attribute with name [param attribute_name] as a byte array. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "set_extended_attribute",
+      "xmlDocId": "M:Godot.FileAccess.SetExtendedAttribute(String,String,PackedByteArray)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SetExtendedAttributeString",
+      "kind": "Method",
+      "signature": "public int SetExtendedAttributeString(String file, String attributeName, String data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "attribute_name",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "String"
+        }
+      ],
+      "summary": "Writes file extended attribute with name [param attribute_name] as a UTF-8 encoded string. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Extended attributes support depends on the file system. Attributes will be lost when the file is moved between incompatible file systems. [b]Note:[/b] On Linux, only \u0022user\u0022 namespace attributes are accessible, namespace prefix should not be included. [b]Note:[/b] On Windows, alternate data streams are used to store extended attributes.",
+      "godotName": "set_extended_attribute_string",
+      "xmlDocId": "M:Godot.FileAccess.SetExtendedAttributeString(String,String,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SetHiddenAttribute",
+      "kind": "Method",
+      "signature": "public int SetHiddenAttribute(String file, bool hidden)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "hidden",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets file [b]hidden[/b] attribute. [b]Note:[/b] This method is implemented on iOS, BSD, macOS, and Windows.",
+      "godotName": "set_hidden_attribute",
+      "xmlDocId": "M:Godot.FileAccess.SetHiddenAttribute(String,bool)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SetReadOnlyAttribute",
+      "kind": "Method",
+      "signature": "public int SetReadOnlyAttribute(String file, bool ro)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "ro",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets file [b]read only[/b] attribute. [b]Note:[/b] This method is implemented on iOS, BSD, macOS, and Windows.",
+      "godotName": "set_read_only_attribute",
+      "xmlDocId": "M:Godot.FileAccess.SetReadOnlyAttribute(String,bool)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "SetUnixPermissions",
+      "kind": "Method",
+      "signature": "public int SetUnixPermissions(String file, int permissions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "permissions",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets file UNIX permissions. [b]Note:[/b] This method is implemented on iOS, Linux/BSD, and macOS.",
+      "godotName": "set_unix_permissions",
+      "xmlDocId": "M:Godot.FileAccess.SetUnixPermissions(String,int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Store8",
+      "kind": "Method",
+      "signature": "public bool Store8(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Stores an integer as 8 bits in the file. This advances the file cursor by 1 byte. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] The [param value] should lie in the interval [code][0, 255][/code]. Any other value will overflow and wrap around. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate. To store a signed integer, use [method store_64], or convert it manually (see [method store_16] for an example).",
+      "godotName": "store_8",
+      "xmlDocId": "M:Godot.FileAccess.Store8(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Store16",
+      "kind": "Method",
+      "signature": "public bool Store16(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Stores an integer as 16 bits in the file. This advances the file cursor by 2 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] The [param value] should lie in the interval [code][0, 2^16 - 1][/code]. Any other value will overflow and wrap around. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate. To store a signed integer, use [method store_64] or store a signed integer from the interval [code][-2^15, 2^15 - 1][/code] (i.e. keeping one bit for the signedness) and compute its sign manually when reading. For example: [codeblocks] [gdscript] const MAX_15B = 1 \u003C\u003C 15 const MAX_16B = 1 \u003C\u003C 16 func unsigned16_to_signed(unsigned): return (unsigned \u002B MAX_15B) % MAX_16B - MAX_15B func _ready(): var f = FileAccess.open(\u0022user://file.dat\u0022, FileAccess.WRITE_READ) f.store_16(-42) # This wraps around and stores 65494 (2^16 - 42). f.store_16(121) # In bounds, will store 121. f.seek(0) # Go back to start to read the stored value. var read1 = f.get_16() # 65494 var read2 = f.get_16() # 121 var converted1 = unsigned16_to_signed(read1) # -42 var converted2 = unsigned16_to_signed(read2) # 121 [/gdscript] [csharp] public override void _Ready() { using var f = FileAccess.Open(\u0022user://file.dat\u0022, FileAccess.ModeFlags.WriteRead); f.Store16(unchecked((ushort)-42)); // This wraps around and stores 65494 (2^16 - 42). f.Store16(121); // In bounds, will store 121. f.Seek(0); // Go back to start to read the stored value. ushort read1 = f.Get16(); // 65494 ushort read2 = f.Get16(); // 121 short converted1 = (short)read1; // -42 short converted2 = (short)read2; // 121 } [/csharp] [/codeblocks]",
+      "godotName": "store_16",
+      "xmlDocId": "M:Godot.FileAccess.Store16(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Store32",
+      "kind": "Method",
+      "signature": "public bool Store32(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Stores an integer as 32 bits in the file. This advances the file cursor by 4 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] The [param value] should lie in the interval [code][0, 2^32 - 1][/code]. Any other value will overflow and wrap around. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate. To store a signed integer, use [method store_64], or convert it manually (see [method store_16] for an example).",
+      "godotName": "store_32",
+      "xmlDocId": "M:Godot.FileAccess.Store32(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "Store64",
+      "kind": "Method",
+      "signature": "public bool Store64(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Stores an integer as 64 bits in the file. This advances the file cursor by 8 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] The [param value] must lie in the interval [code][-2^63, 2^63 - 1][/code] (i.e. be a valid [int] value). [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_64",
+      "xmlDocId": "M:Godot.FileAccess.Store64(int)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreBuffer",
+      "kind": "Method",
+      "signature": "public bool StoreBuffer(PackedByteArray buffer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Stores the given array of bytes in the file. This advances the file cursor by the number of bytes written. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_buffer",
+      "xmlDocId": "M:Godot.FileAccess.StoreBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreCsvLine",
+      "kind": "Method",
+      "signature": "public bool StoreCsvLine(PackedStringArray values, String delim)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "values",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "delim",
+          "type": "String",
+          "defaultValue": "\u0022,\u0022"
+        }
+      ],
+      "summary": "Stores the given [PackedStringArray] in the file as a line formatted in the CSV (Comma-Separated Values) format. You can pass a different delimiter [param delim] to use other than the default [code]\u0022,\u0022[/code] (comma). This delimiter must be one-character long. Text will be encoded as UTF-8. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_csv_line",
+      "xmlDocId": "M:Godot.FileAccess.StoreCsvLine(PackedStringArray,String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreDouble",
+      "kind": "Method",
+      "signature": "public bool StoreDouble(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Stores a floating-point number as 64 bits in the file. This advances the file cursor by 8 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_double",
+      "xmlDocId": "M:Godot.FileAccess.StoreDouble(float)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreFloat",
+      "kind": "Method",
+      "signature": "public bool StoreFloat(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Stores a floating-point number as 32 bits in the file. This advances the file cursor by 4 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_float",
+      "xmlDocId": "M:Godot.FileAccess.StoreFloat(float)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreHalf",
+      "kind": "Method",
+      "signature": "public bool StoreHalf(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Stores a half-precision floating-point number as 16 bits in the file. This advances the file cursor by 2 bytes. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_half",
+      "xmlDocId": "M:Godot.FileAccess.StoreHalf(float)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreLine",
+      "kind": "Method",
+      "signature": "public bool StoreLine(String line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "String"
+        }
+      ],
+      "summary": "Stores [param line] in the file followed by a newline character ([code]\\n[/code]), encoding the text as UTF-8. This advances the file cursor by the length of the line, after the newline character. The amount of bytes written depends on the UTF-8 encoded bytes, which may be different from [method String.length] which counts the number of UTF-32 codepoints. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_line",
+      "xmlDocId": "M:Godot.FileAccess.StoreLine(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StorePascalString",
+      "kind": "Method",
+      "signature": "public bool StorePascalString(String @string)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "string",
+          "type": "String"
+        }
+      ],
+      "summary": "Stores the given [String] as a line in the file in Pascal format (i.e. also store the length of the string). Text will be encoded as UTF-8. This advances the file cursor by the number of bytes written depending on the UTF-8 encoded bytes, which may be different from [method String.length] which counts the number of UTF-32 codepoints. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_pascal_string",
+      "xmlDocId": "M:Godot.FileAccess.StorePascalString(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreReal",
+      "kind": "Method",
+      "signature": "public bool StoreReal(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Stores a floating-point number in the file. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the current Godot build. If using a Godot build compiled with the [code]precision=single[/code] option (the default), this method will save a 32-bit float. Otherwise, if compiled with the [code]precision=double[/code] option, this will save a 64-bit float. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_real",
+      "xmlDocId": "M:Godot.FileAccess.StoreReal(float)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreString",
+      "kind": "Method",
+      "signature": "public bool StoreString(String @string)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "string",
+          "type": "String"
+        }
+      ],
+      "summary": "Stores [param string] in the file without a newline character ([code]\\n[/code]), encoding the text as UTF-8. This advances the file cursor by the length of the string in UTF-8 encoded bytes, which may be different from [method String.length] which counts the number of UTF-32 codepoints. Returns [code]true[/code] if the operation is successful. [b]Note:[/b] This method is intended to be used to write text files. The string is stored as a UTF-8 encoded buffer without string length or terminating zero, which means that it can\u0027t be loaded back easily. If you want to store a retrievable string in a binary file, consider using [method store_pascal_string] instead. For retrieving strings from a text file, you can use [code]get_buffer(length).get_string_from_utf8()[/code] (if you know the length) or [method get_as_text]. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_string",
+      "xmlDocId": "M:Godot.FileAccess.StoreString(String)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "StoreVar",
+      "kind": "Method",
+      "signature": "public bool StoreVar(Variant value, bool fullObjects)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "full_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Stores any Variant value in the file. If [param full_objects] is [code]true[/code], encoding objects is allowed (and can potentially include code). This advances the file cursor by the number of bytes written. Returns [code]true[/code] if the operation is successful. Internally, this uses the same encoding mechanism as the [method @GlobalScope.var_to_bytes] method, as described in the [url=$DOCS_URL/tutorials/io/binary_serialization_api.html]Binary serialization API[/url] documentation. [b]Note:[/b] Not all properties are included. Only properties that are configured with the [constant PROPERTY_USAGE_STORAGE] flag set will be serialized. You can add a new usage flag to a property by overriding the [method Object._get_property_list] method in your class. You can also check how property usage is configured by calling [method Object._get_property_list]. See [enum PropertyUsageFlags] for the possible usage flags. [b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.",
+      "godotName": "store_var",
+      "xmlDocId": "M:Godot.FileAccess.StoreVar(Variant,bool)",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "BigEndian",
+      "kind": "Property",
+      "signature": "public bool BigEndian { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the file is read with big-endian [url=https://en.wikipedia.org/wiki/Endianness]endianness[/url]. If [code]false[/code], the file is read with little-endian endianness. If in doubt, leave this to [code]false[/code] as most files are written with little-endian endianness. [b]Note:[/b] This is always reset to system endianness, which is little-endian on all supported platforms, whenever you open the file. Therefore, you must set [member big_endian] [i]after[/i] opening the file, not before.",
+      "godotName": "big_endian",
+      "xmlDocId": "P:Godot.FileAccess.BigEndian",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CompressionMode",
+      "values": [
+        {
+          "name": "COMPRESSION_BROTLI",
+          "value": "4",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "Uses the [url=https://github.com/google/brotli]brotli[/url] compression method (only decompression is supported).",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "COMPRESSION_DEFLATE",
+          "value": "1",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "Uses the [url=https://en.wikipedia.org/wiki/DEFLATE]DEFLATE[/url] compression method.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "COMPRESSION_FASTLZ",
+          "value": "0",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "Uses the [url=https://fastlz.org/]FastLZ[/url] compression method.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "COMPRESSION_GZIP",
+          "value": "3",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "Uses the [url=https://www.gzip.org/]gzip[/url] compression method.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "COMPRESSION_ZSTD",
+          "value": "2",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "Uses the [url=https://facebook.github.io/zstd/]Zstandard[/url] compression method.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        }
+      ]
+    },
+    {
+      "name": "ModeFlags",
+      "values": [
+        {
+          "name": "READ",
+          "value": "1",
+          "enum": "ModeFlags",
+          "kind": "EnumValue",
+          "summary": "Opens the file for read operations. The file cursor is positioned at the beginning of the file.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "READ_WRITE",
+          "value": "3",
+          "enum": "ModeFlags",
+          "kind": "EnumValue",
+          "summary": "Opens the file for read and write operations. Does not truncate the file. The file cursor is positioned at the beginning of the file.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "WRITE",
+          "value": "2",
+          "enum": "ModeFlags",
+          "kind": "EnumValue",
+          "summary": "Opens the file for write operations. If the file exists, it is truncated to zero length and its contents are cleared. Otherwise, it is created. [b]Note:[/b] When creating a file it must be in an already existing directory. To recursively create directories for a file path, see [method DirAccess.make_dir_recursive].",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "WRITE_READ",
+          "value": "7",
+          "enum": "ModeFlags",
+          "kind": "EnumValue",
+          "summary": "Opens the file for read and write operations. If the file exists, it is truncated to zero length and its contents are cleared. Otherwise, it is created. The file cursor is positioned at the beginning of the file. [b]Note:[/b] When creating a file it must be in an already existing directory. To recursively create directories for a file path, see [method DirAccess.make_dir_recursive].",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        }
+      ]
+    },
+    {
+      "name": "UnixPermissionFlags",
+      "values": [
+        {
+          "name": "UNIX_EXECUTE_GROUP",
+          "value": "8",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Execute for group bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_EXECUTE_OTHER",
+          "value": "1",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Execute for other bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_EXECUTE_OWNER",
+          "value": "64",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Execute for owner bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_READ_GROUP",
+          "value": "32",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Read for group bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_READ_OTHER",
+          "value": "4",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Read for other bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_READ_OWNER",
+          "value": "256",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Read for owner bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_RESTRICTED_DELETE",
+          "value": "512",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Restricted deletion (sticky) bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_SET_GROUP_ID",
+          "value": "1024",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Set group id on execution bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_SET_USER_ID",
+          "value": "2048",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Set user id on execution bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_WRITE_GROUP",
+          "value": "16",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Write for group bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_WRITE_OTHER",
+          "value": "2",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Write for other bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        },
+        {
+          "name": "UNIX_WRITE_OWNER",
+          "value": "128",
+          "enum": "UnixPermissionFlags",
+          "kind": "EnumValue",
+          "summary": "Write for owner bit.",
+          "sourcePath": "doc/classes/FileAccess.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "READ",
+      "value": "1",
+      "enum": "ModeFlags",
+      "kind": "EnumValue",
+      "summary": "Opens the file for read operations. The file cursor is positioned at the beginning of the file.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "WRITE",
+      "value": "2",
+      "enum": "ModeFlags",
+      "kind": "EnumValue",
+      "summary": "Opens the file for write operations. If the file exists, it is truncated to zero length and its contents are cleared. Otherwise, it is created. [b]Note:[/b] When creating a file it must be in an already existing directory. To recursively create directories for a file path, see [method DirAccess.make_dir_recursive].",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "READ_WRITE",
+      "value": "3",
+      "enum": "ModeFlags",
+      "kind": "EnumValue",
+      "summary": "Opens the file for read and write operations. Does not truncate the file. The file cursor is positioned at the beginning of the file.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "WRITE_READ",
+      "value": "7",
+      "enum": "ModeFlags",
+      "kind": "EnumValue",
+      "summary": "Opens the file for read and write operations. If the file exists, it is truncated to zero length and its contents are cleared. Otherwise, it is created. The file cursor is positioned at the beginning of the file. [b]Note:[/b] When creating a file it must be in an already existing directory. To recursively create directories for a file path, see [method DirAccess.make_dir_recursive].",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "COMPRESSION_FASTLZ",
+      "value": "0",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "Uses the [url=https://fastlz.org/]FastLZ[/url] compression method.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "COMPRESSION_DEFLATE",
+      "value": "1",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "Uses the [url=https://en.wikipedia.org/wiki/DEFLATE]DEFLATE[/url] compression method.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "COMPRESSION_ZSTD",
+      "value": "2",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "Uses the [url=https://facebook.github.io/zstd/]Zstandard[/url] compression method.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "COMPRESSION_GZIP",
+      "value": "3",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "Uses the [url=https://www.gzip.org/]gzip[/url] compression method.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "COMPRESSION_BROTLI",
+      "value": "4",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "Uses the [url=https://github.com/google/brotli]brotli[/url] compression method (only decompression is supported).",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_READ_OWNER",
+      "value": "256",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Read for owner bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_WRITE_OWNER",
+      "value": "128",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Write for owner bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_EXECUTE_OWNER",
+      "value": "64",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Execute for owner bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_READ_GROUP",
+      "value": "32",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Read for group bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_WRITE_GROUP",
+      "value": "16",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Write for group bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_EXECUTE_GROUP",
+      "value": "8",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Execute for group bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_READ_OTHER",
+      "value": "4",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Read for other bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_WRITE_OTHER",
+      "value": "2",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Write for other bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_EXECUTE_OTHER",
+      "value": "1",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Execute for other bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_SET_USER_ID",
+      "value": "2048",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Set user id on execution bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_SET_GROUP_ID",
+      "value": "1024",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Set group id on execution bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    },
+    {
+      "name": "UNIX_RESTRICTED_DELETE",
+      "value": "512",
+      "enum": "UnixPermissionFlags",
+      "kind": "EnumValue",
+      "summary": "Restricted deletion (sticky) bit.",
+      "sourcePath": "doc/classes/FileAccess.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FileAccess.xml",
+      "sha256": "835f55985ad34a5097d10b7c9fe76b96d5a6df995499b5dd6f9e281b822fde37"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

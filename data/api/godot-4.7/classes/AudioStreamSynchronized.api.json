@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamSynchronized",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamSynchronized",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamSynchronized",
+    "documentationPath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamsynchronized.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetSyncStream",
+      "kind": "Method",
+      "signature": "public AudioStream GetSyncStream(int streamIndex)",
+      "returnType": "AudioStream",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Get one of the synchronized streams, by index.",
+      "godotName": "get_sync_stream",
+      "xmlDocId": "M:Godot.AudioStreamSynchronized.GetSyncStream(int)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    },
+    {
+      "name": "GetSyncStreamVolume",
+      "kind": "Method",
+      "signature": "public float GetSyncStreamVolume(int streamIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Get the volume of one of the synchronized streams, by index.",
+      "godotName": "get_sync_stream_volume",
+      "xmlDocId": "M:Godot.AudioStreamSynchronized.GetSyncStreamVolume(int)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    },
+    {
+      "name": "SetSyncStream",
+      "kind": "Method",
+      "signature": "public void SetSyncStream(int streamIndex, AudioStream audioStream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        },
+        {
+          "name": "audio_stream",
+          "type": "AudioStream"
+        }
+      ],
+      "summary": "Set one of the synchronized streams, by index.",
+      "godotName": "set_sync_stream",
+      "xmlDocId": "M:Godot.AudioStreamSynchronized.SetSyncStream(int,AudioStream)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    },
+    {
+      "name": "SetSyncStreamVolume",
+      "kind": "Method",
+      "signature": "public void SetSyncStreamVolume(int streamIndex, float volumeDb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream_index",
+          "type": "int"
+        },
+        {
+          "name": "volume_db",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the volume of one of the synchronized streams, by index.",
+      "godotName": "set_sync_stream_volume",
+      "xmlDocId": "M:Godot.AudioStreamSynchronized.SetSyncStreamVolume(int,float)",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    },
+    {
+      "name": "StreamCount",
+      "kind": "Property",
+      "signature": "public int StreamCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set the total amount of streams that will be played back synchronized.",
+      "defaultValue": "0",
+      "godotName": "stream_count",
+      "xmlDocId": "P:Godot.AudioStreamSynchronized.StreamCount",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "MAX_STREAMS",
+      "value": "32",
+      "kind": "Constant",
+      "summary": "Maximum amount of streams that can be synchronized.",
+      "sourcePath": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/interactive_music/doc_classes/AudioStreamSynchronized.xml",
+      "sha256": "2973d52e12741b2c3f9f2ef222038cf25165a6a25a849ba3be8af15c46823d57"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

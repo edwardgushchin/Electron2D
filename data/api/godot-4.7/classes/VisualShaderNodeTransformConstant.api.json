@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTransformConstant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTransformConstant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTransformConstant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformConstant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetransformconstant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public Transform3D Constant { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "A [Transform3D] constant which represents the state of this node.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeTransformConstant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformConstant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTransformConstant.xml",
+      "sha256": "c775952038ae3f6772bb8c9639ec92acc9102e41cb50e80a40dc5bae93a8cc81"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

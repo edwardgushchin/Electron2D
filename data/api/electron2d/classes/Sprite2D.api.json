@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Sprite2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Sprite2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "Sprite2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Sprite2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Sprite2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Sprite2D type.",
+      "xmlDocId": "M:Electron2D.Sprite2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Sprite2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Sprite2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Sprite2D type.",
+      "xmlDocId": "M:Electron2D.Sprite2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRect",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 GetRect()",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets the local rectangle occupied by this sprite.",
+      "xmlDocId": "M:Electron2D.Sprite2D.GetRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public System.Boolean IsPixelOpaque(Electron2D.Vector2 pos)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "pos",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Checks whether a local sprite position maps to an opaque texture pixel.",
+      "xmlDocId": "M:Electron2D.Sprite2D.IsPixelOpaque(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Centered",
+      "kind": "Property",
+      "signature": "public System.Boolean Centered { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture is drawn centered on the node origin.",
+      "xmlDocId": "P:Electron2D.Sprite2D.Centered",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public System.Boolean FlipH { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture is flipped horizontally.",
+      "xmlDocId": "P:Electron2D.Sprite2D.FlipH",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public System.Boolean FlipV { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture is flipped vertically.",
+      "xmlDocId": "P:Electron2D.Sprite2D.FlipV",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Offset { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the local drawing offset.",
+      "xmlDocId": "P:Electron2D.Sprite2D.Offset",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RegionEnabled",
+      "kind": "Property",
+      "signature": "public System.Boolean RegionEnabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether \u0060Electron2D.Sprite2D.RegionRect\u0060 limits the sampled texture region.",
+      "xmlDocId": "P:Electron2D.Sprite2D.RegionEnabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RegionFilterClipEnabled",
+      "kind": "Property",
+      "signature": "public System.Boolean RegionFilterClipEnabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether filtering should clip to the enabled region.",
+      "xmlDocId": "P:Electron2D.Sprite2D.RegionFilterClipEnabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Electron2D.Rect2 RegionRect { get; set; }",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets or sets the source rectangle used when \u0060Electron2D.Sprite2D.RegionEnabled\u0060 is \u0060true\u0060.",
+      "xmlDocId": "P:Electron2D.Sprite2D.RegionRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D Texture { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the texture displayed by this sprite.",
+      "xmlDocId": "P:Electron2D.Sprite2D.Texture",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

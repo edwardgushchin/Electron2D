@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionShape2D",
+    "namespace": "Godot",
+    "fullName": "Godot.CollisionShape2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "CollisionShape2D",
+    "documentationPath": "doc/classes/CollisionShape2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_collisionshape2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DebugColor",
+      "kind": "Property",
+      "signature": "public Color DebugColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The collision shape color that is displayed in the editor, or in the running project if [b]Debug \u003E Visible Collision Shapes[/b] is checked at the top of the editor. [b]Note:[/b] The default value is [member ProjectSettings.debug/shapes/collision/shape_color]. The [code]Color(0, 0, 0, 0)[/code] value documented here is a placeholder, and not the actual default debug color.",
+      "defaultValue": "Color(0, 0, 0, 0)",
+      "godotName": "debug_color",
+      "xmlDocId": "P:Godot.CollisionShape2D.DebugColor",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public bool Disabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "A disabled collision shape has no effect in the world. This property should be changed with [method Object.set_deferred].",
+      "defaultValue": "false",
+      "godotName": "disabled",
+      "xmlDocId": "P:Godot.CollisionShape2D.Disabled",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    },
+    {
+      "name": "OneWayCollision",
+      "kind": "Property",
+      "signature": "public bool OneWayCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Sets whether this collision shape should only detect collision on one side (top or bottom). [b]Note:[/b] This property has no effect if this [CollisionShape2D] is a child of an [Area2D] node. [b]Note:[/b] The one way collision direction can be configured by setting [member one_way_collision_direction].",
+      "defaultValue": "false",
+      "godotName": "one_way_collision",
+      "xmlDocId": "P:Godot.CollisionShape2D.OneWayCollision",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    },
+    {
+      "name": "OneWayCollisionDirection",
+      "kind": "Property",
+      "signature": "public Vector2 OneWayCollisionDirection { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The direction used for one-way collision.",
+      "defaultValue": "Vector2(0, 1)",
+      "godotName": "one_way_collision_direction",
+      "xmlDocId": "P:Godot.CollisionShape2D.OneWayCollisionDirection",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    },
+    {
+      "name": "OneWayCollisionMargin",
+      "kind": "Property",
+      "signature": "public float OneWayCollisionMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The margin used for one-way collision (in pixels). Higher values will make the shape thicker, and work better for colliders that enter the shape at a high velocity.",
+      "defaultValue": "1.0",
+      "godotName": "one_way_collision_margin",
+      "xmlDocId": "P:Godot.CollisionShape2D.OneWayCollisionMargin",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Shape2D Shape { get; set; }",
+      "returnType": "Shape2D",
+      "parameters": [],
+      "summary": "The actual shape owned by this collision shape.",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.CollisionShape2D.Shape",
+      "sourcePath": "doc/classes/CollisionShape2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CollisionShape2D.xml",
+      "sha256": "2d2a1f0703506d9483b0b104f1d63f1e41c116902c69d9d9b7cab8559ea3a76c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterMP3",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterMP3",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterMP3",
+    "documentationPath": "modules/mp3/doc_classes/ResourceImporterMP3.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimportermp3.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BarBeats",
+      "kind": "Property",
+      "signature": "public int BarBeats { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of beats within a single bar in the audio track. This is only relevant for music that wishes to make use of interactive music functionality, not sound effects. A more convenient editor for [member bar_beats] is provided in the [b]Advanced Import Settings[/b] dialog, as it lets you preview your changes without having to reimport the audio.",
+      "defaultValue": "4",
+      "godotName": "bar_beats",
+      "xmlDocId": "P:Godot.ResourceImporterMP3.BarBeats",
+      "sourcePath": "modules/mp3/doc_classes/ResourceImporterMP3.xml"
+    },
+    {
+      "name": "BeatCount",
+      "kind": "Property",
+      "signature": "public int BeatCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The length of the audio track, in beats. The actual duration of the audio file might be longer than what is indicated by this property. This is only relevant for music that wishes to make use of interactive music functionality, not sound effects. A more convenient editor for [member beat_count] is provided in the [b]Advanced Import Settings[/b] dialog, as it lets you preview your changes without having to reimport the audio.",
+      "defaultValue": "0",
+      "godotName": "beat_count",
+      "xmlDocId": "P:Godot.ResourceImporterMP3.BeatCount",
+      "sourcePath": "modules/mp3/doc_classes/ResourceImporterMP3.xml"
+    },
+    {
+      "name": "Bpm",
+      "kind": "Property",
+      "signature": "public float Bpm { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The tempo of the audio track, measured in beats per minute. This should match the BPM measure that was used to compose the track. This is only relevant for music that wishes to make use of interactive music functionality, not sound effects. A more convenient editor for [member bpm] is provided in the [b]Advanced Import Settings[/b] dialog, as it lets you preview your changes without having to reimport the audio.",
+      "defaultValue": "0",
+      "godotName": "bpm",
+      "xmlDocId": "P:Godot.ResourceImporterMP3.Bpm",
+      "sourcePath": "modules/mp3/doc_classes/ResourceImporterMP3.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, the audio will begin playing either from the beginning or from [member loop_offset], after playback ends by either reaching the end of the audio or reaching the end of the last beat according to the amount specified in [member beat_count]. [b]Note:[/b] In [AudioStreamPlayer], the [signal AudioStreamPlayer.finished] signal won\u0027t be emitted for looping audio when it reaches the end of the audio file, as the audio will keep playing indefinitely.",
+      "defaultValue": "false",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.ResourceImporterMP3.Loop",
+      "sourcePath": "modules/mp3/doc_classes/ResourceImporterMP3.xml"
+    },
+    {
+      "name": "LoopOffset",
+      "kind": "Property",
+      "signature": "public float LoopOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Determines where audio will start to loop after playback reaches the end of the audio. This can be used to only loop a part of the audio file, which is useful for some ambient sounds or music. The value is determined in seconds relative to the beginning of the audio. A value of [code]0.0[/code] will loop the entire audio file. Only has an effect if [member loop] is [code]true[/code]. A more convenient editor for [member loop_offset] is provided in the [b]Advanced Import Settings[/b] dialog, as it lets you preview your changes without having to reimport the audio.",
+      "defaultValue": "0",
+      "godotName": "loop_offset",
+      "xmlDocId": "P:Godot.ResourceImporterMP3.LoopOffset",
+      "sourcePath": "modules/mp3/doc_classes/ResourceImporterMP3.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/mp3/doc_classes/ResourceImporterMP3.xml",
+      "sha256": "3fb8a615073725212ee834ceb9579db4eaa221fa3e3eeee1d2638a6565a2a30c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

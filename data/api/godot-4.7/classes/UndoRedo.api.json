@@ -1,0 +1,423 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "UndoRedo",
+    "namespace": "Godot",
+    "fullName": "Godot.UndoRedo",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "UndoRedo",
+    "documentationPath": "doc/classes/UndoRedo.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_undoredo.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddDoMethod",
+      "kind": "Method",
+      "signature": "public void AddDoMethod(Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Register a [Callable] that will be called when the action is committed.",
+      "godotName": "add_do_method",
+      "xmlDocId": "M:Godot.UndoRedo.AddDoMethod(Callable)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "AddDoProperty",
+      "kind": "Method",
+      "signature": "public void AddDoProperty(Object @object, StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Register a [param property] that would change its value to [param value] when the action is committed.",
+      "godotName": "add_do_property",
+      "xmlDocId": "M:Godot.UndoRedo.AddDoProperty(Object,StringName,Variant)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "AddDoReference",
+      "kind": "Method",
+      "signature": "public void AddDoReference(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Register a reference to an object that will be erased if the \u0022do\u0022 history is deleted. This is useful for objects added by the \u0022do\u0022 action and removed by the \u0022undo\u0022 action. When the \u0022do\u0022 history is deleted, if the object is a [RefCounted], it will be unreferenced. Otherwise, it will be freed. Do not use for resources. [codeblock] var node = Node2D.new() undo_redo.create_action(\u0022Add node\u0022) undo_redo.add_do_method(add_child.bind(node)) undo_redo.add_do_reference(node) undo_redo.add_undo_method(remove_child.bind(node)) undo_redo.commit_action() [/codeblock]",
+      "godotName": "add_do_reference",
+      "xmlDocId": "M:Godot.UndoRedo.AddDoReference(Object)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "AddUndoMethod",
+      "kind": "Method",
+      "signature": "public void AddUndoMethod(Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Register a [Callable] that will be called when the action is undone.",
+      "godotName": "add_undo_method",
+      "xmlDocId": "M:Godot.UndoRedo.AddUndoMethod(Callable)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "AddUndoProperty",
+      "kind": "Method",
+      "signature": "public void AddUndoProperty(Object @object, StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Register a [param property] that would change its value to [param value] when the action is undone.",
+      "godotName": "add_undo_property",
+      "xmlDocId": "M:Godot.UndoRedo.AddUndoProperty(Object,StringName,Variant)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "AddUndoReference",
+      "kind": "Method",
+      "signature": "public void AddUndoReference(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Register a reference to an object that will be erased if the \u0022undo\u0022 history is deleted. This is useful for objects added by the \u0022undo\u0022 action and removed by the \u0022do\u0022 action. When the \u0022undo\u0022 history is deleted, if the object is a [RefCounted], it will be unreferenced. Otherwise, it will be freed. Do not use for resources. [codeblock] var node = $Node2D undo_redo.create_action(\u0022Remove node\u0022) undo_redo.add_do_method(remove_child.bind(node)) undo_redo.add_undo_method(add_child.bind(node)) undo_redo.add_undo_reference(node) undo_redo.commit_action() [/codeblock]",
+      "godotName": "add_undo_reference",
+      "xmlDocId": "M:Godot.UndoRedo.AddUndoReference(Object)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "ClearHistory",
+      "kind": "Method",
+      "signature": "public void ClearHistory(bool increaseVersion)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "increase_version",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Clear the undo/redo history and associated references. Passing [code]false[/code] to [param increase_version] will prevent the version number from increasing when the history is cleared.",
+      "godotName": "clear_history",
+      "xmlDocId": "M:Godot.UndoRedo.ClearHistory(bool)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "CommitAction",
+      "kind": "Method",
+      "signature": "public void CommitAction(bool execute)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "execute",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Commit the action. If [param execute] is [code]true[/code] (which it is by default), all \u0022do\u0022 methods/properties are called/set when this function is called.",
+      "godotName": "commit_action",
+      "xmlDocId": "M:Godot.UndoRedo.CommitAction(bool)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "CreateAction",
+      "kind": "Method",
+      "signature": "public void CreateAction(String name, int mergeMode, bool backwardUndoOps)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "merge_mode",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "backward_undo_ops",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Create a new action. After this is called, do all your calls to [method add_do_method], [method add_undo_method], [method add_do_property], and [method add_undo_property], then commit the action with [method commit_action]. The way actions are merged is dictated by [param merge_mode]. The way undo operation are ordered in actions is dictated by [param backward_undo_ops]. When [param backward_undo_ops] is [code]false[/code] undo option are ordered in the same order they were added. Which means the first operation to be added will be the first to be undone.",
+      "godotName": "create_action",
+      "xmlDocId": "M:Godot.UndoRedo.CreateAction(String,int,bool)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "EndForceKeepInMergeEnds",
+      "kind": "Method",
+      "signature": "public void EndForceKeepInMergeEnds()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops marking operations as to be processed even if the action gets merged with another in the [constant MERGE_ENDS] mode. See [method start_force_keep_in_merge_ends].",
+      "godotName": "end_force_keep_in_merge_ends",
+      "xmlDocId": "M:Godot.UndoRedo.EndForceKeepInMergeEnds",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "GetActionName",
+      "kind": "Method",
+      "signature": "public String GetActionName(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the action name from its index.",
+      "godotName": "get_action_name",
+      "xmlDocId": "M:Godot.UndoRedo.GetActionName(int)",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "GetCurrentAction",
+      "kind": "Method",
+      "signature": "public int GetCurrentAction()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the index of the current action.",
+      "godotName": "get_current_action",
+      "xmlDocId": "M:Godot.UndoRedo.GetCurrentAction",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "GetCurrentActionName",
+      "kind": "Method",
+      "signature": "public String GetCurrentActionName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the name of the current action, equivalent to [code]get_action_name(get_current_action())[/code].",
+      "godotName": "get_current_action_name",
+      "xmlDocId": "M:Godot.UndoRedo.GetCurrentActionName",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "GetHistoryCount",
+      "kind": "Method",
+      "signature": "public int GetHistoryCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns how many elements are in the history.",
+      "godotName": "get_history_count",
+      "xmlDocId": "M:Godot.UndoRedo.GetHistoryCount",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "GetVersion",
+      "kind": "Method",
+      "signature": "public int GetVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the version. Every time a new action is committed, the [UndoRedo]\u0027s version number is increased automatically. This is useful mostly to check if something changed from a saved version.",
+      "godotName": "get_version",
+      "xmlDocId": "M:Godot.UndoRedo.GetVersion",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "HasRedo",
+      "kind": "Method",
+      "signature": "public bool HasRedo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a \u0022redo\u0022 action is available.",
+      "godotName": "has_redo",
+      "xmlDocId": "M:Godot.UndoRedo.HasRedo",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "HasUndo",
+      "kind": "Method",
+      "signature": "public bool HasUndo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an \u0022undo\u0022 action is available.",
+      "godotName": "has_undo",
+      "xmlDocId": "M:Godot.UndoRedo.HasUndo",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "IsCommittingAction",
+      "kind": "Method",
+      "signature": "public bool IsCommittingAction()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [UndoRedo] is currently committing the action, i.e. running its \u0022do\u0022 method or property change (see [method commit_action]).",
+      "godotName": "is_committing_action",
+      "xmlDocId": "M:Godot.UndoRedo.IsCommittingAction",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "Redo",
+      "kind": "Method",
+      "signature": "public bool Redo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Redo the last action. Returns [code]false[/code] if there was no action to redo.",
+      "godotName": "redo",
+      "xmlDocId": "M:Godot.UndoRedo.Redo",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "StartForceKeepInMergeEnds",
+      "kind": "Method",
+      "signature": "public void StartForceKeepInMergeEnds()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Marks the next \u0022do\u0022 and \u0022undo\u0022 operations to be processed even if the action gets merged with another in the [constant MERGE_ENDS] mode. Return to normal operation using [method end_force_keep_in_merge_ends].",
+      "godotName": "start_force_keep_in_merge_ends",
+      "xmlDocId": "M:Godot.UndoRedo.StartForceKeepInMergeEnds",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "Undo",
+      "kind": "Method",
+      "signature": "public bool Undo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Undo the last action. Returns [code]false[/code] if there was no action to undo.",
+      "godotName": "undo",
+      "xmlDocId": "M:Godot.UndoRedo.Undo",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "MaxSteps",
+      "kind": "Property",
+      "signature": "public int MaxSteps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of steps that can be stored in the undo/redo history. If the number of stored steps exceeds this limit, older steps are removed from history and can no longer be reached by calling [method undo]. A value of [code]0[/code] or lower means no limit.",
+      "defaultValue": "0",
+      "godotName": "max_steps",
+      "xmlDocId": "P:Godot.UndoRedo.MaxSteps",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "VersionChanged",
+      "kind": "Signal",
+      "signature": "public event VersionChangedHandler VersionChanged",
+      "parameters": [],
+      "summary": "Called when [method undo] or [method redo] was called.",
+      "godotName": "version_changed",
+      "xmlDocId": "E:Godot.UndoRedo.VersionChanged",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "MergeMode",
+      "values": [
+        {
+          "name": "MERGE_ALL",
+          "value": "2",
+          "enum": "MergeMode",
+          "kind": "EnumValue",
+          "summary": "Merges this action with the previous one if they have the same name.",
+          "sourcePath": "doc/classes/UndoRedo.xml"
+        },
+        {
+          "name": "MERGE_DISABLE",
+          "value": "0",
+          "enum": "MergeMode",
+          "kind": "EnumValue",
+          "summary": "Makes \u0022do\u0022/\u0022undo\u0022 operations stay in separate actions.",
+          "sourcePath": "doc/classes/UndoRedo.xml"
+        },
+        {
+          "name": "MERGE_ENDS",
+          "value": "1",
+          "enum": "MergeMode",
+          "kind": "EnumValue",
+          "summary": "Merges this action with the previous one if they have the same name. Keeps only the first action\u0027s \u0022undo\u0022 operations and the last action\u0027s \u0022do\u0022 operations. Useful for sequential changes to a single value.",
+          "sourcePath": "doc/classes/UndoRedo.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MERGE_DISABLE",
+      "value": "0",
+      "enum": "MergeMode",
+      "kind": "EnumValue",
+      "summary": "Makes \u0022do\u0022/\u0022undo\u0022 operations stay in separate actions.",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "MERGE_ENDS",
+      "value": "1",
+      "enum": "MergeMode",
+      "kind": "EnumValue",
+      "summary": "Merges this action with the previous one if they have the same name. Keeps only the first action\u0027s \u0022undo\u0022 operations and the last action\u0027s \u0022do\u0022 operations. Useful for sequential changes to a single value.",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    },
+    {
+      "name": "MERGE_ALL",
+      "value": "2",
+      "enum": "MergeMode",
+      "kind": "EnumValue",
+      "summary": "Merges this action with the previous one if they have the same name.",
+      "sourcePath": "doc/classes/UndoRedo.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/UndoRedo.xml",
+      "sha256": "9ed849dbf6fca7d7fa03e21d7c4a09d8ab1ebff9a9bd25a60aa62abb092327c6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

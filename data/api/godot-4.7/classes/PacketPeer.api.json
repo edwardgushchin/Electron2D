@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PacketPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.PacketPeer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PacketPeer",
+    "documentationPath": "doc/classes/PacketPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packetpeer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of packets currently available in the ring-buffer.",
+      "godotName": "get_available_packet_count",
+      "xmlDocId": "M:Godot.PacketPeer.GetAvailablePacketCount",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "GetPacket",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetPacket()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Gets a raw packet.",
+      "godotName": "get_packet",
+      "xmlDocId": "M:Godot.PacketPeer.GetPacket",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "GetPacketError",
+      "kind": "Method",
+      "signature": "public int GetPacketError()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the error state of the last packet received (via [method get_packet] and [method get_var]).",
+      "godotName": "get_packet_error",
+      "xmlDocId": "M:Godot.PacketPeer.GetPacketError",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "GetVar",
+      "kind": "Method",
+      "signature": "public Variant GetVar(bool allowObjects)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Gets a Variant. If [param allow_objects] is [code]true[/code], decoding objects is allowed. Internally, this uses the same decoding mechanism as the [method @GlobalScope.bytes_to_var] method. [b]Warning:[/b] Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threats such as remote code execution.",
+      "godotName": "get_var",
+      "xmlDocId": "M:Godot.PacketPeer.GetVar(bool)",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "PutPacket",
+      "kind": "Method",
+      "signature": "public int PutPacket(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Sends a raw packet.",
+      "godotName": "put_packet",
+      "xmlDocId": "M:Godot.PacketPeer.PutPacket(PackedByteArray)",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "PutVar",
+      "kind": "Method",
+      "signature": "public int PutVar(Variant var, bool fullObjects)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "var",
+          "type": "Variant"
+        },
+        {
+          "name": "full_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Sends a [Variant] as a packet. If [param full_objects] is [code]true[/code], encoding objects is allowed (and can potentially include code). Internally, this uses the same encoding mechanism as the [method @GlobalScope.var_to_bytes] method.",
+      "godotName": "put_var",
+      "xmlDocId": "M:Godot.PacketPeer.PutVar(Variant,bool)",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    },
+    {
+      "name": "EncodeBufferMaxSize",
+      "kind": "Property",
+      "signature": "public int EncodeBufferMaxSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum buffer size allowed when encoding [Variant]s. Raise this value to support heavier memory allocations. The [method put_var] method allocates memory on the stack, and the buffer used will grow automatically to the closest power of two to match the size of the [Variant]. If the [Variant] is bigger than [member encode_buffer_max_size], the method will error out with [constant ERR_OUT_OF_MEMORY].",
+      "defaultValue": "8388608",
+      "godotName": "encode_buffer_max_size",
+      "xmlDocId": "P:Godot.PacketPeer.EncodeBufferMaxSize",
+      "sourcePath": "doc/classes/PacketPeer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PacketPeer.xml",
+      "sha256": "c5183ea0aada8f38932664a649b1262e96dcfd49770cec34f70b0ff38a2fb9d6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DisplayServer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.DisplayServer",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "DisplayServer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetDisplaySafeArea",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rect2I GetDisplaySafeArea()",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [],
+      "summary": "Gets the current display safe area.",
+      "xmlDocId": "M:Electron2D.DisplayServer.GetDisplaySafeArea",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScreenGetOrientation",
+      "kind": "Method",
+      "signature": "public static Electron2D.DisplayServer.ScreenOrientation ScreenGetOrientation(System.Int32 screen)",
+      "returnType": "Electron2D.DisplayServer.ScreenOrientation",
+      "parameters": [
+        {
+          "name": "screen",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Gets the current screen orientation state.",
+      "xmlDocId": "M:Electron2D.DisplayServer.ScreenGetOrientation(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScreenSetOrientation",
+      "kind": "Method",
+      "signature": "public static System.Void ScreenSetOrientation(Electron2D.DisplayServer.ScreenOrientation orientation, System.Int32 screen)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "orientation",
+          "type": "Electron2D.DisplayServer.ScreenOrientation"
+        },
+        {
+          "name": "screen",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Sets the requested screen orientation state.",
+      "xmlDocId": "M:Electron2D.DisplayServer.ScreenSetOrientation(Electron2D.DisplayServer.ScreenOrientation,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VirtualKeyboardGetHeight",
+      "kind": "Method",
+      "signature": "public static System.Int32 VirtualKeyboardGetHeight()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the current virtual keyboard height.",
+      "xmlDocId": "M:Electron2D.DisplayServer.VirtualKeyboardGetHeight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VirtualKeyboardHide",
+      "kind": "Method",
+      "signature": "public static System.Void VirtualKeyboardHide()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Hides the virtual keyboard.",
+      "xmlDocId": "M:Electron2D.DisplayServer.VirtualKeyboardHide",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VirtualKeyboardShow",
+      "kind": "Method",
+      "signature": "public static System.Void VirtualKeyboardShow(System.String existingText, Electron2D.Rect2 position, Electron2D.DisplayServer.VirtualKeyboardType type, System.Int32 maxLength, System.Int32 cursorStart, System.Int32 cursorEnd)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "existingText",
+          "type": "System.String",
+          "defaultValue": ""
+        },
+        {
+          "name": "position",
+          "type": "Electron2D.Rect2"
+        },
+        {
+          "name": "type",
+          "type": "Electron2D.DisplayServer.VirtualKeyboardType",
+          "defaultValue": "Default"
+        },
+        {
+          "name": "maxLength",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "cursorStart",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "cursorEnd",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Shows the virtual keyboard.",
+      "xmlDocId": "M:Electron2D.DisplayServer.VirtualKeyboardShow(System.String,Electron2D.Rect2,Electron2D.DisplayServer.VirtualKeyboardType,System.Int32,System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

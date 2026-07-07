@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NodePath",
+    "namespace": "Godot",
+    "fullName": "Godot.NodePath",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "NodePath",
+    "documentationPath": "doc/classes/NodePath.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_nodepath.html"
+  },
+  "constructors": [
+    {
+      "name": "NodePath",
+      "kind": "Constructor",
+      "signature": "public NodePath()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Constructs an empty [NodePath].",
+      "godotName": "NodePath",
+      "xmlDocId": "M:Godot.NodePath.#ctor",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "NodePath",
+      "kind": "Constructor",
+      "signature": "public NodePath(NodePath from)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Constructs a [NodePath] as a copy of the given [NodePath].",
+      "godotName": "NodePath",
+      "xmlDocId": "M:Godot.NodePath.#ctor(NodePath)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "NodePath",
+      "kind": "Constructor",
+      "signature": "public NodePath(String from)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "String"
+        }
+      ],
+      "summary": "Constructs a [NodePath] from a [String]. The created path is absolute if prefixed with a slash (see [method is_absolute]). The \u0022subnames\u0022 optionally included after the path to the target node can point to properties, and can also be nested. The following strings can be valid node paths: [codeblock] # Points to the Sprite2D node. \u0022Level/RigidBody2D/Sprite2D\u0022 # Points to the Sprite2D node and its \u0022texture\u0022 resource. # get_node() would retrieve the Sprite2D, while get_node_and_resource() # would retrieve both the Sprite2D node and the \u0022texture\u0022 resource. \u0022Level/RigidBody2D/Sprite2D:texture\u0022 # Points to the Sprite2D node and its \u0022position\u0022 property. \u0022Level/RigidBody2D/Sprite2D:position\u0022 # Points to the Sprite2D node and the \u0022x\u0022 component of its \u0022position\u0022 property. \u0022Level/RigidBody2D/Sprite2D:position:x\u0022 # Points to the RigidBody2D node as an absolute path beginning from the SceneTree. \u0022/root/Level/RigidBody2D\u0022 [/codeblock] [b]Note:[/b] In GDScript, it\u0027s also possible to convert a constant string into a node path by prefixing it with [code]^[/code]. [code]^\u0022path/to/node\u0022[/code] is equivalent to [code]NodePath(\u0022path/to/node\u0022)[/code].",
+      "godotName": "NodePath",
+      "xmlDocId": "M:Godot.NodePath.#ctor(String)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "GetAsPropertyPath",
+      "kind": "Method",
+      "signature": "public NodePath GetAsPropertyPath()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Returns a copy of this node path with a colon character ([code]:[/code]) prefixed, transforming it to a pure property path with no node names (relative to the current node). [codeblocks] [gdscript] # node_path points to the \u0022x\u0022 property of the child node named \u0022position\u0022. var node_path = ^\u0022position:x\u0022 # property_path points to the \u0022position\u0022 in the \u0022x\u0022 axis of this node. var property_path = node_path.get_as_property_path() print(property_path) # Prints \u0022:position:x\u0022 [/gdscript] [csharp] // nodePath points to the \u0022x\u0022 property of the child node named \u0022position\u0022. var nodePath = new NodePath(\u0022position:x\u0022); // propertyPath points to the \u0022position\u0022 in the \u0022x\u0022 axis of this node. NodePath propertyPath = nodePath.GetAsPropertyPath(); GD.Print(propertyPath); // Prints \u0022:position:x\u0022 [/csharp] [/codeblocks]",
+      "godotName": "get_as_property_path",
+      "xmlDocId": "M:Godot.NodePath.GetAsPropertyPath",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetConcatenatedNames",
+      "kind": "Method",
+      "signature": "public StringName GetConcatenatedNames()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns all node names concatenated with a slash character ([code]/[/code]) as a single [StringName].",
+      "godotName": "get_concatenated_names",
+      "xmlDocId": "M:Godot.NodePath.GetConcatenatedNames",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetConcatenatedSubnames",
+      "kind": "Method",
+      "signature": "public StringName GetConcatenatedSubnames()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns all property subnames concatenated with a colon character ([code]:[/code]) as a single [StringName]. [codeblocks] [gdscript] var node_path = ^\u0022Sprite2D:texture:resource_name\u0022 print(node_path.get_concatenated_subnames()) # Prints \u0022texture:resource_name\u0022 [/gdscript] [csharp] var nodePath = new NodePath(\u0022Sprite2D:texture:resource_name\u0022); GD.Print(nodePath.GetConcatenatedSubnames()); // Prints \u0022texture:resource_name\u0022 [/csharp] [/codeblocks]",
+      "godotName": "get_concatenated_subnames",
+      "xmlDocId": "M:Godot.NodePath.GetConcatenatedSubnames",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetName",
+      "kind": "Method",
+      "signature": "public StringName GetName(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the node name indicated by [param idx], starting from 0. If [param idx] is out of bounds, an error is generated. See also [method get_subname_count] and [method get_name_count]. [codeblocks] [gdscript] var sprite_path = NodePath(\u0022../RigidBody2D/Sprite2D\u0022) print(sprite_path.get_name(0)) # Prints \u0022..\u0022 print(sprite_path.get_name(1)) # Prints \u0022RigidBody2D\u0022 print(sprite_path.get_name(2)) # Prints \u0022Sprite\u0022 [/gdscript] [csharp] var spritePath = new NodePath(\u0022../RigidBody2D/Sprite2D\u0022); GD.Print(spritePath.GetName(0)); // Prints \u0022..\u0022 GD.Print(spritePath.GetName(1)); // Prints \u0022PathFollow2D\u0022 GD.Print(spritePath.GetName(2)); // Prints \u0022Sprite\u0022 [/csharp] [/codeblocks]",
+      "godotName": "get_name",
+      "xmlDocId": "M:Godot.NodePath.GetName(int)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetNameCount",
+      "kind": "Method",
+      "signature": "public int GetNameCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of node names in the path. Property subnames are not included. For example, [code]\u0022../RigidBody2D/Sprite2D:texture\u0022[/code] contains 3 node names.",
+      "godotName": "get_name_count",
+      "xmlDocId": "M:Godot.NodePath.GetNameCount",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetSubname",
+      "kind": "Method",
+      "signature": "public StringName GetSubname(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the property name indicated by [param idx], starting from 0. If [param idx] is out of bounds, an error is generated. See also [method get_subname_count]. [codeblocks] [gdscript] var path_to_name = NodePath(\u0022Sprite2D:texture:resource_name\u0022) print(path_to_name.get_subname(0)) # Prints \u0022texture\u0022 print(path_to_name.get_subname(1)) # Prints \u0022resource_name\u0022 [/gdscript] [csharp] var pathToName = new NodePath(\u0022Sprite2D:texture:resource_name\u0022); GD.Print(pathToName.GetSubname(0)); // Prints \u0022texture\u0022 GD.Print(pathToName.GetSubname(1)); // Prints \u0022resource_name\u0022 [/csharp] [/codeblocks]",
+      "godotName": "get_subname",
+      "xmlDocId": "M:Godot.NodePath.GetSubname(int)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "GetSubnameCount",
+      "kind": "Method",
+      "signature": "public int GetSubnameCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of property names (\u0022subnames\u0022) in the path. Each subname in the node path is listed after a colon character ([code]:[/code]). For example, [code]\u0022Level/RigidBody2D/Sprite2D:texture:resource_name\u0022[/code] contains 2 subnames.",
+      "godotName": "get_subname_count",
+      "xmlDocId": "M:Godot.NodePath.GetSubnameCount",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "Hash",
+      "kind": "Method",
+      "signature": "public int Hash()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the 32-bit hash value representing the node path\u0027s contents. [b]Note:[/b] Node paths with equal hash values are [i]not[/i] guaranteed to be the same, as a result of hash collisions. Node paths with different hash values are guaranteed to be different.",
+      "godotName": "hash",
+      "xmlDocId": "M:Godot.NodePath.Hash",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "IsAbsolute",
+      "kind": "Method",
+      "signature": "public bool IsAbsolute()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node path is absolute. Unlike a relative path, an absolute path is represented by a leading slash character ([code]/[/code]) and always begins from the [SceneTree]. It can be used to reliably access nodes from the root node (e.g. [code]\u0022/root/Global\u0022[/code] if an autoload named \u0022Global\u0022 exists).",
+      "godotName": "is_absolute",
+      "xmlDocId": "M:Godot.NodePath.IsAbsolute",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node path has been constructed from an empty [String] ([code]\u0022\u0022[/code]).",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.NodePath.IsEmpty",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public NodePath Slice(int begin, int end)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [NodePath], from [param begin] (inclusive) to [param end] (exclusive), as a new [NodePath]. The absolute value of [param begin] and [param end] will be clamped to the sum of [method get_name_count] and [method get_subname_count], so the default value for [param end] makes it slice to the end of the [NodePath] by default (i.e. [code]path.slice(1)[/code] is a shorthand for [code]path.slice(1, path.get_name_count() \u002B path.get_subname_count())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the [NodePath] (i.e. [code]path.slice(0, -2)[/code] is a shorthand for [code]path.slice(0, path.get_name_count() \u002B path.get_subname_count() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.NodePath.Slice(int,int)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(NodePath right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if two node paths are not equal.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.NodePath.operator !=(NodePath)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(NodePath right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if two node paths are equal, that is, they are composed of the same node names and subnames in the same order.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.NodePath.operator ==(NodePath)",
+      "sourcePath": "doc/classes/NodePath.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NodePath.xml",
+      "sha256": "f918578e5aeb2be5e0d106cc97a01f2b82cc9832fc641fdcfc1a844772b31aef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

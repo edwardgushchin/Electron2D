@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HSlider",
+    "namespace": "Godot",
+    "fullName": "Godot.HSlider",
+    "kind": "class",
+    "baseType": "Slider",
+    "interfaces": [],
+    "godotReference": "HSlider",
+    "documentationPath": "doc/classes/HSlider.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hslider.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HSlider.xml",
+      "sha256": "bc4e1e626c76a3424e058cd39b67769842b0cdace1c6aca8dceb8d78d7c40ca9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

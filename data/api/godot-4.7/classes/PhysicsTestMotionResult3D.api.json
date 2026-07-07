@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsTestMotionResult3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsTestMotionResult3D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PhysicsTestMotionResult3D",
+    "documentationPath": "doc/classes/PhysicsTestMotionResult3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicstestmotionresult3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Object GetCollider(int collisionIndex)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s attached [Object] given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collider",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollider(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetColliderId",
+      "kind": "Method",
+      "signature": "public int GetColliderId(int collisionIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the unique instance ID of the colliding body\u0027s attached [Object] given a collision index (the deepest collision by default), if a collision occurred. See [method Object.get_instance_id].",
+      "godotName": "get_collider_id",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public RID GetColliderRid(int collisionIndex)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s [RID] used by the [PhysicsServer3D] given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collider_rid",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetColliderRid(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public int GetColliderShape(int collisionIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s shape index given a collision index (the deepest collision by default), if a collision occurred. See [CollisionObject3D].",
+      "godotName": "get_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetColliderVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetColliderVelocity(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s velocity given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collider_velocity",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetColliderVelocity(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetCollisionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of detected collisions.",
+      "godotName": "get_collision_count",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionCount",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionDepth",
+      "kind": "Method",
+      "signature": "public float GetCollisionDepth(int collisionIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the length of overlap along the collision normal given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collision_depth",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionDepth(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionLocalShape",
+      "kind": "Method",
+      "signature": "public int GetCollisionLocalShape(int collisionIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the moving object\u0027s colliding shape given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collision_local_shape",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionNormal",
+      "kind": "Method",
+      "signature": "public Vector3 GetCollisionNormal(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s shape\u0027s normal at the point of collision given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collision_normal",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionNormal(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionPoint",
+      "kind": "Method",
+      "signature": "public Vector3 GetCollisionPoint(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the point of collision in global coordinates given a collision index (the deepest collision by default), if a collision occurred.",
+      "godotName": "get_collision_point",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionPoint(int)",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionSafeFraction",
+      "kind": "Method",
+      "signature": "public float GetCollisionSafeFraction()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the maximum fraction of the motion that can occur without a collision, between [code]0[/code] and [code]1[/code].",
+      "godotName": "get_collision_safe_fraction",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionSafeFraction",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetCollisionUnsafeFraction",
+      "kind": "Method",
+      "signature": "public float GetCollisionUnsafeFraction()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the minimum fraction of the motion needed to collide, if a collision occurred, between [code]0[/code] and [code]1[/code].",
+      "godotName": "get_collision_unsafe_fraction",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetCollisionUnsafeFraction",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetRemainder",
+      "kind": "Method",
+      "signature": "public Vector3 GetRemainder()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the moving object\u0027s remaining movement vector.",
+      "godotName": "get_remainder",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetRemainder",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    },
+    {
+      "name": "GetTravel",
+      "kind": "Method",
+      "signature": "public Vector3 GetTravel()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the moving object\u0027s travel before collision.",
+      "godotName": "get_travel",
+      "xmlDocId": "M:Godot.PhysicsTestMotionResult3D.GetTravel",
+      "sourcePath": "doc/classes/PhysicsTestMotionResult3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsTestMotionResult3D.xml",
+      "sha256": "98d918d63736856645b03dc684c51d61cc0c333535f6bd81c89141372525a2f0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

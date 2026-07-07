@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderTexture2DArray",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderTexture2DArray",
+    "kind": "class",
+    "baseType": "PlaceholderTextureLayered",
+    "interfaces": [],
+    "godotReference": "PlaceholderTexture2DArray",
+    "documentationPath": "doc/classes/PlaceholderTexture2DArray.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdertexture2darray.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderTexture2DArray.xml",
+      "sha256": "1bd64ddf6ec3a9e20aa70f8ba2c95b53b52ec387af53b189521a5b080a5b71f6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

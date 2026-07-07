@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpinBox",
+    "namespace": "Godot",
+    "fullName": "Godot.SpinBox",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "SpinBox",
+    "documentationPath": "doc/classes/SpinBox.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_spinbox.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Apply",
+      "kind": "Method",
+      "signature": "public void Apply()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Applies the current value of this [SpinBox]. This is equivalent to pressing [kbd]Enter[/kbd] while editing the [LineEdit] used by the [SpinBox]. This will cause [signal LineEdit.text_submitted] to be emitted and its currently contained expression to be evaluated.",
+      "godotName": "apply",
+      "xmlDocId": "M:Godot.SpinBox.Apply",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "GetLineEdit",
+      "kind": "Method",
+      "signature": "public LineEdit GetLineEdit()",
+      "returnType": "LineEdit",
+      "parameters": [],
+      "summary": "Returns the [LineEdit] instance from this [SpinBox]. You can use it to access properties and methods of [LineEdit]. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_line_edit",
+      "xmlDocId": "M:Godot.SpinBox.GetLineEdit",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Changes the alignment of the underlying [LineEdit].",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.SpinBox.Alignment",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "CustomArrowRound",
+      "kind": "Property",
+      "signature": "public bool CustomArrowRound { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the value will be rounded to a multiple of [member custom_arrow_step] when interacting with the arrow buttons. Otherwise, increments the value by [member custom_arrow_step] and then rounds it according to [member Range.step].",
+      "defaultValue": "false",
+      "godotName": "custom_arrow_round",
+      "xmlDocId": "P:Godot.SpinBox.CustomArrowRound",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "CustomArrowStep",
+      "kind": "Property",
+      "signature": "public float CustomArrowStep { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If not [code]0[/code], sets the step when interacting with the arrow buttons of the [SpinBox]. [b]Note:[/b] [member Range.value] will still be rounded to a multiple of [member Range.step].",
+      "defaultValue": "0.0",
+      "godotName": "custom_arrow_step",
+      "xmlDocId": "P:Godot.SpinBox.CustomArrowStep",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public bool Editable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [SpinBox] will be editable. Otherwise, it will be read only.",
+      "defaultValue": "true",
+      "godotName": "editable",
+      "xmlDocId": "P:Godot.SpinBox.Editable",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "Prefix",
+      "kind": "Property",
+      "signature": "public String Prefix { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Adds the specified prefix string before the numerical value of the [SpinBox].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "prefix",
+      "xmlDocId": "P:Godot.SpinBox.Prefix",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "SelectAllOnFocus",
+      "kind": "Property",
+      "signature": "public bool SelectAllOnFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [SpinBox] will select the whole text when the [LineEdit] gains focus. Clicking the up and down arrows won\u0027t trigger this behavior.",
+      "defaultValue": "false",
+      "godotName": "select_all_on_focus",
+      "xmlDocId": "P:Godot.SpinBox.SelectAllOnFocus",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.SpinBox.SizeFlagsVertical",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.SpinBox.Step",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "Suffix",
+      "kind": "Property",
+      "signature": "public String Suffix { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Adds the specified suffix string after the numerical value of the [SpinBox].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "suffix",
+      "xmlDocId": "P:Godot.SpinBox.Suffix",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    },
+    {
+      "name": "UpdateOnTextChanged",
+      "kind": "Property",
+      "signature": "public bool UpdateOnTextChanged { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Sets the value of the [Range] for this [SpinBox] when the [LineEdit] text is [i]changed[/i] instead of [i]submitted[/i]. See [signal LineEdit.text_changed] and [signal LineEdit.text_submitted]. [b]Note:[/b] If set to [code]true[/code], this will interfere with entering mathematical expressions in the [SpinBox]. The [SpinBox] will try to evaluate the expression as you type, which means symbols like a trailing [code]\u002B[/code] are removed immediately by the expression being evaluated.",
+      "defaultValue": "false",
+      "godotName": "update_on_text_changed",
+      "xmlDocId": "P:Godot.SpinBox.UpdateOnTextChanged",
+      "sourcePath": "doc/classes/SpinBox.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpinBox.xml",
+      "sha256": "62b8bacb53abfa4bc8b803a99826c7a85827ad612d7929a9bd839b2cfac84477"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

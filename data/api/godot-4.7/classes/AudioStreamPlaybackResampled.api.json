@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlaybackResampled",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlaybackResampled",
+    "kind": "class",
+    "baseType": "AudioStreamPlayback",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlaybackResampled",
+    "documentationPath": "doc/classes/AudioStreamPlaybackResampled.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplaybackresampled.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetStreamSamplingRate",
+      "kind": "Method",
+      "signature": "public float _GetStreamSamplingRate()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns an [AudioStream]\u0027s sample rate, in Hz. Used to perform resampling.",
+      "godotName": "_get_stream_sampling_rate",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackResampled._GetStreamSamplingRate",
+      "sourcePath": "doc/classes/AudioStreamPlaybackResampled.xml"
+    },
+    {
+      "name": "_MixResampled",
+      "kind": "Method",
+      "signature": "public int _MixResampled(AudioFrame* dstBuffer, int frameCount)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "dst_buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "frame_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Called by [method begin_resample] to mix an [AudioStream] to [method AudioServer.get_mix_rate]. Uses [method _get_stream_sampling_rate] as the source sample rate. Returns the number of mixed frames.",
+      "godotName": "_mix_resampled",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackResampled._MixResampled(AudioFrame*,int)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackResampled.xml"
+    },
+    {
+      "name": "BeginResample",
+      "kind": "Method",
+      "signature": "public void BeginResample()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when an [AudioStream] is played. Clears the cubic interpolation history and starts mixing by calling [method _mix_resampled].",
+      "godotName": "begin_resample",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackResampled.BeginResample",
+      "sourcePath": "doc/classes/AudioStreamPlaybackResampled.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetStreamSamplingRate",
+      "kind": "Method",
+      "signature": "public float _GetStreamSamplingRate()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns an [AudioStream]\u0027s sample rate, in Hz. Used to perform resampling.",
+      "godotName": "_get_stream_sampling_rate",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackResampled._GetStreamSamplingRate",
+      "sourcePath": "doc/classes/AudioStreamPlaybackResampled.xml"
+    },
+    {
+      "name": "_MixResampled",
+      "kind": "Method",
+      "signature": "public int _MixResampled(AudioFrame* dstBuffer, int frameCount)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "dst_buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "frame_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Called by [method begin_resample] to mix an [AudioStream] to [method AudioServer.get_mix_rate]. Uses [method _get_stream_sampling_rate] as the source sample rate. Returns the number of mixed frames.",
+      "godotName": "_mix_resampled",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackResampled._MixResampled(AudioFrame*,int)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackResampled.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamPlaybackResampled.xml",
+      "sha256": "06bc07d4df90e3833faee5bb577772614a62945f9e444415ff24a25ee9937198"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

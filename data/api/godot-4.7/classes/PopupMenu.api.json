@@ -1,0 +1,1851 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PopupMenu",
+    "namespace": "Godot",
+    "fullName": "Godot.PopupMenu",
+    "kind": "class",
+    "baseType": "Popup",
+    "interfaces": [],
+    "godotReference": "PopupMenu",
+    "documentationPath": "doc/classes/PopupMenu.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_popupmenu.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActivateItemByEvent",
+      "kind": "Method",
+      "signature": "public bool ActivateItemByEvent(InputEvent @event, bool forGlobalOnly)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "for_global_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Checks the provided [param event] against the [PopupMenu]\u0027s shortcuts and accelerators, and activates the first item with matching events. If [param for_global_only] is [code]true[/code], only shortcuts and accelerators with [code]global[/code] set to [code]true[/code] will be called. Returns [code]true[/code] if an item was successfully activated. [b]Note:[/b] Certain [Control]s, such as [MenuButton], will call this method automatically.",
+      "godotName": "activate_item_by_event",
+      "xmlDocId": "M:Godot.PopupMenu.ActivateItemByEvent(InputEvent,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddCheckItem",
+      "kind": "Method",
+      "signature": "public void AddCheckItem(String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new checkable item with text [param label]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_check_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddCheckItem(String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddCheckShortcut",
+      "kind": "Method",
+      "signature": "public void AddCheckShortcut(Shortcut shortcut, int id, bool global)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a new checkable item and assigns the specified [Shortcut] to it. Sets the label of the checkbox to the [Shortcut]\u0027s name. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_check_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddCheckShortcut(Shortcut,int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconCheckItem",
+      "kind": "Method",
+      "signature": "public void AddIconCheckItem(Texture2D texture, String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new checkable item with text [param label] and icon [param texture]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_icon_check_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconCheckItem(Texture2D,String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconCheckShortcut",
+      "kind": "Method",
+      "signature": "public void AddIconCheckShortcut(Texture2D texture, Shortcut shortcut, int id, bool global)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a new checkable item and assigns the specified [Shortcut] and icon [param texture] to it. Sets the label of the checkbox to the [Shortcut]\u0027s name. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_icon_check_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconCheckShortcut(Texture2D,Shortcut,int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public void AddIconItem(Texture2D texture, String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new item with text [param label] and icon [param texture]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators.",
+      "godotName": "add_icon_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconItem(Texture2D,String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconRadioCheckItem",
+      "kind": "Method",
+      "signature": "public void AddIconRadioCheckItem(Texture2D texture, String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Same as [method add_icon_check_item], but uses a radio check button.",
+      "godotName": "add_icon_radio_check_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconRadioCheckItem(Texture2D,String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconRadioCheckShortcut",
+      "kind": "Method",
+      "signature": "public void AddIconRadioCheckShortcut(Texture2D texture, Shortcut shortcut, int id, bool global)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Same as [method add_icon_check_shortcut], but uses a radio check button.",
+      "godotName": "add_icon_radio_check_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconRadioCheckShortcut(Texture2D,Shortcut,int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddIconShortcut",
+      "kind": "Method",
+      "signature": "public void AddIconShortcut(Texture2D texture, Shortcut shortcut, int id, bool global, bool allowEcho)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "allow_echo",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a new item and assigns the specified [Shortcut] and icon [param texture] to it. Sets the label of the checkbox to the [Shortcut]\u0027s name. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index. If [param allow_echo] is [code]true[/code], the shortcut can be activated with echo events.",
+      "godotName": "add_icon_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddIconShortcut(Texture2D,Shortcut,int,bool,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public void AddItem(String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new item with text [param label]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators. [b]Note:[/b] The provided [param id] is used only in [signal id_pressed] and [signal id_focused] signals. It\u0027s not related to the [code]index[/code] arguments in e.g. [method set_item_checked].",
+      "godotName": "add_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddItem(String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddMultistateItem",
+      "kind": "Method",
+      "signature": "public void AddMultistateItem(String label, int maxStates, int defaultState, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "max_states",
+          "type": "int"
+        },
+        {
+          "name": "default_state",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new multistate item with text [param label]. Contrarily to normal binary items, multistate items can have more than two states, as defined by [param max_states]. The default value is defined by [param default_state]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators. [codeblock] func _ready(): add_multistate_item(\u0022Item\u0022, 3, 0) index_pressed.connect(func(index: int): toggle_item_multistate(index) match get_item_multistate(index): 0: print(\u0022First state\u0022) 1: print(\u0022Second state\u0022) 2: print(\u0022Third state\u0022) ) [/codeblock] [b]Note:[/b] Multistate items don\u0027t update their state automatically and must be done manually. See [method toggle_item_multistate], [method set_item_multistate] and [method get_item_multistate] for more info on how to control it.",
+      "godotName": "add_multistate_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddMultistateItem(String,int,int,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddRadioCheckItem",
+      "kind": "Method",
+      "signature": "public void AddRadioCheckItem(String label, int id, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "accel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a new radio check button with text [param label]. An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won\u0027t have any accelerator). See [method get_item_accelerator] for more info on accelerators. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_radio_check_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddRadioCheckItem(String,int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddRadioCheckShortcut",
+      "kind": "Method",
+      "signature": "public void AddRadioCheckShortcut(Shortcut shortcut, int id, bool global)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a new radio check button and assigns a [Shortcut] to it. Sets the label of the checkbox to the [Shortcut]\u0027s name. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.",
+      "godotName": "add_radio_check_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddRadioCheckShortcut(Shortcut,int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddSeparator",
+      "kind": "Method",
+      "signature": "public void AddSeparator(String label, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a separator between items. Separators also occupy an index, which you can set by using the [param id] parameter. A [param label] can optionally be provided, which will appear at the center of the separator.",
+      "godotName": "add_separator",
+      "xmlDocId": "M:Godot.PopupMenu.AddSeparator(String,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddShortcut",
+      "kind": "Method",
+      "signature": "public void AddShortcut(Shortcut shortcut, int id, bool global, bool allowEcho)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "allow_echo",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a [Shortcut]. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index. If [param allow_echo] is [code]true[/code], the shortcut can be activated with echo events.",
+      "godotName": "add_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.AddShortcut(Shortcut,int,bool,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddSubmenuItem",
+      "kind": "Method",
+      "signature": "public void AddSubmenuItem(String label, String submenu, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "submenu",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an item that will act as a submenu of the parent [PopupMenu] node when clicked. The [param submenu] argument must be the name of an existing [PopupMenu] that has been added as a child to this node. This submenu will be shown when the item is clicked, hovered for long enough, or activated using the [code]ui_select[/code] or [code]ui_right[/code] input actions. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.",
+      "godotName": "add_submenu_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddSubmenuItem(String,String,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AddSubmenuNodeItem",
+      "kind": "Method",
+      "signature": "public void AddSubmenuNodeItem(String label, PopupMenu submenu, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "submenu",
+          "type": "PopupMenu"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an item that will act as a submenu of the parent [PopupMenu] node when clicked. This submenu will be shown when the item is clicked, hovered for long enough, or activated using the [code]ui_select[/code] or [code]ui_right[/code] input actions. [param submenu] must be either child of this [PopupMenu] or has no parent node (in which case it will be automatically added as a child). If the [param submenu] popup has another parent, this method will fail. An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.",
+      "godotName": "add_submenu_node_item",
+      "xmlDocId": "M:Godot.PopupMenu.AddSubmenuNodeItem(String,PopupMenu,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear(bool freeSubmenus)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "free_submenus",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Removes all items from the [PopupMenu]. If [param free_submenus] is [code]true[/code], the submenu nodes are automatically freed.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PopupMenu.Clear(bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetFocusedItem",
+      "kind": "Method",
+      "signature": "public int GetFocusedItem()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index of the currently focused item. Returns [code]-1[/code] if no item is focused.",
+      "godotName": "get_focused_item",
+      "xmlDocId": "M:Godot.PopupMenu.GetFocusedItem",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemAccelerator",
+      "kind": "Method",
+      "signature": "public int GetItemAccelerator(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the accelerator of the item at the given [param index]. An accelerator is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The return value is an integer which is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). If no accelerator is defined for the specified [param index], [method get_item_accelerator] returns [code]0[/code] (corresponding to [constant @GlobalScope.KEY_NONE]).",
+      "godotName": "get_item_accelerator",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemAccelerator(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public int GetItemAutoTranslateMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the auto translate mode of the item at the given [param index].",
+      "godotName": "get_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemAutoTranslateMode(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetItemIcon(int index)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the icon of the item at the given [param index].",
+      "godotName": "get_item_icon",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemIcon(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemIconMaxWidth",
+      "kind": "Method",
+      "signature": "public int GetItemIconMaxWidth(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum allowed width of the icon for the item at the given [param index].",
+      "godotName": "get_item_icon_max_width",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemIconMaxWidth(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemIconModulate",
+      "kind": "Method",
+      "signature": "public Color GetItemIconModulate(int index)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Color] modulating the item\u0027s icon at the given [param index].",
+      "godotName": "get_item_icon_modulate",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemIconModulate(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemId",
+      "kind": "Method",
+      "signature": "public int GetItemId(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the ID of the item at the given [param index].",
+      "godotName": "get_item_id",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemId(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemIndent",
+      "kind": "Method",
+      "signature": "public int GetItemIndent(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the horizontal offset of the item at the given [param index].",
+      "godotName": "get_item_indent",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemIndent(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemIndex",
+      "kind": "Method",
+      "signature": "public int GetItemIndex(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the item containing the specified [param id]. The index is automatically assigned to each item by the engine when added and represents the order items will be displayed.",
+      "godotName": "get_item_index",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemIndex(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemLanguage",
+      "kind": "Method",
+      "signature": "public String GetItemLanguage(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns item\u0027s text language code.",
+      "godotName": "get_item_language",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemLanguage(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetItemMetadata(int index)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the metadata of the specified item, which might be of any type. You can set it with [method set_item_metadata], which provides a simple way of assigning context data to items.",
+      "godotName": "get_item_metadata",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemMetadata(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemMultistate",
+      "kind": "Method",
+      "signature": "public int GetItemMultistate(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the state of the item at the given [param index].",
+      "godotName": "get_item_multistate",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemMultistate(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemMultistateMax",
+      "kind": "Method",
+      "signature": "public int GetItemMultistateMax(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the max states of the item at the given [param index].",
+      "godotName": "get_item_multistate_max",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemMultistateMax(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemShortcut",
+      "kind": "Method",
+      "signature": "public Shortcut GetItemShortcut(int index)",
+      "returnType": "Shortcut",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Shortcut] associated with the item at the given [param index].",
+      "godotName": "get_item_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemShortcut(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemSubmenu",
+      "kind": "Method",
+      "signature": "public String GetItemSubmenu(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the submenu name of the item at the given [param index]. See [method add_submenu_item] for more info on how to add a submenu.",
+      "godotName": "get_item_submenu",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemSubmenu(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemSubmenuNode",
+      "kind": "Method",
+      "signature": "public PopupMenu GetItemSubmenuNode(int index)",
+      "returnType": "PopupMenu",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the submenu of the item at the given [param index], or [code]null[/code] if no submenu was added. See [method add_submenu_node_item] for more info on how to add a submenu.",
+      "godotName": "get_item_submenu_node",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemSubmenuNode(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public String GetItemText(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text of the item at the given [param index].",
+      "godotName": "get_item_text",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemText(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemTextDirection",
+      "kind": "Method",
+      "signature": "public int GetItemTextDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns item\u0027s text base writing direction.",
+      "godotName": "get_item_text_direction",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemTextDirection(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "GetItemTooltip",
+      "kind": "Method",
+      "signature": "public String GetItemTooltip(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tooltip associated with the item at the given [param index].",
+      "godotName": "get_item_tooltip",
+      "xmlDocId": "M:Godot.PopupMenu.GetItemTooltip(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemCheckable",
+      "kind": "Method",
+      "signature": "public bool IsItemCheckable(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the given [param index] is checkable in some way, i.e. if it has a checkbox or radio button. [b]Note:[/b] Checkable items just display a checkmark or radio button, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually.",
+      "godotName": "is_item_checkable",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemCheckable(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemChecked",
+      "kind": "Method",
+      "signature": "public bool IsItemChecked(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the given [param index] is checked.",
+      "godotName": "is_item_checked",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemChecked(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public bool IsItemDisabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the given [param index] is disabled. When it is disabled it can\u0027t be selected, or its action invoked. See [method set_item_disabled] for more info on how to disable an item.",
+      "godotName": "is_item_disabled",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemDisabled(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemRadioCheckable",
+      "kind": "Method",
+      "signature": "public bool IsItemRadioCheckable(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the given [param index] has radio button-style checkability. [b]Note:[/b] This is purely cosmetic; you must add the logic for checking/unchecking items in radio groups.",
+      "godotName": "is_item_radio_checkable",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemRadioCheckable(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemSeparator",
+      "kind": "Method",
+      "signature": "public bool IsItemSeparator(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item is a separator. If it is, it will be displayed as a line. See [method add_separator] for more info on how to add a separator.",
+      "godotName": "is_item_separator",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemSeparator(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsItemShortcutDisabled",
+      "kind": "Method",
+      "signature": "public bool IsItemShortcutDisabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified item\u0027s shortcut is disabled.",
+      "godotName": "is_item_shortcut_disabled",
+      "xmlDocId": "M:Godot.PopupMenu.IsItemShortcutDisabled(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsNativeMenu",
+      "kind": "Method",
+      "signature": "public bool IsNativeMenu()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the system native menu is supported and currently used by this [PopupMenu].",
+      "godotName": "is_native_menu",
+      "xmlDocId": "M:Godot.PopupMenu.IsNativeMenu",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IsSystemMenu",
+      "kind": "Method",
+      "signature": "public bool IsSystemMenu()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the menu is bound to the special system menu.",
+      "godotName": "is_system_menu",
+      "xmlDocId": "M:Godot.PopupMenu.IsSystemMenu",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "RemoveItem",
+      "kind": "Method",
+      "signature": "public void RemoveItem(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the item at the given [param index] from the menu. [b]Note:[/b] The indices of items after the removed item will be shifted by one.",
+      "godotName": "remove_item",
+      "xmlDocId": "M:Godot.PopupMenu.RemoveItem(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ScrollToItem",
+      "kind": "Method",
+      "signature": "public void ScrollToItem(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the scroll view to make the item at the given [param index] visible.",
+      "godotName": "scroll_to_item",
+      "xmlDocId": "M:Godot.PopupMenu.ScrollToItem(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetFocusedItem",
+      "kind": "Method",
+      "signature": "public void SetFocusedItem(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the currently focused item as the given [param index]. Passing [code]-1[/code] as the index makes so that no item is focused.",
+      "godotName": "set_focused_item",
+      "xmlDocId": "M:Godot.PopupMenu.SetFocusedItem(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemAccelerator",
+      "kind": "Method",
+      "signature": "public void SetItemAccelerator(int index, int accel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "accel",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the accelerator of the item at the given [param index]. An accelerator is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. [param accel] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]).",
+      "godotName": "set_item_accelerator",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemAccelerator(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemAsCheckable",
+      "kind": "Method",
+      "signature": "public void SetItemAsCheckable(int index, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the item at the given [param index] has a checkbox. If [code]false[/code], sets the type of the item to plain text. [b]Note:[/b] Checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually.",
+      "godotName": "set_item_as_checkable",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemAsCheckable(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemAsRadioCheckable",
+      "kind": "Method",
+      "signature": "public void SetItemAsRadioCheckable(int index, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the type of the item at the given [param index] to radio button. If [code]false[/code], sets the type of the item to plain text.",
+      "godotName": "set_item_as_radio_checkable",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemAsRadioCheckable(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemAsSeparator",
+      "kind": "Method",
+      "signature": "public void SetItemAsSeparator(int index, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Mark the item at the given [param index] as a separator, which means that it would be displayed as a line. If [code]false[/code], sets the type of the item to plain text.",
+      "godotName": "set_item_as_separator",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemAsSeparator(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public void SetItemAutoTranslateMode(int index, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the auto translate mode of the item at the given [param index]. Items use [constant Node.AUTO_TRANSLATE_MODE_INHERIT] by default, which uses the same auto translate mode as the [PopupMenu] itself.",
+      "godotName": "set_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemAutoTranslateMode(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemChecked",
+      "kind": "Method",
+      "signature": "public void SetItemChecked(int index, bool @checked)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "checked",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the checkstate status of the item at the given [param index].",
+      "godotName": "set_item_checked",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemChecked(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public void SetItemDisabled(int index, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables/disables the item at the given [param index]. When it is disabled, it can\u0027t be selected and its action can\u0027t be invoked.",
+      "godotName": "set_item_disabled",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemDisabled(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public void SetItemIcon(int index, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Replaces the [Texture2D] icon of the item at the given [param index].",
+      "godotName": "set_item_icon",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemIcon(int,Texture2D)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemIconMaxWidth",
+      "kind": "Method",
+      "signature": "public void SetItemIconMaxWidth(int index, int width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the maximum allowed width of the icon for the item at the given [param index]. This limit is applied on top of the default size of the icon and on top of [theme_item icon_max_width]. The height is adjusted according to the icon\u0027s ratio.",
+      "godotName": "set_item_icon_max_width",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemIconMaxWidth(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemIconModulate",
+      "kind": "Method",
+      "signature": "public void SetItemIconModulate(int index, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets a modulating [Color] of the item\u0027s icon at the given [param index].",
+      "godotName": "set_item_icon_modulate",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemIconModulate(int,Color)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemId",
+      "kind": "Method",
+      "signature": "public void SetItemId(int index, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the [param id] of the item at the given [param index]. The [param id] is used in [signal id_pressed] and [signal id_focused] signals.",
+      "godotName": "set_item_id",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemId(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemIndent",
+      "kind": "Method",
+      "signature": "public void SetItemIndent(int index, int indent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "indent",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the horizontal offset of the item at the given [param index].",
+      "godotName": "set_item_indent",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemIndent(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemIndex",
+      "kind": "Method",
+      "signature": "public void SetItemIndex(int index, int targetIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "target_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes the index of the item at index [param index] to be at index [param target_index]. This can be used to move an item above other items. The moved item will keep the same ID, even if it was generated from the original index. [b]Note:[/b] The indices of any items between index [param index] and index [param target_index] will be shifted by one.",
+      "godotName": "set_item_index",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemIndex(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemLanguage",
+      "kind": "Method",
+      "signature": "public void SetItemLanguage(int index, String language)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the language code of the text for the item at the given index to [param language]. This is used for line-breaking and text shaping algorithms. If [param language] is empty, the current locale is used.",
+      "godotName": "set_item_language",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemLanguage(int,String)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemMetadata",
+      "kind": "Method",
+      "signature": "public void SetItemMetadata(int index, Variant metadata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "metadata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata of an item, which may be of any type. You can later get it with [method get_item_metadata], which provides a simple way of assigning context data to items.",
+      "godotName": "set_item_metadata",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemMetadata(int,Variant)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemMultistate",
+      "kind": "Method",
+      "signature": "public void SetItemMultistate(int index, int state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the state of a multistate item. See [method add_multistate_item] for details.",
+      "godotName": "set_item_multistate",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemMultistate(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemMultistateMax",
+      "kind": "Method",
+      "signature": "public void SetItemMultistateMax(int index, int maxStates)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "max_states",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the max states of a multistate item. See [method add_multistate_item] for details.",
+      "godotName": "set_item_multistate_max",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemMultistateMax(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemShortcut",
+      "kind": "Method",
+      "signature": "public void SetItemShortcut(int index, Shortcut shortcut, bool global)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "shortcut",
+          "type": "Shortcut"
+        },
+        {
+          "name": "global",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Sets a [Shortcut] for the item at the given [param index].",
+      "godotName": "set_item_shortcut",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemShortcut(int,Shortcut,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemShortcutDisabled",
+      "kind": "Method",
+      "signature": "public void SetItemShortcutDisabled(int index, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Disables the [Shortcut] of the item at the given [param index].",
+      "godotName": "set_item_shortcut_disabled",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemShortcutDisabled(int,bool)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemSubmenu",
+      "kind": "Method",
+      "signature": "public void SetItemSubmenu(int index, String submenu)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "submenu",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the submenu of the item at the given [param index]. The submenu is the name of a child [PopupMenu] node that would be shown when the item is clicked.",
+      "godotName": "set_item_submenu",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemSubmenu(int,String)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemSubmenuNode",
+      "kind": "Method",
+      "signature": "public void SetItemSubmenuNode(int index, PopupMenu submenu)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "submenu",
+          "type": "PopupMenu"
+        }
+      ],
+      "summary": "Sets the submenu of the item at the given [param index]. The submenu is a [PopupMenu] node that would be shown when the item is clicked. It must either be a child of this [PopupMenu] or has no parent (in which case it will be automatically added as a child). If the [param submenu] popup has another parent, this method will fail.",
+      "godotName": "set_item_submenu_node",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemSubmenuNode(int,PopupMenu)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public void SetItemText(int index, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text of the item at the given [param index].",
+      "godotName": "set_item_text",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemText(int,String)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemTextDirection",
+      "kind": "Method",
+      "signature": "public void SetItemTextDirection(int index, int direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets item\u0027s text base writing direction.",
+      "godotName": "set_item_text_direction",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemTextDirection(int,int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SetItemTooltip",
+      "kind": "Method",
+      "signature": "public void SetItemTooltip(int index, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the [String] tooltip of the item at the given [param index].",
+      "godotName": "set_item_tooltip",
+      "xmlDocId": "M:Godot.PopupMenu.SetItemTooltip(int,String)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ToggleItemChecked",
+      "kind": "Method",
+      "signature": "public void ToggleItemChecked(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Toggles the check state of the item at the given [param index].",
+      "godotName": "toggle_item_checked",
+      "xmlDocId": "M:Godot.PopupMenu.ToggleItemChecked(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ToggleItemMultistate",
+      "kind": "Method",
+      "signature": "public void ToggleItemMultistate(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Cycle to the next state of a multistate item. See [method add_multistate_item] for details.",
+      "godotName": "toggle_item_multistate",
+      "xmlDocId": "M:Godot.PopupMenu.ToggleItemMultistate(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "AllowSearch",
+      "kind": "Property",
+      "signature": "public bool AllowSearch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows navigating [PopupMenu] with letter keys.",
+      "defaultValue": "true",
+      "godotName": "allow_search",
+      "xmlDocId": "P:Godot.PopupMenu.AllowSearch",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "CanvasItemDefaultTextureFilter",
+      "kind": "Property",
+      "signature": "public int CanvasItemDefaultTextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "4",
+      "godotName": "canvas_item_default_texture_filter",
+      "xmlDocId": "P:Godot.PopupMenu.CanvasItemDefaultTextureFilter",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "CanvasItemDefaultTextureRepeat",
+      "kind": "Property",
+      "signature": "public int CanvasItemDefaultTextureRepeat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "canvas_item_default_texture_repeat",
+      "xmlDocId": "P:Godot.PopupMenu.CanvasItemDefaultTextureRepeat",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "HideOnCheckableItemSelection",
+      "kind": "Property",
+      "signature": "public bool HideOnCheckableItemSelection { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], hides the [PopupMenu] when a checkbox or radio button is selected.",
+      "defaultValue": "true",
+      "godotName": "hide_on_checkable_item_selection",
+      "xmlDocId": "P:Godot.PopupMenu.HideOnCheckableItemSelection",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "HideOnItemSelection",
+      "kind": "Property",
+      "signature": "public bool HideOnItemSelection { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], hides the [PopupMenu] when an item is selected.",
+      "defaultValue": "true",
+      "godotName": "hide_on_item_selection",
+      "xmlDocId": "P:Godot.PopupMenu.HideOnItemSelection",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "HideOnStateItemSelection",
+      "kind": "Property",
+      "signature": "public bool HideOnStateItemSelection { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], hides the [PopupMenu] when a state item is selected.",
+      "defaultValue": "false",
+      "godotName": "hide_on_state_item_selection",
+      "xmlDocId": "P:Godot.PopupMenu.HideOnStateItemSelection",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ItemCount",
+      "kind": "Property",
+      "signature": "public int ItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of items currently in the list.",
+      "defaultValue": "0",
+      "godotName": "item_count",
+      "xmlDocId": "P:Godot.PopupMenu.ItemCount",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "PreferNativeMenu",
+      "kind": "Property",
+      "signature": "public bool PreferNativeMenu { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [MenuBar] will use native menu when supported. [b]Note:[/b] If [PopupMenu] is linked to [StatusIndicator], [MenuBar], or another [PopupMenu] item it can use native menu regardless of this property, use [method is_native_menu] to check it.",
+      "defaultValue": "false",
+      "godotName": "prefer_native_menu",
+      "xmlDocId": "P:Godot.PopupMenu.PreferNativeMenu",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SearchBarEnabled",
+      "kind": "Property",
+      "signature": "public bool SearchBarEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows a search bar at the top of the [PopupMenu] for filtering items. See [member search_bar_min_item_count] for dynamically controlling its visibility based on the number of items. [b]Note:[/b] When enabled, [member allow_search] is ignored.",
+      "defaultValue": "false",
+      "godotName": "search_bar_enabled",
+      "xmlDocId": "P:Godot.PopupMenu.SearchBarEnabled",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SearchBarFuzzySearchEnabled",
+      "kind": "Property",
+      "signature": "public bool SearchBarFuzzySearchEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables fuzzy searching in the [PopupMenu] search bar. This allows the search results to include items that almost match the search query, as well items that match the individual characters of the search query, but not in sequence. Use [member search_bar_fuzzy_search_max_misses] to set the maximum number of mismatches allowed in the search results.",
+      "defaultValue": "true",
+      "godotName": "search_bar_fuzzy_search_enabled",
+      "xmlDocId": "P:Godot.PopupMenu.SearchBarFuzzySearchEnabled",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SearchBarFuzzySearchMaxMisses",
+      "kind": "Property",
+      "signature": "public int SearchBarFuzzySearchMaxMisses { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the maximum number of mismatches allowed in each search result when fuzzy searching is enabled for the [PopupMenu] search bar. Any item with more mismatches will be hidden from the search results.",
+      "defaultValue": "2",
+      "godotName": "search_bar_fuzzy_search_max_misses",
+      "xmlDocId": "P:Godot.PopupMenu.SearchBarFuzzySearchMaxMisses",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SearchBarMinItemCount",
+      "kind": "Property",
+      "signature": "public int SearchBarMinItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the minimum number of items required for the search bar to be visible. [member search_bar_enabled] must be [code]true[/code] for this to have any effect. Separator items are not counted.",
+      "defaultValue": "0",
+      "godotName": "search_bar_min_item_count",
+      "xmlDocId": "P:Godot.PopupMenu.SearchBarMinItemCount",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ShrinkHeight",
+      "kind": "Property",
+      "signature": "public bool ShrinkHeight { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shrinks [PopupMenu] to minimum height when it\u0027s shown.",
+      "defaultValue": "true",
+      "godotName": "shrink_height",
+      "xmlDocId": "P:Godot.PopupMenu.ShrinkHeight",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "ShrinkWidth",
+      "kind": "Property",
+      "signature": "public bool ShrinkWidth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shrinks [PopupMenu] to minimum width when it\u0027s shown.",
+      "defaultValue": "true",
+      "godotName": "shrink_width",
+      "xmlDocId": "P:Godot.PopupMenu.ShrinkWidth",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SubmenuPopupDelay",
+      "kind": "Property",
+      "signature": "public float SubmenuPopupDelay { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the delay time in seconds for the submenu item to popup on mouse hovering. If the popup menu is added as a child of another (acting as a submenu), it will inherit the delay time of the parent menu item. [b]Note:[/b] If the mouse is exiting a submenu item with an open submenu and enters a different submenu item, the submenu popup delay time is affected by the direction of the mouse movement toward the open submenu. If the mouse is moving toward the submenu, the open submenu will wait approximately [code]0.5[/code] seconds before closing, which then allows the hovered submenu item to open. This additional delay allows the mouse time to move to the open submenu across other menu items without prematurely closing. If the mouse is not moving toward the open submenu, for example in a downward direction, the open submenu will close immediately.",
+      "defaultValue": "0.2",
+      "godotName": "submenu_popup_delay",
+      "xmlDocId": "P:Godot.PopupMenu.SubmenuPopupDelay",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "SystemMenuId",
+      "kind": "Property",
+      "signature": "public int SystemMenuId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If set to one of the values of [enum NativeMenu.SystemMenus], this [PopupMenu] is bound to the special system menu. Only one [PopupMenu] can be bound to each special menu at a time.",
+      "defaultValue": "0",
+      "godotName": "system_menu_id",
+      "xmlDocId": "P:Godot.PopupMenu.SystemMenuId",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "Transparent",
+      "kind": "Property",
+      "signature": "public bool Transparent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transparent",
+      "xmlDocId": "P:Godot.PopupMenu.Transparent",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "TransparentBg",
+      "kind": "Property",
+      "signature": "public bool TransparentBg { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transparent_bg",
+      "xmlDocId": "P:Godot.PopupMenu.TransparentBg",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "item_{index}/checkable",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The checkable item type of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "item_{index}/checkable",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/checked",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is checked. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "item_{index}/checked",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/disabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is disabled. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "item_{index}/disabled",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/icon",
+      "kind": "RawProperty",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The icon of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "godotName": "item_{index}/icon",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/id",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "item_{index}/id",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/separator",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is a separator. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "item_{index}/separator",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "item_{index}/text",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "item_{index}/text",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "IdFocused",
+      "kind": "Signal",
+      "signature": "public event IdFocusedHandler IdFocused",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user navigated to an item of some [param id] using the [member ProjectSettings.input/ui_up] or [member ProjectSettings.input/ui_down] input action.",
+      "godotName": "id_focused",
+      "xmlDocId": "E:Godot.PopupMenu.IdFocused(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IdPressed",
+      "kind": "Signal",
+      "signature": "public event IdPressedHandler IdPressed",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when an item of some [param id] is pressed. Also emitted when its accelerator is activated on macOS. [b]Note:[/b] If [param id] is negative (either explicitly or due to overflow), this will return the corresponding index instead.",
+      "godotName": "id_pressed",
+      "xmlDocId": "E:Godot.PopupMenu.IdPressed(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "IndexPressed",
+      "kind": "Signal",
+      "signature": "public event IndexPressedHandler IndexPressed",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when an item of some [param index] is pressed. Also emitted when its accelerator is activated on macOS.",
+      "godotName": "index_pressed",
+      "xmlDocId": "E:Godot.PopupMenu.IndexPressed(int)",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    },
+    {
+      "name": "MenuChanged",
+      "kind": "Signal",
+      "signature": "public event MenuChangedHandler MenuChanged",
+      "parameters": [],
+      "summary": "Emitted when any item is added, modified or removed.",
+      "godotName": "menu_changed",
+      "xmlDocId": "E:Godot.PopupMenu.MenuChanged",
+      "sourcePath": "doc/classes/PopupMenu.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PopupMenu.xml",
+      "sha256": "bb650cb8f357cfaf8a89e7508218ff696e5a12cf164471b63ec209a4ec3cc1c1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ShaderMaterial",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ShaderMaterial",
+    "kind": "class",
+    "baseType": "Electron2D.Material",
+    "interfaces": [],
+    "godotReference": "ShaderMaterial",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "ShaderMaterial",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ShaderMaterial()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the ShaderMaterial type.",
+      "xmlDocId": "M:Electron2D.ShaderMaterial.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "ShaderMaterial",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ShaderMaterial()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the ShaderMaterial type.",
+      "xmlDocId": "M:Electron2D.ShaderMaterial.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetShaderParameter",
+      "kind": "Method",
+      "signature": "public Electron2D.Variant GetShaderParameter(Electron2D.StringName param)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Returns the current value set for a shader uniform parameter.",
+      "xmlDocId": "M:Electron2D.ShaderMaterial.GetShaderParameter(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetShaderParameter",
+      "kind": "Method",
+      "signature": "public System.Void SetShaderParameter(Electron2D.StringName param, Electron2D.Variant value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "value",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Changes the value set for a shader uniform parameter.",
+      "xmlDocId": "M:Electron2D.ShaderMaterial.SetShaderParameter(Electron2D.StringName,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Shader",
+      "kind": "Property",
+      "signature": "public Electron2D.Shader Shader { get; set; }",
+      "returnType": "Electron2D.Shader",
+      "parameters": [],
+      "summary": "Gets or sets the shader program used by this material.",
+      "xmlDocId": "P:Electron2D.ShaderMaterial.Shader",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

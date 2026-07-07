@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiMesh",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "MultiMesh",
+    "documentationPath": "doc/classes/MultiMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multimesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAabb",
+      "kind": "Method",
+      "signature": "public AABB GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the visibility axis-aligned bounding box in local space.",
+      "godotName": "get_aabb",
+      "xmlDocId": "M:Godot.MultiMesh.GetAabb",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "GetInstanceColor",
+      "kind": "Method",
+      "signature": "public Color GetInstanceColor(int instance)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets a specific instance\u0027s color multiplier.",
+      "godotName": "get_instance_color",
+      "xmlDocId": "M:Godot.MultiMesh.GetInstanceColor(int)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "GetInstanceCustomData",
+      "kind": "Method",
+      "signature": "public Color GetInstanceCustomData(int instance)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the custom data that has been set for a specific instance.",
+      "godotName": "get_instance_custom_data",
+      "xmlDocId": "M:Godot.MultiMesh.GetInstanceCustomData(int)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "GetInstanceTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetInstanceTransform(int instance)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Transform3D] of a specific instance.",
+      "godotName": "get_instance_transform",
+      "xmlDocId": "M:Godot.MultiMesh.GetInstanceTransform(int)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "GetInstanceTransform2d",
+      "kind": "Method",
+      "signature": "public Transform2D GetInstanceTransform2d(int instance)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Transform2D] of a specific instance.",
+      "godotName": "get_instance_transform_2d",
+      "xmlDocId": "M:Godot.MultiMesh.GetInstanceTransform2d(int)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "ResetInstancePhysicsInterpolation",
+      "kind": "Method",
+      "signature": "public void ResetInstancePhysicsInterpolation(int instance)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        }
+      ],
+      "summary": "When using [i]physics interpolation[/i], this function allows you to prevent interpolation on an instance in the current physics tick. This allows you to move instances instantaneously, and should usually be used when initially placing an instance such as a bullet to prevent graphical glitches.",
+      "godotName": "reset_instance_physics_interpolation",
+      "xmlDocId": "M:Godot.MultiMesh.ResetInstancePhysicsInterpolation(int)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "ResetInstancesPhysicsInterpolation",
+      "kind": "Method",
+      "signature": "public void ResetInstancesPhysicsInterpolation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "When using [i]physics interpolation[/i], this function allows you to prevent interpolation for all instances in the current physics tick. This allows you to move all instances instantaneously, and should usually be used when initially placing instances to prevent graphical glitches.",
+      "godotName": "reset_instances_physics_interpolation",
+      "xmlDocId": "M:Godot.MultiMesh.ResetInstancesPhysicsInterpolation",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "SetBufferInterpolated",
+      "kind": "Method",
+      "signature": "public void SetBufferInterpolated(PackedFloat32Array bufferCurr, PackedFloat32Array bufferPrev)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "buffer_curr",
+          "type": "PackedFloat32Array"
+        },
+        {
+          "name": "buffer_prev",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "An alternative to setting the [member buffer] property, which can be used with [i]physics interpolation[/i]. This method takes two arrays, and can set the data for the current and previous tick in one go. The renderer will automatically interpolate the data at each frame. This is useful for situations where the order of instances may change from physics tick to tick, such as particle systems. When the order of instances is coherent, the simpler alternative of setting [member buffer] can still be used with interpolation.",
+      "godotName": "set_buffer_interpolated",
+      "xmlDocId": "M:Godot.MultiMesh.SetBufferInterpolated(PackedFloat32Array,PackedFloat32Array)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "SetInstanceColor",
+      "kind": "Method",
+      "signature": "public void SetInstanceColor(int instance, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color of a specific instance by [i]multiplying[/i] the mesh\u0027s existing vertex colors. This allows for different color tinting per instance. [b]Note:[/b] Each component is stored in 32 bits in the Forward\u002B and Mobile rendering methods, but is packed into 16 bits in the Compatibility rendering method. For the color to take effect, ensure that [member use_colors] is [code]true[/code] on the [MultiMesh] and [member BaseMaterial3D.vertex_color_use_as_albedo] is [code]true[/code] on the material. If you intend to set an absolute color instead of tinting, make sure the material\u0027s albedo color is set to pure white ([code]Color(1, 1, 1)[/code]).",
+      "godotName": "set_instance_color",
+      "xmlDocId": "M:Godot.MultiMesh.SetInstanceColor(int,Color)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "SetInstanceCustomData",
+      "kind": "Method",
+      "signature": "public void SetInstanceCustomData(int instance, Color customData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        },
+        {
+          "name": "custom_data",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets custom data for a specific instance. [param custom_data] is a [Color] type only to contain 4 floating-point numbers. [b]Note:[/b] Each number is stored in 32 bits in the Forward\u002B and Mobile rendering methods, but is packed into 16 bits in the Compatibility rendering method. For the custom data to be used, ensure that [member use_custom_data] is [code]true[/code]. This custom instance data has to be manually accessed in your custom shader using [code]INSTANCE_CUSTOM[/code].",
+      "godotName": "set_instance_custom_data",
+      "xmlDocId": "M:Godot.MultiMesh.SetInstanceCustomData(int,Color)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "SetInstanceTransform",
+      "kind": "Method",
+      "signature": "public void SetInstanceTransform(int instance, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the [Transform3D] for a specific instance.",
+      "godotName": "set_instance_transform",
+      "xmlDocId": "M:Godot.MultiMesh.SetInstanceTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "SetInstanceTransform2d",
+      "kind": "Method",
+      "signature": "public void SetInstanceTransform2d(int instance, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "instance",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets the [Transform2D] for a specific instance.",
+      "godotName": "set_instance_transform_2d",
+      "xmlDocId": "M:Godot.MultiMesh.SetInstanceTransform2d(int,Transform2D)",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "Buffer",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array Buffer { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedFloat32Array()",
+      "godotName": "buffer",
+      "xmlDocId": "P:Godot.MultiMesh.Buffer",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "ColorArray",
+      "kind": "Property",
+      "signature": "public PackedColorArray ColorArray { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Array containing each [Color] used by all instances of this mesh.",
+      "godotName": "color_array",
+      "xmlDocId": "P:Godot.MultiMesh.ColorArray",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "CustomAabb",
+      "kind": "Property",
+      "signature": "public AABB CustomAabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Custom AABB for this MultiMesh resource. Setting this manually prevents costly runtime AABB recalculations.",
+      "defaultValue": "AABB(0, 0, 0, 0, 0, 0)",
+      "godotName": "custom_aabb",
+      "xmlDocId": "P:Godot.MultiMesh.CustomAabb",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "CustomDataArray",
+      "kind": "Property",
+      "signature": "public PackedColorArray CustomDataArray { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Array containing each custom data value used by all instances of this mesh, as a [PackedColorArray].",
+      "godotName": "custom_data_array",
+      "xmlDocId": "P:Godot.MultiMesh.CustomDataArray",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "InstanceCount",
+      "kind": "Property",
+      "signature": "public int InstanceCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of instances that will get drawn. This clears and (re)sizes the buffers. Setting data format or flags afterwards will have no effect. By default, all instances are drawn but you can limit this with [member visible_instance_count].",
+      "defaultValue": "0",
+      "godotName": "instance_count",
+      "xmlDocId": "P:Godot.MultiMesh.InstanceCount",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "[Mesh] resource to be instanced. The looks of the individual instances can be modified using [method set_instance_color] and [method set_instance_custom_data].",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.MultiMesh.Mesh",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "PhysicsInterpolationQuality",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationQuality { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Choose whether to use an interpolation method that favors speed or quality. When using low physics tick rates (typically below 20) or high rates of object rotation, you may get better results from the high quality setting. [b]Note:[/b] Fast quality does not equate to low quality. Except in the special cases mentioned above, the quality should be comparable to high quality.",
+      "defaultValue": "0",
+      "godotName": "physics_interpolation_quality",
+      "xmlDocId": "P:Godot.MultiMesh.PhysicsInterpolationQuality",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "Transform2dArray",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Transform2dArray { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Array containing each [Transform2D] value used by all instances of this mesh, as a [PackedVector2Array]. Each transform is divided into 3 [Vector2] values corresponding to the transforms\u0027 [code]x[/code], [code]y[/code], and [code]origin[/code].",
+      "godotName": "transform_2d_array",
+      "xmlDocId": "P:Godot.MultiMesh.Transform2dArray",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "TransformArray",
+      "kind": "Property",
+      "signature": "public PackedVector3Array TransformArray { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Array containing each [Transform3D] value used by all instances of this mesh, as a [PackedVector3Array]. Each transform is divided into 4 [Vector3] values corresponding to the transforms\u0027 [code]x[/code], [code]y[/code], [code]z[/code], and [code]origin[/code].",
+      "godotName": "transform_array",
+      "xmlDocId": "P:Godot.MultiMesh.TransformArray",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "TransformFormat",
+      "kind": "Property",
+      "signature": "public int TransformFormat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Format of transform used to transform mesh, either 2D or 3D.",
+      "defaultValue": "0",
+      "godotName": "transform_format",
+      "xmlDocId": "P:Godot.MultiMesh.TransformFormat",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "UseColors",
+      "kind": "Property",
+      "signature": "public bool UseColors { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [MultiMesh] will use color data (see [method set_instance_color]). Can only be set when [member instance_count] is [code]0[/code] or less. This means that you need to call this method before setting the instance count, or temporarily reset it to [code]0[/code].",
+      "defaultValue": "false",
+      "godotName": "use_colors",
+      "xmlDocId": "P:Godot.MultiMesh.UseColors",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "UseCustomData",
+      "kind": "Property",
+      "signature": "public bool UseCustomData { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [MultiMesh] will use custom data (see [method set_instance_custom_data]). Can only be set when [member instance_count] is [code]0[/code] or less. This means that you need to call this method before setting the instance count, or temporarily reset it to [code]0[/code].",
+      "defaultValue": "false",
+      "godotName": "use_custom_data",
+      "xmlDocId": "P:Godot.MultiMesh.UseCustomData",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "VisibleInstanceCount",
+      "kind": "Property",
+      "signature": "public int VisibleInstanceCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Limits the number of instances drawn, -1 draws all instances. Changing this does not change the sizes of the buffers.",
+      "defaultValue": "-1",
+      "godotName": "visible_instance_count",
+      "xmlDocId": "P:Godot.MultiMesh.VisibleInstanceCount",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PhysicsInterpolationQuality",
+      "values": [
+        {
+          "name": "INTERP_QUALITY_FAST",
+          "value": "0",
+          "enum": "PhysicsInterpolationQuality",
+          "kind": "EnumValue",
+          "summary": "Always interpolate using Basis lerping, which can produce warping artifacts in some situations.",
+          "sourcePath": "doc/classes/MultiMesh.xml"
+        },
+        {
+          "name": "INTERP_QUALITY_HIGH",
+          "value": "1",
+          "enum": "PhysicsInterpolationQuality",
+          "kind": "EnumValue",
+          "summary": "Attempt to interpolate using Basis slerping (spherical linear interpolation) where possible, otherwise fall back to lerping.",
+          "sourcePath": "doc/classes/MultiMesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "TransformFormat",
+      "values": [
+        {
+          "name": "TRANSFORM_2D",
+          "value": "0",
+          "enum": "TransformFormat",
+          "kind": "EnumValue",
+          "summary": "Use this when using 2D transforms.",
+          "sourcePath": "doc/classes/MultiMesh.xml"
+        },
+        {
+          "name": "TRANSFORM_3D",
+          "value": "1",
+          "enum": "TransformFormat",
+          "kind": "EnumValue",
+          "summary": "Use this when using 3D transforms.",
+          "sourcePath": "doc/classes/MultiMesh.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TRANSFORM_2D",
+      "value": "0",
+      "enum": "TransformFormat",
+      "kind": "EnumValue",
+      "summary": "Use this when using 2D transforms.",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "TRANSFORM_3D",
+      "value": "1",
+      "enum": "TransformFormat",
+      "kind": "EnumValue",
+      "summary": "Use this when using 3D transforms.",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "INTERP_QUALITY_FAST",
+      "value": "0",
+      "enum": "PhysicsInterpolationQuality",
+      "kind": "EnumValue",
+      "summary": "Always interpolate using Basis lerping, which can produce warping artifacts in some situations.",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    },
+    {
+      "name": "INTERP_QUALITY_HIGH",
+      "value": "1",
+      "enum": "PhysicsInterpolationQuality",
+      "kind": "EnumValue",
+      "summary": "Attempt to interpolate using Basis slerping (spherical linear interpolation) where possible, otherwise fall back to lerping.",
+      "sourcePath": "doc/classes/MultiMesh.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiMesh.xml",
+      "sha256": "1b83c38a7272569b241ba2898e94245d4a574705e11d36cc52d75f91302a995d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

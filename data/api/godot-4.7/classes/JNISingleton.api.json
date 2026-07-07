@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JNISingleton",
+    "namespace": "Godot",
+    "fullName": "Godot.JNISingleton",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "JNISingleton",
+    "documentationPath": "doc/classes/JNISingleton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_jnisingleton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "HasJavaMethod",
+      "kind": "Method",
+      "signature": "public bool HasJavaMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param method] name exists in the JNISingleton\u0027s Java methods.",
+      "godotName": "has_java_method",
+      "xmlDocId": "M:Godot.JNISingleton.HasJavaMethod(StringName)",
+      "sourcePath": "doc/classes/JNISingleton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/JNISingleton.xml",
+      "sha256": "8b3fb90ce47635f3e5c35539400f519fbb90f7cf05d51b891c5fbcbbeba0cbb4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

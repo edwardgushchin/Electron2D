@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeLinearSceneDepth",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeLinearSceneDepth",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeLinearSceneDepth",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeLinearSceneDepth.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodelinearscenedepth.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeLinearSceneDepth.xml",
+      "sha256": "306fd21ba4794ca3a6663ca62a020c99792c6cc1d5bdfc221365bb0db1d46ba4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

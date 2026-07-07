@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterImage",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterImage",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterImage",
+    "documentationPath": "doc/classes/ResourceImporterImage.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterimage.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterImage.xml",
+      "sha256": "71cb466d5634f8a92a7e014a880700300a943190cf9adc7e350742aaddcb09bf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneBuffersConfiguration",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneBuffersConfiguration",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RenderSceneBuffersConfiguration",
+    "documentationPath": "doc/classes/RenderSceneBuffersConfiguration.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenebuffersconfiguration.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AnisotropicFilteringLevel",
+      "kind": "Property",
+      "signature": "public int AnisotropicFilteringLevel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Level of the anisotropic filter.",
+      "defaultValue": "2",
+      "godotName": "anisotropic_filtering_level",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.AnisotropicFilteringLevel",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "FsrSharpness",
+      "kind": "Property",
+      "signature": "public float FsrSharpness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "FSR Sharpness applicable if FSR upscaling is used.",
+      "defaultValue": "0.0",
+      "godotName": "fsr_sharpness",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.FsrSharpness",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "InternalSize",
+      "kind": "Property",
+      "signature": "public Vector2i InternalSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The size of the 3D render buffer used for rendering.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "internal_size",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.InternalSize",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "Msaa3d",
+      "kind": "Property",
+      "signature": "public int Msaa3d { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The MSAA mode we\u0027re using for 3D rendering.",
+      "defaultValue": "0",
+      "godotName": "msaa_3d",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.Msaa3d",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "RenderTarget",
+      "kind": "Property",
+      "signature": "public RID RenderTarget { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The render target associated with these buffer.",
+      "defaultValue": "RID()",
+      "godotName": "render_target",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.RenderTarget",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "Scaling3dMode",
+      "kind": "Property",
+      "signature": "public int Scaling3dMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The requested scaling mode with which we upscale/downscale if [member internal_size] and [member target_size] are not equal.",
+      "defaultValue": "255",
+      "godotName": "scaling_3d_mode",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.Scaling3dMode",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "ScreenSpaceAa",
+      "kind": "Property",
+      "signature": "public int ScreenSpaceAa { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The requested screen space AA applied in post processing.",
+      "defaultValue": "0",
+      "godotName": "screen_space_aa",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.ScreenSpaceAa",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "TargetSize",
+      "kind": "Property",
+      "signature": "public Vector2i TargetSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The target (upscale) size if scaling is used.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "target_size",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.TargetSize",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "TextureMipmapBias",
+      "kind": "Property",
+      "signature": "public float TextureMipmapBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Bias applied to mipmaps. [b]Note:[/b] This property is only supported in the Forward\u002B and Mobile renderers, not Compatibility. In Compatibility, this property is always treated as if it was set to [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "texture_mipmap_bias",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.TextureMipmapBias",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    },
+    {
+      "name": "ViewCount",
+      "kind": "Property",
+      "signature": "public int ViewCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of views we\u0027re rendering.",
+      "defaultValue": "1",
+      "godotName": "view_count",
+      "xmlDocId": "P:Godot.RenderSceneBuffersConfiguration.ViewCount",
+      "sourcePath": "doc/classes/RenderSceneBuffersConfiguration.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneBuffersConfiguration.xml",
+      "sha256": "dd5c9fdd3493f0aa9e706b141efb2467be245b60f12e213d2dc8cb1ce3bdabda"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

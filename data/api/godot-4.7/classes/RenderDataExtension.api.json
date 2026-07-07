@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderDataExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderDataExtension",
+    "kind": "class",
+    "baseType": "RenderData",
+    "interfaces": [],
+    "godotReference": "RenderDataExtension",
+    "documentationPath": "doc/classes/RenderDataExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderdataextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetCameraAttributes",
+      "kind": "Method",
+      "signature": "public RID _GetCameraAttributes()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] for the implementation\u0027s camera attributes object.",
+      "godotName": "_get_camera_attributes",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetCameraAttributes",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetEnvironment",
+      "kind": "Method",
+      "signature": "public RID _GetEnvironment()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] of the implementation\u0027s environment object.",
+      "godotName": "_get_environment",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetEnvironment",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetRenderSceneBuffers",
+      "kind": "Method",
+      "signature": "public RenderSceneBuffers _GetRenderSceneBuffers()",
+      "returnType": "RenderSceneBuffers",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the implementation\u0027s [RenderSceneBuffers] object.",
+      "godotName": "_get_render_scene_buffers",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetRenderSceneBuffers",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetRenderSceneData",
+      "kind": "Method",
+      "signature": "public RenderSceneData _GetRenderSceneData()",
+      "returnType": "RenderSceneData",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the implementation\u0027s [RenderSceneDataExtension] object.",
+      "godotName": "_get_render_scene_data",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetRenderSceneData",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetCameraAttributes",
+      "kind": "Method",
+      "signature": "public RID _GetCameraAttributes()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] for the implementation\u0027s camera attributes object.",
+      "godotName": "_get_camera_attributes",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetCameraAttributes",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetEnvironment",
+      "kind": "Method",
+      "signature": "public RID _GetEnvironment()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] of the implementation\u0027s environment object.",
+      "godotName": "_get_environment",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetEnvironment",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetRenderSceneBuffers",
+      "kind": "Method",
+      "signature": "public RenderSceneBuffers _GetRenderSceneBuffers()",
+      "returnType": "RenderSceneBuffers",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the implementation\u0027s [RenderSceneBuffers] object.",
+      "godotName": "_get_render_scene_buffers",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetRenderSceneBuffers",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    },
+    {
+      "name": "_GetRenderSceneData",
+      "kind": "Method",
+      "signature": "public RenderSceneData _GetRenderSceneData()",
+      "returnType": "RenderSceneData",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the implementation\u0027s [RenderSceneDataExtension] object.",
+      "godotName": "_get_render_scene_data",
+      "xmlDocId": "M:Godot.RenderDataExtension._GetRenderSceneData",
+      "sourcePath": "doc/classes/RenderDataExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderDataExtension.xml",
+      "sha256": "a4a9f83d6f60f32c5958aa100e16694a08565cb5c38b46e3ce01777d2ade54af"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

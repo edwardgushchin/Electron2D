@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImporterMeshInstance3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ImporterMeshInstance3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "ImporterMeshInstance3D",
+    "documentationPath": "doc/classes/ImporterMeshInstance3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_importermeshinstance3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CastShadow",
+      "kind": "Property",
+      "signature": "public int CastShadow { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "cast_shadow",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.CastShadow",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "LayerMask",
+      "kind": "Property",
+      "signature": "public int LayerMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "layer_mask",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.LayerMask",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public ImporterMesh Mesh { get; set; }",
+      "returnType": "ImporterMesh",
+      "parameters": [],
+      "summary": "",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.Mesh",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "SkeletonPath",
+      "kind": "Property",
+      "signature": "public NodePath SkeletonPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "skeleton_path",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.SkeletonPath",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "Skin",
+      "kind": "Property",
+      "signature": "public Skin Skin { get; set; }",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "",
+      "godotName": "skin",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.Skin",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "VisibilityRangeBegin",
+      "kind": "Property",
+      "signature": "public float VisibilityRangeBegin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "visibility_range_begin",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.VisibilityRangeBegin",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "VisibilityRangeBeginMargin",
+      "kind": "Property",
+      "signature": "public float VisibilityRangeBeginMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "visibility_range_begin_margin",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.VisibilityRangeBeginMargin",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "VisibilityRangeEnd",
+      "kind": "Property",
+      "signature": "public float VisibilityRangeEnd { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "visibility_range_end",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.VisibilityRangeEnd",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "VisibilityRangeEndMargin",
+      "kind": "Property",
+      "signature": "public float VisibilityRangeEndMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "visibility_range_end_margin",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.VisibilityRangeEndMargin",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    },
+    {
+      "name": "VisibilityRangeFadeMode",
+      "kind": "Property",
+      "signature": "public int VisibilityRangeFadeMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "visibility_range_fade_mode",
+      "xmlDocId": "P:Godot.ImporterMeshInstance3D.VisibilityRangeFadeMode",
+      "sourcePath": "doc/classes/ImporterMeshInstance3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ImporterMeshInstance3D.xml",
+      "sha256": "478d75ae0550c6bda75fd49f992195cd1893b67a9757913866b40f9b97473f58"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

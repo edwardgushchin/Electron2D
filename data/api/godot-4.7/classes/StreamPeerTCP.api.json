@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerTCP",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerTCP",
+    "kind": "class",
+    "baseType": "StreamPeerSocket",
+    "interfaces": [],
+    "godotReference": "StreamPeerTCP",
+    "documentationPath": "doc/classes/StreamPeerTCP.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeertcp.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bind",
+      "kind": "Method",
+      "signature": "public int Bind(int port, String host)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "host",
+          "type": "String",
+          "defaultValue": "\u0022*\u0022"
+        }
+      ],
+      "summary": "Opens the TCP socket, and binds it to the specified local address. This method is generally not needed, and only used to force the subsequent call to [method connect_to_host] to use the specified [param host] and [param port] as source address. This can be desired in some NAT punchthrough techniques, or when forcing the source network interface.",
+      "godotName": "bind",
+      "xmlDocId": "M:Godot.StreamPeerTCP.Bind(int,String)",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    },
+    {
+      "name": "ConnectToHost",
+      "kind": "Method",
+      "signature": "public int ConnectToHost(String host, int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Connects to the specified [code]host:port[/code] pair. A hostname will be resolved if valid. Returns [constant OK] on success.",
+      "godotName": "connect_to_host",
+      "xmlDocId": "M:Godot.StreamPeerTCP.ConnectToHost(String,int)",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    },
+    {
+      "name": "GetConnectedHost",
+      "kind": "Method",
+      "signature": "public String GetConnectedHost()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the IP of this peer.",
+      "godotName": "get_connected_host",
+      "xmlDocId": "M:Godot.StreamPeerTCP.GetConnectedHost",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    },
+    {
+      "name": "GetConnectedPort",
+      "kind": "Method",
+      "signature": "public int GetConnectedPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the port of this peer.",
+      "godotName": "get_connected_port",
+      "xmlDocId": "M:Godot.StreamPeerTCP.GetConnectedPort",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    },
+    {
+      "name": "GetLocalPort",
+      "kind": "Method",
+      "signature": "public int GetLocalPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the local port to which this peer is bound.",
+      "godotName": "get_local_port",
+      "xmlDocId": "M:Godot.StreamPeerTCP.GetLocalPort",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    },
+    {
+      "name": "SetNoDelay",
+      "kind": "Method",
+      "signature": "public void SetNoDelay(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], packets will be sent immediately. If [param enabled] is [code]false[/code] (the default), packet transfers will be delayed and combined using [url=https://en.wikipedia.org/wiki/Nagle%27s_algorithm]Nagle\u0027s algorithm[/url]. [b]Note:[/b] It\u0027s recommended to leave this disabled for applications that send large packets or need to transfer a lot of data, as enabling this can decrease the total available bandwidth.",
+      "godotName": "set_no_delay",
+      "xmlDocId": "M:Godot.StreamPeerTCP.SetNoDelay(bool)",
+      "sourcePath": "doc/classes/StreamPeerTCP.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerTCP.xml",
+      "sha256": "67ef0a6d30b60713c817f9cd985738d4731089f832e7b7f229d186b8dc6e32bf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

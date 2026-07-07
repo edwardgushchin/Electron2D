@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VoxelGIData",
+    "namespace": "Godot",
+    "fullName": "Godot.VoxelGIData",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "VoxelGIData",
+    "documentationPath": "doc/classes/VoxelGIData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_voxelgidata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Allocate",
+      "kind": "Method",
+      "signature": "public void Allocate(Transform3D toCellXform, AABB aabb, Vector3 octreeSize, PackedByteArray octreeCells, PackedByteArray dataCells, PackedByteArray distanceField, PackedInt32Array levelCounts)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_cell_xform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "aabb",
+          "type": "AABB"
+        },
+        {
+          "name": "octree_size",
+          "type": "Vector3"
+        },
+        {
+          "name": "octree_cells",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "data_cells",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "distance_field",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "level_counts",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Initializes this [VoxelGIData] with the specified data. [param octree_cells] must be a multiple of 32. [param octree_cells] must be double the size of [param data_cells]. The allocated data can be retrieved later using the various getter methods.",
+      "godotName": "allocate",
+      "xmlDocId": "M:Godot.VoxelGIData.Allocate(Transform3D,AABB,Vector3,PackedByteArray,PackedByteArray,PackedByteArray,PackedInt32Array)",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetBounds",
+      "kind": "Method",
+      "signature": "public AABB GetBounds()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the bounds of the baked voxel data as an [AABB], which should match [member VoxelGI.size] after being baked (which only contains the size as a [Vector3]). [b]Note:[/b] If the size was modified without baking the VoxelGI data, then the value of [method get_bounds] and [member VoxelGI.size] will not match.",
+      "godotName": "get_bounds",
+      "xmlDocId": "M:Godot.VoxelGIData.GetBounds",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetDataCells",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetDataCells()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the baked cell data for this [VoxelGIData].",
+      "godotName": "get_data_cells",
+      "xmlDocId": "M:Godot.VoxelGIData.GetDataCells",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetLevelCounts",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetLevelCounts()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the baked level counts for this [VoxelGIData].",
+      "godotName": "get_level_counts",
+      "xmlDocId": "M:Godot.VoxelGIData.GetLevelCounts",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetOctreeCells",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetOctreeCells()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the baked octree cell data for this [VoxelGIData].",
+      "godotName": "get_octree_cells",
+      "xmlDocId": "M:Godot.VoxelGIData.GetOctreeCells",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetOctreeSize",
+      "kind": "Method",
+      "signature": "public Vector3 GetOctreeSize()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the baked octree size for this [VoxelGIData], which corresponds to the number of subdivisions per axis. This can be viewed in the editor by hovering the [b]Bake VoxelGI[/b] button at the top of the 3D editor viewport when a [VoxelGI] node is selected and looking at the [b]Subdivisions[/b] field in the tooltip.",
+      "godotName": "get_octree_size",
+      "xmlDocId": "M:Godot.VoxelGIData.GetOctreeSize",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "GetToCellXform",
+      "kind": "Method",
+      "signature": "public Transform3D GetToCellXform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the baked cell transform for this [VoxelGIData].",
+      "godotName": "get_to_cell_xform",
+      "xmlDocId": "M:Godot.VoxelGIData.GetToCellXform",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "Bias",
+      "kind": "Property",
+      "signature": "public float Bias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The normal bias to use for indirect lighting and reflections. Higher values reduce self-reflections visible in non-rough materials, at the cost of more visible light leaking and flatter-looking indirect lighting. To prioritize hiding self-reflections over lighting quality, set [member bias] to [code]0.0[/code] and [member normal_bias] to a value between [code]1.0[/code] and [code]2.0[/code].",
+      "defaultValue": "1.5",
+      "godotName": "bias",
+      "xmlDocId": "P:Godot.VoxelGIData.Bias",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "DynamicRange",
+      "kind": "Property",
+      "signature": "public float DynamicRange { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The dynamic range to use ([code]1.0[/code] represents a low dynamic range scene brightness). Higher values can be used to provide brighter indirect lighting, at the cost of more visible color banding in dark areas (both in indirect lighting and reflections). To avoid color banding, it\u0027s recommended to use the lowest value that does not result in visible light clipping.",
+      "defaultValue": "2.0",
+      "godotName": "dynamic_range",
+      "xmlDocId": "P:Godot.VoxelGIData.DynamicRange",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "Energy",
+      "kind": "Property",
+      "signature": "public float Energy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The energy of the indirect lighting and reflections produced by the [VoxelGI] node. Higher values result in brighter indirect lighting. If indirect lighting looks too flat, try decreasing [member propagation] while increasing [member energy] at the same time. See also [member use_two_bounces] which influences the indirect lighting\u0027s effective brightness.",
+      "defaultValue": "1.0",
+      "godotName": "energy",
+      "xmlDocId": "P:Godot.VoxelGIData.Energy",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "Interior",
+      "kind": "Property",
+      "signature": "public bool Interior { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [Environment] lighting is ignored by the [VoxelGI] node. If [code]false[/code], [Environment] lighting is taken into account by the [VoxelGI] node. [Environment] lighting updates in real-time, which means it can be changed without having to bake the [VoxelGI] node again.",
+      "defaultValue": "false",
+      "godotName": "interior",
+      "xmlDocId": "P:Godot.VoxelGIData.Interior",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "NormalBias",
+      "kind": "Property",
+      "signature": "public float NormalBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The normal bias to use for indirect lighting and reflections. Higher values reduce self-reflections visible in non-rough materials, at the cost of more visible light leaking and flatter-looking indirect lighting. See also [member bias]. To prioritize hiding self-reflections over lighting quality, set [member bias] to [code]0.0[/code] and [member normal_bias] to a value between [code]1.0[/code] and [code]2.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "normal_bias",
+      "xmlDocId": "P:Godot.VoxelGIData.NormalBias",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "Propagation",
+      "kind": "Property",
+      "signature": "public float Propagation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The multiplier to use when light bounces off a surface. Higher values result in brighter indirect lighting. If indirect lighting looks too flat, try decreasing [member propagation] while increasing [member energy] at the same time. See also [member use_two_bounces] which influences the indirect lighting\u0027s effective brightness.",
+      "defaultValue": "0.5",
+      "godotName": "propagation",
+      "xmlDocId": "P:Godot.VoxelGIData.Propagation",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    },
+    {
+      "name": "UseTwoBounces",
+      "kind": "Property",
+      "signature": "public bool UseTwoBounces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], performs two bounces of indirect lighting instead of one. This makes indirect lighting look more natural and brighter at a small performance cost. The second bounce is also visible in reflections. If the scene appears too bright after enabling [member use_two_bounces], adjust [member propagation] and [member energy].",
+      "defaultValue": "true",
+      "godotName": "use_two_bounces",
+      "xmlDocId": "P:Godot.VoxelGIData.UseTwoBounces",
+      "sourcePath": "doc/classes/VoxelGIData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VoxelGIData.xml",
+      "sha256": "0ec0ebe3e8a371ed6d6b28833c422c68eb7214cff33e1844a5b92e80cf63ec18"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

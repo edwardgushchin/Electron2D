@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Path3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Path3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "Path3D",
+    "documentationPath": "doc/classes/Path3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_path3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Curve",
+      "kind": "Property",
+      "signature": "public Curve3D Curve { get; set; }",
+      "returnType": "Curve3D",
+      "parameters": [],
+      "summary": "A [Curve3D] describing the path.",
+      "godotName": "curve",
+      "xmlDocId": "P:Godot.Path3D.Curve",
+      "sourcePath": "doc/classes/Path3D.xml"
+    },
+    {
+      "name": "DebugCustomColor",
+      "kind": "Property",
+      "signature": "public Color DebugCustomColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The custom color used to draw the path in the editor. If set to [constant Color.BLACK] (as by default), the color set in [member ProjectSettings.debug/shapes/paths/geometry_color] is used.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "debug_custom_color",
+      "xmlDocId": "P:Godot.Path3D.DebugCustomColor",
+      "sourcePath": "doc/classes/Path3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "CurveChanged",
+      "kind": "Signal",
+      "signature": "public event CurveChangedHandler CurveChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member curve] changes.",
+      "godotName": "curve_changed",
+      "xmlDocId": "E:Godot.Path3D.CurveChanged",
+      "sourcePath": "doc/classes/Path3D.xml"
+    },
+    {
+      "name": "DebugColorChanged",
+      "kind": "Signal",
+      "signature": "public event DebugColorChangedHandler DebugColorChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member debug_custom_color] changes.",
+      "godotName": "debug_color_changed",
+      "xmlDocId": "E:Godot.Path3D.DebugColorChanged",
+      "sourcePath": "doc/classes/Path3D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Path3D.xml",
+      "sha256": "bafbb45a415338b18969ef4ced4afbafba3e8de3f59383976b9a2a57a32a6fb8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

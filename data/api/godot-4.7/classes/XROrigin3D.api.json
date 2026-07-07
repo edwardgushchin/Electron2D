@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XROrigin3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XROrigin3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "XROrigin3D",
+    "documentationPath": "doc/classes/XROrigin3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrorigin3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Current",
+      "kind": "Property",
+      "signature": "public bool Current { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this origin node is currently being used by the [XRServer]. Only one origin point can be used at a time.",
+      "defaultValue": "false",
+      "godotName": "current",
+      "xmlDocId": "P:Godot.XROrigin3D.Current",
+      "sourcePath": "doc/classes/XROrigin3D.xml"
+    },
+    {
+      "name": "WorldScale",
+      "kind": "Property",
+      "signature": "public float WorldScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The scale of the game world compared to the real world. This is the same as [member XRServer.world_scale]. By default, most AR/VR platforms assume that 1 game unit corresponds to 1 real world meter.",
+      "defaultValue": "1.0",
+      "godotName": "world_scale",
+      "xmlDocId": "P:Godot.XROrigin3D.WorldScale",
+      "sourcePath": "doc/classes/XROrigin3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XROrigin3D.xml",
+      "sha256": "8169d4bff8cb9fc5795f942fad13e0688de8cd0d50c7941534e40578f1c4243e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

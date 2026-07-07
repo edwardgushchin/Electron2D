@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Marshalls",
+    "namespace": "Godot",
+    "fullName": "Godot.Marshalls",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "Marshalls",
+    "documentationPath": "doc/classes/Marshalls.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_marshalls.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Base64ToRaw",
+      "kind": "Method",
+      "signature": "public PackedByteArray Base64ToRaw(String base64Str)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "base64_str",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a decoded [PackedByteArray] corresponding to the Base64-encoded string [param base64_str].",
+      "godotName": "base64_to_raw",
+      "xmlDocId": "M:Godot.Marshalls.Base64ToRaw(String)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    },
+    {
+      "name": "Base64ToUtf8",
+      "kind": "Method",
+      "signature": "public String Base64ToUtf8(String base64Str)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "base64_str",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a decoded string corresponding to the Base64-encoded string [param base64_str].",
+      "godotName": "base64_to_utf8",
+      "xmlDocId": "M:Godot.Marshalls.Base64ToUtf8(String)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    },
+    {
+      "name": "Base64ToVariant",
+      "kind": "Method",
+      "signature": "public Variant Base64ToVariant(String base64Str, bool allowObjects)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "base64_str",
+          "type": "String"
+        },
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a decoded [Variant] corresponding to the Base64-encoded string [param base64_str]. If [param allow_objects] is [code]true[/code], decoding objects is allowed. Internally, this uses the same decoding mechanism as the [method @GlobalScope.bytes_to_var] method. [b]Warning:[/b] Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threats such as remote code execution.",
+      "godotName": "base64_to_variant",
+      "xmlDocId": "M:Godot.Marshalls.Base64ToVariant(String,bool)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    },
+    {
+      "name": "RawToBase64",
+      "kind": "Method",
+      "signature": "public String RawToBase64(PackedByteArray array)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Returns a Base64-encoded string of a given [PackedByteArray].",
+      "godotName": "raw_to_base64",
+      "xmlDocId": "M:Godot.Marshalls.RawToBase64(PackedByteArray)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    },
+    {
+      "name": "Utf8ToBase64",
+      "kind": "Method",
+      "signature": "public String Utf8ToBase64(String utf8Str)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "utf8_str",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a Base64-encoded string of the UTF-8 string [param utf8_str].",
+      "godotName": "utf8_to_base64",
+      "xmlDocId": "M:Godot.Marshalls.Utf8ToBase64(String)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    },
+    {
+      "name": "VariantToBase64",
+      "kind": "Method",
+      "signature": "public String VariantToBase64(Variant variant, bool fullObjects)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "variant",
+          "type": "Variant"
+        },
+        {
+          "name": "full_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a Base64-encoded string of the [Variant] [param variant]. If [param full_objects] is [code]true[/code], encoding objects is allowed (and can potentially include code). Internally, this uses the same encoding mechanism as the [method @GlobalScope.var_to_bytes] method.",
+      "godotName": "variant_to_base64",
+      "xmlDocId": "M:Godot.Marshalls.VariantToBase64(Variant,bool)",
+      "sourcePath": "doc/classes/Marshalls.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Marshalls.xml",
+      "sha256": "13ce6af3d45dc1f6144558e11f8bf5c77f155ecdffc1c5fe7ace9726b95a1558"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

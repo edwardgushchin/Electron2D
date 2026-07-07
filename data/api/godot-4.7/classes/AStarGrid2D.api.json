@@ -1,0 +1,731 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AStarGrid2D",
+    "namespace": "Godot",
+    "fullName": "Godot.AStarGrid2D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AStarGrid2D",
+    "documentationPath": "doc/classes/AStarGrid2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_astargrid2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ComputeCost",
+      "kind": "Method",
+      "signature": "public float _ComputeCost(Vector2i fromId, Vector2i toId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "to_id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Called when computing the cost between two connected points. Note that this function is hidden in the default [AStarGrid2D] class.",
+      "godotName": "_compute_cost",
+      "xmlDocId": "M:Godot.AStarGrid2D._ComputeCost(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "_EstimateCost",
+      "kind": "Method",
+      "signature": "public float _EstimateCost(Vector2i fromId, Vector2i endId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "end_id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Called when estimating the cost between a point and the path\u0027s ending point. Note that this function is hidden in the default [AStarGrid2D] class.",
+      "godotName": "_estimate_cost",
+      "xmlDocId": "M:Godot.AStarGrid2D._EstimateCost(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the grid and sets the [member region] to [code]Rect2i(0, 0, 0, 0)[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.AStarGrid2D.Clear",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "FillSolidRegion",
+      "kind": "Method",
+      "signature": "public void FillSolidRegion(Rect2i region, bool solid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "Rect2i"
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Fills the given [param region] on the grid with the specified value for the solid flag. [b]Note:[/b] Calling [method update] is not needed after the call of this function.",
+      "godotName": "fill_solid_region",
+      "xmlDocId": "M:Godot.AStarGrid2D.FillSolidRegion(Rect2i,bool)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "FillWeightScaleRegion",
+      "kind": "Method",
+      "signature": "public void FillWeightScaleRegion(Rect2i region, float weightScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "Rect2i"
+        },
+        {
+          "name": "weight_scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Fills the given [param region] on the grid with the specified value for the weight scale. [b]Note:[/b] Calling [method update] is not needed after the call of this function.",
+      "godotName": "fill_weight_scale_region",
+      "xmlDocId": "M:Godot.AStarGrid2D.FillWeightScaleRegion(Rect2i,float)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "GetIdPath",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetIdPath(Vector2i fromId, Vector2i toId, bool allowPartialPath)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "to_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "allow_partial_path",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with the IDs of the points that form the path found by AStar2D between the given points. The array is ordered from the starting point to the ending point of the path. If [param from_id] point is disabled, returns an empty array (even if [code]from_id == to_id[/code]). If [param from_id] point is not disabled, there is no valid path to the target, and [param allow_partial_path] is [code]true[/code], returns a path to the point closest to the target that can be reached. [b]Note:[/b] When [param allow_partial_path] is [code]true[/code] and [param to_id] is solid the search may take an unusually long time to finish.",
+      "godotName": "get_id_path",
+      "xmlDocId": "M:Godot.AStarGrid2D.GetIdPath(Vector2i,Vector2i,bool)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "GetPointDataInRegion",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetPointDataInRegion(Rect2i region)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns an array of dictionaries with point data ([code]id[/code]: [Vector2i], [code]position[/code]: [Vector2], [code]solid[/code]: [bool], [code]weight_scale[/code]: [float]) within a [param region].",
+      "godotName": "get_point_data_in_region",
+      "xmlDocId": "M:Godot.AStarGrid2D.GetPointDataInRegion(Rect2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "GetPointPath",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetPointPath(Vector2i fromId, Vector2i toId, bool allowPartialPath)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "to_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "allow_partial_path",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with the points that are in the path found by [AStarGrid2D] between the given points. The array is ordered from the starting point to the ending point of the path. If [param from_id] point is disabled, returns an empty array (even if [code]from_id == to_id[/code]). If [param from_id] point is not disabled, there is no valid path to the target, and [param allow_partial_path] is [code]true[/code], returns a path to the point closest to the target that can be reached. [b]Note:[/b] This method is not thread-safe; it can only be used from a single [Thread] at a given time. Consider using [Mutex] to ensure exclusive access to one thread to avoid race conditions. Additionally, when [param allow_partial_path] is [code]true[/code] and [param to_id] is solid the search may take an unusually long time to finish.",
+      "godotName": "get_point_path",
+      "xmlDocId": "M:Godot.AStarGrid2D.GetPointPath(Vector2i,Vector2i,bool)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "GetPointPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointPosition(Vector2i id)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the position of the point associated with the given [param id].",
+      "godotName": "get_point_position",
+      "xmlDocId": "M:Godot.AStarGrid2D.GetPointPosition(Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "GetPointWeightScale",
+      "kind": "Method",
+      "signature": "public float GetPointWeightScale(Vector2i id)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the weight scale of the point associated with the given [param id].",
+      "godotName": "get_point_weight_scale",
+      "xmlDocId": "M:Godot.AStarGrid2D.GetPointWeightScale(Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "IsDirty",
+      "kind": "Method",
+      "signature": "public bool IsDirty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Indicates that the grid parameters were changed and [method update] needs to be called.",
+      "godotName": "is_dirty",
+      "xmlDocId": "M:Godot.AStarGrid2D.IsDirty",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "IsInBounds",
+      "kind": "Method",
+      "signature": "public bool IsInBounds(int x, int y)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param x] and [param y] is a valid grid coordinate (id), i.e. if it is inside [member region]. Equivalent to [code]region.has_point(Vector2i(x, y))[/code].",
+      "godotName": "is_in_bounds",
+      "xmlDocId": "M:Godot.AStarGrid2D.IsInBounds(int,int)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "IsInBoundsv",
+      "kind": "Method",
+      "signature": "public bool IsInBoundsv(Vector2i id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param id] vector is a valid grid coordinate, i.e. if it is inside [member region]. Equivalent to [code]region.has_point(id)[/code].",
+      "godotName": "is_in_boundsv",
+      "xmlDocId": "M:Godot.AStarGrid2D.IsInBoundsv(Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "IsPointSolid",
+      "kind": "Method",
+      "signature": "public bool IsPointSolid(Vector2i id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a point is disabled for pathfinding. By default, all points are enabled.",
+      "godotName": "is_point_solid",
+      "xmlDocId": "M:Godot.AStarGrid2D.IsPointSolid(Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "SetPointSolid",
+      "kind": "Method",
+      "signature": "public void SetPointSolid(Vector2i id, bool solid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Disables or enables the specified point for pathfinding. Useful for making an obstacle. By default, all points are enabled. [b]Note:[/b] Calling [method update] is not needed after the call of this function.",
+      "godotName": "set_point_solid",
+      "xmlDocId": "M:Godot.AStarGrid2D.SetPointSolid(Vector2i,bool)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "SetPointWeightScale",
+      "kind": "Method",
+      "signature": "public void SetPointWeightScale(Vector2i id, float weightScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "weight_scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param weight_scale] for the point with the given [param id]. The [param weight_scale] is multiplied by the result of [method _compute_cost] when determining the overall cost of traveling across a segment from a neighboring point to this point. [b]Note:[/b] Calling [method update] is not needed after the call of this function.",
+      "godotName": "set_point_weight_scale",
+      "xmlDocId": "M:Godot.AStarGrid2D.SetPointWeightScale(Vector2i,float)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "Update",
+      "kind": "Method",
+      "signature": "public void Update()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Updates the internal state of the grid according to the parameters to prepare it to search the path. Needs to be called if parameters like [member region], [member cell_size] or [member offset] are changed. [method is_dirty] will return [code]true[/code] if this is the case and this needs to be called. [b]Note:[/b] All point data (solidity and weight scale) will be cleared.",
+      "godotName": "update",
+      "xmlDocId": "M:Godot.AStarGrid2D.Update",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CellShape",
+      "kind": "Property",
+      "signature": "public int CellShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The cell shape. Affects how the positions are placed in the grid. If changed, [method update] needs to be called before finding the next path.",
+      "defaultValue": "0",
+      "godotName": "cell_shape",
+      "xmlDocId": "P:Godot.AStarGrid2D.CellShape",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CellSize",
+      "kind": "Property",
+      "signature": "public Vector2 CellSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The size of the point cell which will be applied to calculate the resulting point position returned by [method get_point_path]. If changed, [method update] needs to be called before finding the next path.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "cell_size",
+      "xmlDocId": "P:Godot.AStarGrid2D.CellSize",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DefaultComputeHeuristic",
+      "kind": "Property",
+      "signature": "public int DefaultComputeHeuristic { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The default [enum Heuristic] which will be used to calculate the cost between two points if [method _compute_cost] was not overridden.",
+      "defaultValue": "0",
+      "godotName": "default_compute_heuristic",
+      "xmlDocId": "P:Godot.AStarGrid2D.DefaultComputeHeuristic",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DefaultEstimateHeuristic",
+      "kind": "Property",
+      "signature": "public int DefaultEstimateHeuristic { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The default [enum Heuristic] which will be used to calculate the cost between the point and the end point if [method _estimate_cost] was not overridden.",
+      "defaultValue": "0",
+      "godotName": "default_estimate_heuristic",
+      "xmlDocId": "P:Godot.AStarGrid2D.DefaultEstimateHeuristic",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DiagonalMode",
+      "kind": "Property",
+      "signature": "public int DiagonalMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A specific [enum DiagonalMode] mode which will force the path to avoid or accept the specified diagonals.",
+      "defaultValue": "0",
+      "godotName": "diagonal_mode",
+      "xmlDocId": "P:Godot.AStarGrid2D.DiagonalMode",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "JumpingEnabled",
+      "kind": "Property",
+      "signature": "public bool JumpingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables or disables jumping to skip up the intermediate points and speeds up the searching algorithm. [b]Note:[/b] Currently, toggling it on disables the consideration of weight scaling in pathfinding.",
+      "defaultValue": "false",
+      "godotName": "jumping_enabled",
+      "xmlDocId": "P:Godot.AStarGrid2D.JumpingEnabled",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The offset of the grid which will be applied to calculate the resulting point position returned by [method get_point_path]. If changed, [method update] needs to be called before finding the next path.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.AStarGrid2D.Offset",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "Region",
+      "kind": "Property",
+      "signature": "public Rect2i Region { get; set; }",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "The region of grid cells available for pathfinding. If changed, [method update] needs to be called before finding the next path.",
+      "defaultValue": "Rect2i(0, 0, 0, 0)",
+      "godotName": "region",
+      "xmlDocId": "P:Godot.AStarGrid2D.Region",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The size of the grid (number of cells of size [member cell_size] on each axis). If changed, [method update] needs to be called before finding the next path.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.AStarGrid2D.Size",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CellShape",
+      "values": [
+        {
+          "name": "CELL_SHAPE_ISOMETRIC_DOWN",
+          "value": "2",
+          "enum": "CellShape",
+          "kind": "EnumValue",
+          "summary": "Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes down-right, and the vertical one goes down-left.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "CELL_SHAPE_ISOMETRIC_RIGHT",
+          "value": "1",
+          "enum": "CellShape",
+          "kind": "EnumValue",
+          "summary": "Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes up-right, and the vertical one goes down-right.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "CELL_SHAPE_MAX",
+          "value": "3",
+          "enum": "CellShape",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum CellShape] enum.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "CELL_SHAPE_SQUARE",
+          "value": "0",
+          "enum": "CellShape",
+          "kind": "EnumValue",
+          "summary": "Rectangular cell shape.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DiagonalMode",
+      "values": [
+        {
+          "name": "DIAGONAL_MODE_ALWAYS",
+          "value": "0",
+          "enum": "DiagonalMode",
+          "kind": "EnumValue",
+          "summary": "The pathfinding algorithm will ignore solid neighbors around the target cell and allow passing using diagonals.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE",
+          "value": "2",
+          "enum": "DiagonalMode",
+          "kind": "EnumValue",
+          "summary": "The pathfinding algorithm will avoid using diagonals if at least two obstacles have been placed around the neighboring cells of the specific path segment.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "DIAGONAL_MODE_MAX",
+          "value": "4",
+          "enum": "DiagonalMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum DiagonalMode] enum.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "DIAGONAL_MODE_NEVER",
+          "value": "1",
+          "enum": "DiagonalMode",
+          "kind": "EnumValue",
+          "summary": "The pathfinding algorithm will ignore all diagonals and the way will be always orthogonal.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES",
+          "value": "3",
+          "enum": "DiagonalMode",
+          "kind": "EnumValue",
+          "summary": "The pathfinding algorithm will avoid using diagonals if any obstacle has been placed around the neighboring cells of the specific path segment.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Heuristic",
+      "values": [
+        {
+          "name": "HEURISTIC_CHEBYSHEV",
+          "value": "3",
+          "enum": "Heuristic",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/Chebyshev_distance]Chebyshev heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = max(dx, dy) [/codeblock]",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "HEURISTIC_EUCLIDEAN",
+          "value": "0",
+          "enum": "Heuristic",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = sqrt(dx * dx \u002B dy * dy) [/codeblock] [b]Note:[/b] This is also the internal heuristic used in [AStar3D] and [AStar2D] by default (with the inclusion of possible z-axis coordinate).",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "HEURISTIC_MANHATTAN",
+          "value": "1",
+          "enum": "Heuristic",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/Taxicab_geometry]Manhattan heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = dx \u002B dy [/codeblock] [b]Note:[/b] This heuristic is intended to be used with 4-side orthogonal movements, provided by setting the [member diagonal_mode] to [constant DIAGONAL_MODE_NEVER].",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "HEURISTIC_MAX",
+          "value": "4",
+          "enum": "Heuristic",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Heuristic] enum.",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        },
+        {
+          "name": "HEURISTIC_OCTILE",
+          "value": "2",
+          "enum": "Heuristic",
+          "kind": "EnumValue",
+          "summary": "The Octile heuristic to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) f = sqrt(2) - 1 result = (dx \u003C dy) ? f * dx \u002B dy : f * dy \u002B dx; [/codeblock]",
+          "sourcePath": "doc/classes/AStarGrid2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HEURISTIC_EUCLIDEAN",
+      "value": "0",
+      "enum": "Heuristic",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = sqrt(dx * dx \u002B dy * dy) [/codeblock] [b]Note:[/b] This is also the internal heuristic used in [AStar3D] and [AStar2D] by default (with the inclusion of possible z-axis coordinate).",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "HEURISTIC_MANHATTAN",
+      "value": "1",
+      "enum": "Heuristic",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/Taxicab_geometry]Manhattan heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = dx \u002B dy [/codeblock] [b]Note:[/b] This heuristic is intended to be used with 4-side orthogonal movements, provided by setting the [member diagonal_mode] to [constant DIAGONAL_MODE_NEVER].",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "HEURISTIC_OCTILE",
+      "value": "2",
+      "enum": "Heuristic",
+      "kind": "EnumValue",
+      "summary": "The Octile heuristic to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) f = sqrt(2) - 1 result = (dx \u003C dy) ? f * dx \u002B dy : f * dy \u002B dx; [/codeblock]",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "HEURISTIC_CHEBYSHEV",
+      "value": "3",
+      "enum": "Heuristic",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/Chebyshev_distance]Chebyshev heuristic[/url] to be used for the pathfinding using the following formula: [codeblock] dx = abs(to_id.x - from_id.x) dy = abs(to_id.y - from_id.y) result = max(dx, dy) [/codeblock]",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "HEURISTIC_MAX",
+      "value": "4",
+      "enum": "Heuristic",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Heuristic] enum.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DIAGONAL_MODE_ALWAYS",
+      "value": "0",
+      "enum": "DiagonalMode",
+      "kind": "EnumValue",
+      "summary": "The pathfinding algorithm will ignore solid neighbors around the target cell and allow passing using diagonals.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DIAGONAL_MODE_NEVER",
+      "value": "1",
+      "enum": "DiagonalMode",
+      "kind": "EnumValue",
+      "summary": "The pathfinding algorithm will ignore all diagonals and the way will be always orthogonal.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE",
+      "value": "2",
+      "enum": "DiagonalMode",
+      "kind": "EnumValue",
+      "summary": "The pathfinding algorithm will avoid using diagonals if at least two obstacles have been placed around the neighboring cells of the specific path segment.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES",
+      "value": "3",
+      "enum": "DiagonalMode",
+      "kind": "EnumValue",
+      "summary": "The pathfinding algorithm will avoid using diagonals if any obstacle has been placed around the neighboring cells of the specific path segment.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "DIAGONAL_MODE_MAX",
+      "value": "4",
+      "enum": "DiagonalMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum DiagonalMode] enum.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CELL_SHAPE_SQUARE",
+      "value": "0",
+      "enum": "CellShape",
+      "kind": "EnumValue",
+      "summary": "Rectangular cell shape.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CELL_SHAPE_ISOMETRIC_RIGHT",
+      "value": "1",
+      "enum": "CellShape",
+      "kind": "EnumValue",
+      "summary": "Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes up-right, and the vertical one goes down-right.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CELL_SHAPE_ISOMETRIC_DOWN",
+      "value": "2",
+      "enum": "CellShape",
+      "kind": "EnumValue",
+      "summary": "Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes down-right, and the vertical one goes down-left.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "CELL_SHAPE_MAX",
+      "value": "3",
+      "enum": "CellShape",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum CellShape] enum.",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ComputeCost",
+      "kind": "Method",
+      "signature": "public float _ComputeCost(Vector2i fromId, Vector2i toId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "to_id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Called when computing the cost between two connected points. Note that this function is hidden in the default [AStarGrid2D] class.",
+      "godotName": "_compute_cost",
+      "xmlDocId": "M:Godot.AStarGrid2D._ComputeCost(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    },
+    {
+      "name": "_EstimateCost",
+      "kind": "Method",
+      "signature": "public float _EstimateCost(Vector2i fromId, Vector2i endId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from_id",
+          "type": "Vector2i"
+        },
+        {
+          "name": "end_id",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Called when estimating the cost between a point and the path\u0027s ending point. Note that this function is hidden in the default [AStarGrid2D] class.",
+      "godotName": "_estimate_cost",
+      "xmlDocId": "M:Godot.AStarGrid2D._EstimateCost(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/AStarGrid2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AStarGrid2D.xml",
+      "sha256": "21c2416c18fa7a84fe74e92166bbb26ec898a9b58f000a8ebccf0c6838ecac11"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

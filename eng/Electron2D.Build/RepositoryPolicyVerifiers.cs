@@ -2484,11 +2484,11 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     {
         return kind switch
         {
-            "EnumValue" or "Field" => 0,
+            "EnumValue" or "Constant" or "Field" => 0,
             "Property" => 1,
             "Event" => 2,
             "Constructor" => 3,
-            "Method" => 4,
+            "Method" or "Operator" => 4,
             _ => 5
         };
     }
@@ -2504,7 +2504,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         return member.Kind switch
         {
             "Constructor" => type.Name + "(" + parameterTypes + ")",
-            "Method" => member.Name + "(" + parameterTypes + ")",
+            "Method" or "Operator" => member.Name + "(" + parameterTypes + ")",
             _ => member.Name
         };
     }
@@ -2552,25 +2552,28 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     {
         var members = new List<ApiWikiReflectionMember>();
         foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
-            .Where(field => !field.IsSpecialName)
+            .Where(field => !field.IsSpecialName && (!type.IsEnum || field.Name != "value__"))
             .OrderBy(field => field.Name, StringComparer.Ordinal))
         {
             var id = "F:" + XmlTypeName(type) + "." + field.Name;
-            members.Add(new ApiWikiReflectionMember(field.IsLiteral && type.IsEnum ? "Enum value" : "Field", field.Name, FieldSignature(field), id));
+            var kind = field.IsLiteral
+                ? type.IsEnum ? "Enum value" : "Constant"
+                : "Field";
+            members.Add(new ApiWikiReflectionMember(kind, ProjectMemberName(field.Name), FieldSignature(field), id));
         }
 
         foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
             .OrderBy(property => property.Name, StringComparer.Ordinal))
         {
             var id = "P:" + XmlTypeName(type) + "." + property.Name;
-            members.Add(new ApiWikiReflectionMember("Property", property.Name, PropertySignature(property), id));
+            members.Add(new ApiWikiReflectionMember("Property", ProjectMemberName(property.Name), PropertySignature(property), id));
         }
 
         foreach (var @event in type.GetEvents(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
             .OrderBy(@event => @event.Name, StringComparer.Ordinal))
         {
             var id = "E:" + XmlTypeName(type) + "." + @event.Name;
-            members.Add(new ApiWikiReflectionMember("Event", @event.Name, EventSignature(@event), id));
+            members.Add(new ApiWikiReflectionMember("Event", ProjectMemberName(@event.Name), EventSignature(@event), id));
         }
 
         foreach (var constructor in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
@@ -2586,7 +2589,8 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             .ThenBy(method => method.ToString(), StringComparer.Ordinal))
         {
             var id = MethodId(type, method, method.Name);
-            members.Add(new ApiWikiReflectionMember("Method", MethodDisplayName(method), MethodSignature(method), id));
+            var kind = method.Name.StartsWith("op_", StringComparison.Ordinal) ? "Operator" : "Method";
+            members.Add(new ApiWikiReflectionMember(kind, MethodDisplayName(method), MethodSignature(method), id));
         }
 
         return members;
@@ -2869,7 +2873,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private static string FieldSignature(FieldInfo field)
     {
         var modifiers = field.IsLiteral ? "public const " : field.IsStatic ? "public static " : "public ";
-        return modifiers + TypeDisplayName(field.FieldType) + " " + field.Name;
+        return modifiers + TypeDisplayName(field.FieldType) + " " + ProjectMemberName(field.Name);
     }
 
     private static string PropertySignature(PropertyInfo property)
@@ -2887,14 +2891,15 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
         var indexParameters = property.GetIndexParameters();
         var name = indexParameters.Length == 0
-            ? property.Name
+            ? ProjectMemberName(property.Name)
             : "this[" + Parameters(indexParameters) + "]";
-        return "public " + TypeDisplayName(property.PropertyType) + " " + name + " { " + string.Join(" ", accessors) + " }";
+        var modifiers = property.GetMethod?.IsStatic == true || property.SetMethod?.IsStatic == true ? "public static " : "public ";
+        return modifiers + TypeDisplayName(property.PropertyType) + " " + name + " { " + string.Join(" ", accessors) + " }";
     }
 
     private static string EventSignature(EventInfo @event)
     {
-        return "public event " + TypeDisplayName(@event.EventHandlerType!) + " " + @event.Name;
+        return "public event " + TypeDisplayName(@event.EventHandlerType!) + " " + ProjectMemberName(@event.Name);
     }
 
     private static string ConstructorSignature(Type type, ConstructorInfo constructor)
@@ -2905,7 +2910,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private static string MethodSignature(MethodInfo method)
     {
         var modifiers = method.IsStatic ? "public static " : "public ";
-        return modifiers + TypeDisplayName(method.ReturnType) + " " + MethodDisplayName(method) + "(" + Parameters(method.GetParameters()) + ")";
+        return modifiers + TypeDisplayName(method.ReturnType) + " " + ProjectMemberName(method.Name) + "(" + Parameters(method.GetParameters()) + ")";
     }
 
     private static string ConstructorDisplayName(Type type, ConstructorInfo constructor)
@@ -2915,7 +2920,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
     private static string MethodDisplayName(MethodInfo method)
     {
-        return method.Name + "(" + Parameters(method.GetParameters(), includeTypesOnly: true) + ")";
+        return ProjectMemberName(method.Name) + "(" + Parameters(method.GetParameters(), includeTypesOnly: true) + ")";
     }
 
     private static string Parameters(ParameterInfo[] parameters, bool includeTypesOnly = false)
@@ -2923,7 +2928,94 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         return string.Join(", ", parameters.Select(parameter =>
             includeTypesOnly
                 ? TypeDisplayName(parameter.ParameterType)
-                : TypeDisplayName(parameter.ParameterType) + " " + parameter.Name));
+                : TypeDisplayName(parameter.ParameterType) + " " + EscapeCSharpIdentifier(parameter.Name ?? "arg")));
+    }
+
+    private static string EscapeCSharpIdentifier(string name)
+    {
+        return IsCSharpReservedKeyword(name) ? "@" + name : name;
+    }
+
+    private static bool IsCSharpReservedKeyword(string name)
+    {
+        return name is
+            "abstract" or
+            "as" or
+            "base" or
+            "bool" or
+            "break" or
+            "byte" or
+            "case" or
+            "catch" or
+            "char" or
+            "checked" or
+            "class" or
+            "const" or
+            "continue" or
+            "decimal" or
+            "default" or
+            "delegate" or
+            "do" or
+            "double" or
+            "else" or
+            "enum" or
+            "event" or
+            "explicit" or
+            "extern" or
+            "false" or
+            "finally" or
+            "fixed" or
+            "float" or
+            "for" or
+            "foreach" or
+            "goto" or
+            "if" or
+            "implicit" or
+            "in" or
+            "int" or
+            "interface" or
+            "internal" or
+            "is" or
+            "lock" or
+            "long" or
+            "namespace" or
+            "new" or
+            "null" or
+            "object" or
+            "operator" or
+            "out" or
+            "override" or
+            "params" or
+            "private" or
+            "protected" or
+            "public" or
+            "readonly" or
+            "ref" or
+            "return" or
+            "sbyte" or
+            "sealed" or
+            "short" or
+            "sizeof" or
+            "stackalloc" or
+            "static" or
+            "string" or
+            "struct" or
+            "switch" or
+            "this" or
+            "throw" or
+            "true" or
+            "try" or
+            "typeof" or
+            "uint" or
+            "ulong" or
+            "unchecked" or
+            "unsafe" or
+            "ushort" or
+            "using" or
+            "virtual" or
+            "void" or
+            "volatile" or
+            "while";
     }
 
     private static string TypeDisplayName(Type type)
@@ -2951,10 +3043,10 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
         if (!type.IsGenericType)
         {
-            return (type.FullName ?? type.Name).Replace('+', '.');
+            return DisplayName(type);
         }
 
-        var definitionName = (type.GetGenericTypeDefinition().FullName ?? type.Name).Replace('+', '.');
+        var definitionName = DisplayName(type.GetGenericTypeDefinition());
         var tickIndex = definitionName.IndexOf('`', StringComparison.Ordinal);
         if (tickIndex >= 0)
         {
@@ -2976,6 +3068,11 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
     private static string DisplayName(Type type)
     {
+        return ProjectTypeDisplayName(RawDisplayName(type), type.IsEnum);
+    }
+
+    private static string RawDisplayName(Type type)
+    {
         return (type.FullName ?? type.Name).Replace('+', '.');
     }
 
@@ -2996,6 +3093,35 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private static string XmlTypeName(Type type)
     {
         return (type.FullName ?? type.Name).Replace('+', '.');
+    }
+
+    private static string ProjectTypeDisplayName(string displayName, bool isEnum)
+    {
+        const string rootNamespace = "Electron2D.";
+        if (!isEnum || !displayName.StartsWith(rootNamespace, StringComparison.Ordinal))
+        {
+            return displayName;
+        }
+
+        const string suffix = "Enum";
+        var lastDot = displayName.LastIndexOf('.');
+        var nameStart = lastDot < 0 ? 0 : lastDot + 1;
+        return displayName.EndsWith(suffix, StringComparison.Ordinal) &&
+            displayName.Length > nameStart + suffix.Length
+            ? displayName[..^suffix.Length]
+            : displayName;
+    }
+
+    private static string ProjectMemberName(string name)
+    {
+        return name switch
+        {
+            "_GetMinimumSize" => "ComputeMinimumSize",
+            "_GetTooltip" => "GetTooltipText",
+            "_MakeCustomTooltip" => "MakeCustomTooltip",
+            _ when name.Length > 1 && name[0] == '_' && char.IsUpper(name[1]) => name[1..],
+            _ => name
+        };
     }
 
     private static string MethodId(Type declaringType, MethodBase method, string methodName)

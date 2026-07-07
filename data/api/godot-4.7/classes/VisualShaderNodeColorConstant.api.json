@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeColorConstant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeColorConstant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeColorConstant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeColorConstant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecolorconstant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public Color Constant { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "A [Color] constant which represents a state of this node.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeColorConstant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorConstant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeColorConstant.xml",
+      "sha256": "a28100d85d15d9991f6bdf928dea30bd3af893bbbd9bcd20728eb4b51def2cfd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

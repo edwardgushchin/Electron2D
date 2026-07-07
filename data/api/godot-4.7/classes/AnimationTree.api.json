@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationTree",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationTree",
+    "kind": "class",
+    "baseType": "AnimationMixer",
+    "interfaces": [],
+    "godotReference": "AnimationTree",
+    "documentationPath": "doc/classes/AnimationTree.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationtree.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetProcessCallback",
+      "kind": "Method",
+      "signature": "public int GetProcessCallback()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the process notification in which to update animations.",
+      "godotName": "get_process_callback",
+      "xmlDocId": "M:Godot.AnimationTree.GetProcessCallback",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "SetProcessCallback",
+      "kind": "Method",
+      "signature": "public void SetProcessCallback(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the process notification in which to update animations.",
+      "godotName": "set_process_callback",
+      "xmlDocId": "M:Godot.AnimationTree.SetProcessCallback(int)",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "AdvanceExpressionBaseNode",
+      "kind": "Property",
+      "signature": "public NodePath AdvanceExpressionBaseNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The path to the [Node] used to evaluate the [AnimationNode] [Expression] if one is not explicitly specified internally.",
+      "defaultValue": "NodePath(\u0022.\u0022)",
+      "godotName": "advance_expression_base_node",
+      "xmlDocId": "P:Godot.AnimationTree.AdvanceExpressionBaseNode",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "AnimPlayer",
+      "kind": "Property",
+      "signature": "public NodePath AnimPlayer { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The path to the [AnimationPlayer] used for animating.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "anim_player",
+      "xmlDocId": "P:Godot.AnimationTree.AnimPlayer",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "CallbackModeDiscrete",
+      "kind": "Property",
+      "signature": "public int CallbackModeDiscrete { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "callback_mode_discrete",
+      "xmlDocId": "P:Godot.AnimationTree.CallbackModeDiscrete",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "Deterministic",
+      "kind": "Property",
+      "signature": "public bool Deterministic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "deterministic",
+      "xmlDocId": "P:Godot.AnimationTree.Deterministic",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "TreeRoot",
+      "kind": "Property",
+      "signature": "public AnimationRootNode TreeRoot { get; set; }",
+      "returnType": "AnimationRootNode",
+      "parameters": [],
+      "summary": "The root animation node of this [AnimationTree]. See [AnimationRootNode].",
+      "godotName": "tree_root",
+      "xmlDocId": "P:Godot.AnimationTree.TreeRoot",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationPlayerChanged",
+      "kind": "Signal",
+      "signature": "public event AnimationPlayerChangedHandler AnimationPlayerChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member anim_player] is changed.",
+      "godotName": "animation_player_changed",
+      "xmlDocId": "E:Godot.AnimationTree.AnimationPlayerChanged",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AnimationProcessCallback",
+      "values": [
+        {
+          "name": "ANIMATION_PROCESS_IDLE",
+          "value": "1",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationTree.xml"
+        },
+        {
+          "name": "ANIMATION_PROCESS_MANUAL",
+          "value": "2",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationTree.xml"
+        },
+        {
+          "name": "ANIMATION_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "AnimationProcessCallback",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/AnimationTree.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ANIMATION_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "ANIMATION_PROCESS_IDLE",
+      "value": "1",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    },
+    {
+      "name": "ANIMATION_PROCESS_MANUAL",
+      "value": "2",
+      "enum": "AnimationProcessCallback",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/AnimationTree.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationTree.xml",
+      "sha256": "487c6b319794b0526467c23397835f232d2ffa362f5ec888385d43fc66981695"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFObjectModelProperty",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFObjectModelProperty",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "GLTFObjectModelProperty",
+    "documentationPath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfobjectmodelproperty.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AppendNodePath",
+      "kind": "Method",
+      "signature": "public void AppendNodePath(NodePath nodePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Appends a [NodePath] to [member node_paths]. This can be used by [GLTFDocumentExtension] classes to define how a glTF object model property maps to a Godot property, or multiple Godot properties. Prefer using [method append_path_to_property] for simple cases. Be sure to also call [method set_types] once (the order does not matter).",
+      "godotName": "append_node_path",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.AppendNodePath(NodePath)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "AppendPathToProperty",
+      "kind": "Method",
+      "signature": "public void AppendPathToProperty(NodePath nodePath, StringName propName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        },
+        {
+          "name": "prop_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "High-level wrapper over [method append_node_path] that handles the most common cases. It constructs a new [NodePath] using [param node_path] as a base and appends [param prop_name] to the subpath. Be sure to also call [method set_types] once (the order does not matter).",
+      "godotName": "append_path_to_property",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.AppendPathToProperty(NodePath,StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GetAccessorType",
+      "kind": "Method",
+      "signature": "public int GetAccessorType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The GLTF accessor type associated with this property\u0027s [member object_model_type]. See [member GLTFAccessor.accessor_type] for possible values, and see [enum GLTFObjectModelType] for how the object model type maps to accessor types.",
+      "godotName": "get_accessor_type",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.GetAccessorType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "HasJsonPointers",
+      "kind": "Method",
+      "signature": "public bool HasJsonPointers()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member json_pointers] is not empty. This is used during export to determine if a [GLTFObjectModelProperty] can handle converting a Godot property to a glTF object model property.",
+      "godotName": "has_json_pointers",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.HasJsonPointers",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "HasNodePaths",
+      "kind": "Method",
+      "signature": "public bool HasNodePaths()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member node_paths] is not empty. This is used during import to determine if a [GLTFObjectModelProperty] can handle converting a glTF object model property to a Godot property.",
+      "godotName": "has_node_paths",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.HasNodePaths",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "SetTypes",
+      "kind": "Method",
+      "signature": "public void SetTypes(int variantType, int objModelType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "variant_type",
+          "type": "int"
+        },
+        {
+          "name": "obj_model_type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the [member variant_type] and [member object_model_type] properties. This is a convenience method to set both properties at once, since they are almost always known at the same time. This method should be called once. Calling it again with the same values will have no effect.",
+      "godotName": "set_types",
+      "xmlDocId": "M:Godot.GLTFObjectModelProperty.SetTypes(int,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GltfToGodotExpression",
+      "kind": "Property",
+      "signature": "public Expression GltfToGodotExpression { get; set; }",
+      "returnType": "Expression",
+      "parameters": [],
+      "summary": "If set, this [Expression] will be used to convert the property value from the glTF object model to the value expected by the Godot property. This is useful when the glTF object model uses a different unit system, or when the data needs to be transformed in some way. If [code]null[/code], the value will be copied as-is.",
+      "godotName": "gltf_to_godot_expression",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.GltfToGodotExpression",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GodotToGltfExpression",
+      "kind": "Property",
+      "signature": "public Expression GodotToGltfExpression { get; set; }",
+      "returnType": "Expression",
+      "parameters": [],
+      "summary": "If set, this [Expression] will be used to convert the property value from the Godot property to the value expected by the glTF object model. This is useful when the glTF object model uses a different unit system, or when the data needs to be transformed in some way. If [code]null[/code], the value will be copied as-is.",
+      "godotName": "godot_to_gltf_expression",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.GodotToGltfExpression",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "JsonPointers",
+      "kind": "Property",
+      "signature": "public PackedStringArray[] JsonPointers { get; set; }",
+      "returnType": "PackedStringArray[]",
+      "parameters": [],
+      "summary": "The glTF object model JSON pointers used to identify the property in the glTF object model. In most cases, there will be only one item in this array, but specific cases may require multiple pointers. The items are themselves arrays which represent the JSON pointer split into its components.",
+      "defaultValue": "[]",
+      "godotName": "json_pointers",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.JsonPointers",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "NodePaths",
+      "kind": "Property",
+      "signature": "public NodePath[] NodePaths { get; set; }",
+      "returnType": "NodePath[]",
+      "parameters": [],
+      "summary": "An array of [NodePath]s that point to a property, or multiple properties, in the Godot scene tree. On import, this will either be set by [GLTFDocument], or by a [GLTFDocumentExtension] class. For simple cases, use [method append_path_to_property] to add properties to this array. In most cases [member node_paths] will only have one item, but in some cases a single glTF JSON pointer will map to multiple Godot properties. For example, a [GLTFCamera] or [GLTFLight] used on multiple glTF nodes will be represented by multiple Godot nodes.",
+      "defaultValue": "[]",
+      "godotName": "node_paths",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.NodePaths",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "ObjectModelType",
+      "kind": "Property",
+      "signature": "public int ObjectModelType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of data stored in the glTF file as defined by the object model. This is a superset of the available accessor types, and determines the accessor type.",
+      "defaultValue": "0",
+      "godotName": "object_model_type",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.ObjectModelType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "VariantType",
+      "kind": "Property",
+      "signature": "public int VariantType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of data stored in the Godot property. This is the type of the property that the [member node_paths] point to.",
+      "defaultValue": "0",
+      "godotName": "variant_type",
+      "xmlDocId": "P:Godot.GLTFObjectModelProperty.VariantType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "GLTFObjectModelType",
+      "values": [
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_BOOL",
+          "value": "1",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022bool\u0022. Represented in the glTF JSON as a boolean, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022. When encoded in an accessor, a value of [code]0[/code] is [code]false[/code], and any other value is [code]true[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT",
+          "value": "2",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float\u0022. Represented in the glTF JSON as a number, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT2",
+          "value": "4",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float2\u0022. Represented in the glTF JSON as an array of two numbers, and encoded in a [GLTFAccessor] as \u0022VEC2\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT2X2",
+          "value": "7",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float2x2\u0022. Represented in the glTF JSON as an array of four numbers, and encoded in a [GLTFAccessor] as \u0022MAT2\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT3",
+          "value": "5",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float3\u0022. Represented in the glTF JSON as an array of three numbers, and encoded in a [GLTFAccessor] as \u0022VEC3\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT3X3",
+          "value": "8",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float3x3\u0022. Represented in the glTF JSON as an array of nine numbers, and encoded in a [GLTFAccessor] as \u0022MAT3\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT4",
+          "value": "6",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float4\u0022. Represented in the glTF JSON as an array of four numbers, and encoded in a [GLTFAccessor] as \u0022VEC4\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT4X4",
+          "value": "9",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float4x4\u0022. Represented in the glTF JSON as an array of sixteen numbers, and encoded in a [GLTFAccessor] as \u0022MAT4\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT_ARRAY",
+          "value": "3",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022float[lb][rb]\u0022. Represented in the glTF JSON as an array of numbers, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_INT",
+          "value": "10",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Object model type \u0022int\u0022. Represented in the glTF JSON as a number, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022. The range of values is limited to signed integers. For [code]KHR_interactivity[/code], only 32-bit integers are supported.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        },
+        {
+          "name": "GLTF_OBJECT_MODEL_TYPE_UNKNOWN",
+          "value": "0",
+          "enum": "GLTFObjectModelType",
+          "kind": "EnumValue",
+          "summary": "Unknown or not set object model type. If the object model type is set to this value, the real type still needs to be determined.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_UNKNOWN",
+      "value": "0",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Unknown or not set object model type. If the object model type is set to this value, the real type still needs to be determined.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_BOOL",
+      "value": "1",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022bool\u0022. Represented in the glTF JSON as a boolean, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022. When encoded in an accessor, a value of [code]0[/code] is [code]false[/code], and any other value is [code]true[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT",
+      "value": "2",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float\u0022. Represented in the glTF JSON as a number, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT_ARRAY",
+      "value": "3",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float[lb][rb]\u0022. Represented in the glTF JSON as an array of numbers, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT2",
+      "value": "4",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float2\u0022. Represented in the glTF JSON as an array of two numbers, and encoded in a [GLTFAccessor] as \u0022VEC2\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT3",
+      "value": "5",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float3\u0022. Represented in the glTF JSON as an array of three numbers, and encoded in a [GLTFAccessor] as \u0022VEC3\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT4",
+      "value": "6",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float4\u0022. Represented in the glTF JSON as an array of four numbers, and encoded in a [GLTFAccessor] as \u0022VEC4\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT2X2",
+      "value": "7",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float2x2\u0022. Represented in the glTF JSON as an array of four numbers, and encoded in a [GLTFAccessor] as \u0022MAT2\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT3X3",
+      "value": "8",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float3x3\u0022. Represented in the glTF JSON as an array of nine numbers, and encoded in a [GLTFAccessor] as \u0022MAT3\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_FLOAT4X4",
+      "value": "9",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022float4x4\u0022. Represented in the glTF JSON as an array of sixteen numbers, and encoded in a [GLTFAccessor] as \u0022MAT4\u0022.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    },
+    {
+      "name": "GLTF_OBJECT_MODEL_TYPE_INT",
+      "value": "10",
+      "enum": "GLTFObjectModelType",
+      "kind": "EnumValue",
+      "summary": "Object model type \u0022int\u0022. Represented in the glTF JSON as a number, and encoded in a [GLTFAccessor] as \u0022SCALAR\u0022. The range of values is limited to signed integers. For [code]KHR_interactivity[/code], only 32-bit integers are supported.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFObjectModelProperty.xml",
+      "sha256": "66b5de142c845ec231c8a5bd8f28c2132a1e1227c3e40922c5b26ae2ad68f1a8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

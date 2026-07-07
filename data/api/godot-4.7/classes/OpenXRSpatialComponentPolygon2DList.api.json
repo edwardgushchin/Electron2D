@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentPolygon2DList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentPolygon2DList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentPolygon2DList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentPolygon2DList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentpolygon2dlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetTransform(int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for positioning our polygon for the entity at this [param index].",
+      "godotName": "get_transform",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPolygon2DList.GetTransform(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPolygon2DList.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetVertices(RID snapshot, int index)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "snapshot",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the polygon vertices for the entity at this [param index].",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPolygon2DList.GetVertices(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPolygon2DList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentPolygon2DList.xml",
+      "sha256": "66d9c404fdcfb9303b6b285dd3fc1369b0d6eb7c754d2a5a87275be710a0754d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

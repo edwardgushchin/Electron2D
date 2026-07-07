@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Sprite2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Sprite2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Sprite2D",
+    "documentationPath": "doc/classes/Sprite2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_sprite2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetRect()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns a [Rect2] representing the Sprite2D\u0027s boundary in local coordinates. [b]Example:[/b] Detect if the Sprite2D was clicked: [codeblocks] [gdscript] func _input(event): if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT: if get_rect().has_point(to_local(event.position)): print(\u0022A click!\u0022) [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventMouseButton inputEventMouse) { if (inputEventMouse.Pressed \u0026\u0026 inputEventMouse.ButtonIndex == MouseButton.Left) { if (GetRect().HasPoint(ToLocal(inputEventMouse.Position))) { GD.Print(\u0022A click!\u0022); } } } } [/csharp] [/codeblocks]",
+      "godotName": "get_rect",
+      "xmlDocId": "M:Godot.Sprite2D.GetRect",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public bool IsPixelOpaque(Vector2 pos)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "pos",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the pixel at the given position is opaque, [code]false[/code] otherwise. Also returns [code]false[/code] if the given position is out of bounds or this sprite\u0027s [member texture] is [code]null[/code]. [param pos] is in local coordinates.",
+      "godotName": "is_pixel_opaque",
+      "xmlDocId": "M:Godot.Sprite2D.IsPixelOpaque(Vector2)",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Centered",
+      "kind": "Property",
+      "signature": "public bool Centered { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is centered. [b]Note:[/b] For games with a pixel art aesthetic, textures may appear deformed when centered. This is caused by their position being between pixels. To prevent this, set this property to [code]false[/code], or consider enabling [member ProjectSettings.rendering/2d/snap/snap_2d_vertices_to_pixel] and [member ProjectSettings.rendering/2d/snap/snap_2d_transforms_to_pixel].",
+      "defaultValue": "true",
+      "godotName": "centered",
+      "xmlDocId": "P:Godot.Sprite2D.Centered",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public bool FlipH { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped horizontally.",
+      "defaultValue": "false",
+      "godotName": "flip_h",
+      "xmlDocId": "P:Godot.Sprite2D.FlipH",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public bool FlipV { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped vertically.",
+      "defaultValue": "false",
+      "godotName": "flip_v",
+      "xmlDocId": "P:Godot.Sprite2D.FlipV",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Frame",
+      "kind": "Property",
+      "signature": "public int Frame { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Current frame to display from sprite sheet. [member hframes] or [member vframes] must be greater than 1. This property is automatically adjusted when [member hframes] or [member vframes] are changed to keep pointing to the same visual frame (same column and row). If that\u0027s impossible, this value is reset to [code]0[/code].",
+      "defaultValue": "0",
+      "godotName": "frame",
+      "xmlDocId": "P:Godot.Sprite2D.Frame",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "FrameCoords",
+      "kind": "Property",
+      "signature": "public Vector2i FrameCoords { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Coordinates of the frame to display from sprite sheet. This is as an alias for the [member frame] property. [member hframes] or [member vframes] must be greater than 1.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "frame_coords",
+      "xmlDocId": "P:Godot.Sprite2D.FrameCoords",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Hframes",
+      "kind": "Property",
+      "signature": "public int Hframes { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of columns in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that\u0027s impossible, [member frame] is reset to [code]0[/code].",
+      "defaultValue": "1",
+      "godotName": "hframes",
+      "xmlDocId": "P:Godot.Sprite2D.Hframes",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The texture\u0027s drawing offset. [b]Note:[/b] When you increase [member offset].y in Sprite2D, the sprite moves downward on screen (i.e., \u002BY is down).",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.Sprite2D.Offset",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "RegionEnabled",
+      "kind": "Property",
+      "signature": "public bool RegionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is cut from a larger atlas texture. See [member region_rect]. [b]Note:[/b] When using a custom [Shader] on a [Sprite2D], the [code]UV[/code] shader built-in will refer to the entire texture space. Use the [code]REGION_RECT[/code] built-in to get the currently visible region defined in [member region_rect] instead. See [url=$DOCS_URL/tutorials/shaders/shader_reference/canvas_item_shader.html]CanvasItem shaders[/url] for details.",
+      "defaultValue": "false",
+      "godotName": "region_enabled",
+      "xmlDocId": "P:Godot.Sprite2D.RegionEnabled",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "RegionFilterClipEnabled",
+      "kind": "Property",
+      "signature": "public bool RegionFilterClipEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the area outside of the [member region_rect] is clipped to avoid bleeding of the surrounding texture pixels. [member region_enabled] must be [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "region_filter_clip_enabled",
+      "xmlDocId": "P:Godot.Sprite2D.RegionFilterClipEnabled",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Rect2 RegionRect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The region of the atlas texture to display. [member region_enabled] must be [code]true[/code].",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "region_rect",
+      "xmlDocId": "P:Godot.Sprite2D.RegionRect",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] object to draw.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.Sprite2D.Texture",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "Vframes",
+      "kind": "Property",
+      "signature": "public int Vframes { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of rows in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that\u0027s impossible, [member frame] is reset to [code]0[/code].",
+      "defaultValue": "1",
+      "godotName": "vframes",
+      "xmlDocId": "P:Godot.Sprite2D.Vframes",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FrameChanged",
+      "kind": "Signal",
+      "signature": "public event FrameChangedHandler FrameChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member frame] changes.",
+      "godotName": "frame_changed",
+      "xmlDocId": "E:Godot.Sprite2D.FrameChanged",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    },
+    {
+      "name": "TextureChanged",
+      "kind": "Signal",
+      "signature": "public event TextureChangedHandler TextureChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member texture] changes.",
+      "godotName": "texture_changed",
+      "xmlDocId": "E:Godot.Sprite2D.TextureChanged",
+      "sourcePath": "doc/classes/Sprite2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Sprite2D.xml",
+      "sha256": "9dbc418179c0c9b241b449d1ca9684c66ae80b847f48ebe4606d7fb87b7f2649"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

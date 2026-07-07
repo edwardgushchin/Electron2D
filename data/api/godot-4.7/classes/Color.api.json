@@ -1,0 +1,1981 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Color",
+    "namespace": "Godot",
+    "fullName": "Godot.Color",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Color",
+    "documentationPath": "doc/classes/Color.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_color.html"
+  },
+  "constructors": [
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Constructs a default [Color] from opaque black. This is the same as [constant BLACK]. [b]Note:[/b] In C#, this constructs a [Color] with all of its components set to [code]0.0[/code] (transparent black).",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(Color from, float alpha)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Color"
+        },
+        {
+          "name": "alpha",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Color] from the existing color, with [member a] set to the given [param alpha] value. [codeblocks] [gdscript] var red = Color(Color.RED, 0.2) # 20% opaque red. [/gdscript] [csharp] var red = new Color(Colors.Red, 0.2f); // 20% opaque red. [/csharp] [/codeblocks]",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(Color,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(Color from)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Color"
+        }
+      ],
+      "summary": "Constructs a [Color] as a copy of the given [Color].",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(String code)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        }
+      ],
+      "summary": "Constructs a [Color] either from an HTML color code or from a standardized color name. The supported color names are the same as the constants.",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(String)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(String code, float alpha)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "alpha",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Color] either from an HTML color code or from a standardized color name, with [param alpha] on the range of 0.0 to 1.0. The supported color names are the same as the constants.",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(String,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(float r, float g, float b)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "r",
+          "type": "float"
+        },
+        {
+          "name": "g",
+          "type": "float"
+        },
+        {
+          "name": "b",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Color] from RGB values, typically between 0.0 and 1.0. [member a] is set to 1.0. [codeblocks] [gdscript] var color = Color(0.2, 1.0, 0.7) # Similar to \u0060Color.from_rgba8(51, 255, 178, 255)\u0060 [/gdscript] [csharp] var color = new Color(0.2f, 1.0f, 0.7f); // Similar to \u0060Color.Color8(51, 255, 178, 255)\u0060 [/csharp] [/codeblocks]",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(float,float,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Constructor",
+      "signature": "public Color(float r, float g, float b, float a)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "r",
+          "type": "float"
+        },
+        {
+          "name": "g",
+          "type": "float"
+        },
+        {
+          "name": "b",
+          "type": "float"
+        },
+        {
+          "name": "a",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Color] from RGBA values, typically between 0.0 and 1.0. [codeblocks] [gdscript] var color = Color(0.2, 1.0, 0.7, 0.8) # Similar to \u0060Color.from_rgba8(51, 255, 178, 204)\u0060 [/gdscript] [csharp] var color = new Color(0.2f, 1.0f, 0.7f, 0.8f); // Similar to \u0060Color.Color8(51, 255, 178, 255, 204)\u0060 [/csharp] [/codeblocks]",
+      "godotName": "Color",
+      "xmlDocId": "M:Godot.Color.#ctor(float,float,float,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Blend",
+      "kind": "Method",
+      "signature": "public Color Blend(Color over)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "over",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns a new color resulting from overlaying this color over the given color. In a painting program, you can imagine it as the [param over] color painted over this color (including alpha). [codeblocks] [gdscript] var bg = Color(0.0, 1.0, 0.0, 0.5) # Green with alpha of 50% var fg = Color(1.0, 0.0, 0.0, 0.5) # Red with alpha of 50% var blended_color = bg.blend(fg) # Brown with alpha of 75% [/gdscript] [csharp] var bg = new Color(0.0f, 1.0f, 0.0f, 0.5f); // Green with alpha of 50% var fg = new Color(1.0f, 0.0f, 0.0f, 0.5f); // Red with alpha of 50% Color blendedColor = bg.Blend(fg); // Brown with alpha of 75% [/csharp] [/codeblocks]",
+      "godotName": "blend",
+      "xmlDocId": "M:Godot.Color.Blend(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public Color Clamp(Color min, Color max)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "Color",
+          "defaultValue": "Color(0, 0, 0, 0)"
+        },
+        {
+          "name": "max",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Returns a new color with all components clamped between the components of [param min] and [param max], by running [method @GlobalScope.clamp] on each component.",
+      "godotName": "clamp",
+      "xmlDocId": "M:Godot.Color.Clamp(Color,Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Darkened",
+      "kind": "Method",
+      "signature": "public Color Darkened(float amount)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a new color resulting from making this color darker by the specified [param amount] (ratio from 0.0 to 1.0). See also [method lightened]. [codeblocks] [gdscript] var green = Color(0.0, 1.0, 0.0) var darkgreen = green.darkened(0.2) # 20% darker than regular green [/gdscript] [csharp] var green = new Color(0.0f, 1.0f, 0.0f); Color darkgreen = green.Darkened(0.2f); // 20% darker than regular green [/csharp] [/codeblocks]",
+      "godotName": "darkened",
+      "xmlDocId": "M:Godot.Color.Darkened(float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FromHsv",
+      "kind": "Method",
+      "signature": "public Color FromHsv(float h, float s, float v, float alpha)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "h",
+          "type": "float"
+        },
+        {
+          "name": "s",
+          "type": "float"
+        },
+        {
+          "name": "v",
+          "type": "float"
+        },
+        {
+          "name": "alpha",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Constructs a color from an [url=https://en.wikipedia.org/wiki/HSL_and_HSV]HSV profile[/url]. The hue ([param h]), saturation ([param s]), and value ([param v]) are typically between 0.0 and 1.0. [codeblocks] [gdscript] var color = Color.from_hsv(0.58, 0.5, 0.79, 0.8) [/gdscript] [csharp] var color = Color.FromHsv(0.58f, 0.5f, 0.79f, 0.8f); [/csharp] [/codeblocks]",
+      "godotName": "from_hsv",
+      "xmlDocId": "M:Godot.Color.FromHsv(float,float,float,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FromOkHsl",
+      "kind": "Method",
+      "signature": "public Color FromOkHsl(float h, float s, float l, float alpha)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "h",
+          "type": "float"
+        },
+        {
+          "name": "s",
+          "type": "float"
+        },
+        {
+          "name": "l",
+          "type": "float"
+        },
+        {
+          "name": "alpha",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Constructs a color from an [url=https://bottosson.github.io/posts/colorpicker/]OK HSL profile[/url]. The hue ([param h]), saturation ([param s]), and lightness ([param l]) are typically between 0.0 and 1.0. [codeblocks] [gdscript] var color = Color.from_ok_hsl(0.58, 0.5, 0.79, 0.8) [/gdscript] [csharp] var color = Color.FromOkHsl(0.58f, 0.5f, 0.79f, 0.8f); [/csharp] [/codeblocks]",
+      "godotName": "from_ok_hsl",
+      "xmlDocId": "M:Godot.Color.FromOkHsl(float,float,float,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FromRgba8",
+      "kind": "Method",
+      "signature": "public Color FromRgba8(int r8, int g8, int b8, int a8)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "r8",
+          "type": "int"
+        },
+        {
+          "name": "g8",
+          "type": "int"
+        },
+        {
+          "name": "b8",
+          "type": "int"
+        },
+        {
+          "name": "a8",
+          "type": "int",
+          "defaultValue": "255"
+        }
+      ],
+      "summary": "Returns a [Color] constructed from red ([param r8]), green ([param g8]), blue ([param b8]), and optionally alpha ([param a8]) integer channels, each divided by [code]255.0[/code] for their final value. [codeblock] var red = Color.from_rgba8(255, 0, 0) # Same as Color(1, 0, 0). var dark_blue = Color.from_rgba8(0, 0, 51) # Same as Color(0, 0, 0.2). var my_color = Color.from_rgba8(306, 255, 0, 102) # Same as Color(1.2, 1, 0, 0.4). [/codeblock] [b]Note:[/b] Due to the lower precision of [method from_rgba8] compared to the standard [Color] constructor, a color created with [method from_rgba8] will generally not be equal to the same color created with the standard [Color] constructor. Use [method is_equal_approx] for comparisons to avoid issues with floating-point precision error.",
+      "godotName": "from_rgba8",
+      "xmlDocId": "M:Godot.Color.FromRgba8(int,int,int,int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FromRgbe9995",
+      "kind": "Method",
+      "signature": "public Color FromRgbe9995(int rgbe)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "rgbe",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a [Color] from an RGBE9995 format integer. See [constant Image.FORMAT_RGBE9995].",
+      "godotName": "from_rgbe9995",
+      "xmlDocId": "M:Godot.Color.FromRgbe9995(int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FromString",
+      "kind": "Method",
+      "signature": "public Color FromString(String str, Color @default)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "str",
+          "type": "String"
+        },
+        {
+          "name": "default",
+          "type": "Color"
+        }
+      ],
+      "summary": "Creates a [Color] from the given string, which can be either an HTML color code or a named color (case-insensitive). Returns [param default] if the color cannot be inferred from the string. If you want to create a color from String in a constant expression, use the equivalent constructor instead (i.e. [code]Color(\u0022color string\u0022)[/code]).",
+      "godotName": "from_string",
+      "xmlDocId": "M:Godot.Color.FromString(String,Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GetLuminance",
+      "kind": "Method",
+      "signature": "public float GetLuminance()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the light intensity of the color, as a value between 0.0 and 1.0 (inclusive). This is useful when determining light or dark color. Colors with a luminance smaller than 0.5 can be generally considered dark. [b]Note:[/b] [method get_luminance] relies on the color using linear encoding to return an accurate relative luminance value. If the color uses the default nonlinear sRGB encoding, use [method srgb_to_linear] to convert it to linear encoding first.",
+      "godotName": "get_luminance",
+      "xmlDocId": "M:Godot.Color.GetLuminance",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Hex",
+      "kind": "Method",
+      "signature": "public Color Hex(int hex)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "hex",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] associated with the provided [param hex] integer in 32-bit RGBA format (8 bits per channel). This method is the inverse of [method to_rgba32]. In GDScript and C#, the [int] is best visualized with hexadecimal notation ([code]\u00220x\u0022[/code] prefix, making it [code]\u00220xRRGGBBAA\u0022[/code]). [codeblocks] [gdscript] var red = Color.hex(0xff0000ff) var dark_cyan = Color.hex(0x008b8bff) var my_color = Color.hex(0xbbefd2a4) [/gdscript] [csharp] var red = new Color(0xff0000ff); var dark_cyan = new Color(0x008b8bff); var my_color = new Color(0xbbefd2a4); [/csharp] [/codeblocks] If you want to use hex notation in a constant expression, use the equivalent constructor instead (i.e. [code]Color(0xRRGGBBAA)[/code]).",
+      "godotName": "hex",
+      "xmlDocId": "M:Godot.Color.Hex(int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Hex64",
+      "kind": "Method",
+      "signature": "public Color Hex64(int hex)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "hex",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] associated with the provided [param hex] integer in 64-bit RGBA format (16 bits per channel). This method is the inverse of [method to_rgba64]. In GDScript and C#, the [int] is best visualized with hexadecimal notation ([code]\u00220x\u0022[/code] prefix, making it [code]\u00220xRRRRGGGGBBBBAAAA\u0022[/code]).",
+      "godotName": "hex64",
+      "xmlDocId": "M:Godot.Color.Hex64(int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Html",
+      "kind": "Method",
+      "signature": "public Color Html(String rgba)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "rgba",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a new color from [param rgba], an HTML hexadecimal color string. [param rgba] is not case-sensitive, and may be prefixed by a hash sign ([code]#[/code]). [param rgba] must be a valid three-digit or six-digit hexadecimal color string, and may contain an alpha channel value. If [param rgba] does not contain an alpha channel value, an alpha channel value of 1.0 is applied. If [param rgba] is invalid, returns an empty color. [codeblocks] [gdscript] var blue = Color.html(\u0022#0000ff\u0022) # blue is Color(0.0, 0.0, 1.0, 1.0) var green = Color.html(\u0022#0F0\u0022) # green is Color(0.0, 1.0, 0.0, 1.0) var col = Color.html(\u0022663399cc\u0022) # col is Color(0.4, 0.2, 0.6, 0.8) [/gdscript] [csharp] var blue = Color.FromHtml(\u0022#0000ff\u0022); // blue is Color(0.0, 0.0, 1.0, 1.0) var green = Color.FromHtml(\u0022#0F0\u0022); // green is Color(0.0, 1.0, 0.0, 1.0) var col = Color.FromHtml(\u0022663399cc\u0022); // col is Color(0.4, 0.2, 0.6, 0.8) [/csharp] [/codeblocks]",
+      "godotName": "html",
+      "xmlDocId": "M:Godot.Color.Html(String)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "HtmlIsValid",
+      "kind": "Method",
+      "signature": "public bool HtmlIsValid(String color)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param color] is a valid HTML hexadecimal color string. The string must be a hexadecimal value (case-insensitive) of either 3, 4, 6 or 8 digits, and may be prefixed by a hash sign ([code]#[/code]). This method is identical to [method String.is_valid_html_color]. [codeblocks] [gdscript] Color.html_is_valid(\u0022#55aaFF\u0022) # Returns true Color.html_is_valid(\u0022#55AAFF20\u0022) # Returns true Color.html_is_valid(\u002255AAFF\u0022) # Returns true Color.html_is_valid(\u0022#F2C\u0022) # Returns true Color.html_is_valid(\u0022#AABBC\u0022) # Returns false Color.html_is_valid(\u0022#55aaFF5\u0022) # Returns false [/gdscript] [csharp] Color.HtmlIsValid(\u0022#55AAFF\u0022); // Returns true Color.HtmlIsValid(\u0022#55AAFF20\u0022); // Returns true Color.HtmlIsValid(\u002255AAFF\u0022); // Returns true Color.HtmlIsValid(\u0022#F2C\u0022); // Returns true Color.HtmlIsValid(\u0022#AABBC\u0022); // Returns false Color.HtmlIsValid(\u0022#55aaFF5\u0022); // Returns false [/csharp] [/codeblocks]",
+      "godotName": "html_is_valid",
+      "xmlDocId": "M:Godot.Color.HtmlIsValid(String)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Inverted",
+      "kind": "Method",
+      "signature": "public Color Inverted()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Returns the color with its [member r], [member g], and [member b] components inverted ([code](1 - r, 1 - g, 1 - b, a)[/code]). [codeblocks] [gdscript] var black = Color.WHITE.inverted() var color = Color(0.3, 0.4, 0.9) var inverted_color = color.inverted() # Equivalent to \u0060Color(0.7, 0.6, 0.1)\u0060 [/gdscript] [csharp] var black = Colors.White.Inverted(); var color = new Color(0.3f, 0.4f, 0.9f); Color invertedColor = color.Inverted(); // Equivalent to \u0060new Color(0.7f, 0.6f, 0.1f)\u0060 [/csharp] [/codeblocks]",
+      "godotName": "inverted",
+      "xmlDocId": "M:Godot.Color.Inverted",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Color to)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this color and [param to] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Color.IsEqualApprox(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Lerp",
+      "kind": "Method",
+      "signature": "public Color Lerp(Color to, float weight)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Color"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the linear interpolation between this color\u0027s components and [param to]\u0027s components. The interpolation factor [param weight] should be between 0.0 and 1.0 (inclusive). See also [method @GlobalScope.lerp]. [codeblocks] [gdscript] var red = Color(1.0, 0.0, 0.0) var aqua = Color(0.0, 1.0, 0.8) red.lerp(aqua, 0.2) # Returns Color(0.8, 0.2, 0.16) red.lerp(aqua, 0.5) # Returns Color(0.5, 0.5, 0.4) red.lerp(aqua, 1.0) # Returns Color(0.0, 1.0, 0.8) [/gdscript] [csharp] var red = new Color(1.0f, 0.0f, 0.0f); var aqua = new Color(0.0f, 1.0f, 0.8f); red.Lerp(aqua, 0.2f); // Returns Color(0.8f, 0.2f, 0.16f) red.Lerp(aqua, 0.5f); // Returns Color(0.5f, 0.5f, 0.4f) red.Lerp(aqua, 1.0f); // Returns Color(0.0f, 1.0f, 0.8f) [/csharp] [/codeblocks]",
+      "godotName": "lerp",
+      "xmlDocId": "M:Godot.Color.Lerp(Color,float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "Lightened",
+      "kind": "Method",
+      "signature": "public Color Lightened(float amount)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a new color resulting from making this color lighter by the specified [param amount], which should be a ratio from 0.0 to 1.0. See also [method darkened]. [codeblocks] [gdscript] var green = Color(0.0, 1.0, 0.0) var light_green = green.lightened(0.2) # 20% lighter than regular green [/gdscript] [csharp] var green = new Color(0.0f, 1.0f, 0.0f); Color lightGreen = green.Lightened(0.2f); // 20% lighter than regular green [/csharp] [/codeblocks]",
+      "godotName": "lightened",
+      "xmlDocId": "M:Godot.Color.Lightened(float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LinearToSrgb",
+      "kind": "Method",
+      "signature": "public Color LinearToSrgb()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Returns a copy of the color that is encoded using the [url=https://en.wikipedia.org/wiki/SRGB]nonlinear sRGB transfer function[/url]. This method requires the original color to use linear encoding. See also [method srgb_to_linear] which performs the opposite operation. [b]Note:[/b] The color\u0027s alpha channel ([member a]) is not affected. The alpha channel is always stored with linear encoding, regardless of the color space of the other color channels.",
+      "godotName": "linear_to_srgb",
+      "xmlDocId": "M:Godot.Color.LinearToSrgb",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SrgbToLinear",
+      "kind": "Method",
+      "signature": "public Color SrgbToLinear()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Returns a copy of the color that uses linear encoding. This method requires the original color to be encoded using the [url=https://en.wikipedia.org/wiki/SRGB]nonlinear sRGB transfer function[/url]. See also [method linear_to_srgb] which performs the opposite operation. [b]Note:[/b] The color\u0027s alpha channel ([member a]) is not affected. The alpha channel is always stored with linear encoding, regardless of the color space of the other color channels.",
+      "godotName": "srgb_to_linear",
+      "xmlDocId": "M:Godot.Color.SrgbToLinear",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToAbgr32",
+      "kind": "Method",
+      "signature": "public int ToAbgr32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 32-bit integer in ABGR format (each component is 8 bits). ABGR is the reversed version of the default RGBA format. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_abgr32()) # Prints 4281565439 [/gdscript] [csharp] var color = new Color(1.0f, 0.5f, 0.2f); GD.Print(color.ToAbgr32()); // Prints 4281565439 [/csharp] [/codeblocks]",
+      "godotName": "to_abgr32",
+      "xmlDocId": "M:Godot.Color.ToAbgr32",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToAbgr64",
+      "kind": "Method",
+      "signature": "public int ToAbgr64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 64-bit integer in ABGR format (each component is 16 bits). ABGR is the reversed version of the default RGBA format. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_abgr64()) # Prints -225178692812801 [/gdscript] [csharp] var color = new Color(1.0f, 0.5f, 0.2f); GD.Print(color.ToAbgr64()); // Prints -225178692812801 [/csharp] [/codeblocks]",
+      "godotName": "to_abgr64",
+      "xmlDocId": "M:Godot.Color.ToAbgr64",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToArgb32",
+      "kind": "Method",
+      "signature": "public int ToArgb32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 32-bit integer in ARGB format (each component is 8 bits). ARGB is more compatible with DirectX. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_argb32()) # Prints 4294934323 [/gdscript] [csharp] var color = new Color(1.0f, 0.5f, 0.2f); GD.Print(color.ToArgb32()); // Prints 4294934323 [/csharp] [/codeblocks]",
+      "godotName": "to_argb32",
+      "xmlDocId": "M:Godot.Color.ToArgb32",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToArgb64",
+      "kind": "Method",
+      "signature": "public int ToArgb64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 64-bit integer in ARGB format (each component is 16 bits). ARGB is more compatible with DirectX. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_argb64()) # Prints -2147470541 [/gdscript] [csharp] var color = new Color(1.0f, 0.5f, 0.2f); GD.Print(color.ToArgb64()); // Prints -2147470541 [/csharp] [/codeblocks]",
+      "godotName": "to_argb64",
+      "xmlDocId": "M:Godot.Color.ToArgb64",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToHtml",
+      "kind": "Method",
+      "signature": "public String ToHtml(bool withAlpha)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "with_alpha",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the color converted to an HTML hexadecimal color [String] in RGBA format, without the hash ([code]#[/code]) prefix. Setting [param with_alpha] to [code]false[/code], excludes alpha from the hexadecimal string, using RGB format instead of RGBA format. [codeblocks] [gdscript] var white = Color(1, 1, 1, 0.5) var with_alpha = white.to_html() # Returns \u0022ffffff7f\u0022 var without_alpha = white.to_html(false) # Returns \u0022ffffff\u0022 [/gdscript] [csharp] var white = new Color(1, 1, 1, 0.5f); string withAlpha = white.ToHtml(); // Returns \u0022ffffff7f\u0022 string withoutAlpha = white.ToHtml(false); // Returns \u0022ffffff\u0022 [/csharp] [/codeblocks]",
+      "godotName": "to_html",
+      "xmlDocId": "M:Godot.Color.ToHtml(bool)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToRgba32",
+      "kind": "Method",
+      "signature": "public int ToRgba32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 32-bit integer in RGBA format (each component is 8 bits). RGBA is Godot\u0027s default format. This method is the inverse of [method hex]. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_rgba32()) # Prints 4286526463 [/gdscript] [csharp] var color = new Color(1, 0.5f, 0.2f); GD.Print(color.ToRgba32()); // Prints 4286526463 [/csharp] [/codeblocks]",
+      "godotName": "to_rgba32",
+      "xmlDocId": "M:Godot.Color.ToRgba32",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ToRgba64",
+      "kind": "Method",
+      "signature": "public int ToRgba64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the color converted to a 64-bit integer in RGBA format (each component is 16 bits). RGBA is Godot\u0027s default format. This method is the inverse of [method hex64]. [codeblocks] [gdscript] var color = Color(1, 0.5, 0.2) print(color.to_rgba64()) # Prints -140736629309441 [/gdscript] [csharp] var color = new Color(1, 0.5f, 0.2f); GD.Print(color.ToRgba64()); // Prints -140736629309441 [/csharp] [/codeblocks]",
+      "godotName": "to_rgba64",
+      "xmlDocId": "M:Godot.Color.ToRgba64",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "A",
+      "kind": "Property",
+      "signature": "public float A { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The color\u0027s alpha component, typically on the range of 0 to 1. A value of 0 means that the color is fully transparent. A value of 1 means that the color is fully opaque. [b]Note:[/b] The alpha channel is always stored with linear encoding, regardless of the encoding of the other color channels. The [method linear_to_srgb] and [method srgb_to_linear] methods do not affect the alpha channel.",
+      "defaultValue": "1.0",
+      "godotName": "a",
+      "xmlDocId": "P:Godot.Color.A",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "A8",
+      "kind": "Property",
+      "signature": "public int A8 { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapper for [member a] that uses the range 0 to 255, instead of 0 to 1.",
+      "defaultValue": "255",
+      "godotName": "a8",
+      "xmlDocId": "P:Godot.Color.A8",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "B",
+      "kind": "Property",
+      "signature": "public float B { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The color\u0027s blue component, typically on the range of 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "b",
+      "xmlDocId": "P:Godot.Color.B",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "B8",
+      "kind": "Property",
+      "signature": "public int B8 { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapper for [member b] that uses the range 0 to 255, instead of 0 to 1.",
+      "defaultValue": "0",
+      "godotName": "b8",
+      "xmlDocId": "P:Godot.Color.B8",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "G",
+      "kind": "Property",
+      "signature": "public float G { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The color\u0027s green component, typically on the range of 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "g",
+      "xmlDocId": "P:Godot.Color.G",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "G8",
+      "kind": "Property",
+      "signature": "public int G8 { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapper for [member g] that uses the range 0 to 255, instead of 0 to 1.",
+      "defaultValue": "0",
+      "godotName": "g8",
+      "xmlDocId": "P:Godot.Color.G8",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "H",
+      "kind": "Property",
+      "signature": "public float H { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The HSV hue of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "h",
+      "xmlDocId": "P:Godot.Color.H",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OkHslH",
+      "kind": "Property",
+      "signature": "public float OkHslH { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The OKHSL hue of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "ok_hsl_h",
+      "xmlDocId": "P:Godot.Color.OkHslH",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OkHslL",
+      "kind": "Property",
+      "signature": "public float OkHslL { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The OKHSL lightness of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "ok_hsl_l",
+      "xmlDocId": "P:Godot.Color.OkHslL",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OkHslS",
+      "kind": "Property",
+      "signature": "public float OkHslS { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The OKHSL saturation of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "ok_hsl_s",
+      "xmlDocId": "P:Godot.Color.OkHslS",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "R",
+      "kind": "Property",
+      "signature": "public float R { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The color\u0027s red component, typically on the range of 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "r",
+      "xmlDocId": "P:Godot.Color.R",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "R8",
+      "kind": "Property",
+      "signature": "public int R8 { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapper for [member r] that uses the range 0 to 255, instead of 0 to 1.",
+      "defaultValue": "0",
+      "godotName": "r8",
+      "xmlDocId": "P:Godot.Color.R8",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "S",
+      "kind": "Property",
+      "signature": "public float S { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The HSV saturation of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "s",
+      "xmlDocId": "P:Godot.Color.S",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "V",
+      "kind": "Property",
+      "signature": "public float V { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The HSV value (brightness) of this color, on the range 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "v",
+      "xmlDocId": "P:Godot.Color.V",
+      "sourcePath": "doc/classes/Color.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "ALICE_BLUE",
+      "value": "Color(0.9411765, 0.972549, 1, 1)",
+      "kind": "Constant",
+      "summary": "Alice blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ANTIQUE_WHITE",
+      "value": "Color(0.98039216, 0.92156863, 0.84313726, 1)",
+      "kind": "Constant",
+      "summary": "Antique white color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "AQUA",
+      "value": "Color(0, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "Aqua color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "AQUAMARINE",
+      "value": "Color(0.49803922, 1, 0.83137256, 1)",
+      "kind": "Constant",
+      "summary": "Aquamarine color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "AZURE",
+      "value": "Color(0.9411765, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "Azure color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BEIGE",
+      "value": "Color(0.9607843, 0.9607843, 0.8627451, 1)",
+      "kind": "Constant",
+      "summary": "Beige color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BISQUE",
+      "value": "Color(1, 0.89411765, 0.76862746, 1)",
+      "kind": "Constant",
+      "summary": "Bisque color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BLACK",
+      "value": "Color(0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "Black color. In GDScript, this is the default value of any color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BLANCHED_ALMOND",
+      "value": "Color(1, 0.92156863, 0.8039216, 1)",
+      "kind": "Constant",
+      "summary": "Blanched almond color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BLUE",
+      "value": "Color(0, 0, 1, 1)",
+      "kind": "Constant",
+      "summary": "Blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BLUE_VIOLET",
+      "value": "Color(0.5411765, 0.16862746, 0.8862745, 1)",
+      "kind": "Constant",
+      "summary": "Blue violet color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BROWN",
+      "value": "Color(0.64705884, 0.16470589, 0.16470589, 1)",
+      "kind": "Constant",
+      "summary": "Brown color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "BURLYWOOD",
+      "value": "Color(0.87058824, 0.72156864, 0.5294118, 1)",
+      "kind": "Constant",
+      "summary": "Burlywood color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CADET_BLUE",
+      "value": "Color(0.37254903, 0.61960787, 0.627451, 1)",
+      "kind": "Constant",
+      "summary": "Cadet blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CHARTREUSE",
+      "value": "Color(0.49803922, 1, 0, 1)",
+      "kind": "Constant",
+      "summary": "Chartreuse color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CHOCOLATE",
+      "value": "Color(0.8235294, 0.4117647, 0.11764706, 1)",
+      "kind": "Constant",
+      "summary": "Chocolate color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CORAL",
+      "value": "Color(1, 0.49803922, 0.3137255, 1)",
+      "kind": "Constant",
+      "summary": "Coral color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CORNFLOWER_BLUE",
+      "value": "Color(0.39215687, 0.58431375, 0.92941177, 1)",
+      "kind": "Constant",
+      "summary": "Cornflower blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CORNSILK",
+      "value": "Color(1, 0.972549, 0.8627451, 1)",
+      "kind": "Constant",
+      "summary": "Cornsilk color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CRIMSON",
+      "value": "Color(0.8627451, 0.078431375, 0.23529412, 1)",
+      "kind": "Constant",
+      "summary": "Crimson color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "CYAN",
+      "value": "Color(0, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "Cyan color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_BLUE",
+      "value": "Color(0, 0, 0.54509807, 1)",
+      "kind": "Constant",
+      "summary": "Dark blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_CYAN",
+      "value": "Color(0, 0.54509807, 0.54509807, 1)",
+      "kind": "Constant",
+      "summary": "Dark cyan color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_GOLDENROD",
+      "value": "Color(0.72156864, 0.5254902, 0.043137256, 1)",
+      "kind": "Constant",
+      "summary": "Dark goldenrod color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_GRAY",
+      "value": "Color(0.6627451, 0.6627451, 0.6627451, 1)",
+      "kind": "Constant",
+      "summary": "Dark gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_GREEN",
+      "value": "Color(0, 0.39215687, 0, 1)",
+      "kind": "Constant",
+      "summary": "Dark green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_KHAKI",
+      "value": "Color(0.7411765, 0.7176471, 0.41960785, 1)",
+      "kind": "Constant",
+      "summary": "Dark khaki color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_MAGENTA",
+      "value": "Color(0.54509807, 0, 0.54509807, 1)",
+      "kind": "Constant",
+      "summary": "Dark magenta color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_OLIVE_GREEN",
+      "value": "Color(0.33333334, 0.41960785, 0.18431373, 1)",
+      "kind": "Constant",
+      "summary": "Dark olive green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_ORANGE",
+      "value": "Color(1, 0.54901963, 0, 1)",
+      "kind": "Constant",
+      "summary": "Dark orange color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_ORCHID",
+      "value": "Color(0.6, 0.19607843, 0.8, 1)",
+      "kind": "Constant",
+      "summary": "Dark orchid color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_RED",
+      "value": "Color(0.54509807, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "Dark red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_SALMON",
+      "value": "Color(0.9137255, 0.5882353, 0.47843137, 1)",
+      "kind": "Constant",
+      "summary": "Dark salmon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_SEA_GREEN",
+      "value": "Color(0.56078434, 0.7372549, 0.56078434, 1)",
+      "kind": "Constant",
+      "summary": "Dark sea green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_SLATE_BLUE",
+      "value": "Color(0.28235295, 0.23921569, 0.54509807, 1)",
+      "kind": "Constant",
+      "summary": "Dark slate blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_SLATE_GRAY",
+      "value": "Color(0.18431373, 0.30980393, 0.30980393, 1)",
+      "kind": "Constant",
+      "summary": "Dark slate gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_TURQUOISE",
+      "value": "Color(0, 0.80784315, 0.81960785, 1)",
+      "kind": "Constant",
+      "summary": "Dark turquoise color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DARK_VIOLET",
+      "value": "Color(0.5803922, 0, 0.827451, 1)",
+      "kind": "Constant",
+      "summary": "Dark violet color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DEEP_PINK",
+      "value": "Color(1, 0.078431375, 0.5764706, 1)",
+      "kind": "Constant",
+      "summary": "Deep pink color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DEEP_SKY_BLUE",
+      "value": "Color(0, 0.7490196, 1, 1)",
+      "kind": "Constant",
+      "summary": "Deep sky blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DIM_GRAY",
+      "value": "Color(0.4117647, 0.4117647, 0.4117647, 1)",
+      "kind": "Constant",
+      "summary": "Dim gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "DODGER_BLUE",
+      "value": "Color(0.11764706, 0.5647059, 1, 1)",
+      "kind": "Constant",
+      "summary": "Dodger blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FIREBRICK",
+      "value": "Color(0.69803923, 0.13333334, 0.13333334, 1)",
+      "kind": "Constant",
+      "summary": "Firebrick color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FLORAL_WHITE",
+      "value": "Color(1, 0.98039216, 0.9411765, 1)",
+      "kind": "Constant",
+      "summary": "Floral white color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FOREST_GREEN",
+      "value": "Color(0.13333334, 0.54509807, 0.13333334, 1)",
+      "kind": "Constant",
+      "summary": "Forest green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "FUCHSIA",
+      "value": "Color(1, 0, 1, 1)",
+      "kind": "Constant",
+      "summary": "Fuchsia color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GAINSBORO",
+      "value": "Color(0.8627451, 0.8627451, 0.8627451, 1)",
+      "kind": "Constant",
+      "summary": "Gainsboro color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GHOST_WHITE",
+      "value": "Color(0.972549, 0.972549, 1, 1)",
+      "kind": "Constant",
+      "summary": "Ghost white color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GOLD",
+      "value": "Color(1, 0.84313726, 0, 1)",
+      "kind": "Constant",
+      "summary": "Gold color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GOLDENROD",
+      "value": "Color(0.85490197, 0.64705884, 0.1254902, 1)",
+      "kind": "Constant",
+      "summary": "Goldenrod color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GRAY",
+      "value": "Color(0.74509805, 0.74509805, 0.74509805, 1)",
+      "kind": "Constant",
+      "summary": "Gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GREEN",
+      "value": "Color(0, 1, 0, 1)",
+      "kind": "Constant",
+      "summary": "Green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "GREEN_YELLOW",
+      "value": "Color(0.6784314, 1, 0.18431373, 1)",
+      "kind": "Constant",
+      "summary": "Green yellow color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "HONEYDEW",
+      "value": "Color(0.9411765, 1, 0.9411765, 1)",
+      "kind": "Constant",
+      "summary": "Honeydew color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "HOT_PINK",
+      "value": "Color(1, 0.4117647, 0.7058824, 1)",
+      "kind": "Constant",
+      "summary": "Hot pink color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "INDIAN_RED",
+      "value": "Color(0.8039216, 0.36078432, 0.36078432, 1)",
+      "kind": "Constant",
+      "summary": "Indian red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "INDIGO",
+      "value": "Color(0.29411766, 0, 0.50980395, 1)",
+      "kind": "Constant",
+      "summary": "Indigo color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "IVORY",
+      "value": "Color(1, 1, 0.9411765, 1)",
+      "kind": "Constant",
+      "summary": "Ivory color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "KHAKI",
+      "value": "Color(0.9411765, 0.9019608, 0.54901963, 1)",
+      "kind": "Constant",
+      "summary": "Khaki color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LAVENDER",
+      "value": "Color(0.9019608, 0.9019608, 0.98039216, 1)",
+      "kind": "Constant",
+      "summary": "Lavender color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LAVENDER_BLUSH",
+      "value": "Color(1, 0.9411765, 0.9607843, 1)",
+      "kind": "Constant",
+      "summary": "Lavender blush color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LAWN_GREEN",
+      "value": "Color(0.4862745, 0.9882353, 0, 1)",
+      "kind": "Constant",
+      "summary": "Lawn green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LEMON_CHIFFON",
+      "value": "Color(1, 0.98039216, 0.8039216, 1)",
+      "kind": "Constant",
+      "summary": "Lemon chiffon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_BLUE",
+      "value": "Color(0.6784314, 0.84705883, 0.9019608, 1)",
+      "kind": "Constant",
+      "summary": "Light blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_CORAL",
+      "value": "Color(0.9411765, 0.5019608, 0.5019608, 1)",
+      "kind": "Constant",
+      "summary": "Light coral color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_CYAN",
+      "value": "Color(0.8784314, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "Light cyan color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_GOLDENROD",
+      "value": "Color(0.98039216, 0.98039216, 0.8235294, 1)",
+      "kind": "Constant",
+      "summary": "Light goldenrod color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_GRAY",
+      "value": "Color(0.827451, 0.827451, 0.827451, 1)",
+      "kind": "Constant",
+      "summary": "Light gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_GREEN",
+      "value": "Color(0.5647059, 0.93333334, 0.5647059, 1)",
+      "kind": "Constant",
+      "summary": "Light green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_PINK",
+      "value": "Color(1, 0.7137255, 0.75686276, 1)",
+      "kind": "Constant",
+      "summary": "Light pink color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_SALMON",
+      "value": "Color(1, 0.627451, 0.47843137, 1)",
+      "kind": "Constant",
+      "summary": "Light salmon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_SEA_GREEN",
+      "value": "Color(0.1254902, 0.69803923, 0.6666667, 1)",
+      "kind": "Constant",
+      "summary": "Light sea green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_SKY_BLUE",
+      "value": "Color(0.5294118, 0.80784315, 0.98039216, 1)",
+      "kind": "Constant",
+      "summary": "Light sky blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_SLATE_GRAY",
+      "value": "Color(0.46666667, 0.53333336, 0.6, 1)",
+      "kind": "Constant",
+      "summary": "Light slate gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_STEEL_BLUE",
+      "value": "Color(0.6901961, 0.76862746, 0.87058824, 1)",
+      "kind": "Constant",
+      "summary": "Light steel blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIGHT_YELLOW",
+      "value": "Color(1, 1, 0.8784314, 1)",
+      "kind": "Constant",
+      "summary": "Light yellow color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIME",
+      "value": "Color(0, 1, 0, 1)",
+      "kind": "Constant",
+      "summary": "Lime color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LIME_GREEN",
+      "value": "Color(0.19607843, 0.8039216, 0.19607843, 1)",
+      "kind": "Constant",
+      "summary": "Lime green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "LINEN",
+      "value": "Color(0.98039216, 0.9411765, 0.9019608, 1)",
+      "kind": "Constant",
+      "summary": "Linen color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MAGENTA",
+      "value": "Color(1, 0, 1, 1)",
+      "kind": "Constant",
+      "summary": "Magenta color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MAROON",
+      "value": "Color(0.6901961, 0.1882353, 0.3764706, 1)",
+      "kind": "Constant",
+      "summary": "Maroon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_AQUAMARINE",
+      "value": "Color(0.4, 0.8039216, 0.6666667, 1)",
+      "kind": "Constant",
+      "summary": "Medium aquamarine color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_BLUE",
+      "value": "Color(0, 0, 0.8039216, 1)",
+      "kind": "Constant",
+      "summary": "Medium blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_ORCHID",
+      "value": "Color(0.7294118, 0.33333334, 0.827451, 1)",
+      "kind": "Constant",
+      "summary": "Medium orchid color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_PURPLE",
+      "value": "Color(0.5764706, 0.4392157, 0.85882354, 1)",
+      "kind": "Constant",
+      "summary": "Medium purple color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_SEA_GREEN",
+      "value": "Color(0.23529412, 0.7019608, 0.44313726, 1)",
+      "kind": "Constant",
+      "summary": "Medium sea green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_SLATE_BLUE",
+      "value": "Color(0.48235294, 0.40784314, 0.93333334, 1)",
+      "kind": "Constant",
+      "summary": "Medium slate blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_SPRING_GREEN",
+      "value": "Color(0, 0.98039216, 0.6039216, 1)",
+      "kind": "Constant",
+      "summary": "Medium spring green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_TURQUOISE",
+      "value": "Color(0.28235295, 0.81960785, 0.8, 1)",
+      "kind": "Constant",
+      "summary": "Medium turquoise color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MEDIUM_VIOLET_RED",
+      "value": "Color(0.78039217, 0.08235294, 0.52156866, 1)",
+      "kind": "Constant",
+      "summary": "Medium violet red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MIDNIGHT_BLUE",
+      "value": "Color(0.09803922, 0.09803922, 0.4392157, 1)",
+      "kind": "Constant",
+      "summary": "Midnight blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MINT_CREAM",
+      "value": "Color(0.9607843, 1, 0.98039216, 1)",
+      "kind": "Constant",
+      "summary": "Mint cream color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MISTY_ROSE",
+      "value": "Color(1, 0.89411765, 0.88235295, 1)",
+      "kind": "Constant",
+      "summary": "Misty rose color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "MOCCASIN",
+      "value": "Color(1, 0.89411765, 0.70980394, 1)",
+      "kind": "Constant",
+      "summary": "Moccasin color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "NAVAJO_WHITE",
+      "value": "Color(1, 0.87058824, 0.6784314, 1)",
+      "kind": "Constant",
+      "summary": "Navajo white color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "NAVY_BLUE",
+      "value": "Color(0, 0, 0.5019608, 1)",
+      "kind": "Constant",
+      "summary": "Navy blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OLD_LACE",
+      "value": "Color(0.99215686, 0.9607843, 0.9019608, 1)",
+      "kind": "Constant",
+      "summary": "Old lace color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OLIVE",
+      "value": "Color(0.5019608, 0.5019608, 0, 1)",
+      "kind": "Constant",
+      "summary": "Olive color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "OLIVE_DRAB",
+      "value": "Color(0.41960785, 0.5568628, 0.13725491, 1)",
+      "kind": "Constant",
+      "summary": "Olive drab color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ORANGE",
+      "value": "Color(1, 0.64705884, 0, 1)",
+      "kind": "Constant",
+      "summary": "Orange color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ORANGE_RED",
+      "value": "Color(1, 0.27058825, 0, 1)",
+      "kind": "Constant",
+      "summary": "Orange red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ORCHID",
+      "value": "Color(0.85490197, 0.4392157, 0.8392157, 1)",
+      "kind": "Constant",
+      "summary": "Orchid color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PALE_GOLDENROD",
+      "value": "Color(0.93333334, 0.9098039, 0.6666667, 1)",
+      "kind": "Constant",
+      "summary": "Pale goldenrod color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PALE_GREEN",
+      "value": "Color(0.59607846, 0.9843137, 0.59607846, 1)",
+      "kind": "Constant",
+      "summary": "Pale green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PALE_TURQUOISE",
+      "value": "Color(0.6862745, 0.93333334, 0.93333334, 1)",
+      "kind": "Constant",
+      "summary": "Pale turquoise color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PALE_VIOLET_RED",
+      "value": "Color(0.85882354, 0.4392157, 0.5764706, 1)",
+      "kind": "Constant",
+      "summary": "Pale violet red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PAPAYA_WHIP",
+      "value": "Color(1, 0.9372549, 0.8352941, 1)",
+      "kind": "Constant",
+      "summary": "Papaya whip color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PEACH_PUFF",
+      "value": "Color(1, 0.85490197, 0.7254902, 1)",
+      "kind": "Constant",
+      "summary": "Peach puff color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PERU",
+      "value": "Color(0.8039216, 0.52156866, 0.24705882, 1)",
+      "kind": "Constant",
+      "summary": "Peru color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PINK",
+      "value": "Color(1, 0.7529412, 0.79607844, 1)",
+      "kind": "Constant",
+      "summary": "Pink color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PLUM",
+      "value": "Color(0.8666667, 0.627451, 0.8666667, 1)",
+      "kind": "Constant",
+      "summary": "Plum color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "POWDER_BLUE",
+      "value": "Color(0.6901961, 0.8784314, 0.9019608, 1)",
+      "kind": "Constant",
+      "summary": "Powder blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "PURPLE",
+      "value": "Color(0.627451, 0.1254902, 0.9411765, 1)",
+      "kind": "Constant",
+      "summary": "Purple color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "REBECCA_PURPLE",
+      "value": "Color(0.4, 0.2, 0.6, 1)",
+      "kind": "Constant",
+      "summary": "Rebecca purple color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "RED",
+      "value": "Color(1, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "Red color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ROSY_BROWN",
+      "value": "Color(0.7372549, 0.56078434, 0.56078434, 1)",
+      "kind": "Constant",
+      "summary": "Rosy brown color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "ROYAL_BLUE",
+      "value": "Color(0.25490198, 0.4117647, 0.88235295, 1)",
+      "kind": "Constant",
+      "summary": "Royal blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SADDLE_BROWN",
+      "value": "Color(0.54509807, 0.27058825, 0.07450981, 1)",
+      "kind": "Constant",
+      "summary": "Saddle brown color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SALMON",
+      "value": "Color(0.98039216, 0.5019608, 0.44705883, 1)",
+      "kind": "Constant",
+      "summary": "Salmon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SANDY_BROWN",
+      "value": "Color(0.95686275, 0.6431373, 0.3764706, 1)",
+      "kind": "Constant",
+      "summary": "Sandy brown color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SEA_GREEN",
+      "value": "Color(0.18039216, 0.54509807, 0.34117648, 1)",
+      "kind": "Constant",
+      "summary": "Sea green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SEASHELL",
+      "value": "Color(1, 0.9607843, 0.93333334, 1)",
+      "kind": "Constant",
+      "summary": "Seashell color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SIENNA",
+      "value": "Color(0.627451, 0.32156864, 0.1764706, 1)",
+      "kind": "Constant",
+      "summary": "Sienna color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SILVER",
+      "value": "Color(0.7529412, 0.7529412, 0.7529412, 1)",
+      "kind": "Constant",
+      "summary": "Silver color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SKY_BLUE",
+      "value": "Color(0.5294118, 0.80784315, 0.92156863, 1)",
+      "kind": "Constant",
+      "summary": "Sky blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SLATE_BLUE",
+      "value": "Color(0.41568628, 0.3529412, 0.8039216, 1)",
+      "kind": "Constant",
+      "summary": "Slate blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SLATE_GRAY",
+      "value": "Color(0.4392157, 0.5019608, 0.5647059, 1)",
+      "kind": "Constant",
+      "summary": "Slate gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SNOW",
+      "value": "Color(1, 0.98039216, 0.98039216, 1)",
+      "kind": "Constant",
+      "summary": "Snow color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "SPRING_GREEN",
+      "value": "Color(0, 1, 0.49803922, 1)",
+      "kind": "Constant",
+      "summary": "Spring green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "STEEL_BLUE",
+      "value": "Color(0.27450982, 0.50980395, 0.7058824, 1)",
+      "kind": "Constant",
+      "summary": "Steel blue color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "TAN",
+      "value": "Color(0.8235294, 0.7058824, 0.54901963, 1)",
+      "kind": "Constant",
+      "summary": "Tan color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "TEAL",
+      "value": "Color(0, 0.5019608, 0.5019608, 1)",
+      "kind": "Constant",
+      "summary": "Teal color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "THISTLE",
+      "value": "Color(0.84705883, 0.7490196, 0.84705883, 1)",
+      "kind": "Constant",
+      "summary": "Thistle color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "TOMATO",
+      "value": "Color(1, 0.3882353, 0.2784314, 1)",
+      "kind": "Constant",
+      "summary": "Tomato color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "TRANSPARENT",
+      "value": "Color(1, 1, 1, 0)",
+      "kind": "Constant",
+      "summary": "Transparent color (white with zero alpha).",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "TURQUOISE",
+      "value": "Color(0.2509804, 0.8784314, 0.8156863, 1)",
+      "kind": "Constant",
+      "summary": "Turquoise color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "VIOLET",
+      "value": "Color(0.93333334, 0.50980395, 0.93333334, 1)",
+      "kind": "Constant",
+      "summary": "Violet color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WEB_GRAY",
+      "value": "Color(0.5019608, 0.5019608, 0.5019608, 1)",
+      "kind": "Constant",
+      "summary": "Web gray color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WEB_GREEN",
+      "value": "Color(0, 0.5019608, 0, 1)",
+      "kind": "Constant",
+      "summary": "Web green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WEB_MAROON",
+      "value": "Color(0.5019608, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "Web maroon color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WEB_PURPLE",
+      "value": "Color(0.5019608, 0, 0.5019608, 1)",
+      "kind": "Constant",
+      "summary": "Web purple color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WHEAT",
+      "value": "Color(0.9607843, 0.87058824, 0.7019608, 1)",
+      "kind": "Constant",
+      "summary": "Wheat color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WHITE",
+      "value": "Color(1, 1, 1, 1)",
+      "kind": "Constant",
+      "summary": "White color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "WHITE_SMOKE",
+      "value": "Color(0.9607843, 0.9607843, 0.9607843, 1)",
+      "kind": "Constant",
+      "summary": "White smoke color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "YELLOW",
+      "value": "Color(1, 1, 0, 1)",
+      "kind": "Constant",
+      "summary": "Yellow color.",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "YELLOW_GREEN",
+      "value": "Color(0.6039216, 0.8039216, 0.19607843, 1)",
+      "kind": "Constant",
+      "summary": "Yellow green color.",
+      "sourcePath": "doc/classes/Color.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Color right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the colors are not exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Color.operator !=(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Color operator *(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Multiplies each component of the [Color] by the components of the given [Color].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Color.operator *(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Color operator *(float right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies each component of the [Color] by the given [float].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Color.operator *(float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Color operator *(int right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies each component of the [Color] by the given [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Color.operator *(int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public Color operator \u002B(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Adds each component of the [Color] with the components of the given [Color].",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.Color.operator \u002B(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public Color operator -(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Subtracts each component of the [Color] by the components of the given [Color].",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.Color.operator -(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Color operator /(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Divides each component of the [Color] by the components of the given [Color].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Color.operator /(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Color operator /(float right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides each component of the [Color] by the given [float].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Color.operator /(float)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Color operator /(int right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides each component of the [Color] by the given [int].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Color.operator /(int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Color right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the colors are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Color.operator ==(Color)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public float operator [](int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Access color components using their index. [code][0][/code] is equivalent to [member r], [code][1][/code] is equivalent to [member g], [code][2][/code] is equivalent to [member b], and [code][3][/code] is equivalent to [member a].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Color.operator [](int)",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public Color operator unary\u002B()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.Color.operator unary\u002B",
+      "sourcePath": "doc/classes/Color.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public Color operator unary-()",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Inverts the given color. This is equivalent to [code]Color.WHITE - c[/code] or [code]Color(1 - c.r, 1 - c.g, 1 - c.b, 1 - c.a)[/code]. Unlike with [method inverted], the [member a] component is inverted, too.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.Color.operator unary-",
+      "sourcePath": "doc/classes/Color.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Color.xml",
+      "sha256": "f53ecdd2d3eae589806cf4df0465a31ba3f61523ec2453838ecebffc3473bd80"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

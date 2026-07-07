@@ -1,0 +1,552 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TwoBoneIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.TwoBoneIK3D",
+    "kind": "class",
+    "baseType": "IKModifier3D",
+    "interfaces": [],
+    "godotReference": "TwoBoneIK3D",
+    "documentationPath": "doc/classes/TwoBoneIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_twoboneik3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEndBone",
+      "kind": "Method",
+      "signature": "public int GetEndBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone index.",
+      "godotName": "get_end_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetEndBone(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public int GetEndBoneDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone\u0027s tail direction when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_direction",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetEndBoneDirection(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneLength",
+      "kind": "Method",
+      "signature": "public float GetEndBoneLength(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone tail length of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_length",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetEndBoneLength(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneName",
+      "kind": "Method",
+      "signature": "public String GetEndBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone name.",
+      "godotName": "get_end_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetEndBoneName(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetMiddleBone",
+      "kind": "Method",
+      "signature": "public int GetMiddleBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the middle bone index.",
+      "godotName": "get_middle_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetMiddleBone(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetMiddleBoneName",
+      "kind": "Method",
+      "signature": "public String GetMiddleBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the middle bone name.",
+      "godotName": "get_middle_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetMiddleBoneName(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetPoleDirection",
+      "kind": "Method",
+      "signature": "public int GetPoleDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pole direction.",
+      "godotName": "get_pole_direction",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetPoleDirection(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetPoleDirectionVector",
+      "kind": "Method",
+      "signature": "public Vector3 GetPoleDirectionVector(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pole direction vector. If [method get_pole_direction] is [constant SkeletonModifier3D.SECONDARY_DIRECTION_NONE], this method returns [code]Vector3(0, 0, 0)[/code].",
+      "godotName": "get_pole_direction_vector",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetPoleDirectionVector(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetPoleNode",
+      "kind": "Method",
+      "signature": "public NodePath GetPoleNode(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pole target node that constructs a plane which the joints are all on and the pole is trying to direct.",
+      "godotName": "get_pole_node",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetPoleNode(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetRootBone",
+      "kind": "Method",
+      "signature": "public int GetRootBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone index.",
+      "godotName": "get_root_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetRootBone(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetRootBoneName",
+      "kind": "Method",
+      "signature": "public String GetRootBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone name.",
+      "godotName": "get_root_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetRootBoneName(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "GetTargetNode",
+      "kind": "Method",
+      "signature": "public NodePath GetTargetNode(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the target node that the end bone is trying to reach.",
+      "godotName": "get_target_node",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.GetTargetNode(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "IsEndBoneExtended",
+      "kind": "Method",
+      "signature": "public bool IsEndBoneExtended(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the end bone is extended to have a tail.",
+      "godotName": "is_end_bone_extended",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.IsEndBoneExtended(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "IsUsingVirtualEnd",
+      "kind": "Method",
+      "signature": "public bool IsUsingVirtualEnd(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the end bone is extended from the middle bone as a virtual bone.",
+      "godotName": "is_using_virtual_end",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.IsUsingVirtualEnd(int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetEndBone",
+      "kind": "Method",
+      "signature": "public void SetEndBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone index.",
+      "godotName": "set_end_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetEndBone(int,int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public void SetEndBoneDirection(int index, int boneDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone tail direction when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_direction",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetEndBoneDirection(int,int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneLength",
+      "kind": "Method",
+      "signature": "public void SetEndBoneLength(int index, float length)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the end bone tail length when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_length",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetEndBoneLength(int,float)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneName",
+      "kind": "Method",
+      "signature": "public void SetEndBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the end bone name. [b]Note:[/b] The end bone must be a child of the middle bone.",
+      "godotName": "set_end_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetEndBoneName(int,String)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetExtendEndBone",
+      "kind": "Method",
+      "signature": "public void SetExtendEndBone(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the end bone is extended to have a tail.",
+      "godotName": "set_extend_end_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetExtendEndBone(int,bool)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetMiddleBone",
+      "kind": "Method",
+      "signature": "public void SetMiddleBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the middle bone index.",
+      "godotName": "set_middle_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetMiddleBone(int,int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetMiddleBoneName",
+      "kind": "Method",
+      "signature": "public void SetMiddleBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the middle bone name. [b]Note:[/b] The middle bone must be a child of the root bone.",
+      "godotName": "set_middle_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetMiddleBoneName(int,String)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetPoleDirection",
+      "kind": "Method",
+      "signature": "public void SetPoleDirection(int index, int direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the pole direction. The pole is on the middle bone and will direct to the pole target. The rotation axis is a vector that is orthogonal to this and the forward vector. [b]Note:[/b] The pole direction and the forward vector shouldn\u0027t be colinear to avoid unintended rotation.",
+      "godotName": "set_pole_direction",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetPoleDirection(int,int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetPoleDirectionVector",
+      "kind": "Method",
+      "signature": "public void SetPoleDirectionVector(int index, Vector3 vector)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "vector",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the pole direction vector. This vector is normalized by an internal process. If the vector length is [code]0[/code], it is considered synonymous with [constant SkeletonModifier3D.SECONDARY_DIRECTION_NONE].",
+      "godotName": "set_pole_direction_vector",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetPoleDirectionVector(int,Vector3)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetPoleNode",
+      "kind": "Method",
+      "signature": "public void SetPoleNode(int index, NodePath poleNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "pole_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the pole target node that constructs a plane which the joints are all on and the pole is trying to direct.",
+      "godotName": "set_pole_node",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetPoleNode(int,NodePath)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetRootBone",
+      "kind": "Method",
+      "signature": "public void SetRootBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the root bone index.",
+      "godotName": "set_root_bone",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetRootBone(int,int)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetRootBoneName",
+      "kind": "Method",
+      "signature": "public void SetRootBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the root bone name.",
+      "godotName": "set_root_bone_name",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetRootBoneName(int,String)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetTargetNode",
+      "kind": "Method",
+      "signature": "public void SetTargetNode(int index, NodePath targetNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "target_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the target node that the end bone is trying to reach.",
+      "godotName": "set_target_node",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetTargetNode(int,NodePath)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SetUseVirtualEnd",
+      "kind": "Method",
+      "signature": "public void SetUseVirtualEnd(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the end bone is extended from the middle bone as a virtual bone.",
+      "godotName": "set_use_virtual_end",
+      "xmlDocId": "M:Godot.TwoBoneIK3D.SetUseVirtualEnd(int,bool)",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.TwoBoneIK3D.SettingCount",
+      "sourcePath": "doc/classes/TwoBoneIK3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TwoBoneIK3D.xml",
+      "sha256": "f0ef0d24fb3c75a842d7250f6a3fe7aa07c866da2eef1dddafc6505a5edcee90"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

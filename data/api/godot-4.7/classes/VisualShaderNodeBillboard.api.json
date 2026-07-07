@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeBillboard",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeBillboard",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeBillboard",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodebillboard.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BillboardType",
+      "kind": "Property",
+      "signature": "public int BillboardType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the object faces the camera.",
+      "defaultValue": "1",
+      "godotName": "billboard_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeBillboard.BillboardType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    },
+    {
+      "name": "KeepScale",
+      "kind": "Property",
+      "signature": "public bool KeepScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the shader will keep the scale set for the mesh. Otherwise, the scale is lost when billboarding.",
+      "defaultValue": "false",
+      "godotName": "keep_scale",
+      "xmlDocId": "P:Godot.VisualShaderNodeBillboard.KeepScale",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BillboardType",
+      "values": [
+        {
+          "name": "BILLBOARD_TYPE_DISABLED",
+          "value": "0",
+          "enum": "BillboardType",
+          "kind": "EnumValue",
+          "summary": "Billboarding is disabled and the node does nothing.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+        },
+        {
+          "name": "BILLBOARD_TYPE_ENABLED",
+          "value": "1",
+          "enum": "BillboardType",
+          "kind": "EnumValue",
+          "summary": "A standard billboarding algorithm is enabled.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+        },
+        {
+          "name": "BILLBOARD_TYPE_FIXED_Y",
+          "value": "2",
+          "enum": "BillboardType",
+          "kind": "EnumValue",
+          "summary": "A billboarding algorithm to rotate around Y-axis is enabled.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+        },
+        {
+          "name": "BILLBOARD_TYPE_MAX",
+          "value": "4",
+          "enum": "BillboardType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BillboardType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+        },
+        {
+          "name": "BILLBOARD_TYPE_PARTICLES",
+          "value": "3",
+          "enum": "BillboardType",
+          "kind": "EnumValue",
+          "summary": "A billboarding algorithm designed to use on particles is enabled.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BILLBOARD_TYPE_DISABLED",
+      "value": "0",
+      "enum": "BillboardType",
+      "kind": "EnumValue",
+      "summary": "Billboarding is disabled and the node does nothing.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    },
+    {
+      "name": "BILLBOARD_TYPE_ENABLED",
+      "value": "1",
+      "enum": "BillboardType",
+      "kind": "EnumValue",
+      "summary": "A standard billboarding algorithm is enabled.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    },
+    {
+      "name": "BILLBOARD_TYPE_FIXED_Y",
+      "value": "2",
+      "enum": "BillboardType",
+      "kind": "EnumValue",
+      "summary": "A billboarding algorithm to rotate around Y-axis is enabled.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    },
+    {
+      "name": "BILLBOARD_TYPE_PARTICLES",
+      "value": "3",
+      "enum": "BillboardType",
+      "kind": "EnumValue",
+      "summary": "A billboarding algorithm designed to use on particles is enabled.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    },
+    {
+      "name": "BILLBOARD_TYPE_MAX",
+      "value": "4",
+      "enum": "BillboardType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BillboardType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeBillboard.xml",
+      "sha256": "8231e01b0e814901ffe29e61eac62d1498d770db07715e75382cd1529552eda1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

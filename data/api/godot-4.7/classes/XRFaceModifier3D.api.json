@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRFaceModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRFaceModifier3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "XRFaceModifier3D",
+    "documentationPath": "doc/classes/XRFaceModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrfacemodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FaceTracker",
+      "kind": "Property",
+      "signature": "public StringName FaceTracker { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The [XRFaceTracker] path.",
+      "defaultValue": "\u0026\u0022/user/face_tracker\u0022",
+      "godotName": "face_tracker",
+      "xmlDocId": "P:Godot.XRFaceModifier3D.FaceTracker",
+      "sourcePath": "doc/classes/XRFaceModifier3D.xml"
+    },
+    {
+      "name": "Target",
+      "kind": "Property",
+      "signature": "public NodePath Target { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [NodePath] of the face [MeshInstance3D].",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target",
+      "xmlDocId": "P:Godot.XRFaceModifier3D.Target",
+      "sourcePath": "doc/classes/XRFaceModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRFaceModifier3D.xml",
+      "sha256": "1764c8943711e05f05e229b9e47c9d6fc7103ab0896fee197a57b9d2c313c3da"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

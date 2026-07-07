@@ -1,0 +1,653 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectBodyState3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsDirectBodyState3D",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectBodyState3D",
+    "documentationPath": "doc/classes/PhysicsDirectBodyState3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsdirectbodystate3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void AddConstantCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]constant_force = Vector3(0, 0, 0)[/code]. This is equivalent to using [method add_constant_force] at the body\u0027s center of mass.",
+      "godotName": "add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.AddConstantCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "AddConstantForce",
+      "kind": "Method",
+      "signature": "public void AddConstantForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]constant_force = Vector3(0, 0, 0)[/code]. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.AddConstantForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void AddConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Adds a constant rotational force without affecting position that keeps being applied over time until cleared with [code]constant_torque = Vector3(0, 0, 0)[/code].",
+      "godotName": "add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.AddConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void ApplyCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Applies a directional force without affecting rotation. A force is time dependent and meant to be applied every physics update. This is equivalent to using [method apply_force] at the body\u0027s center of mass.",
+      "godotName": "apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyCentralImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Applies a directional impulse without affecting rotation. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). This is equivalent to using [method apply_impulse] at the body\u0027s center of mass.",
+      "godotName": "apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyCentralImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyForce",
+      "kind": "Method",
+      "signature": "public void ApplyForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned force to the body. A force is time dependent and meant to be applied every physics update. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "apply_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyImpulse(Vector3 impulse, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned impulse to the body. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyImpulse(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyTorque",
+      "kind": "Method",
+      "signature": "public void ApplyTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Applies a rotational force without affecting position. A force is time dependent and meant to be applied every physics update. [b]Note:[/b] [member inverse_inertia] is required for this to work. To have [member inverse_inertia], an active [CollisionShape3D] must be a child of the node, or you can manually set [member inverse_inertia].",
+      "godotName": "apply_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyTorqueImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Applies a rotational impulse to the body without affecting the position. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). [b]Note:[/b] [member inverse_inertia] is required for this to work. To have [member inverse_inertia], an active [CollisionShape3D] must be a child of the node, or you can manually set [member inverse_inertia].",
+      "godotName": "apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.ApplyTorqueImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector3 GetConstantForce()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the body\u0027s total constant positional forces applied during each physics update. See [method add_constant_force] and [method add_constant_central_force].",
+      "godotName": "get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetConstantForce",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetConstantTorque",
+      "kind": "Method",
+      "signature": "public Vector3 GetConstantTorque()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the body\u0027s total constant rotational forces applied during each physics update. See [method add_constant_torque].",
+      "godotName": "get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetConstantTorque",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactCollider",
+      "kind": "Method",
+      "signature": "public RID GetContactCollider(int contactIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collider\u0027s [RID].",
+      "godotName": "get_contact_collider",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactCollider(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactColliderId",
+      "kind": "Method",
+      "signature": "public int GetContactColliderId(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collider\u0027s object id.",
+      "godotName": "get_contact_collider_id",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactColliderObject",
+      "kind": "Method",
+      "signature": "public Object GetContactColliderObject(int contactIdx)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collider object.",
+      "godotName": "get_contact_collider_object",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactColliderObject(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactColliderPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactColliderPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the contact point on the collider in the global coordinate system.",
+      "godotName": "get_contact_collider_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactColliderPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactColliderShape",
+      "kind": "Method",
+      "signature": "public int GetContactColliderShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collider\u0027s shape index.",
+      "godotName": "get_contact_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactColliderVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactColliderVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the linear velocity vector at the collider\u0027s contact point.",
+      "godotName": "get_contact_collider_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactColliderVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactCount",
+      "kind": "Method",
+      "signature": "public int GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of contacts this body has with other bodies. [b]Note:[/b] By default, this returns 0 unless bodies are configured to monitor contacts. See [member RigidBody3D.contact_monitor].",
+      "godotName": "get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactCount",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactImpulse",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactImpulse(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Impulse created by the contact.",
+      "godotName": "get_contact_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactImpulse(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactLocalNormal",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactLocalNormal(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local normal at the contact point.",
+      "godotName": "get_contact_local_normal",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactLocalNormal(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactLocalPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the contact point on the body in the global coordinate system.",
+      "godotName": "get_contact_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactLocalPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactLocalShape",
+      "kind": "Method",
+      "signature": "public int GetContactLocalShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local shape index of the collision.",
+      "godotName": "get_contact_local_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetContactLocalVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactLocalVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the linear velocity vector at the body\u0027s contact point.",
+      "godotName": "get_contact_local_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetContactLocalVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetSpaceState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState3D GetSpaceState()",
+      "returnType": "PhysicsDirectSpaceState3D",
+      "parameters": [],
+      "summary": "Returns the current state of the space, useful for queries.",
+      "godotName": "get_space_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetSpaceState",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "GetVelocityAtLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetVelocityAtLocalPosition(Vector3 localPosition)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the body\u0027s velocity at the given relative position. [param local_position] is the offset from the body origin in global coordinates.",
+      "godotName": "get_velocity_at_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.GetVelocityAtLocalPosition(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "IntegrateForces",
+      "kind": "Method",
+      "signature": "public void IntegrateForces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Updates the body\u0027s linear and angular velocity by applying gravity and damping for the equivalent of one physics tick.",
+      "godotName": "integrate_forces",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.IntegrateForces",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "SetConstantForce",
+      "kind": "Method",
+      "signature": "public void SetConstantForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the body\u0027s total constant positional forces applied during each physics update. See [method add_constant_force] and [method add_constant_central_force].",
+      "godotName": "set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.SetConstantForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "SetConstantTorque",
+      "kind": "Method",
+      "signature": "public void SetConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the body\u0027s total constant rotational forces applied during each physics update. See [method add_constant_torque].",
+      "godotName": "set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3D.SetConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 AngularVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The body\u0027s rotational velocity in [i]radians[/i] per second.",
+      "godotName": "angular_velocity",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.AngularVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "CenterOfMass",
+      "kind": "Property",
+      "signature": "public Vector3 CenterOfMass { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The body\u0027s center of mass position relative to the body\u0027s center in the global coordinate system.",
+      "godotName": "center_of_mass",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.CenterOfMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "CenterOfMassLocal",
+      "kind": "Property",
+      "signature": "public Vector3 CenterOfMassLocal { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The body\u0027s center of mass position in the body\u0027s local coordinate system.",
+      "godotName": "center_of_mass_local",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.CenterOfMassLocal",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public int CollisionLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The body\u0027s collision layer.",
+      "godotName": "collision_layer",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.CollisionLayer",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The body\u0027s collision mask.",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.CollisionMask",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "InverseInertia",
+      "kind": "Property",
+      "signature": "public Vector3 InverseInertia { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The inverse of the inertia of the body.",
+      "godotName": "inverse_inertia",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.InverseInertia",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "InverseInertiaTensor",
+      "kind": "Property",
+      "signature": "public Basis InverseInertiaTensor { get; set; }",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "The inverse of the inertia tensor of the body.",
+      "godotName": "inverse_inertia_tensor",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.InverseInertiaTensor",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "InverseMass",
+      "kind": "Property",
+      "signature": "public float InverseMass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inverse of the mass of the body.",
+      "godotName": "inverse_mass",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.InverseMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 LinearVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The body\u0027s linear velocity in units per second.",
+      "godotName": "linear_velocity",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.LinearVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "PrincipalInertiaAxes",
+      "kind": "Property",
+      "signature": "public Basis PrincipalInertiaAxes { get; set; }",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "",
+      "godotName": "principal_inertia_axes",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.PrincipalInertiaAxes",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "Sleeping",
+      "kind": "Property",
+      "signature": "public bool Sleeping { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this body is currently sleeping (not active).",
+      "godotName": "sleeping",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.Sleeping",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The timestep (delta) used for the simulation.",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.Step",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "TotalAngularDamp",
+      "kind": "Property",
+      "signature": "public float TotalAngularDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate at which the body stops rotating, if there are not any other forces moving it.",
+      "godotName": "total_angular_damp",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.TotalAngularDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "TotalGravity",
+      "kind": "Property",
+      "signature": "public Vector3 TotalGravity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The total gravity vector being currently applied to this body.",
+      "godotName": "total_gravity",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.TotalGravity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "TotalLinearDamp",
+      "kind": "Property",
+      "signature": "public float TotalLinearDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate at which the body stops moving, if there are not any other forces moving it.",
+      "godotName": "total_linear_damp",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.TotalLinearDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform3D Transform { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "The body\u0027s transformation matrix.",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.PhysicsDirectBodyState3D.Transform",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsDirectBodyState3D.xml",
+      "sha256": "8ce7576c9f5d944aee9db65a27234fc627113143983a164a35e9a6c8c7616817"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

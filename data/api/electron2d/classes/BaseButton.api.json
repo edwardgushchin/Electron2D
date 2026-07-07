@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BaseButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.BaseButton",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "BaseButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "BaseButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.BaseButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.BaseButton\u0060 class.",
+      "xmlDocId": "M:Electron2D.BaseButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "BaseButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.BaseButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.BaseButton\u0060 class.",
+      "xmlDocId": "M:Electron2D.BaseButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this button.",
+      "xmlDocId": "M:Electron2D.BaseButton._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionMode",
+      "kind": "Property",
+      "signature": "public Electron2D.BaseButton.ActionMode ActionMode { get; set; }",
+      "returnType": "Electron2D.BaseButton.ActionMode",
+      "parameters": [],
+      "summary": "Gets or sets when this button activates.",
+      "xmlDocId": "P:Electron2D.BaseButton.ActionMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ButtonPressed",
+      "kind": "Property",
+      "signature": "public System.Boolean ButtonPressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this button is currently pressed as a toggle.",
+      "xmlDocId": "P:Electron2D.BaseButton.ButtonPressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public System.Boolean Disabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this button is disabled.",
+      "xmlDocId": "P:Electron2D.BaseButton.Disabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public System.Boolean ToggleMode { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this button toggles its pressed state.",
+      "xmlDocId": "P:Electron2D.BaseButton.ToggleMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this button.",
+      "xmlDocId": "M:Electron2D.BaseButton._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

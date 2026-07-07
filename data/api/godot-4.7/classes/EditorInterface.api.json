@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorInterface",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorInterface",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorInterface",
+    "documentationPath": "doc/classes/EditorInterface.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorinterface.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddRootNode",
+      "kind": "Method",
+      "signature": "public void AddRootNode(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Makes [param node] root of the currently opened scene. Only works if the scene is empty. If the [param node] is a scene instance, an inheriting scene will be created.",
+      "godotName": "add_root_node",
+      "xmlDocId": "M:Godot.EditorInterface.AddRootNode(Node)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "CloseScene",
+      "kind": "Method",
+      "signature": "public int CloseScene()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Closes the currently active scene, discarding any pending changes in the process. Returns [constant OK] on success or [constant ERR_DOES_NOT_EXIST] if there is no scene to close.",
+      "godotName": "close_scene",
+      "xmlDocId": "M:Godot.EditorInterface.CloseScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "EditNode",
+      "kind": "Method",
+      "signature": "public void EditNode(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Edits the given [Node]. The node will be also selected if it\u0027s inside the scene tree.",
+      "godotName": "edit_node",
+      "xmlDocId": "M:Godot.EditorInterface.EditNode(Node)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "EditResource",
+      "kind": "Method",
+      "signature": "public void EditResource(Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Edits the given [Resource]. If the resource is a [Script] you can also edit it with [method edit_script] to specify the line and column position.",
+      "godotName": "edit_resource",
+      "xmlDocId": "M:Godot.EditorInterface.EditResource(Resource)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "EditScript",
+      "kind": "Method",
+      "signature": "public void EditScript(Script script, int line, int column, bool grabFocus)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "column",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "grab_focus",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Edits the given [Script]. The line and column on which to open the script can also be specified. The script will be open with the user-configured editor for the script\u0027s language which may be an external editor.",
+      "godotName": "edit_script",
+      "xmlDocId": "M:Godot.EditorInterface.EditScript(Script,int,int,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetBaseControl",
+      "kind": "Method",
+      "signature": "public Control GetBaseControl()",
+      "returnType": "Control",
+      "parameters": [],
+      "summary": "Returns the main container of Godot editor\u0027s window. For example, you can use it to retrieve the size of the container and place your controls accordingly. [b]Warning:[/b] Removing and freeing this node will render the editor useless and may cause a crash.",
+      "godotName": "get_base_control",
+      "xmlDocId": "M:Godot.EditorInterface.GetBaseControl",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetCommandPalette",
+      "kind": "Method",
+      "signature": "public EditorCommandPalette GetCommandPalette()",
+      "returnType": "EditorCommandPalette",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorCommandPalette] instance. [b]Warning:[/b] Removing and freeing this node will render a part of the editor useless and may cause a crash.",
+      "godotName": "get_command_palette",
+      "xmlDocId": "M:Godot.EditorInterface.GetCommandPalette",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetCurrentDirectory",
+      "kind": "Method",
+      "signature": "public String GetCurrentDirectory()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the current directory being viewed in the [FileSystemDock]. If a file is selected, its base directory will be returned using [method String.get_base_dir] instead.",
+      "godotName": "get_current_directory",
+      "xmlDocId": "M:Godot.EditorInterface.GetCurrentDirectory",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetCurrentFeatureProfile",
+      "kind": "Method",
+      "signature": "public String GetCurrentFeatureProfile()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the currently activated feature profile. If the default profile is currently active, an empty string is returned instead. In order to get a reference to the [EditorFeatureProfile], you must load the feature profile using [method EditorFeatureProfile.load_from_file]. [b]Note:[/b] Feature profiles created via the user interface are loaded from the [code]feature_profiles[/code] directory, as a file with the [code].profile[/code] extension. The editor configuration folder can be found by using [method EditorPaths.get_config_dir].",
+      "godotName": "get_current_feature_profile",
+      "xmlDocId": "M:Godot.EditorInterface.GetCurrentFeatureProfile",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetCurrentPath",
+      "kind": "Method",
+      "signature": "public String GetCurrentPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the current path being viewed in the [FileSystemDock].",
+      "godotName": "get_current_path",
+      "xmlDocId": "M:Godot.EditorInterface.GetCurrentPath",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditedSceneRoot",
+      "kind": "Method",
+      "signature": "public Node GetEditedSceneRoot()",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "Returns the edited (current) scene\u0027s root [Node].",
+      "godotName": "get_edited_scene_root",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditedSceneRoot",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorLanguage",
+      "kind": "Method",
+      "signature": "public String GetEditorLanguage()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the language currently used for the editor interface.",
+      "godotName": "get_editor_language",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorLanguage",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorMainScreen",
+      "kind": "Method",
+      "signature": "public VBoxContainer GetEditorMainScreen()",
+      "returnType": "VBoxContainer",
+      "parameters": [],
+      "summary": "Returns the editor control responsible for main screen plugins and tools. Use it with plugins that implement [method EditorPlugin._has_main_screen]. [b]Note:[/b] This node is a [VBoxContainer], which means that if you add a [Control] child to it, you need to set the child\u0027s [member Control.size_flags_vertical] to [constant Control.SIZE_EXPAND_FILL] to make it use the full available space. [b]Warning:[/b] Removing and freeing this node will render a part of the editor useless and may cause a crash.",
+      "godotName": "get_editor_main_screen",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorMainScreen",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorPaths",
+      "kind": "Method",
+      "signature": "public EditorPaths GetEditorPaths()",
+      "returnType": "EditorPaths",
+      "parameters": [],
+      "summary": "Returns the [EditorPaths] singleton.",
+      "godotName": "get_editor_paths",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorPaths",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorScale",
+      "kind": "Method",
+      "signature": "public float GetEditorScale()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the actual scale of the editor UI ([code]1.0[/code] being 100% scale). This can be used to adjust position and dimensions of the UI added by plugins. [b]Note:[/b] This value is set via the [member EditorSettings.interface/editor/appearance/display_scale] and [member EditorSettings.interface/editor/appearance/custom_display_scale] settings. The editor must be restarted for changes to be properly applied.",
+      "godotName": "get_editor_scale",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorScale",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorSettings",
+      "kind": "Method",
+      "signature": "public EditorSettings GetEditorSettings()",
+      "returnType": "EditorSettings",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorSettings] instance.",
+      "godotName": "get_editor_settings",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorSettings",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorTheme",
+      "kind": "Method",
+      "signature": "public Theme GetEditorTheme()",
+      "returnType": "Theme",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [Theme]. [b]Note:[/b] When creating custom editor UI, prefer accessing theme items directly from your GUI nodes using the [code]get_theme_*[/code] methods.",
+      "godotName": "get_editor_theme",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorTheme",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorToaster",
+      "kind": "Method",
+      "signature": "public EditorToaster GetEditorToaster()",
+      "returnType": "EditorToaster",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorToaster].",
+      "godotName": "get_editor_toaster",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorToaster",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorUndoRedo",
+      "kind": "Method",
+      "signature": "public EditorUndoRedoManager GetEditorUndoRedo()",
+      "returnType": "EditorUndoRedoManager",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorUndoRedoManager].",
+      "godotName": "get_editor_undo_redo",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorUndoRedo",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorViewport2d",
+      "kind": "Method",
+      "signature": "public SubViewport GetEditorViewport2d()",
+      "returnType": "SubViewport",
+      "parameters": [],
+      "summary": "Returns the 2D editor [SubViewport]. It does not have a camera. Instead, the view transforms are done directly and can be accessed with [member Viewport.global_canvas_transform].",
+      "godotName": "get_editor_viewport_2d",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorViewport2d",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetEditorViewport3d",
+      "kind": "Method",
+      "signature": "public SubViewport GetEditorViewport3d(int idx)",
+      "returnType": "SubViewport",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the specified 3D editor [SubViewport], from [code]0[/code] to [code]3[/code]. The viewport can be used to access the active editor cameras with [method Viewport.get_camera_3d].",
+      "godotName": "get_editor_viewport_3d",
+      "xmlDocId": "M:Godot.EditorInterface.GetEditorViewport3d(int)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetFileSystemDock",
+      "kind": "Method",
+      "signature": "public FileSystemDock GetFileSystemDock()",
+      "returnType": "FileSystemDock",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [FileSystemDock] instance. [b]Warning:[/b] Removing and freeing this node will render a part of the editor useless and may cause a crash.",
+      "godotName": "get_file_system_dock",
+      "xmlDocId": "M:Godot.EditorInterface.GetFileSystemDock",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetInspector",
+      "kind": "Method",
+      "signature": "public EditorInspector GetInspector()",
+      "returnType": "EditorInspector",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorInspector] instance. [b]Warning:[/b] Removing and freeing this node will render a part of the editor useless and may cause a crash.",
+      "godotName": "get_inspector",
+      "xmlDocId": "M:Godot.EditorInterface.GetInspector",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetNode3dRotateSnap",
+      "kind": "Method",
+      "signature": "public float GetNode3dRotateSnap()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the amount of degrees the 3D editor\u0027s rotational snapping is set to.",
+      "godotName": "get_node_3d_rotate_snap",
+      "xmlDocId": "M:Godot.EditorInterface.GetNode3dRotateSnap",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetNode3dScaleSnap",
+      "kind": "Method",
+      "signature": "public float GetNode3dScaleSnap()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the amount of units the 3D editor\u0027s scale snapping is set to.",
+      "godotName": "get_node_3d_scale_snap",
+      "xmlDocId": "M:Godot.EditorInterface.GetNode3dScaleSnap",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetNode3dTranslateSnap",
+      "kind": "Method",
+      "signature": "public float GetNode3dTranslateSnap()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the amount of units the 3D editor\u0027s translation snapping is set to.",
+      "godotName": "get_node_3d_translate_snap",
+      "xmlDocId": "M:Godot.EditorInterface.GetNode3dTranslateSnap",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetOpenSceneRoots",
+      "kind": "Method",
+      "signature": "public Node[] GetOpenSceneRoots()",
+      "returnType": "Node[]",
+      "parameters": [],
+      "summary": "Returns an array with references to the root nodes of the currently opened scenes.",
+      "godotName": "get_open_scene_roots",
+      "xmlDocId": "M:Godot.EditorInterface.GetOpenSceneRoots",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetOpenScenes",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetOpenScenes()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array with the file paths of the currently opened scenes.",
+      "godotName": "get_open_scenes",
+      "xmlDocId": "M:Godot.EditorInterface.GetOpenScenes",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetPlayingScene",
+      "kind": "Method",
+      "signature": "public String GetPlayingScene()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the scene that is being played. If no scene is currently being played, returns an empty string.",
+      "godotName": "get_playing_scene",
+      "xmlDocId": "M:Godot.EditorInterface.GetPlayingScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetResourceFilesystem",
+      "kind": "Method",
+      "signature": "public EditorFileSystem GetResourceFilesystem()",
+      "returnType": "EditorFileSystem",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorFileSystem] instance.",
+      "godotName": "get_resource_filesystem",
+      "xmlDocId": "M:Godot.EditorInterface.GetResourceFilesystem",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetResourcePreviewer",
+      "kind": "Method",
+      "signature": "public EditorResourcePreview GetResourcePreviewer()",
+      "returnType": "EditorResourcePreview",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorResourcePreview] instance.",
+      "godotName": "get_resource_previewer",
+      "xmlDocId": "M:Godot.EditorInterface.GetResourcePreviewer",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetScriptEditor",
+      "kind": "Method",
+      "signature": "public ScriptEditor GetScriptEditor()",
+      "returnType": "ScriptEditor",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [ScriptEditor] instance. [b]Warning:[/b] Removing and freeing this node will render a part of the editor useless and may cause a crash.",
+      "godotName": "get_script_editor",
+      "xmlDocId": "M:Godot.EditorInterface.GetScriptEditor",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetSelectedPaths",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSelectedPaths()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array containing the paths of the currently selected files (and directories) in the [FileSystemDock].",
+      "godotName": "get_selected_paths",
+      "xmlDocId": "M:Godot.EditorInterface.GetSelectedPaths",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetSelection",
+      "kind": "Method",
+      "signature": "public EditorSelection GetSelection()",
+      "returnType": "EditorSelection",
+      "parameters": [],
+      "summary": "Returns the editor\u0027s [EditorSelection] instance.",
+      "godotName": "get_selection",
+      "xmlDocId": "M:Godot.EditorInterface.GetSelection",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "GetUnsavedScenes",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetUnsavedScenes()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of file paths of currently unsaved scenes.",
+      "godotName": "get_unsaved_scenes",
+      "xmlDocId": "M:Godot.EditorInterface.GetUnsavedScenes",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "InspectObject",
+      "kind": "Method",
+      "signature": "public void InspectObject(Object @object, String forProperty, bool inspectorOnly)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "for_property",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "inspector_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Shows the given property on the given [param object] in the editor\u0027s Inspector dock. If [param inspector_only] is [code]true[/code], plugins will not attempt to edit [param object].",
+      "godotName": "inspect_object",
+      "xmlDocId": "M:Godot.EditorInterface.InspectObject(Object,String,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "IsMultiWindowEnabled",
+      "kind": "Method",
+      "signature": "public bool IsMultiWindowEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if multiple window support is enabled in the editor. Multiple window support is enabled if [i]all[/i] of these statements are true: - [member EditorSettings.interface/multi_window/enable] is [code]true[/code]. - [member EditorSettings.interface/editor/display/single_window_mode] is [code]false[/code]. - [member Viewport.gui_embed_subwindows] is [code]false[/code]. This is forced to [code]true[/code] on platforms that don\u0027t support multiple windows such as Web, or when the [code]--single-window[/code] [url=$DOCS_URL/tutorials/editor/command_line_tutorial.html]command line argument[/url] is used.",
+      "godotName": "is_multi_window_enabled",
+      "xmlDocId": "M:Godot.EditorInterface.IsMultiWindowEnabled",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "IsNode3dSnapEnabled",
+      "kind": "Method",
+      "signature": "public bool IsNode3dSnapEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the 3D editor currently has snapping mode enabled, and [code]false[/code] otherwise.",
+      "godotName": "is_node_3d_snap_enabled",
+      "xmlDocId": "M:Godot.EditorInterface.IsNode3dSnapEnabled",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "IsObjectEdited",
+      "kind": "Method",
+      "signature": "public bool IsObjectEdited(Object @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the object has been marked as edited through [method set_object_edited].",
+      "godotName": "is_object_edited",
+      "xmlDocId": "M:Godot.EditorInterface.IsObjectEdited(Object)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "IsPlayingScene",
+      "kind": "Method",
+      "signature": "public bool IsPlayingScene()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a scene is currently being played, [code]false[/code] otherwise. Paused scenes are considered as being played.",
+      "godotName": "is_playing_scene",
+      "xmlDocId": "M:Godot.EditorInterface.IsPlayingScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "IsPluginEnabled",
+      "kind": "Method",
+      "signature": "public bool IsPluginEnabled(String plugin)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "plugin",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param plugin] is enabled. The plugin name is the same as its directory name.",
+      "godotName": "is_plugin_enabled",
+      "xmlDocId": "M:Godot.EditorInterface.IsPluginEnabled(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "MakeMeshPreviews",
+      "kind": "Method",
+      "signature": "public Texture2D[] MakeMeshPreviews(Mesh[] meshes, int previewSize)",
+      "returnType": "Texture2D[]",
+      "parameters": [
+        {
+          "name": "meshes",
+          "type": "Mesh[]"
+        },
+        {
+          "name": "preview_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns mesh previews rendered at the given size as an [Array] of [Texture2D]s.",
+      "godotName": "make_mesh_previews",
+      "xmlDocId": "M:Godot.EditorInterface.MakeMeshPreviews(Mesh[],int)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "MarkSceneAsUnsaved",
+      "kind": "Method",
+      "signature": "public void MarkSceneAsUnsaved()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Marks the current scene tab as unsaved.",
+      "godotName": "mark_scene_as_unsaved",
+      "xmlDocId": "M:Godot.EditorInterface.MarkSceneAsUnsaved",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "OpenSceneFromPath",
+      "kind": "Method",
+      "signature": "public void OpenSceneFromPath(String sceneFilepath, bool setInherited)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene_filepath",
+          "type": "String"
+        },
+        {
+          "name": "set_inherited",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Opens the scene at the given path. If [param set_inherited] is [code]true[/code], creates a new inherited scene.",
+      "godotName": "open_scene_from_path",
+      "xmlDocId": "M:Godot.EditorInterface.OpenSceneFromPath(String,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PlayCurrentScene",
+      "kind": "Method",
+      "signature": "public void PlayCurrentScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Plays the currently active scene.",
+      "godotName": "play_current_scene",
+      "xmlDocId": "M:Godot.EditorInterface.PlayCurrentScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PlayCustomScene",
+      "kind": "Method",
+      "signature": "public void PlayCustomScene(String sceneFilepath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene_filepath",
+          "type": "String"
+        }
+      ],
+      "summary": "Plays the scene specified by its filepath.",
+      "godotName": "play_custom_scene",
+      "xmlDocId": "M:Godot.EditorInterface.PlayCustomScene(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PlayMainScene",
+      "kind": "Method",
+      "signature": "public void PlayMainScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Plays the main scene.",
+      "godotName": "play_main_scene",
+      "xmlDocId": "M:Godot.EditorInterface.PlayMainScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupCreateDialog",
+      "kind": "Method",
+      "signature": "public void PopupCreateDialog(Callable callback, StringName baseType, String currentType, String dialogTitle, StringName[] typeBlocklist)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "base_type",
+          "type": "StringName",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "current_type",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "dialog_title",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "type_blocklist",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Pops up an editor dialog for creating an object. The [param callback] must take a single argument of type [String], which will contain the type name of the selected object (or the script path of the type, if the type is created from a script), or be an empty string if no item is selected. The [param base_type] specifies the base type of objects to display. For example, if you set this to \u0022Resource\u0022, all types derived from [Resource] will display in the create dialog. The [param current_type] will be passed in the search box of the create dialog, and the specified type can be immediately selected when the dialog pops up. If the [param current_type] is not derived from [param base_type], there will be no result of the type in the dialog. The [param dialog_title] allows you to define a custom title for the dialog. This is useful if you want to accurately hint the usage of the dialog. If the [param dialog_title] is an empty string, the dialog will use \u0022Create New \u0027Base Type\u0027\u0022 as the default title. The [param type_blocklist] contains a list of type names, and the types in the blocklist will be hidden from the create dialog. [b]Note:[/b] Trying to list the base type in the [param type_blocklist] will hide all types derived from the base type from the create dialog.",
+      "godotName": "popup_create_dialog",
+      "xmlDocId": "M:Godot.EditorInterface.PopupCreateDialog(Callable,StringName,String,String,StringName[])",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupDialog",
+      "kind": "Method",
+      "signature": "public void PopupDialog(Window dialog, Rect2i rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dialog",
+          "type": "Window"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2i",
+          "defaultValue": "Rect2i(0, 0, 0, 0)"
+        }
+      ],
+      "summary": "Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive]. The dialog must have no current parent, otherwise the method fails. See also [method Window.set_unparent_when_invisible].",
+      "godotName": "popup_dialog",
+      "xmlDocId": "M:Godot.EditorInterface.PopupDialog(Window,Rect2i)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupDialogCentered",
+      "kind": "Method",
+      "signature": "public void PopupDialogCentered(Window dialog, Vector2i minsize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dialog",
+          "type": "Window"
+        },
+        {
+          "name": "minsize",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(0, 0)"
+        }
+      ],
+      "summary": "Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive_centered]. The dialog must have no current parent, otherwise the method fails. See also [method Window.set_unparent_when_invisible].",
+      "godotName": "popup_dialog_centered",
+      "xmlDocId": "M:Godot.EditorInterface.PopupDialogCentered(Window,Vector2i)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupDialogCenteredClamped",
+      "kind": "Method",
+      "signature": "public void PopupDialogCenteredClamped(Window dialog, Vector2i minsize, float fallbackRatio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dialog",
+          "type": "Window"
+        },
+        {
+          "name": "minsize",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(0, 0)"
+        },
+        {
+          "name": "fallback_ratio",
+          "type": "float",
+          "defaultValue": "0.75"
+        }
+      ],
+      "summary": "Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive_centered_clamped]. The dialog must have no current parent, otherwise the method fails. See also [method Window.set_unparent_when_invisible].",
+      "godotName": "popup_dialog_centered_clamped",
+      "xmlDocId": "M:Godot.EditorInterface.PopupDialogCenteredClamped(Window,Vector2i,float)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupDialogCenteredRatio",
+      "kind": "Method",
+      "signature": "public void PopupDialogCenteredRatio(Window dialog, float ratio)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dialog",
+          "type": "Window"
+        },
+        {
+          "name": "ratio",
+          "type": "float",
+          "defaultValue": "0.8"
+        }
+      ],
+      "summary": "Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive_centered_ratio]. The dialog must have no current parent, otherwise the method fails. See also [method Window.set_unparent_when_invisible].",
+      "godotName": "popup_dialog_centered_ratio",
+      "xmlDocId": "M:Godot.EditorInterface.PopupDialogCenteredRatio(Window,float)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupMethodSelector",
+      "kind": "Method",
+      "signature": "public void PopupMethodSelector(Object @object, Callable callback, String currentValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "current_value",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Pops up an editor dialog for selecting a method from [param object]. The [param callback] must take a single argument of type [String] which will contain the name of the selected method or be empty if the dialog is canceled. If [param current_value] is provided, the method will be selected automatically in the method list, if it exists.",
+      "godotName": "popup_method_selector",
+      "xmlDocId": "M:Godot.EditorInterface.PopupMethodSelector(Object,Callable,String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupNodeSelector",
+      "kind": "Method",
+      "signature": "public void PopupNodeSelector(Callable callback, StringName[] validTypes, Node currentValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "valid_types",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "current_value",
+          "type": "Node",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Pops up an editor dialog for selecting a [Node] from the edited scene. The [param callback] must take a single argument of type [NodePath]. It is called on the selected [NodePath] or the empty path [code]^\u0022\u0022[/code] if the dialog is canceled. If [param valid_types] is provided, the dialog will only show Nodes that match one of the listed Node types. If [param current_value] is provided, the Node will be automatically selected in the tree, if it exists. [b]Example:[/b] Display the node selection dialog as soon as this node is added to the tree for the first time: [codeblock] func _ready(): if Engine.is_editor_hint(): EditorInterface.popup_node_selector(_on_node_selected, [\u0022Button\u0022]) func _on_node_selected(node_path): if node_path.is_empty(): print(\u0022node selection canceled\u0022) else: print(\u0022selected \u0022, node_path) [/codeblock]",
+      "godotName": "popup_node_selector",
+      "xmlDocId": "M:Godot.EditorInterface.PopupNodeSelector(Callable,StringName[],Node)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupPropertySelector",
+      "kind": "Method",
+      "signature": "public void PopupPropertySelector(Object @object, Callable callback, PackedInt32Array typeFilter, String currentValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "type_filter",
+          "type": "PackedInt32Array",
+          "defaultValue": "PackedInt32Array()"
+        },
+        {
+          "name": "current_value",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Pops up an editor dialog for selecting properties from [param object]. The [param callback] must take a single argument of type [NodePath]. It is called on the selected property path (see [method NodePath.get_as_property_path]) or the empty path [code]^\u0022\u0022[/code] if the dialog is canceled. If [param type_filter] is provided, the dialog will only show properties that match one of the listed [enum Variant.Type] values. If [param current_value] is provided, the property will be selected automatically in the property list, if it exists. [codeblock] func _ready(): if Engine.is_editor_hint(): EditorInterface.popup_property_selector(this, _on_property_selected, [TYPE_INT]) func _on_property_selected(property_path): if property_path.is_empty(): print(\u0022property selection canceled\u0022) else: print(\u0022selected \u0022, property_path) [/codeblock]",
+      "godotName": "popup_property_selector",
+      "xmlDocId": "M:Godot.EditorInterface.PopupPropertySelector(Object,Callable,PackedInt32Array,String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "PopupQuickOpen",
+      "kind": "Method",
+      "signature": "public void PopupQuickOpen(Callable callback, StringName[] baseTypes)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        },
+        {
+          "name": "base_types",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Pops up an editor dialog for quick selecting a resource file. The [param callback] must take a single argument of type [String] which will contain the path of the selected resource or be empty if the dialog is canceled. If [param base_types] is provided, the dialog will only show resources that match these types. Only types deriving from [Resource] are supported.",
+      "godotName": "popup_quick_open",
+      "xmlDocId": "M:Godot.EditorInterface.PopupQuickOpen(Callable,StringName[])",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "ReloadSceneFromPath",
+      "kind": "Method",
+      "signature": "public void ReloadSceneFromPath(String sceneFilepath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene_filepath",
+          "type": "String"
+        }
+      ],
+      "summary": "Reloads the scene at the given path. Fails if the scene is not open.",
+      "godotName": "reload_scene_from_path",
+      "xmlDocId": "M:Godot.EditorInterface.ReloadSceneFromPath(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "RestartEditor",
+      "kind": "Method",
+      "signature": "public void RestartEditor(bool save)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "save",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Restarts the editor. This closes the editor and then opens the same project. If [param save] is [code]true[/code], the project will be saved before restarting.",
+      "godotName": "restart_editor",
+      "xmlDocId": "M:Godot.EditorInterface.RestartEditor(bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SaveAllScenes",
+      "kind": "Method",
+      "signature": "public void SaveAllScenes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Saves all opened scenes in the editor.",
+      "godotName": "save_all_scenes",
+      "xmlDocId": "M:Godot.EditorInterface.SaveAllScenes",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SaveScene",
+      "kind": "Method",
+      "signature": "public int SaveScene()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Saves the currently active scene. Returns either [constant OK] or [constant ERR_CANT_CREATE].",
+      "godotName": "save_scene",
+      "xmlDocId": "M:Godot.EditorInterface.SaveScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SaveSceneAs",
+      "kind": "Method",
+      "signature": "public void SaveSceneAs(String path, bool withPreview)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "with_preview",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Saves the currently active scene as a file at [param path].",
+      "godotName": "save_scene_as",
+      "xmlDocId": "M:Godot.EditorInterface.SaveSceneAs(String,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SelectFile",
+      "kind": "Method",
+      "signature": "public void SelectFile(String file)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Selects the file, with the path provided by [param file], in the FileSystem dock.",
+      "godotName": "select_file",
+      "xmlDocId": "M:Godot.EditorInterface.SelectFile(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SetCurrentFeatureProfile",
+      "kind": "Method",
+      "signature": "public void SetCurrentFeatureProfile(String profileName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "profile_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Selects and activates the specified feature profile with the given [param profile_name]. Set [param profile_name] to an empty string to reset to the default feature profile. A feature profile can be created programmatically using the [EditorFeatureProfile] class. [b]Note:[/b] The feature profile that gets activated must be located in the [code]feature_profiles[/code] directory, as a file with the [code].profile[/code] extension. If a profile could not be found, an error occurs. The editor configuration folder can be found by using [method EditorPaths.get_config_dir].",
+      "godotName": "set_current_feature_profile",
+      "xmlDocId": "M:Godot.EditorInterface.SetCurrentFeatureProfile(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SetMainScreenEditor",
+      "kind": "Method",
+      "signature": "public void SetMainScreenEditor(String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the editor\u0027s current main screen to the one specified in [param name]. [param name] must match the title of the tab in question exactly (e.g. [code]2D[/code], [code]3D[/code], [code skip-lint]Script[/code], [code]Game[/code], or [code]Asset Store[/code] for default tabs).",
+      "godotName": "set_main_screen_editor",
+      "xmlDocId": "M:Godot.EditorInterface.SetMainScreenEditor(String)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SetObjectEdited",
+      "kind": "Method",
+      "signature": "public void SetObjectEdited(Object @object, bool edited)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "edited",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param edited] is [code]true[/code], the object is marked as edited. [b]Note:[/b] This is primarily used by the editor for [Resource] based objects to track their modified state. For example, any changes to an open scene, a resource in the inspector, or an edited script will cause this method to be called with [code]true[/code]. Saving the scene, script, or resource resets the edited state by calling this method with [code]false[/code]. [b]Note:[/b] Each call to this method increments the object\u0027s edited version. This is used to track changes in the editor and to trigger when thumbnails should be regenerated for resources.",
+      "godotName": "set_object_edited",
+      "xmlDocId": "M:Godot.EditorInterface.SetObjectEdited(Object,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "SetPluginEnabled",
+      "kind": "Method",
+      "signature": "public void SetPluginEnabled(String plugin, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "plugin",
+          "type": "String"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the enabled status of a plugin. The plugin name is the same as its directory name.",
+      "godotName": "set_plugin_enabled",
+      "xmlDocId": "M:Godot.EditorInterface.SetPluginEnabled(String,bool)",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "StopPlayingScene",
+      "kind": "Method",
+      "signature": "public void StopPlayingScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the scene that is currently playing.",
+      "godotName": "stop_playing_scene",
+      "xmlDocId": "M:Godot.EditorInterface.StopPlayingScene",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "DistractionFreeMode",
+      "kind": "Property",
+      "signature": "public bool DistractionFreeMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables distraction-free mode which hides side docks to increase the space available for the main view.",
+      "godotName": "distraction_free_mode",
+      "xmlDocId": "P:Godot.EditorInterface.DistractionFreeMode",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    },
+    {
+      "name": "MovieMakerEnabled",
+      "kind": "Property",
+      "signature": "public bool MovieMakerEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the Movie Maker mode is enabled in the editor. See [MovieWriter] for more information.",
+      "godotName": "movie_maker_enabled",
+      "xmlDocId": "P:Godot.EditorInterface.MovieMakerEnabled",
+      "sourcePath": "doc/classes/EditorInterface.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorInterface.xml",
+      "sha256": "3945c648340ff7712e54c4c13e6e1a7fda5bb7f50088ff5c0f5a703dc252864a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

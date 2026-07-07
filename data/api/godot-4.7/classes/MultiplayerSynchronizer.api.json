@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerSynchronizer",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerSynchronizer",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "MultiplayerSynchronizer",
+    "documentationPath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayersynchronizer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddVisibilityFilter",
+      "kind": "Method",
+      "signature": "public void AddVisibilityFilter(Callable filter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Adds a peer visibility filter for this synchronizer. [param filter] should take a peer ID [int] and return a [bool].",
+      "godotName": "add_visibility_filter",
+      "xmlDocId": "M:Godot.MultiplayerSynchronizer.AddVisibilityFilter(Callable)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "GetVisibilityFor",
+      "kind": "Method",
+      "signature": "public bool GetVisibilityFor(int peer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        }
+      ],
+      "summary": "Queries the current visibility for peer [param peer].",
+      "godotName": "get_visibility_for",
+      "xmlDocId": "M:Godot.MultiplayerSynchronizer.GetVisibilityFor(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "RemoveVisibilityFilter",
+      "kind": "Method",
+      "signature": "public void RemoveVisibilityFilter(Callable filter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Removes a peer visibility filter from this synchronizer.",
+      "godotName": "remove_visibility_filter",
+      "xmlDocId": "M:Godot.MultiplayerSynchronizer.RemoveVisibilityFilter(Callable)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "SetVisibilityFor",
+      "kind": "Method",
+      "signature": "public void SetVisibilityFor(int peer, bool visible)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "visible",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the visibility of [param peer] to [param visible]. If [param peer] is [code]0[/code], the value of [member public_visibility] will be updated instead.",
+      "godotName": "set_visibility_for",
+      "xmlDocId": "M:Godot.MultiplayerSynchronizer.SetVisibilityFor(int,bool)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "UpdateVisibility",
+      "kind": "Method",
+      "signature": "public void UpdateVisibility(int forPeer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "for_peer",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Updates the visibility of [param for_peer] according to visibility filters. If [param for_peer] is [code]0[/code] (the default), all peers\u0027 visibilties are updated.",
+      "godotName": "update_visibility",
+      "xmlDocId": "M:Godot.MultiplayerSynchronizer.UpdateVisibility(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "DeltaInterval",
+      "kind": "Property",
+      "signature": "public float DeltaInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time interval between delta synchronizations. Used when the replication is set to [constant SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE]. If set to [code]0.0[/code] (the default), delta synchronizations happen every network process frame.",
+      "defaultValue": "0.0",
+      "godotName": "delta_interval",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.DeltaInterval",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "PublicVisibility",
+      "kind": "Property",
+      "signature": "public bool PublicVisibility { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether synchronization should be visible to all peers by default. See [method set_visibility_for] and [method add_visibility_filter] for ways of configuring fine-grained visibility options.",
+      "defaultValue": "true",
+      "godotName": "public_visibility",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.PublicVisibility",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "ReplicationConfig",
+      "kind": "Property",
+      "signature": "public SceneReplicationConfig ReplicationConfig { get; set; }",
+      "returnType": "SceneReplicationConfig",
+      "parameters": [],
+      "summary": "Resource containing which properties to synchronize.",
+      "godotName": "replication_config",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.ReplicationConfig",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "ReplicationInterval",
+      "kind": "Property",
+      "signature": "public float ReplicationInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time interval between synchronizations. Used when the replication is set to [constant SceneReplicationConfig.REPLICATION_MODE_ALWAYS]. If set to [code]0.0[/code] (the default), synchronizations happen every network process frame.",
+      "defaultValue": "0.0",
+      "godotName": "replication_interval",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.ReplicationInterval",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "RootPath",
+      "kind": "Property",
+      "signature": "public NodePath RootPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Node path that replicated properties are relative to. If [member root_path] was spawned by a [MultiplayerSpawner], the node will be also be spawned and despawned based on this synchronizer visibility options.",
+      "defaultValue": "NodePath(\u0022..\u0022)",
+      "godotName": "root_path",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.RootPath",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "VisibilityUpdateMode",
+      "kind": "Property",
+      "signature": "public int VisibilityUpdateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies when visibility filters are updated.",
+      "defaultValue": "0",
+      "godotName": "visibility_update_mode",
+      "xmlDocId": "P:Godot.MultiplayerSynchronizer.VisibilityUpdateMode",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "DeltaSynchronized",
+      "kind": "Signal",
+      "signature": "public event DeltaSynchronizedHandler DeltaSynchronized",
+      "parameters": [],
+      "summary": "Emitted when a new delta synchronization state is received by this synchronizer after the properties have been updated.",
+      "godotName": "delta_synchronized",
+      "xmlDocId": "E:Godot.MultiplayerSynchronizer.DeltaSynchronized",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "Synchronized",
+      "kind": "Signal",
+      "signature": "public event SynchronizedHandler Synchronized",
+      "parameters": [],
+      "summary": "Emitted when a new synchronization state is received by this synchronizer after the properties have been updated.",
+      "godotName": "synchronized",
+      "xmlDocId": "E:Godot.MultiplayerSynchronizer.Synchronized",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "VisibilityChanged",
+      "kind": "Signal",
+      "signature": "public event VisibilityChangedHandler VisibilityChanged",
+      "parameters": [
+        {
+          "name": "for_peer",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when visibility of [param for_peer] is updated. See [method update_visibility].",
+      "godotName": "visibility_changed",
+      "xmlDocId": "E:Godot.MultiplayerSynchronizer.VisibilityChanged(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "VisibilityUpdateMode",
+      "values": [
+        {
+          "name": "VISIBILITY_PROCESS_IDLE",
+          "value": "0",
+          "enum": "VisibilityUpdateMode",
+          "kind": "EnumValue",
+          "summary": "Visibility filters are updated during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+          "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+        },
+        {
+          "name": "VISIBILITY_PROCESS_NONE",
+          "value": "2",
+          "enum": "VisibilityUpdateMode",
+          "kind": "EnumValue",
+          "summary": "Visibility filters are not updated automatically, and must be updated manually by calling [method update_visibility].",
+          "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+        },
+        {
+          "name": "VISIBILITY_PROCESS_PHYSICS",
+          "value": "1",
+          "enum": "VisibilityUpdateMode",
+          "kind": "EnumValue",
+          "summary": "Visibility filters are updated during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+          "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "VISIBILITY_PROCESS_IDLE",
+      "value": "0",
+      "enum": "VisibilityUpdateMode",
+      "kind": "EnumValue",
+      "summary": "Visibility filters are updated during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "VISIBILITY_PROCESS_PHYSICS",
+      "value": "1",
+      "enum": "VisibilityUpdateMode",
+      "kind": "EnumValue",
+      "summary": "Visibility filters are updated during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    },
+    {
+      "name": "VISIBILITY_PROCESS_NONE",
+      "value": "2",
+      "enum": "VisibilityUpdateMode",
+      "kind": "EnumValue",
+      "summary": "Visibility filters are not updated automatically, and must be updated manually by calling [method update_visibility].",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/multiplayer/doc_classes/MultiplayerSynchronizer.xml",
+      "sha256": "b078b1781d0bb5ab96789f40d91329c2dec5207fb0ce0b81d33842c817061a52"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

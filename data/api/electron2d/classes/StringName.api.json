@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StringName",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.StringName",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.StringName\u003E"
+    ],
+    "godotReference": "StringName",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "StringName",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StringName(System.String value)",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Initializes a new instance of the StringName type.",
+      "xmlDocId": "M:Electron2D.StringName.#ctor(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "StringName",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StringName(System.String value)",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Initializes a new instance of the StringName type.",
+      "xmlDocId": "M:Electron2D.StringName.#ctor(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.StringName other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.StringName.Equals(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.StringName.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.StringName.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public System.Boolean IsEmpty()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether empty is true.",
+      "xmlDocId": "M:Electron2D.StringName.IsEmpty",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.StringName.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.StringName left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.StringName left, System.String right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(Electron2D.StringName,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(System.String left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "System.String"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(System.String,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.StringName op_Implicit(System.String value)",
+      "returnType": "Electron2D.StringName",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts the supplied value to the target type.",
+      "xmlDocId": "M:Electron2D.StringName.op_Implicit(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.StringName left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.StringName left, System.String right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(Electron2D.StringName,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(System.String left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "System.String"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(System.String,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.StringName left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.StringName left, System.String right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(Electron2D.StringName,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(System.String left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "System.String"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Equality(System.String,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Implicit",
+      "kind": "Operator",
+      "signature": "public static Electron2D.StringName op_Implicit(System.String value)",
+      "returnType": "Electron2D.StringName",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts the supplied value to the target type.",
+      "xmlDocId": "M:Electron2D.StringName.op_Implicit(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.StringName left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.StringName left, System.String right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "right",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(Electron2D.StringName,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(System.String left, Electron2D.StringName right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "System.String"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.StringName.op_Inequality(System.String,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

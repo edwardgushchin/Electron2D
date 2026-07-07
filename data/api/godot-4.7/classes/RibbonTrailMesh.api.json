@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RibbonTrailMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.RibbonTrailMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "RibbonTrailMesh",
+    "documentationPath": "doc/classes/RibbonTrailMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_ribbontrailmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Curve",
+      "kind": "Property",
+      "signature": "public Curve Curve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Determines the size of the ribbon along its length. The size of a particular section segment is obtained by multiplying the baseline [member size] by the value of this curve at the given distance. For values smaller than [code]0[/code], the faces will be inverted. Should be a unit [Curve].",
+      "godotName": "curve",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.Curve",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "SectionLength",
+      "kind": "Property",
+      "signature": "public float SectionLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of a section of the ribbon.",
+      "defaultValue": "0.2",
+      "godotName": "section_length",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.SectionLength",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "SectionSegments",
+      "kind": "Property",
+      "signature": "public int SectionSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of segments in a section. The [member curve] is sampled on each segment to determine its size. Higher values result in a more detailed ribbon at the cost of performance.",
+      "defaultValue": "3",
+      "godotName": "section_segments",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.SectionSegments",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "Sections",
+      "kind": "Property",
+      "signature": "public int Sections { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The total number of sections on the ribbon.",
+      "defaultValue": "5",
+      "godotName": "sections",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.Sections",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public int Shape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines the shape of the ribbon.",
+      "defaultValue": "1",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.Shape",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public float Size { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The baseline size of the ribbon. The size of a particular section segment is obtained by multiplying this size by the value of the [member curve] at the given distance.",
+      "defaultValue": "1.0",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.RibbonTrailMesh.Size",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Shape",
+      "values": [
+        {
+          "name": "SHAPE_CROSS",
+          "value": "1",
+          "enum": "Shape",
+          "kind": "EnumValue",
+          "summary": "Gives the mesh two perpendicular flat faces, making a cross shape.",
+          "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+        },
+        {
+          "name": "SHAPE_FLAT",
+          "value": "0",
+          "enum": "Shape",
+          "kind": "EnumValue",
+          "summary": "Gives the mesh a single flat face.",
+          "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SHAPE_FLAT",
+      "value": "0",
+      "enum": "Shape",
+      "kind": "EnumValue",
+      "summary": "Gives the mesh a single flat face.",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    },
+    {
+      "name": "SHAPE_CROSS",
+      "value": "1",
+      "enum": "Shape",
+      "kind": "EnumValue",
+      "summary": "Gives the mesh two perpendicular flat faces, making a cross shape.",
+      "sourcePath": "doc/classes/RibbonTrailMesh.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RibbonTrailMesh.xml",
+      "sha256": "42a7e2e154994abbf41ec720d801f887a53b43fe1dab9a95e46702a254496f54"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

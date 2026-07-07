@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Skin",
+    "namespace": "Godot",
+    "fullName": "Godot.Skin",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Skin",
+    "documentationPath": "doc/classes/Skin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBind",
+      "kind": "Method",
+      "signature": "public void AddBind(int bone, Transform3D pose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone",
+          "type": "int"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "",
+      "godotName": "add_bind",
+      "xmlDocId": "M:Godot.Skin.AddBind(int,Transform3D)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "AddNamedBind",
+      "kind": "Method",
+      "signature": "public void AddNamedBind(String name, Transform3D pose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "",
+      "godotName": "add_named_bind",
+      "xmlDocId": "M:Godot.Skin.AddNamedBind(String,Transform3D)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "ClearBinds",
+      "kind": "Method",
+      "signature": "public void ClearBinds()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "clear_binds",
+      "xmlDocId": "M:Godot.Skin.ClearBinds",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "GetBindBone",
+      "kind": "Method",
+      "signature": "public int GetBindBone(int bindIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_bind_bone",
+      "xmlDocId": "M:Godot.Skin.GetBindBone(int)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "GetBindCount",
+      "kind": "Method",
+      "signature": "public int GetBindCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_bind_count",
+      "xmlDocId": "M:Godot.Skin.GetBindCount",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "GetBindName",
+      "kind": "Method",
+      "signature": "public StringName GetBindName(int bindIndex)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_bind_name",
+      "xmlDocId": "M:Godot.Skin.GetBindName(int)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "GetBindPose",
+      "kind": "Method",
+      "signature": "public Transform3D GetBindPose(int bindIndex)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_bind_pose",
+      "xmlDocId": "M:Godot.Skin.GetBindPose(int)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "SetBindBone",
+      "kind": "Method",
+      "signature": "public void SetBindBone(int bindIndex, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_bind_bone",
+      "xmlDocId": "M:Godot.Skin.SetBindBone(int,int)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "SetBindCount",
+      "kind": "Method",
+      "signature": "public void SetBindCount(int bindCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bind_count",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_bind_count",
+      "xmlDocId": "M:Godot.Skin.SetBindCount(int)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "SetBindName",
+      "kind": "Method",
+      "signature": "public void SetBindName(int bindIndex, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_bind_name",
+      "xmlDocId": "M:Godot.Skin.SetBindName(int,StringName)",
+      "sourcePath": "doc/classes/Skin.xml"
+    },
+    {
+      "name": "SetBindPose",
+      "kind": "Method",
+      "signature": "public void SetBindPose(int bindIndex, Transform3D pose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bind_index",
+          "type": "int"
+        },
+        {
+          "name": "pose",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_bind_pose",
+      "xmlDocId": "M:Godot.Skin.SetBindPose(int,Transform3D)",
+      "sourcePath": "doc/classes/Skin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Skin.xml",
+      "sha256": "4245a9e5fa0c7d3a3f1cca0bc2bb6343d72db2a3f1b06cd7134aa831cb698178"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

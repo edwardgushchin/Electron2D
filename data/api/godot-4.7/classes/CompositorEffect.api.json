@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CompositorEffect",
+    "namespace": "Godot",
+    "fullName": "Godot.CompositorEffect",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "CompositorEffect",
+    "documentationPath": "doc/classes/CompositorEffect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_compositoreffect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_RenderCallback",
+      "kind": "Method",
+      "signature": "public void _RenderCallback(int effectCallbackType, RenderData renderData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "effect_callback_type",
+          "type": "int"
+        },
+        {
+          "name": "render_data",
+          "type": "RenderData"
+        }
+      ],
+      "summary": "Implement this function with your custom rendering code. [param effect_callback_type] should always match the effect callback type you\u0027ve specified in [member effect_callback_type]. [param render_data] provides access to the rendering state, it is only valid during rendering and should not be stored.",
+      "godotName": "_render_callback",
+      "xmlDocId": "M:Godot.CompositorEffect._RenderCallback(int,RenderData)",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "AccessResolvedColor",
+      "kind": "Property",
+      "signature": "public bool AccessResolvedColor { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] and MSAA is enabled, this will trigger a color buffer resolve before the effect is run. [b]Note:[/b] In [method _render_callback], to access the resolved buffer use: [codeblock] var render_scene_buffers = render_data.get_render_scene_buffers() var color_buffer = render_scene_buffers.get_texture(\u0022render_buffers\u0022, \u0022color\u0022) [/codeblock]",
+      "godotName": "access_resolved_color",
+      "xmlDocId": "P:Godot.CompositorEffect.AccessResolvedColor",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "AccessResolvedDepth",
+      "kind": "Property",
+      "signature": "public bool AccessResolvedDepth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] and MSAA is enabled, this will trigger a depth buffer resolve before the effect is run. [b]Note:[/b] In [method _render_callback], to access the resolved buffer use: [codeblock] var render_scene_buffers = render_data.get_render_scene_buffers() var depth_buffer = render_scene_buffers.get_texture(\u0022render_buffers\u0022, \u0022depth\u0022) [/codeblock]",
+      "godotName": "access_resolved_depth",
+      "xmlDocId": "P:Godot.CompositorEffect.AccessResolvedDepth",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EffectCallbackType",
+      "kind": "Property",
+      "signature": "public int EffectCallbackType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of effect that is implemented, determines at what stage of rendering the callback is called.",
+      "godotName": "effect_callback_type",
+      "xmlDocId": "P:Godot.CompositorEffect.EffectCallbackType",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] this rendering effect is applied to any viewport it is added to.",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.CompositorEffect.Enabled",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "NeedsMotionVectors",
+      "kind": "Property",
+      "signature": "public bool NeedsMotionVectors { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] this triggers motion vectors being calculated during the opaque render state. [b]Note:[/b] In [method _render_callback], to access the motion vector buffer use: [codeblock] var render_scene_buffers = render_data.get_render_scene_buffers() var motion_buffer = render_scene_buffers.get_velocity_texture() [/codeblock]",
+      "godotName": "needs_motion_vectors",
+      "xmlDocId": "P:Godot.CompositorEffect.NeedsMotionVectors",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "NeedsNormalRoughness",
+      "kind": "Property",
+      "signature": "public bool NeedsNormalRoughness { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] this triggers normal and roughness data to be output during our depth pre-pass, only applicable for the Forward\u002B renderer. [b]Note:[/b] In [method _render_callback], to access the roughness buffer use: [codeblock] var render_scene_buffers = render_data.get_render_scene_buffers() var roughness_buffer = render_scene_buffers.get_texture(\u0022forward_clustered\u0022, \u0022normal_roughness\u0022) [/codeblock] The raw normal and roughness buffer is stored in an optimized format, different than the one available in Spatial shaders. When sampling the buffer, a conversion function must be applied. Use this function, copied from [url=https://github.com/godotengine/godot/blob/da5f39889f155658cef7f7ec3cc1abb94e17d815/servers/rendering/renderer_rd/shaders/forward_clustered/scene_forward_clustered_inc.glsl#L334-L341]here[/url]: [codeblock] vec4 normal_roughness_compatibility(vec4 p_normal_roughness) { float roughness = p_normal_roughness.w; if (roughness \u003E 0.5) { roughness = 1.0 - roughness; } roughness /= (127.0 / 255.0); return vec4(normalize(p_normal_roughness.xyz * 2.0 - 1.0) * 0.5 \u002B 0.5, roughness); } [/codeblock]",
+      "godotName": "needs_normal_roughness",
+      "xmlDocId": "P:Godot.CompositorEffect.NeedsNormalRoughness",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "NeedsSeparateSpecular",
+      "kind": "Property",
+      "signature": "public bool NeedsSeparateSpecular { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] this triggers specular data being rendered to a separate buffer and combined after effects have been applied, only applicable for the Forward\u002B renderer.",
+      "godotName": "needs_separate_specular",
+      "xmlDocId": "P:Godot.CompositorEffect.NeedsSeparateSpecular",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "EffectCallbackType",
+      "values": [
+        {
+          "name": "EFFECT_CALLBACK_TYPE_MAX",
+          "value": "5",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum EffectCallbackType] enum.",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        },
+        {
+          "name": "EFFECT_CALLBACK_TYPE_POST_OPAQUE",
+          "value": "1",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "The callback is called after our opaque rendering pass, but before our sky is rendered.",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        },
+        {
+          "name": "EFFECT_CALLBACK_TYPE_POST_SKY",
+          "value": "2",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "The callback is called after our sky is rendered, but before our back buffers are created (and if enabled, before subsurface scattering and/or screen space reflections).",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        },
+        {
+          "name": "EFFECT_CALLBACK_TYPE_POST_TRANSPARENT",
+          "value": "4",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "The callback is called after our transparent rendering pass, but before any built-in post-processing effects and output to our render target.",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        },
+        {
+          "name": "EFFECT_CALLBACK_TYPE_PRE_OPAQUE",
+          "value": "0",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "The callback is called before our opaque rendering pass, but after depth prepass (if applicable).",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        },
+        {
+          "name": "EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT",
+          "value": "3",
+          "enum": "EffectCallbackType",
+          "kind": "EnumValue",
+          "summary": "The callback is called before our transparent rendering pass, but after our sky is rendered and we\u0027ve created our back buffers.",
+          "sourcePath": "doc/classes/CompositorEffect.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "EFFECT_CALLBACK_TYPE_PRE_OPAQUE",
+      "value": "0",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "The callback is called before our opaque rendering pass, but after depth prepass (if applicable).",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EFFECT_CALLBACK_TYPE_POST_OPAQUE",
+      "value": "1",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "The callback is called after our opaque rendering pass, but before our sky is rendered.",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EFFECT_CALLBACK_TYPE_POST_SKY",
+      "value": "2",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "The callback is called after our sky is rendered, but before our back buffers are created (and if enabled, before subsurface scattering and/or screen space reflections).",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT",
+      "value": "3",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "The callback is called before our transparent rendering pass, but after our sky is rendered and we\u0027ve created our back buffers.",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EFFECT_CALLBACK_TYPE_POST_TRANSPARENT",
+      "value": "4",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "The callback is called after our transparent rendering pass, but before any built-in post-processing effects and output to our render target.",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    },
+    {
+      "name": "EFFECT_CALLBACK_TYPE_MAX",
+      "value": "5",
+      "enum": "EffectCallbackType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum EffectCallbackType] enum.",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_RenderCallback",
+      "kind": "Method",
+      "signature": "public void _RenderCallback(int effectCallbackType, RenderData renderData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "effect_callback_type",
+          "type": "int"
+        },
+        {
+          "name": "render_data",
+          "type": "RenderData"
+        }
+      ],
+      "summary": "Implement this function with your custom rendering code. [param effect_callback_type] should always match the effect callback type you\u0027ve specified in [member effect_callback_type]. [param render_data] provides access to the rendering state, it is only valid during rendering and should not be stored.",
+      "godotName": "_render_callback",
+      "xmlDocId": "M:Godot.CompositorEffect._RenderCallback(int,RenderData)",
+      "sourcePath": "doc/classes/CompositorEffect.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CompositorEffect.xml",
+      "sha256": "7ee88e6998f9234f4a78fbc2c6081fc3771ab2929accbe719b73a76c5bc5a16b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

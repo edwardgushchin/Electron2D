@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "bool",
+    "namespace": "Godot",
+    "fullName": "Godot.bool",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "bool",
+    "documentationPath": "doc/classes/bool.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_bool.html"
+  },
+  "constructors": [
+    {
+      "name": "Bool",
+      "kind": "Constructor",
+      "signature": "public Bool()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Constructs a [bool] set to [code]false[/code].",
+      "godotName": "bool",
+      "xmlDocId": "M:Godot.bool.#ctor",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "Bool",
+      "kind": "Constructor",
+      "signature": "public Bool(bool from)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "bool"
+        }
+      ],
+      "summary": "Constructs a [bool] as a copy of the given [bool].",
+      "godotName": "bool",
+      "xmlDocId": "M:Godot.bool.#ctor(bool)",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "Bool",
+      "kind": "Constructor",
+      "signature": "public Bool(float from)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "float"
+        }
+      ],
+      "summary": "Casts a [float] value to a [bool]. Returns [code]false[/code] if [param from] is equal to [code]0.0[/code] (including [code]-0.0[/code]), and [code]true[/code] for all other values (including [constant @GDScript.INF] and [constant @GDScript.NAN]).",
+      "godotName": "bool",
+      "xmlDocId": "M:Godot.bool.#ctor(float)",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "Bool",
+      "kind": "Constructor",
+      "signature": "public Bool(int from)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int"
+        }
+      ],
+      "summary": "Casts an [int] value to a [bool]. Returns [code]false[/code] if [param from] is equal to [code]0[/code], and [code]true[/code] for all other values.",
+      "godotName": "bool",
+      "xmlDocId": "M:Godot.bool.#ctor(int)",
+      "sourcePath": "doc/classes/bool.xml"
+    }
+  ],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(bool right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if one [bool] is [code]true[/code] and the other [bool] is [code]false[/code]. Equivalent to logical XOR (NEQ).",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.bool.operator !=(bool)",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(bool right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [bool] is [code]false[/code] and [param right] is [code]true[/code].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.bool.operator \u003C(bool)",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(bool right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both [bool]s are [code]true[/code], or if both [bool]s are [code]false[/code]. Equivalent to logical XNOR (EQ).",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.bool.operator ==(bool)",
+      "sourcePath": "doc/classes/bool.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(bool right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [bool] is [code]true[/code] and [param right] is [code]false[/code].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.bool.operator \u003E(bool)",
+      "sourcePath": "doc/classes/bool.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/bool.xml",
+      "sha256": "d0c4f513c5d2f5a1b451e0025fb1860921b24effdeaa43e8bce428c6d727e618"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

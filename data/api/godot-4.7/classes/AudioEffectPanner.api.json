@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectPanner",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectPanner",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectPanner",
+    "documentationPath": "doc/classes/AudioEffectPanner.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectpanner.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Pan",
+      "kind": "Property",
+      "signature": "public float Pan { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Pan position. Negative values pan the sound to the left, positive pan to the right. Value can range from -1 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "pan",
+      "xmlDocId": "P:Godot.AudioEffectPanner.Pan",
+      "sourcePath": "doc/classes/AudioEffectPanner.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectPanner.xml",
+      "sha256": "d907eb65c87acfcc687608e59cc28db0ba40e5618dcdfa886dd849330cd4a0a6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

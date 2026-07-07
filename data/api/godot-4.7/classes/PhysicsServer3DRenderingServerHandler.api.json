@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer3DRenderingServerHandler",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsServer3DRenderingServerHandler",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "PhysicsServer3DRenderingServerHandler",
+    "documentationPath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsserver3drenderingserverhandler.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_SetAabb",
+      "kind": "Method",
+      "signature": "public void _SetAabb(AABB aabb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "aabb",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the bounding box for the [SoftBody3D].",
+      "godotName": "_set_aabb",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetAabb(AABB)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "_SetNormal",
+      "kind": "Method",
+      "signature": "public void _SetNormal(int vertexId, Vector3 normal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the normal for the [SoftBody3D] vertex at the index specified by [param vertex_id]. [b]Note:[/b] The [param normal] parameter used to be of type [code]const void*[/code] prior to Godot 4.2.",
+      "godotName": "_set_normal",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetNormal(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "_SetVertex",
+      "kind": "Method",
+      "signature": "public void _SetVertex(int vertexId, Vector3 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "vertex",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the position for the [SoftBody3D] vertex at the index specified by [param vertex_id]. [b]Note:[/b] The [param vertex] parameter used to be of type [code]const void*[/code] prior to Godot 4.2.",
+      "godotName": "_set_vertex",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetVertex(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "SetAabb",
+      "kind": "Method",
+      "signature": "public void SetAabb(AABB aabb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "aabb",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Sets the bounding box for the [SoftBody3D].",
+      "godotName": "set_aabb",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler.SetAabb(AABB)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "SetNormal",
+      "kind": "Method",
+      "signature": "public void SetNormal(int vertexId, Vector3 normal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the normal for the [SoftBody3D] vertex at the index specified by [param vertex_id].",
+      "godotName": "set_normal",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler.SetNormal(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "SetVertex",
+      "kind": "Method",
+      "signature": "public void SetVertex(int vertexId, Vector3 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "vertex",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the position for the [SoftBody3D] vertex at the index specified by [param vertex_id].",
+      "godotName": "set_vertex",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler.SetVertex(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_SetAabb",
+      "kind": "Method",
+      "signature": "public void _SetAabb(AABB aabb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "aabb",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the bounding box for the [SoftBody3D].",
+      "godotName": "_set_aabb",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetAabb(AABB)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "_SetNormal",
+      "kind": "Method",
+      "signature": "public void _SetNormal(int vertexId, Vector3 normal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the normal for the [SoftBody3D] vertex at the index specified by [param vertex_id]. [b]Note:[/b] The [param normal] parameter used to be of type [code]const void*[/code] prior to Godot 4.2.",
+      "godotName": "_set_normal",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetNormal(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    },
+    {
+      "name": "_SetVertex",
+      "kind": "Method",
+      "signature": "public void _SetVertex(int vertexId, Vector3 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex_id",
+          "type": "int"
+        },
+        {
+          "name": "vertex",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Called by the [PhysicsServer3D] to set the position for the [SoftBody3D] vertex at the index specified by [param vertex_id]. [b]Note:[/b] The [param vertex] parameter used to be of type [code]const void*[/code] prior to Godot 4.2.",
+      "godotName": "_set_vertex",
+      "xmlDocId": "M:Godot.PhysicsServer3DRenderingServerHandler._SetVertex(int,Vector3)",
+      "sourcePath": "doc/classes/PhysicsServer3DRenderingServerHandler.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsServer3DRenderingServerHandler.xml",
+      "sha256": "c341cd3edd813349b3f7a04163101d57e3afe31958898026741f6b427e756106"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

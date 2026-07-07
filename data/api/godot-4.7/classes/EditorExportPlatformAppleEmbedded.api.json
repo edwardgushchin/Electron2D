@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorExportPlatformAppleEmbedded",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorExportPlatformAppleEmbedded",
+    "kind": "class",
+    "baseType": "EditorExportPlatform",
+    "interfaces": [],
+    "godotReference": "EditorExportPlatformAppleEmbedded",
+    "documentationPath": "doc/classes/EditorExportPlatformAppleEmbedded.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorexportplatformappleembedded.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorExportPlatformAppleEmbedded.xml",
+      "sha256": "d5d58c3709ff58258a9e46a603a80bc10f84c69a73b7551bf0b8496f624524a9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

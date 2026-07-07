@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Shape2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Shape2D",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Shape2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Shape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Shape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Shape2D type.",
+      "xmlDocId": "M:Electron2D.Shape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Shape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Shape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Shape2D type.",
+      "xmlDocId": "M:Electron2D.Shape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Rid GetRid()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Gets the physics server RID backing this shape.",
+      "xmlDocId": "M:Electron2D.Shape2D.GetRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

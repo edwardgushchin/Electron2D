@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoxContainerAlignmentMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.BoxContainerAlignmentMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "BoxContainer.AlignmentMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Begin",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.BoxContainerAlignmentMode Begin",
+      "returnType": "Electron2D.BoxContainerAlignmentMode",
+      "parameters": [],
+      "summary": "Places children at the beginning of the box axis.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.BoxContainerAlignmentMode.Begin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Center",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.BoxContainerAlignmentMode Center",
+      "returnType": "Electron2D.BoxContainerAlignmentMode",
+      "parameters": [],
+      "summary": "Centers children along the box axis.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.BoxContainerAlignmentMode.Center",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.BoxContainerAlignmentMode End",
+      "returnType": "Electron2D.BoxContainerAlignmentMode",
+      "parameters": [],
+      "summary": "Places children at the end of the box axis.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.BoxContainerAlignmentMode.End",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Begin",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Places children at the beginning of the box axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Center",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Centers children along the box axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Places children at the end of the box axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

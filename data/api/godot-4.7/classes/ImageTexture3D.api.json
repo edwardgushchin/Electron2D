@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImageTexture3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ImageTexture3D",
+    "kind": "class",
+    "baseType": "Texture3D",
+    "interfaces": [],
+    "godotReference": "ImageTexture3D",
+    "documentationPath": "doc/classes/ImageTexture3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_imagetexture3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Create",
+      "kind": "Method",
+      "signature": "public int Create(int format, int width, int height, int depth, bool useMipmaps, Image[] data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "depth",
+          "type": "int"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool"
+        },
+        {
+          "name": "data",
+          "type": "Image[]"
+        }
+      ],
+      "summary": "Creates the [ImageTexture3D] with specified [param format], [param width], [param height], and [param depth]. If [param use_mipmaps] is [code]true[/code], generates mipmaps for the [ImageTexture3D].",
+      "godotName": "create",
+      "xmlDocId": "M:Godot.ImageTexture3D.Create(int,int,int,int,bool,Image[])",
+      "sourcePath": "doc/classes/ImageTexture3D.xml"
+    },
+    {
+      "name": "Update",
+      "kind": "Method",
+      "signature": "public void Update(Image[] data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Image[]"
+        }
+      ],
+      "summary": "Replaces the texture\u0027s existing data with the layers specified in [param data]. The size of [param data] must match the parameters that were used for [method create]. In other words, the texture cannot be resized or have its format changed by calling [method update].",
+      "godotName": "update",
+      "xmlDocId": "M:Godot.ImageTexture3D.Update(Image[])",
+      "sourcePath": "doc/classes/ImageTexture3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ImageTexture3D.xml",
+      "sha256": "c26a3ce967de315bdb9f09ae26f1f351f026a204ef12be59685e2049fb9559de"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

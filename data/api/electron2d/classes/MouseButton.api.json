@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MouseButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.MouseButton",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "MouseButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Left",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton Left",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Primary mouse button.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.MouseButton.Left",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Middle",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton Middle",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Middle mouse button.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.MouseButton.Middle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton None",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "No mouse button.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.MouseButton.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton Right",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Secondary mouse button.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.MouseButton.Right",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelDown",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton WheelDown",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Mouse wheel scrolling down.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.MouseButton.WheelDown",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelLeft",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton WheelLeft",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Mouse wheel scrolling left.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.MouseButton.WheelLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelRight",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton WheelRight",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Mouse wheel scrolling right.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.MouseButton.WheelRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelUp",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton WheelUp",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Mouse wheel scrolling up.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.MouseButton.WheelUp",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton Xbutton1",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Extra mouse button 1.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.MouseButton.Xbutton1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButton Xbutton2",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Extra mouse button 2.",
+      "value": "9",
+      "xmlDocId": "F:Electron2D.MouseButton.Xbutton2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Left",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Primary mouse button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Middle",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Middle mouse button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "No mouse button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Secondary mouse button.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelDown",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Mouse wheel scrolling down.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelLeft",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Mouse wheel scrolling left.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelRight",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Mouse wheel scrolling right.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WheelUp",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Mouse wheel scrolling up.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton1",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Extra mouse button 1.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton2",
+      "value": "9",
+      "kind": "EnumValue",
+      "summary": "Extra mouse button 2.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

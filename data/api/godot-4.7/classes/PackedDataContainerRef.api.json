@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedDataContainerRef",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedDataContainerRef",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PackedDataContainerRef",
+    "documentationPath": "doc/classes/PackedDataContainerRef.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packeddatacontainerref.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the size of the packed container (see [method Array.size] and [method Dictionary.size]).",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedDataContainerRef.Size",
+      "sourcePath": "doc/classes/PackedDataContainerRef.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedDataContainerRef.xml",
+      "sha256": "6a686852cfed742d6f94a89123702c23e06272ce48f1fcd5dbc8bbb34e694b9d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

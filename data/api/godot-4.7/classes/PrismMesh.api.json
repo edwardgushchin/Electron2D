@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PrismMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.PrismMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "PrismMesh",
+    "documentationPath": "doc/classes/PrismMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_prismmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LeftToRight",
+      "kind": "Property",
+      "signature": "public float LeftToRight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Displacement of the upper edge along the X axis. 0.0 positions edge straight above the bottom-left edge.",
+      "defaultValue": "0.5",
+      "godotName": "left_to_right",
+      "xmlDocId": "P:Godot.PrismMesh.LeftToRight",
+      "sourcePath": "doc/classes/PrismMesh.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Size of the prism.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.PrismMesh.Size",
+      "sourcePath": "doc/classes/PrismMesh.xml"
+    },
+    {
+      "name": "SubdivideDepth",
+      "kind": "Property",
+      "signature": "public int SubdivideDepth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of added edge loops along the Z axis.",
+      "defaultValue": "0",
+      "godotName": "subdivide_depth",
+      "xmlDocId": "P:Godot.PrismMesh.SubdivideDepth",
+      "sourcePath": "doc/classes/PrismMesh.xml"
+    },
+    {
+      "name": "SubdivideHeight",
+      "kind": "Property",
+      "signature": "public int SubdivideHeight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of added edge loops along the Y axis.",
+      "defaultValue": "0",
+      "godotName": "subdivide_height",
+      "xmlDocId": "P:Godot.PrismMesh.SubdivideHeight",
+      "sourcePath": "doc/classes/PrismMesh.xml"
+    },
+    {
+      "name": "SubdivideWidth",
+      "kind": "Property",
+      "signature": "public int SubdivideWidth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of added edge loops along the X axis.",
+      "defaultValue": "0",
+      "godotName": "subdivide_width",
+      "xmlDocId": "P:Godot.PrismMesh.SubdivideWidth",
+      "sourcePath": "doc/classes/PrismMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PrismMesh.xml",
+      "sha256": "5024759d913687a7bc782244cf6b16f678811523d5bd0324a2d5312e2a03cf1a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

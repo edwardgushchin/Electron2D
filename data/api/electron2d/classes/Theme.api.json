@@ -1,0 +1,600 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Theme",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Theme",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Theme",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Theme",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Theme()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Theme\u0060 class.",
+      "xmlDocId": "M:Electron2D.Theme.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Theme",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Theme()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Theme\u0060 class.",
+      "xmlDocId": "M:Electron2D.Theme.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all items and default values from this theme.",
+      "xmlDocId": "M:Electron2D.Theme.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearColor",
+      "kind": "Method",
+      "signature": "public System.Void ClearColor(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a color item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearColor(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearConstant",
+      "kind": "Method",
+      "signature": "public System.Void ClearConstant(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a constant item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearConstant(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearFont",
+      "kind": "Method",
+      "signature": "public System.Void ClearFont(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a font item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearFont(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearFontSize",
+      "kind": "Method",
+      "signature": "public System.Void ClearFontSize(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a font size item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearFontSize(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearIcon",
+      "kind": "Method",
+      "signature": "public System.Void ClearIcon(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes an icon item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearIcon(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearStyleBox",
+      "kind": "Method",
+      "signature": "public System.Void ClearStyleBox(System.String name, System.String themeType)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes a style box item.",
+      "xmlDocId": "M:Electron2D.Theme.ClearStyleBox(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColor",
+      "kind": "Method",
+      "signature": "public Electron2D.Color GetColor(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Color",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets a color item.",
+      "xmlDocId": "M:Electron2D.Theme.GetColor(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetConstant",
+      "kind": "Method",
+      "signature": "public System.Int32 GetConstant(System.String name, System.String themeType)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets a constant item.",
+      "xmlDocId": "M:Electron2D.Theme.GetConstant(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFont",
+      "kind": "Method",
+      "signature": "public Electron2D.Font GetFont(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Font",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets a font item.",
+      "xmlDocId": "M:Electron2D.Theme.GetFont(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFontSize",
+      "kind": "Method",
+      "signature": "public System.Int32 GetFontSize(System.String name, System.String themeType)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets a font size item.",
+      "xmlDocId": "M:Electron2D.Theme.GetFontSize(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetIcon(System.String name, System.String themeType)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets an icon item.",
+      "xmlDocId": "M:Electron2D.Theme.GetIcon(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetStyleBox",
+      "kind": "Method",
+      "signature": "public Electron2D.StyleBox GetStyleBox(System.String name, System.String themeType)",
+      "returnType": "Electron2D.StyleBox",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets a style box item.",
+      "xmlDocId": "M:Electron2D.Theme.GetStyleBox(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasColor",
+      "kind": "Method",
+      "signature": "public System.Boolean HasColor(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether a color item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasColor(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasConstant",
+      "kind": "Method",
+      "signature": "public System.Boolean HasConstant(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether a constant item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasConstant(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasDefaultBaseScale",
+      "kind": "Method",
+      "signature": "public System.Boolean HasDefaultBaseScale()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Reports whether this theme has a valid default base scale.",
+      "xmlDocId": "M:Electron2D.Theme.HasDefaultBaseScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasDefaultFont",
+      "kind": "Method",
+      "signature": "public System.Boolean HasDefaultFont()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Reports whether this theme has a default font.",
+      "xmlDocId": "M:Electron2D.Theme.HasDefaultFont",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasDefaultFontSize",
+      "kind": "Method",
+      "signature": "public System.Boolean HasDefaultFontSize()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Reports whether this theme has a valid default font size.",
+      "xmlDocId": "M:Electron2D.Theme.HasDefaultFontSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasFont",
+      "kind": "Method",
+      "signature": "public System.Boolean HasFont(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether a font item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasFont(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasFontSize",
+      "kind": "Method",
+      "signature": "public System.Boolean HasFontSize(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether a font size item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasFontSize(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasIcon",
+      "kind": "Method",
+      "signature": "public System.Boolean HasIcon(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether an icon item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasIcon(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasStyleBox",
+      "kind": "Method",
+      "signature": "public System.Boolean HasStyleBox(System.String name, System.String themeType)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Reports whether a style box item exists.",
+      "xmlDocId": "M:Electron2D.Theme.HasStyleBox(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetColor",
+      "kind": "Method",
+      "signature": "public System.Void SetColor(System.String name, System.String themeType, Electron2D.Color color)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        }
+      ],
+      "summary": "Sets a color item.",
+      "xmlDocId": "M:Electron2D.Theme.SetColor(System.String,System.String,Electron2D.Color)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetConstant",
+      "kind": "Method",
+      "signature": "public System.Void SetConstant(System.String name, System.String themeType, System.Int32 constant)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "constant",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Sets a constant item.",
+      "xmlDocId": "M:Electron2D.Theme.SetConstant(System.String,System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetFont",
+      "kind": "Method",
+      "signature": "public System.Void SetFont(System.String name, System.String themeType, Electron2D.Font font)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "font",
+          "type": "Electron2D.Font"
+        }
+      ],
+      "summary": "Sets a font item.",
+      "xmlDocId": "M:Electron2D.Theme.SetFont(System.String,System.String,Electron2D.Font)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetFontSize",
+      "kind": "Method",
+      "signature": "public System.Void SetFontSize(System.String name, System.String themeType, System.Int32 fontSize)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "fontSize",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Sets a font size item.",
+      "xmlDocId": "M:Electron2D.Theme.SetFontSize(System.String,System.String,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetIcon",
+      "kind": "Method",
+      "signature": "public System.Void SetIcon(System.String name, System.String themeType, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Sets an icon item.",
+      "xmlDocId": "M:Electron2D.Theme.SetIcon(System.String,System.String,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetStyleBox",
+      "kind": "Method",
+      "signature": "public System.Void SetStyleBox(System.String name, System.String themeType, Electron2D.StyleBox styleBox)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        },
+        {
+          "name": "themeType",
+          "type": "System.String"
+        },
+        {
+          "name": "styleBox",
+          "type": "Electron2D.StyleBox"
+        }
+      ],
+      "summary": "Sets a style box item.",
+      "xmlDocId": "M:Electron2D.Theme.SetStyleBox(System.String,System.String,Electron2D.StyleBox)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DefaultBaseScale",
+      "kind": "Property",
+      "signature": "public System.Single DefaultBaseScale { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the default base scale for this theme.",
+      "xmlDocId": "P:Electron2D.Theme.DefaultBaseScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DefaultFont",
+      "kind": "Property",
+      "signature": "public Electron2D.Font DefaultFont { get; set; }",
+      "returnType": "Electron2D.Font",
+      "parameters": [],
+      "summary": "Gets or sets the default font for this theme.",
+      "xmlDocId": "P:Electron2D.Theme.DefaultFont",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DefaultFontSize",
+      "kind": "Property",
+      "signature": "public System.Int32 DefaultFontSize { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the default font size for this theme.",
+      "xmlDocId": "P:Electron2D.Theme.DefaultFontSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

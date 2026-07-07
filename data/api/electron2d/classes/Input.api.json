@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Input",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Input",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Input",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetActionStrength",
+      "kind": "Method",
+      "signature": "public static System.Single GetActionStrength(System.String action, System.Boolean exactMatch)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "exactMatch",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Gets the current strength of an action.",
+      "xmlDocId": "M:Electron2D.Input.GetActionStrength(System.String,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetConnectedJoypads",
+      "kind": "Method",
+      "signature": "public static System.Int32[] GetConnectedJoypads()",
+      "returnType": "System.Int32[]",
+      "parameters": [],
+      "summary": "Gets the connected gamepad device ids.",
+      "xmlDocId": "M:Electron2D.Input.GetConnectedJoypads",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetJoyAxis",
+      "kind": "Method",
+      "signature": "public static System.Single GetJoyAxis(System.Int32 device, Electron2D.JoyAxis axis)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        },
+        {
+          "name": "axis",
+          "type": "Electron2D.JoyAxis"
+        }
+      ],
+      "summary": "Gets the last known value for a gamepad axis.",
+      "xmlDocId": "M:Electron2D.Input.GetJoyAxis(System.Int32,Electron2D.JoyAxis)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetJoyName",
+      "kind": "Method",
+      "signature": "public static System.String GetJoyName(System.Int32 device)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the display name for a connected gamepad.",
+      "xmlDocId": "M:Electron2D.Input.GetJoyName(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetJoyVibrationDuration",
+      "kind": "Method",
+      "signature": "public static System.Single GetJoyVibrationDuration(System.Int32 device)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the active vibration duration for a gamepad.",
+      "xmlDocId": "M:Electron2D.Input.GetJoyVibrationDuration(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetJoyVibrationStrength",
+      "kind": "Method",
+      "signature": "public static Electron2D.Vector2 GetJoyVibrationStrength(System.Int32 device)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the active vibration strength for a gamepad.",
+      "xmlDocId": "M:Electron2D.Input.GetJoyVibrationStrength(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetVector",
+      "kind": "Method",
+      "signature": "public static Electron2D.Vector2 GetVector(System.String negativeX, System.String positiveX, System.String negativeY, System.String positiveY, System.Single deadzone)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "negativeX",
+          "type": "System.String"
+        },
+        {
+          "name": "positiveX",
+          "type": "System.String"
+        },
+        {
+          "name": "negativeY",
+          "type": "System.String"
+        },
+        {
+          "name": "positiveY",
+          "type": "System.String"
+        },
+        {
+          "name": "deadzone",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Gets a 2D vector from four directional actions.",
+      "xmlDocId": "M:Electron2D.Input.GetVector(System.String,System.String,System.String,System.String,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsActionJustPressed",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsActionJustPressed(System.String action, System.Boolean exactMatch)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "exactMatch",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Checks whether an action became pressed during the current frame.",
+      "xmlDocId": "M:Electron2D.Input.IsActionJustPressed(System.String,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsActionPressed",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsActionPressed(System.String action, System.Boolean exactMatch)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "exactMatch",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Checks whether an action is currently pressed.",
+      "xmlDocId": "M:Electron2D.Input.IsActionPressed(System.String,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsJoyButtonPressed",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsJoyButtonPressed(System.Int32 device, Electron2D.JoyButton button)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        },
+        {
+          "name": "button",
+          "type": "Electron2D.JoyButton"
+        }
+      ],
+      "summary": "Checks whether a gamepad button is currently pressed.",
+      "xmlDocId": "M:Electron2D.Input.IsJoyButtonPressed(System.Int32,Electron2D.JoyButton)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsJoyKnown",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsJoyKnown(System.Int32 device)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a connected gamepad uses a known mapping.",
+      "xmlDocId": "M:Electron2D.Input.IsJoyKnown(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StartJoyVibration",
+      "kind": "Method",
+      "signature": "public static System.Void StartJoyVibration(System.Int32 device, System.Single weakMagnitude, System.Single strongMagnitude, System.Single duration)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        },
+        {
+          "name": "weakMagnitude",
+          "type": "System.Single"
+        },
+        {
+          "name": "strongMagnitude",
+          "type": "System.Single"
+        },
+        {
+          "name": "duration",
+          "type": "System.Single",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Starts gamepad vibration when the device supports it.",
+      "xmlDocId": "M:Electron2D.Input.StartJoyVibration(System.Int32,System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StopJoyVibration",
+      "kind": "Method",
+      "signature": "public static System.Void StopJoyVibration(System.Int32 device)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Stops gamepad vibration.",
+      "xmlDocId": "M:Electron2D.Input.StopJoyVibration(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

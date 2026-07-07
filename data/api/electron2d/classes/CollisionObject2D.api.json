@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionObject2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CollisionObject2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "CollisionObject2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CollisionObject2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CollisionObject2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CollisionObject2D type.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CollisionObject2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CollisionObject2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CollisionObject2D type.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public System.Boolean GetCollisionLayerValue(System.Int32 layerNumber)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "layerNumber",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether an Electron2D collision layer number is enabled.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.GetCollisionLayerValue(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public System.Boolean GetCollisionMaskValue(System.Int32 layerNumber)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "layerNumber",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether an Electron2D collision mask number is enabled.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.GetCollisionMaskValue(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Rid GetRid()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Gets the physics server RID owned by this collision object.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.GetRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionLayerValue(System.Int32 layerNumber, System.Boolean value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerNumber",
+          "type": "System.Int32"
+        },
+        {
+          "name": "value",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Enables or disables an Electron2D collision layer number.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.SetCollisionLayerValue(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionMaskValue(System.Int32 layerNumber, System.Boolean value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerNumber",
+          "type": "System.Int32"
+        },
+        {
+          "name": "value",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Enables or disables an Electron2D collision mask number.",
+      "xmlDocId": "M:Electron2D.CollisionObject2D.SetCollisionMaskValue(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public System.UInt32 CollisionLayer { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the collision layer bits for this object.",
+      "xmlDocId": "P:Electron2D.CollisionObject2D.CollisionLayer",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public System.UInt32 CollisionMask { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the collision mask bits used by this object.",
+      "xmlDocId": "P:Electron2D.CollisionObject2D.CollisionMask",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

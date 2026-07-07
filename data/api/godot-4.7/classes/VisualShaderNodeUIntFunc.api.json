@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeUIntFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeUIntFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeUIntFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeuintfunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A function to be applied to the scalar.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeUIntFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_BITWISE_NOT",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise [code]NOT[/code] operation on the integer. Translates to [code]~a[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+        },
+        {
+          "name": "FUNC_NEGATE",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Negates the [code]x[/code] using [code]-(x)[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_NEGATE",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Negates the [code]x[/code] using [code]-(x)[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+    },
+    {
+      "name": "FUNC_BITWISE_NOT",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise [code]NOT[/code] operation on the integer. Translates to [code]~a[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeUIntFunc.xml",
+      "sha256": "868e3ebc194527b036b9567314b58c511c2bc0f781bbd64fcd9ce8aed013118e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

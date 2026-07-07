@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CenterContainer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CenterContainer",
+    "kind": "class",
+    "baseType": "Electron2D.Container",
+    "interfaces": [],
+    "godotReference": "CenterContainer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CenterContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CenterContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.CenterContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.CenterContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CenterContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CenterContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.CenterContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.CenterContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this center container.",
+      "xmlDocId": "M:Electron2D.CenterContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "UseTopLeft",
+      "kind": "Property",
+      "signature": "public System.Boolean UseTopLeft { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the child top-left corner is placed at the center.",
+      "xmlDocId": "P:Electron2D.CenterContainer.UseTopLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this center container.",
+      "xmlDocId": "M:Electron2D.CenterContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

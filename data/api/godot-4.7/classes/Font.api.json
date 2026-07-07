@@ -1,0 +1,947 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Font",
+    "namespace": "Godot",
+    "fullName": "Godot.Font",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Font",
+    "documentationPath": "doc/classes/Font.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_font.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DrawChar",
+      "kind": "Method",
+      "signature": "public float DrawChar(RID canvasItem, Vector2 pos, int @char, int fontSize, Color modulate, float oversampling)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "char",
+          "type": "int"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw a single Unicode character [param char] into a canvas item using the font, at a given position, with [param modulate] color. [param pos] specifies the baseline, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. [b]Note:[/b] Do not use this function to draw strings character by character, use [method draw_string] or [TextLine] instead.",
+      "godotName": "draw_char",
+      "xmlDocId": "M:Godot.Font.DrawChar(RID,Vector2,int,int,Color,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "DrawCharOutline",
+      "kind": "Method",
+      "signature": "public float DrawCharOutline(RID canvasItem, Vector2 pos, int @char, int fontSize, int size, Color modulate, float oversampling)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "char",
+          "type": "int"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw a single Unicode character [param char] outline into a canvas item using the font, at a given position, with [param modulate] color and [param size] outline size. [param pos] specifies the baseline, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. [b]Note:[/b] Do not use this function to draw strings character by character, use [method draw_string] or [TextLine] instead.",
+      "godotName": "draw_char_outline",
+      "xmlDocId": "M:Godot.Font.DrawCharOutline(RID,Vector2,int,int,int,Color,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "DrawMultilineString",
+      "kind": "Method",
+      "signature": "public void DrawMultilineString(RID canvasItem, Vector2 pos, String text, int alignment, float width, int fontSize, int maxLines, Color modulate, int brkFlags, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "max_lines",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "brk_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Breaks [param text] into lines using rules specified by [param brk_flags] and draws it into a canvas item using the font, at a given position, with [param modulate] color, optionally clipping the width and aligning horizontally. [param pos] specifies the baseline of the first line, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. See also [method CanvasItem.draw_multiline_string].",
+      "godotName": "draw_multiline_string",
+      "xmlDocId": "M:Godot.Font.DrawMultilineString(RID,Vector2,String,int,float,int,int,Color,int,int,int,int,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "DrawMultilineStringOutline",
+      "kind": "Method",
+      "signature": "public void DrawMultilineStringOutline(RID canvasItem, Vector2 pos, String text, int alignment, float width, int fontSize, int maxLines, int size, Color modulate, int brkFlags, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "max_lines",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "brk_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Breaks [param text] to the lines using rules specified by [param brk_flags] and draws text outline into a canvas item using the font, at a given position, with [param modulate] color and [param size] outline size, optionally clipping the width and aligning horizontally. [param pos] specifies the baseline of the first line, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. See also [method CanvasItem.draw_multiline_string_outline].",
+      "godotName": "draw_multiline_string_outline",
+      "xmlDocId": "M:Godot.Font.DrawMultilineStringOutline(RID,Vector2,String,int,float,int,int,int,Color,int,int,int,int,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "DrawString",
+      "kind": "Method",
+      "signature": "public void DrawString(RID canvasItem, Vector2 pos, String text, int alignment, float width, int fontSize, Color modulate, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw [param text] into a canvas item using the font, at a given position, with [param modulate] color, optionally clipping the width and aligning horizontally. [param pos] specifies the baseline, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. See also [method CanvasItem.draw_string].",
+      "godotName": "draw_string",
+      "xmlDocId": "M:Godot.Font.DrawString(RID,Vector2,String,int,float,int,Color,int,int,int,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "DrawStringOutline",
+      "kind": "Method",
+      "signature": "public void DrawStringOutline(RID canvasItem, Vector2 pos, String text, int alignment, float width, int fontSize, int size, Color modulate, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw [param text] outline into a canvas item using the font, at a given position, with [param modulate] color and [param size] outline size, optionally clipping the width and aligning horizontally. [param pos] specifies the baseline, not the top. To draw from the top, [i]ascent[/i] must be added to the Y axis. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. See also [method CanvasItem.draw_string_outline].",
+      "godotName": "draw_string_outline",
+      "xmlDocId": "M:Godot.Font.DrawStringOutline(RID,Vector2,String,int,float,int,int,Color,int,int,int,float)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "FindVariation",
+      "kind": "Method",
+      "signature": "public RID FindVariation(Dictionary variationCoordinates, int faceIndex, float strength, Transform2D transform, int spacingTop, int spacingBottom, int spacingSpace, int spacingGlyph, float baselineOffset, int paletteIndex, PackedColorArray customColors)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "variation_coordinates",
+          "type": "Dictionary"
+        },
+        {
+          "name": "face_index",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "strength",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D",
+          "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)"
+        },
+        {
+          "name": "spacing_top",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "spacing_bottom",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "spacing_space",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "spacing_glyph",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "baseline_offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "palette_index",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "custom_colors",
+          "type": "PackedColorArray",
+          "defaultValue": "PackedColorArray()"
+        }
+      ],
+      "summary": "Returns [TextServer] RID of the font cache for specific variation.",
+      "godotName": "find_variation",
+      "xmlDocId": "M:Godot.Font.FindVariation(Dictionary,int,float,Transform2D,int,int,int,int,float,int,PackedColorArray)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetAscent",
+      "kind": "Method",
+      "signature": "public float GetAscent(int fontSize)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the maximum font ascent (number of pixels above the baseline) of this font and all fallback fonts. [b]Note:[/b] Real ascent of the string is context-dependent and can be significantly different from the value returned by this function. Use it only as rough estimate (e.g. as the ascent of empty line).",
+      "godotName": "get_ascent",
+      "xmlDocId": "M:Godot.Font.GetAscent(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetCharSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetCharSize(int @char, int fontSize)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "char",
+          "type": "int"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the size of a character. Does not take kerning into account. [b]Note:[/b] Do not use this function to calculate width of the string character by character, use [method get_string_size] or [TextLine] instead. The height returned is the font height (see also [method get_height]) and has no relation to the glyph height.",
+      "godotName": "get_char_size",
+      "xmlDocId": "M:Godot.Font.GetCharSize(int,int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetDescent",
+      "kind": "Method",
+      "signature": "public float GetDescent(int fontSize)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the maximum font descent (number of pixels below the baseline) of this font and all fallback fonts. [b]Note:[/b] Real descent of the string is context-dependent and can be significantly different from the value returned by this function. Use it only as rough estimate (e.g. as the descent of empty line).",
+      "godotName": "get_descent",
+      "xmlDocId": "M:Godot.Font.GetDescent(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFaceCount",
+      "kind": "Method",
+      "signature": "public int GetFaceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns number of faces in the TrueType / OpenType collection.",
+      "godotName": "get_face_count",
+      "xmlDocId": "M:Godot.Font.GetFaceCount",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFontName",
+      "kind": "Method",
+      "signature": "public String GetFontName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns font family name.",
+      "godotName": "get_font_name",
+      "xmlDocId": "M:Godot.Font.GetFontName",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFontStretch",
+      "kind": "Method",
+      "signature": "public int GetFontStretch()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns font stretch amount, compared to a normal width. A percentage value between [code]50%[/code] and [code]200%[/code].",
+      "godotName": "get_font_stretch",
+      "xmlDocId": "M:Godot.Font.GetFontStretch",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFontStyle",
+      "kind": "Method",
+      "signature": "public int GetFontStyle()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns font style flags.",
+      "godotName": "get_font_style",
+      "xmlDocId": "M:Godot.Font.GetFontStyle",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFontStyleName",
+      "kind": "Method",
+      "signature": "public String GetFontStyleName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns font style name.",
+      "godotName": "get_font_style_name",
+      "xmlDocId": "M:Godot.Font.GetFontStyleName",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetFontWeight",
+      "kind": "Method",
+      "signature": "public int GetFontWeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns weight (boldness) of the font. A value in the [code]100...999[/code] range, normal font weight is [code]400[/code], bold font weight is [code]700[/code].",
+      "godotName": "get_font_weight",
+      "xmlDocId": "M:Godot.Font.GetFontWeight",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public float GetHeight(int fontSize)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the total average font height (ascent plus descent) in pixels. [b]Note:[/b] Real height of the string is context-dependent and can be significantly different from the value returned by this function. Use it only as rough estimate (e.g. as the height of empty line).",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.Font.GetHeight(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetMultilineStringSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetMultilineStringSize(String text, int alignment, float width, int fontSize, int maxLines, int brkFlags, int justificationFlags, int direction, int orientation)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "max_lines",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "brk_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the size of a bounding box of a string broken into the lines, taking kerning and advance into account. See also [method draw_multiline_string].",
+      "godotName": "get_multiline_string_size",
+      "xmlDocId": "M:Godot.Font.GetMultilineStringSize(String,int,float,int,int,int,int,int,int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetOpentypeFeatures",
+      "kind": "Method",
+      "signature": "public Dictionary GetOpentypeFeatures()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a set of OpenType feature tags. More info: [url=https://docs.microsoft.com/en-us/typography/opentype/spec/featuretags]OpenType feature tags[/url].",
+      "godotName": "get_opentype_features",
+      "xmlDocId": "M:Godot.Font.GetOpentypeFeatures",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetOtNameStrings",
+      "kind": "Method",
+      "signature": "public Dictionary GetOtNameStrings()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns [Dictionary] with OpenType font name strings (localized font names, version, description, license information, sample text, etc.).",
+      "godotName": "get_ot_name_strings",
+      "xmlDocId": "M:Godot.Font.GetOtNameStrings",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetPaletteColors",
+      "kind": "Method",
+      "signature": "public PackedColorArray GetPaletteColors(int index)",
+      "returnType": "PackedColorArray",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the array in the predefined color palette at [param index]. Palette contains all colors used to render font glyphs. Each palette has the same number of colors. Colors can be overridden using [FontVariation].",
+      "godotName": "get_palette_colors",
+      "xmlDocId": "M:Godot.Font.GetPaletteColors(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetPaletteCount",
+      "kind": "Method",
+      "signature": "public int GetPaletteCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of predefined color palettes. Palette contains all colors used to render font glyphs. Each palette has the same number of colors.",
+      "godotName": "get_palette_count",
+      "xmlDocId": "M:Godot.Font.GetPaletteCount",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetPaletteName",
+      "kind": "Method",
+      "signature": "public String GetPaletteName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the predefined color palette at [param index]. Palette contains all colors used to render font glyphs. Each palette has the same number of colors.",
+      "godotName": "get_palette_name",
+      "xmlDocId": "M:Godot.Font.GetPaletteName(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetRids",
+      "kind": "Method",
+      "signature": "public RID[] GetRids()",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "Returns [Array] of valid [Font] [RID]s, which can be passed to the [TextServer] methods.",
+      "godotName": "get_rids",
+      "xmlDocId": "M:Godot.Font.GetRids",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetSpacing",
+      "kind": "Method",
+      "signature": "public int GetSpacing(int spacing)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "spacing",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the amount of spacing for the given [param spacing] type.",
+      "godotName": "get_spacing",
+      "xmlDocId": "M:Godot.Font.GetSpacing(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetStringSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetStringSize(String text, int alignment, float width, int fontSize, int justificationFlags, int direction, int orientation)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the size of a bounding box of a single-line string, taking kerning, advance and subpixel positioning into account. See also [method get_multiline_string_size] and [method draw_string]. For example, to get the string size as displayed by a single-line Label, use: [codeblocks] [gdscript] var string_size = $Label.get_theme_font(\u0022font\u0022).get_string_size($Label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, $Label.get_theme_font_size(\u0022font_size\u0022)) [/gdscript] [csharp] Label label = GetNode\u003CLabel\u003E(\u0022Label\u0022); Vector2 stringSize = label.GetThemeFont(\u0022font\u0022).GetStringSize(label.Text, HorizontalAlignment.Left, -1, label.GetThemeFontSize(\u0022font_size\u0022)); [/csharp] [/codeblocks] [b]Note:[/b] Since kerning, advance and subpixel positioning are taken into account by [method get_string_size], using separate [method get_string_size] calls on substrings of a string then adding the results together will return a different result compared to using a single [method get_string_size] call on the full string. [b]Note:[/b] Real height of the string is context-dependent and can be significantly different from the value returned by [method get_height].",
+      "godotName": "get_string_size",
+      "xmlDocId": "M:Godot.Font.GetStringSize(String,int,float,int,int,int,int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetSupportedChars",
+      "kind": "Method",
+      "signature": "public String GetSupportedChars()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a string containing all the characters available in the font. If a given character is included in more than one font data source, it appears only once in the returned string.",
+      "godotName": "get_supported_chars",
+      "xmlDocId": "M:Godot.Font.GetSupportedChars",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetSupportedFeatureList",
+      "kind": "Method",
+      "signature": "public Dictionary GetSupportedFeatureList()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns list of OpenType features supported by font.",
+      "godotName": "get_supported_feature_list",
+      "xmlDocId": "M:Godot.Font.GetSupportedFeatureList",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetSupportedVariationList",
+      "kind": "Method",
+      "signature": "public Dictionary GetSupportedVariationList()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns list of supported [url=https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg]variation coordinates[/url], each coordinate is returned as [code]tag: Vector3i(min_value,max_value,default_value)[/code]. Font variations allow for continuous change of glyph characteristics along some given design axis, such as weight, width or slant. To print available variation axes of a variable font: [codeblock] var fv = FontVariation.new() fv.base_font = load(\u0022res://RobotoFlex.ttf\u0022) var variation_list = fv.get_supported_variation_list() for tag in variation_list: var name = TextServerManager.get_primary_interface().tag_to_name(tag) var values = variation_list[tag] print(\u0022variation axis: %s (%d)\\n\\tmin, max, default: %s\u0022 % [name, tag, values]) [/codeblock] [b]Note:[/b] To set and get variation coordinates of a [FontVariation], use [member FontVariation.variation_opentype].",
+      "godotName": "get_supported_variation_list",
+      "xmlDocId": "M:Godot.Font.GetSupportedVariationList",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetUnderlinePosition",
+      "kind": "Method",
+      "signature": "public float GetUnderlinePosition(int fontSize)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns average pixel offset of the underline below the baseline. [b]Note:[/b] Real underline position of the string is context-dependent and can be significantly different from the value returned by this function. Use it only as rough estimate.",
+      "godotName": "get_underline_position",
+      "xmlDocId": "M:Godot.Font.GetUnderlinePosition(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "GetUnderlineThickness",
+      "kind": "Method",
+      "signature": "public float GetUnderlineThickness(int fontSize)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns average thickness of the underline. [b]Note:[/b] Real underline thickness of the string is context-dependent and can be significantly different from the value returned by this function. Use it only as rough estimate.",
+      "godotName": "get_underline_thickness",
+      "xmlDocId": "M:Godot.Font.GetUnderlineThickness(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "HasChar",
+      "kind": "Method",
+      "signature": "public bool HasChar(int @char)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "char",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a Unicode [param char] is available in the font.",
+      "godotName": "has_char",
+      "xmlDocId": "M:Godot.Font.HasChar(int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "IsLanguageSupported",
+      "kind": "Method",
+      "signature": "public bool IsLanguageSupported(String language)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the font supports the given language (as a [url=https://en.wikipedia.org/wiki/ISO_639-1]ISO 639[/url] code).",
+      "godotName": "is_language_supported",
+      "xmlDocId": "M:Godot.Font.IsLanguageSupported(String)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "IsScriptSupported",
+      "kind": "Method",
+      "signature": "public bool IsScriptSupported(String script)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the font supports the given script (as a [url=https://en.wikipedia.org/wiki/ISO_15924]ISO 15924[/url] code).",
+      "godotName": "is_script_supported",
+      "xmlDocId": "M:Godot.Font.IsScriptSupported(String)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "SetCacheCapacity",
+      "kind": "Method",
+      "signature": "public void SetCacheCapacity(int singleLine, int multiLine)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "single_line",
+          "type": "int"
+        },
+        {
+          "name": "multi_line",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets LRU cache capacity for [code]draw_*[/code] methods.",
+      "godotName": "set_cache_capacity",
+      "xmlDocId": "M:Godot.Font.SetCacheCapacity(int,int)",
+      "sourcePath": "doc/classes/Font.xml"
+    },
+    {
+      "name": "Fallbacks",
+      "kind": "Property",
+      "signature": "public Font[] Fallbacks { get; set; }",
+      "returnType": "Font[]",
+      "parameters": [],
+      "summary": "Array of fallback [Font]s to use as a substitute if a glyph is not found in this current [Font]. If this array is empty in a [FontVariation], the [member FontVariation.base_font]\u0027s fallbacks are used instead.",
+      "defaultValue": "[]",
+      "godotName": "fallbacks",
+      "xmlDocId": "P:Godot.Font.Fallbacks",
+      "sourcePath": "doc/classes/Font.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Font.xml",
+      "sha256": "d330bf65b8bedd7e6388cfafb7ec957508b342931f179730830879d842c2bf83"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

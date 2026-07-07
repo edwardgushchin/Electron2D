@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify audit-followups, verify audit-contracts, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit [--deep-research], audit submit --download-report-only."));
+                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify audit-followups, verify audit-contracts, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, api fetch-godot --version <version>, api generate-matrix [--check], api generate-class-packets [--check], package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit [--deep-research], audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -76,6 +76,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             "test" => RunTestAsync(args, cancellationToken),
             "verify" => RouteVerifyAsync(args, cancellationToken),
             "update" => RouteUpdateAsync(args, cancellationToken),
+            "api" => RouteApiAsync(args, cancellationToken),
             "package" => RoutePackageAsync(args, cancellationToken),
             "release" => RouteReleaseAsync(args, cancellationToken),
             "audit" => RouteAuditAsync(args, cancellationToken),
@@ -86,6 +87,14 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
     private Task<int> RouteAuditAsync(string[] args, CancellationToken cancellationToken)
     {
         return new AuditPackageCommand(diagnostics).RunAsync(args, cancellationToken);
+    }
+
+    private Task<int> RouteApiAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("api", args.Length >= 2 ? "api " + args[1] : "api");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new ApiMatrixCommand(repositoryRoot, diagnostics).RunAsync(args, cancellationToken);
     }
 
     private Task<int> RouteVerifyAsync(string[] args, CancellationToken cancellationToken)

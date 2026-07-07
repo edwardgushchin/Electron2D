@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VehicleWheel3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VehicleWheel3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "VehicleWheel3D",
+    "documentationPath": "doc/classes/VehicleWheel3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vehiclewheel3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetContactBody",
+      "kind": "Method",
+      "signature": "public Node3D GetContactBody()",
+      "returnType": "Node3D",
+      "parameters": [],
+      "summary": "Returns the contacting body node if valid in the tree, as [Node3D]. At the moment, [GridMap] is not supported so the node will be always of type [PhysicsBody3D]. Returns [code]null[/code] if the wheel is not in contact with a surface, or the contact body is not a [PhysicsBody3D].",
+      "godotName": "get_contact_body",
+      "xmlDocId": "M:Godot.VehicleWheel3D.GetContactBody",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "GetContactNormal",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactNormal()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the normal of the suspension\u0027s collision in world space if the wheel is in contact. If the wheel isn\u0027t in contact with anything, returns a vector pointing directly along the suspension axis toward the vehicle in world space.",
+      "godotName": "get_contact_normal",
+      "xmlDocId": "M:Godot.VehicleWheel3D.GetContactNormal",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "GetContactPoint",
+      "kind": "Method",
+      "signature": "public Vector3 GetContactPoint()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the point of the suspension\u0027s collision in world space if the wheel is in contact. If the wheel isn\u0027t in contact with anything, returns the maximum point of the wheel\u0027s ray cast in world space, which is defined by [code]wheel_rest_length \u002B wheel_radius[/code].",
+      "godotName": "get_contact_point",
+      "xmlDocId": "M:Godot.VehicleWheel3D.GetContactPoint",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "GetRpm",
+      "kind": "Method",
+      "signature": "public float GetRpm()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the rotational speed of the wheel in revolutions per minute.",
+      "godotName": "get_rpm",
+      "xmlDocId": "M:Godot.VehicleWheel3D.GetRpm",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "GetSkidinfo",
+      "kind": "Method",
+      "signature": "public float GetSkidinfo()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns a value between 0.0 and 1.0 that indicates whether this wheel is skidding. 0.0 is skidding (the wheel has lost grip, e.g. icy terrain), 1.0 means not skidding (the wheel has full grip, e.g. dry asphalt road).",
+      "godotName": "get_skidinfo",
+      "xmlDocId": "M:Godot.VehicleWheel3D.GetSkidinfo",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "IsInContact",
+      "kind": "Method",
+      "signature": "public bool IsInContact()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this wheel is in contact with a surface.",
+      "godotName": "is_in_contact",
+      "xmlDocId": "M:Godot.VehicleWheel3D.IsInContact",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "Brake",
+      "kind": "Property",
+      "signature": "public float Brake { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Slows down the wheel by applying a braking force. The wheel is only slowed down if it is in contact with a surface. The force you need to apply to adequately slow down your vehicle depends on the [member RigidBody3D.mass] of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 30 range for hard braking.",
+      "defaultValue": "0.0",
+      "godotName": "brake",
+      "xmlDocId": "P:Godot.VehicleWheel3D.Brake",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "DampingCompression",
+      "kind": "Property",
+      "signature": "public float DampingCompression { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The damping applied to the suspension spring when being compressed, meaning when the wheel is moving up relative to the vehicle. It is measured in Newton-seconds per millimeter (N\u22C5s/mm), or megagrams per second (Mg/s). This value should be between 0.0 (no damping) and 1.0, but may be more. A value of 0.0 means the car will keep bouncing as the spring keeps its energy. A good value for this is around 0.3 for a normal car, 0.5 for a race car.",
+      "defaultValue": "0.83",
+      "godotName": "damping_compression",
+      "xmlDocId": "P:Godot.VehicleWheel3D.DampingCompression",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "DampingRelaxation",
+      "kind": "Property",
+      "signature": "public float DampingRelaxation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The damping applied to the suspension spring when rebounding or extending, meaning when the wheel is moving down relative to the vehicle. It is measured in Newton-seconds per millimeter (N\u22C5s/mm), or megagrams per second (Mg/s). This value should be between 0.0 (no damping) and 1.0, but may be more. This value should always be slightly higher than the [member damping_compression] property. For a [member damping_compression] value of 0.3, try a relaxation value of 0.5.",
+      "defaultValue": "0.88",
+      "godotName": "damping_relaxation",
+      "xmlDocId": "P:Godot.VehicleWheel3D.DampingRelaxation",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "EngineForce",
+      "kind": "Property",
+      "signature": "public float EngineForce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Accelerates the wheel by applying an engine force. The wheel is only sped up if it is in contact with a surface. The [member RigidBody3D.mass] of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration. [b]Note:[/b] The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears. A negative value will result in the wheel reversing.",
+      "defaultValue": "0.0",
+      "godotName": "engine_force",
+      "xmlDocId": "P:Godot.VehicleWheel3D.EngineForce",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.VehicleWheel3D.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "Steering",
+      "kind": "Property",
+      "signature": "public float Steering { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The steering angle for the wheel, in radians. Setting this to a non-zero value will result in the vehicle turning when it\u0027s moving.",
+      "defaultValue": "0.0",
+      "godotName": "steering",
+      "xmlDocId": "P:Godot.VehicleWheel3D.Steering",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "SuspensionMaxForce",
+      "kind": "Property",
+      "signature": "public float SuspensionMaxForce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum force the spring can resist. This value should be higher than a quarter of the [member RigidBody3D.mass] of the [VehicleBody3D] or the spring will not carry the weight of the vehicle. Good results are often obtained by a value that is about 3\u00D7 to 4\u00D7 this number.",
+      "defaultValue": "6000.0",
+      "godotName": "suspension_max_force",
+      "xmlDocId": "P:Godot.VehicleWheel3D.SuspensionMaxForce",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "SuspensionStiffness",
+      "kind": "Property",
+      "signature": "public float SuspensionStiffness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The stiffness of the suspension, measured in Newtons per millimeter (N/mm), or megagrams per second squared (Mg/s\u00B2). Use a value lower than 50 for an off-road car, a value between 50 and 100 for a race car and try something around 200 for something like a Formula 1 car.",
+      "defaultValue": "5.88",
+      "godotName": "suspension_stiffness",
+      "xmlDocId": "P:Godot.VehicleWheel3D.SuspensionStiffness",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "SuspensionTravel",
+      "kind": "Property",
+      "signature": "public float SuspensionTravel { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This is the distance the suspension can travel. As Godot units are equivalent to meters, keep this setting relatively low. Try a value between 0.1 and 0.3 depending on the type of car.",
+      "defaultValue": "0.2",
+      "godotName": "suspension_travel",
+      "xmlDocId": "P:Godot.VehicleWheel3D.SuspensionTravel",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "UseAsSteering",
+      "kind": "Property",
+      "signature": "public bool UseAsSteering { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this wheel will be turned when the car steers. This value is used in conjunction with [member VehicleBody3D.steering] and ignored if you are using the per-wheel [member steering] value instead.",
+      "defaultValue": "false",
+      "godotName": "use_as_steering",
+      "xmlDocId": "P:Godot.VehicleWheel3D.UseAsSteering",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "UseAsTraction",
+      "kind": "Property",
+      "signature": "public bool UseAsTraction { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this wheel transfers engine force to the ground to propel the vehicle forward. This value is used in conjunction with [member VehicleBody3D.engine_force] and ignored if you are using the per-wheel [member engine_force] value instead.",
+      "defaultValue": "false",
+      "godotName": "use_as_traction",
+      "xmlDocId": "P:Godot.VehicleWheel3D.UseAsTraction",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "WheelFrictionSlip",
+      "kind": "Property",
+      "signature": "public float WheelFrictionSlip { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This determines how much grip this wheel has. It is combined with the friction setting of the surface the wheel is in contact with. 0.0 means no grip, 1.0 is normal grip. For a drift car setup, try setting the grip of the rear wheels slightly lower than the front wheels, or use a lower value to simulate tire wear. It\u0027s best to set this to 1.0 when starting out.",
+      "defaultValue": "10.5",
+      "godotName": "wheel_friction_slip",
+      "xmlDocId": "P:Godot.VehicleWheel3D.WheelFrictionSlip",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "WheelRadius",
+      "kind": "Property",
+      "signature": "public float WheelRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the wheel in meters.",
+      "defaultValue": "0.5",
+      "godotName": "wheel_radius",
+      "xmlDocId": "P:Godot.VehicleWheel3D.WheelRadius",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "WheelRestLength",
+      "kind": "Property",
+      "signature": "public float WheelRestLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This is the distance in meters the wheel is lowered from its origin point. Don\u0027t set this to 0.0 and move the wheel into position, instead move the origin point of your wheel (the gizmo in Godot) to the position the wheel will take when bottoming out, then use the rest length to move the wheel down to the position it should be in when the car is in rest.",
+      "defaultValue": "0.15",
+      "godotName": "wheel_rest_length",
+      "xmlDocId": "P:Godot.VehicleWheel3D.WheelRestLength",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    },
+    {
+      "name": "WheelRollInfluence",
+      "kind": "Property",
+      "signature": "public float WheelRollInfluence { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This value affects the roll of your vehicle. If set to 1.0 for all wheels, your vehicle will resist body roll, while a value of 0.0 will be prone to rolling over.",
+      "defaultValue": "0.1",
+      "godotName": "wheel_roll_influence",
+      "xmlDocId": "P:Godot.VehicleWheel3D.WheelRollInfluence",
+      "sourcePath": "doc/classes/VehicleWheel3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VehicleWheel3D.xml",
+      "sha256": "12452c4b5a504076d953bde7781b023f2491ff8a062dcc756e057274e61b9ccd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

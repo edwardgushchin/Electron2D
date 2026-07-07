@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGMesh3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGMesh3D",
+    "kind": "class",
+    "baseType": "CSGPrimitive3D",
+    "interfaces": [],
+    "godotReference": "CSGMesh3D",
+    "documentationPath": "modules/csg/doc_classes/CSGMesh3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgmesh3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The [Material] used in drawing the CSG shape.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CSGMesh3D.Material",
+      "sourcePath": "modules/csg/doc_classes/CSGMesh3D.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "The [Mesh] resource to use as a CSG shape. [b]Note:[/b] Some [Mesh] types such as [PlaneMesh], [PointMesh], [QuadMesh], and [RibbonTrailMesh] are excluded from the type hint for this property, as these primitives are non-[i]manifold[/i] and thus not compatible with the CSG algorithm. [b]Note:[/b] When using an [ArrayMesh], all vertex attributes except [constant Mesh.ARRAY_VERTEX], [constant Mesh.ARRAY_NORMAL] and [constant Mesh.ARRAY_TEX_UV] are left unused. Only [constant Mesh.ARRAY_VERTEX] and [constant Mesh.ARRAY_TEX_UV] will be passed to the GPU. [constant Mesh.ARRAY_NORMAL] is only used to determine which faces require the use of flat shading. By default, CSGMesh will ignore the mesh\u0027s vertex normals, recalculate them for each vertex and use a smooth shader. If a flat shader is required for a face, ensure that all vertex normals of the face are approximately equal.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.CSGMesh3D.Mesh",
+      "sourcePath": "modules/csg/doc_classes/CSGMesh3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGMesh3D.xml",
+      "sha256": "8343c58d0eb6c7dcfa94fd9a8d589382b06a7b22e85941d494f8f30ed8c4c7d9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

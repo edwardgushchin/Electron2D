@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HashingContext",
+    "namespace": "Godot",
+    "fullName": "Godot.HashingContext",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "HashingContext",
+    "documentationPath": "doc/classes/HashingContext.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hashingcontext.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Finish",
+      "kind": "Method",
+      "signature": "public PackedByteArray Finish()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Closes the current context, and return the computed hash.",
+      "godotName": "finish",
+      "xmlDocId": "M:Godot.HashingContext.Finish",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public int Start(int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Starts a new hash computation of the given [param type] (e.g. [constant HASH_SHA256] to start computation of an SHA-256).",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.HashingContext.Start(int)",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    },
+    {
+      "name": "Update",
+      "kind": "Method",
+      "signature": "public int Update(PackedByteArray chunk)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "chunk",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Updates the computation with the given [param chunk] of data.",
+      "godotName": "update",
+      "xmlDocId": "M:Godot.HashingContext.Update(PackedByteArray)",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "HashType",
+      "values": [
+        {
+          "name": "HASH_MD5",
+          "value": "0",
+          "enum": "HashType",
+          "kind": "EnumValue",
+          "summary": "Hashing algorithm: MD5.",
+          "sourcePath": "doc/classes/HashingContext.xml"
+        },
+        {
+          "name": "HASH_SHA1",
+          "value": "1",
+          "enum": "HashType",
+          "kind": "EnumValue",
+          "summary": "Hashing algorithm: SHA-1.",
+          "sourcePath": "doc/classes/HashingContext.xml"
+        },
+        {
+          "name": "HASH_SHA256",
+          "value": "2",
+          "enum": "HashType",
+          "kind": "EnumValue",
+          "summary": "Hashing algorithm: SHA-256.",
+          "sourcePath": "doc/classes/HashingContext.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HASH_MD5",
+      "value": "0",
+      "enum": "HashType",
+      "kind": "EnumValue",
+      "summary": "Hashing algorithm: MD5.",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    },
+    {
+      "name": "HASH_SHA1",
+      "value": "1",
+      "enum": "HashType",
+      "kind": "EnumValue",
+      "summary": "Hashing algorithm: SHA-1.",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    },
+    {
+      "name": "HASH_SHA256",
+      "value": "2",
+      "enum": "HashType",
+      "kind": "EnumValue",
+      "summary": "Hashing algorithm: SHA-256.",
+      "sourcePath": "doc/classes/HashingContext.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HashingContext.xml",
+      "sha256": "9490c4b39a7737d3746ade7affec3c80acbb798a7fa199f3c9c19d5d7b58f854"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

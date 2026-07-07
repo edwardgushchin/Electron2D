@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTransformFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTransformFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTransformFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetransformfunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The function to be computed.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeTransformFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_INVERSE",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Perform the inverse operation on the [Transform3D] matrix.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+        },
+        {
+          "name": "FUNC_TRANSPOSE",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Perform the transpose operation on the [Transform3D] matrix.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_INVERSE",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Perform the inverse operation on the [Transform3D] matrix.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+    },
+    {
+      "name": "FUNC_TRANSPOSE",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Perform the transpose operation on the [Transform3D] matrix.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTransformFunc.xml",
+      "sha256": "6142d0b576ecdac0819f0b9938095b6ee96d9a4ad564ebe45f26dd1d97086112"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

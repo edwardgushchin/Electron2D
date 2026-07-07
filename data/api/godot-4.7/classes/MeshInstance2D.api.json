@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MeshInstance2D",
+    "namespace": "Godot",
+    "fullName": "Godot.MeshInstance2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "MeshInstance2D",
+    "documentationPath": "doc/classes/MeshInstance2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_meshinstance2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "The [Mesh] that will be drawn by the [MeshInstance2D].",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.MeshInstance2D.Mesh",
+      "sourcePath": "doc/classes/MeshInstance2D.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The [Texture2D] that will be used if using the default [CanvasItemMaterial]. Can be accessed as [code]TEXTURE[/code] in CanvasItem shader.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.MeshInstance2D.Texture",
+      "sourcePath": "doc/classes/MeshInstance2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "TextureChanged",
+      "kind": "Signal",
+      "signature": "public event TextureChangedHandler TextureChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member texture] is changed.",
+      "godotName": "texture_changed",
+      "xmlDocId": "E:Godot.MeshInstance2D.TextureChanged",
+      "sourcePath": "doc/classes/MeshInstance2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MeshInstance2D.xml",
+      "sha256": "456cb33fe78c952cf017f73e0b31cb83c250474e12a3a1dad5b5125a1e54b0ba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

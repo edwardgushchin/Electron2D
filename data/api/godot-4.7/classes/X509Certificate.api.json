@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "X509Certificate",
+    "namespace": "Godot",
+    "fullName": "Godot.X509Certificate",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "X509Certificate",
+    "documentationPath": "doc/classes/X509Certificate.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_x509certificate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public int Load(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads a certificate from [param path] (\u0022*.crt\u0022 file).",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.X509Certificate.Load(String)",
+      "sourcePath": "doc/classes/X509Certificate.xml"
+    },
+    {
+      "name": "LoadFromString",
+      "kind": "Method",
+      "signature": "public int LoadFromString(String @string)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "string",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads a certificate from the given [param string].",
+      "godotName": "load_from_string",
+      "xmlDocId": "M:Godot.X509Certificate.LoadFromString(String)",
+      "sourcePath": "doc/classes/X509Certificate.xml"
+    },
+    {
+      "name": "Save",
+      "kind": "Method",
+      "signature": "public int Save(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves a certificate to the given [param path] (should be a \u0022*.crt\u0022 file).",
+      "godotName": "save",
+      "xmlDocId": "M:Godot.X509Certificate.Save(String)",
+      "sourcePath": "doc/classes/X509Certificate.xml"
+    },
+    {
+      "name": "SaveToString",
+      "kind": "Method",
+      "signature": "public String SaveToString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a string representation of the certificate, or an empty string if the certificate is invalid.",
+      "godotName": "save_to_string",
+      "xmlDocId": "M:Godot.X509Certificate.SaveToString",
+      "sourcePath": "doc/classes/X509Certificate.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/X509Certificate.xml",
+      "sha256": "763f69f52db273c6ccf39b288f490fc2efb3077eef38a870eccd771e0654a516"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

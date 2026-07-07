@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSetSource",
+    "namespace": "Godot",
+    "fullName": "Godot.TileSetSource",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "TileSetSource",
+    "documentationPath": "doc/classes/TileSetSource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tilesetsource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAlternativeTileId",
+      "kind": "Method",
+      "signature": "public int GetAlternativeTileId(Vector2i atlasCoords, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the alternative ID for the tile with coordinates ID [param atlas_coords] at index [param index].",
+      "godotName": "get_alternative_tile_id",
+      "xmlDocId": "M:Godot.TileSetSource.GetAlternativeTileId(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    },
+    {
+      "name": "GetAlternativeTilesCount",
+      "kind": "Method",
+      "signature": "public int GetAlternativeTilesCount(Vector2i atlasCoords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the number of alternatives tiles for the coordinates ID [param atlas_coords]. For [TileSetAtlasSource], this always return at least 1, as the base tile with ID 0 is always part of the alternatives list. Returns -1 if there is not tile at the given coords.",
+      "godotName": "get_alternative_tiles_count",
+      "xmlDocId": "M:Godot.TileSetSource.GetAlternativeTilesCount(Vector2i)",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    },
+    {
+      "name": "GetTileId",
+      "kind": "Method",
+      "signature": "public Vector2i GetTileId(int index)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tile coordinates ID of the tile with index [param index].",
+      "godotName": "get_tile_id",
+      "xmlDocId": "M:Godot.TileSetSource.GetTileId(int)",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    },
+    {
+      "name": "GetTilesCount",
+      "kind": "Method",
+      "signature": "public int GetTilesCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns how many tiles this atlas source defines (not including alternative tiles).",
+      "godotName": "get_tiles_count",
+      "xmlDocId": "M:Godot.TileSetSource.GetTilesCount",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    },
+    {
+      "name": "HasAlternativeTile",
+      "kind": "Method",
+      "signature": "public bool HasAlternativeTile(Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if the base tile at coordinates [param atlas_coords] has an alternative with ID [param alternative_tile].",
+      "godotName": "has_alternative_tile",
+      "xmlDocId": "M:Godot.TileSetSource.HasAlternativeTile(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    },
+    {
+      "name": "HasTile",
+      "kind": "Method",
+      "signature": "public bool HasTile(Vector2i atlasCoords)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns if this atlas has a tile with coordinates ID [param atlas_coords].",
+      "godotName": "has_tile",
+      "xmlDocId": "M:Godot.TileSetSource.HasTile(Vector2i)",
+      "sourcePath": "doc/classes/TileSetSource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileSetSource.xml",
+      "sha256": "6e1b25234cc2eed40c10db811f4d9b6c8c2fa3d60e514a7a3610ddd35e70caed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRBindingModifier",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRBindingModifier",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRBindingModifier",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRBindingModifier.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrbindingmodifier.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetDescription",
+      "kind": "Method",
+      "signature": "public String _GetDescription()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Return the description of this class that is used for the title bar of the binding modifier editor.",
+      "godotName": "_get_description",
+      "xmlDocId": "M:Godot.OpenXRBindingModifier._GetDescription",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifier.xml"
+    },
+    {
+      "name": "_GetIpModification",
+      "kind": "Method",
+      "signature": "public PackedByteArray _GetIpModification()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the data that is sent to OpenXR when submitting the suggested interacting bindings this modifier is a part of. [b]Note:[/b] This must be data compatible with an [code]XrBindingModificationBaseHeaderKHR[/code] structure.",
+      "godotName": "_get_ip_modification",
+      "xmlDocId": "M:Godot.OpenXRBindingModifier._GetIpModification",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifier.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetDescription",
+      "kind": "Method",
+      "signature": "public String _GetDescription()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Return the description of this class that is used for the title bar of the binding modifier editor.",
+      "godotName": "_get_description",
+      "xmlDocId": "M:Godot.OpenXRBindingModifier._GetDescription",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifier.xml"
+    },
+    {
+      "name": "_GetIpModification",
+      "kind": "Method",
+      "signature": "public PackedByteArray _GetIpModification()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the data that is sent to OpenXR when submitting the suggested interacting bindings this modifier is a part of. [b]Note:[/b] This must be data compatible with an [code]XrBindingModificationBaseHeaderKHR[/code] structure.",
+      "godotName": "_get_ip_modification",
+      "xmlDocId": "M:Godot.OpenXRBindingModifier._GetIpModification",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRBindingModifier.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRBindingModifier.xml",
+      "sha256": "ac37c73773bbad893f150a2c4c1b2de6c3e217d4c24ef10ba1be7aae9ca4d46a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Button",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Button",
+    "kind": "class",
+    "baseType": "Electron2D.BaseButton",
+    "interfaces": [],
+    "godotReference": "Button",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Button",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Button()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Button\u0060 class.",
+      "xmlDocId": "M:Electron2D.Button.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Button",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Button()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Button\u0060 class.",
+      "xmlDocId": "M:Electron2D.Button.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this button.",
+      "xmlDocId": "M:Electron2D.Button._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the button background and text.",
+      "xmlDocId": "M:Electron2D.Button._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public System.String Text { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the text displayed by this button.",
+      "xmlDocId": "P:Electron2D.Button.Text",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this button.",
+      "xmlDocId": "M:Electron2D.Button._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the button background and text.",
+      "xmlDocId": "M:Electron2D.Button._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

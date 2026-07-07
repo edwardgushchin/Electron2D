@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimatedSprite2D",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimatedSprite2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "AnimatedSprite2D",
+    "documentationPath": "doc/classes/AnimatedSprite2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPlayingSpeed",
+      "kind": "Method",
+      "signature": "public float GetPlayingSpeed()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the actual playing speed of current animation or [code]0[/code] if not playing. This speed is the [member speed_scale] property multiplied by [code]custom_speed[/code] argument specified when calling the [method play] method. Returns a negative value if the current animation is playing backwards.",
+      "godotName": "get_playing_speed",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.GetPlayingSpeed",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public bool IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an animation is currently playing (even if [member speed_scale] and/or [code]custom_speed[/code] are [code]0[/code]).",
+      "godotName": "is_playing",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.IsPlaying",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public void Pause()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Pauses the currently playing animation. The [member frame] and [member frame_progress] will be kept and calling [method play] or [method play_backwards] without arguments will resume the animation from the current playback position. See also [method stop].",
+      "godotName": "pause",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.Pause",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public void Play(StringName name, float customSpeed, bool fromEnd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        },
+        {
+          "name": "custom_speed",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "from_end",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Plays the animation with key [param name]. If [param custom_speed] is negative and [param from_end] is [code]true[/code], the animation will play backwards (which is equivalent to calling [method play_backwards]). If this method is called with that same animation [param name], or with no [param name] parameter, the assigned animation will resume playing if it was paused.",
+      "godotName": "play",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.Play(StringName,float,bool)",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "PlayBackwards",
+      "kind": "Method",
+      "signature": "public void PlayBackwards(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Plays the animation with key [param name] in reverse. This method is a shorthand for [method play] with [code]custom_speed = -1.0[/code] and [code]from_end = true[/code], so see its description for more information.",
+      "godotName": "play_backwards",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.PlayBackwards(StringName)",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "SetFrameAndProgress",
+      "kind": "Method",
+      "signature": "public void SetFrameAndProgress(int frame, float progress)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "int"
+        },
+        {
+          "name": "progress",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets [member frame] and [member frame_progress] to the given values. Unlike setting [member frame], this method does not reset the [member frame_progress] to [code]0.0[/code] implicitly. [b]Example:[/b] Change the animation while keeping the same [member frame] and [member frame_progress]: [codeblocks] [gdscript] var current_frame = animated_sprite.get_frame() var current_progress = animated_sprite.get_frame_progress() animated_sprite.play(\u0022walk_another_skin\u0022) animated_sprite.set_frame_and_progress(current_frame, current_progress) [/gdscript] [/codeblocks]",
+      "godotName": "set_frame_and_progress",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.SetFrameAndProgress(int,float)",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the currently playing animation. The animation position is reset to [code]0[/code] and the [code]custom_speed[/code] is reset to [code]1.0[/code]. See also [method pause].",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.AnimatedSprite2D.Stop",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Animation",
+      "kind": "Property",
+      "signature": "public StringName Animation { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The current animation from the [member sprite_frames] resource. If this value is changed, the [member frame] counter and the [member frame_progress] are reset.",
+      "defaultValue": "\u0026\u0022default\u0022",
+      "godotName": "animation",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.Animation",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public String Autoplay { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The key of the animation to play when the scene loads.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "autoplay",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.Autoplay",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Centered",
+      "kind": "Property",
+      "signature": "public bool Centered { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture will be centered. [b]Note:[/b] For games with a pixel art aesthetic, textures may appear deformed when centered. This is caused by their position being between pixels. To prevent this, set this property to [code]false[/code], or consider enabling [member ProjectSettings.rendering/2d/snap/snap_2d_vertices_to_pixel] and [member ProjectSettings.rendering/2d/snap/snap_2d_transforms_to_pixel].",
+      "defaultValue": "true",
+      "godotName": "centered",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.Centered",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public bool FlipH { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped horizontally.",
+      "defaultValue": "false",
+      "godotName": "flip_h",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.FlipH",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public bool FlipV { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped vertically.",
+      "defaultValue": "false",
+      "godotName": "flip_v",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.FlipV",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Frame",
+      "kind": "Property",
+      "signature": "public int Frame { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The displayed animation frame\u0027s index. Setting this property also resets [member frame_progress]. If this is not desired, use [method set_frame_and_progress].",
+      "defaultValue": "0",
+      "godotName": "frame",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.Frame",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "FrameProgress",
+      "kind": "Property",
+      "signature": "public float FrameProgress { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The progress value between [code]0.0[/code] and [code]1.0[/code] until the current frame transitions to the next frame. If the animation is playing backwards, the value transitions from [code]1.0[/code] to [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "frame_progress",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.FrameProgress",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The texture\u0027s drawing offset.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.Offset",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed scaling ratio. For example, if this value is [code]1[/code], then the animation plays at normal speed. If it\u0027s [code]0.5[/code], then it plays at half speed. If it\u0027s [code]2[/code], then it plays at double speed. If set to a negative value, the animation is played in reverse. If set to [code]0[/code], the animation will not advance.",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.SpeedScale",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "SpriteFrames",
+      "kind": "Property",
+      "signature": "public SpriteFrames SpriteFrames { get; set; }",
+      "returnType": "SpriteFrames",
+      "parameters": [],
+      "summary": "The [SpriteFrames] resource containing the animation(s). Allows you the option to load, edit, clear, make unique and save the states of the [SpriteFrames] resource.",
+      "godotName": "sprite_frames",
+      "xmlDocId": "P:Godot.AnimatedSprite2D.SpriteFrames",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationChanged",
+      "kind": "Signal",
+      "signature": "public event AnimationChangedHandler AnimationChanged",
+      "parameters": [],
+      "summary": "Emitted when [member animation] changes.",
+      "godotName": "animation_changed",
+      "xmlDocId": "E:Godot.AnimatedSprite2D.AnimationChanged",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "AnimationFinished",
+      "kind": "Signal",
+      "signature": "public event AnimationFinishedHandler AnimationFinished",
+      "parameters": [],
+      "summary": "Emitted when the animation reaches the end, or the start if it is played in reverse. When the animation finishes, it pauses the playback. [b]Note:[/b] This signal is not emitted if an animation is looping.",
+      "godotName": "animation_finished",
+      "xmlDocId": "E:Godot.AnimatedSprite2D.AnimationFinished",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "AnimationLooped",
+      "kind": "Signal",
+      "signature": "public event AnimationLoopedHandler AnimationLooped",
+      "parameters": [],
+      "summary": "Emitted when the animation loops.",
+      "godotName": "animation_looped",
+      "xmlDocId": "E:Godot.AnimatedSprite2D.AnimationLooped",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "FrameChanged",
+      "kind": "Signal",
+      "signature": "public event FrameChangedHandler FrameChanged",
+      "parameters": [],
+      "summary": "Emitted when [member frame] changes.",
+      "godotName": "frame_changed",
+      "xmlDocId": "E:Godot.AnimatedSprite2D.FrameChanged",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    },
+    {
+      "name": "SpriteFramesChanged",
+      "kind": "Signal",
+      "signature": "public event SpriteFramesChangedHandler SpriteFramesChanged",
+      "parameters": [],
+      "summary": "Emitted when [member sprite_frames] changes.",
+      "godotName": "sprite_frames_changed",
+      "xmlDocId": "E:Godot.AnimatedSprite2D.SpriteFramesChanged",
+      "sourcePath": "doc/classes/AnimatedSprite2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimatedSprite2D.xml",
+      "sha256": "257b95da24587f986e8c4f934bbaef1166bb8c6c815968bee1d138aecec2810e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

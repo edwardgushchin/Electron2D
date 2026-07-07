@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonProfileHumanoid",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonProfileHumanoid",
+    "kind": "class",
+    "baseType": "SkeletonProfile",
+    "interfaces": [],
+    "godotReference": "SkeletonProfileHumanoid",
+    "documentationPath": "doc/classes/SkeletonProfileHumanoid.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonprofilehumanoid.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BoneSize",
+      "kind": "Property",
+      "signature": "public int BoneSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "56",
+      "godotName": "bone_size",
+      "xmlDocId": "P:Godot.SkeletonProfileHumanoid.BoneSize",
+      "sourcePath": "doc/classes/SkeletonProfileHumanoid.xml"
+    },
+    {
+      "name": "GroupSize",
+      "kind": "Property",
+      "signature": "public int GroupSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "4",
+      "godotName": "group_size",
+      "xmlDocId": "P:Godot.SkeletonProfileHumanoid.GroupSize",
+      "sourcePath": "doc/classes/SkeletonProfileHumanoid.xml"
+    },
+    {
+      "name": "RootBone",
+      "kind": "Property",
+      "signature": "public StringName RootBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0026\u0022Root\u0022",
+      "godotName": "root_bone",
+      "xmlDocId": "P:Godot.SkeletonProfileHumanoid.RootBone",
+      "sourcePath": "doc/classes/SkeletonProfileHumanoid.xml"
+    },
+    {
+      "name": "ScaleBaseBone",
+      "kind": "Property",
+      "signature": "public StringName ScaleBaseBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0026\u0022Hips\u0022",
+      "godotName": "scale_base_bone",
+      "xmlDocId": "P:Godot.SkeletonProfileHumanoid.ScaleBaseBone",
+      "sourcePath": "doc/classes/SkeletonProfileHumanoid.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonProfileHumanoid.xml",
+      "sha256": "a4791c5d3973cfa4cb99113584fc3cc8f9ea68375577742c231b5353a21db1b9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

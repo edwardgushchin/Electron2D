@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureRect.ExpandMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TextureRect.ExpandMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "TextureRect.ExpandMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FitHeight",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode FitHeight",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Uses texture height as minimum height.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.FitHeight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitHeightProportional",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode FitHeightProportional",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Uses the full texture size while fitting by height.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.FitHeightProportional",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitWidth",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode FitWidth",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Uses texture width as minimum width.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.FitWidth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitWidthProportional",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode FitWidthProportional",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Uses the full texture size while fitting by width.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.FitWidthProportional",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IgnoreSize",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode IgnoreSize",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Ignores texture size for minimum size.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.IgnoreSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepSize",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TextureRect.ExpandMode KeepSize",
+      "returnType": "Electron2D.TextureRect.ExpandMode",
+      "parameters": [],
+      "summary": "Keeps the texture size as minimum size.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.TextureRect.ExpandModeEnum.KeepSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "FitHeight",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Uses texture height as minimum height.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitHeightProportional",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Uses the full texture size while fitting by height.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitWidth",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Uses texture width as minimum width.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FitWidthProportional",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Uses the full texture size while fitting by width.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IgnoreSize",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Ignores texture size for minimum size.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeepSize",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Keeps the texture size as minimum size.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

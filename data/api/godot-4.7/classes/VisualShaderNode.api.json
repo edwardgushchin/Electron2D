@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNode",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNode",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "VisualShaderNode",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearDefaultInputValues",
+      "kind": "Method",
+      "signature": "public void ClearDefaultInputValues()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the default input ports value.",
+      "godotName": "clear_default_input_values",
+      "xmlDocId": "M:Godot.VisualShaderNode.ClearDefaultInputValues",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "GetDefaultInputPort",
+      "kind": "Method",
+      "signature": "public int GetDefaultInputPort(int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the input port which should be connected by default when this node is created as a result of dragging a connection from an existing node to the empty space on the graph.",
+      "godotName": "get_default_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNode.GetDefaultInputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "GetDefaultInputValues",
+      "kind": "Method",
+      "signature": "public Array GetDefaultInputValues()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an [Array] containing default values for all of the input ports of the node in the form [code][index0, value0, index1, value1, ...][/code].",
+      "godotName": "get_default_input_values",
+      "xmlDocId": "M:Godot.VisualShaderNode.GetDefaultInputValues",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "GetInputPortDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant GetInputPortDefaultValue(int port)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the default value of the input [param port].",
+      "godotName": "get_input_port_default_value",
+      "xmlDocId": "M:Godot.VisualShaderNode.GetInputPortDefaultValue(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "RemoveInputPortDefaultValue",
+      "kind": "Method",
+      "signature": "public void RemoveInputPortDefaultValue(int port)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the default value of the input [param port].",
+      "godotName": "remove_input_port_default_value",
+      "xmlDocId": "M:Godot.VisualShaderNode.RemoveInputPortDefaultValue(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "SetDefaultInputValues",
+      "kind": "Method",
+      "signature": "public void SetDefaultInputValues(Array values)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "values",
+          "type": "Array"
+        }
+      ],
+      "summary": "Sets the default input ports values using an [Array] of the form [code][index0, value0, index1, value1, ...][/code]. For example: [code][0, Vector3(0, 0, 0), 1, Vector3(0, 0, 0)][/code].",
+      "godotName": "set_default_input_values",
+      "xmlDocId": "M:Godot.VisualShaderNode.SetDefaultInputValues(Array)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "SetInputPortDefaultValue",
+      "kind": "Method",
+      "signature": "public void SetInputPortDefaultValue(int port, Variant value, Variant prevValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "prev_value",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Sets the default [param value] for the selected input [param port].",
+      "godotName": "set_input_port_default_value",
+      "xmlDocId": "M:Godot.VisualShaderNode.SetInputPortDefaultValue(int,Variant,Variant)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "LinkedParentGraphFrame",
+      "kind": "Property",
+      "signature": "public int LinkedParentGraphFrame { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Represents the index of the frame this node is linked to. If set to [code]-1[/code] the node is not linked to any frame.",
+      "defaultValue": "-1",
+      "godotName": "linked_parent_graph_frame",
+      "xmlDocId": "P:Godot.VisualShaderNode.LinkedParentGraphFrame",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "OutputPortForPreview",
+      "kind": "Property",
+      "signature": "public int OutputPortForPreview { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the output port index which will be showed for preview. If set to [code]-1[/code] no port will be open for preview.",
+      "defaultValue": "-1",
+      "godotName": "output_port_for_preview",
+      "xmlDocId": "P:Godot.VisualShaderNode.OutputPortForPreview",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PortType",
+      "values": [
+        {
+          "name": "PORT_TYPE_BOOLEAN",
+          "value": "6",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Boolean type. Translated to [code skip-lint]bool[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_MAX",
+          "value": "9",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum PortType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_SAMPLER",
+          "value": "8",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Sampler type. Translated to reference of sampler uniform in shader code. Can only be used for input ports in non-uniform nodes.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_SCALAR",
+          "value": "0",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Floating-point scalar. Translated to [code skip-lint]float[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_SCALAR_INT",
+          "value": "1",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Integer scalar. Translated to [code skip-lint]int[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_SCALAR_UINT",
+          "value": "2",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Unsigned integer scalar. Translated to [code skip-lint]uint[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_TRANSFORM",
+          "value": "7",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "Transform type. Translated to [code skip-lint]mat4[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_VECTOR_2D",
+          "value": "3",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "2D vector of floating-point values. Translated to [code skip-lint]vec2[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_VECTOR_3D",
+          "value": "4",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "3D vector of floating-point values. Translated to [code skip-lint]vec3[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        },
+        {
+          "name": "PORT_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "PortType",
+          "kind": "EnumValue",
+          "summary": "4D vector of floating-point values. Translated to [code skip-lint]vec4[/code] type in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PORT_TYPE_SCALAR",
+      "value": "0",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Floating-point scalar. Translated to [code skip-lint]float[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_SCALAR_INT",
+      "value": "1",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Integer scalar. Translated to [code skip-lint]int[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_SCALAR_UINT",
+      "value": "2",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Unsigned integer scalar. Translated to [code skip-lint]uint[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_VECTOR_2D",
+      "value": "3",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "2D vector of floating-point values. Translated to [code skip-lint]vec2[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_VECTOR_3D",
+      "value": "4",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "3D vector of floating-point values. Translated to [code skip-lint]vec3[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "4D vector of floating-point values. Translated to [code skip-lint]vec4[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_BOOLEAN",
+      "value": "6",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Boolean type. Translated to [code skip-lint]bool[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_TRANSFORM",
+      "value": "7",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Transform type. Translated to [code skip-lint]mat4[/code] type in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_SAMPLER",
+      "value": "8",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Sampler type. Translated to reference of sampler uniform in shader code. Can only be used for input ports in non-uniform nodes.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    },
+    {
+      "name": "PORT_TYPE_MAX",
+      "value": "9",
+      "enum": "PortType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum PortType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNode.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNode.xml",
+      "sha256": "49f8f440baba509385480a1903f9a05b0663884018381b5dc12d816afd6bc6f0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

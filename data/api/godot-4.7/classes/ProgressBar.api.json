@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ProgressBar",
+    "namespace": "Godot",
+    "fullName": "Godot.ProgressBar",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "ProgressBar",
+    "documentationPath": "doc/classes/ProgressBar.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_progressbar.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EditorPreviewIndeterminate",
+      "kind": "Property",
+      "signature": "public bool EditorPreviewIndeterminate { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], the [member indeterminate] animation will be paused in the editor.",
+      "godotName": "editor_preview_indeterminate",
+      "xmlDocId": "P:Godot.ProgressBar.EditorPreviewIndeterminate",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "FillMode",
+      "kind": "Property",
+      "signature": "public int FillMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The fill direction. See [enum FillMode] for possible values.",
+      "defaultValue": "0",
+      "godotName": "fill_mode",
+      "xmlDocId": "P:Godot.ProgressBar.FillMode",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "Indeterminate",
+      "kind": "Property",
+      "signature": "public bool Indeterminate { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When set to [code]true[/code], the progress bar indicates that something is happening with an animation, but does not show the fill percentage or value.",
+      "defaultValue": "false",
+      "godotName": "indeterminate",
+      "xmlDocId": "P:Godot.ProgressBar.Indeterminate",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "ShowPercentage",
+      "kind": "Property",
+      "signature": "public bool ShowPercentage { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the fill percentage is displayed on the bar.",
+      "defaultValue": "true",
+      "godotName": "show_percentage",
+      "xmlDocId": "P:Godot.ProgressBar.ShowPercentage",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "FillMode",
+      "values": [
+        {
+          "name": "FILL_BEGIN_TO_END",
+          "value": "0",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The progress bar fills from begin to end horizontally, according to the language direction. If [method Control.is_layout_rtl] returns [code]false[/code], it fills from left to right, and if it returns [code]true[/code], it fills from right to left.",
+          "sourcePath": "doc/classes/ProgressBar.xml"
+        },
+        {
+          "name": "FILL_BOTTOM_TO_TOP",
+          "value": "3",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The progress fills from bottom to top.",
+          "sourcePath": "doc/classes/ProgressBar.xml"
+        },
+        {
+          "name": "FILL_END_TO_BEGIN",
+          "value": "1",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The progress bar fills from end to begin horizontally, according to the language direction. If [method Control.is_layout_rtl] returns [code]false[/code], it fills from right to left, and if it returns [code]true[/code], it fills from left to right.",
+          "sourcePath": "doc/classes/ProgressBar.xml"
+        },
+        {
+          "name": "FILL_TOP_TO_BOTTOM",
+          "value": "2",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The progress fills from top to bottom.",
+          "sourcePath": "doc/classes/ProgressBar.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILL_BEGIN_TO_END",
+      "value": "0",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The progress bar fills from begin to end horizontally, according to the language direction. If [method Control.is_layout_rtl] returns [code]false[/code], it fills from left to right, and if it returns [code]true[/code], it fills from right to left.",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "FILL_END_TO_BEGIN",
+      "value": "1",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The progress bar fills from end to begin horizontally, according to the language direction. If [method Control.is_layout_rtl] returns [code]false[/code], it fills from right to left, and if it returns [code]true[/code], it fills from left to right.",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "FILL_TOP_TO_BOTTOM",
+      "value": "2",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The progress fills from top to bottom.",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    },
+    {
+      "name": "FILL_BOTTOM_TO_TOP",
+      "value": "3",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The progress fills from bottom to top.",
+      "sourcePath": "doc/classes/ProgressBar.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ProgressBar.xml",
+      "sha256": "2ae069479665f530d45ceac7e4a34b66b71bcbeb23a2674b2444c7491c682573"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

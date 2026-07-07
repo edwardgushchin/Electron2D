@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVectorRefract",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVectorRefract",
+    "kind": "class",
+    "baseType": "VisualShaderNodeVectorBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVectorRefract",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorRefract.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevectorrefract.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVectorRefract.xml",
+      "sha256": "1a2e4d4790047d7f3478541b671e7e9188667ca3647937f828b1150bf44d285a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

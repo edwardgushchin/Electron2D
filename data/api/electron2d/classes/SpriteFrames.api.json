@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpriteFrames",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SpriteFrames",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "SpriteFrames",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "SpriteFrames",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SpriteFrames()",
+      "parameters": [],
+      "summary": "Creates a new sprite-frame library with an empty \u0060default\u0060 animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "SpriteFrames",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SpriteFrames()",
+      "parameters": [],
+      "summary": "Creates a new sprite-frame library with an empty \u0060default\u0060 animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddAnimation",
+      "kind": "Method",
+      "signature": "public System.Void AddAnimation(Electron2D.StringName animation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Adds an empty animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.AddAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddFrame",
+      "kind": "Method",
+      "signature": "public System.Void AddFrame(Electron2D.StringName animation, Electron2D.Texture2D texture, System.Single duration, System.Int32 atPosition)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "duration",
+          "type": "System.Single",
+          "defaultValue": "1"
+        },
+        {
+          "name": "atPosition",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a frame to an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.AddFrame(Electron2D.StringName,Electron2D.Texture2D,System.Single,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear(Electron2D.StringName animation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Removes all frames from one animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.Clear(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearAll",
+      "kind": "Method",
+      "signature": "public System.Void ClearAll()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all animations and recreates an empty \u0060default\u0060 animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.ClearAll",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DuplicateAnimation",
+      "kind": "Method",
+      "signature": "public System.Void DuplicateAnimation(Electron2D.StringName animationFrom, Electron2D.StringName animationTo)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animationFrom",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "animationTo",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Duplicates an animation into a new animation name.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.DuplicateAnimation(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationLoop",
+      "kind": "Method",
+      "signature": "public System.Boolean GetAnimationLoop(Electron2D.StringName animation)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets whether an animation uses linear looping.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetAnimationLoop(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationLoopMode",
+      "kind": "Method",
+      "signature": "public Electron2D.SpriteFrames.LoopMode GetAnimationLoopMode(Electron2D.StringName animation)",
+      "returnType": "Electron2D.SpriteFrames.LoopMode",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets the loop mode for an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetAnimationLoopMode(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationNames",
+      "kind": "Method",
+      "signature": "public Electron2D.StringName[] GetAnimationNames()",
+      "returnType": "Electron2D.StringName[]",
+      "parameters": [],
+      "summary": "Gets animation names in deterministic alphabetical order.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetAnimationNames",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAnimationSpeed",
+      "kind": "Method",
+      "signature": "public System.Single GetAnimationSpeed(Electron2D.StringName animation)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets the speed of an animation in frames per second.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetAnimationSpeed(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFrameCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetFrameCount(Electron2D.StringName animation)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Gets the number of frames in an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetFrameCount(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFrameDuration",
+      "kind": "Method",
+      "signature": "public System.Single GetFrameDuration(Electron2D.StringName animation, System.Int32 index)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a frame\u0027s relative duration.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetFrameDuration(Electron2D.StringName,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFrameTexture",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetFrameTexture(Electron2D.StringName animation, System.Int32 index)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a frame\u0027s texture.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.GetFrameTexture(Electron2D.StringName,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAnimation(Electron2D.StringName animation)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Checks whether an animation exists.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.HasAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveAnimation",
+      "kind": "Method",
+      "signature": "public System.Void RemoveAnimation(Electron2D.StringName animation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Removes an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.RemoveAnimation(Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveFrame",
+      "kind": "Method",
+      "signature": "public System.Void RemoveFrame(Electron2D.StringName animation, System.Int32 index)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Removes one frame from an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.RemoveFrame(Electron2D.StringName,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenameAnimation",
+      "kind": "Method",
+      "signature": "public System.Void RenameAnimation(Electron2D.StringName animation, Electron2D.StringName newName)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "newName",
+          "type": "Electron2D.StringName"
+        }
+      ],
+      "summary": "Renames an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.RenameAnimation(Electron2D.StringName,Electron2D.StringName)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetAnimationLoop",
+      "kind": "Method",
+      "signature": "public System.Void SetAnimationLoop(Electron2D.StringName animation, System.Boolean loop)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "loop",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether an animation uses linear looping.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.SetAnimationLoop(Electron2D.StringName,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetAnimationLoopMode",
+      "kind": "Method",
+      "signature": "public System.Void SetAnimationLoopMode(Electron2D.StringName animation, Electron2D.SpriteFrames.LoopMode loopMode)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "loopMode",
+          "type": "Electron2D.SpriteFrames.LoopMode"
+        }
+      ],
+      "summary": "Sets the loop mode for an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.SetAnimationLoopMode(Electron2D.StringName,Electron2D.SpriteFrames.LoopModeEnum)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetAnimationSpeed",
+      "kind": "Method",
+      "signature": "public System.Void SetAnimationSpeed(Electron2D.StringName animation, System.Single fps)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "fps",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets the speed of an animation in frames per second.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.SetAnimationSpeed(Electron2D.StringName,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetFrame",
+      "kind": "Method",
+      "signature": "public System.Void SetFrame(Electron2D.StringName animation, System.Int32 index, Electron2D.Texture2D texture, System.Single duration)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "index",
+          "type": "System.Int32"
+        },
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "duration",
+          "type": "System.Single",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Replaces one frame in an animation.",
+      "xmlDocId": "M:Electron2D.SpriteFrames.SetFrame(Electron2D.StringName,System.Int32,Electron2D.Texture2D,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

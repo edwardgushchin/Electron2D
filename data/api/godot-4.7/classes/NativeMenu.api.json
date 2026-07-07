@@ -1,0 +1,1817 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NativeMenu",
+    "namespace": "Godot",
+    "fullName": "Godot.NativeMenu",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "NativeMenu",
+    "documentationPath": "doc/classes/NativeMenu.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_nativemenu.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCheckItem",
+      "kind": "Method",
+      "signature": "public int AddCheckItem(RID rid, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new checkable item with text [param label] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_check_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddCheckItem(RID,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddIconCheckItem",
+      "kind": "Method",
+      "signature": "public int AddIconCheckItem(RID rid, Texture2D icon, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new checkable item with text [param label] and icon [param icon] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_icon_check_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddIconCheckItem(RID,Texture2D,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public int AddIconItem(RID rid, Texture2D icon, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new item with text [param label] and icon [param icon] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_icon_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddIconItem(RID,Texture2D,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddIconRadioCheckItem",
+      "kind": "Method",
+      "signature": "public int AddIconRadioCheckItem(RID rid, Texture2D icon, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new radio-checkable item with text [param label] and icon [param icon] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] Radio-checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it. [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_icon_radio_check_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddIconRadioCheckItem(RID,Texture2D,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public int AddItem(RID rid, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new item with text [param label] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddItem(RID,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddMultistateItem",
+      "kind": "Method",
+      "signature": "public int AddMultistateItem(RID rid, String label, int maxStates, int defaultState, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "max_states",
+          "type": "int"
+        },
+        {
+          "name": "default_state",
+          "type": "int"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new item with text [param label] to the global menu [param rid]. Contrarily to normal binary items, multistate items can have more than two states, as defined by [param max_states]. Each press or activate of the item will increase the state by one. The default value is defined by [param default_state]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] By default, there\u0027s no indication of the current item state, it should be changed manually. [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_multistate_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddMultistateItem(RID,String,int,int,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddRadioCheckItem",
+      "kind": "Method",
+      "signature": "public int AddRadioCheckItem(RID rid, String label, Callable callback, Callable keyCallback, Variant tag, int accelerator, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "accelerator",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new radio-checkable item with text [param label] to the global menu [param rid]. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. An [param accelerator] can optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu button even if it\u0027s not currently open. The [param accelerator] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] Radio-checkable items just display a checkmark, but don\u0027t have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it. [b]Note:[/b] The [param callback] and [param key_callback] Callables need to accept exactly one Variant parameter, the parameter passed to the Callables will be the value passed to [param tag]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] On Windows, [param accelerator] and [param key_callback] are ignored.",
+      "godotName": "add_radio_check_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddRadioCheckItem(RID,String,Callable,Callable,Variant,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddSeparator",
+      "kind": "Method",
+      "signature": "public int AddSeparator(RID rid, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a separator between items to the global menu [param rid]. Separators also occupy an index. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "add_separator",
+      "xmlDocId": "M:Godot.NativeMenu.AddSeparator(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "AddSubmenuItem",
+      "kind": "Method",
+      "signature": "public int AddSubmenuItem(RID rid, String label, RID submenuRid, Variant tag, int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "label",
+          "type": "String"
+        },
+        {
+          "name": "submenu_rid",
+          "type": "RID"
+        },
+        {
+          "name": "tag",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an item that will act as a submenu of the global menu [param rid]. The [param submenu_rid] argument is the RID of the global menu that will be shown when the item is clicked. Returns index of the inserted item, it\u0027s not guaranteed to be the same as [param index] value. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "add_submenu_item",
+      "xmlDocId": "M:Godot.NativeMenu.AddSubmenuItem(RID,String,RID,Variant,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes all items from the global menu [param rid]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NativeMenu.Clear(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "CreateMenu",
+      "kind": "Method",
+      "signature": "public RID CreateMenu()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a new global menu object. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "create_menu",
+      "xmlDocId": "M:Godot.NativeMenu.CreateMenu",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FindItemIndexWithSubmenu",
+      "kind": "Method",
+      "signature": "public int FindItemIndexWithSubmenu(RID rid, RID submenuRid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "submenu_rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the index of the item with the submenu specified by [param submenu_rid]. Indices are automatically assigned to each item by the engine. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "find_item_index_with_submenu",
+      "xmlDocId": "M:Godot.NativeMenu.FindItemIndexWithSubmenu(RID,RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FindItemIndexWithTag",
+      "kind": "Method",
+      "signature": "public int FindItemIndexWithTag(RID rid, Variant tag)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "tag",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the index of the item with the specified [param tag]. Indices are automatically assigned to each item by the engine. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "find_item_index_with_tag",
+      "xmlDocId": "M:Godot.NativeMenu.FindItemIndexWithTag(RID,Variant)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FindItemIndexWithText",
+      "kind": "Method",
+      "signature": "public int FindItemIndexWithText(RID rid, String text)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the index of the item with the specified [param text]. Indices are automatically assigned to each item by the engine. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "find_item_index_with_text",
+      "xmlDocId": "M:Godot.NativeMenu.FindItemIndexWithText(RID,String)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FreeMenu",
+      "kind": "Method",
+      "signature": "public void FreeMenu(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Frees a global menu object created by this [NativeMenu]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "free_menu",
+      "xmlDocId": "M:Godot.NativeMenu.FreeMenu(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemAccelerator",
+      "kind": "Method",
+      "signature": "public int GetItemAccelerator(RID rid, int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the accelerator of the item at index [param idx]. Accelerators are special combinations of keys that activate the item, no matter which control is focused. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_item_accelerator",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemAccelerator(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemCallback",
+      "kind": "Method",
+      "signature": "public Callable GetItemCallback(RID rid, int idx)",
+      "returnType": "Callable",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the callback of the item at index [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_callback",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemCallback(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemCount",
+      "kind": "Method",
+      "signature": "public int GetItemCount(RID rid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns number of items in the global menu [param rid]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_count",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemCount(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetItemIcon(RID rid, int idx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the icon of the item at index [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_icon",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemIcon(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemIndentationLevel",
+      "kind": "Method",
+      "signature": "public int GetItemIndentationLevel(RID rid, int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the horizontal offset of the item at the given [param idx]. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_item_indentation_level",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemIndentationLevel(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemKeyCallback",
+      "kind": "Method",
+      "signature": "public Callable GetItemKeyCallback(RID rid, int idx)",
+      "returnType": "Callable",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the callback of the item accelerator at index [param idx]. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_item_key_callback",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemKeyCallback(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemMaxStates",
+      "kind": "Method",
+      "signature": "public int GetItemMaxStates(RID rid, int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns number of states of a multistate item. See [method add_multistate_item] for details. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_max_states",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemMaxStates(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemState",
+      "kind": "Method",
+      "signature": "public int GetItemState(RID rid, int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the state of a multistate item. See [method add_multistate_item] for details. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_state",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemState(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemSubmenu",
+      "kind": "Method",
+      "signature": "public RID GetItemSubmenu(RID rid, int idx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the submenu ID of the item at index [param idx]. See [method add_submenu_item] for more info on how to add a submenu. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_submenu",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemSubmenu(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemTag",
+      "kind": "Method",
+      "signature": "public Variant GetItemTag(RID rid, int idx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the metadata of the specified item, which might be of any type. You can set it with [method set_item_tag], which provides a simple way of assigning context data to items. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_tag",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemTag(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public String GetItemText(RID rid, int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text of the item at index [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_item_text",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemText(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetItemTooltip",
+      "kind": "Method",
+      "signature": "public String GetItemTooltip(RID rid, int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tooltip associated with the specified index [param idx]. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_item_tooltip",
+      "xmlDocId": "M:Godot.NativeMenu.GetItemTooltip(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetMinimumWidth",
+      "kind": "Method",
+      "signature": "public float GetMinimumWidth(RID rid)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns global menu minimum width. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_minimum_width",
+      "xmlDocId": "M:Godot.NativeMenu.GetMinimumWidth(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetPopupCloseCallback",
+      "kind": "Method",
+      "signature": "public Callable GetPopupCloseCallback(RID rid)",
+      "returnType": "Callable",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns global menu close callback. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_popup_close_callback",
+      "xmlDocId": "M:Godot.NativeMenu.GetPopupCloseCallback(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetPopupOpenCallback",
+      "kind": "Method",
+      "signature": "public Callable GetPopupOpenCallback(RID rid)",
+      "returnType": "Callable",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns global menu open callback. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_popup_open_callback",
+      "xmlDocId": "M:Godot.NativeMenu.GetPopupOpenCallback(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetSize(RID rid)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns global menu size. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.NativeMenu.GetSize(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetSystemMenu",
+      "kind": "Method",
+      "signature": "public RID GetSystemMenu(int menuId)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "menu_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns RID of a special system menu. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_system_menu",
+      "xmlDocId": "M:Godot.NativeMenu.GetSystemMenu(int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetSystemMenuName",
+      "kind": "Method",
+      "signature": "public String GetSystemMenuName(int menuId)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "menu_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns readable name of a special system menu. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "get_system_menu_name",
+      "xmlDocId": "M:Godot.NativeMenu.GetSystemMenuName(int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "GetSystemMenuText",
+      "kind": "Method",
+      "signature": "public String GetSystemMenuText(int menuId)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "menu_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text of the system menu item. [b]Note:[/b] This method is implemented on macOS.",
+      "godotName": "get_system_menu_text",
+      "xmlDocId": "M:Godot.NativeMenu.GetSystemMenuText(int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "HasFeature",
+      "kind": "Method",
+      "signature": "public bool HasFeature(int feature)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param feature] is supported by the current [NativeMenu], [code]false[/code] otherwise. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "has_feature",
+      "xmlDocId": "M:Godot.NativeMenu.HasFeature(int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "HasMenu",
+      "kind": "Method",
+      "signature": "public bool HasMenu(RID rid)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param rid] is valid global menu. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "has_menu",
+      "xmlDocId": "M:Godot.NativeMenu.HasMenu(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "HasSystemMenu",
+      "kind": "Method",
+      "signature": "public bool HasSystemMenu(int menuId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "menu_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a special system menu is supported. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "has_system_menu",
+      "xmlDocId": "M:Godot.NativeMenu.HasSystemMenu(int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsItemCheckable",
+      "kind": "Method",
+      "signature": "public bool IsItemCheckable(RID rid, int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is checkable in some way, i.e. if it has a checkbox or radio button. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "is_item_checkable",
+      "xmlDocId": "M:Godot.NativeMenu.IsItemCheckable(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsItemChecked",
+      "kind": "Method",
+      "signature": "public bool IsItemChecked(RID rid, int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is checked. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "is_item_checked",
+      "xmlDocId": "M:Godot.NativeMenu.IsItemChecked(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public bool IsItemDisabled(RID rid, int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is disabled. When it is disabled it can\u0027t be selected, or its action invoked. See [method set_item_disabled] for more info on how to disable an item. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "is_item_disabled",
+      "xmlDocId": "M:Godot.NativeMenu.IsItemDisabled(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsItemHidden",
+      "kind": "Method",
+      "signature": "public bool IsItemHidden(RID rid, int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] is hidden. See [method set_item_hidden] for more info on how to hide an item. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "is_item_hidden",
+      "xmlDocId": "M:Godot.NativeMenu.IsItemHidden(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsItemRadioCheckable",
+      "kind": "Method",
+      "signature": "public bool IsItemRadioCheckable(RID rid, int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at index [param idx] has radio button-style checkability. [b]Note:[/b] This is purely cosmetic; you must add the logic for checking/unchecking items in radio groups. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "is_item_radio_checkable",
+      "xmlDocId": "M:Godot.NativeMenu.IsItemRadioCheckable(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsOpened",
+      "kind": "Method",
+      "signature": "public bool IsOpened(RID rid)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the menu is currently opened. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "is_opened",
+      "xmlDocId": "M:Godot.NativeMenu.IsOpened(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "IsSystemMenu",
+      "kind": "Method",
+      "signature": "public bool IsSystemMenu(RID rid)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Return [code]true[/code] is global menu is a special system menu. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "is_system_menu",
+      "xmlDocId": "M:Godot.NativeMenu.IsSystemMenu(RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "Popup",
+      "kind": "Method",
+      "signature": "public void Popup(RID rid, Vector2i position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Shows the global menu at [param position] in the screen coordinates. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "popup",
+      "xmlDocId": "M:Godot.NativeMenu.Popup(RID,Vector2i)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "RemoveItem",
+      "kind": "Method",
+      "signature": "public void RemoveItem(RID rid, int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the item at index [param idx] from the global menu [param rid]. [b]Note:[/b] The indices of items after the removed item will be shifted by one. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "remove_item",
+      "xmlDocId": "M:Godot.NativeMenu.RemoveItem(RID,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetInterfaceDirection",
+      "kind": "Method",
+      "signature": "public void SetInterfaceDirection(RID rid, bool isRtl)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "is_rtl",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the menu text layout direction from right-to-left if [param is_rtl] is [code]true[/code]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_interface_direction",
+      "xmlDocId": "M:Godot.NativeMenu.SetInterfaceDirection(RID,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemAccelerator",
+      "kind": "Method",
+      "signature": "public void SetItemAccelerator(RID rid, int idx, int keycode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "keycode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the accelerator of the item at index [param idx]. [param keycode] can be a single [enum Key], or a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl \u002B A[/kbd]). [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_accelerator",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemAccelerator(RID,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemCallback",
+      "kind": "Method",
+      "signature": "public void SetItemCallback(RID rid, int idx, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback of the item at index [param idx]. Callback is emitted when an item is pressed. [b]Note:[/b] The [param callback] Callable needs to accept exactly one Variant parameter, the parameter passed to the Callable will be the value passed to the [code]tag[/code] parameter when the menu item was created. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_callback",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemCallback(RID,int,Callable)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemCheckable",
+      "kind": "Method",
+      "signature": "public void SetItemCheckable(RID rid, int idx, bool checkable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "checkable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the item at index [param idx] has a checkbox. If [code]false[/code], sets the type of the item to plain text. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_checkable",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemCheckable(RID,int,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemChecked",
+      "kind": "Method",
+      "signature": "public void SetItemChecked(RID rid, int idx, bool @checked)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "checked",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the checkstate status of the item at index [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_checked",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemChecked(RID,int,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public void SetItemDisabled(RID rid, int idx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables/disables the item at index [param idx]. When it is disabled, it can\u0027t be selected and its action can\u0027t be invoked. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_disabled",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemHidden",
+      "kind": "Method",
+      "signature": "public void SetItemHidden(RID rid, int idx, bool hidden)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "hidden",
+          "type": "bool"
+        }
+      ],
+      "summary": "Hides/shows the item at index [param idx]. When it is hidden, an item does not appear in a menu and its action cannot be invoked. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_hidden",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemHidden(RID,int,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemHoverCallbacks",
+      "kind": "Method",
+      "signature": "public void SetItemHoverCallbacks(RID rid, int idx, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback of the item at index [param idx]. The callback is emitted when an item is hovered. [b]Note:[/b] The [param callback] Callable needs to accept exactly one Variant parameter, the parameter passed to the Callable will be the value passed to the [code]tag[/code] parameter when the menu item was created. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_hover_callbacks",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemHoverCallbacks(RID,int,Callable)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public void SetItemIcon(RID rid, int idx, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Replaces the [Texture2D] icon of the specified [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows. [b]Note:[/b] This method is not supported by macOS Dock menu items.",
+      "godotName": "set_item_icon",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemIcon(RID,int,Texture2D)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemIndentationLevel",
+      "kind": "Method",
+      "signature": "public void SetItemIndentationLevel(RID rid, int idx, int level)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the horizontal offset of the item at the given [param idx]. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_indentation_level",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemIndentationLevel(RID,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemIndex",
+      "kind": "Method",
+      "signature": "public int SetItemIndex(RID rid, int idx, int targetIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "target_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes the index of the item at index [param idx] to be at index [param target_idx]. This can be used to move an item above other items. Returns the new index of the moved item, it\u0027s not guaranteed to be the same as [param target_idx]. [b]Note:[/b] The indices of any items between index [param idx] and index [param target_idx] will be shifted by one. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_index",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemIndex(RID,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemKeyCallback",
+      "kind": "Method",
+      "signature": "public void SetItemKeyCallback(RID rid, int idx, Callable keyCallback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "key_callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback of the item at index [param idx]. Callback is emitted when its accelerator is activated. [b]Note:[/b] The [param key_callback] Callable needs to accept exactly one Variant parameter, the parameter passed to the Callable will be the value passed to the [code]tag[/code] parameter when the menu item was created. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_key_callback",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemKeyCallback(RID,int,Callable)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemMaxStates",
+      "kind": "Method",
+      "signature": "public void SetItemMaxStates(RID rid, int idx, int maxStates)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "max_states",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets number of state of a multistate item. See [method add_multistate_item] for details. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_max_states",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemMaxStates(RID,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemRadioCheckable",
+      "kind": "Method",
+      "signature": "public void SetItemRadioCheckable(RID rid, int idx, bool checkable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "checkable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the type of the item at the specified index [param idx] to radio button. If [code]false[/code], sets the type of the item to plain text. [b]Note:[/b] This is purely cosmetic; you must add the logic for checking/unchecking items in radio groups. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_radio_checkable",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemRadioCheckable(RID,int,bool)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemState",
+      "kind": "Method",
+      "signature": "public void SetItemState(RID rid, int idx, int state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the state of a multistate item. See [method add_multistate_item] for details. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_state",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemState(RID,int,int)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemSubmenu",
+      "kind": "Method",
+      "signature": "public void SetItemSubmenu(RID rid, int idx, RID submenuRid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "submenu_rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the submenu RID of the item at index [param idx]. The submenu is a global menu that would be shown when the item is clicked. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_submenu",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemSubmenu(RID,int,RID)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemTag",
+      "kind": "Method",
+      "signature": "public void SetItemTag(RID rid, int idx, Variant tag)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "tag",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata of an item, which may be of any type. You can later get it with [method get_item_tag], which provides a simple way of assigning context data to items. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_tag",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemTag(RID,int,Variant)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public void SetItemText(RID rid, int idx, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text of the item at index [param idx]. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_item_text",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemText(RID,int,String)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetItemTooltip",
+      "kind": "Method",
+      "signature": "public void SetItemTooltip(RID rid, int idx, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the [String] tooltip of the item at the specified index [param idx]. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_item_tooltip",
+      "xmlDocId": "M:Godot.NativeMenu.SetItemTooltip(RID,int,String)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetMinimumWidth",
+      "kind": "Method",
+      "signature": "public void SetMinimumWidth(RID rid, float width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "width",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum width of the global menu. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_minimum_width",
+      "xmlDocId": "M:Godot.NativeMenu.SetMinimumWidth(RID,float)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetPopupCloseCallback",
+      "kind": "Method",
+      "signature": "public void SetPopupCloseCallback(RID rid, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers callable to emit when the menu is about to show. [b]Note:[/b] The OS can simulate menu opening to track menu item changes and global shortcuts, in which case the corresponding close callback is not triggered. Use [method is_opened] to check if the menu is currently opened. [b]Note:[/b] This method is implemented on macOS and Windows.",
+      "godotName": "set_popup_close_callback",
+      "xmlDocId": "M:Godot.NativeMenu.SetPopupCloseCallback(RID,Callable)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetPopupOpenCallback",
+      "kind": "Method",
+      "signature": "public void SetPopupOpenCallback(RID rid, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers callable to emit after the menu is closed. [b]Note:[/b] This method is implemented only on macOS.",
+      "godotName": "set_popup_open_callback",
+      "xmlDocId": "M:Godot.NativeMenu.SetPopupOpenCallback(RID,Callable)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "SetSystemMenuText",
+      "kind": "Method",
+      "signature": "public void SetSystemMenuText(int menuId, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text of the system menu item. [b]Note:[/b] This method is implemented on macOS.",
+      "godotName": "set_system_menu_text",
+      "xmlDocId": "M:Godot.NativeMenu.SetSystemMenuText(int,String)",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Feature",
+      "values": [
+        {
+          "name": "FEATURE_GLOBAL_MENU",
+          "value": "0",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "[NativeMenu] supports native global main menu.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "FEATURE_HOVER_CALLBACK",
+          "value": "3",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "[NativeMenu] supports menu item hover callback.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "FEATURE_KEY_CALLBACK",
+          "value": "4",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "[NativeMenu] supports menu item accelerator/key callback.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "FEATURE_OPEN_CLOSE_CALLBACK",
+          "value": "2",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "[NativeMenu] supports menu open and close callbacks.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "FEATURE_POPUP_MENU",
+          "value": "1",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "[NativeMenu] supports native popup menus.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        }
+      ]
+    },
+    {
+      "name": "SystemMenus",
+      "values": [
+        {
+          "name": "APPLICATION_MENU_ID",
+          "value": "2",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "Application (first menu after \u0022Apple\u0022 menu on macOS) menu ID.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "DOCK_MENU_ID",
+          "value": "5",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "Dock icon right-click menu ID (on macOS this menu include standard application control items and a list of open windows).",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "HELP_MENU_ID",
+          "value": "4",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "\u0022Help\u0022 menu ID (on macOS this menu includes help search bar).",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "INVALID_MENU_ID",
+          "value": "0",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "Invalid special system menu ID.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "MAIN_MENU_ID",
+          "value": "1",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "Global main menu ID.",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        },
+        {
+          "name": "WINDOW_MENU_ID",
+          "value": "3",
+          "enum": "SystemMenus",
+          "kind": "EnumValue",
+          "summary": "\u0022Window\u0022 menu ID (on macOS this menu includes standard window control items and a list of open windows).",
+          "sourcePath": "doc/classes/NativeMenu.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FEATURE_GLOBAL_MENU",
+      "value": "0",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "[NativeMenu] supports native global main menu.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FEATURE_POPUP_MENU",
+      "value": "1",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "[NativeMenu] supports native popup menus.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FEATURE_OPEN_CLOSE_CALLBACK",
+      "value": "2",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "[NativeMenu] supports menu open and close callbacks.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FEATURE_HOVER_CALLBACK",
+      "value": "3",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "[NativeMenu] supports menu item hover callback.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "FEATURE_KEY_CALLBACK",
+      "value": "4",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "[NativeMenu] supports menu item accelerator/key callback.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "INVALID_MENU_ID",
+      "value": "0",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "Invalid special system menu ID.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "MAIN_MENU_ID",
+      "value": "1",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "Global main menu ID.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "APPLICATION_MENU_ID",
+      "value": "2",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "Application (first menu after \u0022Apple\u0022 menu on macOS) menu ID.",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "WINDOW_MENU_ID",
+      "value": "3",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "\u0022Window\u0022 menu ID (on macOS this menu includes standard window control items and a list of open windows).",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "HELP_MENU_ID",
+      "value": "4",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "\u0022Help\u0022 menu ID (on macOS this menu includes help search bar).",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    },
+    {
+      "name": "DOCK_MENU_ID",
+      "value": "5",
+      "enum": "SystemMenus",
+      "kind": "EnumValue",
+      "summary": "Dock icon right-click menu ID (on macOS this menu include standard application control items and a list of open windows).",
+      "sourcePath": "doc/classes/NativeMenu.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NativeMenu.xml",
+      "sha256": "90f623843049c4d5ad5f9678874c98d4dc6130792ab0d7dbcfb8d2a87fa72b38"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

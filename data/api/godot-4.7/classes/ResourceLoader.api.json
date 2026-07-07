@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceLoader",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceLoader",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ResourceLoader",
+    "documentationPath": "doc/classes/ResourceLoader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceloader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddResourceFormatLoader",
+      "kind": "Method",
+      "signature": "public void AddResourceFormatLoader(ResourceFormatLoader formatLoader, bool atFront)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format_loader",
+          "type": "ResourceFormatLoader"
+        },
+        {
+          "name": "at_front",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Registers a new [ResourceFormatLoader]. The ResourceLoader will use the ResourceFormatLoader as described in [method load]. This method is performed implicitly for ResourceFormatLoaders written in GDScript (see [ResourceFormatLoader] for more information).",
+      "godotName": "add_resource_format_loader",
+      "xmlDocId": "M:Godot.ResourceLoader.AddResourceFormatLoader(ResourceFormatLoader,bool)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "Exists",
+      "kind": "Method",
+      "signature": "public bool Exists(String path, String typeHint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "type_hint",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Returns whether a recognized resource exists for the given [param path]. An optional [param type_hint] can be used to further specify the [Resource] type that should be handled by the [ResourceFormatLoader]. Anything that inherits from [Resource] can be used as a type hint, for example [Image]. [b]Note:[/b] If you use [method Resource.take_over_path], this method will return [code]true[/code] for the taken path even if the resource wasn\u0027t saved (i.e. exists only in resource cache).",
+      "godotName": "exists",
+      "xmlDocId": "M:Godot.ResourceLoader.Exists(String,String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "GetCachedRef",
+      "kind": "Method",
+      "signature": "public Resource GetCachedRef(String path)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the cached resource reference for the given [param path]. [b]Note:[/b] If the resource is not cached, the returned [Resource] will be invalid.",
+      "godotName": "get_cached_ref",
+      "xmlDocId": "M:Godot.ResourceLoader.GetCachedRef(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "GetDependencies",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetDependencies(String path)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the dependencies for the resource at the given [param path]. Each dependency is a string that can be divided into sections by [code]::[/code]. There can be either one section or three sections, with the second section always being empty. When there is one section, it contains the file path. When there are three sections, the first section contains the UID and the third section contains the fallback path. [codeblock] for dependency in ResourceLoader.get_dependencies(path): if dependency.contains(\u0022::\u0022): print(dependency.get_slice(\u0022::\u0022, 0)) # Prints the UID. print(dependency.get_slice(\u0022::\u0022, 2)) # Prints the fallback path. else: print(dependency) # Prints the path. [/codeblock]",
+      "godotName": "get_dependencies",
+      "xmlDocId": "M:Godot.ResourceLoader.GetDependencies(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "GetRecognizedExtensionsForType",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetRecognizedExtensionsForType(String type)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the list of recognized extensions for a resource type.",
+      "godotName": "get_recognized_extensions_for_type",
+      "xmlDocId": "M:Godot.ResourceLoader.GetRecognizedExtensionsForType(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "GetResourceUid",
+      "kind": "Method",
+      "signature": "public int GetResourceUid(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the ID associated with a given resource path, or [code]-1[/code] when no such ID exists.",
+      "godotName": "get_resource_uid",
+      "xmlDocId": "M:Godot.ResourceLoader.GetResourceUid(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "HasCached",
+      "kind": "Method",
+      "signature": "public bool HasCached(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns whether a cached resource is available for the given [param path]. Once a resource has been loaded by the engine, it is cached in memory for faster access, and future calls to the [method load] method will use the cached version. The cached resource can be overridden by using [method Resource.take_over_path] on a new resource for that same path.",
+      "godotName": "has_cached",
+      "xmlDocId": "M:Godot.ResourceLoader.HasCached(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "ListDirectory",
+      "kind": "Method",
+      "signature": "public PackedStringArray ListDirectory(String directoryPath)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "directory_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Lists a directory, returning all resources and subdirectories contained within. The resource files have the original file names as visible in the editor before exporting. The directories have [code]\u0022/\u0022[/code] appended. [codeblock] # Prints [\u0022extra_data/\u0022, \u0022model.gltf\u0022, \u0022model.tscn\u0022, \u0022model_slime.png\u0022] print(ResourceLoader.list_directory(\u0022res://assets/enemies/slime\u0022)) [/codeblock] [b]Note:[/b] The order of files and directories returned by this method is not deterministic, and can vary between operating systems. [b]Note:[/b] To normally traverse the filesystem, see [DirAccess].",
+      "godotName": "list_directory",
+      "xmlDocId": "M:Godot.ResourceLoader.ListDirectory(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public Resource Load(String path, String typeHint, int cacheMode)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "type_hint",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "cache_mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Loads a resource at the given [param path], caching the result for further access. The registered [ResourceFormatLoader]s are queried sequentially to find the first one which can handle the file\u0027s extension, and then attempt loading. If loading fails, the remaining ResourceFormatLoaders are also attempted. An optional [param type_hint] can be used to further specify the [Resource] type that should be handled by the [ResourceFormatLoader]. Anything that inherits from [Resource] can be used as a type hint, for example [Image]. The [param cache_mode] property defines whether and how the cache should be used or updated when loading the resource. Returns an empty resource if no [ResourceFormatLoader] could handle the file, and prints an error if no file is found at the specified path. GDScript has a simplified [method @GDScript.load] built-in method which can be used in most situations, leaving the use of [ResourceLoader] for more advanced scenarios. [b]Note:[/b] If [member ProjectSettings.editor/export/convert_text_resources_to_binary] is [code]true[/code], [method @GDScript.load] will not be able to read converted files in an exported project. If you rely on run-time loading of files present within the PCK, set [member ProjectSettings.editor/export/convert_text_resources_to_binary] to [code]false[/code]. [b]Note:[/b] Relative paths will be prefixed with [code]\u0022res://\u0022[/code] before loading, to avoid unexpected results make sure your paths are absolute.",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.ResourceLoader.Load(String,String,int)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "LoadThreadedGet",
+      "kind": "Method",
+      "signature": "public Resource LoadThreadedGet(String path)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the resource loaded by [method load_threaded_request]. If this is called before the loading thread is done (i.e. [method load_threaded_get_status] is not [constant THREAD_LOAD_LOADED]), the calling thread will be blocked until the resource has finished loading. However, it\u0027s recommended to use [method load_threaded_get_status] to known when the load has actually completed.",
+      "godotName": "load_threaded_get",
+      "xmlDocId": "M:Godot.ResourceLoader.LoadThreadedGet(String)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "LoadThreadedGetStatus",
+      "kind": "Method",
+      "signature": "public int LoadThreadedGetStatus(String path, Array progress)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "progress",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Returns the status of a threaded loading operation started with [method load_threaded_request] for the resource at [param path]. An array variable can optionally be passed via [param progress], and will return a one-element array containing the ratio of completion of the threaded loading (between [code]0.0[/code] and [code]1.0[/code]). [b]Note:[/b] The recommended way of using this method is to call it during different frames (e.g., in [method Node._process], instead of a loop).",
+      "godotName": "load_threaded_get_status",
+      "xmlDocId": "M:Godot.ResourceLoader.LoadThreadedGetStatus(String,Array)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "LoadThreadedRequest",
+      "kind": "Method",
+      "signature": "public int LoadThreadedRequest(String path, String typeHint, bool useSubThreads, int cacheMode)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "type_hint",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "use_sub_threads",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "cache_mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Loads the resource using threads. If [param use_sub_threads] is [code]true[/code], multiple threads will be used to load the resource, which makes loading faster, but may affect the main thread (and thus cause game slowdowns). The [param cache_mode] parameter defines whether and how the cache should be used or updated when loading the resource.",
+      "godotName": "load_threaded_request",
+      "xmlDocId": "M:Godot.ResourceLoader.LoadThreadedRequest(String,String,bool,int)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "RemoveResourceFormatLoader",
+      "kind": "Method",
+      "signature": "public void RemoveResourceFormatLoader(ResourceFormatLoader formatLoader)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format_loader",
+          "type": "ResourceFormatLoader"
+        }
+      ],
+      "summary": "Unregisters the given [ResourceFormatLoader].",
+      "godotName": "remove_resource_format_loader",
+      "xmlDocId": "M:Godot.ResourceLoader.RemoveResourceFormatLoader(ResourceFormatLoader)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "SetAbortOnMissingResources",
+      "kind": "Method",
+      "signature": "public void SetAbortOnMissingResources(bool abort)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "abort",
+          "type": "bool"
+        }
+      ],
+      "summary": "Changes the behavior on missing sub-resources. The default behavior is to abort loading.",
+      "godotName": "set_abort_on_missing_resources",
+      "xmlDocId": "M:Godot.ResourceLoader.SetAbortOnMissingResources(bool)",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CacheMode",
+      "values": [
+        {
+          "name": "CACHE_MODE_IGNORE",
+          "value": "0",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Neither the main resource (the one requested to be loaded) nor any of its subresources are retrieved from cache nor stored into it. Dependencies (external resources) are loaded with [constant CACHE_MODE_REUSE].",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_IGNORE_DEEP",
+          "value": "3",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_IGNORE], but propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REPLACE",
+          "value": "2",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_REUSE], but the cache is checked for the main resource (the one requested to be loaded) as well as for each of its subresources. Those already in the cache, as long as the loaded and cached types match, have their data refreshed from storage into the already existing instances. Otherwise, they are recreated as completely new objects.",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REPLACE_DEEP",
+          "value": "4",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_REPLACE], but propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REUSE",
+          "value": "1",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "The main resource (the one requested to be loaded), its subresources, and its dependencies (external resources) are retrieved from cache if present, instead of loaded. Those not cached are loaded and then stored into the cache. The same rules are propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        }
+      ]
+    },
+    {
+      "name": "ThreadLoadStatus",
+      "values": [
+        {
+          "name": "THREAD_LOAD_FAILED",
+          "value": "2",
+          "enum": "ThreadLoadStatus",
+          "kind": "EnumValue",
+          "summary": "Some error occurred during loading and it failed.",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "THREAD_LOAD_INVALID_RESOURCE",
+          "value": "0",
+          "enum": "ThreadLoadStatus",
+          "kind": "EnumValue",
+          "summary": "The resource is invalid, or has not been loaded with [method load_threaded_request].",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "THREAD_LOAD_IN_PROGRESS",
+          "value": "1",
+          "enum": "ThreadLoadStatus",
+          "kind": "EnumValue",
+          "summary": "The resource is still being loaded.",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        },
+        {
+          "name": "THREAD_LOAD_LOADED",
+          "value": "3",
+          "enum": "ThreadLoadStatus",
+          "kind": "EnumValue",
+          "summary": "The resource was loaded successfully and can be accessed via [method load_threaded_get].",
+          "sourcePath": "doc/classes/ResourceLoader.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "THREAD_LOAD_INVALID_RESOURCE",
+      "value": "0",
+      "enum": "ThreadLoadStatus",
+      "kind": "EnumValue",
+      "summary": "The resource is invalid, or has not been loaded with [method load_threaded_request].",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "THREAD_LOAD_IN_PROGRESS",
+      "value": "1",
+      "enum": "ThreadLoadStatus",
+      "kind": "EnumValue",
+      "summary": "The resource is still being loaded.",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "THREAD_LOAD_FAILED",
+      "value": "2",
+      "enum": "ThreadLoadStatus",
+      "kind": "EnumValue",
+      "summary": "Some error occurred during loading and it failed.",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "THREAD_LOAD_LOADED",
+      "value": "3",
+      "enum": "ThreadLoadStatus",
+      "kind": "EnumValue",
+      "summary": "The resource was loaded successfully and can be accessed via [method load_threaded_get].",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_IGNORE",
+      "value": "0",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Neither the main resource (the one requested to be loaded) nor any of its subresources are retrieved from cache nor stored into it. Dependencies (external resources) are loaded with [constant CACHE_MODE_REUSE].",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REUSE",
+      "value": "1",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "The main resource (the one requested to be loaded), its subresources, and its dependencies (external resources) are retrieved from cache if present, instead of loaded. Those not cached are loaded and then stored into the cache. The same rules are propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REPLACE",
+      "value": "2",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_REUSE], but the cache is checked for the main resource (the one requested to be loaded) as well as for each of its subresources. Those already in the cache, as long as the loaded and cached types match, have their data refreshed from storage into the already existing instances. Otherwise, they are recreated as completely new objects.",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_IGNORE_DEEP",
+      "value": "3",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_IGNORE], but propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REPLACE_DEEP",
+      "value": "4",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_REPLACE], but propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceLoader.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceLoader.xml",
+      "sha256": "b25c77e57e49313c1d3172959d6f05b89a9b751c0990bac09d44e0a7e66cbe32"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

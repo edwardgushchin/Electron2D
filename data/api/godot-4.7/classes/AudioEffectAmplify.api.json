@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectAmplify",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectAmplify",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectAmplify",
+    "documentationPath": "doc/classes/AudioEffectAmplify.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectamplify.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "VolumeDb",
+      "kind": "Property",
+      "signature": "public float VolumeDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of amplification in dB. Positive values make the sound louder, negative values make it quieter. Value can range from -80 to 24.",
+      "defaultValue": "0.0",
+      "godotName": "volume_db",
+      "xmlDocId": "P:Godot.AudioEffectAmplify.VolumeDb",
+      "sourcePath": "doc/classes/AudioEffectAmplify.xml"
+    },
+    {
+      "name": "VolumeLinear",
+      "kind": "Property",
+      "signature": "public float VolumeLinear { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of amplification as a linear value. [b]Note:[/b] This member modifies [member volume_db] for convenience. The returned value is equivalent to the result of [method @GlobalScope.db_to_linear] on [member volume_db]. Setting this member is equivalent to setting [member volume_db] to the result of [method @GlobalScope.linear_to_db] on a value.",
+      "godotName": "volume_linear",
+      "xmlDocId": "P:Godot.AudioEffectAmplify.VolumeLinear",
+      "sourcePath": "doc/classes/AudioEffectAmplify.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectAmplify.xml",
+      "sha256": "5cec6f44557b8e71db3486693ebe39ad1a86a76eb99881de124fad910e3e80e2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

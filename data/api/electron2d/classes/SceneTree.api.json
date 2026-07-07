@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneTree",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SceneTree",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "SceneTree",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "SceneTree",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SceneTree()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SceneTree type.",
+      "xmlDocId": "M:Electron2D.SceneTree.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "SceneTree",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SceneTree()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SceneTree type.",
+      "xmlDocId": "M:Electron2D.SceneTree.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CallGroup",
+      "kind": "Method",
+      "signature": "public System.Void CallGroup(System.String group, System.String method, System.Object[] args)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        },
+        {
+          "name": "method",
+          "type": "System.String"
+        },
+        {
+          "name": "args",
+          "type": "System.Object[]"
+        }
+      ],
+      "summary": "Executes the call group operation.",
+      "xmlDocId": "M:Electron2D.SceneTree.CallGroup(System.String,System.String,System.Object[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ChangeSceneToPacked",
+      "kind": "Method",
+      "signature": "public Electron2D.Error ChangeSceneToPacked(Electron2D.PackedScene packedScene)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "packedScene",
+          "type": "Electron2D.PackedScene"
+        }
+      ],
+      "summary": "Executes the change scene to packed operation.",
+      "xmlDocId": "M:Electron2D.SceneTree.ChangeSceneToPacked(Electron2D.PackedScene)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateTween",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween CreateTween()",
+      "returnType": "Electron2D.Tween",
+      "parameters": [],
+      "summary": "Creates a tween processed by this scene tree.",
+      "xmlDocId": "M:Electron2D.SceneTree.CreateTween",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFirstNodeInGroup",
+      "kind": "Method",
+      "signature": "public Electron2D.Node GetFirstNodeInGroup(System.String group)",
+      "returnType": "Electron2D.Node",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the first node in group value.",
+      "xmlDocId": "M:Electron2D.SceneTree.GetFirstNodeInGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNodeCountInGroup",
+      "kind": "Method",
+      "signature": "public System.Int32 GetNodeCountInGroup(System.String group)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the node count in group value.",
+      "xmlDocId": "M:Electron2D.SceneTree.GetNodeCountInGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNodesInGroup",
+      "kind": "Method",
+      "signature": "public Electron2D.Node[] GetNodesInGroup(System.String group)",
+      "returnType": "Electron2D.Node[]",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the nodes in group value.",
+      "xmlDocId": "M:Electron2D.SceneTree.GetNodesInGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasGroup",
+      "kind": "Method",
+      "signature": "public System.Boolean HasGroup(System.String name)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Checks whether group is available.",
+      "xmlDocId": "M:Electron2D.SceneTree.HasGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentScene",
+      "kind": "Property",
+      "signature": "public Electron2D.Node CurrentScene { get; }",
+      "returnType": "Electron2D.Node",
+      "parameters": [],
+      "summary": "Gets or sets the current scene value.",
+      "xmlDocId": "P:Electron2D.SceneTree.CurrentScene",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DebugCollisionsHint",
+      "kind": "Property",
+      "signature": "public System.Boolean DebugCollisionsHint { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether collision shapes should be exposed to debug visualization.",
+      "xmlDocId": "P:Electron2D.SceneTree.DebugCollisionsHint",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Paused",
+      "kind": "Property",
+      "signature": "public System.Boolean Paused { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether ordinary scene processing is paused.",
+      "xmlDocId": "P:Electron2D.SceneTree.Paused",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Root",
+      "kind": "Property",
+      "signature": "public Electron2D.Node Root { get; }",
+      "returnType": "Electron2D.Node",
+      "parameters": [],
+      "summary": "Gets the root value.",
+      "xmlDocId": "P:Electron2D.SceneTree.Root",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeFloatParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeFloatParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeFloatParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodefloatparameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DefaultValue",
+      "kind": "Property",
+      "signature": "public float DefaultValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A default value to be assigned within the shader.",
+      "defaultValue": "0.0",
+      "godotName": "default_value",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.DefaultValue",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "DefaultValueEnabled",
+      "kind": "Property",
+      "signature": "public bool DefaultValueEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables usage of the [member default_value].",
+      "defaultValue": "false",
+      "godotName": "default_value_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.DefaultValueEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "Hint",
+      "kind": "Property",
+      "signature": "public int Hint { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A hint applied to the uniform, which controls the values it can take when set through the Inspector.",
+      "defaultValue": "0",
+      "godotName": "hint",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.Hint",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Property",
+      "signature": "public float Max { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum value for range hints. Used if [member hint] is set to [constant HINT_RANGE] or [constant HINT_RANGE_STEP].",
+      "defaultValue": "1.0",
+      "godotName": "max",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.Max",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Property",
+      "signature": "public float Min { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum value for range hints. Used if [member hint] is set to [constant HINT_RANGE] or [constant HINT_RANGE_STEP].",
+      "defaultValue": "0.0",
+      "godotName": "min",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.Min",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Step (increment) value for the range hint with step. Used if [member hint] is set to [constant HINT_RANGE_STEP].",
+      "defaultValue": "0.1",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatParameter.Step",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Hint",
+      "values": [
+        {
+          "name": "HINT_MAX",
+          "value": "3",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Hint] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+        },
+        {
+          "name": "HINT_NONE",
+          "value": "0",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "No hint used.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+        },
+        {
+          "name": "HINT_RANGE",
+          "value": "1",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "A range hint for scalar value, which limits possible input values between [member min] and [member max]. Translated to [code]hint_range(min, max)[/code] in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+        },
+        {
+          "name": "HINT_RANGE_STEP",
+          "value": "2",
+          "enum": "Hint",
+          "kind": "EnumValue",
+          "summary": "A range hint for scalar value with step, which limits possible input values between [member min] and [member max], with a step (increment) of [member step]). Translated to [code]hint_range(min, max, step)[/code] in shader code.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HINT_NONE",
+      "value": "0",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "No hint used.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "HINT_RANGE",
+      "value": "1",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "A range hint for scalar value, which limits possible input values between [member min] and [member max]. Translated to [code]hint_range(min, max)[/code] in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "HINT_RANGE_STEP",
+      "value": "2",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "A range hint for scalar value with step, which limits possible input values between [member min] and [member max], with a step (increment) of [member step]). Translated to [code]hint_range(min, max, step)[/code] in shader code.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    },
+    {
+      "name": "HINT_MAX",
+      "value": "3",
+      "enum": "Hint",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Hint] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeFloatParameter.xml",
+      "sha256": "2f0ce444ac75b04e79796ca590239fc85fb8fcd4bdad7f6b6e6f5db2ad52f96a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

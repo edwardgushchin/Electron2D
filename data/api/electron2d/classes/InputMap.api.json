@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputMap",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputMap",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "InputMap",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionAddEvent",
+      "kind": "Method",
+      "signature": "public static System.Void ActionAddEvent(System.String action, Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Adds an input event binding to an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionAddEvent(System.String,Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionEraseEvent",
+      "kind": "Method",
+      "signature": "public static System.Void ActionEraseEvent(System.String action, Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Removes one input event binding from an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionEraseEvent(System.String,Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionEraseEvents",
+      "kind": "Method",
+      "signature": "public static System.Void ActionEraseEvents(System.String action)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes all input event bindings from an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionEraseEvents(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionGetDeadzone",
+      "kind": "Method",
+      "signature": "public static System.Single ActionGetDeadzone(System.String action)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the deadzone for an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionGetDeadzone(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionGetEvents",
+      "kind": "Method",
+      "signature": "public static Electron2D.InputEvent[] ActionGetEvents(System.String action)",
+      "returnType": "Electron2D.InputEvent[]",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Gets the input event bindings for an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionGetEvents(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ActionSetDeadzone",
+      "kind": "Method",
+      "signature": "public static System.Void ActionSetDeadzone(System.String action, System.Single deadzone)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "deadzone",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets the deadzone for an action.",
+      "xmlDocId": "M:Electron2D.InputMap.ActionSetDeadzone(System.String,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddAction",
+      "kind": "Method",
+      "signature": "public static System.Void AddAction(System.String action, System.Single deadzone)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "deadzone",
+          "type": "System.Single",
+          "defaultValue": "0.5"
+        }
+      ],
+      "summary": "Adds an action to the input map.",
+      "xmlDocId": "M:Electron2D.InputMap.AddAction(System.String,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EraseAction",
+      "kind": "Method",
+      "signature": "public static System.Void EraseAction(System.String action)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes an action and its events from the input map.",
+      "xmlDocId": "M:Electron2D.InputMap.EraseAction(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EventIsAction",
+      "kind": "Method",
+      "signature": "public static System.Boolean EventIsAction(Electron2D.InputEvent inputEvent, System.String action, System.Boolean exactMatch)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        },
+        {
+          "name": "action",
+          "type": "System.String"
+        },
+        {
+          "name": "exactMatch",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Checks whether an input event matches an action.",
+      "xmlDocId": "M:Electron2D.InputMap.EventIsAction(Electron2D.InputEvent,System.String,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetActions",
+      "kind": "Method",
+      "signature": "public static System.String[] GetActions()",
+      "returnType": "System.String[]",
+      "parameters": [],
+      "summary": "Gets the registered action names.",
+      "xmlDocId": "M:Electron2D.InputMap.GetActions",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAction",
+      "kind": "Method",
+      "signature": "public static System.Boolean HasAction(System.String action)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Checks whether an action exists.",
+      "xmlDocId": "M:Electron2D.InputMap.HasAction(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

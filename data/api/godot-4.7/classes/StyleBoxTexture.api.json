@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBoxTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.StyleBoxTexture",
+    "kind": "class",
+    "baseType": "StyleBox",
+    "interfaces": [],
+    "godotReference": "StyleBoxTexture",
+    "documentationPath": "doc/classes/StyleBoxTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_styleboxtexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetExpandMargin",
+      "kind": "Method",
+      "signature": "public float GetExpandMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the expand margin size of the specified [enum Side].",
+      "godotName": "get_expand_margin",
+      "xmlDocId": "M:Godot.StyleBoxTexture.GetExpandMargin(int)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "GetTextureMargin",
+      "kind": "Method",
+      "signature": "public float GetTextureMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the margin size of the specified [enum Side].",
+      "godotName": "get_texture_margin",
+      "xmlDocId": "M:Godot.StyleBoxTexture.GetTextureMargin(int)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "SetExpandMargin",
+      "kind": "Method",
+      "signature": "public void SetExpandMargin(int margin, float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the expand margin to [param size] pixels for the specified [enum Side].",
+      "godotName": "set_expand_margin",
+      "xmlDocId": "M:Godot.StyleBoxTexture.SetExpandMargin(int,float)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "SetExpandMarginAll",
+      "kind": "Method",
+      "signature": "public void SetExpandMarginAll(float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the expand margin to [param size] pixels for all sides.",
+      "godotName": "set_expand_margin_all",
+      "xmlDocId": "M:Godot.StyleBoxTexture.SetExpandMarginAll(float)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "SetTextureMargin",
+      "kind": "Method",
+      "signature": "public void SetTextureMargin(int margin, float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the margin to [param size] pixels for the specified [enum Side].",
+      "godotName": "set_texture_margin",
+      "xmlDocId": "M:Godot.StyleBoxTexture.SetTextureMargin(int,float)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "SetTextureMarginAll",
+      "kind": "Method",
+      "signature": "public void SetTextureMarginAll(float size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the margin to [param size] pixels for all sides.",
+      "godotName": "set_texture_margin_all",
+      "xmlDocId": "M:Godot.StyleBoxTexture.SetTextureMarginAll(float)",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "AxisStretchHorizontal",
+      "kind": "Property",
+      "signature": "public int AxisStretchHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the stylebox\u0027s texture will be stretched or tiled horizontally.",
+      "defaultValue": "0",
+      "godotName": "axis_stretch_horizontal",
+      "xmlDocId": "P:Godot.StyleBoxTexture.AxisStretchHorizontal",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "AxisStretchVertical",
+      "kind": "Property",
+      "signature": "public int AxisStretchVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the stylebox\u0027s texture will be stretched or tiled vertically.",
+      "defaultValue": "0",
+      "godotName": "axis_stretch_vertical",
+      "xmlDocId": "P:Godot.StyleBoxTexture.AxisStretchVertical",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "DrawCenter",
+      "kind": "Property",
+      "signature": "public bool DrawCenter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the nine-patch texture\u0027s center tile will be drawn.",
+      "defaultValue": "true",
+      "godotName": "draw_center",
+      "xmlDocId": "P:Godot.StyleBoxTexture.DrawCenter",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "ExpandMarginBottom",
+      "kind": "Property",
+      "signature": "public float ExpandMarginBottom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the bottom margin of this style box when drawing, causing it to be drawn larger than requested.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_bottom",
+      "xmlDocId": "P:Godot.StyleBoxTexture.ExpandMarginBottom",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "ExpandMarginLeft",
+      "kind": "Property",
+      "signature": "public float ExpandMarginLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the left margin of this style box when drawing, causing it to be drawn larger than requested.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_left",
+      "xmlDocId": "P:Godot.StyleBoxTexture.ExpandMarginLeft",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "ExpandMarginRight",
+      "kind": "Property",
+      "signature": "public float ExpandMarginRight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the right margin of this style box when drawing, causing it to be drawn larger than requested.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_right",
+      "xmlDocId": "P:Godot.StyleBoxTexture.ExpandMarginRight",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "ExpandMarginTop",
+      "kind": "Property",
+      "signature": "public float ExpandMarginTop { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Expands the top margin of this style box when drawing, causing it to be drawn larger than requested.",
+      "defaultValue": "0.0",
+      "godotName": "expand_margin_top",
+      "xmlDocId": "P:Godot.StyleBoxTexture.ExpandMarginTop",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "ModulateColor",
+      "kind": "Property",
+      "signature": "public Color ModulateColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Modulates the color of the texture when this style box is drawn.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "modulate_color",
+      "xmlDocId": "P:Godot.StyleBoxTexture.ModulateColor",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Rect2 RegionRect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The region to use from the [member texture]. This is equivalent to first wrapping the [member texture] in an [AtlasTexture] with the same region. If empty ([code]Rect2(0, 0, 0, 0)[/code]), the whole [member texture] is used.",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "region_rect",
+      "xmlDocId": "P:Godot.StyleBoxTexture.RegionRect",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The texture to use when drawing this style box.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.StyleBoxTexture.Texture",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "TextureMarginBottom",
+      "kind": "Property",
+      "signature": "public float TextureMarginBottom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increases the bottom margin of the 3\u00D73 texture box. A higher value means more of the source texture is considered to be part of the bottom border of the 3\u00D73 box. This is also the value used as fallback for [member StyleBox.content_margin_bottom] if it is negative.",
+      "defaultValue": "0.0",
+      "godotName": "texture_margin_bottom",
+      "xmlDocId": "P:Godot.StyleBoxTexture.TextureMarginBottom",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "TextureMarginLeft",
+      "kind": "Property",
+      "signature": "public float TextureMarginLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increases the left margin of the 3\u00D73 texture box. A higher value means more of the source texture is considered to be part of the left border of the 3\u00D73 box. This is also the value used as fallback for [member StyleBox.content_margin_left] if it is negative.",
+      "defaultValue": "0.0",
+      "godotName": "texture_margin_left",
+      "xmlDocId": "P:Godot.StyleBoxTexture.TextureMarginLeft",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "TextureMarginRight",
+      "kind": "Property",
+      "signature": "public float TextureMarginRight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increases the right margin of the 3\u00D73 texture box. A higher value means more of the source texture is considered to be part of the right border of the 3\u00D73 box. This is also the value used as fallback for [member StyleBox.content_margin_right] if it is negative.",
+      "defaultValue": "0.0",
+      "godotName": "texture_margin_right",
+      "xmlDocId": "P:Godot.StyleBoxTexture.TextureMarginRight",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "TextureMarginTop",
+      "kind": "Property",
+      "signature": "public float TextureMarginTop { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increases the top margin of the 3\u00D73 texture box. A higher value means more of the source texture is considered to be part of the top border of the 3\u00D73 box. This is also the value used as fallback for [member StyleBox.content_margin_top] if it is negative.",
+      "defaultValue": "0.0",
+      "godotName": "texture_margin_top",
+      "xmlDocId": "P:Godot.StyleBoxTexture.TextureMarginTop",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AxisStretchMode",
+      "values": [
+        {
+          "name": "AXIS_STRETCH_MODE_STRETCH",
+          "value": "0",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Stretch the stylebox\u0027s texture. This results in visible distortion unless the texture size matches the stylebox\u0027s size perfectly.",
+          "sourcePath": "doc/classes/StyleBoxTexture.xml"
+        },
+        {
+          "name": "AXIS_STRETCH_MODE_TILE",
+          "value": "1",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Repeats the stylebox\u0027s texture to match the stylebox\u0027s size according to the nine-patch system.",
+          "sourcePath": "doc/classes/StyleBoxTexture.xml"
+        },
+        {
+          "name": "AXIS_STRETCH_MODE_TILE_FIT",
+          "value": "2",
+          "enum": "AxisStretchMode",
+          "kind": "EnumValue",
+          "summary": "Repeats the stylebox\u0027s texture to match the stylebox\u0027s size according to the nine-patch system. Unlike [constant AXIS_STRETCH_MODE_TILE], the texture may be slightly stretched to make the nine-patch texture tile seamlessly.",
+          "sourcePath": "doc/classes/StyleBoxTexture.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "AXIS_STRETCH_MODE_STRETCH",
+      "value": "0",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Stretch the stylebox\u0027s texture. This results in visible distortion unless the texture size matches the stylebox\u0027s size perfectly.",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "AXIS_STRETCH_MODE_TILE",
+      "value": "1",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Repeats the stylebox\u0027s texture to match the stylebox\u0027s size according to the nine-patch system.",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    },
+    {
+      "name": "AXIS_STRETCH_MODE_TILE_FIT",
+      "value": "2",
+      "enum": "AxisStretchMode",
+      "kind": "EnumValue",
+      "summary": "Repeats the stylebox\u0027s texture to match the stylebox\u0027s size according to the nine-patch system. Unlike [constant AXIS_STRETCH_MODE_TILE], the texture may be slightly stretched to make the nine-patch texture tile seamlessly.",
+      "sourcePath": "doc/classes/StyleBoxTexture.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StyleBoxTexture.xml",
+      "sha256": "52c863564d0a3862daedd649fba388d605714961bdb87b9bcb0a42a9565fc3cc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

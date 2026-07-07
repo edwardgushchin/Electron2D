@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Translation",
+    "namespace": "Godot",
+    "fullName": "Godot.Translation",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Translation",
+    "documentationPath": "doc/classes/Translation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_translation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetMessage",
+      "kind": "Method",
+      "signature": "public StringName _GetMessage(StringName srcMessage, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override [method get_message].",
+      "godotName": "_get_message",
+      "xmlDocId": "M:Godot.Translation._GetMessage(StringName,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "_GetPluralMessage",
+      "kind": "Method",
+      "signature": "public StringName _GetPluralMessage(StringName srcMessage, StringName srcPluralMessage, int n, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "src_plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override [method get_plural_message].",
+      "godotName": "_get_plural_message",
+      "xmlDocId": "M:Godot.Translation._GetPluralMessage(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "AddMessage",
+      "kind": "Method",
+      "signature": "public void AddMessage(StringName srcMessage, StringName xlatedMessage, StringName context)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "xlated_message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a message if nonexistent, followed by its translation. An additional context could be used to specify the translation context or differentiate polysemic words.",
+      "godotName": "add_message",
+      "xmlDocId": "M:Godot.Translation.AddMessage(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "AddPluralMessage",
+      "kind": "Method",
+      "signature": "public void AddPluralMessage(StringName srcMessage, PackedStringArray xlatedMessages, StringName context)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "xlated_messages",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a message involving plural translation if nonexistent, followed by its translation. An additional context could be used to specify the translation context or differentiate polysemic words.",
+      "godotName": "add_plural_message",
+      "xmlDocId": "M:Godot.Translation.AddPluralMessage(StringName,PackedStringArray,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "EraseMessage",
+      "kind": "Method",
+      "signature": "public void EraseMessage(StringName srcMessage, StringName context)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Erases a message.",
+      "godotName": "erase_message",
+      "xmlDocId": "M:Godot.Translation.EraseMessage(StringName,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "GetMessage",
+      "kind": "Method",
+      "signature": "public StringName GetMessage(StringName srcMessage, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns a message\u0027s translation.",
+      "godotName": "get_message",
+      "xmlDocId": "M:Godot.Translation.GetMessage(StringName,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "GetMessageCount",
+      "kind": "Method",
+      "signature": "public int GetMessageCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of existing messages.",
+      "godotName": "get_message_count",
+      "xmlDocId": "M:Godot.Translation.GetMessageCount",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "GetMessageList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetMessageList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the keys of all messages, that is, the context and untranslated strings of each message. [b]Note:[/b] If a message does not use a context, the corresponding element is the untranslated string. Otherwise, the corresponding element is the context and untranslated string separated by the EOT character ([code]U\u002B0004[/code]). This is done for compatibility purposes. [codeblock] for key in translation.get_message_list(): var p = key.find(\u0022\\u0004\u0022) if p == -1: var untranslated = key print(\u0022Message %s\u0022 % untranslated) else: var context = key.substr(0, p) var untranslated = key.substr(p \u002B 1) print(\u0022Message %s with context %s\u0022 % [untranslated, context]) [/codeblock]",
+      "godotName": "get_message_list",
+      "xmlDocId": "M:Godot.Translation.GetMessageList",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "GetPluralMessage",
+      "kind": "Method",
+      "signature": "public StringName GetPluralMessage(StringName srcMessage, StringName srcPluralMessage, int n, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "src_plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns a message\u0027s translation involving plurals. The number [param n] is the number or quantity of the plural object. It will be used to guide the translation system to fetch the correct plural form for the selected language. [b]Note:[/b] Plurals are only supported in [url=$DOCS_URL/tutorials/i18n/localization_using_gettext.html]gettext-based translations (PO)[/url], not CSV.",
+      "godotName": "get_plural_message",
+      "xmlDocId": "M:Godot.Translation.GetPluralMessage(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "GetTranslatedMessageList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetTranslatedMessageList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns all the translated strings.",
+      "godotName": "get_translated_message_list",
+      "xmlDocId": "M:Godot.Translation.GetTranslatedMessageList",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "Locale",
+      "kind": "Property",
+      "signature": "public String Locale { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The locale of the translation.",
+      "defaultValue": "\u0022en\u0022",
+      "godotName": "locale",
+      "xmlDocId": "P:Godot.Translation.Locale",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "PluralRulesOverride",
+      "kind": "Property",
+      "signature": "public String PluralRulesOverride { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The plural rules string to enforce. See [url=https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html]GNU gettext[/url] for examples and more info. If empty or invalid, default plural rules from [method TranslationServer.get_plural_rules] are used. The English plural rules are used as a fallback.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "plural_rules_override",
+      "xmlDocId": "P:Godot.Translation.PluralRulesOverride",
+      "sourcePath": "doc/classes/Translation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetMessage",
+      "kind": "Method",
+      "signature": "public StringName _GetMessage(StringName srcMessage, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override [method get_message].",
+      "godotName": "_get_message",
+      "xmlDocId": "M:Godot.Translation._GetMessage(StringName,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    },
+    {
+      "name": "_GetPluralMessage",
+      "kind": "Method",
+      "signature": "public StringName _GetPluralMessage(StringName srcMessage, StringName srcPluralMessage, int n, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "src_message",
+          "type": "StringName"
+        },
+        {
+          "name": "src_plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override [method get_plural_message].",
+      "godotName": "_get_plural_message",
+      "xmlDocId": "M:Godot.Translation._GetPluralMessage(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/Translation.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Translation.xml",
+      "sha256": "a942bc0bc26785a6936feaf97bd4041118157b6cb45550eed81ce5f503f34925"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

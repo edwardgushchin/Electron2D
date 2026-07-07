@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Sky",
+    "namespace": "Godot",
+    "fullName": "Godot.Sky",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Sky",
+    "documentationPath": "doc/classes/Sky.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_sky.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ProcessMode",
+      "kind": "Property",
+      "signature": "public int ProcessMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The method for generating the radiance map from the sky. The radiance map is a cubemap with increasingly blurry versions of the sky corresponding to different levels of roughness. Radiance maps can be expensive to calculate.",
+      "defaultValue": "0",
+      "godotName": "process_mode",
+      "xmlDocId": "P:Godot.Sky.ProcessMode",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RadianceSize",
+      "kind": "Property",
+      "signature": "public int RadianceSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The [Sky]\u0027s radiance map size. The higher the radiance map size, the more detailed the lighting from the [Sky] will be. [b]Note:[/b] Some hardware will have trouble with higher radiance sizes, especially [constant RADIANCE_SIZE_512] and above. Only use such high values on high-end hardware.",
+      "defaultValue": "3",
+      "godotName": "radiance_size",
+      "xmlDocId": "P:Godot.Sky.RadianceSize",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "SkyMaterial",
+      "kind": "Property",
+      "signature": "public Material SkyMaterial { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "[Material] used to draw the background. Can be [PanoramaSkyMaterial], [ProceduralSkyMaterial], [PhysicalSkyMaterial], or even a [ShaderMaterial] if you want to use your own custom shader.",
+      "godotName": "sky_material",
+      "xmlDocId": "P:Godot.Sky.SkyMaterial",
+      "sourcePath": "doc/classes/Sky.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ProcessMode",
+      "values": [
+        {
+          "name": "PROCESS_MODE_AUTOMATIC",
+          "value": "0",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Automatically selects the appropriate process mode based on your sky shader. If your shader uses [code]TIME[/code] or [code]POSITION[/code], this will use [constant PROCESS_MODE_REALTIME]. If your shader uses any of the [code]LIGHT_*[/code] variables or any custom uniforms, this uses [constant PROCESS_MODE_INCREMENTAL]. Otherwise, this defaults to [constant PROCESS_MODE_QUALITY].",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "PROCESS_MODE_INCREMENTAL",
+          "value": "2",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Uses the same high quality importance sampling to process the radiance map as [constant PROCESS_MODE_QUALITY], but updates over several frames. The number of frames is determined by [member ProjectSettings.rendering/reflections/sky_reflections/roughness_layers]. Use this when you need highest quality radiance maps, but have a sky that updates slowly.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "PROCESS_MODE_QUALITY",
+          "value": "1",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Uses high quality importance sampling to process the radiance map. In general, this results in much higher quality than [constant PROCESS_MODE_REALTIME] but takes much longer to generate. This should not be used if you plan on changing the sky at runtime. If you are finding that the reflection is not blurry enough and is showing sparkles or fireflies, try increasing [member ProjectSettings.rendering/reflections/sky_reflections/ggx_samples].",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "PROCESS_MODE_REALTIME",
+          "value": "3",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Uses the fast filtering algorithm to process the radiance map. In general this results in lower quality, but substantially faster run times. If you need better quality, but still need to update the sky every frame, consider turning on [member ProjectSettings.rendering/reflections/sky_reflections/fast_filter_high_quality]. [b]Note:[/b] The fast filtering algorithm is limited to 256\u00D7256 cubemaps, so [member radiance_size] must be set to [constant RADIANCE_SIZE_256]. Otherwise, a warning is printed and the overridden radiance size is ignored.",
+          "sourcePath": "doc/classes/Sky.xml"
+        }
+      ]
+    },
+    {
+      "name": "RadianceSize",
+      "values": [
+        {
+          "name": "RADIANCE_SIZE_1024",
+          "value": "5",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 1024\u00D71024 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_128",
+          "value": "2",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 128\u00D7128 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_2048",
+          "value": "6",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 2048\u00D72048 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_256",
+          "value": "3",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 256\u00D7256 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_32",
+          "value": "0",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 32\u00D732 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_512",
+          "value": "4",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 512\u00D7512 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_64",
+          "value": "1",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Radiance texture size is 64\u00D764 pixels.",
+          "sourcePath": "doc/classes/Sky.xml"
+        },
+        {
+          "name": "RADIANCE_SIZE_MAX",
+          "value": "7",
+          "enum": "RadianceSize",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum RadianceSize] enum.",
+          "sourcePath": "doc/classes/Sky.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RADIANCE_SIZE_32",
+      "value": "0",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 32\u00D732 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_64",
+      "value": "1",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 64\u00D764 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_128",
+      "value": "2",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 128\u00D7128 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_256",
+      "value": "3",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 256\u00D7256 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_512",
+      "value": "4",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 512\u00D7512 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_1024",
+      "value": "5",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 1024\u00D71024 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_2048",
+      "value": "6",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Radiance texture size is 2048\u00D72048 pixels.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "RADIANCE_SIZE_MAX",
+      "value": "7",
+      "enum": "RadianceSize",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum RadianceSize] enum.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "PROCESS_MODE_AUTOMATIC",
+      "value": "0",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Automatically selects the appropriate process mode based on your sky shader. If your shader uses [code]TIME[/code] or [code]POSITION[/code], this will use [constant PROCESS_MODE_REALTIME]. If your shader uses any of the [code]LIGHT_*[/code] variables or any custom uniforms, this uses [constant PROCESS_MODE_INCREMENTAL]. Otherwise, this defaults to [constant PROCESS_MODE_QUALITY].",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "PROCESS_MODE_QUALITY",
+      "value": "1",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Uses high quality importance sampling to process the radiance map. In general, this results in much higher quality than [constant PROCESS_MODE_REALTIME] but takes much longer to generate. This should not be used if you plan on changing the sky at runtime. If you are finding that the reflection is not blurry enough and is showing sparkles or fireflies, try increasing [member ProjectSettings.rendering/reflections/sky_reflections/ggx_samples].",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "PROCESS_MODE_INCREMENTAL",
+      "value": "2",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Uses the same high quality importance sampling to process the radiance map as [constant PROCESS_MODE_QUALITY], but updates over several frames. The number of frames is determined by [member ProjectSettings.rendering/reflections/sky_reflections/roughness_layers]. Use this when you need highest quality radiance maps, but have a sky that updates slowly.",
+      "sourcePath": "doc/classes/Sky.xml"
+    },
+    {
+      "name": "PROCESS_MODE_REALTIME",
+      "value": "3",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Uses the fast filtering algorithm to process the radiance map. In general this results in lower quality, but substantially faster run times. If you need better quality, but still need to update the sky every frame, consider turning on [member ProjectSettings.rendering/reflections/sky_reflections/fast_filter_high_quality]. [b]Note:[/b] The fast filtering algorithm is limited to 256\u00D7256 cubemaps, so [member radiance_size] must be set to [constant RADIANCE_SIZE_256]. Otherwise, a warning is printed and the overridden radiance size is ignored.",
+      "sourcePath": "doc/classes/Sky.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Sky.xml",
+      "sha256": "ff58020816dd6848929786e08057f3ac6e75ebe5128eae71fba5be7a12b3a7df"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

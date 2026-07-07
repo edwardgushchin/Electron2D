@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DTLSServer",
+    "namespace": "Godot",
+    "fullName": "Godot.DTLSServer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "DTLSServer",
+    "documentationPath": "doc/classes/DTLSServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_dtlsserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Setup",
+      "kind": "Method",
+      "signature": "public int Setup(TLSOptions serverOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "server_options",
+          "type": "TLSOptions"
+        }
+      ],
+      "summary": "Setup the DTLS server to use the given [param server_options]. See [method TLSOptions.server].",
+      "godotName": "setup",
+      "xmlDocId": "M:Godot.DTLSServer.Setup(TLSOptions)",
+      "sourcePath": "doc/classes/DTLSServer.xml"
+    },
+    {
+      "name": "TakeConnection",
+      "kind": "Method",
+      "signature": "public PacketPeerDTLS TakeConnection(PacketPeerUDP udpPeer)",
+      "returnType": "PacketPeerDTLS",
+      "parameters": [
+        {
+          "name": "udp_peer",
+          "type": "PacketPeerUDP"
+        }
+      ],
+      "summary": "Try to initiate the DTLS handshake with the given [param udp_peer] which must be already connected (see [method PacketPeerUDP.connect_to_host]). [b]Note:[/b] You must check that the state of the return PacketPeerUDP is [constant PacketPeerDTLS.STATUS_HANDSHAKING], as it is normal that 50% of the new connections will be invalid due to cookie exchange.",
+      "godotName": "take_connection",
+      "xmlDocId": "M:Godot.DTLSServer.TakeConnection(PacketPeerUDP)",
+      "sourcePath": "doc/classes/DTLSServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/DTLSServer.xml",
+      "sha256": "408de5333e926b55271bbf1f027ca08aaf2346ee6e27d485bbfff9a93b9bf78f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

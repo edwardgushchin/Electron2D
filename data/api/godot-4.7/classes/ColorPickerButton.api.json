@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ColorPickerButton",
+    "namespace": "Godot",
+    "fullName": "Godot.ColorPickerButton",
+    "kind": "class",
+    "baseType": "Button",
+    "interfaces": [],
+    "godotReference": "ColorPickerButton",
+    "documentationPath": "doc/classes/ColorPickerButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_colorpickerbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPicker",
+      "kind": "Method",
+      "signature": "public ColorPicker GetPicker()",
+      "returnType": "ColorPicker",
+      "parameters": [],
+      "summary": "Returns the [ColorPicker] that this node toggles. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_picker",
+      "xmlDocId": "M:Godot.ColorPickerButton.GetPicker",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "GetPopup",
+      "kind": "Method",
+      "signature": "public PopupPanel GetPopup()",
+      "returnType": "PopupPanel",
+      "parameters": [],
+      "summary": "Returns the control\u0027s [PopupPanel] which allows you to connect to popup signals. This allows you to handle events when the ColorPicker is shown or hidden. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_popup",
+      "xmlDocId": "M:Godot.ColorPickerButton.GetPopup",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The currently selected color.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.ColorPickerButton.Color",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "EditAlpha",
+      "kind": "Property",
+      "signature": "public bool EditAlpha { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the alpha channel in the displayed [ColorPicker] will be visible.",
+      "defaultValue": "true",
+      "godotName": "edit_alpha",
+      "xmlDocId": "P:Godot.ColorPickerButton.EditAlpha",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "EditIntensity",
+      "kind": "Property",
+      "signature": "public bool EditIntensity { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the intensity slider in the displayed [ColorPicker] will be visible.",
+      "defaultValue": "true",
+      "godotName": "edit_intensity",
+      "xmlDocId": "P:Godot.ColorPickerButton.EditIntensity",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.ColorPickerButton.ToggleMode",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ColorChanged",
+      "kind": "Signal",
+      "signature": "public event ColorChangedHandler ColorChanged",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Emitted when the color changes.",
+      "godotName": "color_changed",
+      "xmlDocId": "E:Godot.ColorPickerButton.ColorChanged(Color)",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "PickerCreated",
+      "kind": "Signal",
+      "signature": "public event PickerCreatedHandler PickerCreated",
+      "parameters": [],
+      "summary": "Emitted when the [ColorPicker] is created (the button is pressed for the first time).",
+      "godotName": "picker_created",
+      "xmlDocId": "E:Godot.ColorPickerButton.PickerCreated",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    },
+    {
+      "name": "PopupClosed",
+      "kind": "Signal",
+      "signature": "public event PopupClosedHandler PopupClosed",
+      "parameters": [],
+      "summary": "Emitted when the [ColorPicker] is closed.",
+      "godotName": "popup_closed",
+      "xmlDocId": "E:Godot.ColorPickerButton.PopupClosed",
+      "sourcePath": "doc/classes/ColorPickerButton.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ColorPickerButton.xml",
+      "sha256": "40910c4d44133862ce5f431b233ed6e21de2e7049127c611a862256e9302a1ba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

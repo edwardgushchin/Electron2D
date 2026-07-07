@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Logger",
+    "namespace": "Godot",
+    "fullName": "Godot.Logger",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Logger",
+    "documentationPath": "doc/classes/Logger.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_logger.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_LogError",
+      "kind": "Method",
+      "signature": "public void _LogError(String function, String file, int line, String code, String rationale, bool editorNotify, int errorType, ScriptBacktrace[] scriptBacktraces)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "function",
+          "type": "String"
+        },
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "rationale",
+          "type": "String"
+        },
+        {
+          "name": "editor_notify",
+          "type": "bool"
+        },
+        {
+          "name": "error_type",
+          "type": "int"
+        },
+        {
+          "name": "script_backtraces",
+          "type": "ScriptBacktrace[]"
+        }
+      ],
+      "summary": "Called when an error is logged. The error provides the [param function], [param file], and [param line] that it originated from, as well as either the [param code] that generated the error or a [param rationale]. The type of error provided by [param error_type] is described in the [enum ErrorType] enumeration. Additionally, [param script_backtraces] provides backtraces for each of the script languages. These will only contain stack frames in editor builds and debug builds by default. To enable them for release builds as well, you need to enable [member ProjectSettings.debug/settings/gdscript/always_track_call_stacks]. [b]Warning:[/b] This method will be called from threads other than the main thread, possibly at the same time, so you will need to have some kind of thread-safety in your implementation of it, like a [Mutex]. [b]Note:[/b] [param script_backtraces] will not contain any captured variables, due to its prohibitively high cost. To get those, you will need to capture the backtraces yourself, from within the [Logger] virtual methods, using [method Engine.capture_script_backtraces]. [b]Note:[/b] Logging errors from this method using functions like [method @GlobalScope.push_error] or [method @GlobalScope.push_warning] is not supported, as it could cause infinite recursion. These errors will only show up in the console output.",
+      "godotName": "_log_error",
+      "xmlDocId": "M:Godot.Logger._LogError(String,String,int,String,String,bool,int,ScriptBacktrace[])",
+      "sourcePath": "doc/classes/Logger.xml"
+    },
+    {
+      "name": "_LogMessage",
+      "kind": "Method",
+      "signature": "public void _LogMessage(String message, bool error)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "error",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when a message is logged. If [param error] is [code]true[/code], then this message was meant to be sent to [code]stderr[/code]. [b]Warning:[/b] This method will be called from threads other than the main thread, possibly at the same time, so you will need to have some kind of thread-safety in your implementation of it, like a [Mutex]. [b]Note:[/b] Logging another message from this method using functions like [method @GlobalScope.print] is not supported, as it could cause infinite recursion. These messages will only show up in the console output.",
+      "godotName": "_log_message",
+      "xmlDocId": "M:Godot.Logger._LogMessage(String,bool)",
+      "sourcePath": "doc/classes/Logger.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ErrorType",
+      "values": [
+        {
+          "name": "ERROR_TYPE_ERROR",
+          "value": "0",
+          "enum": "ErrorType",
+          "kind": "EnumValue",
+          "summary": "The message received is an error.",
+          "sourcePath": "doc/classes/Logger.xml"
+        },
+        {
+          "name": "ERROR_TYPE_SCRIPT",
+          "value": "2",
+          "enum": "ErrorType",
+          "kind": "EnumValue",
+          "summary": "The message received is a script error.",
+          "sourcePath": "doc/classes/Logger.xml"
+        },
+        {
+          "name": "ERROR_TYPE_SHADER",
+          "value": "3",
+          "enum": "ErrorType",
+          "kind": "EnumValue",
+          "summary": "The message received is a shader error.",
+          "sourcePath": "doc/classes/Logger.xml"
+        },
+        {
+          "name": "ERROR_TYPE_WARNING",
+          "value": "1",
+          "enum": "ErrorType",
+          "kind": "EnumValue",
+          "summary": "The message received is a warning.",
+          "sourcePath": "doc/classes/Logger.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ERROR_TYPE_ERROR",
+      "value": "0",
+      "enum": "ErrorType",
+      "kind": "EnumValue",
+      "summary": "The message received is an error.",
+      "sourcePath": "doc/classes/Logger.xml"
+    },
+    {
+      "name": "ERROR_TYPE_WARNING",
+      "value": "1",
+      "enum": "ErrorType",
+      "kind": "EnumValue",
+      "summary": "The message received is a warning.",
+      "sourcePath": "doc/classes/Logger.xml"
+    },
+    {
+      "name": "ERROR_TYPE_SCRIPT",
+      "value": "2",
+      "enum": "ErrorType",
+      "kind": "EnumValue",
+      "summary": "The message received is a script error.",
+      "sourcePath": "doc/classes/Logger.xml"
+    },
+    {
+      "name": "ERROR_TYPE_SHADER",
+      "value": "3",
+      "enum": "ErrorType",
+      "kind": "EnumValue",
+      "summary": "The message received is a shader error.",
+      "sourcePath": "doc/classes/Logger.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_LogError",
+      "kind": "Method",
+      "signature": "public void _LogError(String function, String file, int line, String code, String rationale, bool editorNotify, int errorType, ScriptBacktrace[] scriptBacktraces)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "function",
+          "type": "String"
+        },
+        {
+          "name": "file",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "rationale",
+          "type": "String"
+        },
+        {
+          "name": "editor_notify",
+          "type": "bool"
+        },
+        {
+          "name": "error_type",
+          "type": "int"
+        },
+        {
+          "name": "script_backtraces",
+          "type": "ScriptBacktrace[]"
+        }
+      ],
+      "summary": "Called when an error is logged. The error provides the [param function], [param file], and [param line] that it originated from, as well as either the [param code] that generated the error or a [param rationale]. The type of error provided by [param error_type] is described in the [enum ErrorType] enumeration. Additionally, [param script_backtraces] provides backtraces for each of the script languages. These will only contain stack frames in editor builds and debug builds by default. To enable them for release builds as well, you need to enable [member ProjectSettings.debug/settings/gdscript/always_track_call_stacks]. [b]Warning:[/b] This method will be called from threads other than the main thread, possibly at the same time, so you will need to have some kind of thread-safety in your implementation of it, like a [Mutex]. [b]Note:[/b] [param script_backtraces] will not contain any captured variables, due to its prohibitively high cost. To get those, you will need to capture the backtraces yourself, from within the [Logger] virtual methods, using [method Engine.capture_script_backtraces]. [b]Note:[/b] Logging errors from this method using functions like [method @GlobalScope.push_error] or [method @GlobalScope.push_warning] is not supported, as it could cause infinite recursion. These errors will only show up in the console output.",
+      "godotName": "_log_error",
+      "xmlDocId": "M:Godot.Logger._LogError(String,String,int,String,String,bool,int,ScriptBacktrace[])",
+      "sourcePath": "doc/classes/Logger.xml"
+    },
+    {
+      "name": "_LogMessage",
+      "kind": "Method",
+      "signature": "public void _LogMessage(String message, bool error)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "error",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when a message is logged. If [param error] is [code]true[/code], then this message was meant to be sent to [code]stderr[/code]. [b]Warning:[/b] This method will be called from threads other than the main thread, possibly at the same time, so you will need to have some kind of thread-safety in your implementation of it, like a [Mutex]. [b]Note:[/b] Logging another message from this method using functions like [method @GlobalScope.print] is not supported, as it could cause infinite recursion. These messages will only show up in the console output.",
+      "godotName": "_log_message",
+      "xmlDocId": "M:Godot.Logger._LogMessage(String,bool)",
+      "sourcePath": "doc/classes/Logger.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Logger.xml",
+      "sha256": "cee5e2c8d431cfaff64c681860e65fc05dc522b3f20709a004786ab2e9f4c078"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

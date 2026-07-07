@@ -1,0 +1,720 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "int",
+    "namespace": "Godot",
+    "fullName": "Godot.int",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "int",
+    "documentationPath": "doc/classes/int.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_int.html"
+  },
+  "constructors": [
+    {
+      "name": "Int",
+      "kind": "Constructor",
+      "signature": "public Int()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Constructs an [int] set to [code]0[/code].",
+      "godotName": "int",
+      "xmlDocId": "M:Godot.int.#ctor",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "Int",
+      "kind": "Constructor",
+      "signature": "public Int(int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int"
+        }
+      ],
+      "summary": "Constructs an [int] as a copy of the given [int].",
+      "godotName": "int",
+      "xmlDocId": "M:Godot.int.#ctor(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "Int",
+      "kind": "Constructor",
+      "signature": "public Int(String from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "String"
+        }
+      ],
+      "summary": "Constructs a new [int] from a [String], following the same rules as [method String.to_int].",
+      "godotName": "int",
+      "xmlDocId": "M:Godot.int.#ctor(String)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "Int",
+      "kind": "Constructor",
+      "signature": "public Int(bool from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "bool"
+        }
+      ],
+      "summary": "Constructs a new [int] from a [bool]. [code]true[/code] is converted to [code]1[/code] and [code]false[/code] is converted to [code]0[/code].",
+      "godotName": "int",
+      "xmlDocId": "M:Godot.int.#ctor(bool)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "Int",
+      "kind": "Constructor",
+      "signature": "public Int(float from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a new [int] from a [float]. This will truncate the [float], discarding anything after the floating point.",
+      "godotName": "int",
+      "xmlDocId": "M:Godot.int.#ctor(float)",
+      "sourcePath": "doc/classes/int.xml"
+    }
+  ],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is not equivalent to the [float].",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.int.operator !=(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int]s are not equal.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.int.operator !=(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator %",
+      "kind": "Operator",
+      "signature": "public int operator %(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the remainder after dividing two [int]s. Uses truncated division, which returns a negative number if the dividend is negative. If this is not desired, consider using [method @GlobalScope.posmod]. [codeblock] print(6 % 2) # Prints 0 print(11 % 4) # Prints 3 print(-5 % 3) # Prints -2 [/codeblock]",
+      "godotName": "operator %",
+      "xmlDocId": "M:Godot.int.operator %(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u0026",
+      "kind": "Operator",
+      "signature": "public int operator \u0026(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Performs the bitwise [code]AND[/code] operation. [codeblock] print(0b1100 \u0026 0b1010) # Prints 8 (binary 1000) [/codeblock] This is useful for retrieving binary flags from a variable. [codeblock] var flags = 0b101 # Check if the first or second bit are enabled. if flags \u0026 0b011: do_stuff() # This line will run. [/codeblock]",
+      "godotName": "operator \u0026",
+      "xmlDocId": "M:Godot.int.operator \u0026(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Color operator *(Color right)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Color"
+        }
+      ],
+      "summary": "Multiplies each component of the [Color] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Color)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Quaternion operator *(Quaternion right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Multiplies each component of the [Quaternion] by the [int]. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Quaternion)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2 operator *(Vector2 right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2] by the [int]. [codeblock] print(2 * Vector2(1, 4)) # Prints (2, 8) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector2)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2i operator *(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2i] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector2i)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3 right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector3] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector3)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3i operator *(Vector3i right)",
+      "returnType": "Vector3i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector3i] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector3i)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector4)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4i operator *(Vector4i right)",
+      "returnType": "Vector4i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector4i] by the [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(Vector4i)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public float operator *(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies the [float] by the [int]. The result is a [float].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public int operator *(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies the two [int]s.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.int.operator *(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator **",
+      "kind": "Operator",
+      "signature": "public float operator **(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Raises an [int] to a power of a [float]. The result is a [float]. [codeblock] print(2 ** 0.5) # Prints 1.4142135623731 [/codeblock]",
+      "godotName": "operator **",
+      "xmlDocId": "M:Godot.int.operator **(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator **",
+      "kind": "Operator",
+      "signature": "public int operator **(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Raises the left [int] to a power of the right [int]. [codeblock] print(3 ** 4) # Prints 81 [/codeblock]",
+      "godotName": "operator **",
+      "xmlDocId": "M:Godot.int.operator **(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public float operator \u002B(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Adds the [int] and the [float]. The result is a [float].",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.int.operator \u002B(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public int operator \u002B(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds the two [int]s.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.int.operator \u002B(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public float operator -(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Subtracts the [float] from the [int]. The result is a [float].",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.int.operator -(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public int operator -(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Subtracts the two [int]s.",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.int.operator -(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public float operator /(float right)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides the [int] by the [float]. The result is a [float]. [codeblock] print(10 / 3.0) # Prints 3.33333333333333 [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.int.operator /(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public int operator /(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides the two [int]s. The result is an [int]. This will truncate the [float], discarding anything after the floating point. [codeblock] print(6 / 2) # Prints 3 print(5 / 3) # Prints 1 [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.int.operator /(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is less than the [float].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.int.operator \u003C(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [int] is less than the right [int].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.int.operator \u003C(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003C\u003C",
+      "kind": "Operator",
+      "signature": "public int operator \u003C\u003C(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Performs the bitwise shift left operation. Effectively the same as multiplying by a power of 2. [codeblock] print(0b1010 \u003C\u003C 1) # Prints 20 (binary 10100) print(0b1010 \u003C\u003C 3) # Prints 80 (binary 1010000) [/codeblock]",
+      "godotName": "operator \u003C\u003C",
+      "xmlDocId": "M:Godot.int.operator \u003C\u003C(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is less than or equal to the [float].",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.int.operator \u003C=(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [int] is less than or equal to the right [int].",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.int.operator \u003C=(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is equal to the [float].",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.int.operator ==(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the two [int]s are equal.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.int.operator ==(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is greater than the [float].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.int.operator \u003E(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [int] is greater than the right [int].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.int.operator \u003E(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(float right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [int] is greater than or equal to the [float].",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.int.operator \u003E=(float)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(int right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [int] is greater than or equal to the right [int].",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.int.operator \u003E=(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator \u003E\u003E",
+      "kind": "Operator",
+      "signature": "public int operator \u003E\u003E(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Performs the bitwise shift right operation. Effectively the same as dividing by a power of 2. [codeblock] print(0b1010 \u003E\u003E 1) # Prints 5 (binary 101) print(0b1010 \u003E\u003E 2) # Prints 2 (binary 10) [/codeblock]",
+      "godotName": "operator \u003E\u003E",
+      "xmlDocId": "M:Godot.int.operator \u003E\u003E(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator ^",
+      "kind": "Operator",
+      "signature": "public int operator ^(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Performs the bitwise [code]XOR[/code] operation. [codeblock] print(0b1100 ^ 0b1010) # Prints 6 (binary 110) [/codeblock]",
+      "godotName": "operator ^",
+      "xmlDocId": "M:Godot.int.operator ^(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public int operator unary\u002B()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.int.operator unary\u002B",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public int operator unary-()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the negated value of the [int]. If positive, turns the number negative. If negative, turns the number positive. If zero, does nothing.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.int.operator unary-",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator |",
+      "kind": "Operator",
+      "signature": "public int operator |(int right)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Performs the bitwise [code]OR[/code] operation. [codeblock] print(0b1100 | 0b1010) # Prints 14 (binary 1110) [/codeblock] This is useful for storing binary flags in a variable. [codeblock] var flags = 0 flags |= 0b101 # Turn the first and third bits on. [/codeblock]",
+      "godotName": "operator |",
+      "xmlDocId": "M:Godot.int.operator |(int)",
+      "sourcePath": "doc/classes/int.xml"
+    },
+    {
+      "name": "operator ~",
+      "kind": "Operator",
+      "signature": "public int operator ~()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Performs the bitwise [code]NOT[/code] operation on the [int]. Due to [url=https://en.wikipedia.org/wiki/Two%27s_complement]2\u0027s complement[/url], it\u0027s effectively equal to [code]-(int \u002B 1)[/code]. [codeblock] print(~4) # Prints -5 print(~(-7)) # Prints 6 [/codeblock]",
+      "godotName": "operator ~",
+      "xmlDocId": "M:Godot.int.operator ~",
+      "sourcePath": "doc/classes/int.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/int.xml",
+      "sha256": "daa189ac7d7947d9900f21b0728c1a2529f10e6c9d4f916b789cad6fe175084b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ArrayMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.ArrayMesh",
+    "kind": "class",
+    "baseType": "Mesh",
+    "interfaces": [],
+    "godotReference": "ArrayMesh",
+    "documentationPath": "doc/classes/ArrayMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_arraymesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBlendShape",
+      "kind": "Method",
+      "signature": "public void AddBlendShape(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Adds name for a blend shape that will be added with [method add_surface_from_arrays]. Must be called before surface is added.",
+      "godotName": "add_blend_shape",
+      "xmlDocId": "M:Godot.ArrayMesh.AddBlendShape(StringName)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "AddSurfaceFromArrays",
+      "kind": "Method",
+      "signature": "public void AddSurfaceFromArrays(int primitive, Array arrays, Array[] blendShapes, Dictionary lods, int flags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "primitive",
+          "type": "int"
+        },
+        {
+          "name": "arrays",
+          "type": "Array"
+        },
+        {
+          "name": "blend_shapes",
+          "type": "Array[]",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "lods",
+          "type": "Dictionary",
+          "defaultValue": "{}"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Creates a new surface. [method Mesh.get_surface_count] will become the [code]surf_idx[/code] for this new surface. Surfaces are created to be rendered using a [param primitive], which may be any of the values defined in [enum Mesh.PrimitiveType]. The [param arrays] argument is an array of arrays. Each of the [constant Mesh.ARRAY_MAX] elements contains an array with some of the mesh data for this surface as described by the corresponding member of [enum Mesh.ArrayType] or [code]null[/code] if it is not used by the surface. For example, [code]arrays[0][/code] is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this surface into \u0022index mode\u0022 where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array (or be an exact multiple of the vertex array\u0027s length, when multiple elements of a sub-array correspond to a single vertex) or be empty, except for [constant Mesh.ARRAY_INDEX] if it is used. The [param blend_shapes] argument is an array of vertex data for each blend shape. Each element is an array of the same structure as [param arrays], but [constant Mesh.ARRAY_VERTEX], [constant Mesh.ARRAY_NORMAL], and [constant Mesh.ARRAY_TANGENT] are set if and only if they are set in [param arrays] and all other entries are [code]null[/code]. The [param lods] argument is a dictionary with [float] keys and [PackedInt32Array] values. Each entry in the dictionary represents an LOD level of the surface, where the value is the [constant Mesh.ARRAY_INDEX] array to use for the LOD level and the key is roughly proportional to the distance at which the LOD stats being used. I.e., increasing the key of an LOD also increases the distance that the objects has to be from the camera before the LOD is used. The [param flags] argument is the bitwise OR of, as required: One value of [enum Mesh.ArrayCustomFormat] left shifted by [code]ARRAY_FORMAT_CUSTOMn_SHIFT[/code] for each custom channel in use, [constant Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE], [constant Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS], or [constant Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY]. [b]Note:[/b] When using indices, it is recommended to only use points, lines, or triangles.",
+      "godotName": "add_surface_from_arrays",
+      "xmlDocId": "M:Godot.ArrayMesh.AddSurfaceFromArrays(int,Array,Array[],Dictionary,int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "ClearBlendShapes",
+      "kind": "Method",
+      "signature": "public void ClearBlendShapes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all blend shapes from this [ArrayMesh].",
+      "godotName": "clear_blend_shapes",
+      "xmlDocId": "M:Godot.ArrayMesh.ClearBlendShapes",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "ClearSurfaces",
+      "kind": "Method",
+      "signature": "public void ClearSurfaces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all surfaces from this [ArrayMesh].",
+      "godotName": "clear_surfaces",
+      "xmlDocId": "M:Godot.ArrayMesh.ClearSurfaces",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "GetBlendShapeCount",
+      "kind": "Method",
+      "signature": "public int GetBlendShapeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of blend shapes that the [ArrayMesh] holds.",
+      "godotName": "get_blend_shape_count",
+      "xmlDocId": "M:Godot.ArrayMesh.GetBlendShapeCount",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "GetBlendShapeName",
+      "kind": "Method",
+      "signature": "public StringName GetBlendShapeName(int index)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the blend shape at this index.",
+      "godotName": "get_blend_shape_name",
+      "xmlDocId": "M:Godot.ArrayMesh.GetBlendShapeName(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "LightmapUnwrap",
+      "kind": "Method",
+      "signature": "public int LightmapUnwrap(Transform3D transform, float texelSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "texel_size",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a UV unwrap on the [ArrayMesh] to prepare the mesh for lightmapping.",
+      "godotName": "lightmap_unwrap",
+      "xmlDocId": "M:Godot.ArrayMesh.LightmapUnwrap(Transform3D,float)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "RegenNormalMaps",
+      "kind": "Method",
+      "signature": "public void RegenNormalMaps()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Regenerates tangents for each of the [ArrayMesh]\u0027s surfaces.",
+      "godotName": "regen_normal_maps",
+      "xmlDocId": "M:Godot.ArrayMesh.RegenNormalMaps",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SetBlendShapeName",
+      "kind": "Method",
+      "signature": "public void SetBlendShapeName(int index, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the name of the blend shape at this index.",
+      "godotName": "set_blend_shape_name",
+      "xmlDocId": "M:Godot.ArrayMesh.SetBlendShapeName(int,StringName)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceFindByName",
+      "kind": "Method",
+      "signature": "public int SurfaceFindByName(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the index of the first surface with this name held within this [ArrayMesh]. If none are found, -1 is returned.",
+      "godotName": "surface_find_by_name",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceFindByName(String)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceGetArrayIndexLen",
+      "kind": "Method",
+      "signature": "public int SurfaceGetArrayIndexLen(int surfIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the length in indices of the index array in the requested surface (see [method add_surface_from_arrays]).",
+      "godotName": "surface_get_array_index_len",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceGetArrayIndexLen(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceGetArrayLen",
+      "kind": "Method",
+      "signature": "public int SurfaceGetArrayLen(int surfIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the length in vertices of the vertex array in the requested surface (see [method add_surface_from_arrays]).",
+      "godotName": "surface_get_array_len",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceGetArrayLen(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceGetFormat",
+      "kind": "Method",
+      "signature": "public int SurfaceGetFormat(int surfIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the format mask of the requested surface (see [method add_surface_from_arrays]).",
+      "godotName": "surface_get_format",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceGetFormat(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceGetName",
+      "kind": "Method",
+      "signature": "public String SurfaceGetName(int surfIdx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the name assigned to this surface.",
+      "godotName": "surface_get_name",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceGetName(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceGetPrimitiveType",
+      "kind": "Method",
+      "signature": "public int SurfaceGetPrimitiveType(int surfIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the primitive type of the requested surface (see [method add_surface_from_arrays]).",
+      "godotName": "surface_get_primitive_type",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceGetPrimitiveType(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceRemove",
+      "kind": "Method",
+      "signature": "public void SurfaceRemove(int surfIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the surface at the given index from the Mesh, shifting surfaces with higher index down by one.",
+      "godotName": "surface_remove",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceRemove(int)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceSetName",
+      "kind": "Method",
+      "signature": "public void SurfaceSetName(int surfIdx, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets a name for a given surface.",
+      "godotName": "surface_set_name",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceSetName(int,String)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceUpdateAttributeRegion",
+      "kind": "Method",
+      "signature": "public void SurfaceUpdateAttributeRegion(int surfIdx, int offset, PackedByteArray data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Updates the attribute buffer of this mesh\u0027s surface with the given [param data]. The expected data per attribute is 12 or 8 bytes (4 bytes per float, 2 floats per [Vector2], and 3 floats per [Vector3]) depending on if the mesh is using [Vector3] or [Vector2] vertices. This value can be determined with [method RenderingServer.mesh_surface_get_format_attribute_stride]. The starting point of the updates can be changed with [param offset]. The value of [param offset] should be a multiple of 12 bytes in most cases to align to each attribute. A [PackedVector3Array] of attribute locations can be converted into a [PackedByteArray] using [method PackedVector3Array.to_byte_array] for use in [param data].",
+      "godotName": "surface_update_attribute_region",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceUpdateAttributeRegion(int,int,PackedByteArray)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceUpdateSkinRegion",
+      "kind": "Method",
+      "signature": "public void SurfaceUpdateSkinRegion(int surfIdx, int offset, PackedByteArray data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Updates the skin buffer of this mesh\u0027s surface with the given [param data]. The expected data per skin is 12 or 8 bytes (4 bytes per float, 2 floats per [Vector2], and 3 floats per [Vector3]) depending on if the mesh is using [Vector3] or [Vector2] vertices. This value can be determined with [method RenderingServer.mesh_surface_get_format_skin_stride]. The starting point of the updates can be changed with [param offset]. The value of [param offset] should be a multiple of 12 bytes in most cases to align to each skin. A [PackedVector3Array] of skin locations can be converted into a [PackedByteArray] using [method PackedVector3Array.to_byte_array] for use in [param data].",
+      "godotName": "surface_update_skin_region",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceUpdateSkinRegion(int,int,PackedByteArray)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "SurfaceUpdateVertexRegion",
+      "kind": "Method",
+      "signature": "public void SurfaceUpdateVertexRegion(int surfIdx, int offset, PackedByteArray data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Updates the vertex buffer of this mesh\u0027s surface with the given [param data]. The expected data per vertex is 12 or 8 bytes (4 bytes per float, 2 floats per [Vector2], and 3 floats per [Vector3]) depending on if the mesh is using [Vector3] or [Vector2] vertices. This value can be determined with [method RenderingServer.mesh_surface_get_format_vertex_stride]. The starting point of the updates can be changed with [param offset]. The value of [param offset] should be a multiple of 12 bytes in most cases to align to each vertex. A [PackedVector3Array] of vertex locations can be converted into a [PackedByteArray] using [method PackedVector3Array.to_byte_array] for use in [param data].",
+      "godotName": "surface_update_vertex_region",
+      "xmlDocId": "M:Godot.ArrayMesh.SurfaceUpdateVertexRegion(int,int,PackedByteArray)",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "BlendShapeMode",
+      "kind": "Property",
+      "signature": "public int BlendShapeMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The blend shape mode.",
+      "defaultValue": "1",
+      "godotName": "blend_shape_mode",
+      "xmlDocId": "P:Godot.ArrayMesh.BlendShapeMode",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "CustomAabb",
+      "kind": "Property",
+      "signature": "public AABB CustomAabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Overrides the [AABB] with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices.",
+      "defaultValue": "AABB(0, 0, 0, 0, 0, 0)",
+      "godotName": "custom_aabb",
+      "xmlDocId": "P:Godot.ArrayMesh.CustomAabb",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    },
+    {
+      "name": "ShadowMesh",
+      "kind": "Property",
+      "signature": "public ArrayMesh ShadowMesh { get; set; }",
+      "returnType": "ArrayMesh",
+      "parameters": [],
+      "summary": "An optional mesh which can be used for rendering shadows and the depth prepass. Can be used to increase performance by supplying a mesh with fused vertices and only vertex position data (without normals, UVs, colors, etc.). [b]Note:[/b] This mesh must have exactly the same vertex positions as the source mesh (including the source mesh\u0027s LODs, if present). If vertex positions differ, then the mesh will not draw correctly.",
+      "godotName": "shadow_mesh",
+      "xmlDocId": "P:Godot.ArrayMesh.ShadowMesh",
+      "sourcePath": "doc/classes/ArrayMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ArrayMesh.xml",
+      "sha256": "026230aa6549724bcb0be9963b1f962ce1daf0a63d58e42a5f5331a42e6ce2cd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SubViewportContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.SubViewportContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "SubViewportContainer",
+    "documentationPath": "doc/classes/SubViewportContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_subviewportcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_PropagateInputEvent",
+      "kind": "Method",
+      "signature": "public bool _PropagateInputEvent(InputEvent @event)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Virtual method to be implemented by the user. If it returns [code]true[/code], the [param event] is propagated to [SubViewport] children. Propagation doesn\u0027t happen if it returns [code]false[/code]. If the function is not implemented, all events are propagated to SubViewports.",
+      "godotName": "_propagate_input_event",
+      "xmlDocId": "M:Godot.SubViewportContainer._PropagateInputEvent(InputEvent)",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.SubViewportContainer.FocusMode",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    },
+    {
+      "name": "MouseTarget",
+      "kind": "Property",
+      "signature": "public bool MouseTarget { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Configure, if either the [SubViewportContainer] or alternatively the [Control] nodes of its [SubViewport] children should be available as targets of mouse-related functionalities, like identifying the drop target in drag-and-drop operations or cursor shape of hovered [Control] node. If [code]false[/code], the [Control] nodes inside its [SubViewport] children are considered as targets. If [code]true[/code], the [SubViewportContainer] itself will be considered as a target.",
+      "defaultValue": "false",
+      "godotName": "mouse_target",
+      "xmlDocId": "P:Godot.SubViewportContainer.MouseTarget",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    },
+    {
+      "name": "Stretch",
+      "kind": "Property",
+      "signature": "public bool Stretch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the sub-viewport will be automatically resized to the control\u0027s size. [b]Note:[/b] If [code]true[/code], this will prohibit changing [member SubViewport.size] of its children manually.",
+      "defaultValue": "false",
+      "godotName": "stretch",
+      "xmlDocId": "P:Godot.SubViewportContainer.Stretch",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    },
+    {
+      "name": "StretchShrink",
+      "kind": "Property",
+      "signature": "public int StretchShrink { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Divides the sub-viewport\u0027s effective resolution by this value while preserving its scale. This can be used to speed up rendering. For example, a 1280\u00D7720 sub-viewport with [member stretch_shrink] set to [code]2[/code] will be rendered at 640\u00D7360 while occupying the same size in the container. [b]Note:[/b] [member stretch] must be [code]true[/code] for this property to work.",
+      "defaultValue": "1",
+      "godotName": "stretch_shrink",
+      "xmlDocId": "P:Godot.SubViewportContainer.StretchShrink",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_PropagateInputEvent",
+      "kind": "Method",
+      "signature": "public bool _PropagateInputEvent(InputEvent @event)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Virtual method to be implemented by the user. If it returns [code]true[/code], the [param event] is propagated to [SubViewport] children. Propagation doesn\u0027t happen if it returns [code]false[/code]. If the function is not implemented, all events are propagated to SubViewports.",
+      "godotName": "_propagate_input_event",
+      "xmlDocId": "M:Godot.SubViewportContainer._PropagateInputEvent(InputEvent)",
+      "sourcePath": "doc/classes/SubViewportContainer.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SubViewportContainer.xml",
+      "sha256": "3ac02203730c95cf86748004d7d45fe0d60ec11976f30b529d42e5ccf6d95275"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

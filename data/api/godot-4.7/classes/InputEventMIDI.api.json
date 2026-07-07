@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMIDI",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventMIDI",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventMIDI",
+    "documentationPath": "doc/classes/InputEventMIDI.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventmidi.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Channel",
+      "kind": "Property",
+      "signature": "public int Channel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The MIDI channel of this message, ranging from [code]0[/code] to [code]15[/code]. MIDI channel [code]9[/code] is reserved for percussion instruments.",
+      "defaultValue": "0",
+      "godotName": "channel",
+      "xmlDocId": "P:Godot.InputEventMIDI.Channel",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "ControllerNumber",
+      "kind": "Property",
+      "signature": "public int ControllerNumber { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The unique number of the controller, if [member message] is [constant MIDI_MESSAGE_CONTROL_CHANGE], otherwise this is [code]0[/code]. This value can be used to identify sliders for volume, balance, and panning, as well as switches and pedals on the MIDI device. See the [url=https://en.wikipedia.org/wiki/General_MIDI#Controller_events]General MIDI specification[/url] for a small list.",
+      "defaultValue": "0",
+      "godotName": "controller_number",
+      "xmlDocId": "P:Godot.InputEventMIDI.ControllerNumber",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "ControllerValue",
+      "kind": "Property",
+      "signature": "public int ControllerValue { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The value applied to the controller. If [member message] is [constant MIDI_MESSAGE_CONTROL_CHANGE], this value ranges from [code]0[/code] to [code]127[/code], otherwise it is [code]0[/code]. See also [member controller_value].",
+      "defaultValue": "0",
+      "godotName": "controller_value",
+      "xmlDocId": "P:Godot.InputEventMIDI.ControllerValue",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "Instrument",
+      "kind": "Property",
+      "signature": "public int Instrument { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The instrument (also called [i]program[/i] or [i]preset[/i]) used on this MIDI message. This value ranges from [code]0[/code] to [code]127[/code]. To see what each value means, refer to the [url=https://en.wikipedia.org/wiki/General_MIDI#Program_change_events]General MIDI\u0027s instrument list[/url]. Keep in mind that the list is off by 1 because it does not begin from 0. A value of [code]0[/code] corresponds to the acoustic grand piano.",
+      "defaultValue": "0",
+      "godotName": "instrument",
+      "xmlDocId": "P:Godot.InputEventMIDI.Instrument",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "Message",
+      "kind": "Property",
+      "signature": "public int Message { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Represents the type of MIDI message (see the [enum MIDIMessage] enum). For more information, see the [url=https://www.midi.org/specifications-old/item/table-2-expanded-messages-list-status-bytes]MIDI message status byte list chart[/url].",
+      "defaultValue": "0",
+      "godotName": "message",
+      "xmlDocId": "P:Godot.InputEventMIDI.Message",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "Pitch",
+      "kind": "Property",
+      "signature": "public int Pitch { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The pitch index number of this MIDI message. This value ranges from [code]0[/code] to [code]127[/code]. On a piano, the [b]middle C[/b] is [code]60[/code], followed by a [b]C-sharp[/b] ([code]61[/code]), then a [b]D[/b] ([code]62[/code]), and so on. Each octave is split in offsets of 12. See the \u0022MIDI note number\u0022 column of the [url=https://en.wikipedia.org/wiki/Piano_key_frequencies]piano key frequency chart[/url] a full list.",
+      "defaultValue": "0",
+      "godotName": "pitch",
+      "xmlDocId": "P:Godot.InputEventMIDI.Pitch",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public int Pressure { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The strength of the key being pressed. This value ranges from [code]0[/code] to [code]127[/code]. [b]Note:[/b] For many devices, this value is always [code]0[/code]. Other devices such as musical keyboards may simulate pressure by changing the [member velocity], instead.",
+      "defaultValue": "0",
+      "godotName": "pressure",
+      "xmlDocId": "P:Godot.InputEventMIDI.Pressure",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public int Velocity { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The velocity of the MIDI message. This value ranges from [code]0[/code] to [code]127[/code]. For a musical keyboard, this corresponds to how quickly the key was pressed, and is rarely above [code]110[/code] in practice. [b]Note:[/b] Some MIDI devices may send a [constant MIDI_MESSAGE_NOTE_ON] message with [code]0[/code] velocity and expect it to be treated the same as a [constant MIDI_MESSAGE_NOTE_OFF] message. If necessary, this can be handled with a few lines of code: [codeblock] func _input(event): if event is InputEventMIDI: if event.message == MIDI_MESSAGE_NOTE_ON and event.velocity \u003E 0: print(\u0022Note pressed!\u0022) [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "velocity",
+      "xmlDocId": "P:Godot.InputEventMIDI.Velocity",
+      "sourcePath": "doc/classes/InputEventMIDI.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventMIDI.xml",
+      "sha256": "212f2b8250f92931272522aa91b3553773d89c823084438eac87d8d3dfd1ef91"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

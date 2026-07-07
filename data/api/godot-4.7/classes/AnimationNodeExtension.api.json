@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeExtension",
+    "kind": "class",
+    "baseType": "AnimationNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeExtension",
+    "documentationPath": "doc/classes/AnimationNodeExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodeextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ProcessAnimationNode",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array _ProcessAnimationNode(PackedFloat64Array playbackInfo, bool testOnly)",
+      "returnType": "PackedFloat32Array",
+      "parameters": [
+        {
+          "name": "playback_info",
+          "type": "PackedFloat64Array"
+        },
+        {
+          "name": "test_only",
+          "type": "bool"
+        }
+      ],
+      "summary": "A version of the [method AnimationNode._process] method that is meant to be overridden by custom nodes. It returns a [PackedFloat32Array] with the processed animation data. The [PackedFloat64Array] parameter contains the playback information, containing the following values encoded as floating point numbers (in order): playback time and delta, start and end times, whether a seek was requested (encoded as a float greater than [code]0[/code]), whether the seek request was externally requested (encoded as a float greater than [code]0[/code]), the current [enum Animation.LoopedFlag] (encoded as a float), and the current blend weight. The function must return a [PackedFloat32Array] of the node\u0027s time info, containing the following values (in order): animation length, time position, delta, [enum Animation.LoopMode] (encoded as a float), whether the animation is about to end (encoded as a float greater than [code]0[/code]) and whether the animation is infinite (encoded as a float greater than [code]0[/code]). All values must be included in the returned array.",
+      "godotName": "_process_animation_node",
+      "xmlDocId": "M:Godot.AnimationNodeExtension._ProcessAnimationNode(PackedFloat64Array,bool)",
+      "sourcePath": "doc/classes/AnimationNodeExtension.xml"
+    },
+    {
+      "name": "GetRemainingTime",
+      "kind": "Method",
+      "signature": "public float GetRemainingTime(PackedFloat32Array nodeInfo, bool breakLoop)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "node_info",
+          "type": "PackedFloat32Array"
+        },
+        {
+          "name": "break_loop",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns the animation\u0027s remaining time for the given node info. For looping animations, it will only return the remaining time if [param break_loop] is [code]true[/code], a large integer value will be returned otherwise.",
+      "godotName": "get_remaining_time",
+      "xmlDocId": "M:Godot.AnimationNodeExtension.GetRemainingTime(PackedFloat32Array,bool)",
+      "sourcePath": "doc/classes/AnimationNodeExtension.xml"
+    },
+    {
+      "name": "IsLooping",
+      "kind": "Method",
+      "signature": "public bool IsLooping(PackedFloat32Array nodeInfo)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "node_info",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the animation for the given [param node_info] is looping.",
+      "godotName": "is_looping",
+      "xmlDocId": "M:Godot.AnimationNodeExtension.IsLooping(PackedFloat32Array)",
+      "sourcePath": "doc/classes/AnimationNodeExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ProcessAnimationNode",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array _ProcessAnimationNode(PackedFloat64Array playbackInfo, bool testOnly)",
+      "returnType": "PackedFloat32Array",
+      "parameters": [
+        {
+          "name": "playback_info",
+          "type": "PackedFloat64Array"
+        },
+        {
+          "name": "test_only",
+          "type": "bool"
+        }
+      ],
+      "summary": "A version of the [method AnimationNode._process] method that is meant to be overridden by custom nodes. It returns a [PackedFloat32Array] with the processed animation data. The [PackedFloat64Array] parameter contains the playback information, containing the following values encoded as floating point numbers (in order): playback time and delta, start and end times, whether a seek was requested (encoded as a float greater than [code]0[/code]), whether the seek request was externally requested (encoded as a float greater than [code]0[/code]), the current [enum Animation.LoopedFlag] (encoded as a float), and the current blend weight. The function must return a [PackedFloat32Array] of the node\u0027s time info, containing the following values (in order): animation length, time position, delta, [enum Animation.LoopMode] (encoded as a float), whether the animation is about to end (encoded as a float greater than [code]0[/code]) and whether the animation is infinite (encoded as a float greater than [code]0[/code]). All values must be included in the returned array.",
+      "godotName": "_process_animation_node",
+      "xmlDocId": "M:Godot.AnimationNodeExtension._ProcessAnimationNode(PackedFloat64Array,bool)",
+      "sourcePath": "doc/classes/AnimationNodeExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeExtension.xml",
+      "sha256": "81e835581b3a02dd3f08cc255e553a005eadc2e98918c2c7aedbf437e8c59d53"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

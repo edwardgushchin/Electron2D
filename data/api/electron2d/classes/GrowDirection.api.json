@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GrowDirection",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.GrowDirection",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Control.GrowDirection",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Begin",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.GrowDirection Begin",
+      "returnType": "Electron2D.GrowDirection",
+      "parameters": [],
+      "summary": "Moves the beginning side while preserving the ending side.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.GrowDirection.Begin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Both",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.GrowDirection Both",
+      "returnType": "Electron2D.GrowDirection",
+      "parameters": [],
+      "summary": "Splits the required growth between the beginning and ending sides.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.GrowDirection.Both",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.GrowDirection End",
+      "returnType": "Electron2D.GrowDirection",
+      "parameters": [],
+      "summary": "Preserves the beginning side while moving the ending side.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.GrowDirection.End",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Begin",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Moves the beginning side while preserving the ending side.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Both",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Splits the required growth between the beginning and ending sides.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Preserves the beginning side while moving the ending side.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectHighPassFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectHighPassFilter",
+    "kind": "class",
+    "baseType": "AudioEffectFilter",
+    "interfaces": [],
+    "godotReference": "AudioEffectHighPassFilter",
+    "documentationPath": "doc/classes/AudioEffectHighPassFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffecthighpassfilter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectHighPassFilter.xml",
+      "sha256": "ee7acf8c3d33b45ee46e15308aec764c4a7ceca602938e895d0a68471c0d7806"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

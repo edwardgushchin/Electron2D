@@ -1,0 +1,757 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSetAtlasSource",
+    "namespace": "Godot",
+    "fullName": "Godot.TileSetAtlasSource",
+    "kind": "class",
+    "baseType": "TileSetSource",
+    "interfaces": [],
+    "godotReference": "TileSetAtlasSource",
+    "documentationPath": "doc/classes/TileSetAtlasSource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tilesetatlassource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearTilesOutsideTexture",
+      "kind": "Method",
+      "signature": "public void ClearTilesOutsideTexture()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all tiles that don\u0027t fit the available texture area. This method iterates over all the source\u0027s tiles, so it\u0027s advised to use [method has_tiles_outside_texture] beforehand.",
+      "godotName": "clear_tiles_outside_texture",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.ClearTilesOutsideTexture",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "CreateAlternativeTile",
+      "kind": "Method",
+      "signature": "public int CreateAlternativeTile(Vector2i atlasCoords, int alternativeIdOverride)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_id_override",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Creates an alternative tile for the tile at coordinates [param atlas_coords]. If [param alternative_id_override] is -1, give it an automatically generated unique ID, or assigns it the given ID otherwise. Returns the new alternative identifier, or -1 if the alternative could not be created with a provided [param alternative_id_override].",
+      "godotName": "create_alternative_tile",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.CreateAlternativeTile(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "CreateTile",
+      "kind": "Method",
+      "signature": "public void CreateTile(Vector2i atlasCoords, Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(1, 1)"
+        }
+      ],
+      "summary": "Creates a new tile at coordinates [param atlas_coords] with the given [param size].",
+      "godotName": "create_tile",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.CreateTile(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetAtlasGridSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetAtlasGridSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the atlas grid size, which depends on how many tiles can fit in the texture. It thus depends on the [member texture]\u0027s size, the atlas [member margins], and the tiles\u0027 [member texture_region_size].",
+      "godotName": "get_atlas_grid_size",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetAtlasGridSize",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetNextAlternativeTileId",
+      "kind": "Method",
+      "signature": "public int GetNextAlternativeTileId(Vector2i atlasCoords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the alternative ID a following call to [method create_alternative_tile] would return.",
+      "godotName": "get_next_alternative_tile_id",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetNextAlternativeTileId(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetRuntimeTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetRuntimeTexture()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "If [member use_texture_padding] is [code]false[/code], returns [member texture]. Otherwise, returns an internal [ImageTexture] created that includes the padding.",
+      "godotName": "get_runtime_texture",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetRuntimeTexture",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetRuntimeTileTextureRegion",
+      "kind": "Method",
+      "signature": "public Rect2i GetRuntimeTileTextureRegion(Vector2i atlasCoords, int frame)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frame",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the region of the tile at coordinates [param atlas_coords] for the given [param frame] inside the texture returned by [method get_runtime_texture]. [b]Note:[/b] If [member use_texture_padding] is [code]false[/code], returns the same as [method get_tile_texture_region].",
+      "godotName": "get_runtime_tile_texture_region",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetRuntimeTileTextureRegion(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationColumns",
+      "kind": "Method",
+      "signature": "public int GetTileAnimationColumns(Vector2i atlasCoords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns how many columns the tile at [param atlas_coords] has in its animation layout.",
+      "godotName": "get_tile_animation_columns",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationColumns(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationFrameDuration",
+      "kind": "Method",
+      "signature": "public float GetTileAnimationFrameDuration(Vector2i atlasCoords, int frameIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frame_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the animation frame duration of frame [param frame_index] for the tile at coordinates [param atlas_coords].",
+      "godotName": "get_tile_animation_frame_duration",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationFrameDuration(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationFramesCount",
+      "kind": "Method",
+      "signature": "public int GetTileAnimationFramesCount(Vector2i atlasCoords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns how many animation frames has the tile at coordinates [param atlas_coords].",
+      "godotName": "get_tile_animation_frames_count",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationFramesCount(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationMode",
+      "kind": "Method",
+      "signature": "public int GetTileAnimationMode(Vector2i atlasCoords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the tile animation mode of the tile at [param atlas_coords]. See also [method set_tile_animation_mode].",
+      "godotName": "get_tile_animation_mode",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationMode(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationSeparation",
+      "kind": "Method",
+      "signature": "public Vector2i GetTileAnimationSeparation(Vector2i atlasCoords)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the separation (as in the atlas grid) between each frame of an animated tile at coordinates [param atlas_coords].",
+      "godotName": "get_tile_animation_separation",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationSeparation(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationSpeed",
+      "kind": "Method",
+      "signature": "public float GetTileAnimationSpeed(Vector2i atlasCoords)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the animation speed of the tile at coordinates [param atlas_coords].",
+      "godotName": "get_tile_animation_speed",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationSpeed(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAnimationTotalDuration",
+      "kind": "Method",
+      "signature": "public float GetTileAnimationTotalDuration(Vector2i atlasCoords)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the sum of the sum of the frame durations of the tile at coordinates [param atlas_coords]. This value needs to be divided by the animation speed to get the actual animation loop duration.",
+      "godotName": "get_tile_animation_total_duration",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAnimationTotalDuration(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileAtCoords",
+      "kind": "Method",
+      "signature": "public Vector2i GetTileAtCoords(Vector2i atlasCoords)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "If there is a tile covering the [param atlas_coords] coordinates, returns the top-left coordinates of the tile (thus its coordinate ID). Returns [code]Vector2i(-1, -1)[/code] otherwise.",
+      "godotName": "get_tile_at_coords",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileAtCoords(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileData",
+      "kind": "Method",
+      "signature": "public TileData GetTileData(Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "TileData",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [TileData] object for the given atlas coordinates and alternative ID.",
+      "godotName": "get_tile_data",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileData(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileSizeInAtlas",
+      "kind": "Method",
+      "signature": "public Vector2i GetTileSizeInAtlas(Vector2i atlasCoords)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the size of the tile (in the grid coordinates system) at coordinates [param atlas_coords].",
+      "godotName": "get_tile_size_in_atlas",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileSizeInAtlas(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTileTextureRegion",
+      "kind": "Method",
+      "signature": "public Rect2i GetTileTextureRegion(Vector2i atlasCoords, int frame)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frame",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns a tile\u0027s texture region in the atlas texture. For animated tiles, a [param frame] argument might be provided for the different frames of the animation.",
+      "godotName": "get_tile_texture_region",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTileTextureRegion(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "GetTilesToBeRemovedOnChange",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetTilesToBeRemovedOnChange(Texture2D texture, Vector2i margins, Vector2i separation, Vector2i textureRegionSize)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "margins",
+          "type": "Vector2i"
+        },
+        {
+          "name": "separation",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_region_size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns an array of tiles coordinates ID that will be automatically removed when modifying one or several of those properties: [param texture], [param margins], [param separation] or [param texture_region_size]. This can be used to undo changes that would have caused tiles data loss.",
+      "godotName": "get_tiles_to_be_removed_on_change",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.GetTilesToBeRemovedOnChange(Texture2D,Vector2i,Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "HasRoomForTile",
+      "kind": "Method",
+      "signature": "public bool HasRoomForTile(Vector2i atlasCoords, Vector2i size, int animationColumns, Vector2i animationSeparation, int framesCount, Vector2i ignoredTile)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "animation_columns",
+          "type": "int"
+        },
+        {
+          "name": "animation_separation",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frames_count",
+          "type": "int"
+        },
+        {
+          "name": "ignored_tile",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        }
+      ],
+      "summary": "Returns whether there is enough room in an atlas to create/modify a tile with the given properties. If [param ignored_tile] is provided, act as is the given tile was not present in the atlas. This may be used when you want to modify a tile\u0027s properties.",
+      "godotName": "has_room_for_tile",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.HasRoomForTile(Vector2i,Vector2i,int,Vector2i,int,Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "HasTilesOutsideTexture",
+      "kind": "Method",
+      "signature": "public bool HasTilesOutsideTexture()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Checks if the source has any tiles that don\u0027t fit the texture area (either partially or completely).",
+      "godotName": "has_tiles_outside_texture",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.HasTilesOutsideTexture",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "MoveTileInAtlas",
+      "kind": "Method",
+      "signature": "public void MoveTileInAtlas(Vector2i atlasCoords, Vector2i newAtlasCoords, Vector2i newSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "new_atlas_coords",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        },
+        {
+          "name": "new_size",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        }
+      ],
+      "summary": "Move the tile and its alternatives at the [param atlas_coords] coordinates to the [param new_atlas_coords] coordinates with the [param new_size] size. This functions will fail if a tile is already present in the given area. If [param new_atlas_coords] is [code]Vector2i(-1, -1)[/code], keeps the tile\u0027s coordinates. If [param new_size] is [code]Vector2i(-1, -1)[/code], keeps the tile\u0027s size. To avoid an error, first check if a move is possible using [method has_room_for_tile].",
+      "godotName": "move_tile_in_atlas",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.MoveTileInAtlas(Vector2i,Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "RemoveAlternativeTile",
+      "kind": "Method",
+      "signature": "public void RemoveAlternativeTile(Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int"
+        }
+      ],
+      "summary": "Remove a tile\u0027s alternative with alternative ID [param alternative_tile]. Calling this function with [param alternative_tile] equals to 0 will fail, as the base tile alternative cannot be removed.",
+      "godotName": "remove_alternative_tile",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.RemoveAlternativeTile(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "RemoveTile",
+      "kind": "Method",
+      "signature": "public void RemoveTile(Vector2i atlasCoords)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Remove a tile and its alternative at coordinates [param atlas_coords].",
+      "godotName": "remove_tile",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.RemoveTile(Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetAlternativeTileId",
+      "kind": "Method",
+      "signature": "public void SetAlternativeTileId(Vector2i atlasCoords, int alternativeTile, int newId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int"
+        },
+        {
+          "name": "new_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Change a tile\u0027s alternative ID from [param alternative_tile] to [param new_id]. Calling this function with [param new_id] of 0 will fail, as the base tile alternative cannot be moved.",
+      "godotName": "set_alternative_tile_id",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetAlternativeTileId(Vector2i,int,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationColumns",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationColumns(Vector2i atlasCoords, int frameColumns)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frame_columns",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the number of columns in the animation layout of the tile at coordinates [param atlas_coords]. If set to 0, then the different frames of the animation are laid out as a single horizontal line in the atlas.",
+      "godotName": "set_tile_animation_columns",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationColumns(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationFrameDuration",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationFrameDuration(Vector2i atlasCoords, int frameIndex, float duration)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frame_index",
+          "type": "int"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the animation frame [param duration] of frame [param frame_index] for the tile at coordinates [param atlas_coords].",
+      "godotName": "set_tile_animation_frame_duration",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationFrameDuration(Vector2i,int,float)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationFramesCount",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationFramesCount(Vector2i atlasCoords, int framesCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "frames_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets how many animation frames the tile at coordinates [param atlas_coords] has.",
+      "godotName": "set_tile_animation_frames_count",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationFramesCount(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationMode",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationMode(Vector2i atlasCoords, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the tile animation mode of the tile at [param atlas_coords] to [param mode]. See also [method get_tile_animation_mode].",
+      "godotName": "set_tile_animation_mode",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationMode(Vector2i,int)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationSeparation",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationSeparation(Vector2i atlasCoords, Vector2i separation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "separation",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Sets the margin (in grid tiles) between each tile in the animation layout of the tile at coordinates [param atlas_coords] has.",
+      "godotName": "set_tile_animation_separation",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationSeparation(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "SetTileAnimationSpeed",
+      "kind": "Method",
+      "signature": "public void SetTileAnimationSpeed(Vector2i atlasCoords, float speed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "speed",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the animation speed of the tile at coordinates [param atlas_coords] has.",
+      "godotName": "set_tile_animation_speed",
+      "xmlDocId": "M:Godot.TileSetAtlasSource.SetTileAnimationSpeed(Vector2i,float)",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "Margins",
+      "kind": "Property",
+      "signature": "public Vector2i Margins { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Margins, in pixels, to offset the origin of the grid in the texture.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "margins",
+      "xmlDocId": "P:Godot.TileSetAtlasSource.Margins",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "Separation",
+      "kind": "Property",
+      "signature": "public Vector2i Separation { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Separation, in pixels, between each tile texture region of the grid.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "separation",
+      "xmlDocId": "P:Godot.TileSetAtlasSource.Separation",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The atlas texture.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.TileSetAtlasSource.Texture",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TextureRegionSize",
+      "kind": "Property",
+      "signature": "public Vector2i TextureRegionSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The base tile size in the texture (in pixel). This size must be bigger than or equal to the TileSet\u0027s [code]tile_size[/code] value.",
+      "defaultValue": "Vector2i(16, 16)",
+      "godotName": "texture_region_size",
+      "xmlDocId": "P:Godot.TileSetAtlasSource.TextureRegionSize",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "UseTexturePadding",
+      "kind": "Property",
+      "signature": "public bool UseTexturePadding { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates an internal texture with an additional one pixel padding around each tile. Texture padding avoids a common artifact where lines appear between tiles. Disabling this setting might lead a small performance improvement, as generating the internal texture requires both memory and processing time when the TileSetAtlasSource resource is modified.",
+      "defaultValue": "true",
+      "godotName": "use_texture_padding",
+      "xmlDocId": "P:Godot.TileSetAtlasSource.UseTexturePadding",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "TileAnimationMode",
+      "values": [
+        {
+          "name": "TILE_ANIMATION_MODE_DEFAULT",
+          "value": "0",
+          "enum": "TileAnimationMode",
+          "kind": "EnumValue",
+          "summary": "Tile animations start at same time, looking identical.",
+          "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+        },
+        {
+          "name": "TILE_ANIMATION_MODE_MAX",
+          "value": "2",
+          "enum": "TileAnimationMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TileAnimationMode] enum.",
+          "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+        },
+        {
+          "name": "TILE_ANIMATION_MODE_RANDOM_START_TIMES",
+          "value": "1",
+          "enum": "TileAnimationMode",
+          "kind": "EnumValue",
+          "summary": "Tile animations start at random times, looking varied.",
+          "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TILE_ANIMATION_MODE_DEFAULT",
+      "value": "0",
+      "enum": "TileAnimationMode",
+      "kind": "EnumValue",
+      "summary": "Tile animations start at same time, looking identical.",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TILE_ANIMATION_MODE_RANDOM_START_TIMES",
+      "value": "1",
+      "enum": "TileAnimationMode",
+      "kind": "EnumValue",
+      "summary": "Tile animations start at random times, looking varied.",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TILE_ANIMATION_MODE_MAX",
+      "value": "2",
+      "enum": "TileAnimationMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TileAnimationMode] enum.",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TRANSFORM_FLIP_H",
+      "value": "4096",
+      "kind": "Constant",
+      "summary": "Represents cell\u0027s horizontal flip flag. Should be used directly with [TileMapLayer] to flip placed tiles by altering their alternative IDs. [codeblock] var alternate_id = $TileMapLayer.get_cell_alternative_tile(Vector2i(2, 2)) if not alternate_id \u0026 TileSetAtlasSource.TRANSFORM_FLIP_H: # If tile is not already flipped, flip it. $TileMapLayer.set_cell(Vector2i(2, 2), source_id, atlas_coords, alternate_id | TileSetAtlasSource.TRANSFORM_FLIP_H) [/codeblock] [b]Note:[/b] These transformations can be combined to do the equivalent of 0, 90, 180, and 270 degree rotations, as shown below: [codeblock] enum TileTransform { ROTATE_0 = 0, ROTATE_90 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H, ROTATE_180 = TileSetAtlasSource.TRANSFORM_FLIP_H | TileSetAtlasSource.TRANSFORM_FLIP_V, ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V, } [/codeblock]",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TRANSFORM_FLIP_V",
+      "value": "8192",
+      "kind": "Constant",
+      "summary": "Represents cell\u0027s vertical flip flag. See [constant TRANSFORM_FLIP_H] for usage.",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    },
+    {
+      "name": "TRANSFORM_TRANSPOSE",
+      "value": "16384",
+      "kind": "Constant",
+      "summary": "Represents cell\u0027s transposed flag. See [constant TRANSFORM_FLIP_H] for usage.",
+      "sourcePath": "doc/classes/TileSetAtlasSource.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileSetAtlasSource.xml",
+      "sha256": "4a9ed0adaf247b43d4add78636d6c629928b9d30c9aeaccc8d0869b019218567"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorImportPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorImportPlugin",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "EditorImportPlugin",
+    "documentationPath": "doc/classes/EditorImportPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorimportplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CanImportThreaded",
+      "kind": "Method",
+      "signature": "public bool _CanImportThreaded()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Tells whether this importer can be run in parallel on threads, or, on the contrary, it\u0027s only safe for the editor to call it from the main thread, for one file at a time. If this importer\u0027s implementation is thread-safe and can be run in parallel, override this with [code]true[/code] to optimize for concurrency. If not overridden, returns [code]false[/code].",
+      "godotName": "_can_import_threaded",
+      "xmlDocId": "M:Godot.EditorImportPlugin._CanImportThreaded",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetFormatVersion",
+      "kind": "Method",
+      "signature": "public int _GetFormatVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the format version of this importer. Increment this version when making incompatible changes to the format of the imported resources. If not overridden, the format version is [code]0[/code].",
+      "godotName": "_get_format_version",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetFormatVersion",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetImportOptions(String path, int presetIndex)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "preset_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the options and default values for the preset at this index. Returns an Array of Dictionaries with the following keys: [code]name[/code], [code]default_value[/code], [code]property_hint[/code] (optional), [code]hint_string[/code] (optional), [code]usage[/code] (optional).",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImportOptions(String,int)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImportOrder",
+      "kind": "Method",
+      "signature": "public int _GetImportOrder()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the order of this importer to be run when importing resources. Importers with [i]lower[/i] import orders will be called first, and higher values will be called later. Use this to ensure the importer runs after the dependencies are already imported. The default import order is [code]0[/code] unless overridden by a specific importer. See [enum ResourceImporter.ImportOrder] for some predefined values.",
+      "godotName": "_get_import_order",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImportOrder",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImporterName",
+      "kind": "Method",
+      "signature": "public String _GetImporterName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the unique name of the importer.",
+      "godotName": "_get_importer_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImporterName",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public bool _GetOptionVisibility(String path, StringName optionName, Dictionary options)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "option_name",
+          "type": "StringName"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Gets whether the import option specified by [param option_name] should be visible in the Import dock. The default implementation always returns [code]true[/code], making all options visible. This is mainly useful for hiding options that depend on others if one of them is disabled. [codeblocks] [gdscript] func _get_option_visibility(path, option_name, options): # Only show the lossy quality setting if the compression mode is set to \u0022Lossy\u0022. if option_name == \u0022compress/lossy_quality\u0022 and options.has(\u0022compress/mode\u0022): return int(options[\u0022compress/mode\u0022]) == COMPRESS_LOSSY # This is a constant that you set return true [/gdscript] [csharp] public override bool _GetOptionVisibility(string path, StringName optionName, Godot.Collections.Dictionary options) { // Only show the lossy quality setting if the compression mode is set to \u0022Lossy\u0022. if (optionName == \u0022compress/lossy_quality\u0022 \u0026\u0026 options.ContainsKey(\u0022compress/mode\u0022)) { return (int)options[\u0022compress/mode\u0022] == CompressLossy; // This is a constant you set } return true; } [/csharp] [/codeblocks]",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetOptionVisibility(String,StringName,Dictionary)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPresetCount",
+      "kind": "Method",
+      "signature": "public int _GetPresetCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the number of initial presets defined by the plugin. Use [method _get_import_options] to get the default options for the preset and [method _get_preset_name] to get the name of the preset. By default, there are no presets.",
+      "godotName": "_get_preset_count",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPresetCount",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPresetName",
+      "kind": "Method",
+      "signature": "public String _GetPresetName(int presetIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "preset_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the name of the options preset at this index.",
+      "godotName": "_get_preset_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPresetName(int)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPriority",
+      "kind": "Method",
+      "signature": "public float _GetPriority()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gets the priority of this plugin for the recognized extension. Higher priority plugins will be preferred. The default priority is [code]1.0[/code].",
+      "godotName": "_get_priority",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPriority",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of file extensions to associate with this loader (case-insensitive). e.g. [code][\u0022obj\u0022][/code].",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetResourceType",
+      "kind": "Method",
+      "signature": "public String _GetResourceType()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the Godot resource type associated with this loader. e.g. [code]\u0022Mesh\u0022[/code] or [code]\u0022Animation\u0022[/code].",
+      "godotName": "_get_resource_type",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetResourceType",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetSaveExtension",
+      "kind": "Method",
+      "signature": "public String _GetSaveExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the extension used to save this resource in the [code].godot/imported[/code] directory (see [member ProjectSettings.application/config/use_hidden_project_data_directory]).",
+      "godotName": "_get_save_extension",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetSaveExtension",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetVisibleName",
+      "kind": "Method",
+      "signature": "public String _GetVisibleName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the name to display in the import window. You should choose this name as a continuation to \u0022Import as\u0022, e.g. \u0022Import as Special Mesh\u0022.",
+      "godotName": "_get_visible_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetVisibleName",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_Import",
+      "kind": "Method",
+      "signature": "public int _Import(String sourceFile, String savePath, Dictionary options, String[] platformVariants, String[] genFiles)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "source_file",
+          "type": "String"
+        },
+        {
+          "name": "save_path",
+          "type": "String"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        },
+        {
+          "name": "platform_variants",
+          "type": "String[]"
+        },
+        {
+          "name": "gen_files",
+          "type": "String[]"
+        }
+      ],
+      "summary": "Imports [param source_file] with the import [param options] specified. Should return [constant @GlobalScope.OK] if the import is successful, other values indicate failure. The imported resource is expected to be saved to [code]save_path \u002B \u0022.\u0022 \u002B _get_save_extension()[/code]. If a different variant is preferred for a [url=$DOCS_URL/tutorials/export/feature_tags.html]feature tag[/url], save the variant to [code]save_path \u002B \u0022.\u0022 \u002B tag \u002B \u0022.\u0022 \u002B _get_save_extension()[/code] and add the feature tag to [param platform_variants]. If additional resource files are generated in the resource filesystem ([code]res://[/code]), add their full path to [param gen_files] so that the editor knows they depend on [param source_file]. This method must be overridden to do the actual importing work. See this class\u0027 description for an example of overriding this method.",
+      "godotName": "_import",
+      "xmlDocId": "M:Godot.EditorImportPlugin._Import(String,String,Dictionary,String[],String[])",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "AppendImportExternalResource",
+      "kind": "Method",
+      "signature": "public int AppendImportExternalResource(String path, Dictionary customOptions, String customImporter, Variant generatorParameters)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "custom_options",
+          "type": "Dictionary",
+          "defaultValue": "{}"
+        },
+        {
+          "name": "custom_importer",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "generator_parameters",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "This function can only be called during the [method _import] callback and it allows manually importing resources from it. This is useful when the imported file generates external resources that require importing (as example, images). Custom parameters for the \u0022.import\u0022 file can be passed via the [param custom_options]. Additionally, in cases where multiple importers can handle a file, the [param custom_importer] can be specified to force a specific one. This function performs a resource import and returns immediately with a success or error code. [param generator_parameters] defines optional extra metadata which will be stored as [code skip-lint]generator_parameters[/code] in the [code]remap[/code] section of the [code].import[/code] file, for example to store a md5 hash of the source data.",
+      "godotName": "append_import_external_resource",
+      "xmlDocId": "M:Godot.EditorImportPlugin.AppendImportExternalResource(String,Dictionary,String,Variant)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CanImportThreaded",
+      "kind": "Method",
+      "signature": "public bool _CanImportThreaded()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Tells whether this importer can be run in parallel on threads, or, on the contrary, it\u0027s only safe for the editor to call it from the main thread, for one file at a time. If this importer\u0027s implementation is thread-safe and can be run in parallel, override this with [code]true[/code] to optimize for concurrency. If not overridden, returns [code]false[/code].",
+      "godotName": "_can_import_threaded",
+      "xmlDocId": "M:Godot.EditorImportPlugin._CanImportThreaded",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetFormatVersion",
+      "kind": "Method",
+      "signature": "public int _GetFormatVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the format version of this importer. Increment this version when making incompatible changes to the format of the imported resources. If not overridden, the format version is [code]0[/code].",
+      "godotName": "_get_format_version",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetFormatVersion",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetImportOptions(String path, int presetIndex)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "preset_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the options and default values for the preset at this index. Returns an Array of Dictionaries with the following keys: [code]name[/code], [code]default_value[/code], [code]property_hint[/code] (optional), [code]hint_string[/code] (optional), [code]usage[/code] (optional).",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImportOptions(String,int)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImportOrder",
+      "kind": "Method",
+      "signature": "public int _GetImportOrder()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the order of this importer to be run when importing resources. Importers with [i]lower[/i] import orders will be called first, and higher values will be called later. Use this to ensure the importer runs after the dependencies are already imported. The default import order is [code]0[/code] unless overridden by a specific importer. See [enum ResourceImporter.ImportOrder] for some predefined values.",
+      "godotName": "_get_import_order",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImportOrder",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetImporterName",
+      "kind": "Method",
+      "signature": "public String _GetImporterName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the unique name of the importer.",
+      "godotName": "_get_importer_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetImporterName",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public bool _GetOptionVisibility(String path, StringName optionName, Dictionary options)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "option_name",
+          "type": "StringName"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Gets whether the import option specified by [param option_name] should be visible in the Import dock. The default implementation always returns [code]true[/code], making all options visible. This is mainly useful for hiding options that depend on others if one of them is disabled. [codeblocks] [gdscript] func _get_option_visibility(path, option_name, options): # Only show the lossy quality setting if the compression mode is set to \u0022Lossy\u0022. if option_name == \u0022compress/lossy_quality\u0022 and options.has(\u0022compress/mode\u0022): return int(options[\u0022compress/mode\u0022]) == COMPRESS_LOSSY # This is a constant that you set return true [/gdscript] [csharp] public override bool _GetOptionVisibility(string path, StringName optionName, Godot.Collections.Dictionary options) { // Only show the lossy quality setting if the compression mode is set to \u0022Lossy\u0022. if (optionName == \u0022compress/lossy_quality\u0022 \u0026\u0026 options.ContainsKey(\u0022compress/mode\u0022)) { return (int)options[\u0022compress/mode\u0022] == CompressLossy; // This is a constant you set } return true; } [/csharp] [/codeblocks]",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetOptionVisibility(String,StringName,Dictionary)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPresetCount",
+      "kind": "Method",
+      "signature": "public int _GetPresetCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the number of initial presets defined by the plugin. Use [method _get_import_options] to get the default options for the preset and [method _get_preset_name] to get the name of the preset. By default, there are no presets.",
+      "godotName": "_get_preset_count",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPresetCount",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPresetName",
+      "kind": "Method",
+      "signature": "public String _GetPresetName(int presetIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "preset_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the name of the options preset at this index.",
+      "godotName": "_get_preset_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPresetName(int)",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetPriority",
+      "kind": "Method",
+      "signature": "public float _GetPriority()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gets the priority of this plugin for the recognized extension. Higher priority plugins will be preferred. The default priority is [code]1.0[/code].",
+      "godotName": "_get_priority",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetPriority",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of file extensions to associate with this loader (case-insensitive). e.g. [code][\u0022obj\u0022][/code].",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetResourceType",
+      "kind": "Method",
+      "signature": "public String _GetResourceType()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the Godot resource type associated with this loader. e.g. [code]\u0022Mesh\u0022[/code] or [code]\u0022Animation\u0022[/code].",
+      "godotName": "_get_resource_type",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetResourceType",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetSaveExtension",
+      "kind": "Method",
+      "signature": "public String _GetSaveExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the extension used to save this resource in the [code].godot/imported[/code] directory (see [member ProjectSettings.application/config/use_hidden_project_data_directory]).",
+      "godotName": "_get_save_extension",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetSaveExtension",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_GetVisibleName",
+      "kind": "Method",
+      "signature": "public String _GetVisibleName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the name to display in the import window. You should choose this name as a continuation to \u0022Import as\u0022, e.g. \u0022Import as Special Mesh\u0022.",
+      "godotName": "_get_visible_name",
+      "xmlDocId": "M:Godot.EditorImportPlugin._GetVisibleName",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    },
+    {
+      "name": "_Import",
+      "kind": "Method",
+      "signature": "public int _Import(String sourceFile, String savePath, Dictionary options, String[] platformVariants, String[] genFiles)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "source_file",
+          "type": "String"
+        },
+        {
+          "name": "save_path",
+          "type": "String"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        },
+        {
+          "name": "platform_variants",
+          "type": "String[]"
+        },
+        {
+          "name": "gen_files",
+          "type": "String[]"
+        }
+      ],
+      "summary": "Imports [param source_file] with the import [param options] specified. Should return [constant @GlobalScope.OK] if the import is successful, other values indicate failure. The imported resource is expected to be saved to [code]save_path \u002B \u0022.\u0022 \u002B _get_save_extension()[/code]. If a different variant is preferred for a [url=$DOCS_URL/tutorials/export/feature_tags.html]feature tag[/url], save the variant to [code]save_path \u002B \u0022.\u0022 \u002B tag \u002B \u0022.\u0022 \u002B _get_save_extension()[/code] and add the feature tag to [param platform_variants]. If additional resource files are generated in the resource filesystem ([code]res://[/code]), add their full path to [param gen_files] so that the editor knows they depend on [param source_file]. This method must be overridden to do the actual importing work. See this class\u0027 description for an example of overriding this method.",
+      "godotName": "_import",
+      "xmlDocId": "M:Godot.EditorImportPlugin._Import(String,String,Dictionary,String[],String[])",
+      "sourcePath": "doc/classes/EditorImportPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorImportPlugin.xml",
+      "sha256": "97dbf8472d3f8a0ef68fed55734ece34f938165c4105a179dbe33a790475e615"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Signal",
+    "namespace": "Godot",
+    "fullName": "Godot.Signal",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Signal",
+    "documentationPath": "doc/classes/Signal.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_signal.html"
+  },
+  "constructors": [
+    {
+      "name": "Signal",
+      "kind": "Constructor",
+      "signature": "public Signal()",
+      "returnType": "Signal",
+      "parameters": [],
+      "summary": "Constructs an empty [Signal] with no object nor signal name bound.",
+      "godotName": "Signal",
+      "xmlDocId": "M:Godot.Signal.#ctor",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "Signal",
+      "kind": "Constructor",
+      "signature": "public Signal(Signal from)",
+      "returnType": "Signal",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Signal"
+        }
+      ],
+      "summary": "Constructs a [Signal] as a copy of the given [Signal].",
+      "godotName": "Signal",
+      "xmlDocId": "M:Godot.Signal.#ctor(Signal)",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "Signal",
+      "kind": "Constructor",
+      "signature": "public Signal(Object @object, StringName signal)",
+      "returnType": "Signal",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Creates a [Signal] object referencing a signal named [param signal] in the specified [param object].",
+      "godotName": "Signal",
+      "xmlDocId": "M:Godot.Signal.#ctor(Object,StringName)",
+      "sourcePath": "doc/classes/Signal.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Connect",
+      "kind": "Method",
+      "signature": "public int Connect(Callable callable, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Connects this signal to the specified [param callable]. Optional [param flags] can be also added to configure the connection\u0027s behavior (see [enum Object.ConnectFlags] constants). You can provide additional arguments to the connected [param callable] by using [method Callable.bind]. A signal can only be connected once to the same [Callable]. If the signal is already connected, this method returns [constant ERR_INVALID_PARAMETER] and generates an error, unless the signal is connected with [constant Object.CONNECT_REFERENCE_COUNTED]. To prevent this, use [method is_connected] first to check for existing connections. [codeblock] for button in $Buttons.get_children(): button.pressed.connect(_on_pressed.bind(button)) func _on_pressed(button): print(button.name, \u0022 was pressed\u0022) [/codeblock] [b]Note:[/b] If the [param callable]\u0027s object is freed, the connection will be lost.",
+      "godotName": "connect",
+      "xmlDocId": "M:Godot.Signal.Connect(Callable,int)",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "Disconnect",
+      "kind": "Method",
+      "signature": "public void Disconnect(Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Disconnects this signal from the specified [Callable]. If the connection does not exist, generates an error. Use [method is_connected] to make sure that the connection exists.",
+      "godotName": "disconnect",
+      "xmlDocId": "M:Godot.Signal.Disconnect(Callable)",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "Emit",
+      "kind": "Method",
+      "signature": "public void Emit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Emits this signal. All [Callable]s connected to this signal will be triggered. This method supports a variable number of arguments, so parameters can be passed as a comma separated list.",
+      "godotName": "emit",
+      "xmlDocId": "M:Godot.Signal.Emit",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "GetConnections",
+      "kind": "Method",
+      "signature": "public Array GetConnections()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an [Array] of connections for this signal. Each connection is represented as a [Dictionary] that contains three entries: - [code]signal[/code] is a reference to this signal; - [code]callable[/code] is a reference to the connected [Callable]; - [code]flags[/code] is a combination of [enum Object.ConnectFlags].",
+      "godotName": "get_connections",
+      "xmlDocId": "M:Godot.Signal.GetConnections",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "GetName",
+      "kind": "Method",
+      "signature": "public StringName GetName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the name of this signal.",
+      "godotName": "get_name",
+      "xmlDocId": "M:Godot.Signal.GetName",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "GetObject",
+      "kind": "Method",
+      "signature": "public Object GetObject()",
+      "returnType": "Object",
+      "parameters": [],
+      "summary": "Returns the object emitting this signal.",
+      "godotName": "get_object",
+      "xmlDocId": "M:Godot.Signal.GetObject",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "GetObjectId",
+      "kind": "Method",
+      "signature": "public int GetObjectId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the object emitting this signal (see [method Object.get_instance_id]).",
+      "godotName": "get_object_id",
+      "xmlDocId": "M:Godot.Signal.GetObjectId",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "HasConnections",
+      "kind": "Method",
+      "signature": "public bool HasConnections()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if any [Callable] is connected to this signal.",
+      "godotName": "has_connections",
+      "xmlDocId": "M:Godot.Signal.HasConnections",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "IsConnected",
+      "kind": "Method",
+      "signature": "public bool IsConnected(Callable callable)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [Callable] is connected to this signal.",
+      "godotName": "is_connected",
+      "xmlDocId": "M:Godot.Signal.IsConnected(Callable)",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "IsNull",
+      "kind": "Method",
+      "signature": "public bool IsNull()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this [Signal] has no object and the signal name is empty. Equivalent to [code]signal == Signal()[/code].",
+      "godotName": "is_null",
+      "xmlDocId": "M:Godot.Signal.IsNull",
+      "sourcePath": "doc/classes/Signal.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Signal right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Signal"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the signals do not share the same object and name.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Signal.operator !=(Signal)",
+      "sourcePath": "doc/classes/Signal.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Signal right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Signal"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both signals share the same object and name.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Signal.operator ==(Signal)",
+      "sourcePath": "doc/classes/Signal.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Signal.xml",
+      "sha256": "0102e68cecc9c6db6a94d5eed33c5aa03e2bd3f1698815051725d9e06bc14af6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

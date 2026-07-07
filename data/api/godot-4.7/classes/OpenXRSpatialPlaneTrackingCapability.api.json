@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialPlaneTrackingCapability",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialPlaneTrackingCapability",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialPlaneTrackingCapability",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialPlaneTrackingCapability.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialplanetrackingcapability.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsSupported",
+      "kind": "Method",
+      "signature": "public bool IsSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if plane tracking is supported by the current device.",
+      "godotName": "is_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialPlaneTrackingCapability.IsSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialPlaneTrackingCapability.xml"
+    },
+    {
+      "name": "StartEntityDiscovery",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult StartEntityDiscovery(RID spatialContext, OpenXRSpatialComponentData[] componentData, OpenXRStructureBase nextSnapshotCreate, OpenXRStructureBase nextSnapshotQuery, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        },
+        {
+          "name": "component_data",
+          "type": "OpenXRSpatialComponentData[]"
+        },
+        {
+          "name": "next_snapshot_create",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "next_snapshot_query",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Calls [method OpenXRSpatialEntityExtension.discover_spatial_entities] and [method OpenXRSpatialEntityExtension.query_snapshot] with the plane entities associated with [param spatial_context]. [param component_data] are the [OpenXRSpatialComponentData]s to discover for this plane capability. If [param next_snapshot_create] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.discover_spatial_entities]. If [param next_snapshot_query] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.query_snapshot]. [param user_callback], when non-null, is called with two parameters usually twice. The first parameter is the [RID] of the discovery snapshot and the second parameter is a boolean where [code]false[/code] indicates the discovery snapshot is about to be processed, and [code]true[/code] indicates the discovery snapshot has been processed and [param component_data] has valid data. The second call is skipped if an error was encountered. The returned [OpenXRFutureResult] is identical to the return from [method OpenXRSpatialEntityExtension.discover_spatial_entities].",
+      "godotName": "start_entity_discovery",
+      "xmlDocId": "M:Godot.OpenXRSpatialPlaneTrackingCapability.StartEntityDiscovery(RID,OpenXRSpatialComponentData[],OpenXRStructureBase,OpenXRStructureBase,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialPlaneTrackingCapability.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialPlaneTrackingCapability.xml",
+      "sha256": "561027701aad83f45785ce0c468580b5220729a0e9f1605166c003f18d019f63"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

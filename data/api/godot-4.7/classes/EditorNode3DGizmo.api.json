@@ -1,0 +1,776 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorNode3DGizmo",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorNode3DGizmo",
+    "kind": "class",
+    "baseType": "Node3DGizmo",
+    "interfaces": [],
+    "godotReference": "EditorNode3DGizmo",
+    "documentationPath": "doc/classes/EditorNode3DGizmo.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editornode3dgizmo.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_BeginHandleAction",
+      "kind": "Method",
+      "signature": "public void _BeginHandleAction(int id, bool secondary)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_begin_handle_action",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._BeginHandleAction(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_CommitHandle",
+      "kind": "Method",
+      "signature": "public void _CommitHandle(int id, bool secondary, Variant restore, bool cancel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        },
+        {
+          "name": "restore",
+          "type": "Variant"
+        },
+        {
+          "name": "cancel",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to commit a handle being edited (handles must have been previously added by [method add_handles]). This usually means creating an [UndoRedo] action for the change, using the current handle value as \u0022do\u0022 and the [param restore] argument as \u0022undo\u0022. If the [param cancel] argument is [code]true[/code], the [param restore] value should be directly set, without any [UndoRedo] action. The [param secondary] argument is [code]true[/code] when the committed handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_commit_handle",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._CommitHandle(int,bool,Variant,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_CommitSubgizmos",
+      "kind": "Method",
+      "signature": "public void _CommitSubgizmos(PackedInt32Array ids, Transform3D[] restores, bool cancel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "ids",
+          "type": "PackedInt32Array"
+        },
+        {
+          "name": "restores",
+          "type": "Transform3D[]"
+        },
+        {
+          "name": "cancel",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to commit a group of subgizmos being edited (see [method _subgizmos_intersect_ray] and [method _subgizmos_intersect_frustum]). This usually means creating an [UndoRedo] action for the change, using the current transforms as \u0022do\u0022 and the [param restores] transforms as \u0022undo\u0022. If the [param cancel] argument is [code]true[/code], the [param restores] transforms should be directly set, without any [UndoRedo] action.",
+      "godotName": "_commit_subgizmos",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._CommitSubgizmos(PackedInt32Array,Transform3D[],bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetHandleName",
+      "kind": "Method",
+      "signature": "public String _GetHandleName(int id, bool secondary)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return the name of an edited handle (handles must have been previously added by [method add_handles]). Handles can be named for reference to the user when editing. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_get_handle_name",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetHandleName(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetHandleValue",
+      "kind": "Method",
+      "signature": "public Variant _GetHandleValue(int id, bool secondary)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return the current value of a handle. This value will be requested at the start of an edit and used as the [code]restore[/code] argument in [method _commit_handle]. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_get_handle_value",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetHandleValue(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetSubgizmoTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetSubgizmoTransform(int id)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to return the current transform of a subgizmo. This transform will be requested at the start of an edit and used as the [code]restore[/code] argument in [method _commit_subgizmos].",
+      "godotName": "_get_subgizmo_transform",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetSubgizmoTransform(int)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_IsHandleHighlighted",
+      "kind": "Method",
+      "signature": "public bool _IsHandleHighlighted(int id, bool secondary)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return [code]true[/code] whenever the given handle should be highlighted in the editor. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_is_handle_highlighted",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._IsHandleHighlighted(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_Redraw",
+      "kind": "Method",
+      "signature": "public void _Redraw()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to add all the gizmo elements whenever a gizmo update is requested. It\u0027s common to call [method clear] at the beginning of this method and then add visual elements depending on the node\u0027s properties.",
+      "godotName": "_redraw",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._Redraw",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SetHandle",
+      "kind": "Method",
+      "signature": "public void _SetHandle(int id, bool secondary, Camera3D camera, Vector2 point)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        },
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Override this method to update the node properties when the user drags a gizmo handle (previously added with [method add_handles]). The provided [param point] is the mouse position in screen coordinates and the [param camera] can be used to convert it to raycasts. The [param secondary] argument is [code]true[/code] when the edited handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_set_handle",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SetHandle(int,bool,Camera3D,Vector2)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SetSubgizmoTransform",
+      "kind": "Method",
+      "signature": "public void _SetSubgizmoTransform(int id, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Override this method to update the node properties during subgizmo editing (see [method _subgizmos_intersect_ray] and [method _subgizmos_intersect_frustum]). The [param transform] is given in the [Node3D]\u0027s local coordinate system.",
+      "godotName": "_set_subgizmo_transform",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SetSubgizmoTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SubgizmosIntersectFrustum",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _SubgizmosIntersectFrustum(Camera3D camera, Plane[] frustum)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "frustum",
+          "type": "Plane[]"
+        }
+      ],
+      "summary": "Override this method to allow selecting subgizmos using mouse drag box selection. Given a [param camera] and a [param frustum], this method should return which subgizmos are contained within the frustum. The [param frustum] argument consists of an array with all the [Plane]s that make up the selection frustum. The returned value should contain a list of unique subgizmo identifiers, which can have any non-negative value and will be used in other virtual methods like [method _get_subgizmo_transform] or [method _commit_subgizmos].",
+      "godotName": "_subgizmos_intersect_frustum",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SubgizmosIntersectFrustum(Camera3D,Plane[])",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SubgizmosIntersectRay",
+      "kind": "Method",
+      "signature": "public int _SubgizmosIntersectRay(Camera3D camera, Vector2 point)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Override this method to allow selecting subgizmos using mouse clicks. Given a [param camera] and a [param point] in screen coordinates, this method should return which subgizmo should be selected. The returned value should be a unique subgizmo identifier, which can have any non-negative value and will be used in other virtual methods like [method _get_subgizmo_transform] or [method _commit_subgizmos].",
+      "godotName": "_subgizmos_intersect_ray",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SubgizmosIntersectRay(Camera3D,Vector2)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddCollisionSegments",
+      "kind": "Method",
+      "signature": "public void AddCollisionSegments(PackedVector3Array segments)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "segments",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Adds the specified [param segments] to the gizmo\u0027s collision shape for picking. Call this method during [method _redraw].",
+      "godotName": "add_collision_segments",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddCollisionSegments(PackedVector3Array)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddCollisionTriangles",
+      "kind": "Method",
+      "signature": "public void AddCollisionTriangles(TriangleMesh triangles)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "triangles",
+          "type": "TriangleMesh"
+        }
+      ],
+      "summary": "Adds collision triangles to the gizmo for picking. A [TriangleMesh] can be generated from a regular [Mesh] too. Call this method during [method _redraw].",
+      "godotName": "add_collision_triangles",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddCollisionTriangles(TriangleMesh)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddHandles",
+      "kind": "Method",
+      "signature": "public void AddHandles(PackedVector3Array handles, Material material, PackedInt32Array ids, bool billboard, bool secondary)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "handles",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        },
+        {
+          "name": "ids",
+          "type": "PackedInt32Array"
+        },
+        {
+          "name": "billboard",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "secondary",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a list of handles (points) which can be used to edit the properties of the gizmo\u0027s [Node3D]. The [param ids] argument can be used to specify a custom identifier for each handle, if an empty array is passed, the ids will be assigned automatically from the [param handles] argument order. The [param secondary] argument marks the added handles as secondary, meaning they will normally have lower selection priority than regular handles. When the user is holding the shift key secondary handles will switch to have higher priority than regular handles. This change in priority can be used to place multiple handles at the same point while still giving the user control on their selection. There are virtual methods which will be called upon editing of these handles. Call this method during [method _redraw].",
+      "godotName": "add_handles",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddHandles(PackedVector3Array,Material,PackedInt32Array,bool,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddLines",
+      "kind": "Method",
+      "signature": "public void AddLines(PackedVector3Array lines, Material material, bool billboard, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "lines",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        },
+        {
+          "name": "billboard",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Adds lines to the gizmo (as sets of 2 points), with a given material. The lines are used for visualizing the gizmo. Call this method during [method _redraw].",
+      "godotName": "add_lines",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddLines(PackedVector3Array,Material,bool,Color)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddMesh",
+      "kind": "Method",
+      "signature": "public void AddMesh(Mesh mesh, Material material, Transform3D transform, SkinReference skeleton)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        },
+        {
+          "name": "material",
+          "type": "Material",
+          "defaultValue": "null"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D",
+          "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+        },
+        {
+          "name": "skeleton",
+          "type": "SkinReference",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Adds a mesh to the gizmo with the specified [param material], local [param transform] and [param skeleton]. Call this method during [method _redraw].",
+      "godotName": "add_mesh",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddMesh(Mesh,Material,Transform3D,SkinReference)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "AddUnscaledBillboard",
+      "kind": "Method",
+      "signature": "public void AddUnscaledBillboard(Material material, float defaultScale, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "material",
+          "type": "Material"
+        },
+        {
+          "name": "default_scale",
+          "type": "float",
+          "defaultValue": "1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Adds an unscaled billboard for visualization and selection. Call this method during [method _redraw].",
+      "godotName": "add_unscaled_billboard",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.AddUnscaledBillboard(Material,float,Color)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes everything in the gizmo including meshes, collisions and handles.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.Clear",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "GetNode3d",
+      "kind": "Method",
+      "signature": "public Node3D GetNode3d()",
+      "returnType": "Node3D",
+      "parameters": [],
+      "summary": "Returns the [Node3D] node associated with this gizmo.",
+      "godotName": "get_node_3d",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.GetNode3d",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "GetPlugin",
+      "kind": "Method",
+      "signature": "public EditorNode3DGizmoPlugin GetPlugin()",
+      "returnType": "EditorNode3DGizmoPlugin",
+      "parameters": [],
+      "summary": "Returns the [EditorNode3DGizmoPlugin] that owns this gizmo. It\u0027s useful to retrieve materials using [method EditorNode3DGizmoPlugin.get_material].",
+      "godotName": "get_plugin",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.GetPlugin",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "GetSubgizmoSelection",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetSubgizmoSelection()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns a list of the currently selected subgizmos. Can be used to highlight selected elements during [method _redraw].",
+      "godotName": "get_subgizmo_selection",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.GetSubgizmoSelection",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "IsSubgizmoSelected",
+      "kind": "Method",
+      "signature": "public bool IsSubgizmoSelected(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given subgizmo is currently selected. Can be used to highlight selected elements during [method _redraw].",
+      "godotName": "is_subgizmo_selected",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.IsSubgizmoSelected(int)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "SetHidden",
+      "kind": "Method",
+      "signature": "public void SetHidden(bool hidden)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "hidden",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the gizmo\u0027s hidden state. If [code]true[/code], the gizmo will be hidden. If [code]false[/code], it will be shown.",
+      "godotName": "set_hidden",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.SetHidden(bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "SetNode3d",
+      "kind": "Method",
+      "signature": "public void SetNode3d(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Sets the reference [Node3D] node for the gizmo. [param node] must inherit from [Node3D].",
+      "godotName": "set_node_3d",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo.SetNode3d(Node)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_BeginHandleAction",
+      "kind": "Method",
+      "signature": "public void _BeginHandleAction(int id, bool secondary)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_begin_handle_action",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._BeginHandleAction(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_CommitHandle",
+      "kind": "Method",
+      "signature": "public void _CommitHandle(int id, bool secondary, Variant restore, bool cancel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        },
+        {
+          "name": "restore",
+          "type": "Variant"
+        },
+        {
+          "name": "cancel",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to commit a handle being edited (handles must have been previously added by [method add_handles]). This usually means creating an [UndoRedo] action for the change, using the current handle value as \u0022do\u0022 and the [param restore] argument as \u0022undo\u0022. If the [param cancel] argument is [code]true[/code], the [param restore] value should be directly set, without any [UndoRedo] action. The [param secondary] argument is [code]true[/code] when the committed handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_commit_handle",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._CommitHandle(int,bool,Variant,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_CommitSubgizmos",
+      "kind": "Method",
+      "signature": "public void _CommitSubgizmos(PackedInt32Array ids, Transform3D[] restores, bool cancel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "ids",
+          "type": "PackedInt32Array"
+        },
+        {
+          "name": "restores",
+          "type": "Transform3D[]"
+        },
+        {
+          "name": "cancel",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to commit a group of subgizmos being edited (see [method _subgizmos_intersect_ray] and [method _subgizmos_intersect_frustum]). This usually means creating an [UndoRedo] action for the change, using the current transforms as \u0022do\u0022 and the [param restores] transforms as \u0022undo\u0022. If the [param cancel] argument is [code]true[/code], the [param restores] transforms should be directly set, without any [UndoRedo] action.",
+      "godotName": "_commit_subgizmos",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._CommitSubgizmos(PackedInt32Array,Transform3D[],bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetHandleName",
+      "kind": "Method",
+      "signature": "public String _GetHandleName(int id, bool secondary)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return the name of an edited handle (handles must have been previously added by [method add_handles]). Handles can be named for reference to the user when editing. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_get_handle_name",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetHandleName(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetHandleValue",
+      "kind": "Method",
+      "signature": "public Variant _GetHandleValue(int id, bool secondary)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return the current value of a handle. This value will be requested at the start of an edit and used as the [code]restore[/code] argument in [method _commit_handle]. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_get_handle_value",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetHandleValue(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_GetSubgizmoTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetSubgizmoTransform(int id)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to return the current transform of a subgizmo. This transform will be requested at the start of an edit and used as the [code]restore[/code] argument in [method _commit_subgizmos].",
+      "godotName": "_get_subgizmo_transform",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._GetSubgizmoTransform(int)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_IsHandleHighlighted",
+      "kind": "Method",
+      "signature": "public bool _IsHandleHighlighted(int id, bool secondary)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to return [code]true[/code] whenever the given handle should be highlighted in the editor. The [param secondary] argument is [code]true[/code] when the requested handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_is_handle_highlighted",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._IsHandleHighlighted(int,bool)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_Redraw",
+      "kind": "Method",
+      "signature": "public void _Redraw()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to add all the gizmo elements whenever a gizmo update is requested. It\u0027s common to call [method clear] at the beginning of this method and then add visual elements depending on the node\u0027s properties.",
+      "godotName": "_redraw",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._Redraw",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SetHandle",
+      "kind": "Method",
+      "signature": "public void _SetHandle(int id, bool secondary, Camera3D camera, Vector2 point)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "secondary",
+          "type": "bool"
+        },
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Override this method to update the node properties when the user drags a gizmo handle (previously added with [method add_handles]). The provided [param point] is the mouse position in screen coordinates and the [param camera] can be used to convert it to raycasts. The [param secondary] argument is [code]true[/code] when the edited handle is secondary (see [method add_handles] for more information).",
+      "godotName": "_set_handle",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SetHandle(int,bool,Camera3D,Vector2)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SetSubgizmoTransform",
+      "kind": "Method",
+      "signature": "public void _SetSubgizmoTransform(int id, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Override this method to update the node properties during subgizmo editing (see [method _subgizmos_intersect_ray] and [method _subgizmos_intersect_frustum]). The [param transform] is given in the [Node3D]\u0027s local coordinate system.",
+      "godotName": "_set_subgizmo_transform",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SetSubgizmoTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SubgizmosIntersectFrustum",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _SubgizmosIntersectFrustum(Camera3D camera, Plane[] frustum)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "frustum",
+          "type": "Plane[]"
+        }
+      ],
+      "summary": "Override this method to allow selecting subgizmos using mouse drag box selection. Given a [param camera] and a [param frustum], this method should return which subgizmos are contained within the frustum. The [param frustum] argument consists of an array with all the [Plane]s that make up the selection frustum. The returned value should contain a list of unique subgizmo identifiers, which can have any non-negative value and will be used in other virtual methods like [method _get_subgizmo_transform] or [method _commit_subgizmos].",
+      "godotName": "_subgizmos_intersect_frustum",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SubgizmosIntersectFrustum(Camera3D,Plane[])",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    },
+    {
+      "name": "_SubgizmosIntersectRay",
+      "kind": "Method",
+      "signature": "public int _SubgizmosIntersectRay(Camera3D camera, Vector2 point)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "camera",
+          "type": "Camera3D"
+        },
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Override this method to allow selecting subgizmos using mouse clicks. Given a [param camera] and a [param point] in screen coordinates, this method should return which subgizmo should be selected. The returned value should be a unique subgizmo identifier, which can have any non-negative value and will be used in other virtual methods like [method _get_subgizmo_transform] or [method _commit_subgizmos].",
+      "godotName": "_subgizmos_intersect_ray",
+      "xmlDocId": "M:Godot.EditorNode3DGizmo._SubgizmosIntersectRay(Camera3D,Vector2)",
+      "sourcePath": "doc/classes/EditorNode3DGizmo.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorNode3DGizmo.xml",
+      "sha256": "61f6e770a387af98fa0f4a8443ccf28bbcb678e1034da14808ec6b5482b69a2d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

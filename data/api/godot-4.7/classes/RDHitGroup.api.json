@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDHitGroup",
+    "namespace": "Godot",
+    "fullName": "Godot.RDHitGroup",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDHitGroup",
+    "documentationPath": "doc/classes/RDHitGroup.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdhitgroup.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AnyHitShader",
+      "kind": "Property",
+      "signature": "public RDPipelineShader AnyHitShader { get; set; }",
+      "returnType": "RDPipelineShader",
+      "parameters": [],
+      "summary": "Any-hit shader for this hit group. Executed for each potential intersection. Can be [code]null[/code].",
+      "godotName": "any_hit_shader",
+      "xmlDocId": "P:Godot.RDHitGroup.AnyHitShader",
+      "sourcePath": "doc/classes/RDHitGroup.xml"
+    },
+    {
+      "name": "ClosestHitShader",
+      "kind": "Property",
+      "signature": "public RDPipelineShader ClosestHitShader { get; set; }",
+      "returnType": "RDPipelineShader",
+      "parameters": [],
+      "summary": "Closest-hit shader for this hit group. Executed for the closest intersection. Can be [code]null[/code].",
+      "godotName": "closest_hit_shader",
+      "xmlDocId": "P:Godot.RDHitGroup.ClosestHitShader",
+      "sourcePath": "doc/classes/RDHitGroup.xml"
+    },
+    {
+      "name": "IntersectionShader",
+      "kind": "Property",
+      "signature": "public RDPipelineShader IntersectionShader { get; set; }",
+      "returnType": "RDPipelineShader",
+      "parameters": [],
+      "summary": "Intersection shader for this hit group. Required for non-triangle geometry. Must be [code]null[/code] when using for triangle geometry.",
+      "godotName": "intersection_shader",
+      "xmlDocId": "P:Godot.RDHitGroup.IntersectionShader",
+      "sourcePath": "doc/classes/RDHitGroup.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDHitGroup.xml",
+      "sha256": "8da27242ba06171b8bc185411ef53df86f2410f80d012819b72f6792890a6b41"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

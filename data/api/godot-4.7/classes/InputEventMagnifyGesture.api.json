@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMagnifyGesture",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventMagnifyGesture",
+    "kind": "class",
+    "baseType": "InputEventGesture",
+    "interfaces": [],
+    "godotReference": "InputEventMagnifyGesture",
+    "documentationPath": "doc/classes/InputEventMagnifyGesture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventmagnifygesture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Factor",
+      "kind": "Property",
+      "signature": "public float Factor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount (or delta) of the event. This value is closer to [code]1.0[/code] the slower the gesture is performed.",
+      "defaultValue": "1.0",
+      "godotName": "factor",
+      "xmlDocId": "P:Godot.InputEventMagnifyGesture.Factor",
+      "sourcePath": "doc/classes/InputEventMagnifyGesture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventMagnifyGesture.xml",
+      "sha256": "8aa813a435e72befdd43413958103e304ceebd2737e9ac1d1a2d649202b65350"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

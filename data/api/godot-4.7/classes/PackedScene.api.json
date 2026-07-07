@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedScene",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedScene",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "PackedScene",
+    "documentationPath": "doc/classes/PackedScene.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedscene.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanInstantiate",
+      "kind": "Method",
+      "signature": "public bool CanInstantiate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the scene file has nodes.",
+      "godotName": "can_instantiate",
+      "xmlDocId": "M:Godot.PackedScene.CanInstantiate",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "GetState",
+      "kind": "Method",
+      "signature": "public SceneState GetState()",
+      "returnType": "SceneState",
+      "parameters": [],
+      "summary": "Returns the [SceneState] representing the scene file contents.",
+      "godotName": "get_state",
+      "xmlDocId": "M:Godot.PackedScene.GetState",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "Instantiate",
+      "kind": "Method",
+      "signature": "public Node Instantiate(int editState)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "edit_state",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Instantiates the scene\u0027s node hierarchy. Triggers child scene instantiation(s). Triggers a [constant Node.NOTIFICATION_SCENE_INSTANTIATED] notification on the root node.",
+      "godotName": "instantiate",
+      "xmlDocId": "M:Godot.PackedScene.Instantiate(int)",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "Pack",
+      "kind": "Method",
+      "signature": "public int Pack(Node path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "Node"
+        }
+      ],
+      "summary": "Packs the [param path] node, and all owned sub-nodes, into this [PackedScene]. Any existing data will be cleared. See [member Node.owner].",
+      "godotName": "pack",
+      "xmlDocId": "M:Godot.PackedScene.Pack(Node)",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "GenEditState",
+      "values": [
+        {
+          "name": "GEN_EDIT_STATE_DISABLED",
+          "value": "0",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method instantiate], blocks edits to the scene state.",
+          "sourcePath": "doc/classes/PackedScene.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_INSTANCE",
+          "value": "1",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method instantiate], provides local scene resources to the local scene. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/PackedScene.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_MAIN",
+          "value": "2",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method instantiate], provides local scene resources to the local scene. Only the main scene should receive the main edit state. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/PackedScene.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_MAIN_INHERITED",
+          "value": "3",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "It\u0027s similar to [constant GEN_EDIT_STATE_MAIN], but for the case where the scene is being instantiated to be the base of another one. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/PackedScene.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GEN_EDIT_STATE_DISABLED",
+      "value": "0",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method instantiate], blocks edits to the scene state.",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_INSTANCE",
+      "value": "1",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method instantiate], provides local scene resources to the local scene. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_MAIN",
+      "value": "2",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method instantiate], provides local scene resources to the local scene. Only the main scene should receive the main edit state. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_MAIN_INHERITED",
+      "value": "3",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "It\u0027s similar to [constant GEN_EDIT_STATE_MAIN], but for the case where the scene is being instantiated to be the base of another one. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/PackedScene.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedScene.xml",
+      "sha256": "7736c42399bb8e69e71db2291da4a5832df862a9a7acd4d0c7c416dbd721e8a3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

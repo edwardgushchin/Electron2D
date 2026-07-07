@@ -1,0 +1,789 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneTree",
+    "namespace": "Godot",
+    "fullName": "Godot.SceneTree",
+    "kind": "class",
+    "baseType": "MainLoop",
+    "interfaces": [],
+    "godotReference": "SceneTree",
+    "documentationPath": "doc/classes/SceneTree.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scenetree.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CallGroup",
+      "kind": "Method",
+      "signature": "public void CallGroup(StringName group, StringName method)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Calls [param method] on each node inside this tree added to the given [param group]. You can pass arguments to [param method] by specifying them at the end of this method call. Nodes that cannot call [param method] (either because the method doesn\u0027t exist or the arguments do not match) are ignored. See also [method set_group] and [method notify_group]. [b]Note:[/b] This method acts immediately on all selected nodes at once, which may cause stuttering in some performance-intensive situations. [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "call_group",
+      "xmlDocId": "M:Godot.SceneTree.CallGroup(StringName,StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "CallGroupFlags",
+      "kind": "Method",
+      "signature": "public void CallGroupFlags(int flags, StringName group, StringName method)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Calls the given [param method] on each node inside this tree added to the given [param group]. Use [param flags] to customize this method\u0027s behavior (see [enum GroupCallFlags]). Additional arguments for [param method] can be passed at the end of this method. Nodes that cannot call [param method] (either because the method doesn\u0027t exist or the arguments do not match) are ignored. [codeblock] # Calls \u0022hide\u0022 to all nodes of the \u0022enemies\u0022 group, at the end of the frame and in reverse tree order. get_tree().call_group_flags( SceneTree.GROUP_CALL_DEFERRED | SceneTree.GROUP_CALL_REVERSE, \u0022enemies\u0022, \u0022hide\u0022) [/codeblock] [b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "call_group_flags",
+      "xmlDocId": "M:Godot.SceneTree.CallGroupFlags(int,StringName,StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "ChangeSceneToFile",
+      "kind": "Method",
+      "signature": "public int ChangeSceneToFile(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Changes the running scene to the one at the given [param path], after loading it into a [PackedScene] and creating a new instance. Returns [constant OK] on success, [constant ERR_CANT_OPEN] if the [param path] cannot be loaded into a [PackedScene], or [constant ERR_CANT_CREATE] if that scene cannot be instantiated. [b]Note:[/b] See [method change_scene_to_node] for details on the order of operations.",
+      "godotName": "change_scene_to_file",
+      "xmlDocId": "M:Godot.SceneTree.ChangeSceneToFile(String)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "ChangeSceneToNode",
+      "kind": "Method",
+      "signature": "public int ChangeSceneToNode(Node node)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Changes the running scene to the provided [Node]. Useful when you want to set up the new scene before changing. Returns [constant OK] on success, [constant ERR_INVALID_PARAMETER] if the [param node] is [code]null[/code], or [constant ERR_UNCONFIGURED] if the [param node] is already inside the scene tree. [b]Note:[/b] Operations happen in the following order when [method change_scene_to_node] is called: 1. The current scene node is immediately removed from the tree. From that point, [method Node.get_tree] called on the current (outgoing) scene will return [code]null[/code]. [member current_scene] will be [code]null[/code] too, because the new scene is not available yet. 2. At the end of the frame, the formerly current scene, already removed from the tree, will be deleted (freed from memory) and then the new scene node will be added to the tree. [method Node.get_tree] and [member current_scene] will be back to working as usual. This ensures that both scenes aren\u0027t running at the same time, while still freeing the previous scene in a safe way similar to [method Node.queue_free]. If you want to reliably access the new scene, await the [signal scene_changed] signal. [b]Warning:[/b] After using this method, the [SceneTree] will take ownership of the node and will free it automatically when changing scene again. Any references you had to that node will become invalid.",
+      "godotName": "change_scene_to_node",
+      "xmlDocId": "M:Godot.SceneTree.ChangeSceneToNode(Node)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "ChangeSceneToPacked",
+      "kind": "Method",
+      "signature": "public int ChangeSceneToPacked(PackedScene packedScene)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "packed_scene",
+          "type": "PackedScene"
+        }
+      ],
+      "summary": "Changes the running scene to a new instance of the given [PackedScene] (which must be valid). Returns [constant OK] on success, [constant ERR_CANT_CREATE] if the scene cannot be instantiated, or [constant ERR_INVALID_PARAMETER] if the scene is invalid. [b]Note:[/b] See [method change_scene_to_node] for details on the order of operations.",
+      "godotName": "change_scene_to_packed",
+      "xmlDocId": "M:Godot.SceneTree.ChangeSceneToPacked(PackedScene)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "CreateTimer",
+      "kind": "Method",
+      "signature": "public SceneTreeTimer CreateTimer(float timeSec, bool processAlways, bool processInPhysics, bool ignoreTimeScale)",
+      "returnType": "SceneTreeTimer",
+      "parameters": [
+        {
+          "name": "time_sec",
+          "type": "float"
+        },
+        {
+          "name": "process_always",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "process_in_physics",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "ignore_time_scale",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a new [SceneTreeTimer]. After [param time_sec] in seconds have passed, the timer will emit [signal SceneTreeTimer.timeout] and will be automatically freed. If [param process_always] is [code]false[/code], the timer will be paused when setting [member SceneTree.paused] to [code]true[/code]. If [param process_in_physics] is [code]true[/code], the timer will update at the end of the physics frame, instead of the process frame. If [param ignore_time_scale] is [code]true[/code], the timer will ignore [member Engine.time_scale] and update with the real, elapsed time. This method is commonly used to create a one-shot delay timer, as in the following example: [codeblocks] [gdscript] func some_function(): print(\u0022start\u0022) await get_tree().create_timer(1.0).timeout print(\u0022end\u0022) [/gdscript] [csharp] public async Task SomeFunction() { GD.Print(\u0022start\u0022); await ToSignal(GetTree().CreateTimer(1.0f), SceneTreeTimer.SignalName.Timeout); GD.Print(\u0022end\u0022); } [/csharp] [/codeblocks] [b]Note:[/b] The timer is always updated [i]after[/i] all of the nodes in the tree. A node\u0027s [method Node._process] method would be called before the timer updates (or [method Node._physics_process] if [param process_in_physics] is set to [code]true[/code]).",
+      "godotName": "create_timer",
+      "xmlDocId": "M:Godot.SceneTree.CreateTimer(float,bool,bool,bool)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "CreateTween",
+      "kind": "Method",
+      "signature": "public Tween CreateTween()",
+      "returnType": "Tween",
+      "parameters": [],
+      "summary": "Creates and returns a new [Tween] processed in this tree. The Tween will start automatically on the next process frame or physics frame (depending on its [enum Tween.TweenProcessMode]). [b]Note:[/b] A [Tween] created using this method is not bound to any [Node]. It may keep working until there is nothing left to animate. If you want the [Tween] to be automatically killed when the [Node] is freed, use [method Node.create_tween] or [method Tween.bind_node].",
+      "godotName": "create_tween",
+      "xmlDocId": "M:Godot.SceneTree.CreateTween",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetFirstNodeInGroup",
+      "kind": "Method",
+      "signature": "public Node GetFirstNodeInGroup(StringName group)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the first [Node] found inside the tree, that has been added to the given [param group], in scene hierarchy order. Returns [code]null[/code] if no match is found. See also [method get_nodes_in_group].",
+      "godotName": "get_first_node_in_group",
+      "xmlDocId": "M:Godot.SceneTree.GetFirstNodeInGroup(StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetFrame",
+      "kind": "Method",
+      "signature": "public int GetFrame()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns how many physics process steps have been processed, since the application started. This is [i]not[/i] a measurement of elapsed time. See also [signal physics_frame]. For the number of frames rendered, see [method Engine.get_process_frames].",
+      "godotName": "get_frame",
+      "xmlDocId": "M:Godot.SceneTree.GetFrame",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetMultiplayer",
+      "kind": "Method",
+      "signature": "public MultiplayerAPI GetMultiplayer(NodePath forPath)",
+      "returnType": "MultiplayerAPI",
+      "parameters": [
+        {
+          "name": "for_path",
+          "type": "NodePath",
+          "defaultValue": "NodePath(\u0022\u0022)"
+        }
+      ],
+      "summary": "Searches for the [MultiplayerAPI] configured for the given path, if one does not exist it searches the parent paths until one is found. If the path is empty, or none is found, the default one is returned. See [method set_multiplayer].",
+      "godotName": "get_multiplayer",
+      "xmlDocId": "M:Godot.SceneTree.GetMultiplayer(NodePath)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetNodeCount",
+      "kind": "Method",
+      "signature": "public int GetNodeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of nodes inside this tree.",
+      "godotName": "get_node_count",
+      "xmlDocId": "M:Godot.SceneTree.GetNodeCount",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetNodeCountInGroup",
+      "kind": "Method",
+      "signature": "public int GetNodeCountInGroup(StringName group)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the number of nodes assigned to the given group.",
+      "godotName": "get_node_count_in_group",
+      "xmlDocId": "M:Godot.SceneTree.GetNodeCountInGroup(StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetNodesInGroup",
+      "kind": "Method",
+      "signature": "public Node[] GetNodesInGroup(StringName group)",
+      "returnType": "Node[]",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns an [Array] containing all nodes inside this tree, that have been added to the given [param group], in scene hierarchy order.",
+      "godotName": "get_nodes_in_group",
+      "xmlDocId": "M:Godot.SceneTree.GetNodesInGroup(StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GetProcessedTweens",
+      "kind": "Method",
+      "signature": "public Tween[] GetProcessedTweens()",
+      "returnType": "Tween[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of currently existing [Tween]s in the tree, including paused tweens.",
+      "godotName": "get_processed_tweens",
+      "xmlDocId": "M:Godot.SceneTree.GetProcessedTweens",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "HasGroup",
+      "kind": "Method",
+      "signature": "public bool HasGroup(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a node added to the given group [param name] exists in the tree.",
+      "godotName": "has_group",
+      "xmlDocId": "M:Godot.SceneTree.HasGroup(StringName)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "IsAccessibilityEnabled",
+      "kind": "Method",
+      "signature": "public bool IsAccessibilityEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if accessibility features are enabled, and accessibility information updates are actively processed.",
+      "godotName": "is_accessibility_enabled",
+      "xmlDocId": "M:Godot.SceneTree.IsAccessibilityEnabled",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "IsAccessibilitySupported",
+      "kind": "Method",
+      "signature": "public bool IsAccessibilitySupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if accessibility features are supported by the OS and enabled in project settings.",
+      "godotName": "is_accessibility_supported",
+      "xmlDocId": "M:Godot.SceneTree.IsAccessibilitySupported",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "NotifyGroup",
+      "kind": "Method",
+      "signature": "public void NotifyGroup(StringName group, int notification)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "notification",
+          "type": "int"
+        }
+      ],
+      "summary": "Calls [method Object.notification] with the given [param notification] to all nodes inside this tree added to the [param group]. See also [url=$DOCS_URL/tutorials/best_practices/godot_notifications.html]Godot notifications[/url] and [method call_group] and [method set_group]. [b]Note:[/b] This method acts immediately on all selected nodes at once, which may cause stuttering in some performance-intensive situations.",
+      "godotName": "notify_group",
+      "xmlDocId": "M:Godot.SceneTree.NotifyGroup(StringName,int)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "NotifyGroupFlags",
+      "kind": "Method",
+      "signature": "public void NotifyGroupFlags(int callFlags, StringName group, int notification)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "call_flags",
+          "type": "int"
+        },
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "notification",
+          "type": "int"
+        }
+      ],
+      "summary": "Calls [method Object.notification] with the given [param notification] to all nodes inside this tree added to the [param group]. Use [param call_flags] to customize this method\u0027s behavior (see [enum GroupCallFlags]).",
+      "godotName": "notify_group_flags",
+      "xmlDocId": "M:Godot.SceneTree.NotifyGroupFlags(int,StringName,int)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "QueueDelete",
+      "kind": "Method",
+      "signature": "public void QueueDelete(Object obj)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "Object"
+        }
+      ],
+      "summary": "Queues the given [param obj] to be deleted, calling its [method Object.free] at the end of the current frame. This method is similar to [method Node.queue_free].",
+      "godotName": "queue_delete",
+      "xmlDocId": "M:Godot.SceneTree.QueueDelete(Object)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "Quit",
+      "kind": "Method",
+      "signature": "public void Quit(int exitCode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "exit_code",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Quits the application at the end of the current iteration, with the given [param exit_code]. By convention, an exit code of [code]0[/code] indicates success, whereas any other exit code indicates an error. For portability reasons, it should be between [code]0[/code] and [code]125[/code] (inclusive). [b]Note:[/b] On iOS this method doesn\u0027t work. Instead, as recommended by the [url=https://developer.apple.com/library/archive/qa/qa1561/_index.html]iOS Human Interface Guidelines[/url], the user is expected to close apps via the Home button.",
+      "godotName": "quit",
+      "xmlDocId": "M:Godot.SceneTree.Quit(int)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "ReloadCurrentScene",
+      "kind": "Method",
+      "signature": "public int ReloadCurrentScene()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Reloads the currently active scene, replacing [member current_scene] with a new instance of its original [PackedScene]. Returns [constant OK] on success, [constant ERR_UNCONFIGURED] if no [member current_scene] is defined, [constant ERR_CANT_OPEN] if [member current_scene] cannot be loaded into a [PackedScene], or [constant ERR_CANT_CREATE] if the scene cannot be instantiated.",
+      "godotName": "reload_current_scene",
+      "xmlDocId": "M:Godot.SceneTree.ReloadCurrentScene",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "SetGroup",
+      "kind": "Method",
+      "signature": "public void SetGroup(StringName group, String property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the given [param property] to [param value] on all nodes inside this tree added to the given [param group]. Nodes that do not have the [param property] are ignored. See also [method call_group] and [method notify_group]. [b]Note:[/b] This method acts immediately on all selected nodes at once, which may cause stuttering in some performance-intensive situations. [b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "set_group",
+      "xmlDocId": "M:Godot.SceneTree.SetGroup(StringName,String,Variant)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "SetGroupFlags",
+      "kind": "Method",
+      "signature": "public void SetGroupFlags(int callFlags, StringName group, String property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "call_flags",
+          "type": "int"
+        },
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the given [param property] to [param value] on all nodes inside this tree added to the given [param group]. Nodes that do not have the [param property] are ignored. Use [param call_flags] to customize this method\u0027s behavior (see [enum GroupCallFlags]). [b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.",
+      "godotName": "set_group_flags",
+      "xmlDocId": "M:Godot.SceneTree.SetGroupFlags(int,StringName,String,Variant)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "SetMultiplayer",
+      "kind": "Method",
+      "signature": "public void SetMultiplayer(MultiplayerAPI multiplayer, NodePath rootPath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "multiplayer",
+          "type": "MultiplayerAPI"
+        },
+        {
+          "name": "root_path",
+          "type": "NodePath",
+          "defaultValue": "NodePath(\u0022\u0022)"
+        }
+      ],
+      "summary": "Sets a custom [MultiplayerAPI] with the given [param root_path] (controlling also the relative subpaths), or override the default one if [param root_path] is empty. [b]Note:[/b] No [MultiplayerAPI] must be configured for the subpath containing [param root_path], nested custom multiplayers are not allowed. I.e. if one is configured for [code]\u0022/root/Foo\u0022[/code] setting one for [code]\u0022/root/Foo/Bar\u0022[/code] will cause an error. [b]Note:[/b] [method set_multiplayer] should be called [i]before[/i] the child nodes are ready at the given [param root_path]. If multiplayer nodes like [MultiplayerSpawner] or [MultiplayerSynchronizer] are added to the tree before the custom multiplayer API is set, they will not work.",
+      "godotName": "set_multiplayer",
+      "xmlDocId": "M:Godot.SceneTree.SetMultiplayer(MultiplayerAPI,NodePath)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "UnloadCurrentScene",
+      "kind": "Method",
+      "signature": "public void UnloadCurrentScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "If a current scene is loaded, calling this method will unload it.",
+      "godotName": "unload_current_scene",
+      "xmlDocId": "M:Godot.SceneTree.UnloadCurrentScene",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "AutoAcceptQuit",
+      "kind": "Property",
+      "signature": "public bool AutoAcceptQuit { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the application automatically accepts quitting requests. For mobile platforms, see [member quit_on_go_back].",
+      "defaultValue": "true",
+      "godotName": "auto_accept_quit",
+      "xmlDocId": "P:Godot.SceneTree.AutoAcceptQuit",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "CurrentScene",
+      "kind": "Property",
+      "signature": "public Node CurrentScene { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The root node of the currently loaded main scene, usually as a direct child of [member root]. See also [method change_scene_to_file], [method change_scene_to_packed], and [method reload_current_scene]. [b]Warning:[/b] Setting this property directly may not work as expected, as it does [i]not[/i] add or remove any nodes from this tree.",
+      "godotName": "current_scene",
+      "xmlDocId": "P:Godot.SceneTree.CurrentScene",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "DebugCollisionsHint",
+      "kind": "Property",
+      "signature": "public bool DebugCollisionsHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collision shapes will be visible when running the game from the editor for debugging purposes. [b]Note:[/b] This property is not designed to be changed at run-time. Changing the value of [member debug_collisions_hint] while the project is running will not have the desired effect.",
+      "defaultValue": "false",
+      "godotName": "debug_collisions_hint",
+      "xmlDocId": "P:Godot.SceneTree.DebugCollisionsHint",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "DebugNavigationHint",
+      "kind": "Property",
+      "signature": "public bool DebugNavigationHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], navigation polygons will be visible when running the game from the editor for debugging purposes. [b]Note:[/b] This property is not designed to be changed at run-time. Changing the value of [member debug_navigation_hint] while the project is running will not have the desired effect.",
+      "defaultValue": "false",
+      "godotName": "debug_navigation_hint",
+      "xmlDocId": "P:Godot.SceneTree.DebugNavigationHint",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "DebugPathsHint",
+      "kind": "Property",
+      "signature": "public bool DebugPathsHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], curves from [Path2D] and [Path3D] nodes will be visible when running the game from the editor for debugging purposes. [b]Note:[/b] This property is not designed to be changed at run-time. Changing the value of [member debug_paths_hint] while the project is running will not have the desired effect.",
+      "defaultValue": "false",
+      "godotName": "debug_paths_hint",
+      "xmlDocId": "P:Godot.SceneTree.DebugPathsHint",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "EditedSceneRoot",
+      "kind": "Property",
+      "signature": "public Node EditedSceneRoot { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The root of the scene currently being edited in the editor. This is usually a direct child of [member root]. [b]Note:[/b] This property does nothing in release builds.",
+      "godotName": "edited_scene_root",
+      "xmlDocId": "P:Godot.SceneTree.EditedSceneRoot",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "MultiplayerPoll",
+      "kind": "Property",
+      "signature": "public bool MultiplayerPoll { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] (default value), enables automatic polling of the [MultiplayerAPI] for this SceneTree during [signal process_frame]. If [code]false[/code], you need to manually call [method MultiplayerAPI.poll] to process network packets and deliver RPCs. This allows running RPCs in a different loop (e.g. physics, thread, specific time step) and for manual [Mutex] protection when accessing the [MultiplayerAPI] from threads.",
+      "defaultValue": "true",
+      "godotName": "multiplayer_poll",
+      "xmlDocId": "P:Godot.SceneTree.MultiplayerPoll",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "Paused",
+      "kind": "Property",
+      "signature": "public bool Paused { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the scene tree is considered paused. This causes the following behavior: - 2D and 3D physics will be stopped, as well as collision detection and related signals. - Depending on each node\u0027s [member Node.process_mode], their [method Node._process], [method Node._physics_process] and [method Node._input] callback methods may not called anymore.",
+      "defaultValue": "false",
+      "godotName": "paused",
+      "xmlDocId": "P:Godot.SceneTree.Paused",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "PhysicsInterpolation",
+      "kind": "Property",
+      "signature": "public bool PhysicsInterpolation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the renderer will interpolate the transforms of objects (both physics and non-physics) between the last two transforms, so that smooth motion is seen even when physics ticks do not coincide with rendered frames. The default value of this property is controlled by [member ProjectSettings.physics/common/physics_interpolation]. [b]Note:[/b] Although this is a global setting, finer control of individual branches of the [SceneTree] is possible using [member Node.physics_interpolation_mode].",
+      "defaultValue": "false",
+      "godotName": "physics_interpolation",
+      "xmlDocId": "P:Godot.SceneTree.PhysicsInterpolation",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "QuitOnGoBack",
+      "kind": "Property",
+      "signature": "public bool QuitOnGoBack { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the application quits automatically when navigating back (e.g. using the system \u0022Back\u0022 button on Android). To handle \u0027Go Back\u0027 button when this option is disabled, use [constant DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST].",
+      "defaultValue": "true",
+      "godotName": "quit_on_go_back",
+      "xmlDocId": "P:Godot.SceneTree.QuitOnGoBack",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "Root",
+      "kind": "Property",
+      "signature": "public Window Root { get; set; }",
+      "returnType": "Window",
+      "parameters": [],
+      "summary": "The tree\u0027s root [Window]. This is top-most [Node] of the scene tree, and is always present. An absolute [NodePath] always starts from this node. Children of the root node may include the loaded [member current_scene], as well as any [url=$DOCS_URL/tutorials/scripting/singletons_autoload.html]AutoLoad[/url] configured in the Project Settings. [b]Warning:[/b] Do not delete this node. This will result in unstable behavior, followed by a crash.",
+      "godotName": "root",
+      "xmlDocId": "P:Godot.SceneTree.Root",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "NodeAdded",
+      "kind": "Signal",
+      "signature": "public event NodeAddedHandler NodeAdded",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the [param node] enters this tree.",
+      "godotName": "node_added",
+      "xmlDocId": "E:Godot.SceneTree.NodeAdded(Node)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "NodeConfigurationWarningChanged",
+      "kind": "Signal",
+      "signature": "public event NodeConfigurationWarningChangedHandler NodeConfigurationWarningChanged",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the [param node]\u0027s [method Node.update_configuration_warnings] is called. Only emitted in the editor.",
+      "godotName": "node_configuration_warning_changed",
+      "xmlDocId": "E:Godot.SceneTree.NodeConfigurationWarningChanged(Node)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "NodeRemoved",
+      "kind": "Signal",
+      "signature": "public event NodeRemovedHandler NodeRemoved",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the [param node] exits this tree.",
+      "godotName": "node_removed",
+      "xmlDocId": "E:Godot.SceneTree.NodeRemoved(Node)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "NodeRenamed",
+      "kind": "Signal",
+      "signature": "public event NodeRenamedHandler NodeRenamed",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the [param node]\u0027s [member Node.name] is changed.",
+      "godotName": "node_renamed",
+      "xmlDocId": "E:Godot.SceneTree.NodeRenamed(Node)",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "PhysicsFrame",
+      "kind": "Signal",
+      "signature": "public event PhysicsFrameHandler PhysicsFrame",
+      "parameters": [],
+      "summary": "Emitted immediately before [method Node._physics_process] is called on every node in this tree.",
+      "godotName": "physics_frame",
+      "xmlDocId": "E:Godot.SceneTree.PhysicsFrame",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "ProcessFrame",
+      "kind": "Signal",
+      "signature": "public event ProcessFrameHandler ProcessFrame",
+      "parameters": [],
+      "summary": "Emitted immediately before [method Node._process] is called on every node in this tree.",
+      "godotName": "process_frame",
+      "xmlDocId": "E:Godot.SceneTree.ProcessFrame",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "SceneChanged",
+      "kind": "Signal",
+      "signature": "public event SceneChangedHandler SceneChanged",
+      "parameters": [],
+      "summary": "Emitted after the new scene is added to scene tree and initialized. Can be used to reliably access [member current_scene] when changing scenes. [codeblock] # This code should be inside an autoload. get_tree().change_scene_to_file(other_scene_path) await get_tree().scene_changed print(get_tree().current_scene) # Prints the new scene. [/codeblock]",
+      "godotName": "scene_changed",
+      "xmlDocId": "E:Godot.SceneTree.SceneChanged",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "TreeChanged",
+      "kind": "Signal",
+      "signature": "public event TreeChangedHandler TreeChanged",
+      "parameters": [],
+      "summary": "Emitted any time the tree\u0027s hierarchy changes (nodes being moved, renamed, etc.).",
+      "godotName": "tree_changed",
+      "xmlDocId": "E:Godot.SceneTree.TreeChanged",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "TreeProcessModeChanged",
+      "kind": "Signal",
+      "signature": "public event TreeProcessModeChangedHandler TreeProcessModeChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member Node.process_mode] of any node inside the tree is changed. Only emitted in the editor, to update the visibility of disabled nodes.",
+      "godotName": "tree_process_mode_changed",
+      "xmlDocId": "E:Godot.SceneTree.TreeProcessModeChanged",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "GroupCallFlags",
+      "values": [
+        {
+          "name": "GROUP_CALL_DEFAULT",
+          "value": "0",
+          "enum": "GroupCallFlags",
+          "kind": "EnumValue",
+          "summary": "Call nodes within a group with no special behavior (default).",
+          "sourcePath": "doc/classes/SceneTree.xml"
+        },
+        {
+          "name": "GROUP_CALL_DEFERRED",
+          "value": "2",
+          "enum": "GroupCallFlags",
+          "kind": "EnumValue",
+          "summary": "Call nodes within a group at the end of the current frame (can be either process or physics frame), similar to [method Object.call_deferred].",
+          "sourcePath": "doc/classes/SceneTree.xml"
+        },
+        {
+          "name": "GROUP_CALL_REVERSE",
+          "value": "1",
+          "enum": "GroupCallFlags",
+          "kind": "EnumValue",
+          "summary": "Call nodes within a group in reverse tree hierarchy order (all nested children are called before their respective parent nodes).",
+          "sourcePath": "doc/classes/SceneTree.xml"
+        },
+        {
+          "name": "GROUP_CALL_UNIQUE",
+          "value": "4",
+          "enum": "GroupCallFlags",
+          "kind": "EnumValue",
+          "summary": "Call nodes within a group only once, even if the call is executed many times in the same frame. Must be combined with [constant GROUP_CALL_DEFERRED] to work. [b]Note:[/b] Different arguments are not taken into account. Therefore, when the same call is executed with different arguments, only the first call will be performed.",
+          "sourcePath": "doc/classes/SceneTree.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GROUP_CALL_DEFAULT",
+      "value": "0",
+      "enum": "GroupCallFlags",
+      "kind": "EnumValue",
+      "summary": "Call nodes within a group with no special behavior (default).",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GROUP_CALL_REVERSE",
+      "value": "1",
+      "enum": "GroupCallFlags",
+      "kind": "EnumValue",
+      "summary": "Call nodes within a group in reverse tree hierarchy order (all nested children are called before their respective parent nodes).",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GROUP_CALL_DEFERRED",
+      "value": "2",
+      "enum": "GroupCallFlags",
+      "kind": "EnumValue",
+      "summary": "Call nodes within a group at the end of the current frame (can be either process or physics frame), similar to [method Object.call_deferred].",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    },
+    {
+      "name": "GROUP_CALL_UNIQUE",
+      "value": "4",
+      "enum": "GroupCallFlags",
+      "kind": "EnumValue",
+      "summary": "Call nodes within a group only once, even if the call is executed many times in the same frame. Must be combined with [constant GROUP_CALL_DEFERRED] to work. [b]Note:[/b] Different arguments are not taken into account. Therefore, when the same call is executed with different arguments, only the first call will be performed.",
+      "sourcePath": "doc/classes/SceneTree.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SceneTree.xml",
+      "sha256": "cf15156009d3686f429c3977db4857f357a3dffa83b749e3d9504868c587a829"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

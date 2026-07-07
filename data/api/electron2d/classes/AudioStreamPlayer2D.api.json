@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlayer2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AudioStreamPlayer2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlayer2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "AudioStreamPlayer2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AudioStreamPlayer2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.AudioStreamPlayer2D\u0060 class.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "AudioStreamPlayer2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AudioStreamPlayer2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.AudioStreamPlayer2D\u0060 class.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public System.Single GetPlaybackPosition()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the stored playback position.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.GetPlaybackPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasStreamPlayback",
+      "kind": "Method",
+      "signature": "public System.Boolean HasStreamPlayback()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this player currently owns an active stream voice.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.HasStreamPlayback",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public System.Void Play(System.Single fromPosition)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "fromPosition",
+          "type": "System.Single",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Starts playback from a position in the stream.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.Play(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public System.Void Seek(System.Single toPosition)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "toPosition",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Changes the stored playback position.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.Seek(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public System.Void Stop()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Stops all voices owned by this player.",
+      "xmlDocId": "M:Electron2D.AudioStreamPlayer2D.Stop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AreaMask",
+      "kind": "Property",
+      "signature": "public System.Int32 AreaMask { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets which 2D area layers may affect this audio source.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.AreaMask",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Attenuation",
+      "kind": "Property",
+      "signature": "public System.Single Attenuation { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the distance attenuation exponent.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.Attenuation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public System.Boolean Autoplay { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this node starts playback when it enters a scene tree.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.Autoplay",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bus",
+      "kind": "Property",
+      "signature": "public Electron2D.StringName Bus { get; set; }",
+      "returnType": "Electron2D.StringName",
+      "parameters": [],
+      "summary": "Gets or sets the target audio bus name.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.Bus",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxDistance",
+      "kind": "Property",
+      "signature": "public System.Single MaxDistance { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the maximum distance from which this source is still audible.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.MaxDistance",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxPolyphony",
+      "kind": "Property",
+      "signature": "public System.Int32 MaxPolyphony { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the maximum number of simultaneous voices owned by this node.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.MaxPolyphony",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PanningStrength",
+      "kind": "Property",
+      "signature": "public System.Single PanningStrength { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the strength of left/right panning.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.PanningStrength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PitchScale",
+      "kind": "Property",
+      "signature": "public System.Single PitchScale { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the playback pitch scale.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.PitchScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Playing",
+      "kind": "Property",
+      "signature": "public System.Boolean Playing { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this player is currently requested to play.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.Playing",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stream",
+      "kind": "Property",
+      "signature": "public Electron2D.AudioStream Stream { get; set; }",
+      "returnType": "Electron2D.AudioStream",
+      "parameters": [],
+      "summary": "Gets or sets the stream resource played by this node.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.Stream",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StreamPaused",
+      "kind": "Property",
+      "signature": "public System.Boolean StreamPaused { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether playback is paused.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.StreamPaused",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VolumeDb",
+      "kind": "Property",
+      "signature": "public System.Single VolumeDb { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the playback volume in decibels before 2D attenuation.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.VolumeDb",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VolumeLinear",
+      "kind": "Property",
+      "signature": "public System.Single VolumeLinear { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the playback volume as linear gain before 2D attenuation.",
+      "xmlDocId": "P:Electron2D.AudioStreamPlayer2D.VolumeLinear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

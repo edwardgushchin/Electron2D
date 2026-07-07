@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialCapabilityConfigurationMicroQrCode",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialCapabilityConfigurationMicroQrCode",
+    "kind": "class",
+    "baseType": "OpenXRSpatialCapabilityConfigurationBaseHeader",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialCapabilityConfigurationMicroQrCode",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationMicroQrCode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcapabilityconfigurationmicroqrcode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEnabledComponents",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetEnabledComponents()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns the components enabled by this configuration. [b]Note:[/b] Only valid after this configuration was used to create a spatial context.",
+      "godotName": "get_enabled_components",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationMicroQrCode.GetEnabledComponents",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationMicroQrCode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationMicroQrCode.xml",
+      "sha256": "7ebbe05455e98a3e323363884a6890dacad117212d63384aabfebc8106af63c5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

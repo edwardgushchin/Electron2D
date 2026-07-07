@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PacketPeerDTLS",
+    "namespace": "Godot",
+    "fullName": "Godot.PacketPeerDTLS",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "PacketPeerDTLS",
+    "documentationPath": "doc/classes/PacketPeerDTLS.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packetpeerdtls.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ConnectToPeer",
+      "kind": "Method",
+      "signature": "public int ConnectToPeer(PacketPeerUDP packetPeer, String hostname, TLSOptions clientOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "packet_peer",
+          "type": "PacketPeerUDP"
+        },
+        {
+          "name": "hostname",
+          "type": "String"
+        },
+        {
+          "name": "client_options",
+          "type": "TLSOptions",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Connects a [param packet_peer] beginning the DTLS handshake using the underlying [PacketPeerUDP] which must be connected (see [method PacketPeerUDP.connect_to_host]). You can optionally specify the [param client_options] to be used while verifying the TLS connections. See [method TLSOptions.client] and [method TLSOptions.client_unsafe].",
+      "godotName": "connect_to_peer",
+      "xmlDocId": "M:Godot.PacketPeerDTLS.ConnectToPeer(PacketPeerUDP,String,TLSOptions)",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "DisconnectFromPeer",
+      "kind": "Method",
+      "signature": "public void DisconnectFromPeer()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disconnects this peer, terminating the DTLS session.",
+      "godotName": "disconnect_from_peer",
+      "xmlDocId": "M:Godot.PacketPeerDTLS.DisconnectFromPeer",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "GetStatus",
+      "kind": "Method",
+      "signature": "public int GetStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the status of the connection.",
+      "godotName": "get_status",
+      "xmlDocId": "M:Godot.PacketPeerDTLS.GetStatus",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public void Poll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Poll the connection to check for incoming packets. Call this frequently to update the status and keep the connection working.",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.PacketPeerDTLS.Poll",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Status",
+      "values": [
+        {
+          "name": "STATUS_CONNECTED",
+          "value": "2",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [PacketPeerDTLS] that is connected to a remote peer.",
+          "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+        },
+        {
+          "name": "STATUS_DISCONNECTED",
+          "value": "0",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [PacketPeerDTLS] that is disconnected.",
+          "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+        },
+        {
+          "name": "STATUS_ERROR",
+          "value": "3",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [PacketPeerDTLS] in a generic error state.",
+          "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+        },
+        {
+          "name": "STATUS_ERROR_HOSTNAME_MISMATCH",
+          "value": "4",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "An error status that shows a mismatch in the DTLS certificate domain presented by the host and the domain requested for validation.",
+          "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+        },
+        {
+          "name": "STATUS_HANDSHAKING",
+          "value": "1",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [PacketPeerDTLS] that is currently performing the handshake with a remote peer.",
+          "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STATUS_DISCONNECTED",
+      "value": "0",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [PacketPeerDTLS] that is disconnected.",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "STATUS_HANDSHAKING",
+      "value": "1",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [PacketPeerDTLS] that is currently performing the handshake with a remote peer.",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "STATUS_CONNECTED",
+      "value": "2",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [PacketPeerDTLS] that is connected to a remote peer.",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "STATUS_ERROR",
+      "value": "3",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [PacketPeerDTLS] in a generic error state.",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    },
+    {
+      "name": "STATUS_ERROR_HOSTNAME_MISMATCH",
+      "value": "4",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "An error status that shows a mismatch in the DTLS certificate domain presented by the host and the domain requested for validation.",
+      "sourcePath": "doc/classes/PacketPeerDTLS.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PacketPeerDTLS.xml",
+      "sha256": "2b4a00e3b6915dc43482fb5c0b6166f7a6775da53478cc015d9b5443712e9114"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

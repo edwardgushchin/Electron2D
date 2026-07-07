@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "StreamPeer",
+    "documentationPath": "doc/classes/StreamPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Get8",
+      "kind": "Method",
+      "signature": "public int Get8()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets a signed byte from the stream.",
+      "godotName": "get_8",
+      "xmlDocId": "M:Godot.StreamPeer.Get8",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Get16",
+      "kind": "Method",
+      "signature": "public int Get16()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets a signed 16-bit value from the stream.",
+      "godotName": "get_16",
+      "xmlDocId": "M:Godot.StreamPeer.Get16",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Get32",
+      "kind": "Method",
+      "signature": "public int Get32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets a signed 32-bit value from the stream.",
+      "godotName": "get_32",
+      "xmlDocId": "M:Godot.StreamPeer.Get32",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Get64",
+      "kind": "Method",
+      "signature": "public int Get64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets a signed 64-bit value from the stream.",
+      "godotName": "get_64",
+      "xmlDocId": "M:Godot.StreamPeer.Get64",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetAvailableBytes",
+      "kind": "Method",
+      "signature": "public int GetAvailableBytes()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bytes this [StreamPeer] has available.",
+      "godotName": "get_available_bytes",
+      "xmlDocId": "M:Godot.StreamPeer.GetAvailableBytes",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetData",
+      "kind": "Method",
+      "signature": "public Array GetData(int bytes)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a chunk data with the received bytes, as an [Array] containing two elements: an [enum Error] constant and a [PackedByteArray]. [param bytes] is the number of bytes to be received. If not enough bytes are available, the function will block until the desired amount is received.",
+      "godotName": "get_data",
+      "xmlDocId": "M:Godot.StreamPeer.GetData(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetDouble",
+      "kind": "Method",
+      "signature": "public float GetDouble()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gets a double-precision float from the stream.",
+      "godotName": "get_double",
+      "xmlDocId": "M:Godot.StreamPeer.GetDouble",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetFloat",
+      "kind": "Method",
+      "signature": "public float GetFloat()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gets a single-precision float from the stream.",
+      "godotName": "get_float",
+      "xmlDocId": "M:Godot.StreamPeer.GetFloat",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetHalf",
+      "kind": "Method",
+      "signature": "public float GetHalf()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gets a half-precision float from the stream.",
+      "godotName": "get_half",
+      "xmlDocId": "M:Godot.StreamPeer.GetHalf",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetPartialData",
+      "kind": "Method",
+      "signature": "public Array GetPartialData(int bytes)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a chunk data with the received bytes, as an [Array] containing two elements: an [enum Error] constant and a [PackedByteArray]. [param bytes] is the number of bytes to be received. If not enough bytes are available, the function will return how many were actually received.",
+      "godotName": "get_partial_data",
+      "xmlDocId": "M:Godot.StreamPeer.GetPartialData(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetString",
+      "kind": "Method",
+      "signature": "public String GetString(int bytes)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Gets an ASCII string with byte-length [param bytes] from the stream. If [param bytes] is negative (default) the length will be read from the stream using the reverse process of [method put_string].",
+      "godotName": "get_string",
+      "xmlDocId": "M:Godot.StreamPeer.GetString(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetU8",
+      "kind": "Method",
+      "signature": "public int GetU8()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets an unsigned byte from the stream.",
+      "godotName": "get_u8",
+      "xmlDocId": "M:Godot.StreamPeer.GetU8",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetU16",
+      "kind": "Method",
+      "signature": "public int GetU16()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets an unsigned 16-bit value from the stream.",
+      "godotName": "get_u16",
+      "xmlDocId": "M:Godot.StreamPeer.GetU16",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetU32",
+      "kind": "Method",
+      "signature": "public int GetU32()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets an unsigned 32-bit value from the stream.",
+      "godotName": "get_u32",
+      "xmlDocId": "M:Godot.StreamPeer.GetU32",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetU64",
+      "kind": "Method",
+      "signature": "public int GetU64()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets an unsigned 64-bit value from the stream.",
+      "godotName": "get_u64",
+      "xmlDocId": "M:Godot.StreamPeer.GetU64",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetUtf8String",
+      "kind": "Method",
+      "signature": "public String GetUtf8String(int bytes)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Gets a UTF-8 string with byte-length [param bytes] from the stream (this decodes the string sent as UTF-8). If [param bytes] is negative (default) the length will be read from the stream using the reverse process of [method put_utf8_string].",
+      "godotName": "get_utf8_string",
+      "xmlDocId": "M:Godot.StreamPeer.GetUtf8String(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "GetVar",
+      "kind": "Method",
+      "signature": "public Variant GetVar(bool allowObjects)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Gets a Variant from the stream. If [param allow_objects] is [code]true[/code], decoding objects is allowed. Internally, this uses the same decoding mechanism as the [method @GlobalScope.bytes_to_var] method. [b]Warning:[/b] Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threats such as remote code execution.",
+      "godotName": "get_var",
+      "xmlDocId": "M:Godot.StreamPeer.GetVar(bool)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Put8",
+      "kind": "Method",
+      "signature": "public void Put8(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts a signed byte into the stream.",
+      "godotName": "put_8",
+      "xmlDocId": "M:Godot.StreamPeer.Put8(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Put16",
+      "kind": "Method",
+      "signature": "public void Put16(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts a signed 16-bit value into the stream.",
+      "godotName": "put_16",
+      "xmlDocId": "M:Godot.StreamPeer.Put16(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Put32",
+      "kind": "Method",
+      "signature": "public void Put32(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts a signed 32-bit value into the stream.",
+      "godotName": "put_32",
+      "xmlDocId": "M:Godot.StreamPeer.Put32(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "Put64",
+      "kind": "Method",
+      "signature": "public void Put64(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts a signed 64-bit value into the stream.",
+      "godotName": "put_64",
+      "xmlDocId": "M:Godot.StreamPeer.Put64(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutData",
+      "kind": "Method",
+      "signature": "public int PutData(PackedByteArray data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Sends a chunk of data through the connection, blocking if necessary until the data is done sending. This function returns an [enum Error] code.",
+      "godotName": "put_data",
+      "xmlDocId": "M:Godot.StreamPeer.PutData(PackedByteArray)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutDouble",
+      "kind": "Method",
+      "signature": "public void PutDouble(float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Puts a double-precision float into the stream.",
+      "godotName": "put_double",
+      "xmlDocId": "M:Godot.StreamPeer.PutDouble(float)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutFloat",
+      "kind": "Method",
+      "signature": "public void PutFloat(float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Puts a single-precision float into the stream.",
+      "godotName": "put_float",
+      "xmlDocId": "M:Godot.StreamPeer.PutFloat(float)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutHalf",
+      "kind": "Method",
+      "signature": "public void PutHalf(float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Puts a half-precision float into the stream.",
+      "godotName": "put_half",
+      "xmlDocId": "M:Godot.StreamPeer.PutHalf(float)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutPartialData",
+      "kind": "Method",
+      "signature": "public Array PutPartialData(PackedByteArray data)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Sends a chunk of data through the connection. If all the data could not be sent at once, only part of it will. This function returns two values, an [enum Error] code and an integer, describing how much data was actually sent.",
+      "godotName": "put_partial_data",
+      "xmlDocId": "M:Godot.StreamPeer.PutPartialData(PackedByteArray)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutString",
+      "kind": "Method",
+      "signature": "public void PutString(String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Puts a zero-terminated ASCII string into the stream prepended by a 32-bit unsigned integer representing its size. [b]Note:[/b] To put an ASCII string without prepending its size, you can use [method put_data]: [codeblocks] [gdscript] put_data(\u0022Hello world\u0022.to_ascii_buffer()) [/gdscript] [csharp] PutData(\u0022Hello World\u0022.ToAsciiBuffer()); [/csharp] [/codeblocks]",
+      "godotName": "put_string",
+      "xmlDocId": "M:Godot.StreamPeer.PutString(String)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutU8",
+      "kind": "Method",
+      "signature": "public void PutU8(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts an unsigned byte into the stream.",
+      "godotName": "put_u8",
+      "xmlDocId": "M:Godot.StreamPeer.PutU8(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutU16",
+      "kind": "Method",
+      "signature": "public void PutU16(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts an unsigned 16-bit value into the stream.",
+      "godotName": "put_u16",
+      "xmlDocId": "M:Godot.StreamPeer.PutU16(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutU32",
+      "kind": "Method",
+      "signature": "public void PutU32(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts an unsigned 32-bit value into the stream.",
+      "godotName": "put_u32",
+      "xmlDocId": "M:Godot.StreamPeer.PutU32(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutU64",
+      "kind": "Method",
+      "signature": "public void PutU64(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Puts an unsigned 64-bit value into the stream.",
+      "godotName": "put_u64",
+      "xmlDocId": "M:Godot.StreamPeer.PutU64(int)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutUtf8String",
+      "kind": "Method",
+      "signature": "public void PutUtf8String(String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Puts a zero-terminated UTF-8 string into the stream prepended by a 32 bits unsigned integer representing its size. [b]Note:[/b] To put a UTF-8 string without prepending its size, you can use [method put_data]: [codeblocks] [gdscript] put_data(\u0022Hello world\u0022.to_utf8_buffer()) [/gdscript] [csharp] PutData(\u0022Hello World\u0022.ToUtf8Buffer()); [/csharp] [/codeblocks]",
+      "godotName": "put_utf8_string",
+      "xmlDocId": "M:Godot.StreamPeer.PutUtf8String(String)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "PutVar",
+      "kind": "Method",
+      "signature": "public void PutVar(Variant value, bool fullObjects)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "full_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Puts a Variant into the stream. If [param full_objects] is [code]true[/code] encoding objects is allowed (and can potentially include code). Internally, this uses the same encoding mechanism as the [method @GlobalScope.var_to_bytes] method.",
+      "godotName": "put_var",
+      "xmlDocId": "M:Godot.StreamPeer.PutVar(Variant,bool)",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    },
+    {
+      "name": "BigEndian",
+      "kind": "Property",
+      "signature": "public bool BigEndian { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this [StreamPeer] will using big-endian format for encoding and decoding.",
+      "defaultValue": "false",
+      "godotName": "big_endian",
+      "xmlDocId": "P:Godot.StreamPeer.BigEndian",
+      "sourcePath": "doc/classes/StreamPeer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeer.xml",
+      "sha256": "954f465b61b7f0d405f19d8378364c9bf79ebe35f44063f6bad55c3a50933c2e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

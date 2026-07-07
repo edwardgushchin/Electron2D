@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DrawableTexture2D",
+    "namespace": "Godot",
+    "fullName": "Godot.DrawableTexture2D",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "DrawableTexture2D",
+    "documentationPath": "doc/classes/DrawableTexture2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_drawabletexture2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BlitRect",
+      "kind": "Method",
+      "signature": "public void BlitRect(Rect2i rect, Texture2D source, Color modulate, int mipmap, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "source",
+          "type": "Texture2D"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "mipmap",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "material",
+          "type": "Material",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Draws to given [param rect] on this texture by copying from the given [param source]. A [param modulate] color can be passed in for the shader to use, but defaults to White. The [param mipmap] value can specify a draw to a lower mipmap level. The [param material] parameter can take a ShaderMaterial with a TextureBlit Shader for custom drawing behavior.",
+      "godotName": "blit_rect",
+      "xmlDocId": "M:Godot.DrawableTexture2D.BlitRect(Rect2i,Texture2D,Color,int,Material)",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "BlitRectMulti",
+      "kind": "Method",
+      "signature": "public void BlitRectMulti(Rect2i rect, Texture2D[] sources, DrawableTexture2D[] extraTargets, Color modulate, int mipmap, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "sources",
+          "type": "Texture2D[]"
+        },
+        {
+          "name": "extra_targets",
+          "type": "DrawableTexture2D[]"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "mipmap",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "material",
+          "type": "Material",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Draws to the given [param rect] on this texture, as well as on up to 3 DrawableTexture [param extra_targets]. All [param extra_targets] must be the same size and DrawableFormat as the original target, otherwise the Shader may fail. Expects up to 4 Texture [param sources], but will replace missing [param sources] with default Black Textures.",
+      "godotName": "blit_rect_multi",
+      "xmlDocId": "M:Godot.DrawableTexture2D.BlitRectMulti(Rect2i,Texture2D[],DrawableTexture2D[],Color,int,Material)",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "GenerateMipmaps",
+      "kind": "Method",
+      "signature": "public void GenerateMipmaps()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Re-calculates the mipmaps for this texture on demand.",
+      "godotName": "generate_mipmaps",
+      "xmlDocId": "M:Godot.DrawableTexture2D.GenerateMipmaps",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "GetUseMipmaps",
+      "kind": "Method",
+      "signature": "public bool GetUseMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if mipmaps are set to be used on this DrawableTexture.",
+      "godotName": "get_use_mipmaps",
+      "xmlDocId": "M:Godot.DrawableTexture2D.GetUseMipmaps",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "SetFormat",
+      "kind": "Method",
+      "signature": "public void SetFormat(int format)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the format of this DrawableTexture.",
+      "godotName": "set_format",
+      "xmlDocId": "M:Godot.DrawableTexture2D.SetFormat(int)",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "SetUseMipmaps",
+      "kind": "Method",
+      "signature": "public void SetUseMipmaps(bool mipmaps)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mipmaps",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets if mipmaps should be used on this DrawableTexture.",
+      "godotName": "set_use_mipmaps",
+      "xmlDocId": "M:Godot.DrawableTexture2D.SetUseMipmaps(bool)",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "Setup",
+      "kind": "Method",
+      "signature": "public void Setup(int width, int height, int format, Color color, bool useMipmaps)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Initializes the DrawableTexture to a White texture of the given [param width], [param height], and [param format].",
+      "godotName": "setup",
+      "xmlDocId": "M:Godot.DrawableTexture2D.Setup(int,int,int,Color,bool)",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.DrawableTexture2D.ResourceLocalToScene",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DrawableFormat",
+      "values": [
+        {
+          "name": "DRAWABLE_FORMAT_RGBA8",
+          "value": "0",
+          "enum": "DrawableFormat",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format RGBA with four components, each with a bitdepth of 8.",
+          "sourcePath": "doc/classes/DrawableTexture2D.xml"
+        },
+        {
+          "name": "DRAWABLE_FORMAT_RGBA8_SRGB",
+          "value": "1",
+          "enum": "DrawableFormat",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an sRGB to linear color space conversion is performed.",
+          "sourcePath": "doc/classes/DrawableTexture2D.xml"
+        },
+        {
+          "name": "DRAWABLE_FORMAT_RGBAF",
+          "value": "3",
+          "enum": "DrawableFormat",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format GL_RGBA32F where there are four components, each a 32-bit floating-point value.",
+          "sourcePath": "doc/classes/DrawableTexture2D.xml"
+        },
+        {
+          "name": "DRAWABLE_FORMAT_RGBAH",
+          "value": "2",
+          "enum": "DrawableFormat",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format GL_RGBA16F where there are four components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+          "sourcePath": "doc/classes/DrawableTexture2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DRAWABLE_FORMAT_RGBA8",
+      "value": "0",
+      "enum": "DrawableFormat",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format RGBA with four components, each with a bitdepth of 8.",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "DRAWABLE_FORMAT_RGBA8_SRGB",
+      "value": "1",
+      "enum": "DrawableFormat",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an sRGB to linear color space conversion is performed.",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "DRAWABLE_FORMAT_RGBAH",
+      "value": "2",
+      "enum": "DrawableFormat",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format GL_RGBA16F where there are four components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    },
+    {
+      "name": "DRAWABLE_FORMAT_RGBAF",
+      "value": "3",
+      "enum": "DrawableFormat",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format GL_RGBA32F where there are four components, each a 32-bit floating-point value.",
+      "sourcePath": "doc/classes/DrawableTexture2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/DrawableTexture2D.xml",
+      "sha256": "080cee0660c279a7a65f39fc4237e6526576568721a310505ea2dfa6c9fce6e5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

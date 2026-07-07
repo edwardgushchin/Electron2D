@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OccluderPolygon2D",
+    "namespace": "Godot",
+    "fullName": "Godot.OccluderPolygon2D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OccluderPolygon2D",
+    "documentationPath": "doc/classes/OccluderPolygon2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_occluderpolygon2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Closed",
+      "kind": "Property",
+      "signature": "public bool Closed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], closes the polygon. A closed OccluderPolygon2D occludes the light coming from any direction. An opened OccluderPolygon2D occludes the light only at its outline\u0027s direction.",
+      "defaultValue": "true",
+      "godotName": "closed",
+      "xmlDocId": "P:Godot.OccluderPolygon2D.Closed",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    },
+    {
+      "name": "CullMode",
+      "kind": "Property",
+      "signature": "public int CullMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The culling mode to use.",
+      "defaultValue": "0",
+      "godotName": "cull_mode",
+      "xmlDocId": "P:Godot.OccluderPolygon2D.CullMode",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    },
+    {
+      "name": "Polygon",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Polygon { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "A [Vector2] array with the index for polygon\u0027s vertices positions.",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "polygon",
+      "xmlDocId": "P:Godot.OccluderPolygon2D.Polygon",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CullMode",
+      "values": [
+        {
+          "name": "CULL_CLOCKWISE",
+          "value": "1",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "Culling is performed in the clockwise direction. See [member cull_mode].",
+          "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+        },
+        {
+          "name": "CULL_COUNTER_CLOCKWISE",
+          "value": "2",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "Culling is performed in the counterclockwise direction. See [member cull_mode].",
+          "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+        },
+        {
+          "name": "CULL_DISABLED",
+          "value": "0",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "Culling is disabled. See [member cull_mode].",
+          "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CULL_DISABLED",
+      "value": "0",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "Culling is disabled. See [member cull_mode].",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    },
+    {
+      "name": "CULL_CLOCKWISE",
+      "value": "1",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "Culling is performed in the clockwise direction. See [member cull_mode].",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    },
+    {
+      "name": "CULL_COUNTER_CLOCKWISE",
+      "value": "2",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "Culling is performed in the counterclockwise direction. See [member cull_mode].",
+      "sourcePath": "doc/classes/OccluderPolygon2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OccluderPolygon2D.xml",
+      "sha256": "a02bab13c30ced7508289675008221644296e4fd86b79e73497aaec341c8c185"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

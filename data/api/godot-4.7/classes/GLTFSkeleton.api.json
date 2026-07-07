@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFSkeleton",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFSkeleton",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFSkeleton",
+    "documentationPath": "modules/gltf/doc_classes/GLTFSkeleton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfskeleton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBoneAttachment",
+      "kind": "Method",
+      "signature": "public BoneAttachment3D GetBoneAttachment(int idx)",
+      "returnType": "BoneAttachment3D",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_bone_attachment",
+      "xmlDocId": "M:Godot.GLTFSkeleton.GetBoneAttachment(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "GetBoneAttachmentCount",
+      "kind": "Method",
+      "signature": "public int GetBoneAttachmentCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_bone_attachment_count",
+      "xmlDocId": "M:Godot.GLTFSkeleton.GetBoneAttachmentCount",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "GetGodotBoneNode",
+      "kind": "Method",
+      "signature": "public Dictionary GetGodotBoneNode()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] that maps skeleton bone indices to the indices of glTF nodes. This property is unused during import, and only set during export. In a glTF file, a bone is a node, so Godot converts skeleton bones to glTF nodes.",
+      "godotName": "get_godot_bone_node",
+      "xmlDocId": "M:Godot.GLTFSkeleton.GetGodotBoneNode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "GetGodotSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton3D GetGodotSkeleton()",
+      "returnType": "Skeleton3D",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_godot_skeleton",
+      "xmlDocId": "M:Godot.GLTFSkeleton.GetGodotSkeleton",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "GetUniqueNames",
+      "kind": "Method",
+      "signature": "public String[] GetUniqueNames()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_unique_names",
+      "xmlDocId": "M:Godot.GLTFSkeleton.GetUniqueNames",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "SetGodotBoneNode",
+      "kind": "Method",
+      "signature": "public void SetGodotBoneNode(Dictionary godotBoneNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "godot_bone_node",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Sets a [Dictionary] that maps skeleton bone indices to the indices of glTF nodes. This property is unused during import, and only set during export. In a glTF file, a bone is a node, so Godot converts skeleton bones to glTF nodes.",
+      "godotName": "set_godot_bone_node",
+      "xmlDocId": "M:Godot.GLTFSkeleton.SetGodotBoneNode(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "SetUniqueNames",
+      "kind": "Method",
+      "signature": "public void SetUniqueNames(String[] uniqueNames)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "unique_names",
+          "type": "String[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_unique_names",
+      "xmlDocId": "M:Godot.GLTFSkeleton.SetUniqueNames(String[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "Joints",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Joints { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "joints",
+      "xmlDocId": "P:Godot.GLTFSkeleton.Joints",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    },
+    {
+      "name": "Roots",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Roots { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "roots",
+      "xmlDocId": "P:Godot.GLTFSkeleton.Roots",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkeleton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFSkeleton.xml",
+      "sha256": "81103c3bc278fd54cda511aff6c7524c67c563490b11282e37ae78dc5aa8a9e2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

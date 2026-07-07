@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkinReference",
+    "namespace": "Godot",
+    "fullName": "Godot.SkinReference",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "SkinReference",
+    "documentationPath": "doc/classes/SkinReference.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skinreference.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public RID GetSkeleton()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] owned by this SkinReference, as returned by [method RenderingServer.skeleton_create].",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.SkinReference.GetSkeleton",
+      "sourcePath": "doc/classes/SkinReference.xml"
+    },
+    {
+      "name": "GetSkin",
+      "kind": "Method",
+      "signature": "public Skin GetSkin()",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "Returns the [Skin] connected to this SkinReference. In the case of [MeshInstance3D] with no [member MeshInstance3D.skin] assigned, this will reference an internal default [Skin] owned by that [MeshInstance3D]. Note that a single [Skin] may have more than one [SkinReference] in the case that it is shared by meshes across multiple [Skeleton3D] nodes.",
+      "godotName": "get_skin",
+      "xmlDocId": "M:Godot.SkinReference.GetSkin",
+      "sourcePath": "doc/classes/SkinReference.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkinReference.xml",
+      "sha256": "0e3555471351379343fef40ad8e0fdb09c842be9ec7bea7ebab3645e8af30eb0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

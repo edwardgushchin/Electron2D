@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PathFollow3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PathFollow3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "PathFollow3D",
+    "documentationPath": "doc/classes/PathFollow3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_pathfollow3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CorrectPosture",
+      "kind": "Method",
+      "signature": "public Transform3D CorrectPosture(Transform3D transform, int rotationMode)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "rotation_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Correct the [param transform]. [param rotation_mode] implicitly specifies how posture (forward, up and sideway direction) is calculated.",
+      "godotName": "correct_posture",
+      "xmlDocId": "M:Godot.PathFollow3D.CorrectPosture(Transform3D,int)",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "CubicInterp",
+      "kind": "Property",
+      "signature": "public bool CubicInterp { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the position between two cached points is interpolated cubically, and linearly otherwise. The points along the [Curve3D] of the [Path3D] are precomputed before use, for faster calculations. The point at the requested offset is then calculated interpolating between two adjacent cached points. This may present a problem if the curve makes sharp turns, as the cached points may not follow the curve closely enough. There are two answers to this problem: either increase the number of cached points and increase memory consumption, or make a cubic interpolation between two points at the cost of (slightly) slower calculations.",
+      "defaultValue": "true",
+      "godotName": "cubic_interp",
+      "xmlDocId": "P:Godot.PathFollow3D.CubicInterp",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "HOffset",
+      "kind": "Property",
+      "signature": "public float HOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The node\u0027s offset along the curve.",
+      "defaultValue": "0.0",
+      "godotName": "h_offset",
+      "xmlDocId": "P:Godot.PathFollow3D.HOffset",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], any offset outside the path\u0027s length will wrap around, instead of stopping at the ends. Use it for cyclic paths.",
+      "defaultValue": "true",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.PathFollow3D.Loop",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "Progress",
+      "kind": "Property",
+      "signature": "public float Progress { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from the first vertex, measured in 3D units along the path. Changing this value sets this node\u0027s position to a point within the path.",
+      "defaultValue": "0.0",
+      "godotName": "progress",
+      "xmlDocId": "P:Godot.PathFollow3D.Progress",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "ProgressRatio",
+      "kind": "Property",
+      "signature": "public float ProgressRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from the first vertex, considering 0.0 as the first vertex and 1.0 as the last. This is just another way of expressing the progress within the path, as the progress supplied is multiplied internally by the path\u0027s length. It can be set or get only if the [PathFollow3D] is the child of a [Path3D] which is part of the scene tree, and that this [Path3D] has a [Curve3D] with a non-zero length. Otherwise, trying to set this field will print an error, and getting this field will return [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "progress_ratio",
+      "xmlDocId": "P:Godot.PathFollow3D.ProgressRatio",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "RotationMode",
+      "kind": "Property",
+      "signature": "public int RotationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Allows or forbids rotation on one or more axes, depending on the [enum RotationMode] constants being used.",
+      "defaultValue": "3",
+      "godotName": "rotation_mode",
+      "xmlDocId": "P:Godot.PathFollow3D.RotationMode",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "TiltEnabled",
+      "kind": "Property",
+      "signature": "public bool TiltEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tilt property of [Curve3D] takes effect.",
+      "defaultValue": "true",
+      "godotName": "tilt_enabled",
+      "xmlDocId": "P:Godot.PathFollow3D.TiltEnabled",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "UseModelFront",
+      "kind": "Property",
+      "signature": "public bool UseModelFront { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the node moves on the travel path with orienting the \u002BZ axis as forward. See also [constant Vector3.FORWARD] and [constant Vector3.MODEL_FRONT].",
+      "defaultValue": "false",
+      "godotName": "use_model_front",
+      "xmlDocId": "P:Godot.PathFollow3D.UseModelFront",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "VOffset",
+      "kind": "Property",
+      "signature": "public float VOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The node\u0027s offset perpendicular to the curve.",
+      "defaultValue": "0.0",
+      "godotName": "v_offset",
+      "xmlDocId": "P:Godot.PathFollow3D.VOffset",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "RotationMode",
+      "values": [
+        {
+          "name": "ROTATION_NONE",
+          "value": "0",
+          "enum": "RotationMode",
+          "kind": "EnumValue",
+          "summary": "Forbids the PathFollow3D to rotate.",
+          "sourcePath": "doc/classes/PathFollow3D.xml"
+        },
+        {
+          "name": "ROTATION_ORIENTED",
+          "value": "4",
+          "enum": "RotationMode",
+          "kind": "EnumValue",
+          "summary": "Uses the up vector information in a [Curve3D] to enforce orientation. This rotation mode requires the [Path3D]\u0027s [member Curve3D.up_vector_enabled] property to be set to [code]true[/code].",
+          "sourcePath": "doc/classes/PathFollow3D.xml"
+        },
+        {
+          "name": "ROTATION_XY",
+          "value": "2",
+          "enum": "RotationMode",
+          "kind": "EnumValue",
+          "summary": "Allows the PathFollow3D to rotate in both the X, and Y axes.",
+          "sourcePath": "doc/classes/PathFollow3D.xml"
+        },
+        {
+          "name": "ROTATION_XYZ",
+          "value": "3",
+          "enum": "RotationMode",
+          "kind": "EnumValue",
+          "summary": "Allows the PathFollow3D to rotate in any axis.",
+          "sourcePath": "doc/classes/PathFollow3D.xml"
+        },
+        {
+          "name": "ROTATION_Y",
+          "value": "1",
+          "enum": "RotationMode",
+          "kind": "EnumValue",
+          "summary": "Allows the PathFollow3D to rotate in the Y axis only.",
+          "sourcePath": "doc/classes/PathFollow3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ROTATION_NONE",
+      "value": "0",
+      "enum": "RotationMode",
+      "kind": "EnumValue",
+      "summary": "Forbids the PathFollow3D to rotate.",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "ROTATION_Y",
+      "value": "1",
+      "enum": "RotationMode",
+      "kind": "EnumValue",
+      "summary": "Allows the PathFollow3D to rotate in the Y axis only.",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "ROTATION_XY",
+      "value": "2",
+      "enum": "RotationMode",
+      "kind": "EnumValue",
+      "summary": "Allows the PathFollow3D to rotate in both the X, and Y axes.",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "ROTATION_XYZ",
+      "value": "3",
+      "enum": "RotationMode",
+      "kind": "EnumValue",
+      "summary": "Allows the PathFollow3D to rotate in any axis.",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    },
+    {
+      "name": "ROTATION_ORIENTED",
+      "value": "4",
+      "enum": "RotationMode",
+      "kind": "EnumValue",
+      "summary": "Uses the up vector information in a [Curve3D] to enforce orientation. This rotation mode requires the [Path3D]\u0027s [member Curve3D.up_vector_enabled] property to be set to [code]true[/code].",
+      "sourcePath": "doc/classes/PathFollow3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PathFollow3D.xml",
+      "sha256": "1db05b1ddda6ffa40173dea5bf921e9c2b3b7828186cb11ac1f1c67fce2ac5c5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

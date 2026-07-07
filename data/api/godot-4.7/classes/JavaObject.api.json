@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JavaObject",
+    "namespace": "Godot",
+    "fullName": "Godot.JavaObject",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "JavaObject",
+    "documentationPath": "doc/classes/JavaObject.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_javaobject.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetJavaClass",
+      "kind": "Method",
+      "signature": "public JavaClass GetJavaClass()",
+      "returnType": "JavaClass",
+      "parameters": [],
+      "summary": "Returns the [JavaClass] that this object is an instance of.",
+      "godotName": "get_java_class",
+      "xmlDocId": "M:Godot.JavaObject.GetJavaClass",
+      "sourcePath": "doc/classes/JavaObject.xml"
+    },
+    {
+      "name": "HasJavaMethod",
+      "kind": "Method",
+      "signature": "public bool HasJavaMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param method] name exists in the object\u0027s Java methods.",
+      "godotName": "has_java_method",
+      "xmlDocId": "M:Godot.JavaObject.HasJavaMethod(StringName)",
+      "sourcePath": "doc/classes/JavaObject.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/JavaObject.xml",
+      "sha256": "ab0bfc7a4f1e326b27bcacf22919952d4d6fc9c7fe43edc427e1e2f8bb00746d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

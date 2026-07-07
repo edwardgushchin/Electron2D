@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraFeed",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraFeed",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "CameraFeed",
+    "documentationPath": "doc/classes/CameraFeed.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_camerafeed.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ActivateFeed",
+      "kind": "Method",
+      "signature": "public bool _ActivateFeed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the camera feed is activated.",
+      "godotName": "_activate_feed",
+      "xmlDocId": "M:Godot.CameraFeed._ActivateFeed",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_DeactivateFeed",
+      "kind": "Method",
+      "signature": "public void _DeactivateFeed()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the camera feed is deactivated.",
+      "godotName": "_deactivate_feed",
+      "xmlDocId": "M:Godot.CameraFeed._DeactivateFeed",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_GetFormats",
+      "kind": "Method",
+      "signature": "public Array _GetFormats()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Override this method to define supported formats of the camera feed.",
+      "godotName": "_get_formats",
+      "xmlDocId": "M:Godot.CameraFeed._GetFormats",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_SetFormat",
+      "kind": "Method",
+      "signature": "public bool _SetFormat(int index, Dictionary parameters)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "parameters",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Override this method to set the format of the camera feed.",
+      "godotName": "_set_format",
+      "xmlDocId": "M:Godot.CameraFeed._SetFormat(int,Dictionary)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "GetDatatype",
+      "kind": "Method",
+      "signature": "public int GetDatatype()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns feed image data type.",
+      "godotName": "get_datatype",
+      "xmlDocId": "M:Godot.CameraFeed.GetDatatype",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "GetId",
+      "kind": "Method",
+      "signature": "public int GetId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the unique ID for this feed.",
+      "godotName": "get_id",
+      "xmlDocId": "M:Godot.CameraFeed.GetId",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "GetName",
+      "kind": "Method",
+      "signature": "public String GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the camera\u0027s name.",
+      "godotName": "get_name",
+      "xmlDocId": "M:Godot.CameraFeed.GetName",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "GetPosition",
+      "kind": "Method",
+      "signature": "public int GetPosition()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the position of camera on the device.",
+      "godotName": "get_position",
+      "xmlDocId": "M:Godot.CameraFeed.GetPosition",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "GetTextureTexId",
+      "kind": "Method",
+      "signature": "public int GetTextureTexId(int feedImageType)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "feed_image_type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the texture backend ID (usable by some external libraries that need a handle to a texture to write data).",
+      "godotName": "get_texture_tex_id",
+      "xmlDocId": "M:Godot.CameraFeed.GetTextureTexId(int)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetExternal",
+      "kind": "Method",
+      "signature": "public void SetExternal(int width, int height)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the feed as external feed provided by another library.",
+      "godotName": "set_external",
+      "xmlDocId": "M:Godot.CameraFeed.SetExternal(int,int)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetFormat",
+      "kind": "Method",
+      "signature": "public bool SetFormat(int index, Dictionary parameters)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "parameters",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Sets the feed format parameters for the given [param index] in the [member formats] array. Returns [code]true[/code] on success. By default, the YUYV encoded stream is transformed to [constant FEED_RGB]. The YUYV encoded stream output format can be changed by setting [param parameters]\u0027s [code]output[/code] entry to one of the following: - [code]\u0022separate\u0022[/code] will result in [constant FEED_YCBCR_SEP]; - [code]\u0022grayscale\u0022[/code] will result in desaturated [constant FEED_RGB]; - [code]\u0022copy\u0022[/code] will result in [constant FEED_YCBCR].",
+      "godotName": "set_format",
+      "xmlDocId": "M:Godot.CameraFeed.SetFormat(int,Dictionary)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetName",
+      "kind": "Method",
+      "signature": "public void SetName(String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the camera\u0027s name.",
+      "godotName": "set_name",
+      "xmlDocId": "M:Godot.CameraFeed.SetName(String)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetPosition",
+      "kind": "Method",
+      "signature": "public void SetPosition(int position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the position of this camera.",
+      "godotName": "set_position",
+      "xmlDocId": "M:Godot.CameraFeed.SetPosition(int)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetRgbImage",
+      "kind": "Method",
+      "signature": "public void SetRgbImage(Image rgbImage)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rgb_image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Sets RGB image for this feed.",
+      "godotName": "set_rgb_image",
+      "xmlDocId": "M:Godot.CameraFeed.SetRgbImage(Image)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetYcbcrImage",
+      "kind": "Method",
+      "signature": "public void SetYcbcrImage(Image ycbcrImage)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "ycbcr_image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Sets YCbCr image for this feed.",
+      "godotName": "set_ycbcr_image",
+      "xmlDocId": "M:Godot.CameraFeed.SetYcbcrImage(Image)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "SetYcbcrImages",
+      "kind": "Method",
+      "signature": "public void SetYcbcrImages(Image yImage, Image cbcrImage)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "y_image",
+          "type": "Image"
+        },
+        {
+          "name": "cbcr_image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Sets Y and CbCr images for this feed.",
+      "godotName": "set_ycbcr_images",
+      "xmlDocId": "M:Godot.CameraFeed.SetYcbcrImages(Image,Image)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FeedIsActive",
+      "kind": "Property",
+      "signature": "public bool FeedIsActive { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the feed is active.",
+      "defaultValue": "false",
+      "godotName": "feed_is_active",
+      "xmlDocId": "P:Godot.CameraFeed.FeedIsActive",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FeedTransform",
+      "kind": "Property",
+      "signature": "public Transform2D FeedTransform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "The transform applied to the camera\u0027s image.",
+      "defaultValue": "Transform2D(1, 0, 0, -1, 0, 1)",
+      "godotName": "feed_transform",
+      "xmlDocId": "P:Godot.CameraFeed.FeedTransform",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "Formats",
+      "kind": "Property",
+      "signature": "public Array Formats { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Formats supported by the feed. Each entry is a [Dictionary] describing format parameters.",
+      "defaultValue": "[]",
+      "godotName": "formats",
+      "xmlDocId": "P:Godot.CameraFeed.Formats",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FormatChanged",
+      "kind": "Signal",
+      "signature": "public event FormatChangedHandler FormatChanged",
+      "parameters": [],
+      "summary": "Emitted when the format has changed.",
+      "godotName": "format_changed",
+      "xmlDocId": "E:Godot.CameraFeed.FormatChanged",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FrameChanged",
+      "kind": "Signal",
+      "signature": "public event FrameChangedHandler FrameChanged",
+      "parameters": [],
+      "summary": "Emitted when a new frame is available.",
+      "godotName": "frame_changed",
+      "xmlDocId": "E:Godot.CameraFeed.FrameChanged",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "FeedDataType",
+      "values": [
+        {
+          "name": "FEED_EXTERNAL",
+          "value": "4",
+          "enum": "FeedDataType",
+          "kind": "EnumValue",
+          "summary": "Feed supplies external image.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_NOIMAGE",
+          "value": "0",
+          "enum": "FeedDataType",
+          "kind": "EnumValue",
+          "summary": "No image set for the feed.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_RGB",
+          "value": "1",
+          "enum": "FeedDataType",
+          "kind": "EnumValue",
+          "summary": "Feed supplies RGB images.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_YCBCR",
+          "value": "2",
+          "enum": "FeedDataType",
+          "kind": "EnumValue",
+          "summary": "Feed supplies YCbCr images that need to be converted to RGB.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_YCBCR_SEP",
+          "value": "3",
+          "enum": "FeedDataType",
+          "kind": "EnumValue",
+          "summary": "Feed supplies separate Y and CbCr images that need to be combined and converted to RGB.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        }
+      ]
+    },
+    {
+      "name": "FeedPosition",
+      "values": [
+        {
+          "name": "FEED_BACK",
+          "value": "2",
+          "enum": "FeedPosition",
+          "kind": "EnumValue",
+          "summary": "Camera is mounted at the back of the device.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_FRONT",
+          "value": "1",
+          "enum": "FeedPosition",
+          "kind": "EnumValue",
+          "summary": "Camera is mounted at the front of the device.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        },
+        {
+          "name": "FEED_UNSPECIFIED",
+          "value": "0",
+          "enum": "FeedPosition",
+          "kind": "EnumValue",
+          "summary": "Unspecified position.",
+          "sourcePath": "doc/classes/CameraFeed.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FEED_NOIMAGE",
+      "value": "0",
+      "enum": "FeedDataType",
+      "kind": "EnumValue",
+      "summary": "No image set for the feed.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_RGB",
+      "value": "1",
+      "enum": "FeedDataType",
+      "kind": "EnumValue",
+      "summary": "Feed supplies RGB images.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_YCBCR",
+      "value": "2",
+      "enum": "FeedDataType",
+      "kind": "EnumValue",
+      "summary": "Feed supplies YCbCr images that need to be converted to RGB.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_YCBCR_SEP",
+      "value": "3",
+      "enum": "FeedDataType",
+      "kind": "EnumValue",
+      "summary": "Feed supplies separate Y and CbCr images that need to be combined and converted to RGB.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_EXTERNAL",
+      "value": "4",
+      "enum": "FeedDataType",
+      "kind": "EnumValue",
+      "summary": "Feed supplies external image.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_UNSPECIFIED",
+      "value": "0",
+      "enum": "FeedPosition",
+      "kind": "EnumValue",
+      "summary": "Unspecified position.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_FRONT",
+      "value": "1",
+      "enum": "FeedPosition",
+      "kind": "EnumValue",
+      "summary": "Camera is mounted at the front of the device.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "FEED_BACK",
+      "value": "2",
+      "enum": "FeedPosition",
+      "kind": "EnumValue",
+      "summary": "Camera is mounted at the back of the device.",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ActivateFeed",
+      "kind": "Method",
+      "signature": "public bool _ActivateFeed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the camera feed is activated.",
+      "godotName": "_activate_feed",
+      "xmlDocId": "M:Godot.CameraFeed._ActivateFeed",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_DeactivateFeed",
+      "kind": "Method",
+      "signature": "public void _DeactivateFeed()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the camera feed is deactivated.",
+      "godotName": "_deactivate_feed",
+      "xmlDocId": "M:Godot.CameraFeed._DeactivateFeed",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_GetFormats",
+      "kind": "Method",
+      "signature": "public Array _GetFormats()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Override this method to define supported formats of the camera feed.",
+      "godotName": "_get_formats",
+      "xmlDocId": "M:Godot.CameraFeed._GetFormats",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    },
+    {
+      "name": "_SetFormat",
+      "kind": "Method",
+      "signature": "public bool _SetFormat(int index, Dictionary parameters)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "parameters",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Override this method to set the format of the camera feed.",
+      "godotName": "_set_format",
+      "xmlDocId": "M:Godot.CameraFeed._SetFormat(int,Dictionary)",
+      "sourcePath": "doc/classes/CameraFeed.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraFeed.xml",
+      "sha256": "89e4498a764e2b6fa91f1556abecd3cb97e8c0c61ffb622a43757358cf8b2a9b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

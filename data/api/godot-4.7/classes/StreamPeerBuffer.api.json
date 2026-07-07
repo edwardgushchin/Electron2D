@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerBuffer",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerBuffer",
+    "kind": "class",
+    "baseType": "StreamPeer",
+    "interfaces": [],
+    "godotReference": "StreamPeerBuffer",
+    "documentationPath": "doc/classes/StreamPeerBuffer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeerbuffer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the [member data_array] and resets the cursor.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.Clear",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public StreamPeerBuffer Duplicate()",
+      "returnType": "StreamPeerBuffer",
+      "parameters": [],
+      "summary": "Returns a new [StreamPeerBuffer] with the same [member data_array] content.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.Duplicate",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "GetPosition",
+      "kind": "Method",
+      "signature": "public int GetPosition()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current cursor position.",
+      "godotName": "get_position",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.GetPosition",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public int GetSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the size of [member data_array].",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.GetSize",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public void Resize(int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Resizes the [member data_array]. This [i]doesn\u0027t[/i] update the cursor.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.Resize(int)",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public void Seek(int position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the cursor to the specified position. [param position] must be a valid index of [member data_array].",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.StreamPeerBuffer.Seek(int)",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    },
+    {
+      "name": "DataArray",
+      "kind": "Property",
+      "signature": "public PackedByteArray DataArray { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The underlying data buffer. Setting this value resets the cursor.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "data_array",
+      "xmlDocId": "P:Godot.StreamPeerBuffer.DataArray",
+      "sourcePath": "doc/classes/StreamPeerBuffer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerBuffer.xml",
+      "sha256": "0bba4c93865e40f4221a32b1c9a8170b633c68b357adac272a1288c90418512d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

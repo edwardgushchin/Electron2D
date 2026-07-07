@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeSwitch",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeSwitch",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeSwitch",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeswitch.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A type of operands and returned value.",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeSwitch.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_BOOLEAN",
+          "value": "6",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A boolean type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_FLOAT",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_INT",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "An integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "8",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_TRANSFORM",
+          "value": "7",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A transform type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_UINT",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "An unsigned integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_FLOAT",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_INT",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "An integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_UINT",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "An unsigned integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_BOOLEAN",
+      "value": "6",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A boolean type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_TRANSFORM",
+      "value": "7",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A transform type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "8",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeSwitch.xml",
+      "sha256": "ed7dd03f7df53afded2b5143ca8f6085a2e281cb545a1e9fb2e9574dd2a9604d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

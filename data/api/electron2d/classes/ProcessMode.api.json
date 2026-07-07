@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ProcessMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ProcessMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Node.ProcessMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Always",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ProcessMode Always",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Processes regardless of the owning \u0060Electron2D.SceneTree\u0060 pause state.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.ProcessMode.Always",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ProcessMode Disabled",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Does not receive process, physics-process or input callbacks.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.ProcessMode.Disabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inherit",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ProcessMode Inherit",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Inherits the effective process mode from the nearest ancestor.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.ProcessMode.Inherit",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pausable",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ProcessMode Pausable",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Processes only when the owning \u0060Electron2D.SceneTree\u0060 is not paused.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.ProcessMode.Pausable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WhenPaused",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ProcessMode WhenPaused",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Processes only while the owning \u0060Electron2D.SceneTree\u0060 is paused.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.ProcessMode.WhenPaused",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Always",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Processes regardless of the owning \u0060Electron2D.SceneTree\u0060 pause state.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Does not receive process, physics-process or input callbacks.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inherit",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Inherits the effective process mode from the nearest ancestor.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pausable",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Processes only when the owning \u0060Electron2D.SceneTree\u0060 is not paused.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WhenPaused",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Processes only while the owning \u0060Electron2D.SceneTree\u0060 is paused.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CharacterBody2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CharacterBody2D",
+    "kind": "class",
+    "baseType": "Electron2D.PhysicsBody2D",
+    "interfaces": [],
+    "godotReference": "CharacterBody2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CharacterBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CharacterBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.CharacterBody2D\u0060 class.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CharacterBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CharacterBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.CharacterBody2D\u0060 class.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ApplyFloorSnap",
+      "kind": "Method",
+      "signature": "public System.Void ApplyFloorSnap()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Applies floor snapping immediately using \u0060Electron2D.CharacterBody2D.FloorSnapLength\u0060.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.ApplyFloorSnap",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFloorAngle",
+      "kind": "Method",
+      "signature": "public System.Single GetFloorAngle(Electron2D.Vector2? upDirection)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "upDirection",
+          "type": "Electron2D.Vector2?"
+        }
+      ],
+      "summary": "Gets the angle of the last floor collision.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetFloorAngle(System.Nullable{Electron2D.Vector2})",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFloorNormal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetFloorNormal()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the normal of the last floor collision.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetFloorNormal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLastMotion",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetLastMotion()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the last motion applied by \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetLastMotion",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLastSlideCollision",
+      "kind": "Method",
+      "signature": "public Electron2D.KinematicCollision2D GetLastSlideCollision()",
+      "returnType": "Electron2D.KinematicCollision2D",
+      "parameters": [],
+      "summary": "Gets the last slide collision.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetLastSlideCollision",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPlatformVelocity",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetPlatformVelocity()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the velocity of the platform currently treated as floor or wall.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetPlatformVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPositionDelta",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetPositionDelta()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the position delta applied by the last \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060 call.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetPositionDelta",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRealVelocity",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetRealVelocity()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the effective velocity from the last applied position delta.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetRealVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSlideCollision",
+      "kind": "Method",
+      "signature": "public Electron2D.KinematicCollision2D GetSlideCollision(System.Int32 slideIdx)",
+      "returnType": "Electron2D.KinematicCollision2D",
+      "parameters": [
+        {
+          "name": "slideIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a slide collision by index.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetSlideCollision(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSlideCollisionCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetSlideCollisionCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of slide collisions from the last \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060 call.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetSlideCollisionCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetWallNormal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetWallNormal()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the normal of the last wall collision.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.GetWallNormal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnCeiling",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnCeiling()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched a ceiling.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnCeiling",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnCeilingOnly",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnCeilingOnly()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched only a ceiling.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnCeilingOnly",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnFloor",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnFloor()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched a floor.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnFloor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnFloorOnly",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnFloorOnly()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched only a floor.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnFloorOnly",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnWall",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnWall()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched a wall.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnWall",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsOnWallOnly",
+      "kind": "Method",
+      "signature": "public System.Boolean IsOnWallOnly()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the last slide movement touched only a wall.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.IsOnWallOnly",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MoveAndSlide",
+      "kind": "Method",
+      "signature": "public System.Boolean MoveAndSlide()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Moves the body using \u0060Electron2D.CharacterBody2D.Velocity\u0060 and slides along collisions.",
+      "xmlDocId": "M:Electron2D.CharacterBody2D.MoveAndSlide",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorBlockOnWall",
+      "kind": "Property",
+      "signature": "public System.Boolean FloorBlockOnWall { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether floor movement should avoid walking on walls.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.FloorBlockOnWall",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorConstantSpeed",
+      "kind": "Property",
+      "signature": "public System.Boolean FloorConstantSpeed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether floor movement should preserve constant speed on slopes.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.FloorConstantSpeed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorMaxAngle",
+      "kind": "Property",
+      "signature": "public System.Single FloorMaxAngle { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the maximum angle in radians that still counts as floor or ceiling.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.FloorMaxAngle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorSnapLength",
+      "kind": "Property",
+      "signature": "public System.Single FloorSnapLength { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the floor snapping distance used by \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.FloorSnapLength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorStopOnSlope",
+      "kind": "Property",
+      "signature": "public System.Boolean FloorStopOnSlope { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether a standing body should stop on slopes.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.FloorStopOnSlope",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxSlides",
+      "kind": "Property",
+      "signature": "public System.Int32 MaxSlides { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the maximum number of slide iterations for \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.MaxSlides",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MotionMode",
+      "kind": "Property",
+      "signature": "public Electron2D.CharacterBody2D.MotionMode MotionMode { get; set; }",
+      "returnType": "Electron2D.CharacterBody2D.MotionMode",
+      "parameters": [],
+      "summary": "Gets or sets the motion mode used by \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.MotionMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PlatformFloorLayers",
+      "kind": "Property",
+      "signature": "public System.UInt32 PlatformFloorLayers { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the layers treated as moving floor platforms.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.PlatformFloorLayers",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PlatformOnLeave",
+      "kind": "Property",
+      "signature": "public Electron2D.CharacterBody2D.PlatformOnLeave PlatformOnLeave { get; set; }",
+      "returnType": "Electron2D.CharacterBody2D.PlatformOnLeave",
+      "parameters": [],
+      "summary": "Gets or sets how platform velocity should be handled when leaving a platform.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.PlatformOnLeave",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PlatformWallLayers",
+      "kind": "Property",
+      "signature": "public System.UInt32 PlatformWallLayers { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the layers treated as moving wall platforms.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.PlatformWallLayers",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SafeMargin",
+      "kind": "Property",
+      "signature": "public System.Single SafeMargin { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the safe margin used by \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.SafeMargin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SlideOnCeiling",
+      "kind": "Property",
+      "signature": "public System.Boolean SlideOnCeiling { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the body should slide along ceilings.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.SlideOnCeiling",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "UpDirection",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 UpDirection { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the up direction used to classify floor, wall and ceiling collisions.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.UpDirection",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Velocity { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the velocity used by \u0060Electron2D.CharacterBody2D.MoveAndSlide\u0060.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.Velocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WallMinSlideAngle",
+      "kind": "Property",
+      "signature": "public System.Single WallMinSlideAngle { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the minimum slide angle for walls.",
+      "xmlDocId": "P:Electron2D.CharacterBody2D.WallMinSlideAngle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

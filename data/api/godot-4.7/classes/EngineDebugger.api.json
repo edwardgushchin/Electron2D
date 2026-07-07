@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EngineDebugger",
+    "namespace": "Godot",
+    "fullName": "Godot.EngineDebugger",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EngineDebugger",
+    "documentationPath": "doc/classes/EngineDebugger.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_enginedebugger.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearBreakpoints",
+      "kind": "Method",
+      "signature": "public void ClearBreakpoints()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all breakpoints.",
+      "godotName": "clear_breakpoints",
+      "xmlDocId": "M:Godot.EngineDebugger.ClearBreakpoints",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "Debug",
+      "kind": "Method",
+      "signature": "public void Debug(bool canContinue, bool isErrorBreakpoint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "can_continue",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "is_error_breakpoint",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Starts a debug break in script execution, optionally specifying whether the program can continue based on [param can_continue] and whether the break was due to a breakpoint.",
+      "godotName": "debug",
+      "xmlDocId": "M:Godot.EngineDebugger.Debug(bool,bool)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "GetDepth",
+      "kind": "Method",
+      "signature": "public int GetDepth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current debug depth.",
+      "godotName": "get_depth",
+      "xmlDocId": "M:Godot.EngineDebugger.GetDepth",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "GetLinesLeft",
+      "kind": "Method",
+      "signature": "public int GetLinesLeft()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines that remain.",
+      "godotName": "get_lines_left",
+      "xmlDocId": "M:Godot.EngineDebugger.GetLinesLeft",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "HasCapture",
+      "kind": "Method",
+      "signature": "public bool HasCapture(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a capture with the given name is present otherwise [code]false[/code].",
+      "godotName": "has_capture",
+      "xmlDocId": "M:Godot.EngineDebugger.HasCapture(StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "HasProfiler",
+      "kind": "Method",
+      "signature": "public bool HasProfiler(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a profiler with the given name is present otherwise [code]false[/code].",
+      "godotName": "has_profiler",
+      "xmlDocId": "M:Godot.EngineDebugger.HasProfiler(StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "InsertBreakpoint",
+      "kind": "Method",
+      "signature": "public void InsertBreakpoint(int line, StringName source)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "source",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Inserts a new breakpoint with the given [param source] and [param line].",
+      "godotName": "insert_breakpoint",
+      "xmlDocId": "M:Godot.EngineDebugger.InsertBreakpoint(int,StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "IsActive",
+      "kind": "Method",
+      "signature": "public bool IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the debugger is active otherwise [code]false[/code].",
+      "godotName": "is_active",
+      "xmlDocId": "M:Godot.EngineDebugger.IsActive",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "IsBreakpoint",
+      "kind": "Method",
+      "signature": "public bool IsBreakpoint(int line, StringName source)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "source",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param source] and [param line] represent an existing breakpoint.",
+      "godotName": "is_breakpoint",
+      "xmlDocId": "M:Godot.EngineDebugger.IsBreakpoint(int,StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "IsProfiling",
+      "kind": "Method",
+      "signature": "public bool IsProfiling(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a profiler with the given name is present and active otherwise [code]false[/code].",
+      "godotName": "is_profiling",
+      "xmlDocId": "M:Godot.EngineDebugger.IsProfiling(StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "IsSkippingBreakpoints",
+      "kind": "Method",
+      "signature": "public bool IsSkippingBreakpoints()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the debugger is skipping breakpoints otherwise [code]false[/code].",
+      "godotName": "is_skipping_breakpoints",
+      "xmlDocId": "M:Godot.EngineDebugger.IsSkippingBreakpoints",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "LinePoll",
+      "kind": "Method",
+      "signature": "public void LinePoll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces a processing loop of debugger events. The purpose of this method is just processing events every now and then when the script might get too busy, so that bugs like infinite loops can be caught.",
+      "godotName": "line_poll",
+      "xmlDocId": "M:Godot.EngineDebugger.LinePoll",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "ProfilerAddFrameData",
+      "kind": "Method",
+      "signature": "public void ProfilerAddFrameData(StringName name, Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "data",
+          "type": "Array"
+        }
+      ],
+      "summary": "Calls the [code]add[/code] callable of the profiler with given [param name] and [param data].",
+      "godotName": "profiler_add_frame_data",
+      "xmlDocId": "M:Godot.EngineDebugger.ProfilerAddFrameData(StringName,Array)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "ProfilerEnable",
+      "kind": "Method",
+      "signature": "public void ProfilerEnable(StringName name, bool enable, Array arguments)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "arguments",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Calls the [code]toggle[/code] callable of the profiler with given [param name] and [param arguments]. Enables/Disables the same profiler depending on [param enable] argument.",
+      "godotName": "profiler_enable",
+      "xmlDocId": "M:Godot.EngineDebugger.ProfilerEnable(StringName,bool,Array)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "RegisterMessageCapture",
+      "kind": "Method",
+      "signature": "public void RegisterMessageCapture(StringName name, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers a message capture with given [param name]. If [param name] is \u0022my_message\u0022 then messages starting with \u0022my_message:\u0022 will be called with the given callable. The callable must accept a message string and a data array as argument. The callable should return [code]true[/code] if the message is recognized. [b]Note:[/b] The callable will receive the message with the prefix stripped, unlike [method EditorDebuggerPlugin._capture]. See the [EditorDebuggerPlugin] description for an example.",
+      "godotName": "register_message_capture",
+      "xmlDocId": "M:Godot.EngineDebugger.RegisterMessageCapture(StringName,Callable)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "RegisterProfiler",
+      "kind": "Method",
+      "signature": "public void RegisterProfiler(StringName name, EngineProfiler profiler)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "profiler",
+          "type": "EngineProfiler"
+        }
+      ],
+      "summary": "Registers a profiler with the given [param name]. See [EngineProfiler] for more information.",
+      "godotName": "register_profiler",
+      "xmlDocId": "M:Godot.EngineDebugger.RegisterProfiler(StringName,EngineProfiler)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "RemoveBreakpoint",
+      "kind": "Method",
+      "signature": "public void RemoveBreakpoint(int line, StringName source)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "source",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes a breakpoint with the given [param source] and [param line].",
+      "godotName": "remove_breakpoint",
+      "xmlDocId": "M:Godot.EngineDebugger.RemoveBreakpoint(int,StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "ScriptDebug",
+      "kind": "Method",
+      "signature": "public void ScriptDebug(ScriptLanguage language, bool canContinue, bool isErrorBreakpoint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "ScriptLanguage"
+        },
+        {
+          "name": "can_continue",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "is_error_breakpoint",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Starts a debug break in script execution, optionally specifying whether the program can continue based on [param can_continue] and whether the break was due to a breakpoint.",
+      "godotName": "script_debug",
+      "xmlDocId": "M:Godot.EngineDebugger.ScriptDebug(ScriptLanguage,bool,bool)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "SendMessage",
+      "kind": "Method",
+      "signature": "public void SendMessage(String message, Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "Array"
+        }
+      ],
+      "summary": "Sends a message with given [param message] and [param data] array.",
+      "godotName": "send_message",
+      "xmlDocId": "M:Godot.EngineDebugger.SendMessage(String,Array)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "SetDepth",
+      "kind": "Method",
+      "signature": "public void SetDepth(int depth)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "depth",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the current debugging depth.",
+      "godotName": "set_depth",
+      "xmlDocId": "M:Godot.EngineDebugger.SetDepth(int)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "SetLinesLeft",
+      "kind": "Method",
+      "signature": "public void SetLinesLeft(int lines)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "lines",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the current debugging lines that remain.",
+      "godotName": "set_lines_left",
+      "xmlDocId": "M:Godot.EngineDebugger.SetLinesLeft(int)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "UnregisterMessageCapture",
+      "kind": "Method",
+      "signature": "public void UnregisterMessageCapture(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Unregisters the message capture with given [param name].",
+      "godotName": "unregister_message_capture",
+      "xmlDocId": "M:Godot.EngineDebugger.UnregisterMessageCapture(StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    },
+    {
+      "name": "UnregisterProfiler",
+      "kind": "Method",
+      "signature": "public void UnregisterProfiler(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Unregisters a profiler with given [param name].",
+      "godotName": "unregister_profiler",
+      "xmlDocId": "M:Godot.EngineDebugger.UnregisterProfiler(StringName)",
+      "sourcePath": "doc/classes/EngineDebugger.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EngineDebugger.xml",
+      "sha256": "7947ccdff1d556fa39a9289a4bed8e0eb87e8035395fa3951e6d79aae3f0ec3a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventShortcut",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventShortcut",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventShortcut",
+    "documentationPath": "doc/classes/InputEventShortcut.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventshortcut.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Shortcut",
+      "kind": "Property",
+      "signature": "public Shortcut Shortcut { get; set; }",
+      "returnType": "Shortcut",
+      "parameters": [],
+      "summary": "The [Shortcut] represented by this event. Its [method Shortcut.matches_event] method will always return [code]true[/code] for this event.",
+      "godotName": "shortcut",
+      "xmlDocId": "P:Godot.InputEventShortcut.Shortcut",
+      "sourcePath": "doc/classes/InputEventShortcut.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventShortcut.xml",
+      "sha256": "c195afaa0c7cebb6d776125c194d5f5a0b15234ce988a91db671bb97e51099ad"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

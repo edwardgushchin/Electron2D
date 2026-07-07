@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LightmapperRD",
+    "namespace": "Godot",
+    "fullName": "Godot.LightmapperRD",
+    "kind": "class",
+    "baseType": "Lightmapper",
+    "interfaces": [],
+    "godotReference": "LightmapperRD",
+    "documentationPath": "doc/classes/LightmapperRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_lightmapperrd.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LightmapperRD.xml",
+      "sha256": "8b67ad34ff21236a8ad194242a847ee821b99b6a19d8abb31b09d7cc9429ee3b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

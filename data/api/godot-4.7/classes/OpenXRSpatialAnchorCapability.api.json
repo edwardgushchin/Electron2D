@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialAnchorCapability",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialAnchorCapability",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialAnchorCapability",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialanchorcapability.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateDefaultPersistenceContext",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult CreateDefaultPersistenceContext(Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Calls [method create_persistence_context] with a configuration that likely works with the XR runtime. [param user_callback] is called when the context is created.",
+      "godotName": "create_default_persistence_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.CreateDefaultPersistenceContext(Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "CreateNewAnchor",
+      "kind": "Method",
+      "signature": "public OpenXRAnchorTracker CreateNewAnchor(Transform3D transform, RID spatialContext, OpenXRStructureBase next)",
+      "returnType": "OpenXRAnchorTracker",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "spatial_context",
+          "type": "RID",
+          "defaultValue": "RID()"
+        },
+        {
+          "name": "next",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Creates a new anchor that will be tracked by the XR runtime. The [param transform] should be a transform in the local space of your [XROrigin3D] node. If [param spatial_context] is not specified the default will be used, this requires [member ProjectSettings.xr/openxr/extensions/spatial_entity/enable_builtin_anchor_detection] to be set. The returned tracker will track the location in case our reference space changes. [param next] must be a valid next object for the [code]XrSpatialAnchorCreateInfoEXT[/code] chain.",
+      "godotName": "create_new_anchor",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.CreateNewAnchor(Transform3D,RID,OpenXRStructureBase)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "CreatePersistenceContext",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult CreatePersistenceContext(int scope, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "scope",
+          "type": "int"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Creates a new persistence context for storing persistent data. [b]Note:[/b] This is an asynchronous method and returns an [OpenXRFutureResult] object with which to track the status, discarding this object will not cancel the creation process. On success [param user_callback] will be called if specified. The result value for this function is the [RID] for our persistence context.",
+      "godotName": "create_persistence_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.CreatePersistenceContext(int,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "DoEntityUpdate",
+      "kind": "Method",
+      "signature": "public void DoEntityUpdate(RID spatialContext, OpenXRSpatialComponentData[] componentData, OpenXRStructureBase nextSnapshotCreate, OpenXRStructureBase nextSnapshotQuery)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        },
+        {
+          "name": "component_data",
+          "type": "OpenXRSpatialComponentData[]"
+        },
+        {
+          "name": "next_snapshot_create",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "next_snapshot_query",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Calls [method OpenXRSpatialEntityExtension.update_spatial_entities] and [method OpenXRSpatialEntityExtension.query_snapshot] with the anchor entities associated with [param spatial_context]. [param component_data] are the [OpenXRSpatialComponentData]s to update for this anchor capability. If [param next_snapshot_create] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.update_spatial_entities]. If [param next_snapshot_query] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.query_snapshot].",
+      "godotName": "do_entity_update",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.DoEntityUpdate(RID,OpenXRSpatialComponentData[],OpenXRStructureBase,OpenXRStructureBase)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "FreePersistenceContext",
+      "kind": "Method",
+      "signature": "public void FreePersistenceContext(RID persistenceContext)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "persistence_context",
+          "type": "RID"
+        }
+      ],
+      "summary": "Frees a persistence context previously created with [method create_persistence_context].",
+      "godotName": "free_persistence_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.FreePersistenceContext(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "GetPersistenceContextHandle",
+      "kind": "Method",
+      "signature": "public int GetPersistenceContextHandle(RID persistenceContext)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "persistence_context",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the internal handle for this persistence context. [b]Note:[/b] For GDExtension implementations.",
+      "godotName": "get_persistence_context_handle",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.GetPersistenceContextHandle(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "IsPersistenceScopeSupported",
+      "kind": "Method",
+      "signature": "public bool IsPersistenceScopeSupported(int scope)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "scope",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this persistence scope is supported by our spatial anchor capability. [b]Note:[/b] Only valid after an OpenXR instance has been created.",
+      "godotName": "is_persistence_scope_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.IsPersistenceScopeSupported(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "IsSpatialAnchorSupported",
+      "kind": "Method",
+      "signature": "public bool IsSpatialAnchorSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if spatial anchors are supported by the hardware. Only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_spatial_anchor_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.IsSpatialAnchorSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "IsSpatialPersistenceSupported",
+      "kind": "Method",
+      "signature": "public bool IsSpatialPersistenceSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if persistent spatial anchors are supported by the hardware. Only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_spatial_persistence_supported",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.IsSpatialPersistenceSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "PersistAnchor",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult PersistAnchor(OpenXRAnchorTracker anchorTracker, RID persistenceContext, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "anchor_tracker",
+          "type": "OpenXRAnchorTracker"
+        },
+        {
+          "name": "persistence_context",
+          "type": "RID",
+          "defaultValue": "RID()"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Changes this anchor into a persistent anchor. This means its location will be stored on the device and the anchor will be restored the next time your application starts. If [param persistence_context] is not specified the default will be used, this requires [member ProjectSettings.xr/openxr/extensions/spatial_entity/enable_builtin_anchor_detection] to be set. [b]Note:[/b] This is an asynchronous method and returns an [OpenXRFutureResult] object with which to track the status, discarding this object will not cancel the creation process. On success [param user_callback] will be called if specified. The result value for this function is a boolean which will be set to [code]true[/code] on successful completion.",
+      "godotName": "persist_anchor",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.PersistAnchor(OpenXRAnchorTracker,RID,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "RemoveAnchor",
+      "kind": "Method",
+      "signature": "public void RemoveAnchor(OpenXRAnchorTracker anchorTracker)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anchor_tracker",
+          "type": "OpenXRAnchorTracker"
+        }
+      ],
+      "summary": "Remove an anchor previously created with [method create_new_anchor]. If this anchor was persistent you must first call [method unpersist_anchor] and await its callback.",
+      "godotName": "remove_anchor",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.RemoveAnchor(OpenXRAnchorTracker)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "StartEntityDiscovery",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult StartEntityDiscovery(RID spatialContext, OpenXRSpatialComponentData[] componentData, OpenXRStructureBase nextSnapshotCreate, OpenXRStructureBase nextSnapshotQuery, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        },
+        {
+          "name": "component_data",
+          "type": "OpenXRSpatialComponentData[]"
+        },
+        {
+          "name": "next_snapshot_create",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "next_snapshot_query",
+          "type": "OpenXRStructureBase",
+          "defaultValue": "null"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Calls [method OpenXRSpatialEntityExtension.discover_spatial_entities] and [method OpenXRSpatialEntityExtension.query_snapshot] with the anchor entities associated with [param spatial_context]. [param component_data] are the [OpenXRSpatialComponentData]s to discover for this anchor capability. If [param next_snapshot_create] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.discover_spatial_entities]. If [param next_snapshot_query] is non-null, then pass this to the [code]next[/code] parameter in [method OpenXRSpatialEntityExtension.query_snapshot]. [param user_callback], when non-null, is called with two parameters usually twice. The first parameter is the [RID] of the discovery snapshot and the second parameter is a boolean where [code]false[/code] indicates the discovery snapshot is about to be processed, and [code]true[/code] indicates the discovery snapshot has been processed and [param component_data] has valid data. The second call is skipped if an error was encountered. The returned [OpenXRFutureResult] is identical to the return from [method OpenXRSpatialEntityExtension.discover_spatial_entities].",
+      "godotName": "start_entity_discovery",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.StartEntityDiscovery(RID,OpenXRSpatialComponentData[],OpenXRStructureBase,OpenXRStructureBase,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "UnpersistAnchor",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult UnpersistAnchor(OpenXRAnchorTracker anchorTracker, RID persistenceContext, Callable userCallback)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "anchor_tracker",
+          "type": "OpenXRAnchorTracker"
+        },
+        {
+          "name": "persistence_context",
+          "type": "RID",
+          "defaultValue": "RID()"
+        },
+        {
+          "name": "user_callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Removes the persistent data from this anchor. The runtime will not recreate the anchor when your application restarts. If [param persistence_context] is not specified the default will be used, this requires [member ProjectSettings.xr/openxr/extensions/spatial_entity/enabled] to be set. [b]Note:[/b] This is an asynchronous method and returns an [OpenXRFutureResult] object with which to track the status, discarding this object will not cancel the creation process. On success [param user_callback] will be called if specified. The result value for this function is a boolean which will be set to [code]true[/code] on successful completion.",
+      "godotName": "unpersist_anchor",
+      "xmlDocId": "M:Godot.OpenXRSpatialAnchorCapability.UnpersistAnchor(OpenXRAnchorTracker,RID,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PersistenceScope",
+      "values": [
+        {
+          "name": "PERSISTENCE_SCOPE_LOCAL_ANCHORS",
+          "value": "1000781000",
+          "enum": "PersistenceScope",
+          "kind": "EnumValue",
+          "summary": "Persistence operations and data access is limited to spatial anchors, on the same device, for the same user and same app (using [method persist_anchor] and [method unpersist_anchor] functions)",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+        },
+        {
+          "name": "PERSISTENCE_SCOPE_SYSTEM_MANAGED",
+          "value": "1",
+          "enum": "PersistenceScope",
+          "kind": "EnumValue",
+          "summary": "Provides the application with read-only access (i.e. application cannot modify this scope) to spatial entities persisted and managed by the system. The application can use the UUID in the persistence component for this scope to correlate entities across spatial contexts and device reboots.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PERSISTENCE_SCOPE_SYSTEM_MANAGED",
+      "value": "1",
+      "enum": "PersistenceScope",
+      "kind": "EnumValue",
+      "summary": "Provides the application with read-only access (i.e. application cannot modify this scope) to spatial entities persisted and managed by the system. The application can use the UUID in the persistence component for this scope to correlate entities across spatial contexts and device reboots.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    },
+    {
+      "name": "PERSISTENCE_SCOPE_LOCAL_ANCHORS",
+      "value": "1000781000",
+      "enum": "PersistenceScope",
+      "kind": "EnumValue",
+      "summary": "Persistence operations and data access is limited to spatial anchors, on the same device, for the same user and same app (using [method persist_anchor] and [method unpersist_anchor] functions)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml",
+      "sha256": "7eca9843088145a4accdda606c509381c6984a47ba7701a12ecfb76df2c53d58"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

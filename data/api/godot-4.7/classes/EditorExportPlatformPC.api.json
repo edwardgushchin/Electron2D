@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorExportPlatformPC",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorExportPlatformPC",
+    "kind": "class",
+    "baseType": "EditorExportPlatform",
+    "interfaces": [],
+    "godotReference": "EditorExportPlatformPC",
+    "documentationPath": "doc/classes/EditorExportPlatformPC.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorexportplatformpc.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorExportPlatformPC.xml",
+      "sha256": "0a37b04a6c4c056e09221e6f54f2d77096a17c6336669e0e2a85728459e4604a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

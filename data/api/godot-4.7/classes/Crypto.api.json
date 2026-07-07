@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Crypto",
+    "namespace": "Godot",
+    "fullName": "Godot.Crypto",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Crypto",
+    "documentationPath": "doc/classes/Crypto.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_crypto.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ConstantTimeCompare",
+      "kind": "Method",
+      "signature": "public bool ConstantTimeCompare(PackedByteArray trusted, PackedByteArray received)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "trusted",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "received",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Compares two [PackedByteArray]s for equality without leaking timing information in order to prevent timing attacks. See [url=https://paragonie.com/blog/2015/11/preventing-timing-attacks-on-string-comparison-with-double-hmac-strategy]this blog post[/url] for more information.",
+      "godotName": "constant_time_compare",
+      "xmlDocId": "M:Godot.Crypto.ConstantTimeCompare(PackedByteArray,PackedByteArray)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "Decrypt",
+      "kind": "Method",
+      "signature": "public PackedByteArray Decrypt(CryptoKey key, PackedByteArray ciphertext)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "CryptoKey"
+        },
+        {
+          "name": "ciphertext",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Decrypt the given [param ciphertext] with the provided private [param key]. [b]Note:[/b] The maximum size of accepted ciphertext is limited by the key size.",
+      "godotName": "decrypt",
+      "xmlDocId": "M:Godot.Crypto.Decrypt(CryptoKey,PackedByteArray)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "Encrypt",
+      "kind": "Method",
+      "signature": "public PackedByteArray Encrypt(CryptoKey key, PackedByteArray plaintext)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "CryptoKey"
+        },
+        {
+          "name": "plaintext",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Encrypt the given [param plaintext] with the provided public [param key]. [b]Note:[/b] The maximum size of accepted plaintext is limited by the key size.",
+      "godotName": "encrypt",
+      "xmlDocId": "M:Godot.Crypto.Encrypt(CryptoKey,PackedByteArray)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "GenerateRandomBytes",
+      "kind": "Method",
+      "signature": "public PackedByteArray GenerateRandomBytes(int size)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Generates a [PackedByteArray] of cryptographically secure random bytes with given [param size].",
+      "godotName": "generate_random_bytes",
+      "xmlDocId": "M:Godot.Crypto.GenerateRandomBytes(int)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "GenerateRsa",
+      "kind": "Method",
+      "signature": "public CryptoKey GenerateRsa(int size)",
+      "returnType": "CryptoKey",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Generates an RSA [CryptoKey] that can be used for creating self-signed certificates and passed to [method StreamPeerTLS.accept_stream].",
+      "godotName": "generate_rsa",
+      "xmlDocId": "M:Godot.Crypto.GenerateRsa(int)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "GenerateSelfSignedCertificate",
+      "kind": "Method",
+      "signature": "public X509Certificate GenerateSelfSignedCertificate(CryptoKey key, String issuerName, String notBefore, String notAfter)",
+      "returnType": "X509Certificate",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "CryptoKey"
+        },
+        {
+          "name": "issuer_name",
+          "type": "String",
+          "defaultValue": "\u0022CN=myserver,O=myorganisation,C=IT\u0022"
+        },
+        {
+          "name": "not_before",
+          "type": "String",
+          "defaultValue": "\u002220140101000000\u0022"
+        },
+        {
+          "name": "not_after",
+          "type": "String",
+          "defaultValue": "\u002220340101000000\u0022"
+        }
+      ],
+      "summary": "Generates a self-signed [X509Certificate] from the given [CryptoKey] and [param issuer_name]. The certificate validity will be defined by [param not_before] and [param not_after] (first valid date and last valid date). The [param issuer_name] must contain at least \u0022CN=\u0022 (common name, i.e. the domain name), \u0022O=\u0022 (organization, i.e. your company name), \u0022C=\u0022 (country, i.e. 2 lettered ISO-3166 code of the country the organization is based in). A small example to generate an RSA key and an X509 self-signed certificate. [codeblocks] [gdscript] var crypto = Crypto.new() # Generate 4096 bits RSA key. var key = crypto.generate_rsa(4096) # Generate self-signed certificate using the given key. var cert = crypto.generate_self_signed_certificate(key, \u0022CN=example.com,O=A Game Company,C=IT\u0022) [/gdscript] [csharp] var crypto = new Crypto(); // Generate 4096 bits RSA key. CryptoKey key = crypto.GenerateRsa(4096); // Generate self-signed certificate using the given key. X509Certificate cert = crypto.GenerateSelfSignedCertificate(key, \u0022CN=mydomain.com,O=My Game Company,C=IT\u0022); [/csharp] [/codeblocks]",
+      "godotName": "generate_self_signed_certificate",
+      "xmlDocId": "M:Godot.Crypto.GenerateSelfSignedCertificate(CryptoKey,String,String,String)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "HmacDigest",
+      "kind": "Method",
+      "signature": "public PackedByteArray HmacDigest(int hashType, PackedByteArray key, PackedByteArray msg)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "hash_type",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "msg",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Generates an [url=https://en.wikipedia.org/wiki/HMAC]HMAC[/url] digest of [param msg] using [param key]. The [param hash_type] parameter is the hashing algorithm that is used for the inner and outer hashes. Currently, only [constant HashingContext.HASH_SHA256] and [constant HashingContext.HASH_SHA1] are supported.",
+      "godotName": "hmac_digest",
+      "xmlDocId": "M:Godot.Crypto.HmacDigest(int,PackedByteArray,PackedByteArray)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "Sign",
+      "kind": "Method",
+      "signature": "public PackedByteArray Sign(int hashType, PackedByteArray hash, CryptoKey key)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "hash_type",
+          "type": "int"
+        },
+        {
+          "name": "hash",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "key",
+          "type": "CryptoKey"
+        }
+      ],
+      "summary": "Sign a given [param hash] of type [param hash_type] with the provided private [param key].",
+      "godotName": "sign",
+      "xmlDocId": "M:Godot.Crypto.Sign(int,PackedByteArray,CryptoKey)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    },
+    {
+      "name": "Verify",
+      "kind": "Method",
+      "signature": "public bool Verify(int hashType, PackedByteArray hash, PackedByteArray signature, CryptoKey key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "hash_type",
+          "type": "int"
+        },
+        {
+          "name": "hash",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "signature",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "key",
+          "type": "CryptoKey"
+        }
+      ],
+      "summary": "Verify that a given [param signature] for [param hash] of type [param hash_type] against the provided public [param key].",
+      "godotName": "verify",
+      "xmlDocId": "M:Godot.Crypto.Verify(int,PackedByteArray,PackedByteArray,CryptoKey)",
+      "sourcePath": "doc/classes/Crypto.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Crypto.xml",
+      "sha256": "c86a38dd37283bb55b4daf4309f259ca37d578224905a504913c78a24bf7f771"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

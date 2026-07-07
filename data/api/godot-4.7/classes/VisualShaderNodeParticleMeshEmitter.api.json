@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleMeshEmitter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleMeshEmitter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParticleEmitter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleMeshEmitter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMeshEmitter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticlemeshemitter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "The [Mesh] that defines emission shape.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleMeshEmitter.Mesh",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMeshEmitter.xml"
+    },
+    {
+      "name": "SurfaceIndex",
+      "kind": "Property",
+      "signature": "public int SurfaceIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Index of the surface that emits particles. [member use_all_surfaces] must be [code]false[/code] for this to take effect.",
+      "defaultValue": "0",
+      "godotName": "surface_index",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleMeshEmitter.SurfaceIndex",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMeshEmitter.xml"
+    },
+    {
+      "name": "UseAllSurfaces",
+      "kind": "Property",
+      "signature": "public bool UseAllSurfaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the particles will emit from all surfaces of the mesh.",
+      "defaultValue": "true",
+      "godotName": "use_all_surfaces",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleMeshEmitter.UseAllSurfaces",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMeshEmitter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleMeshEmitter.xml",
+      "sha256": "c9f50416c1e11babb4508ae5e7011a964393226cf389cf4fdf0e0b69b46511ce"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

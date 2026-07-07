@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HMACContext",
+    "namespace": "Godot",
+    "fullName": "Godot.HMACContext",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "HMACContext",
+    "documentationPath": "doc/classes/HMACContext.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hmaccontext.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Finish",
+      "kind": "Method",
+      "signature": "public PackedByteArray Finish()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the resulting HMAC. If the HMAC failed, an empty [PackedByteArray] is returned.",
+      "godotName": "finish",
+      "xmlDocId": "M:Godot.HMACContext.Finish",
+      "sourcePath": "doc/classes/HMACContext.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public int Start(int hashType, PackedByteArray key)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "hash_type",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Initializes the HMACContext. This method cannot be called again on the same HMACContext until [method finish] has been called.",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.HMACContext.Start(int,PackedByteArray)",
+      "sourcePath": "doc/classes/HMACContext.xml"
+    },
+    {
+      "name": "Update",
+      "kind": "Method",
+      "signature": "public int Update(PackedByteArray data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Updates the message to be HMACed. This can be called multiple times before [method finish] is called to append [param data] to the message, but cannot be called until [method start] has been called.",
+      "godotName": "update",
+      "xmlDocId": "M:Godot.HMACContext.Update(PackedByteArray)",
+      "sourcePath": "doc/classes/HMACContext.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HMACContext.xml",
+      "sha256": "3a0e2b1bfbc0eeaf96f4e25a951c1d2d820dbf94d920150d25e543adcc9b2228"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

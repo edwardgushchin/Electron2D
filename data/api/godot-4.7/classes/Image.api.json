@@ -1,0 +1,2575 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Image",
+    "namespace": "Godot",
+    "fullName": "Godot.Image",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Image",
+    "documentationPath": "doc/classes/Image.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_image.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AdjustBcs",
+      "kind": "Method",
+      "signature": "public void AdjustBcs(float brightness, float contrast, float saturation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "brightness",
+          "type": "float"
+        },
+        {
+          "name": "contrast",
+          "type": "float"
+        },
+        {
+          "name": "saturation",
+          "type": "float"
+        }
+      ],
+      "summary": "Adjusts this image\u0027s [param brightness], [param contrast], and [param saturation] by the given values. Does not work if the image is compressed (see [method is_compressed]).",
+      "godotName": "adjust_bcs",
+      "xmlDocId": "M:Godot.Image.AdjustBcs(float,float,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "BlendRect",
+      "kind": "Method",
+      "signature": "public void BlendRect(Image src, Rect2i srcRect, Vector2i dst)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Image"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "dst",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Alpha-blends [param src_rect] from [param src] image to this image at coordinates [param dst], clipped accordingly to both image bounds. This image and [param src] image [b]must[/b] have the same format. [param src_rect] with non-positive size is treated as empty.",
+      "godotName": "blend_rect",
+      "xmlDocId": "M:Godot.Image.BlendRect(Image,Rect2i,Vector2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "BlendRectMask",
+      "kind": "Method",
+      "signature": "public void BlendRectMask(Image src, Image mask, Rect2i srcRect, Vector2i dst)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Image"
+        },
+        {
+          "name": "mask",
+          "type": "Image"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "dst",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Alpha-blends [param src_rect] from [param src] image to this image using [param mask] image at coordinates [param dst], clipped accordingly to both image bounds. Alpha channels are required for both [param src] and [param mask]. [param dst] pixels and [param src] pixels will blend if the corresponding mask pixel\u0027s alpha value is not 0. This image and [param src] image [b]must[/b] have the same format. [param src] image and [param mask] image [b]must[/b] have the same size (width and height) but they can have different formats. [param src_rect] with non-positive size is treated as empty.",
+      "godotName": "blend_rect_mask",
+      "xmlDocId": "M:Godot.Image.BlendRectMask(Image,Image,Rect2i,Vector2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "BlitRect",
+      "kind": "Method",
+      "signature": "public void BlitRect(Image src, Rect2i srcRect, Vector2i dst)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Image"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "dst",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Copies [param src_rect] from [param src] image to this image at coordinates [param dst], clipped accordingly to both image bounds. This image and [param src] image [b]must[/b] have the same format. [param src_rect] with non-positive size is treated as empty. [b]Note:[/b] The alpha channel data in [param src] will overwrite the corresponding data in this image at the target position. To blend alpha channels, use [method blend_rect] instead.",
+      "godotName": "blit_rect",
+      "xmlDocId": "M:Godot.Image.BlitRect(Image,Rect2i,Vector2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "BlitRectMask",
+      "kind": "Method",
+      "signature": "public void BlitRectMask(Image src, Image mask, Rect2i srcRect, Vector2i dst)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Image"
+        },
+        {
+          "name": "mask",
+          "type": "Image"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "dst",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Blits [param src_rect] area from [param src] image to this image at the coordinates given by [param dst], clipped accordingly to both image bounds. [param src] pixel is copied onto [param dst] if the corresponding [param mask] pixel\u0027s alpha value is not 0. This image and [param src] image [b]must[/b] have the same format. [param src] image and [param mask] image [b]must[/b] have the same size (width and height) but they can have different formats. [param src_rect] with non-positive size is treated as empty.",
+      "godotName": "blit_rect_mask",
+      "xmlDocId": "M:Godot.Image.BlitRectMask(Image,Image,Rect2i,Vector2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "BumpMapToNormalMap",
+      "kind": "Method",
+      "signature": "public void BumpMapToNormalMap(float bumpScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bump_scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Converts a bump map to a normal map. A bump map provides a height offset per-pixel, while a normal map provides a normal direction per pixel.",
+      "godotName": "bump_map_to_normal_map",
+      "xmlDocId": "M:Godot.Image.BumpMapToNormalMap(float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ClearMipmaps",
+      "kind": "Method",
+      "signature": "public void ClearMipmaps()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes the image\u0027s mipmaps.",
+      "godotName": "clear_mipmaps",
+      "xmlDocId": "M:Godot.Image.ClearMipmaps",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Compress",
+      "kind": "Method",
+      "signature": "public int Compress(int mode, int source, int astcFormat)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "source",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "astc_format",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Compresses the image with a VRAM-compressed format to use less memory. Can not directly access pixel data while the image is compressed. Returns error if the chosen compression mode is not available. The [param source] parameter helps to pick the best compression method for DXT and ETC2 formats. It is ignored for ASTC compression. The [param astc_format] parameter is only taken into account when using ASTC compression; it is ignored for all other formats. [b]Note:[/b] [method compress] is only supported in editor builds. When run in an exported project, this method always returns [constant ERR_UNAVAILABLE].",
+      "godotName": "compress",
+      "xmlDocId": "M:Godot.Image.Compress(int,int,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "CompressFromChannels",
+      "kind": "Method",
+      "signature": "public int CompressFromChannels(int mode, int channels, int astcFormat)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "channels",
+          "type": "int"
+        },
+        {
+          "name": "astc_format",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Compresses the image with a VRAM-compressed format to use less memory. Can not directly access pixel data while the image is compressed. Returns error if the chosen compression mode is not available. This is an alternative to [method compress] that lets the user supply the channels used in order for the compressor to pick the best DXT and ETC2 formats. For other formats (non DXT or ETC2), this argument is ignored. The [param astc_format] parameter is only taken into account when using ASTC compression; it is ignored for all other formats. [b]Note:[/b] [method compress_from_channels] is only supported in editor builds. When run in an exported project, this method always returns [constant ERR_UNAVAILABLE].",
+      "godotName": "compress_from_channels",
+      "xmlDocId": "M:Godot.Image.CompressFromChannels(int,int,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ComputeImageMetrics",
+      "kind": "Method",
+      "signature": "public Dictionary ComputeImageMetrics(Image comparedImage, bool useLuma)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "compared_image",
+          "type": "Image"
+        },
+        {
+          "name": "use_luma",
+          "type": "bool"
+        }
+      ],
+      "summary": "Compute image metrics on the current image and the compared image. This can be used to calculate the similarity between two images. The dictionary contains [code]max[/code], [code]mean[/code], [code]mean_squared[/code], [code]root_mean_squared[/code] and [code]peak_snr[/code].",
+      "godotName": "compute_image_metrics",
+      "xmlDocId": "M:Godot.Image.ComputeImageMetrics(Image,bool)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Convert",
+      "kind": "Method",
+      "signature": "public void Convert(int format)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts this image\u0027s format to the given [param format].",
+      "godotName": "convert",
+      "xmlDocId": "M:Godot.Image.Convert(int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "CopyFrom",
+      "kind": "Method",
+      "signature": "public void CopyFrom(Image src)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Image"
+        }
+      ],
+      "summary": "Copies [param src] image to this image.",
+      "godotName": "copy_from",
+      "xmlDocId": "M:Godot.Image.CopyFrom(Image)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Create",
+      "kind": "Method",
+      "signature": "public Image Create(int width, int height, bool useMipmaps, int format)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates an empty image of the given size and format. If [param use_mipmaps] is [code]true[/code], generates mipmaps for this image (see [method generate_mipmaps]).",
+      "godotName": "create",
+      "xmlDocId": "M:Godot.Image.Create(int,int,bool,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "CreateEmpty",
+      "kind": "Method",
+      "signature": "public Image CreateEmpty(int width, int height, bool useMipmaps, int format)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates an empty image of the given size and format. If [param use_mipmaps] is [code]true[/code], generates mipmaps for this image (see [method generate_mipmaps]).",
+      "godotName": "create_empty",
+      "xmlDocId": "M:Godot.Image.CreateEmpty(int,int,bool,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "CreateFromData",
+      "kind": "Method",
+      "signature": "public Image CreateFromData(int width, int height, bool useMipmaps, int format, PackedByteArray data)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Creates a new image of the given size and format. Fills the image with the given raw data. If [param use_mipmaps] is [code]true[/code], loads the mipmaps for this image from [param data]. See [method generate_mipmaps].",
+      "godotName": "create_from_data",
+      "xmlDocId": "M:Godot.Image.CreateFromData(int,int,bool,int,PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Crop",
+      "kind": "Method",
+      "signature": "public void Crop(int width, int height)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        }
+      ],
+      "summary": "Crops the image to the given [param width] and [param height]. If the specified size is larger than the current size, the extra area is filled with black pixels.",
+      "godotName": "crop",
+      "xmlDocId": "M:Godot.Image.Crop(int,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Decompress",
+      "kind": "Method",
+      "signature": "public int Decompress()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Decompresses the image if it is VRAM-compressed in a supported format. This increases memory utilization, but allows modifying the image. Returns [constant OK] if the format is supported, otherwise [constant ERR_UNAVAILABLE]. All VRAM-compressed formats supported by Godot can be decompressed with this method, except [constant FORMAT_ETC2_R11S], [constant FORMAT_ETC2_RG11S], and [constant FORMAT_ETC2_RGB8A1].",
+      "godotName": "decompress",
+      "xmlDocId": "M:Godot.Image.Decompress",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "DetectAlpha",
+      "kind": "Method",
+      "signature": "public int DetectAlpha()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns [constant ALPHA_BLEND] if the image has data for alpha values. Returns [constant ALPHA_BIT] if all the alpha values are stored in a single bit. Returns [constant ALPHA_NONE] if no data for alpha values is found.",
+      "godotName": "detect_alpha",
+      "xmlDocId": "M:Godot.Image.DetectAlpha",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "DetectUsedChannels",
+      "kind": "Method",
+      "signature": "public int DetectUsedChannels(int source)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "source",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the color channels used by this image. If the image is compressed, the original [param source] must be specified.",
+      "godotName": "detect_used_channels",
+      "xmlDocId": "M:Godot.Image.DetectUsedChannels(int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Fills the image with [param color].",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.Image.Fill(Color)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FillRect",
+      "kind": "Method",
+      "signature": "public void FillRect(Rect2i rect, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2i"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Fills [param rect] with [param color].",
+      "godotName": "fill_rect",
+      "xmlDocId": "M:Godot.Image.FillRect(Rect2i,Color)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FixAlphaEdges",
+      "kind": "Method",
+      "signature": "public void FixAlphaEdges()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Blends low-alpha pixels with nearby pixels.",
+      "godotName": "fix_alpha_edges",
+      "xmlDocId": "M:Godot.Image.FixAlphaEdges",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FlipX",
+      "kind": "Method",
+      "signature": "public void FlipX()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Flips the image horizontally.",
+      "godotName": "flip_x",
+      "xmlDocId": "M:Godot.Image.FlipX",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FlipY",
+      "kind": "Method",
+      "signature": "public void FlipY()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Flips the image vertically.",
+      "godotName": "flip_y",
+      "xmlDocId": "M:Godot.Image.FlipY",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GenerateMipmaps",
+      "kind": "Method",
+      "signature": "public int GenerateMipmaps(bool renormalize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "renormalize",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image that are automatically used if the image needs to be scaled down when rendered. They help improve image quality and performance when rendering. This method returns an error if the image is compressed, in a custom format, or if the image\u0027s width/height is [code]0[/code]. Enabling [param renormalize] when generating mipmaps for normal map textures will make sure all resulting vector values are normalized. It is possible to check if the image has mipmaps by calling [method has_mipmaps] or [method get_mipmap_count]. Calling [method generate_mipmaps] on an image that already has mipmaps will replace existing mipmaps in the image.",
+      "godotName": "generate_mipmaps",
+      "xmlDocId": "M:Godot.Image.GenerateMipmaps(bool)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetData",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetData()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a copy of the image\u0027s raw data.",
+      "godotName": "get_data",
+      "xmlDocId": "M:Godot.Image.GetData",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetDataSize",
+      "kind": "Method",
+      "signature": "public int GetDataSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns size (in bytes) of the image\u0027s raw data.",
+      "godotName": "get_data_size",
+      "xmlDocId": "M:Godot.Image.GetDataSize",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetFormat",
+      "kind": "Method",
+      "signature": "public int GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns this image\u0027s format.",
+      "godotName": "get_format",
+      "xmlDocId": "M:Godot.Image.GetFormat",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public int GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the image\u0027s height.",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.Image.GetHeight",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetMipmapCount",
+      "kind": "Method",
+      "signature": "public int GetMipmapCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of mipmap levels or 0 if the image has no mipmaps. The largest main level image is not counted as a mipmap level by this method, so if you want to include it you can add 1 to this count.",
+      "godotName": "get_mipmap_count",
+      "xmlDocId": "M:Godot.Image.GetMipmapCount",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetMipmapOffset",
+      "kind": "Method",
+      "signature": "public int GetMipmapOffset(int mipmap)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "mipmap",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the offset where the image\u0027s mipmap with index [param mipmap] is stored in the [member data] dictionary.",
+      "godotName": "get_mipmap_offset",
+      "xmlDocId": "M:Godot.Image.GetMipmapOffset(int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetPixel",
+      "kind": "Method",
+      "signature": "public Color GetPixel(int x, int y)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the color of the pixel at [code](x, y)[/code]. This is the same as [method get_pixelv], but with two integer arguments instead of a [Vector2i] argument.",
+      "godotName": "get_pixel",
+      "xmlDocId": "M:Godot.Image.GetPixel(int,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetPixelv",
+      "kind": "Method",
+      "signature": "public Color GetPixelv(Vector2i point)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the color of the pixel at [param point]. This is the same as [method get_pixel], but with a [Vector2i] argument instead of two integer arguments.",
+      "godotName": "get_pixelv",
+      "xmlDocId": "M:Godot.Image.GetPixelv(Vector2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetRegion",
+      "kind": "Method",
+      "signature": "public Image GetRegion(Rect2i region)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns a new [Image] that is a copy of this [Image]\u0027s area specified with [param region].",
+      "godotName": "get_region",
+      "xmlDocId": "M:Godot.Image.GetRegion(Rect2i)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the image\u0027s size (width and height).",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.Image.GetSize",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetUsedRect",
+      "kind": "Method",
+      "signature": "public Rect2i GetUsedRect()",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "Returns a [Rect2i] enclosing the visible portion of the image, considering each pixel with a non-zero alpha channel as visible.",
+      "godotName": "get_used_rect",
+      "xmlDocId": "M:Godot.Image.GetUsedRect",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public int GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the image\u0027s width.",
+      "godotName": "get_width",
+      "xmlDocId": "M:Godot.Image.GetWidth",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the image has generated mipmaps.",
+      "godotName": "has_mipmaps",
+      "xmlDocId": "M:Godot.Image.HasMipmaps",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "IsCompressed",
+      "kind": "Method",
+      "signature": "public bool IsCompressed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the image is compressed.",
+      "godotName": "is_compressed",
+      "xmlDocId": "M:Godot.Image.IsCompressed",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the image has no data.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.Image.IsEmpty",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "IsInvisible",
+      "kind": "Method",
+      "signature": "public bool IsInvisible()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if all the image\u0027s pixels have an alpha value of 0. Returns [code]false[/code] if any pixel has an alpha value higher than 0.",
+      "godotName": "is_invisible",
+      "xmlDocId": "M:Godot.Image.IsInvisible",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LinearToSrgb",
+      "kind": "Method",
+      "signature": "public void LinearToSrgb()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Converts the entire image from linear encoding to nonlinear sRGB encoding by using a lookup table. Only works on images with [constant FORMAT_RGB8] or [constant FORMAT_RGBA8] formats.",
+      "godotName": "linear_to_srgb",
+      "xmlDocId": "M:Godot.Image.LinearToSrgb",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public int Load(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads an image from file [param path]. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_images.html#supported-image-formats]Supported image formats[/url] for a list of supported image formats and limitations. [b]Warning:[/b] This method should only be used in the editor or in cases when you need to load external images at run-time, such as images located at the [code]user://[/code] directory, and may not work in exported projects. See also [ImageTexture] description for usage examples.",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.Image.Load(String)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadBmpFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadBmpFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a BMP file. [b]Note:[/b] Godot\u0027s BMP module doesn\u0027t support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported. [b]Note:[/b] This method is only available in engine builds with the BMP module enabled. By default, the BMP module is enabled, but it can be disabled at build-time using the [code]module_bmp_enabled=no[/code] SCons option.",
+      "godotName": "load_bmp_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadBmpFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadDdsFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadDdsFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a DDS file. [b]Note:[/b] This method is only available in engine builds with the DDS module enabled. By default, the DDS module is enabled, but it can be disabled at build-time using the [code]module_dds_enabled=no[/code] SCons option.",
+      "godotName": "load_dds_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadDdsFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadExrFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadExrFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of an OpenEXR file.",
+      "godotName": "load_exr_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadExrFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public Image LoadFromFile(String path)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new [Image] and loads data from the specified file.",
+      "godotName": "load_from_file",
+      "xmlDocId": "M:Godot.Image.LoadFromFile(String)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadJpgFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadJpgFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a JPEG file.",
+      "godotName": "load_jpg_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadJpgFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadKtxFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadKtxFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a [url=https://github.com/KhronosGroup/KTX-Software]KTX[/url] file. Unlike most image formats, KTX can store VRAM-compressed data and embed mipmaps. [b]Note:[/b] Godot\u0027s libktx implementation only supports 2D images. Cubemaps, texture arrays, and de-padding are not supported. [b]Note:[/b] This method is only available in engine builds with the KTX module enabled. By default, the KTX module is enabled, but it can be disabled at build-time using the [code]module_ktx_enabled=no[/code] SCons option.",
+      "godotName": "load_ktx_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadKtxFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadPngFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadPngFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a PNG file.",
+      "godotName": "load_png_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadPngFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadSvgFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadSvgFromBuffer(PackedByteArray buffer, float scale)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Loads an image from the UTF-8 binary contents of an [b]uncompressed[/b] SVG file ([b].svg[/b]). [b]Note:[/b] Beware when using compressed SVG files (like [b].svgz[/b]), they need to be [code]decompressed[/code] before loading. [b]Note:[/b] This method is only available in engine builds with the SVG module enabled. By default, the SVG module is enabled, but it can be disabled at build-time using the [code]module_svg_enabled=no[/code] SCons option.",
+      "godotName": "load_svg_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadSvgFromBuffer(PackedByteArray,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadSvgFromString",
+      "kind": "Method",
+      "signature": "public int LoadSvgFromString(String svgStr, float scale)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "svg_str",
+          "type": "String"
+        },
+        {
+          "name": "scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Loads an image from the string contents of an SVG file ([b].svg[/b]). [b]Note:[/b] This method is only available in engine builds with the SVG module enabled. By default, the SVG module is enabled, but it can be disabled at build-time using the [code]module_svg_enabled=no[/code] SCons option.",
+      "godotName": "load_svg_from_string",
+      "xmlDocId": "M:Godot.Image.LoadSvgFromString(String,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadTgaFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadTgaFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a TGA file. [b]Note:[/b] This method is only available in engine builds with the TGA module enabled. By default, the TGA module is enabled, but it can be disabled at build-time using the [code]module_tga_enabled=no[/code] SCons option.",
+      "godotName": "load_tga_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadTgaFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "LoadWebpFromBuffer",
+      "kind": "Method",
+      "signature": "public int LoadWebpFromBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads an image from the binary contents of a WebP file.",
+      "godotName": "load_webp_from_buffer",
+      "xmlDocId": "M:Godot.Image.LoadWebpFromBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "NormalMapToXy",
+      "kind": "Method",
+      "signature": "public void NormalMapToXy()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Converts the image\u0027s data to represent coordinates on a 3D plane. This is used when the image represents a normal map. A normal map can add lots of detail to a 3D surface without increasing the polygon count.",
+      "godotName": "normal_map_to_xy",
+      "xmlDocId": "M:Godot.Image.NormalMapToXy",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "PremultiplyAlpha",
+      "kind": "Method",
+      "signature": "public void PremultiplyAlpha()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Multiplies color values with alpha values. Resulting color values for a pixel are [code](color * alpha)/256[/code]. See also [member CanvasItemMaterial.blend_mode].",
+      "godotName": "premultiply_alpha",
+      "xmlDocId": "M:Godot.Image.PremultiplyAlpha",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public void Resize(int width, int height, int interpolation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "interpolation",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Resizes the image to the given [param width] and [param height]. New pixels are calculated using the [param interpolation] mode defined via [enum Interpolation] constants. [b]Note:[/b] If the image\u0027s format is [constant FORMAT_RGBA4444], [constant FORMAT_RGB565], or [constant FORMAT_RGBE9995], it will be temporarily converted to either [constant FORMAT_RGBA8] or [constant FORMAT_RGBAH]. This can affect the quality of the resized image.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.Image.Resize(int,int,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ResizeToPo2",
+      "kind": "Method",
+      "signature": "public void ResizeToPo2(bool square, int interpolation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "square",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "interpolation",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Resizes the image to the nearest power of 2 for the width and height. If [param square] is [code]true[/code], sets width and height to be the same. New pixels are calculated using the [param interpolation] mode defined via [enum Interpolation] constants.",
+      "godotName": "resize_to_po2",
+      "xmlDocId": "M:Godot.Image.ResizeToPo2(bool,int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "RgbeToSrgb",
+      "kind": "Method",
+      "signature": "public Image RgbeToSrgb()",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "Converts a standard linear RGBE (Red Green Blue Exponent) image to an image that uses nonlinear sRGB encoding.",
+      "godotName": "rgbe_to_srgb",
+      "xmlDocId": "M:Godot.Image.RgbeToSrgb",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Rotate90",
+      "kind": "Method",
+      "signature": "public void Rotate90(int direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Rotates the image in the specified [param direction] by [code]90[/code] degrees. The width and height of the image must be greater than [code]1[/code]. If the width and height are not equal, the image will be resized.",
+      "godotName": "rotate_90",
+      "xmlDocId": "M:Godot.Image.Rotate90(int)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Rotate180",
+      "kind": "Method",
+      "signature": "public void Rotate180()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Rotates the image by [code]180[/code] degrees. The width and height of the image must be greater than [code]1[/code].",
+      "godotName": "rotate_180",
+      "xmlDocId": "M:Godot.Image.Rotate180",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveDds",
+      "kind": "Method",
+      "signature": "public int SaveDds(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the image as a DDS (DirectDraw Surface) file to [param path]. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return [constant ERR_UNAVAILABLE] if Godot was compiled without the DDS module. [b]Note:[/b] The DDS module may be disabled in certain builds, which means [method save_dds] will return [constant ERR_UNAVAILABLE] when it is called from an exported project.",
+      "godotName": "save_dds",
+      "xmlDocId": "M:Godot.Image.SaveDds(String)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveDdsToBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray SaveDdsToBuffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Saves the image as a DDS (DirectDraw Surface) file to a byte array. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return an empty byte array if Godot was compiled without the DDS module. [b]Note:[/b] The DDS module may be disabled in certain builds, which means [method save_dds_to_buffer] will return an empty byte array when it is called from an exported project.",
+      "godotName": "save_dds_to_buffer",
+      "xmlDocId": "M:Godot.Image.SaveDdsToBuffer",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveExr",
+      "kind": "Method",
+      "signature": "public int SaveExr(String path, bool grayscale, bool colorImage, float maxLinearValue)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "grayscale",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "color_image",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "max_linear_value",
+          "type": "float",
+          "defaultValue": "-1.0"
+        }
+      ],
+      "summary": "Saves the image as an EXR file to [param path]. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return [constant ERR_UNAVAILABLE] if Godot was compiled without the TinyEXR module. When saving screenshots of a project that uses HDR output, use [method Window.get_output_max_linear_value] for [param max_linear_value].",
+      "godotName": "save_exr",
+      "xmlDocId": "M:Godot.Image.SaveExr(String,bool,bool,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveExrToBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray SaveExrToBuffer(bool grayscale, bool colorImage, float maxLinearValue)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "grayscale",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "color_image",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "max_linear_value",
+          "type": "float",
+          "defaultValue": "-1.0"
+        }
+      ],
+      "summary": "Saves the image as an EXR file to a byte array. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return an empty byte array if Godot was compiled without the TinyEXR module. When saving screenshots of a project that uses HDR output, use [method Window.get_output_max_linear_value] for [param max_linear_value].",
+      "godotName": "save_exr_to_buffer",
+      "xmlDocId": "M:Godot.Image.SaveExrToBuffer(bool,bool,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveJpg",
+      "kind": "Method",
+      "signature": "public int SaveJpg(String path, float quality)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "quality",
+          "type": "float",
+          "defaultValue": "0.75"
+        }
+      ],
+      "summary": "Saves the image as a JPEG file to [param path] with the specified [param quality] between [code]0.01[/code] and [code]1.0[/code] (inclusive). Higher [param quality] values result in better-looking output at the cost of larger file sizes. Recommended [param quality] values are between [code]0.75[/code] and [code]0.90[/code]. Even at quality [code]1.00[/code], JPEG compression remains lossy. [b]Note:[/b] JPEG does not save an alpha channel. If the [Image] contains an alpha channel, the image will still be saved, but the resulting JPEG file won\u0027t contain the alpha channel.",
+      "godotName": "save_jpg",
+      "xmlDocId": "M:Godot.Image.SaveJpg(String,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveJpgToBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray SaveJpgToBuffer(float quality)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "quality",
+          "type": "float",
+          "defaultValue": "0.75"
+        }
+      ],
+      "summary": "Saves the image as a JPEG file to a byte array with the specified [param quality] between [code]0.01[/code] and [code]1.0[/code] (inclusive). Higher [param quality] values result in better-looking output at the cost of larger byte array sizes (and therefore memory usage). Recommended [param quality] values are between [code]0.75[/code] and [code]0.90[/code]. Even at quality [code]1.00[/code], JPEG compression remains lossy. [b]Note:[/b] JPEG does not save an alpha channel. If the [Image] contains an alpha channel, the image will still be saved, but the resulting byte array won\u0027t contain the alpha channel.",
+      "godotName": "save_jpg_to_buffer",
+      "xmlDocId": "M:Godot.Image.SaveJpgToBuffer(float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SavePng",
+      "kind": "Method",
+      "signature": "public int SavePng(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the image as a PNG file to the file at [param path].",
+      "godotName": "save_png",
+      "xmlDocId": "M:Godot.Image.SavePng(String)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SavePngToBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray SavePngToBuffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Saves the image as a PNG file to a byte array.",
+      "godotName": "save_png_to_buffer",
+      "xmlDocId": "M:Godot.Image.SavePngToBuffer",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveWebp",
+      "kind": "Method",
+      "signature": "public int SaveWebp(String path, bool lossy, float quality)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "lossy",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "quality",
+          "type": "float",
+          "defaultValue": "0.75"
+        }
+      ],
+      "summary": "Saves the image as a WebP (Web Picture) file to the file at [param path]. By default it will save lossless. If [param lossy] is [code]true[/code], the image will be saved lossy, using the [param quality] setting between [code]0.0[/code] and [code]1.0[/code] (inclusive). Lossless WebP offers more efficient compression than PNG. [b]Note:[/b] The WebP format is limited to a size of 16383\u00D716383 pixels, while PNG can save larger images.",
+      "godotName": "save_webp",
+      "xmlDocId": "M:Godot.Image.SaveWebp(String,bool,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SaveWebpToBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray SaveWebpToBuffer(bool lossy, float quality)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "lossy",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "quality",
+          "type": "float",
+          "defaultValue": "0.75"
+        }
+      ],
+      "summary": "Saves the image as a WebP (Web Picture) file to a byte array. By default it will save lossless. If [param lossy] is [code]true[/code], the image will be saved lossy, using the [param quality] setting between [code]0.0[/code] and [code]1.0[/code] (inclusive). Lossless WebP offers more efficient compression than PNG. [b]Note:[/b] The WebP format is limited to a size of 16383\u00D716383 pixels, while PNG can save larger images.",
+      "godotName": "save_webp_to_buffer",
+      "xmlDocId": "M:Godot.Image.SaveWebpToBuffer(bool,float)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SetData",
+      "kind": "Method",
+      "signature": "public void SetData(int width, int height, bool useMipmaps, int format, PackedByteArray data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "use_mipmaps",
+          "type": "bool"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Overwrites data of an existing [Image]. Non-static equivalent of [method create_from_data].",
+      "godotName": "set_data",
+      "xmlDocId": "M:Godot.Image.SetData(int,int,bool,int,PackedByteArray)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SetPixel",
+      "kind": "Method",
+      "signature": "public void SetPixel(int x, int y, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the [Color] of the pixel at [code](x, y)[/code] to [param color]. [codeblocks] [gdscript] var img_width = 10 var img_height = 5 var img = Image.create(img_width, img_height, false, Image.FORMAT_RGBA8) img.set_pixel(1, 2, Color.RED) # Sets the color at (1, 2) to red. [/gdscript] [csharp] int imgWidth = 10; int imgHeight = 5; var img = Image.Create(imgWidth, imgHeight, false, Image.Format.Rgba8); img.SetPixel(1, 2, Colors.Red); // Sets the color at (1, 2) to red. [/csharp] [/codeblocks] This is the same as [method set_pixelv], but with a two integer arguments instead of a [Vector2i] argument. [b]Note:[/b] Depending on the image\u0027s format, the color set here may be clamped or lose precision. Do not assume the color returned by [method get_pixel] to be identical to the one set here; any comparisons will likely need to use an approximation like [method Color.is_equal_approx]. [b]Note:[/b] On grayscale image formats, only the red channel of [param color] is used (and alpha if relevant). The green and blue channels are ignored.",
+      "godotName": "set_pixel",
+      "xmlDocId": "M:Godot.Image.SetPixel(int,int,Color)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SetPixelv",
+      "kind": "Method",
+      "signature": "public void SetPixelv(Vector2i point, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2i"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the [Color] of the pixel at [param point] to [param color]. [codeblocks] [gdscript] var img_width = 10 var img_height = 5 var img = Image.create(img_width, img_height, false, Image.FORMAT_RGBA8) img.set_pixelv(Vector2i(1, 2), Color.RED) # Sets the color at (1, 2) to red. [/gdscript] [csharp] int imgWidth = 10; int imgHeight = 5; var img = Image.Create(imgWidth, imgHeight, false, Image.Format.Rgba8); img.SetPixelv(new Vector2I(1, 2), Colors.Red); // Sets the color at (1, 2) to red. [/csharp] [/codeblocks] This is the same as [method set_pixel], but with a [Vector2i] argument instead of two integer arguments. [b]Note:[/b] Depending on the image\u0027s format, the color set here may be clamped or lose precision. Do not assume the color returned by [method get_pixelv] to be identical to the one set here; any comparisons will likely need to use an approximation like [method Color.is_equal_approx]. [b]Note:[/b] On grayscale image formats, only the red channel of [param color] is used (and alpha if relevant). The green and blue channels are ignored.",
+      "godotName": "set_pixelv",
+      "xmlDocId": "M:Godot.Image.SetPixelv(Vector2i,Color)",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ShrinkX2",
+      "kind": "Method",
+      "signature": "public void ShrinkX2()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shrinks the image by a factor of 2 on each axis (this divides the pixel count by 4).",
+      "godotName": "shrink_x2",
+      "xmlDocId": "M:Godot.Image.ShrinkX2",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "SrgbToLinear",
+      "kind": "Method",
+      "signature": "public void SrgbToLinear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Converts the raw data from nonlinear sRGB encoding to linear encoding using a lookup table. Only works on images with [constant FORMAT_RGB8] or [constant FORMAT_RGBA8] formats. [b]Note:[/b] The 8-bit formats required by this method are not suitable for storing linearly encoded values; a significant amount of color information will be lost in darker values. To maintain image quality, this method should not be used.",
+      "godotName": "srgb_to_linear",
+      "xmlDocId": "M:Godot.Image.SrgbToLinear",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "Data",
+      "kind": "Property",
+      "signature": "public Dictionary Data { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Holds all the image\u0027s color data in a given format. See [enum Format] constants.",
+      "defaultValue": "{ \u0022data\u0022: PackedByteArray(), \u0022format\u0022: \u0022Lum8\u0022, \u0022height\u0022: 0, \u0022mipmaps\u0022: false, \u0022width\u0022: 0 }",
+      "godotName": "data",
+      "xmlDocId": "P:Godot.Image.Data",
+      "sourcePath": "doc/classes/Image.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ASTCFormat",
+      "values": [
+        {
+          "name": "ASTC_FORMAT_4x4",
+          "value": "0",
+          "enum": "ASTCFormat",
+          "kind": "EnumValue",
+          "summary": "Hint to indicate that the high quality 4\u00D74 ASTC compression format should be used.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "ASTC_FORMAT_8x8",
+          "value": "1",
+          "enum": "ASTCFormat",
+          "kind": "EnumValue",
+          "summary": "Hint to indicate that the low quality 8\u00D78 ASTC compression format should be used.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "AlphaMode",
+      "values": [
+        {
+          "name": "ALPHA_BIT",
+          "value": "1",
+          "enum": "AlphaMode",
+          "kind": "EnumValue",
+          "summary": "Image stores either fully opaque or fully transparent pixels. Also known as punchthrough alpha.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "ALPHA_BLEND",
+          "value": "2",
+          "enum": "AlphaMode",
+          "kind": "EnumValue",
+          "summary": "Image stores alpha data with values varying between [code]0.0[/code] and [code]1.0[/code].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "ALPHA_NONE",
+          "value": "0",
+          "enum": "AlphaMode",
+          "kind": "EnumValue",
+          "summary": "Image is fully opaque. It does not store alpha data.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "CompressMode",
+      "values": [
+        {
+          "name": "COMPRESS_ASTC",
+          "value": "4",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Use ASTC compression.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_BPTC",
+          "value": "3",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Use BPTC compression.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_ETC",
+          "value": "1",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Use ETC compression.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_ETC2",
+          "value": "2",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Use ETC2 compression.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_MAX",
+          "value": "5",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum CompressMode] enum.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_S3TC",
+          "value": "0",
+          "enum": "CompressMode",
+          "kind": "EnumValue",
+          "summary": "Use S3TC compression.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "CompressSource",
+      "values": [
+        {
+          "name": "COMPRESS_SOURCE_GENERIC",
+          "value": "0",
+          "enum": "CompressSource",
+          "kind": "EnumValue",
+          "summary": "Source texture (before compression) is a regular texture. Default for all textures.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_SOURCE_NORMAL",
+          "value": "2",
+          "enum": "CompressSource",
+          "kind": "EnumValue",
+          "summary": "Source texture (before compression) is a normal texture (e.g. it can be compressed into two channels).",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "COMPRESS_SOURCE_SRGB",
+          "value": "1",
+          "enum": "CompressSource",
+          "kind": "EnumValue",
+          "summary": "Source texture (before compression) uses nonlinear sRGB encoding.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "Format",
+      "values": [
+        {
+          "name": "FORMAT_ASTC_4x4",
+          "value": "35",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Adaptive_scalable_texture_compression]Adaptive Scalable Texture Compression[/url]. This implements the 4\u00D74 (high quality) mode.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ASTC_4x4_HDR",
+          "value": "36",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Same format as [constant FORMAT_ASTC_4x4], but with the hint to let the GPU know it is used for HDR.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ASTC_8x8",
+          "value": "37",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Adaptive_scalable_texture_compression]Adaptive Scalable Texture Compression[/url]. This implements the 8\u00D78 (low quality) mode.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ASTC_8x8_HDR",
+          "value": "38",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Same format as [constant FORMAT_ASTC_8x8], but with the hint to let the GPU know it is used for HDR.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_BPTC_RGBA",
+          "value": "22",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with unsigned normalized RGBA components. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_BPTC_RGBF",
+          "value": "23",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with signed floating-point RGB components.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_BPTC_RGBFU",
+          "value": "24",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with unsigned floating-point RGB components.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_DXT1",
+          "value": "17",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format that uses Block Compression 1, and is the smallest variation of S3TC, only providing 1 bit of alpha and color data being premultiplied with alpha. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_DXT3",
+          "value": "18",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format that uses Block Compression 2, and color data is interpreted as not having been premultiplied by alpha. Well suited for images with sharp alpha transitions between translucent and opaque areas. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_DXT5",
+          "value": "19",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format also known as Block Compression 3 or BC3 that contains 64 bits of alpha channel data followed by 64 bits of DXT1-encoded color data. Color data is not premultiplied by alpha, same as DXT3. DXT5 generally produces superior results for transparent gradients compared to DXT3. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_DXT5_RA_AS_RG",
+          "value": "34",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format also known as Block Compression 3 or BC3, which compresses RA data and interprets it as two channels (red and green). See also [constant FORMAT_DXT5].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC",
+          "value": "25",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC1]Ericsson Texture Compression format 1[/url], also referred to as \u0022ETC1\u0022, and is part of the OpenGL ES graphics standard. This format cannot store an alpha channel.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_R11",
+          "value": "26",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]R11_EAC[/code] variant), which provides one channel of unsigned data.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_R11S",
+          "value": "27",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]SIGNED_R11_EAC[/code] variant), which provides one channel of signed data.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RA_AS_RG",
+          "value": "33",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGBA8[/code] variant), which compresses RA data and interprets it as two channels (red and green). See also [constant FORMAT_ETC2_RGBA8].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RG11",
+          "value": "28",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RG11_EAC[/code] variant), which provides two channels of unsigned data.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RG11S",
+          "value": "29",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]SIGNED_RG11_EAC[/code] variant), which provides two channels of signed data.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RGB8",
+          "value": "30",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGB8[/code] variant), which is a follow-up of ETC1 and compresses RGB888 data. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RGB8A1",
+          "value": "32",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGB8_PUNCHTHROUGH_ALPHA1[/code] variant), which compresses RGBA data to make alpha either fully transparent or fully opaque. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_ETC2_RGBA8",
+          "value": "31",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGBA8[/code]variant), which compresses RGBA8888 data with full alpha support. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_L8",
+          "value": "0",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format with a single 8-bit depth representing luminance.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_LA8",
+          "value": "1",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format with two values, luminance and alpha each stored with 8 bits.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_MAX",
+          "value": "47",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Format] enum.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_R16",
+          "value": "39",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_R16[/code] where there\u0027s one component, a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RF].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_R16I",
+          "value": "43",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_R16UI[/code] where there\u0027s one component, a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_R8",
+          "value": "2",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RED[/code] with a single component and a bitdepth of 8.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RF",
+          "value": "8",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_R32F[/code] where there\u0027s one component, a 32-bit floating-point value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RG16",
+          "value": "40",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RG16[/code] where there are two components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGF].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RG16I",
+          "value": "44",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RG16UI[/code] where there are two components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RG8",
+          "value": "3",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RG[/code] with two components and a bitdepth of 8 for each.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGB16",
+          "value": "41",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGB16[/code] where there are three components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGBF].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGB16I",
+          "value": "45",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGB16UI[/code] where there are three components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGB565",
+          "value": "7",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RGB[/code] with three components. Red and blue have a bitdepth of 5, and green has a bitdepth of 6.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGB8",
+          "value": "4",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RGB[/code] with three components, each with a bitdepth of 8. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBA16",
+          "value": "42",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGBA16[/code] where there are four components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGBAF].",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBA16I",
+          "value": "46",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGBA16UI[/code] where there are four components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBA4444",
+          "value": "6",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RGBA[/code] with four components, each with a bitdepth of 4.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBA8",
+          "value": "5",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]RGBA[/code] with four components, each with a bitdepth of 8. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBAF",
+          "value": "11",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGBA32F[/code] where there are four components, each a 32-bit floating-point values.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBAH",
+          "value": "15",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGBA16F[/code] where there are four components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBE9995",
+          "value": "16",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "A special OpenGL texture format where the three color components have 9 bits of precision and all three share a single 5-bit exponent.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBF",
+          "value": "10",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGB32F[/code] where there are three components, each a 32-bit floating-point values.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGBH",
+          "value": "14",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RGB16F[/code] where there are three components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGF",
+          "value": "9",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RG32F[/code] where there are two components, each a 32-bit floating-point values.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGH",
+          "value": "13",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_RG16F[/code] where there are two components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGTC_R",
+          "value": "20",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression]Red Green Texture Compression[/url], normalizing the red channel data using the same compression algorithm that DXT5 uses for the alpha channel.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RGTC_RG",
+          "value": "21",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression]Red Green Texture Compression[/url], normalizing the red and green channel data using the same compression algorithm that DXT5 uses for the alpha channel.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "FORMAT_RH",
+          "value": "12",
+          "enum": "Format",
+          "kind": "EnumValue",
+          "summary": "OpenGL texture format [code]GL_R16F[/code] where there\u0027s one component, a 16-bit \u0022half-precision\u0022 floating-point value.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "Interpolation",
+      "values": [
+        {
+          "name": "INTERPOLATE_BILINEAR",
+          "value": "1",
+          "enum": "Interpolation",
+          "kind": "EnumValue",
+          "summary": "Performs bilinear interpolation. If the image is resized, it will be blurry. This mode is faster than [constant INTERPOLATE_CUBIC], but it results in lower quality.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "INTERPOLATE_CUBIC",
+          "value": "2",
+          "enum": "Interpolation",
+          "kind": "EnumValue",
+          "summary": "Performs cubic interpolation. If the image is resized, it will be blurry. This mode often gives better results compared to [constant INTERPOLATE_BILINEAR], at the cost of being slower.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "INTERPOLATE_LANCZOS",
+          "value": "4",
+          "enum": "Interpolation",
+          "kind": "EnumValue",
+          "summary": "Performs Lanczos interpolation. This is the slowest image resizing mode, but it typically gives the best results, especially when downscaling images.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "INTERPOLATE_NEAREST",
+          "value": "0",
+          "enum": "Interpolation",
+          "kind": "EnumValue",
+          "summary": "Performs nearest-neighbor interpolation. If the image is resized, it will be pixelated.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "INTERPOLATE_TRILINEAR",
+          "value": "3",
+          "enum": "Interpolation",
+          "kind": "EnumValue",
+          "summary": "Performs bilinear separately on the two most-suited mipmap levels, then linearly interpolates between them. It\u0027s slower than [constant INTERPOLATE_BILINEAR], but produces higher-quality results with far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated and used internally, but no mipmaps will be generated on the resulting image. [b]Note:[/b] If you intend to scale multiple copies of the original image, it\u0027s better to call [method generate_mipmaps]] on it in advance, to avoid wasting processing power in generating them again and again. On the other hand, if the image already has mipmaps, they will be used, and a new set will be generated for the resulting image.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    },
+    {
+      "name": "UsedChannels",
+      "values": [
+        {
+          "name": "USED_CHANNELS_L",
+          "value": "0",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image only uses one channel for luminance (grayscale).",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "USED_CHANNELS_LA",
+          "value": "1",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image uses two channels for luminance and alpha, respectively.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "USED_CHANNELS_R",
+          "value": "2",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image only uses the red channel.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "USED_CHANNELS_RG",
+          "value": "3",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image uses two channels for red and green.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "USED_CHANNELS_RGB",
+          "value": "4",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image uses three channels for red, green, and blue.",
+          "sourcePath": "doc/classes/Image.xml"
+        },
+        {
+          "name": "USED_CHANNELS_RGBA",
+          "value": "5",
+          "enum": "UsedChannels",
+          "kind": "EnumValue",
+          "summary": "The image uses four channels for red, green, blue, and alpha.",
+          "sourcePath": "doc/classes/Image.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MAX_WIDTH",
+      "value": "16777216",
+      "kind": "Constant",
+      "summary": "The maximal width allowed for [Image] resources.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "MAX_HEIGHT",
+      "value": "16777216",
+      "kind": "Constant",
+      "summary": "The maximal height allowed for [Image] resources.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_L8",
+      "value": "0",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format with a single 8-bit depth representing luminance.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_LA8",
+      "value": "1",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format with two values, luminance and alpha each stored with 8 bits.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_R8",
+      "value": "2",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RED[/code] with a single component and a bitdepth of 8.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RG8",
+      "value": "3",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RG[/code] with two components and a bitdepth of 8 for each.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGB8",
+      "value": "4",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RGB[/code] with three components, each with a bitdepth of 8. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBA8",
+      "value": "5",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RGBA[/code] with four components, each with a bitdepth of 8. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBA4444",
+      "value": "6",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RGBA[/code] with four components, each with a bitdepth of 4.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGB565",
+      "value": "7",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]RGB[/code] with three components. Red and blue have a bitdepth of 5, and green has a bitdepth of 6.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RF",
+      "value": "8",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_R32F[/code] where there\u0027s one component, a 32-bit floating-point value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGF",
+      "value": "9",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RG32F[/code] where there are two components, each a 32-bit floating-point values.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBF",
+      "value": "10",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGB32F[/code] where there are three components, each a 32-bit floating-point values.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBAF",
+      "value": "11",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGBA32F[/code] where there are four components, each a 32-bit floating-point values.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RH",
+      "value": "12",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_R16F[/code] where there\u0027s one component, a 16-bit \u0022half-precision\u0022 floating-point value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGH",
+      "value": "13",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RG16F[/code] where there are two components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBH",
+      "value": "14",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGB16F[/code] where there are three components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBAH",
+      "value": "15",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGBA16F[/code] where there are four components, each a 16-bit \u0022half-precision\u0022 floating-point value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBE9995",
+      "value": "16",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "A special OpenGL texture format where the three color components have 9 bits of precision and all three share a single 5-bit exponent.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_DXT1",
+      "value": "17",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format that uses Block Compression 1, and is the smallest variation of S3TC, only providing 1 bit of alpha and color data being premultiplied with alpha. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_DXT3",
+      "value": "18",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format that uses Block Compression 2, and color data is interpreted as not having been premultiplied by alpha. Well suited for images with sharp alpha transitions between translucent and opaque areas. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_DXT5",
+      "value": "19",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format also known as Block Compression 3 or BC3 that contains 64 bits of alpha channel data followed by 64 bits of DXT1-encoded color data. Color data is not premultiplied by alpha, same as DXT3. DXT5 generally produces superior results for transparent gradients compared to DXT3. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGTC_R",
+      "value": "20",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression]Red Green Texture Compression[/url], normalizing the red channel data using the same compression algorithm that DXT5 uses for the alpha channel.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGTC_RG",
+      "value": "21",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression]Red Green Texture Compression[/url], normalizing the red and green channel data using the same compression algorithm that DXT5 uses for the alpha channel.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_BPTC_RGBA",
+      "value": "22",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with unsigned normalized RGBA components. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_BPTC_RGBF",
+      "value": "23",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with signed floating-point RGB components.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_BPTC_RGBFU",
+      "value": "24",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Texture format that uses [url=https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression]BPTC[/url] compression with unsigned floating-point RGB components.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC",
+      "value": "25",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC1]Ericsson Texture Compression format 1[/url], also referred to as \u0022ETC1\u0022, and is part of the OpenGL ES graphics standard. This format cannot store an alpha channel.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_R11",
+      "value": "26",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]R11_EAC[/code] variant), which provides one channel of unsigned data.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_R11S",
+      "value": "27",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]SIGNED_R11_EAC[/code] variant), which provides one channel of signed data.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RG11",
+      "value": "28",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RG11_EAC[/code] variant), which provides two channels of unsigned data.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RG11S",
+      "value": "29",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]SIGNED_RG11_EAC[/code] variant), which provides two channels of signed data.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RGB8",
+      "value": "30",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGB8[/code] variant), which is a follow-up of ETC1 and compresses RGB888 data. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RGBA8",
+      "value": "31",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGBA8[/code]variant), which compresses RGBA8888 data with full alpha support. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RGB8A1",
+      "value": "32",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGB8_PUNCHTHROUGH_ALPHA1[/code] variant), which compresses RGBA data to make alpha either fully transparent or fully opaque. [b]Note:[/b] When creating an [ImageTexture], a nonlinear sRGB to linear encoding conversion is performed.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ETC2_RA_AS_RG",
+      "value": "33",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC]Ericsson Texture Compression format 2[/url] ([code]RGBA8[/code] variant), which compresses RA data and interprets it as two channels (red and green). See also [constant FORMAT_ETC2_RGBA8].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_DXT5_RA_AS_RG",
+      "value": "34",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/S3_Texture_Compression]S3TC[/url] texture format also known as Block Compression 3 or BC3, which compresses RA data and interprets it as two channels (red and green). See also [constant FORMAT_DXT5].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ASTC_4x4",
+      "value": "35",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Adaptive_scalable_texture_compression]Adaptive Scalable Texture Compression[/url]. This implements the 4\u00D74 (high quality) mode.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ASTC_4x4_HDR",
+      "value": "36",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Same format as [constant FORMAT_ASTC_4x4], but with the hint to let the GPU know it is used for HDR.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ASTC_8x8",
+      "value": "37",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "[url=https://en.wikipedia.org/wiki/Adaptive_scalable_texture_compression]Adaptive Scalable Texture Compression[/url]. This implements the 8\u00D78 (low quality) mode.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_ASTC_8x8_HDR",
+      "value": "38",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Same format as [constant FORMAT_ASTC_8x8], but with the hint to let the GPU know it is used for HDR.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_R16",
+      "value": "39",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_R16[/code] where there\u0027s one component, a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RF].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RG16",
+      "value": "40",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RG16[/code] where there are two components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGF].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGB16",
+      "value": "41",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGB16[/code] where there are three components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGBF].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBA16",
+      "value": "42",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGBA16[/code] where there are four components, each a 16-bit unsigned normalized integer value. Since the value is normalized, each component is clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive). [b]Note:[/b] Due to limited hardware support, it is mainly recommended to be used on desktop or console devices. It may be unsupported on mobile or web, and will consequently be converted to [constant FORMAT_RGBAF].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_R16I",
+      "value": "43",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_R16UI[/code] where there\u0027s one component, a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RG16I",
+      "value": "44",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RG16UI[/code] where there are two components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGB16I",
+      "value": "45",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGB16UI[/code] where there are three components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_RGBA16I",
+      "value": "46",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "OpenGL texture format [code]GL_RGBA16UI[/code] where there are four components, each a 16-bit unsigned integer value. Each component is clamped between [code]0[/code] and [code]65535[/code] (inclusive). [b]Note:[/b] When used in a shader, the texture requires usage of [code]usampler[/code] samplers. Additionally, it only supports nearest-neighbor filtering under the Compatibility renderer. [b]Note:[/b] When sampling using [method Image.get_pixel], returned [Color]s have to be divided by [code]65535[/code] to get the correct color value.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "FORMAT_MAX",
+      "value": "47",
+      "enum": "Format",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Format] enum.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "INTERPOLATE_NEAREST",
+      "value": "0",
+      "enum": "Interpolation",
+      "kind": "EnumValue",
+      "summary": "Performs nearest-neighbor interpolation. If the image is resized, it will be pixelated.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "INTERPOLATE_BILINEAR",
+      "value": "1",
+      "enum": "Interpolation",
+      "kind": "EnumValue",
+      "summary": "Performs bilinear interpolation. If the image is resized, it will be blurry. This mode is faster than [constant INTERPOLATE_CUBIC], but it results in lower quality.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "INTERPOLATE_CUBIC",
+      "value": "2",
+      "enum": "Interpolation",
+      "kind": "EnumValue",
+      "summary": "Performs cubic interpolation. If the image is resized, it will be blurry. This mode often gives better results compared to [constant INTERPOLATE_BILINEAR], at the cost of being slower.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "INTERPOLATE_TRILINEAR",
+      "value": "3",
+      "enum": "Interpolation",
+      "kind": "EnumValue",
+      "summary": "Performs bilinear separately on the two most-suited mipmap levels, then linearly interpolates between them. It\u0027s slower than [constant INTERPOLATE_BILINEAR], but produces higher-quality results with far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated and used internally, but no mipmaps will be generated on the resulting image. [b]Note:[/b] If you intend to scale multiple copies of the original image, it\u0027s better to call [method generate_mipmaps]] on it in advance, to avoid wasting processing power in generating them again and again. On the other hand, if the image already has mipmaps, they will be used, and a new set will be generated for the resulting image.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "INTERPOLATE_LANCZOS",
+      "value": "4",
+      "enum": "Interpolation",
+      "kind": "EnumValue",
+      "summary": "Performs Lanczos interpolation. This is the slowest image resizing mode, but it typically gives the best results, especially when downscaling images.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ALPHA_NONE",
+      "value": "0",
+      "enum": "AlphaMode",
+      "kind": "EnumValue",
+      "summary": "Image is fully opaque. It does not store alpha data.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ALPHA_BIT",
+      "value": "1",
+      "enum": "AlphaMode",
+      "kind": "EnumValue",
+      "summary": "Image stores either fully opaque or fully transparent pixels. Also known as punchthrough alpha.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ALPHA_BLEND",
+      "value": "2",
+      "enum": "AlphaMode",
+      "kind": "EnumValue",
+      "summary": "Image stores alpha data with values varying between [code]0.0[/code] and [code]1.0[/code].",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_S3TC",
+      "value": "0",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Use S3TC compression.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_ETC",
+      "value": "1",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Use ETC compression.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_ETC2",
+      "value": "2",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Use ETC2 compression.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_BPTC",
+      "value": "3",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Use BPTC compression.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_ASTC",
+      "value": "4",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Use ASTC compression.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_MAX",
+      "value": "5",
+      "enum": "CompressMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum CompressMode] enum.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_L",
+      "value": "0",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image only uses one channel for luminance (grayscale).",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_LA",
+      "value": "1",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image uses two channels for luminance and alpha, respectively.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_R",
+      "value": "2",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image only uses the red channel.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_RG",
+      "value": "3",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image uses two channels for red and green.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_RGB",
+      "value": "4",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image uses three channels for red, green, and blue.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "USED_CHANNELS_RGBA",
+      "value": "5",
+      "enum": "UsedChannels",
+      "kind": "EnumValue",
+      "summary": "The image uses four channels for red, green, blue, and alpha.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_SOURCE_GENERIC",
+      "value": "0",
+      "enum": "CompressSource",
+      "kind": "EnumValue",
+      "summary": "Source texture (before compression) is a regular texture. Default for all textures.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_SOURCE_SRGB",
+      "value": "1",
+      "enum": "CompressSource",
+      "kind": "EnumValue",
+      "summary": "Source texture (before compression) uses nonlinear sRGB encoding.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "COMPRESS_SOURCE_NORMAL",
+      "value": "2",
+      "enum": "CompressSource",
+      "kind": "EnumValue",
+      "summary": "Source texture (before compression) is a normal texture (e.g. it can be compressed into two channels).",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ASTC_FORMAT_4x4",
+      "value": "0",
+      "enum": "ASTCFormat",
+      "kind": "EnumValue",
+      "summary": "Hint to indicate that the high quality 4\u00D74 ASTC compression format should be used.",
+      "sourcePath": "doc/classes/Image.xml"
+    },
+    {
+      "name": "ASTC_FORMAT_8x8",
+      "value": "1",
+      "enum": "ASTCFormat",
+      "kind": "EnumValue",
+      "summary": "Hint to indicate that the low quality 8\u00D78 ASTC compression format should be used.",
+      "sourcePath": "doc/classes/Image.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Image.xml",
+      "sha256": "f7c5b6ffb5e978053307c764cc656c669b2860ed3fc90475d856f956cdca5e1b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRPose",
+    "namespace": "Godot",
+    "fullName": "Godot.XRPose",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "XRPose",
+    "documentationPath": "doc/classes/XRPose.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrpose.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAdjustedTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetAdjustedTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the [member transform] with world scale and our reference frame applied. This is the transform used to position [XRNode3D] objects.",
+      "godotName": "get_adjusted_transform",
+      "xmlDocId": "M:Godot.XRPose.GetAdjustedTransform",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 AngularVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The angular velocity for this pose.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "angular_velocity",
+      "xmlDocId": "P:Godot.XRPose.AngularVelocity",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "HasTrackingData",
+      "kind": "Property",
+      "signature": "public bool HasTrackingData { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] our tracking data is up to date. If [code]false[/code] we\u0027re no longer receiving new tracking data and our state is whatever that last valid state was.",
+      "defaultValue": "false",
+      "godotName": "has_tracking_data",
+      "xmlDocId": "P:Godot.XRPose.HasTrackingData",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 LinearVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The linear velocity of this pose.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "linear_velocity",
+      "xmlDocId": "P:Godot.XRPose.LinearVelocity",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "Name",
+      "kind": "Property",
+      "signature": "public StringName Name { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of this pose. Usually, this name is derived from an action map set up by the user. Godot also suggests some pose names that [XRInterface] objects are expected to implement: - [code]root[/code] is the root location, often used for tracked objects that do not have further nodes. - [code]aim[/code] is the tip of a controller with its orientation pointing outwards, often used for raycasts. - [code]grip[/code] is the location where the user grips the controller. - [code]skeleton[/code] is the root location for a hand mesh, when using hand tracking and an animated skeleton is supplied by the XR runtime.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "name",
+      "xmlDocId": "P:Godot.XRPose.Name",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "TrackingConfidence",
+      "kind": "Property",
+      "signature": "public int TrackingConfidence { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The tracking confidence for this pose, provides insight on how accurate the spatial positioning of this record is.",
+      "defaultValue": "0",
+      "godotName": "tracking_confidence",
+      "xmlDocId": "P:Godot.XRPose.TrackingConfidence",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform3D Transform { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "The transform containing the original and transform as reported by the XR runtime.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.XRPose.Transform",
+      "sourcePath": "doc/classes/XRPose.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "TrackingConfidence",
+      "values": [
+        {
+          "name": "XR_TRACKING_CONFIDENCE_HIGH",
+          "value": "2",
+          "enum": "TrackingConfidence",
+          "kind": "EnumValue",
+          "summary": "Tracking information is considered accurate and up to date.",
+          "sourcePath": "doc/classes/XRPose.xml"
+        },
+        {
+          "name": "XR_TRACKING_CONFIDENCE_LOW",
+          "value": "1",
+          "enum": "TrackingConfidence",
+          "kind": "EnumValue",
+          "summary": "Tracking information may be inaccurate or estimated. For example, with inside out tracking this would indicate a controller may be (partially) obscured.",
+          "sourcePath": "doc/classes/XRPose.xml"
+        },
+        {
+          "name": "XR_TRACKING_CONFIDENCE_NONE",
+          "value": "0",
+          "enum": "TrackingConfidence",
+          "kind": "EnumValue",
+          "summary": "No tracking information is available for this pose.",
+          "sourcePath": "doc/classes/XRPose.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "XR_TRACKING_CONFIDENCE_NONE",
+      "value": "0",
+      "enum": "TrackingConfidence",
+      "kind": "EnumValue",
+      "summary": "No tracking information is available for this pose.",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "XR_TRACKING_CONFIDENCE_LOW",
+      "value": "1",
+      "enum": "TrackingConfidence",
+      "kind": "EnumValue",
+      "summary": "Tracking information may be inaccurate or estimated. For example, with inside out tracking this would indicate a controller may be (partially) obscured.",
+      "sourcePath": "doc/classes/XRPose.xml"
+    },
+    {
+      "name": "XR_TRACKING_CONFIDENCE_HIGH",
+      "value": "2",
+      "enum": "TrackingConfidence",
+      "kind": "EnumValue",
+      "summary": "Tracking information is considered accurate and up to date.",
+      "sourcePath": "doc/classes/XRPose.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRPose.xml",
+      "sha256": "2e9375c4addd52e108ddd969821f3238cbf13b6f022d8acf4cc80e6db2f432a4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

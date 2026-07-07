@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSpinSlider",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSpinSlider",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "EditorSpinSlider",
+    "documentationPath": "doc/classes/EditorSpinSlider.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorspinslider.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ControlState",
+      "kind": "Property",
+      "signature": "public int ControlState { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The state in which the control used to manipulate the value will be.",
+      "defaultValue": "0",
+      "godotName": "control_state",
+      "xmlDocId": "P:Godot.EditorSpinSlider.ControlState",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "DeferredDragMode",
+      "kind": "Property",
+      "signature": "public bool DeferredDragMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], changing via dragging is applied only at the end of the input (for example, when the user releases a mouse button).",
+      "defaultValue": "false",
+      "godotName": "deferred_drag_mode",
+      "xmlDocId": "P:Godot.EditorSpinSlider.DeferredDragMode",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "EditingInteger",
+      "kind": "Property",
+      "signature": "public bool EditingInteger { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [EditorSpinSlider] is considered to be editing an integer value. If [code]false[/code], the [EditorSpinSlider] is considered to be editing a floating-point value. This is used to determine whether a slider should be drawn by default. The slider is only drawn for floats; integers use up-down arrows similar to [SpinBox] instead, unless [member control_state] is set to [constant CONTROL_STATE_PREFER_SLIDER]. It will also use [member EditorSettings.interface/inspector/integer_drag_speed] instead of [member EditorSettings.interface/inspector/float_drag_speed] if the slider is available.",
+      "defaultValue": "false",
+      "godotName": "editing_integer",
+      "xmlDocId": "P:Godot.EditorSpinSlider.EditingInteger",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "Flat",
+      "kind": "Property",
+      "signature": "public bool Flat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the slider will not draw background.",
+      "defaultValue": "false",
+      "godotName": "flat",
+      "xmlDocId": "P:Godot.EditorSpinSlider.Flat",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.EditorSpinSlider.FocusMode",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "HideSlider",
+      "kind": "Property",
+      "signature": "public bool HideSlider { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the slider and up/down arrows are hidden.",
+      "defaultValue": "false",
+      "godotName": "hide_slider",
+      "xmlDocId": "P:Godot.EditorSpinSlider.HideSlider",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "Label",
+      "kind": "Property",
+      "signature": "public String Label { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text that displays to the left of the value.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "label",
+      "xmlDocId": "P:Godot.EditorSpinSlider.Label",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "ReadOnly",
+      "kind": "Property",
+      "signature": "public bool ReadOnly { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the slider can\u0027t be interacted with.",
+      "defaultValue": "false",
+      "godotName": "read_only",
+      "xmlDocId": "P:Godot.EditorSpinSlider.ReadOnly",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.EditorSpinSlider.SizeFlagsVertical",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.EditorSpinSlider.Step",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "Suffix",
+      "kind": "Property",
+      "signature": "public String Suffix { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The suffix to display after the value (in a faded color). This should generally be a plural word. You may have to use an abbreviation if the suffix is too long to be displayed.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "suffix",
+      "xmlDocId": "P:Godot.EditorSpinSlider.Suffix",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Grabbed",
+      "kind": "Signal",
+      "signature": "public event GrabbedHandler Grabbed",
+      "parameters": [],
+      "summary": "Emitted when the spinner/slider is grabbed.",
+      "godotName": "grabbed",
+      "xmlDocId": "E:Godot.EditorSpinSlider.Grabbed",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "Ungrabbed",
+      "kind": "Signal",
+      "signature": "public event UngrabbedHandler Ungrabbed",
+      "parameters": [],
+      "summary": "Emitted when the spinner/slider is ungrabbed.",
+      "godotName": "ungrabbed",
+      "xmlDocId": "E:Godot.EditorSpinSlider.Ungrabbed",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "UpdownPressed",
+      "kind": "Signal",
+      "signature": "public event UpdownPressedHandler UpdownPressed",
+      "parameters": [],
+      "summary": "Emitted when the updown button is pressed.",
+      "godotName": "updown_pressed",
+      "xmlDocId": "E:Godot.EditorSpinSlider.UpdownPressed",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "ValueFocusEntered",
+      "kind": "Signal",
+      "signature": "public event ValueFocusEnteredHandler ValueFocusEntered",
+      "parameters": [],
+      "summary": "Emitted when the value form gains focus.",
+      "godotName": "value_focus_entered",
+      "xmlDocId": "E:Godot.EditorSpinSlider.ValueFocusEntered",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "ValueFocusExited",
+      "kind": "Signal",
+      "signature": "public event ValueFocusExitedHandler ValueFocusExited",
+      "parameters": [],
+      "summary": "Emitted when the value form loses focus.",
+      "godotName": "value_focus_exited",
+      "xmlDocId": "E:Godot.EditorSpinSlider.ValueFocusExited",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ControlState",
+      "values": [
+        {
+          "name": "CONTROL_STATE_DEFAULT",
+          "value": "0",
+          "enum": "ControlState",
+          "kind": "EnumValue",
+          "summary": "The type of control used will depend on the value of [member editing_integer]. Up-down arrows if [code]true[/code], a slider if [code]false[/code].",
+          "sourcePath": "doc/classes/EditorSpinSlider.xml"
+        },
+        {
+          "name": "CONTROL_STATE_HIDE",
+          "value": "2",
+          "enum": "ControlState",
+          "kind": "EnumValue",
+          "summary": "Neither the up-down arrows nor the slider will be shown.",
+          "sourcePath": "doc/classes/EditorSpinSlider.xml"
+        },
+        {
+          "name": "CONTROL_STATE_PREFER_SLIDER",
+          "value": "1",
+          "enum": "ControlState",
+          "kind": "EnumValue",
+          "summary": "A slider will always be used, even if [member editing_integer] is enabled.",
+          "sourcePath": "doc/classes/EditorSpinSlider.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CONTROL_STATE_DEFAULT",
+      "value": "0",
+      "enum": "ControlState",
+      "kind": "EnumValue",
+      "summary": "The type of control used will depend on the value of [member editing_integer]. Up-down arrows if [code]true[/code], a slider if [code]false[/code].",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "CONTROL_STATE_PREFER_SLIDER",
+      "value": "1",
+      "enum": "ControlState",
+      "kind": "EnumValue",
+      "summary": "A slider will always be used, even if [member editing_integer] is enabled.",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    },
+    {
+      "name": "CONTROL_STATE_HIDE",
+      "value": "2",
+      "enum": "ControlState",
+      "kind": "EnumValue",
+      "summary": "Neither the up-down arrows nor the slider will be shown.",
+      "sourcePath": "doc/classes/EditorSpinSlider.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorSpinSlider.xml",
+      "sha256": "f4f7bdcd84470217cfb0eec5106129fa70b3e36fec85dcb16af8f43d216a251f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

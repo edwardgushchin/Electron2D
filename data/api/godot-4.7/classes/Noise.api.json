@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Noise",
+    "namespace": "Godot",
+    "fullName": "Godot.Noise",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Noise",
+    "documentationPath": "modules/noise/doc_classes/Noise.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_noise.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetImage",
+      "kind": "Method",
+      "signature": "public Image GetImage(int width, int height, bool invert, bool in3dSpace, bool normalize)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "invert",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "in_3d_space",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "normalize",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns an [Image] containing 2D noise values. [b]Note:[/b] With [param normalize] set to [code]false[/code], the default implementation expects the noise generator to return values in the range [code]-1.0[/code] to [code]1.0[/code].",
+      "godotName": "get_image",
+      "xmlDocId": "M:Godot.Noise.GetImage(int,int,bool,bool,bool)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetImage3d",
+      "kind": "Method",
+      "signature": "public Image[] GetImage3d(int width, int height, int depth, bool invert, bool normalize)",
+      "returnType": "Image[]",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "depth",
+          "type": "int"
+        },
+        {
+          "name": "invert",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "normalize",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns an [Array] of [Image]s containing 3D noise values for use with [method ImageTexture3D.create]. [b]Note:[/b] With [param normalize] set to [code]false[/code], the default implementation expects the noise generator to return values in the range [code]-1.0[/code] to [code]1.0[/code].",
+      "godotName": "get_image_3d",
+      "xmlDocId": "M:Godot.Noise.GetImage3d(int,int,int,bool,bool)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetNoise1d",
+      "kind": "Method",
+      "signature": "public float GetNoise1d(float x)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the 1D noise value at the given (x) coordinate.",
+      "godotName": "get_noise_1d",
+      "xmlDocId": "M:Godot.Noise.GetNoise1d(float)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetNoise2d",
+      "kind": "Method",
+      "signature": "public float GetNoise2d(float x, float y)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the 2D noise value at the given position.",
+      "godotName": "get_noise_2d",
+      "xmlDocId": "M:Godot.Noise.GetNoise2d(float,float)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetNoise2dv",
+      "kind": "Method",
+      "signature": "public float GetNoise2dv(Vector2 v)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "v",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the 2D noise value at the given position.",
+      "godotName": "get_noise_2dv",
+      "xmlDocId": "M:Godot.Noise.GetNoise2dv(Vector2)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetNoise3d",
+      "kind": "Method",
+      "signature": "public float GetNoise3d(float x, float y, float z)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        },
+        {
+          "name": "z",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the 3D noise value at the given position.",
+      "godotName": "get_noise_3d",
+      "xmlDocId": "M:Godot.Noise.GetNoise3d(float,float,float)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetNoise3dv",
+      "kind": "Method",
+      "signature": "public float GetNoise3dv(Vector3 v)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "v",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the 3D noise value at the given position.",
+      "godotName": "get_noise_3dv",
+      "xmlDocId": "M:Godot.Noise.GetNoise3dv(Vector3)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetSeamlessImage",
+      "kind": "Method",
+      "signature": "public Image GetSeamlessImage(int width, int height, bool invert, bool in3dSpace, float skirt, bool normalize)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "invert",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "in_3d_space",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "skirt",
+          "type": "float",
+          "defaultValue": "0.1"
+        },
+        {
+          "name": "normalize",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns an [Image] containing seamless 2D noise values. [b]Note:[/b] With [param normalize] set to [code]false[/code], the default implementation expects the noise generator to return values in the range [code]-1.0[/code] to [code]1.0[/code].",
+      "godotName": "get_seamless_image",
+      "xmlDocId": "M:Godot.Noise.GetSeamlessImage(int,int,bool,bool,float,bool)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    },
+    {
+      "name": "GetSeamlessImage3d",
+      "kind": "Method",
+      "signature": "public Image[] GetSeamlessImage3d(int width, int height, int depth, bool invert, float skirt, bool normalize)",
+      "returnType": "Image[]",
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "depth",
+          "type": "int"
+        },
+        {
+          "name": "invert",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "skirt",
+          "type": "float",
+          "defaultValue": "0.1"
+        },
+        {
+          "name": "normalize",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns an [Array] of [Image]s containing seamless 3D noise values for use with [method ImageTexture3D.create]. [b]Note:[/b] With [param normalize] set to [code]false[/code], the default implementation expects the noise generator to return values in the range [code]-1.0[/code] to [code]1.0[/code].",
+      "godotName": "get_seamless_image_3d",
+      "xmlDocId": "M:Godot.Noise.GetSeamlessImage3d(int,int,int,bool,float,bool)",
+      "sourcePath": "modules/noise/doc_classes/Noise.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/noise/doc_classes/Noise.xml",
+      "sha256": "9e3726589e25700bebe13d882eb877d12916de66078de65cda34ed770558ceb9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

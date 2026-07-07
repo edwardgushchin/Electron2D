@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTransformVecMult",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTransformVecMult",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTransformVecMult",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetransformvecmult.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Operator",
+      "kind": "Property",
+      "signature": "public int Operator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The multiplication type to be performed.",
+      "defaultValue": "0",
+      "godotName": "operator",
+      "xmlDocId": "P:Godot.VisualShaderNodeTransformVecMult.Operator",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operator",
+      "values": [
+        {
+          "name": "OP_3x3_AxB",
+          "value": "2",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies transform [code]a[/code] by the vector [code]b[/code], skipping the last row and column of the transform.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+        },
+        {
+          "name": "OP_3x3_BxA",
+          "value": "3",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies vector [code]b[/code] by the transform [code]a[/code], skipping the last row and column of the transform.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+        },
+        {
+          "name": "OP_AxB",
+          "value": "0",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies transform [code]a[/code] by the vector [code]b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+        },
+        {
+          "name": "OP_BxA",
+          "value": "1",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies vector [code]b[/code] by the transform [code]a[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+        },
+        {
+          "name": "OP_MAX",
+          "value": "4",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Operator] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_AxB",
+      "value": "0",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies transform [code]a[/code] by the vector [code]b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    },
+    {
+      "name": "OP_BxA",
+      "value": "1",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies vector [code]b[/code] by the transform [code]a[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    },
+    {
+      "name": "OP_3x3_AxB",
+      "value": "2",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies transform [code]a[/code] by the vector [code]b[/code], skipping the last row and column of the transform.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    },
+    {
+      "name": "OP_3x3_BxA",
+      "value": "3",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies vector [code]b[/code] by the transform [code]a[/code], skipping the last row and column of the transform.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    },
+    {
+      "name": "OP_MAX",
+      "value": "4",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Operator] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTransformVecMult.xml",
+      "sha256": "93c0e857bb011401e0bc7b0a86408d30b4206542b82a8bfa9a496937815abde2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

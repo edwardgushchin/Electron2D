@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MissingNode",
+    "namespace": "Godot",
+    "fullName": "Godot.MissingNode",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "MissingNode",
+    "documentationPath": "doc/classes/MissingNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_missingnode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OriginalClass",
+      "kind": "Property",
+      "signature": "public String OriginalClass { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the class this node was supposed to be (see [method Object.get_class]).",
+      "godotName": "original_class",
+      "xmlDocId": "P:Godot.MissingNode.OriginalClass",
+      "sourcePath": "doc/classes/MissingNode.xml"
+    },
+    {
+      "name": "OriginalScene",
+      "kind": "Property",
+      "signature": "public String OriginalScene { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the path of the scene this node was instance of originally.",
+      "godotName": "original_scene",
+      "xmlDocId": "P:Godot.MissingNode.OriginalScene",
+      "sourcePath": "doc/classes/MissingNode.xml"
+    },
+    {
+      "name": "RecordingProperties",
+      "kind": "Property",
+      "signature": "public bool RecordingProperties { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows new properties to be set along with existing ones. If [code]false[/code], only existing properties\u0027 values can be set, and new properties cannot be added.",
+      "godotName": "recording_properties",
+      "xmlDocId": "P:Godot.MissingNode.RecordingProperties",
+      "sourcePath": "doc/classes/MissingNode.xml"
+    },
+    {
+      "name": "RecordingSignals",
+      "kind": "Property",
+      "signature": "public bool RecordingSignals { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows new signals to be connected to along with existing ones. If [code]false[/code], only existing signals can be connected to, and new signals cannot be added.",
+      "godotName": "recording_signals",
+      "xmlDocId": "P:Godot.MissingNode.RecordingSignals",
+      "sourcePath": "doc/classes/MissingNode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MissingNode.xml",
+      "sha256": "9861e6b838e5bd0d1945e30ad6e35841bc253ad9524c9c530777981c3f5beca7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

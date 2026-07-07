@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraServer",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraServer",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "CameraServer",
+    "documentationPath": "doc/classes/CameraServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cameraserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddFeed",
+      "kind": "Method",
+      "signature": "public void AddFeed(CameraFeed feed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "feed",
+          "type": "CameraFeed"
+        }
+      ],
+      "summary": "Adds the camera [param feed] to the camera server.",
+      "godotName": "add_feed",
+      "xmlDocId": "M:Godot.CameraServer.AddFeed(CameraFeed)",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "Feeds",
+      "kind": "Method",
+      "signature": "public CameraFeed[] Feeds()",
+      "returnType": "CameraFeed[]",
+      "parameters": [],
+      "summary": "Returns an array of [CameraFeed]s.",
+      "godotName": "feeds",
+      "xmlDocId": "M:Godot.CameraServer.Feeds",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "GetFeed",
+      "kind": "Method",
+      "signature": "public CameraFeed GetFeed(int index)",
+      "returnType": "CameraFeed",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [CameraFeed] corresponding to the camera with the given [param index].",
+      "godotName": "get_feed",
+      "xmlDocId": "M:Godot.CameraServer.GetFeed(int)",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "GetFeedCount",
+      "kind": "Method",
+      "signature": "public int GetFeedCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of [CameraFeed]s registered.",
+      "godotName": "get_feed_count",
+      "xmlDocId": "M:Godot.CameraServer.GetFeedCount",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "RemoveFeed",
+      "kind": "Method",
+      "signature": "public void RemoveFeed(CameraFeed feed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "feed",
+          "type": "CameraFeed"
+        }
+      ],
+      "summary": "Removes the specified camera [param feed].",
+      "godotName": "remove_feed",
+      "xmlDocId": "M:Godot.CameraServer.RemoveFeed(CameraFeed)",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "MonitoringFeeds",
+      "kind": "Property",
+      "signature": "public bool MonitoringFeeds { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the server is actively monitoring available camera feeds. This has a performance cost, so only set it to [code]true[/code] when you\u0027re actively accessing the camera. [b]Note:[/b] After setting it to [code]true[/code], you can receive updated camera feeds through the [signal camera_feeds_updated] signal. [codeblocks] [gdscript] func _ready(): CameraServer.camera_feeds_updated.connect(_on_camera_feeds_updated) CameraServer.monitoring_feeds = true func _on_camera_feeds_updated(): var feeds = CameraServer.feeds() [/gdscript] [csharp] public override void _Ready() { CameraServer.CameraFeedsUpdated \u002B= OnCameraFeedsUpdated; CameraServer.MonitoringFeeds = true; } void OnCameraFeedsUpdated() { var feeds = CameraServer.Feeds(); } [/csharp] [/codeblocks]",
+      "defaultValue": "false",
+      "godotName": "monitoring_feeds",
+      "xmlDocId": "P:Godot.CameraServer.MonitoringFeeds",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "CameraFeedAdded",
+      "kind": "Signal",
+      "signature": "public event CameraFeedAddedHandler CameraFeedAdded",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [CameraFeed] is added (e.g. a webcam is plugged in).",
+      "godotName": "camera_feed_added",
+      "xmlDocId": "E:Godot.CameraServer.CameraFeedAdded(int)",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "CameraFeedRemoved",
+      "kind": "Signal",
+      "signature": "public event CameraFeedRemovedHandler CameraFeedRemoved",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [CameraFeed] is removed (e.g. a webcam is unplugged).",
+      "godotName": "camera_feed_removed",
+      "xmlDocId": "E:Godot.CameraServer.CameraFeedRemoved(int)",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "CameraFeedsUpdated",
+      "kind": "Signal",
+      "signature": "public event CameraFeedsUpdatedHandler CameraFeedsUpdated",
+      "parameters": [],
+      "summary": "Emitted when camera feeds are updated.",
+      "godotName": "camera_feeds_updated",
+      "xmlDocId": "E:Godot.CameraServer.CameraFeedsUpdated",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "FeedImage",
+      "values": [
+        {
+          "name": "FEED_CBCR_IMAGE",
+          "value": "1",
+          "enum": "FeedImage",
+          "kind": "EnumValue",
+          "summary": "The CbCr component camera image.",
+          "sourcePath": "doc/classes/CameraServer.xml"
+        },
+        {
+          "name": "FEED_RGBA_IMAGE",
+          "value": "0",
+          "enum": "FeedImage",
+          "kind": "EnumValue",
+          "summary": "The RGBA camera image.",
+          "sourcePath": "doc/classes/CameraServer.xml"
+        },
+        {
+          "name": "FEED_YCBCR_IMAGE",
+          "value": "0",
+          "enum": "FeedImage",
+          "kind": "EnumValue",
+          "summary": "The [url=https://en.wikipedia.org/wiki/YCbCr]YCbCr[/url] camera image.",
+          "sourcePath": "doc/classes/CameraServer.xml"
+        },
+        {
+          "name": "FEED_Y_IMAGE",
+          "value": "0",
+          "enum": "FeedImage",
+          "kind": "EnumValue",
+          "summary": "The Y component camera image.",
+          "sourcePath": "doc/classes/CameraServer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FEED_RGBA_IMAGE",
+      "value": "0",
+      "enum": "FeedImage",
+      "kind": "EnumValue",
+      "summary": "The RGBA camera image.",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "FEED_YCBCR_IMAGE",
+      "value": "0",
+      "enum": "FeedImage",
+      "kind": "EnumValue",
+      "summary": "The [url=https://en.wikipedia.org/wiki/YCbCr]YCbCr[/url] camera image.",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "FEED_Y_IMAGE",
+      "value": "0",
+      "enum": "FeedImage",
+      "kind": "EnumValue",
+      "summary": "The Y component camera image.",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    },
+    {
+      "name": "FEED_CBCR_IMAGE",
+      "value": "1",
+      "enum": "FeedImage",
+      "kind": "EnumValue",
+      "summary": "The CbCr component camera image.",
+      "sourcePath": "doc/classes/CameraServer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraServer.xml",
+      "sha256": "af23adf574ba03f6dc55f7bb24e0b53cf8585c03619e241ba444b3192db01fa4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

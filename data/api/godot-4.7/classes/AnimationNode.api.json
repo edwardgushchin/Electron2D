@@ -1,0 +1,755 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNode",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNode",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "AnimationNode",
+    "documentationPath": "doc/classes/AnimationNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetCaption",
+      "kind": "Method",
+      "signature": "public String _GetCaption()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to override the text caption for this animation node.",
+      "godotName": "_get_caption",
+      "xmlDocId": "M:Godot.AnimationNode._GetCaption",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetChildByName",
+      "kind": "Method",
+      "signature": "public AnimationNode _GetChildByName(StringName name)",
+      "returnType": "AnimationNode",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return a child animation node by its [param name].",
+      "godotName": "_get_child_by_name",
+      "xmlDocId": "M:Godot.AnimationNode._GetChildByName(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetChildNodes",
+      "kind": "Method",
+      "signature": "public Dictionary _GetChildNodes()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return all child animation nodes in order as a [code]name: node[/code] dictionary.",
+      "godotName": "_get_child_nodes",
+      "xmlDocId": "M:Godot.AnimationNode._GetChildNodes",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetParameterDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetParameterDefaultValue(StringName parameter)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "parameter",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return the default value of a [param parameter]. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees.",
+      "godotName": "_get_parameter_default_value",
+      "xmlDocId": "M:Godot.AnimationNode._GetParameterDefaultValue(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetParameterList",
+      "kind": "Method",
+      "signature": "public Array _GetParameterList()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return a list of the properties on this animation node. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees. Format is similar to [method Object.get_property_list].",
+      "godotName": "_get_parameter_list",
+      "xmlDocId": "M:Godot.AnimationNode._GetParameterList",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_HasFilter",
+      "kind": "Method",
+      "signature": "public bool _HasFilter()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return whether the blend tree editor should display filter editing on this animation node.",
+      "godotName": "_has_filter",
+      "xmlDocId": "M:Godot.AnimationNode._HasFilter",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_IsParameterReadOnly",
+      "kind": "Method",
+      "signature": "public bool _IsParameterReadOnly(StringName parameter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "parameter",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return whether the [param parameter] is read-only. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees.",
+      "godotName": "_is_parameter_read_only",
+      "xmlDocId": "M:Godot.AnimationNode._IsParameterReadOnly(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public float _Process(float time, bool seek, bool isExternalSeeking, bool testOnly)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "seek",
+          "type": "bool"
+        },
+        {
+          "name": "is_external_seeking",
+          "type": "bool"
+        },
+        {
+          "name": "test_only",
+          "type": "bool"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to run some code when this animation node is processed. The [param time] parameter is a relative delta, unless [param seek] is [code]true[/code], in which case it is absolute. Here, call the [method blend_input], [method blend_node] or [method blend_animation] functions. You can also use [method get_parameter] and [method set_parameter] to modify local memory. This function should return the delta.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.AnimationNode._Process(float,bool,bool,bool)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "AddInput",
+      "kind": "Method",
+      "signature": "public bool AddInput(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds an input to the animation node. This is only useful for animation nodes created for use in an [AnimationNodeBlendTree]. If the addition fails, returns [code]false[/code].",
+      "godotName": "add_input",
+      "xmlDocId": "M:Godot.AnimationNode.AddInput(String)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "BlendAnimation",
+      "kind": "Method",
+      "signature": "public void BlendAnimation(StringName animation, float time, float delta, bool seeked, bool isExternalSeeking, float blend, int loopedFlag)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "StringName"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "delta",
+          "type": "float"
+        },
+        {
+          "name": "seeked",
+          "type": "bool"
+        },
+        {
+          "name": "is_external_seeking",
+          "type": "bool"
+        },
+        {
+          "name": "blend",
+          "type": "float"
+        },
+        {
+          "name": "looped_flag",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Blends an animation by [param blend] amount (name must be valid in the linked [AnimationPlayer]). A [param time] and [param delta] may be passed, as well as whether [param seeked] happened. A [param looped_flag] is used by internal processing immediately after the loop.",
+      "godotName": "blend_animation",
+      "xmlDocId": "M:Godot.AnimationNode.BlendAnimation(StringName,float,float,bool,bool,float,int)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "BlendInput",
+      "kind": "Method",
+      "signature": "public float BlendInput(int inputIndex, float time, bool seek, bool isExternalSeeking, float blend, int filter, bool sync, bool testOnly)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "input_index",
+          "type": "int"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "seek",
+          "type": "bool"
+        },
+        {
+          "name": "is_external_seeking",
+          "type": "bool"
+        },
+        {
+          "name": "blend",
+          "type": "float"
+        },
+        {
+          "name": "filter",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "sync",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "test_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Blends an input. This is only useful for animation nodes created for an [AnimationNodeBlendTree]. The [param time] parameter is a relative delta, unless [param seek] is [code]true[/code], in which case it is absolute. A filter mode may be optionally passed.",
+      "godotName": "blend_input",
+      "xmlDocId": "M:Godot.AnimationNode.BlendInput(int,float,bool,bool,float,int,bool,bool)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "BlendNode",
+      "kind": "Method",
+      "signature": "public float BlendNode(StringName name, AnimationNode node, float time, bool seek, bool isExternalSeeking, float blend, int filter, bool sync, bool testOnly)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "node",
+          "type": "AnimationNode"
+        },
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "seek",
+          "type": "bool"
+        },
+        {
+          "name": "is_external_seeking",
+          "type": "bool"
+        },
+        {
+          "name": "blend",
+          "type": "float"
+        },
+        {
+          "name": "filter",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "sync",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "test_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Blend another animation node (in case this animation node contains child animation nodes). This function is only useful if you inherit from [AnimationRootNode] instead, otherwise editors will not display your animation node for addition.",
+      "godotName": "blend_node",
+      "xmlDocId": "M:Godot.AnimationNode.BlendNode(StringName,AnimationNode,float,bool,bool,float,int,bool,bool)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "FindInput",
+      "kind": "Method",
+      "signature": "public int FindInput(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the input index which corresponds to [param name]. If not found, returns [code]-1[/code].",
+      "godotName": "find_input",
+      "xmlDocId": "M:Godot.AnimationNode.FindInput(String)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "GetInputCount",
+      "kind": "Method",
+      "signature": "public int GetInputCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Amount of inputs in this animation node, only useful for animation nodes that go into [AnimationNodeBlendTree].",
+      "godotName": "get_input_count",
+      "xmlDocId": "M:Godot.AnimationNode.GetInputCount",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "GetInputName",
+      "kind": "Method",
+      "signature": "public String GetInputName(int input)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the name of an input by index.",
+      "godotName": "get_input_name",
+      "xmlDocId": "M:Godot.AnimationNode.GetInputName(int)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "GetParameter",
+      "kind": "Method",
+      "signature": "public Variant GetParameter(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Gets the value of a parameter. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees.",
+      "godotName": "get_parameter",
+      "xmlDocId": "M:Godot.AnimationNode.GetParameter(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "GetProcessingAnimationTreeInstanceId",
+      "kind": "Method",
+      "signature": "public int GetProcessingAnimationTreeInstanceId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the object id of the [AnimationTree] that owns this node. [b]Note:[/b] This method should only be called from within the [method AnimationNodeExtension._process_animation_node] method, and will return an invalid id otherwise.",
+      "godotName": "get_processing_animation_tree_instance_id",
+      "xmlDocId": "M:Godot.AnimationNode.GetProcessingAnimationTreeInstanceId",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "IsPathFiltered",
+      "kind": "Method",
+      "signature": "public bool IsPathFiltered(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given path is filtered.",
+      "godotName": "is_path_filtered",
+      "xmlDocId": "M:Godot.AnimationNode.IsPathFiltered(NodePath)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "IsProcessTesting",
+      "kind": "Method",
+      "signature": "public bool IsProcessTesting()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this animation node is being processed in test-only mode.",
+      "godotName": "is_process_testing",
+      "xmlDocId": "M:Godot.AnimationNode.IsProcessTesting",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "RemoveInput",
+      "kind": "Method",
+      "signature": "public void RemoveInput(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an input, call this only when inactive.",
+      "godotName": "remove_input",
+      "xmlDocId": "M:Godot.AnimationNode.RemoveInput(int)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "SetFilterPath",
+      "kind": "Method",
+      "signature": "public void SetFilterPath(NodePath path, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds or removes a path for the filter.",
+      "godotName": "set_filter_path",
+      "xmlDocId": "M:Godot.AnimationNode.SetFilterPath(NodePath,bool)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "SetInputName",
+      "kind": "Method",
+      "signature": "public bool SetInputName(int input, String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the name of the input at the given [param input] index. If the setting fails, returns [code]false[/code].",
+      "godotName": "set_input_name",
+      "xmlDocId": "M:Godot.AnimationNode.SetInputName(int,String)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "SetParameter",
+      "kind": "Method",
+      "signature": "public void SetParameter(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets a custom parameter. These are used as local memory, because resources can be reused across the tree or scenes.",
+      "godotName": "set_parameter",
+      "xmlDocId": "M:Godot.AnimationNode.SetParameter(StringName,Variant)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "FilterEnabled",
+      "kind": "Property",
+      "signature": "public bool FilterEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], filtering is enabled.",
+      "godotName": "filter_enabled",
+      "xmlDocId": "P:Godot.AnimationNode.FilterEnabled",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationNodeRemoved",
+      "kind": "Signal",
+      "signature": "public event AnimationNodeRemovedHandler AnimationNodeRemoved",
+      "parameters": [
+        {
+          "name": "object_id",
+          "type": "int"
+        },
+        {
+          "name": "node_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted by nodes that inherit from this class and that have an internal tree when one of their animation nodes removes. The animation nodes that emit this signal are [AnimationNodeBlendSpace1D], [AnimationNodeBlendSpace2D], [AnimationNodeStateMachine], and [AnimationNodeBlendTree].",
+      "godotName": "animation_node_removed",
+      "xmlDocId": "E:Godot.AnimationNode.AnimationNodeRemoved(int,String)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "AnimationNodeRenamed",
+      "kind": "Signal",
+      "signature": "public event AnimationNodeRenamedHandler AnimationNodeRenamed",
+      "parameters": [
+        {
+          "name": "object_id",
+          "type": "int"
+        },
+        {
+          "name": "old_name",
+          "type": "String"
+        },
+        {
+          "name": "new_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted by nodes that inherit from this class and that have an internal tree when one of their animation node names changes. The animation nodes that emit this signal are [AnimationNodeBlendSpace1D], [AnimationNodeBlendSpace2D], [AnimationNodeStateMachine], and [AnimationNodeBlendTree].",
+      "godotName": "animation_node_renamed",
+      "xmlDocId": "E:Godot.AnimationNode.AnimationNodeRenamed(int,String,String)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "NodeUpdated",
+      "kind": "Signal",
+      "signature": "public event NodeUpdatedHandler NodeUpdated",
+      "parameters": [
+        {
+          "name": "object_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted by [AnimationNodeAnimation] when its [member AnimationNodeAnimation.animation] resource is changed, or by [AnimationNodeBlendTree] when its connections change.",
+      "godotName": "node_updated",
+      "xmlDocId": "E:Godot.AnimationNode.NodeUpdated(int)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "TreeChanged",
+      "kind": "Signal",
+      "signature": "public event TreeChangedHandler TreeChanged",
+      "parameters": [],
+      "summary": "Emitted by nodes that inherit from this class and that have an internal tree when one of their animation nodes changes. The animation nodes that emit this signal are [AnimationNodeBlendSpace1D], [AnimationNodeBlendSpace2D], [AnimationNodeStateMachine], [AnimationNodeBlendTree] and [AnimationNodeTransition].",
+      "godotName": "tree_changed",
+      "xmlDocId": "E:Godot.AnimationNode.TreeChanged",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "FilterAction",
+      "values": [
+        {
+          "name": "FILTER_BLEND",
+          "value": "3",
+          "enum": "FilterAction",
+          "kind": "EnumValue",
+          "summary": "Paths matching the filter will be blended (by the blend value).",
+          "sourcePath": "doc/classes/AnimationNode.xml"
+        },
+        {
+          "name": "FILTER_IGNORE",
+          "value": "0",
+          "enum": "FilterAction",
+          "kind": "EnumValue",
+          "summary": "Do not use filtering.",
+          "sourcePath": "doc/classes/AnimationNode.xml"
+        },
+        {
+          "name": "FILTER_PASS",
+          "value": "1",
+          "enum": "FilterAction",
+          "kind": "EnumValue",
+          "summary": "Paths matching the filter will be allowed to pass.",
+          "sourcePath": "doc/classes/AnimationNode.xml"
+        },
+        {
+          "name": "FILTER_STOP",
+          "value": "2",
+          "enum": "FilterAction",
+          "kind": "EnumValue",
+          "summary": "Paths matching the filter will be discarded.",
+          "sourcePath": "doc/classes/AnimationNode.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILTER_IGNORE",
+      "value": "0",
+      "enum": "FilterAction",
+      "kind": "EnumValue",
+      "summary": "Do not use filtering.",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "FILTER_PASS",
+      "value": "1",
+      "enum": "FilterAction",
+      "kind": "EnumValue",
+      "summary": "Paths matching the filter will be allowed to pass.",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "FILTER_STOP",
+      "value": "2",
+      "enum": "FilterAction",
+      "kind": "EnumValue",
+      "summary": "Paths matching the filter will be discarded.",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "FILTER_BLEND",
+      "value": "3",
+      "enum": "FilterAction",
+      "kind": "EnumValue",
+      "summary": "Paths matching the filter will be blended (by the blend value).",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetCaption",
+      "kind": "Method",
+      "signature": "public String _GetCaption()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to override the text caption for this animation node.",
+      "godotName": "_get_caption",
+      "xmlDocId": "M:Godot.AnimationNode._GetCaption",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetChildByName",
+      "kind": "Method",
+      "signature": "public AnimationNode _GetChildByName(StringName name)",
+      "returnType": "AnimationNode",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return a child animation node by its [param name].",
+      "godotName": "_get_child_by_name",
+      "xmlDocId": "M:Godot.AnimationNode._GetChildByName(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetChildNodes",
+      "kind": "Method",
+      "signature": "public Dictionary _GetChildNodes()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return all child animation nodes in order as a [code]name: node[/code] dictionary.",
+      "godotName": "_get_child_nodes",
+      "xmlDocId": "M:Godot.AnimationNode._GetChildNodes",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetParameterDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetParameterDefaultValue(StringName parameter)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "parameter",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return the default value of a [param parameter]. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees.",
+      "godotName": "_get_parameter_default_value",
+      "xmlDocId": "M:Godot.AnimationNode._GetParameterDefaultValue(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_GetParameterList",
+      "kind": "Method",
+      "signature": "public Array _GetParameterList()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return a list of the properties on this animation node. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees. Format is similar to [method Object.get_property_list].",
+      "godotName": "_get_parameter_list",
+      "xmlDocId": "M:Godot.AnimationNode._GetParameterList",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_HasFilter",
+      "kind": "Method",
+      "signature": "public bool _HasFilter()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return whether the blend tree editor should display filter editing on this animation node.",
+      "godotName": "_has_filter",
+      "xmlDocId": "M:Godot.AnimationNode._HasFilter",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_IsParameterReadOnly",
+      "kind": "Method",
+      "signature": "public bool _IsParameterReadOnly(StringName parameter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "parameter",
+          "type": "StringName"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to return whether the [param parameter] is read-only. Parameters are custom local memory used for your animation nodes, given a resource can be reused in multiple trees.",
+      "godotName": "_is_parameter_read_only",
+      "xmlDocId": "M:Godot.AnimationNode._IsParameterReadOnly(StringName)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public float _Process(float time, bool seek, bool isExternalSeeking, bool testOnly)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        },
+        {
+          "name": "seek",
+          "type": "bool"
+        },
+        {
+          "name": "is_external_seeking",
+          "type": "bool"
+        },
+        {
+          "name": "test_only",
+          "type": "bool"
+        }
+      ],
+      "summary": "When inheriting from [AnimationRootNode], implement this virtual method to run some code when this animation node is processed. The [param time] parameter is a relative delta, unless [param seek] is [code]true[/code], in which case it is absolute. Here, call the [method blend_input], [method blend_node] or [method blend_animation] functions. You can also use [method get_parameter] and [method set_parameter] to modify local memory. This function should return the delta.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.AnimationNode._Process(float,bool,bool,bool)",
+      "sourcePath": "doc/classes/AnimationNode.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNode.xml",
+      "sha256": "3cc220abe2ccc0c02591b0503d9052b1b954c6dc260b43bf71ec3f23ef3233b9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

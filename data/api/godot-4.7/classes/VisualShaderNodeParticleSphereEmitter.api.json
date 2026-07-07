@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleSphereEmitter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleSphereEmitter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParticleEmitter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleSphereEmitter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleSphereEmitter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticlesphereemitter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleSphereEmitter.xml",
+      "sha256": "c6d9dfc75fc549d6dcb61d4188591ef81a1667854dc10213d91066833a45308d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

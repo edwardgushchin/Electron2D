@@ -1,0 +1,1622 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CPUParticles3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CPUParticles3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "CPUParticles3D",
+    "documentationPath": "doc/classes/CPUParticles3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cpuparticles3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CaptureAabb",
+      "kind": "Method",
+      "signature": "public AABB CaptureAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the axis-aligned bounding box that contains all the particles that are active in the current frame.",
+      "godotName": "capture_aabb",
+      "xmlDocId": "M:Godot.CPUParticles3D.CaptureAabb",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ConvertFromParticles",
+      "kind": "Method",
+      "signature": "public void ConvertFromParticles(Node particles)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "particles",
+          "type": "Node"
+        }
+      ],
+      "summary": "Sets this node\u0027s properties to match a given [GPUParticles3D] node with an assigned [ParticleProcessMaterial].",
+      "godotName": "convert_from_particles",
+      "xmlDocId": "M:Godot.CPUParticles3D.ConvertFromParticles(Node)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "GetParamCurve",
+      "kind": "Method",
+      "signature": "public Curve GetParamCurve(int param)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Curve] of the parameter specified by [enum Parameter].",
+      "godotName": "get_param_curve",
+      "xmlDocId": "M:Godot.CPUParticles3D.GetParamCurve(int)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "GetParamMax",
+      "kind": "Method",
+      "signature": "public float GetParamMax(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum value range for the given parameter.",
+      "godotName": "get_param_max",
+      "xmlDocId": "M:Godot.CPUParticles3D.GetParamMax(int)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "GetParamMin",
+      "kind": "Method",
+      "signature": "public float GetParamMin(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum value range for the given parameter.",
+      "godotName": "get_param_min",
+      "xmlDocId": "M:Godot.CPUParticles3D.GetParamMin(int)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "GetParticleFlag",
+      "kind": "Method",
+      "signature": "public bool GetParticleFlag(int particleFlag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "particle_flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the enabled state of the given particle flag.",
+      "godotName": "get_particle_flag",
+      "xmlDocId": "M:Godot.CPUParticles3D.GetParticleFlag(int)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "RequestParticlesProcess",
+      "kind": "Method",
+      "signature": "public void RequestParticlesProcess(float processTime, float processTimeResidual)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "process_time",
+          "type": "float"
+        },
+        {
+          "name": "process_time_residual",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Requests the particles to process for extra process time during a single frame. [param process_time] defines the time that the particles will process while emitting is on. [param process_time_residual] defines the time that particles will process with emitting turned off for the simulation. When combined with [member speed_scale] set to [code]0.0[/code], this is useful to be able to seek a particle system timeline.",
+      "godotName": "request_particles_process",
+      "xmlDocId": "M:Godot.CPUParticles3D.RequestParticlesProcess(float,float)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Restart",
+      "kind": "Method",
+      "signature": "public void Restart(bool keepSeed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keep_seed",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Restarts the particle emitter. If [param keep_seed] is [code]true[/code], the current random seed will be preserved. Useful for seeking and playback.",
+      "godotName": "restart",
+      "xmlDocId": "M:Godot.CPUParticles3D.Restart(bool)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SetParamCurve",
+      "kind": "Method",
+      "signature": "public void SetParamCurve(int param, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the [Curve] of the parameter specified by [enum Parameter]. Should be a unit [Curve].",
+      "godotName": "set_param_curve",
+      "xmlDocId": "M:Godot.CPUParticles3D.SetParamCurve(int,Curve)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SetParamMax",
+      "kind": "Method",
+      "signature": "public void SetParamMax(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum value for the given parameter.",
+      "godotName": "set_param_max",
+      "xmlDocId": "M:Godot.CPUParticles3D.SetParamMax(int,float)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SetParamMin",
+      "kind": "Method",
+      "signature": "public void SetParamMin(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum value for the given parameter.",
+      "godotName": "set_param_min",
+      "xmlDocId": "M:Godot.CPUParticles3D.SetParamMin(int,float)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SetParticleFlag",
+      "kind": "Method",
+      "signature": "public void SetParticleFlag(int particleFlag, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "particle_flag",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables the given particle flag.",
+      "godotName": "set_particle_flag",
+      "xmlDocId": "M:Godot.CPUParticles3D.SetParticleFlag(int,bool)",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Amount",
+      "kind": "Property",
+      "signature": "public int Amount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of particles emitted in one emission cycle.",
+      "defaultValue": "8",
+      "godotName": "amount",
+      "xmlDocId": "P:Godot.CPUParticles3D.Amount",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngleCurve",
+      "kind": "Property",
+      "signature": "public Curve AngleCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s rotation will be animated along this [Curve]. Should be a unit [Curve].",
+      "godotName": "angle_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngleCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngleMax",
+      "kind": "Property",
+      "signature": "public float AngleMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum angle.",
+      "defaultValue": "0.0",
+      "godotName": "angle_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngleMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngleMin",
+      "kind": "Property",
+      "signature": "public float AngleMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum angle.",
+      "defaultValue": "0.0",
+      "godotName": "angle_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngleMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngularVelocityCurve",
+      "kind": "Property",
+      "signature": "public Curve AngularVelocityCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s angular velocity (rotation speed) will vary along this [Curve] over its lifetime. Should be a unit [Curve].",
+      "godotName": "angular_velocity_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngularVelocityCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngularVelocityMax",
+      "kind": "Property",
+      "signature": "public float AngularVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum initial angular velocity (rotation speed) applied to each particle in [i]degrees[/i] per second.",
+      "defaultValue": "0.0",
+      "godotName": "angular_velocity_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngularVelocityMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AngularVelocityMin",
+      "kind": "Property",
+      "signature": "public float AngularVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum initial angular velocity (rotation speed) applied to each particle in [i]degrees[/i] per second.",
+      "defaultValue": "0.0",
+      "godotName": "angular_velocity_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.AngularVelocityMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimOffsetCurve",
+      "kind": "Property",
+      "signature": "public Curve AnimOffsetCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s animation offset will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "anim_offset_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimOffsetCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimOffsetMax",
+      "kind": "Property",
+      "signature": "public float AnimOffsetMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum animation offset.",
+      "defaultValue": "0.0",
+      "godotName": "anim_offset_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimOffsetMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimOffsetMin",
+      "kind": "Property",
+      "signature": "public float AnimOffsetMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum animation offset.",
+      "defaultValue": "0.0",
+      "godotName": "anim_offset_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimOffsetMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimSpeedCurve",
+      "kind": "Property",
+      "signature": "public Curve AnimSpeedCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s animation speed will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "anim_speed_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimSpeedCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimSpeedMax",
+      "kind": "Property",
+      "signature": "public float AnimSpeedMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum particle animation speed.",
+      "defaultValue": "0.0",
+      "godotName": "anim_speed_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimSpeedMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "AnimSpeedMin",
+      "kind": "Property",
+      "signature": "public float AnimSpeedMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum particle animation speed.",
+      "defaultValue": "0.0",
+      "godotName": "anim_speed_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.AnimSpeedMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial color. [b]Note:[/b] [member color] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color] will have no visible effect.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.CPUParticles3D.Color",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ColorInitialRamp",
+      "kind": "Property",
+      "signature": "public Gradient ColorInitialRamp { get; set; }",
+      "returnType": "Gradient",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial color will vary along this [Gradient] (multiplied with [member color]). [b]Note:[/b] [member color_initial_ramp] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color_initial_ramp] will have no visible effect.",
+      "godotName": "color_initial_ramp",
+      "xmlDocId": "P:Godot.CPUParticles3D.ColorInitialRamp",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ColorRamp",
+      "kind": "Property",
+      "signature": "public Gradient ColorRamp { get; set; }",
+      "returnType": "Gradient",
+      "parameters": [],
+      "summary": "Each particle\u0027s color will vary along this [Gradient] over its lifetime (multiplied with [member color]). [b]Note:[/b] [member color_ramp] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member color_ramp] will have no visible effect.",
+      "godotName": "color_ramp",
+      "xmlDocId": "P:Godot.CPUParticles3D.ColorRamp",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DampingCurve",
+      "kind": "Property",
+      "signature": "public Curve DampingCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Damping will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "damping_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.DampingCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DampingMax",
+      "kind": "Property",
+      "signature": "public float DampingMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum damping.",
+      "defaultValue": "0.0",
+      "godotName": "damping_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.DampingMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DampingMin",
+      "kind": "Property",
+      "signature": "public float DampingMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum damping.",
+      "defaultValue": "0.0",
+      "godotName": "damping_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.DampingMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Direction",
+      "kind": "Property",
+      "signature": "public Vector3 Direction { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Unit vector specifying the particles\u0027 emission direction.",
+      "defaultValue": "Vector3(1, 0, 0)",
+      "godotName": "direction",
+      "xmlDocId": "P:Godot.CPUParticles3D.Direction",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DrawOrder",
+      "kind": "Property",
+      "signature": "public int DrawOrder { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Particle draw order.",
+      "defaultValue": "0",
+      "godotName": "draw_order",
+      "xmlDocId": "P:Godot.CPUParticles3D.DrawOrder",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionBoxExtents",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionBoxExtents { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The rectangle\u0027s extents if [member emission_shape] is set to [constant EMISSION_SHAPE_BOX].",
+      "godotName": "emission_box_extents",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionBoxExtents",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionColors",
+      "kind": "Property",
+      "signature": "public PackedColorArray EmissionColors { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Sets the [Color]s to modulate particles by when using [constant EMISSION_SHAPE_POINTS] or [constant EMISSION_SHAPE_DIRECTED_POINTS]. [b]Note:[/b] [member emission_colors] multiplies the particle mesh\u0027s vertex colors. To have a visible effect on a [BaseMaterial3D], [member BaseMaterial3D.vertex_color_use_as_albedo] [i]must[/i] be [code]true[/code]. For a [ShaderMaterial], [code]ALBEDO *= COLOR.rgb;[/code] must be inserted in the shader\u0027s [code]fragment()[/code] function. Otherwise, [member emission_colors] will have no visible effect.",
+      "defaultValue": "PackedColorArray()",
+      "godotName": "emission_colors",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionColors",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionNormals",
+      "kind": "Property",
+      "signature": "public PackedVector3Array EmissionNormals { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Sets the direction the particles will be emitted in when using [constant EMISSION_SHAPE_DIRECTED_POINTS].",
+      "godotName": "emission_normals",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionNormals",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionPoints",
+      "kind": "Property",
+      "signature": "public PackedVector3Array EmissionPoints { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Sets the initial positions to spawn particles when using [constant EMISSION_SHAPE_POINTS] or [constant EMISSION_SHAPE_DIRECTED_POINTS].",
+      "godotName": "emission_points",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionPoints",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionRingAxis",
+      "kind": "Property",
+      "signature": "public Vector3 EmissionRingAxis { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The axis of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_axis",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionRingAxis",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionRingConeAngle",
+      "kind": "Property",
+      "signature": "public float EmissionRingConeAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The angle of the cone when using the emitter [constant EMISSION_SHAPE_RING]. The default angle of 90 degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values will result in a ring where one end is larger than the other. [b]Note:[/b] Depending on [member emission_ring_height], the angle may be clamped if the ring\u0027s end is reached to form a perfect cone.",
+      "godotName": "emission_ring_cone_angle",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionRingConeAngle",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionRingHeight",
+      "kind": "Property",
+      "signature": "public float EmissionRingHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_height",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionRingHeight",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionRingInnerRadius",
+      "kind": "Property",
+      "signature": "public float EmissionRingInnerRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inner radius of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_inner_radius",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionRingInnerRadius",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionRingRadius",
+      "kind": "Property",
+      "signature": "public float EmissionRingRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the ring when using the emitter [constant EMISSION_SHAPE_RING].",
+      "godotName": "emission_ring_radius",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionRingRadius",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionShape",
+      "kind": "Property",
+      "signature": "public int EmissionShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Particles will be emitted inside this region.",
+      "defaultValue": "0",
+      "godotName": "emission_shape",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionShape",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EmissionSphereRadius",
+      "kind": "Property",
+      "signature": "public float EmissionSphereRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sphere\u0027s radius if [enum EmissionShape] is set to [constant EMISSION_SHAPE_SPHERE].",
+      "godotName": "emission_sphere_radius",
+      "xmlDocId": "P:Godot.CPUParticles3D.EmissionSphereRadius",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Emitting",
+      "kind": "Property",
+      "signature": "public bool Emitting { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles are being emitted. [member emitting] can be used to start and stop particles from emitting. However, if [member one_shot] is [code]true[/code] setting [member emitting] to [code]true[/code] will not restart the emission cycle until after all active particles finish processing. You can use the [signal finished] signal to be notified once all active particles finish processing.",
+      "defaultValue": "true",
+      "godotName": "emitting",
+      "xmlDocId": "P:Godot.CPUParticles3D.Emitting",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Explosiveness",
+      "kind": "Property",
+      "signature": "public float Explosiveness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "How rapidly particles in an emission cycle are emitted. If greater than [code]0[/code], there will be a gap in emissions before the next cycle begins.",
+      "defaultValue": "0.0",
+      "godotName": "explosiveness",
+      "xmlDocId": "P:Godot.CPUParticles3D.Explosiveness",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "FixedFps",
+      "kind": "Property",
+      "signature": "public int FixedFps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particle system\u0027s frame rate is fixed to a value. For example, changing the value to 2 will make the particles render at 2 frames per second. Note this does not slow down the particle system itself.",
+      "defaultValue": "0",
+      "godotName": "fixed_fps",
+      "xmlDocId": "P:Godot.CPUParticles3D.FixedFps",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Flatness",
+      "kind": "Property",
+      "signature": "public float Flatness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of [member spread] in Y/Z plane. A value of [code]1[/code] restricts particles to X/Z plane.",
+      "defaultValue": "0.0",
+      "godotName": "flatness",
+      "xmlDocId": "P:Godot.CPUParticles3D.Flatness",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "FractDelta",
+      "kind": "Property",
+      "signature": "public bool FractDelta { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], results in fractional delta calculation which has a smoother particles display effect.",
+      "defaultValue": "true",
+      "godotName": "fract_delta",
+      "xmlDocId": "P:Godot.CPUParticles3D.FractDelta",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Gravity",
+      "kind": "Property",
+      "signature": "public Vector3 Gravity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Gravity applied to every particle.",
+      "defaultValue": "Vector3(0, -9.8, 0)",
+      "godotName": "gravity",
+      "xmlDocId": "P:Godot.CPUParticles3D.Gravity",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "HueVariationCurve",
+      "kind": "Property",
+      "signature": "public Curve HueVariationCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s hue will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "hue_variation_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.HueVariationCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "HueVariationMax",
+      "kind": "Property",
+      "signature": "public float HueVariationMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum hue variation.",
+      "defaultValue": "0.0",
+      "godotName": "hue_variation_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.HueVariationMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "HueVariationMin",
+      "kind": "Property",
+      "signature": "public float HueVariationMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum hue variation.",
+      "defaultValue": "0.0",
+      "godotName": "hue_variation_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.HueVariationMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "InitialVelocityMax",
+      "kind": "Property",
+      "signature": "public float InitialVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum value of the initial velocity.",
+      "defaultValue": "0.0",
+      "godotName": "initial_velocity_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.InitialVelocityMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "InitialVelocityMin",
+      "kind": "Property",
+      "signature": "public float InitialVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum value of the initial velocity.",
+      "defaultValue": "0.0",
+      "godotName": "initial_velocity_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.InitialVelocityMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Lifetime",
+      "kind": "Property",
+      "signature": "public float Lifetime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of time each particle will exist.",
+      "defaultValue": "1.0",
+      "godotName": "lifetime",
+      "xmlDocId": "P:Godot.CPUParticles3D.Lifetime",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "LifetimeRandomness",
+      "kind": "Property",
+      "signature": "public float LifetimeRandomness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Particle lifetime randomness ratio.",
+      "defaultValue": "0.0",
+      "godotName": "lifetime_randomness",
+      "xmlDocId": "P:Godot.CPUParticles3D.LifetimeRandomness",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "LinearAccelCurve",
+      "kind": "Property",
+      "signature": "public Curve LinearAccelCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s linear acceleration will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "linear_accel_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.LinearAccelCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "LinearAccelMax",
+      "kind": "Property",
+      "signature": "public float LinearAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum linear acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "linear_accel_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.LinearAccelMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "LinearAccelMin",
+      "kind": "Property",
+      "signature": "public float LinearAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum linear acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "linear_accel_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.LinearAccelMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "LocalCoords",
+      "kind": "Property",
+      "signature": "public bool LocalCoords { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles use the parent node\u0027s coordinate space (known as local coordinates). This will cause particles to move and rotate along the [CPUParticles3D] node (and its parents) when it is moved or rotated. If [code]false[/code], particles use global coordinates; they will not move or rotate along the [CPUParticles3D] node (and its parents) when it is moved or rotated.",
+      "defaultValue": "false",
+      "godotName": "local_coords",
+      "xmlDocId": "P:Godot.CPUParticles3D.LocalCoords",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "The [Mesh] used for each particle. If [code]null[/code], particles will be spheres.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.CPUParticles3D.Mesh",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "OneShot",
+      "kind": "Property",
+      "signature": "public bool OneShot { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], only one emission cycle occurs. If set [code]true[/code] during a cycle, emission will stop at the cycle\u0027s end.",
+      "defaultValue": "false",
+      "godotName": "one_shot",
+      "xmlDocId": "P:Godot.CPUParticles3D.OneShot",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "OrbitVelocityCurve",
+      "kind": "Property",
+      "signature": "public Curve OrbitVelocityCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s orbital velocity will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "orbit_velocity_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.OrbitVelocityCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "OrbitVelocityMax",
+      "kind": "Property",
+      "signature": "public float OrbitVelocityMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum orbit velocity.",
+      "godotName": "orbit_velocity_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.OrbitVelocityMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "OrbitVelocityMin",
+      "kind": "Property",
+      "signature": "public float OrbitVelocityMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum orbit velocity.",
+      "godotName": "orbit_velocity_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.OrbitVelocityMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ParticleFlagAlignY",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagAlignY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Align Y axis of particle with the direction of its velocity.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_align_y",
+      "xmlDocId": "P:Godot.CPUParticles3D.ParticleFlagAlignY",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ParticleFlagDisableZ",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagDisableZ { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles will not move on the Z axis.",
+      "defaultValue": "false",
+      "godotName": "particle_flag_disable_z",
+      "xmlDocId": "P:Godot.CPUParticles3D.ParticleFlagDisableZ",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ParticleFlagRotateY",
+      "kind": "Property",
+      "signature": "public bool ParticleFlagRotateY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles rotate around Y axis by [member angle_min].",
+      "defaultValue": "false",
+      "godotName": "particle_flag_rotate_y",
+      "xmlDocId": "P:Godot.CPUParticles3D.ParticleFlagRotateY",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Preprocess",
+      "kind": "Property",
+      "signature": "public float Preprocess { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Particle system starts as if it had already run for this many seconds.",
+      "defaultValue": "0.0",
+      "godotName": "preprocess",
+      "xmlDocId": "P:Godot.CPUParticles3D.Preprocess",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "RadialAccelCurve",
+      "kind": "Property",
+      "signature": "public Curve RadialAccelCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s radial acceleration will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "radial_accel_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.RadialAccelCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "RadialAccelMax",
+      "kind": "Property",
+      "signature": "public float RadialAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum radial acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "radial_accel_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.RadialAccelMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "RadialAccelMin",
+      "kind": "Property",
+      "signature": "public float RadialAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum radial acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "radial_accel_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.RadialAccelMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Randomness",
+      "kind": "Property",
+      "signature": "public float Randomness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Emission lifetime randomness ratio.",
+      "defaultValue": "0.0",
+      "godotName": "randomness",
+      "xmlDocId": "P:Godot.CPUParticles3D.Randomness",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleAmountCurve",
+      "kind": "Property",
+      "signature": "public Curve ScaleAmountCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s scale will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "scale_amount_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleAmountCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleAmountMax",
+      "kind": "Property",
+      "signature": "public float ScaleAmountMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum scale.",
+      "defaultValue": "1.0",
+      "godotName": "scale_amount_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleAmountMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleAmountMin",
+      "kind": "Property",
+      "signature": "public float ScaleAmountMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum scale.",
+      "defaultValue": "1.0",
+      "godotName": "scale_amount_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleAmountMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleCurveX",
+      "kind": "Property",
+      "signature": "public Curve ScaleCurveX { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Curve for the scale over life, along the x axis.",
+      "godotName": "scale_curve_x",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleCurveX",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleCurveY",
+      "kind": "Property",
+      "signature": "public Curve ScaleCurveY { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Curve for the scale over life, along the y axis.",
+      "godotName": "scale_curve_y",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleCurveY",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "ScaleCurveZ",
+      "kind": "Property",
+      "signature": "public Curve ScaleCurveZ { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Curve for the scale over life, along the z axis.",
+      "godotName": "scale_curve_z",
+      "xmlDocId": "P:Godot.CPUParticles3D.ScaleCurveZ",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Seed",
+      "kind": "Property",
+      "signature": "public int Seed { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the random seed used by the particle system. Only effective if [member use_fixed_seed] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "seed",
+      "xmlDocId": "P:Godot.CPUParticles3D.Seed",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Particle system\u0027s running speed scaling ratio. A value of [code]0[/code] can be used to pause the particles.",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.CPUParticles3D.SpeedScale",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "SplitScale",
+      "kind": "Property",
+      "signature": "public bool SplitScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], three different scale curves can be specified, one per scale axis.",
+      "defaultValue": "false",
+      "godotName": "split_scale",
+      "xmlDocId": "P:Godot.CPUParticles3D.SplitScale",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "Spread",
+      "kind": "Property",
+      "signature": "public float Spread { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Each particle\u0027s initial direction range from [code]\u002Bspread[/code] to [code]-spread[/code] degrees. Applied to X/Z plane and Y/Z planes.",
+      "defaultValue": "45.0",
+      "godotName": "spread",
+      "xmlDocId": "P:Godot.CPUParticles3D.Spread",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "TangentialAccelCurve",
+      "kind": "Property",
+      "signature": "public Curve TangentialAccelCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Each particle\u0027s tangential acceleration will vary along this [Curve]. Should be a unit [Curve].",
+      "godotName": "tangential_accel_curve",
+      "xmlDocId": "P:Godot.CPUParticles3D.TangentialAccelCurve",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "TangentialAccelMax",
+      "kind": "Property",
+      "signature": "public float TangentialAccelMax { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum tangent acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "tangential_accel_max",
+      "xmlDocId": "P:Godot.CPUParticles3D.TangentialAccelMax",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "TangentialAccelMin",
+      "kind": "Property",
+      "signature": "public float TangentialAccelMin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum tangent acceleration.",
+      "defaultValue": "0.0",
+      "godotName": "tangential_accel_min",
+      "xmlDocId": "P:Godot.CPUParticles3D.TangentialAccelMin",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "UseFixedSeed",
+      "kind": "Property",
+      "signature": "public bool UseFixedSeed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles will use the same seed for every simulation using the seed defined in [member seed]. This is useful for situations where the visual outcome should be consistent across replays, for example when using Movie Maker mode.",
+      "defaultValue": "false",
+      "godotName": "use_fixed_seed",
+      "xmlDocId": "P:Godot.CPUParticles3D.UseFixedSeed",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "VisibilityAabb",
+      "kind": "Property",
+      "signature": "public AABB VisibilityAabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "The [AABB] that determines the node\u0027s region which needs to be visible on screen for the particle system to be active. Grow the box if particles suddenly appear/disappear when the node enters/exits the screen. The [AABB] can be grown via code or with the [b]Particles \u2192 Generate AABB[/b] editor tool.",
+      "defaultValue": "AABB(0, 0, 0, 0, 0, 0)",
+      "godotName": "visibility_aabb",
+      "xmlDocId": "P:Godot.CPUParticles3D.VisibilityAabb",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when all active particles have finished processing. When [member one_shot] is disabled, particles will process continuously, so this is never emitted.",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.CPUParticles3D.Finished",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DrawOrder",
+      "values": [
+        {
+          "name": "DRAW_ORDER_INDEX",
+          "value": "0",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in the order emitted.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "DRAW_ORDER_LIFETIME",
+          "value": "1",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in order of remaining lifetime. In other words, the particle with the highest lifetime is drawn at the front.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "DRAW_ORDER_VIEW_DEPTH",
+          "value": "2",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in order of depth.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "EmissionShape",
+      "values": [
+        {
+          "name": "EMISSION_SHAPE_BOX",
+          "value": "3",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in the volume of a box.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_DIRECTED_POINTS",
+          "value": "5",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted at a position chosen randomly among [member emission_points]. Particle velocity and rotation will be set based on [member emission_normals]. Particle color will be modulated by [member emission_colors].",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_MAX",
+          "value": "7",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum EmissionShape] enum.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_POINT",
+          "value": "0",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "All particles will be emitted from a single point.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_POINTS",
+          "value": "4",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted at a position chosen randomly among [member emission_points]. Particle color will be modulated by [member emission_colors].",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_RING",
+          "value": "6",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in a ring or cylinder.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_SPHERE",
+          "value": "1",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted in the volume of a sphere.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "EMISSION_SHAPE_SPHERE_SURFACE",
+          "value": "2",
+          "enum": "EmissionShape",
+          "kind": "EnumValue",
+          "summary": "Particles will be emitted on the surface of a sphere.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Parameter",
+      "values": [
+        {
+          "name": "PARAM_ANGLE",
+          "value": "7",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set angle properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_VELOCITY",
+          "value": "1",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set angular velocity properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_ANIM_OFFSET",
+          "value": "11",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set animation offset properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_ANIM_SPEED",
+          "value": "10",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set animation speed properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_DAMPING",
+          "value": "6",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set damping properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_HUE_VARIATION",
+          "value": "9",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set hue variation properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_INITIAL_LINEAR_VELOCITY",
+          "value": "0",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set initial velocity properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_ACCEL",
+          "value": "3",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set linear acceleration properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "12",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Parameter] enum.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_ORBIT_VELOCITY",
+          "value": "2",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set orbital velocity properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_RADIAL_ACCEL",
+          "value": "4",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set radial acceleration properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_SCALE",
+          "value": "8",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set scale properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARAM_TANGENTIAL_ACCEL",
+          "value": "5",
+          "enum": "Parameter",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set tangential acceleration properties.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ParticleFlags",
+      "values": [
+        {
+          "name": "PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+          "value": "0",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_align_y].",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_DISABLE_Z",
+          "value": "2",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_disable_z].",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_MAX",
+          "value": "3",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ParticleFlags] enum.",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        },
+        {
+          "name": "PARTICLE_FLAG_ROTATE_Y",
+          "value": "1",
+          "enum": "ParticleFlags",
+          "kind": "EnumValue",
+          "summary": "Use with [method set_particle_flag] to set [member particle_flag_rotate_y].",
+          "sourcePath": "doc/classes/CPUParticles3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DRAW_ORDER_INDEX",
+      "value": "0",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in the order emitted.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DRAW_ORDER_LIFETIME",
+      "value": "1",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in order of remaining lifetime. In other words, the particle with the highest lifetime is drawn at the front.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "DRAW_ORDER_VIEW_DEPTH",
+      "value": "2",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in order of depth.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_INITIAL_LINEAR_VELOCITY",
+      "value": "0",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set initial velocity properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_VELOCITY",
+      "value": "1",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set angular velocity properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_ORBIT_VELOCITY",
+      "value": "2",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set orbital velocity properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_ACCEL",
+      "value": "3",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set linear acceleration properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_RADIAL_ACCEL",
+      "value": "4",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set radial acceleration properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_TANGENTIAL_ACCEL",
+      "value": "5",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set tangential acceleration properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_DAMPING",
+      "value": "6",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set damping properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_ANGLE",
+      "value": "7",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set angle properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_SCALE",
+      "value": "8",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set scale properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_HUE_VARIATION",
+      "value": "9",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set hue variation properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_ANIM_SPEED",
+      "value": "10",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set animation speed properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_ANIM_OFFSET",
+      "value": "11",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_param_min], [method set_param_max], and [method set_param_curve] to set animation offset properties.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "12",
+      "enum": "Parameter",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Parameter] enum.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+      "value": "0",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_align_y].",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_ROTATE_Y",
+      "value": "1",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_rotate_y].",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_DISABLE_Z",
+      "value": "2",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Use with [method set_particle_flag] to set [member particle_flag_disable_z].",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "PARTICLE_FLAG_MAX",
+      "value": "3",
+      "enum": "ParticleFlags",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ParticleFlags] enum.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_POINT",
+      "value": "0",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "All particles will be emitted from a single point.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_SPHERE",
+      "value": "1",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in the volume of a sphere.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_SPHERE_SURFACE",
+      "value": "2",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted on the surface of a sphere.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_BOX",
+      "value": "3",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in the volume of a box.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_POINTS",
+      "value": "4",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted at a position chosen randomly among [member emission_points]. Particle color will be modulated by [member emission_colors].",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_DIRECTED_POINTS",
+      "value": "5",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted at a position chosen randomly among [member emission_points]. Particle velocity and rotation will be set based on [member emission_normals]. Particle color will be modulated by [member emission_colors].",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_RING",
+      "value": "6",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Particles will be emitted in a ring or cylinder.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    },
+    {
+      "name": "EMISSION_SHAPE_MAX",
+      "value": "7",
+      "enum": "EmissionShape",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum EmissionShape] enum.",
+      "sourcePath": "doc/classes/CPUParticles3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CPUParticles3D.xml",
+      "sha256": "6f371244af455560b105ea95d2d77649073bf3a003b60f63e3402e5064577ed4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

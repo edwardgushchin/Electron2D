@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Label",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Label",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "Label",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Label",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Label()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Label type.",
+      "xmlDocId": "M:Electron2D.Label.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Label",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Label()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Label type.",
+      "xmlDocId": "M:Electron2D.Label.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the label text when the control is redrawn.",
+      "xmlDocId": "M:Electron2D.Label._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Queues a redraw when the translation state changes.",
+      "xmlDocId": "M:Electron2D.Label._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "kind": "Property",
+      "signature": "public Electron2D.HorizontalAlignment HorizontalAlignment { get; set; }",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Gets or sets the horizontal alignment used when drawing text inside \u0060Electron2D.Control.Size\u0060.",
+      "xmlDocId": "P:Electron2D.Label.HorizontalAlignment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public System.String Text { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the plain text drawn by this label.",
+      "xmlDocId": "P:Electron2D.Label.Text",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Uppercase",
+      "kind": "Property",
+      "signature": "public System.Boolean Uppercase { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether text is converted to invariant uppercase before drawing.",
+      "xmlDocId": "P:Electron2D.Label.Uppercase",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "VerticalAlignment",
+      "kind": "Property",
+      "signature": "public Electron2D.VerticalAlignment VerticalAlignment { get; set; }",
+      "returnType": "Electron2D.VerticalAlignment",
+      "parameters": [],
+      "summary": "Gets or sets the vertical alignment used when drawing text inside \u0060Electron2D.Control.Size\u0060.",
+      "xmlDocId": "P:Electron2D.Label.VerticalAlignment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the label text when the control is redrawn.",
+      "xmlDocId": "M:Electron2D.Label._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Queues a redraw when the translation state changes.",
+      "xmlDocId": "M:Electron2D.Label._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

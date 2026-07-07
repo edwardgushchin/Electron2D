@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeRandomRange",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeRandomRange",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeRandomRange",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeRandomRange.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernoderandomrange.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeRandomRange.xml",
+      "sha256": "d8570daa77e4fb1c62e3cf3546db60b707e17d376c90f0732fdc61a67ce31b06"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

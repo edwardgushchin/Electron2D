@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRCompositionLayerEquirect",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRCompositionLayerEquirect",
+    "kind": "class",
+    "baseType": "OpenXRCompositionLayer",
+    "interfaces": [],
+    "godotReference": "OpenXRCompositionLayerEquirect",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrcompositionlayerequirect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CentralHorizontalAngle",
+      "kind": "Property",
+      "signature": "public float CentralHorizontalAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The central horizontal angle of the sphere. Used to set the width.",
+      "defaultValue": "1.5707964",
+      "godotName": "central_horizontal_angle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerEquirect.CentralHorizontalAngle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml"
+    },
+    {
+      "name": "FallbackSegments",
+      "kind": "Property",
+      "signature": "public int FallbackSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of segments to use in the fallback mesh.",
+      "defaultValue": "10",
+      "godotName": "fallback_segments",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerEquirect.FallbackSegments",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml"
+    },
+    {
+      "name": "LowerVerticalAngle",
+      "kind": "Property",
+      "signature": "public float LowerVerticalAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The lower vertical angle of the sphere. Used (together with [member upper_vertical_angle]) to set the height.",
+      "defaultValue": "0.7853982",
+      "godotName": "lower_vertical_angle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerEquirect.LowerVerticalAngle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the sphere.",
+      "defaultValue": "1.0",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerEquirect.Radius",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml"
+    },
+    {
+      "name": "UpperVerticalAngle",
+      "kind": "Property",
+      "signature": "public float UpperVerticalAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The upper vertical angle of the sphere. Used (together with [member lower_vertical_angle]) to set the height.",
+      "defaultValue": "0.7853982",
+      "godotName": "upper_vertical_angle",
+      "xmlDocId": "P:Godot.OpenXRCompositionLayerEquirect.UpperVerticalAngle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRCompositionLayerEquirect.xml",
+      "sha256": "fd816f5087ad12caa00e6f687d66d99506cb67b856665640c9fac3d8daca80d0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

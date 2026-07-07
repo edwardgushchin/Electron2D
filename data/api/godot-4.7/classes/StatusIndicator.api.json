@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StatusIndicator",
+    "namespace": "Godot",
+    "fullName": "Godot.StatusIndicator",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "StatusIndicator",
+    "documentationPath": "doc/classes/StatusIndicator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_statusindicator.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetRect()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns the status indicator rectangle in screen coordinates. If this status indicator is not visible, returns an empty [Rect2].",
+      "godotName": "get_rect",
+      "xmlDocId": "M:Godot.StatusIndicator.GetRect",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    },
+    {
+      "name": "Icon",
+      "kind": "Property",
+      "signature": "public Texture2D Icon { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Status indicator icon.",
+      "godotName": "icon",
+      "xmlDocId": "P:Godot.StatusIndicator.Icon",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    },
+    {
+      "name": "Menu",
+      "kind": "Property",
+      "signature": "public NodePath Menu { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Status indicator native popup menu. If this is set, the [signal pressed] signal is not emitted. [b]Note:[/b] Native popup is only supported if [NativeMenu] supports [constant NativeMenu.FEATURE_POPUP_MENU] feature.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "menu",
+      "xmlDocId": "P:Godot.StatusIndicator.Menu",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    },
+    {
+      "name": "Tooltip",
+      "kind": "Property",
+      "signature": "public String Tooltip { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Status indicator tooltip.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "tooltip",
+      "xmlDocId": "P:Godot.StatusIndicator.Tooltip",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the status indicator is visible.",
+      "defaultValue": "true",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.StatusIndicator.Visible",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Pressed",
+      "kind": "Signal",
+      "signature": "public event PressedHandler Pressed",
+      "parameters": [
+        {
+          "name": "mouse_button",
+          "type": "int"
+        },
+        {
+          "name": "mouse_position",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Emitted when the status indicator is pressed.",
+      "godotName": "pressed",
+      "xmlDocId": "E:Godot.StatusIndicator.Pressed(int,Vector2i)",
+      "sourcePath": "doc/classes/StatusIndicator.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StatusIndicator.xml",
+      "sha256": "454131c1be96c7d499ca1f681d752933e0d56166cae42b57eb2a608af1f55940"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectChorus",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectChorus",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectChorus",
+    "documentationPath": "doc/classes/AudioEffectChorus.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectchorus.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetVoiceCutoffHz",
+      "kind": "Method",
+      "signature": "public float GetVoiceCutoffHz(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the frequency threshold of a given [param voice_idx]\u0027s low-pass filter in Hz. Frequencies above this value are removed from the voice.",
+      "godotName": "get_voice_cutoff_hz",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoiceCutoffHz(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "GetVoiceDelayMs",
+      "kind": "Method",
+      "signature": "public float GetVoiceDelayMs(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the delay of a given [param voice_idx] in milliseconds, compared to the original audio.",
+      "godotName": "get_voice_delay_ms",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoiceDelayMs(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "GetVoiceDepthMs",
+      "kind": "Method",
+      "signature": "public float GetVoiceDepthMs(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the depth of a given [param voice_idx]\u0027s low-frequency oscillator in milliseconds.",
+      "godotName": "get_voice_depth_ms",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoiceDepthMs(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "GetVoiceLevelDb",
+      "kind": "Method",
+      "signature": "public float GetVoiceLevelDb(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gain of a given [param voice_idx] in dB.",
+      "godotName": "get_voice_level_db",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoiceLevelDb(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "GetVoicePan",
+      "kind": "Method",
+      "signature": "public float GetVoicePan(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the pan position of a given [param voice_idx]. Negative values mean the left channel, positive mean the right.",
+      "godotName": "get_voice_pan",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoicePan(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "GetVoiceRateHz",
+      "kind": "Method",
+      "signature": "public float GetVoiceRateHz(int voiceIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rate of a given [param voice_idx]\u0027s low-frequency oscillator in Hz.",
+      "godotName": "get_voice_rate_hz",
+      "xmlDocId": "M:Godot.AudioEffectChorus.GetVoiceRateHz(int)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoiceCutoffHz",
+      "kind": "Method",
+      "signature": "public void SetVoiceCutoffHz(int voiceIdx, float cutoffHz)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "cutoff_hz",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the frequency threshold of a given [param voice_idx]\u0027s low-pass filter in Hz. Frequencies above [param cutoff_hz] are removed from [param voice_idx]. Value can range from 1 to 20500.",
+      "godotName": "set_voice_cutoff_hz",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoiceCutoffHz(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoiceDelayMs",
+      "kind": "Method",
+      "signature": "public void SetVoiceDelayMs(int voiceIdx, float delayMs)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "delay_ms",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the delay of a given [param voice_idx] in milliseconds, compared to the original audio. Value can range from 0 to 50.",
+      "godotName": "set_voice_delay_ms",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoiceDelayMs(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoiceDepthMs",
+      "kind": "Method",
+      "signature": "public void SetVoiceDepthMs(int voiceIdx, float depthMs)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "depth_ms",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the depth of a given [param voice_idx]\u0027s low-frequency oscillator in milliseconds. Value can range from 0 to 20.",
+      "godotName": "set_voice_depth_ms",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoiceDepthMs(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoiceLevelDb",
+      "kind": "Method",
+      "signature": "public void SetVoiceLevelDb(int voiceIdx, float levelDb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "level_db",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the gain of a given [param voice_idx] in dB. Value can range from -60 to 24.",
+      "godotName": "set_voice_level_db",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoiceLevelDb(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoicePan",
+      "kind": "Method",
+      "signature": "public void SetVoicePan(int voiceIdx, float pan)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "pan",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the pan position of a given [param voice_idx]. Negative values pan the sound to the left, positive pan to the right. Value can range from -1 to 1.",
+      "godotName": "set_voice_pan",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoicePan(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "SetVoiceRateHz",
+      "kind": "Method",
+      "signature": "public void SetVoiceRateHz(int voiceIdx, float rateHz)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "voice_idx",
+          "type": "int"
+        },
+        {
+          "name": "rate_hz",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the rate of a given [param voice_idx]\u0027s low-frequency oscillator in Hz. Value can range from 0.1 to 20.",
+      "godotName": "set_voice_rate_hz",
+      "xmlDocId": "M:Godot.AudioEffectChorus.SetVoiceRateHz(int,float)",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "Dry",
+      "kind": "Property",
+      "signature": "public float Dry { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of the original audio. Value can range from 0 to 1.",
+      "defaultValue": "1.0",
+      "godotName": "dry",
+      "xmlDocId": "P:Godot.AudioEffectChorus.Dry",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "VoiceCount",
+      "kind": "Property",
+      "signature": "public int VoiceCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of voices in the effect. Value can range from 1 to 4.",
+      "defaultValue": "2",
+      "godotName": "voice_count",
+      "xmlDocId": "P:Godot.AudioEffectChorus.VoiceCount",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "Wet",
+      "kind": "Property",
+      "signature": "public float Wet { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of all voices. Value can range from 0 to 1.",
+      "defaultValue": "0.5",
+      "godotName": "wet",
+      "xmlDocId": "P:Godot.AudioEffectChorus.Wet",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "voice/1/cutoff_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency threshold of the voice\u0027s low-pass filter in Hz.",
+      "defaultValue": "8000.0",
+      "godotName": "voice/1/cutoff_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/1/delay_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The delay of the voice in milliseconds, compared to the original audio.",
+      "defaultValue": "15.0",
+      "godotName": "voice/1/delay_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/1/depth_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth of the voice\u0027s low-frequency oscillator in milliseconds.",
+      "defaultValue": "2.0",
+      "godotName": "voice/1/depth_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/1/level_db",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The gain of the voice in dB.",
+      "defaultValue": "0.0",
+      "godotName": "voice/1/level_db",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/1/pan",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The pan position of the voice.",
+      "defaultValue": "-0.5",
+      "godotName": "voice/1/pan",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/1/rate_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate of the voice\u0027s low-frequency oscillator in Hz.",
+      "defaultValue": "0.8",
+      "godotName": "voice/1/rate_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/cutoff_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency threshold of the voice\u0027s low-pass filter in Hz.",
+      "defaultValue": "8000.0",
+      "godotName": "voice/2/cutoff_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/delay_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The delay of the voice in milliseconds, compared to the original audio.",
+      "defaultValue": "20.0",
+      "godotName": "voice/2/delay_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/depth_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth of the voice\u0027s low-frequency oscillator in milliseconds.",
+      "defaultValue": "3.0",
+      "godotName": "voice/2/depth_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/level_db",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The gain of the voice in dB.",
+      "defaultValue": "0.0",
+      "godotName": "voice/2/level_db",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/pan",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The pan position of the voice.",
+      "defaultValue": "0.5",
+      "godotName": "voice/2/pan",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/2/rate_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate of the voice\u0027s low-frequency oscillator in Hz.",
+      "defaultValue": "1.2",
+      "godotName": "voice/2/rate_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/cutoff_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency threshold of the voice\u0027s low-pass filter in Hz.",
+      "godotName": "voice/3/cutoff_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/delay_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The delay of the voice in milliseconds, compared to the original audio.",
+      "godotName": "voice/3/delay_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/depth_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth of the voice\u0027s low-frequency oscillator in milliseconds.",
+      "godotName": "voice/3/depth_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/level_db",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The gain of the voice in dB.",
+      "godotName": "voice/3/level_db",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/pan",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The pan position of the voice.",
+      "godotName": "voice/3/pan",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/3/rate_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate of the voice\u0027s low-frequency oscillator in Hz.",
+      "godotName": "voice/3/rate_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/cutoff_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency threshold of the voice\u0027s low-pass filter in Hz.",
+      "godotName": "voice/4/cutoff_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/delay_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The delay of the voice in milliseconds, compared to the original audio.",
+      "godotName": "voice/4/delay_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/depth_ms",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth of the voice\u0027s low-frequency oscillator in milliseconds.",
+      "godotName": "voice/4/depth_ms",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/level_db",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The gain of the voice in dB.",
+      "godotName": "voice/4/level_db",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/pan",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The pan position of the voice.",
+      "godotName": "voice/4/pan",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    },
+    {
+      "name": "voice/4/rate_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate of the voice\u0027s low-frequency oscillator in Hz.",
+      "godotName": "voice/4/rate_hz",
+      "sourcePath": "doc/classes/AudioEffectChorus.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectChorus.xml",
+      "sha256": "0a6159ec4efcc68bd0b88c552468369c68bc78be45367e0c74692d57165abcf4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

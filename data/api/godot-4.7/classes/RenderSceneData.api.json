@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneData",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneData",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "RenderSceneData",
+    "documentationPath": "doc/classes/RenderSceneData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenedata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCamProjection",
+      "kind": "Method",
+      "signature": "public Projection GetCamProjection()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Returns the camera projection used to render this frame. [b]Note:[/b] If more than one view is rendered, this will return a combined projection.",
+      "godotName": "get_cam_projection",
+      "xmlDocId": "M:Godot.RenderSceneData.GetCamProjection",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    },
+    {
+      "name": "GetCamTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetCamTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the camera transform used to render this frame. [b]Note:[/b] If more than one view is rendered, this will return a centered transform.",
+      "godotName": "get_cam_transform",
+      "xmlDocId": "M:Godot.RenderSceneData.GetCamTransform",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    },
+    {
+      "name": "GetUniformBuffer",
+      "kind": "Method",
+      "signature": "public RID GetUniformBuffer()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Return the [RID] of the uniform buffer containing the scene data as a UBO.",
+      "godotName": "get_uniform_buffer",
+      "xmlDocId": "M:Godot.RenderSceneData.GetUniformBuffer",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    },
+    {
+      "name": "GetViewCount",
+      "kind": "Method",
+      "signature": "public int GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of views being rendered.",
+      "godotName": "get_view_count",
+      "xmlDocId": "M:Godot.RenderSceneData.GetViewCount",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    },
+    {
+      "name": "GetViewEyeOffset",
+      "kind": "Method",
+      "signature": "public Vector3 GetViewEyeOffset(int view)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the eye offset per view used to render this frame. This is the offset between our camera transform and the eye transform.",
+      "godotName": "get_view_eye_offset",
+      "xmlDocId": "M:Godot.RenderSceneData.GetViewEyeOffset(int)",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    },
+    {
+      "name": "GetViewProjection",
+      "kind": "Method",
+      "signature": "public Projection GetViewProjection(int view)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the view projection per view used to render this frame. [b]Note:[/b] If a single view is rendered, this returns the camera projection. If more than one view is rendered, this will return a projection for the given view including the eye offset.",
+      "godotName": "get_view_projection",
+      "xmlDocId": "M:Godot.RenderSceneData.GetViewProjection(int)",
+      "sourcePath": "doc/classes/RenderSceneData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneData.xml",
+      "sha256": "0e02890f8a8d3e470293bb60b3d5be6709ea8a988185096f9f934be065485582"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

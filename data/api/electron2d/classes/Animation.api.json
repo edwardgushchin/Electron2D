@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Animation",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Animation",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Animation",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Animation",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Animation()",
+      "parameters": [],
+      "summary": "Creates an empty animation resource.",
+      "xmlDocId": "M:Electron2D.Animation.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Animation",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Animation()",
+      "parameters": [],
+      "summary": "Creates an empty animation resource.",
+      "xmlDocId": "M:Electron2D.Animation.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddTrack",
+      "kind": "Method",
+      "signature": "public System.Int32 AddTrack(Electron2D.Animation.TrackType type, System.Int32 atPosition)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "Electron2D.Animation.TrackType"
+        },
+        {
+          "name": "atPosition",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a new track.",
+      "xmlDocId": "M:Electron2D.Animation.AddTrack(Electron2D.Animation.TrackTypeEnum,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTrackCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetTrackCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of tracks stored in this resource.",
+      "xmlDocId": "M:Electron2D.Animation.GetTrackCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MethodTrackInsertKey",
+      "kind": "Method",
+      "signature": "public System.Void MethodTrackInsertKey(System.Int32 trackIdx, System.Double time, Electron2D.StringName method, Electron2D.Variant[] arguments)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "time",
+          "type": "System.Double"
+        },
+        {
+          "name": "method",
+          "type": "Electron2D.StringName"
+        },
+        {
+          "name": "arguments",
+          "type": "Electron2D.Variant[]"
+        }
+      ],
+      "summary": "Inserts or replaces a method-call key.",
+      "xmlDocId": "M:Electron2D.Animation.MethodTrackInsertKey(System.Int32,System.Double,Electron2D.StringName,Electron2D.Variant[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveTrack",
+      "kind": "Method",
+      "signature": "public System.Void RemoveTrack(System.Int32 trackIdx)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Removes a track.",
+      "xmlDocId": "M:Electron2D.Animation.RemoveTrack(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetInterpolationType",
+      "kind": "Method",
+      "signature": "public Electron2D.Animation.InterpolationType TrackGetInterpolationType(System.Int32 trackIdx)",
+      "returnType": "Electron2D.Animation.InterpolationType",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the interpolation mode for a value track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetInterpolationType(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetKeyCount",
+      "kind": "Method",
+      "signature": "public System.Int32 TrackGetKeyCount(System.Int32 trackIdx)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the number of keys in a track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetKeyCount(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetKeyTime",
+      "kind": "Method",
+      "signature": "public System.Double TrackGetKeyTime(System.Int32 trackIdx, System.Int32 keyIdx)",
+      "returnType": "System.Double",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "keyIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a key time.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetKeyTime(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetKeyValue",
+      "kind": "Method",
+      "signature": "public Electron2D.Variant TrackGetKeyValue(System.Int32 trackIdx, System.Int32 keyIdx)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "keyIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a value key\u0027s Variant value.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetKeyValue(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetPath",
+      "kind": "Method",
+      "signature": "public Electron2D.NodePath TrackGetPath(System.Int32 trackIdx)",
+      "returnType": "Electron2D.NodePath",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the path assigned to a track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetPath(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackGetType",
+      "kind": "Method",
+      "signature": "public Electron2D.Animation.TrackType TrackGetType(System.Int32 trackIdx)",
+      "returnType": "Electron2D.Animation.TrackType",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the kind of a track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackGetType(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackInsertKey",
+      "kind": "Method",
+      "signature": "public System.Void TrackInsertKey(System.Int32 trackIdx, System.Double time, Electron2D.Variant value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "time",
+          "type": "System.Double"
+        },
+        {
+          "name": "value",
+          "type": "Electron2D.Variant"
+        }
+      ],
+      "summary": "Inserts or replaces a value key.",
+      "xmlDocId": "M:Electron2D.Animation.TrackInsertKey(System.Int32,System.Double,Electron2D.Variant)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackIsEnabled",
+      "kind": "Method",
+      "signature": "public System.Boolean TrackIsEnabled(System.Int32 trackIdx)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets whether a track is enabled.",
+      "xmlDocId": "M:Electron2D.Animation.TrackIsEnabled(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackSetEnabled",
+      "kind": "Method",
+      "signature": "public System.Void TrackSetEnabled(System.Int32 trackIdx, System.Boolean enabled)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "enabled",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Enables or disables a track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackSetEnabled(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackSetInterpolationType",
+      "kind": "Method",
+      "signature": "public System.Void TrackSetInterpolationType(System.Int32 trackIdx, Electron2D.Animation.InterpolationType interpolation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "interpolation",
+          "type": "Electron2D.Animation.InterpolationType"
+        }
+      ],
+      "summary": "Sets the interpolation mode for a value track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackSetInterpolationType(System.Int32,Electron2D.Animation.InterpolationTypeEnum)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TrackSetPath",
+      "kind": "Method",
+      "signature": "public System.Void TrackSetPath(System.Int32 trackIdx, Electron2D.NodePath path)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "path",
+          "type": "Electron2D.NodePath"
+        }
+      ],
+      "summary": "Assigns a path to a track.",
+      "xmlDocId": "M:Electron2D.Animation.TrackSetPath(System.Int32,Electron2D.NodePath)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ValueTrackInterpolate",
+      "kind": "Method",
+      "signature": "public Electron2D.Variant ValueTrackInterpolate(System.Int32 trackIdx, System.Double time)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "trackIdx",
+          "type": "System.Int32"
+        },
+        {
+          "name": "time",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Evaluates a value track at a specific time.",
+      "xmlDocId": "M:Electron2D.Animation.ValueTrackInterpolate(System.Int32,System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Length",
+      "kind": "Property",
+      "signature": "public System.Double Length { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the animation length in seconds.",
+      "xmlDocId": "P:Electron2D.Animation.Length",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LoopMode",
+      "kind": "Property",
+      "signature": "public Electron2D.Animation.LoopMode LoopMode { get; set; }",
+      "returnType": "Electron2D.Animation.LoopMode",
+      "parameters": [],
+      "summary": "Gets or sets the loop mode used by \u0060Electron2D.AnimationPlayer\u0060.",
+      "xmlDocId": "P:Electron2D.Animation.LoopMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

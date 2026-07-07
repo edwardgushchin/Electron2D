@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Animation.InterpolationType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Animation.InterpolationType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Animation.InterpolationType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Linear",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.InterpolationType Linear",
+      "returnType": "Electron2D.Animation.InterpolationType",
+      "parameters": [],
+      "summary": "Interpolates supported numeric and 2D value types between keys.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Animation.InterpolationTypeEnum.Linear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Nearest",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.InterpolationType Nearest",
+      "returnType": "Electron2D.Animation.InterpolationType",
+      "parameters": [],
+      "summary": "Reuses the latest key at or before the requested time.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Animation.InterpolationTypeEnum.Nearest",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Linear",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Interpolates supported numeric and 2D value types between keys.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Nearest",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Reuses the latest key at or before the requested time.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

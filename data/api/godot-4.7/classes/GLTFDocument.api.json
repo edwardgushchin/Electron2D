@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFDocument",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFDocument",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFDocument",
+    "documentationPath": "modules/gltf/doc_classes/GLTFDocument.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfdocument.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AppendFromBuffer",
+      "kind": "Method",
+      "signature": "public int AppendFromBuffer(PackedByteArray bytes, String basePath, GLTFState state, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "base_path",
+          "type": "String"
+        },
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Takes a [PackedByteArray] defining a glTF and imports the data to the given [GLTFState] object through the [param state] parameter. [b]Note:[/b] The [param base_path] tells [method append_from_buffer] where to find dependencies and can be empty.",
+      "godotName": "append_from_buffer",
+      "xmlDocId": "M:Godot.GLTFDocument.AppendFromBuffer(PackedByteArray,String,GLTFState,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "AppendFromFile",
+      "kind": "Method",
+      "signature": "public int AppendFromFile(String path, GLTFState state, int flags, String basePath)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "base_path",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Takes a path to a glTF file and imports the data at that file path to the given [GLTFState] object through the [param state] parameter. [b]Note:[/b] The [param base_path] tells [method append_from_file] where to find dependencies and can be empty.",
+      "godotName": "append_from_file",
+      "xmlDocId": "M:Godot.GLTFDocument.AppendFromFile(String,GLTFState,int,String)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "AppendFromScene",
+      "kind": "Method",
+      "signature": "public int AppendFromScene(Node node, GLTFState state, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Takes a Godot Engine scene node and exports it and its descendants to the given [GLTFState] object through the [param state] parameter.",
+      "godotName": "append_from_scene",
+      "xmlDocId": "M:Godot.GLTFDocument.AppendFromScene(Node,GLTFState,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "ExportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty ExportObjectModelProperty(GLTFState state, NodePath nodePath, Node godotNode, int gltfNodeIndex)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        },
+        {
+          "name": "godot_node",
+          "type": "Node"
+        },
+        {
+          "name": "gltf_node_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Determines a mapping between the given Godot [param node_path] and the corresponding glTF Object Model JSON pointer(s) in the generated glTF file. The details of this mapping are returned in a [GLTFObjectModelProperty] object. Additional mappings can be supplied via the [method GLTFDocumentExtension._import_object_model_property] callback method.",
+      "godotName": "export_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocument.ExportObjectModelProperty(GLTFState,NodePath,Node,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "GenerateBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray GenerateBuffer(GLTFState state)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Takes a [GLTFState] object through the [param state] parameter and returns a glTF [PackedByteArray].",
+      "godotName": "generate_buffer",
+      "xmlDocId": "M:Godot.GLTFDocument.GenerateBuffer(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "GenerateScene",
+      "kind": "Method",
+      "signature": "public Node GenerateScene(GLTFState state, float bakeFps, bool trimming, bool removeImmutableTracks)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "bake_fps",
+          "type": "float",
+          "defaultValue": "30"
+        },
+        {
+          "name": "trimming",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "remove_immutable_tracks",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Takes a [GLTFState] object through the [param state] parameter and returns a Godot Engine scene node. The [param bake_fps] parameter overrides the bake_fps in [param state].",
+      "godotName": "generate_scene",
+      "xmlDocId": "M:Godot.GLTFDocument.GenerateScene(GLTFState,float,bool,bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "GetSupportedGltfExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSupportedGltfExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all support glTF extensions, including extensions supported directly by the engine, and extensions supported by user plugins registering [GLTFDocumentExtension] classes. [b]Note:[/b] If this method is run before a GLTFDocumentExtension is registered, its extensions won\u0027t be included in the list. Be sure to only run this method after all extensions are registered. If you run this when the engine starts, consider waiting a frame before calling this method to ensure all extensions are registered.",
+      "godotName": "get_supported_gltf_extensions",
+      "xmlDocId": "M:Godot.GLTFDocument.GetSupportedGltfExtensions",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "ImportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty ImportObjectModelProperty(GLTFState state, String jsonPointer)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "json_pointer",
+          "type": "String"
+        }
+      ],
+      "summary": "Determines a mapping between the given glTF Object Model [param json_pointer] and the corresponding Godot node path(s) in the generated Godot scene. The details of this mapping are returned in a [GLTFObjectModelProperty] object. Additional mappings can be supplied via the [method GLTFDocumentExtension._export_object_model_property] callback method.",
+      "godotName": "import_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocument.ImportObjectModelProperty(GLTFState,String)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "RegisterGltfDocumentExtension",
+      "kind": "Method",
+      "signature": "public void RegisterGltfDocumentExtension(GLTFDocumentExtension extension, bool firstPriority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "GLTFDocumentExtension"
+        },
+        {
+          "name": "first_priority",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Registers the given [GLTFDocumentExtension] instance with GLTFDocument. If [param first_priority] is [code]true[/code], this extension will be run first. Otherwise, it will be run last. [b]Note:[/b] Like GLTFDocument itself, all GLTFDocumentExtension classes must be stateless in order to function properly. If you need to store data, use the [code]set_additional_data[/code] and [code]get_additional_data[/code] methods in [GLTFState] or [GLTFNode].",
+      "godotName": "register_gltf_document_extension",
+      "xmlDocId": "M:Godot.GLTFDocument.RegisterGltfDocumentExtension(GLTFDocumentExtension,bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "UnregisterGltfDocumentExtension",
+      "kind": "Method",
+      "signature": "public void UnregisterGltfDocumentExtension(GLTFDocumentExtension extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "GLTFDocumentExtension"
+        }
+      ],
+      "summary": "Unregisters the given [GLTFDocumentExtension] instance.",
+      "godotName": "unregister_gltf_document_extension",
+      "xmlDocId": "M:Godot.GLTFDocument.UnregisterGltfDocumentExtension(GLTFDocumentExtension)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "WriteToFilesystem",
+      "kind": "Method",
+      "signature": "public int WriteToFilesystem(GLTFState state, String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Takes a [GLTFState] object through the [param state] parameter and writes a glTF file to the filesystem. [b]Note:[/b] The extension of the glTF file determines if it is a .glb binary file or a .gltf text file.",
+      "godotName": "write_to_filesystem",
+      "xmlDocId": "M:Godot.GLTFDocument.WriteToFilesystem(GLTFState,String)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "FallbackImageFormat",
+      "kind": "Property",
+      "signature": "public String FallbackImageFormat { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The user-friendly name of the fallback image format. This is used when exporting the glTF file, including writing to a file and writing to a byte array. This property may only be one of \u0022None\u0022, \u0022PNG\u0022, or \u0022JPEG\u0022, and is only used when the [member image_format] is not one of \u0022None\u0022, \u0022PNG\u0022, or \u0022JPEG\u0022. If having multiple extension image formats is desired, that can be done using a [GLTFDocumentExtension] class - this property only covers the use case of providing a base glTF fallback image when using a custom image format.",
+      "defaultValue": "\u0022None\u0022",
+      "godotName": "fallback_image_format",
+      "xmlDocId": "P:Godot.GLTFDocument.FallbackImageFormat",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "FallbackImageQuality",
+      "kind": "Property",
+      "signature": "public float FallbackImageQuality { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The quality of the fallback image, if any. For PNG files, this downscales the image on both dimensions by this factor. For JPEG files, this is the lossy quality of the image. A low value is recommended, since including multiple high quality images in a glTF file defeats the file size gains of using a more efficient image format.",
+      "defaultValue": "0.25",
+      "godotName": "fallback_image_quality",
+      "xmlDocId": "P:Godot.GLTFDocument.FallbackImageQuality",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "ImageFormat",
+      "kind": "Property",
+      "signature": "public String ImageFormat { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The user-friendly name of the export image format. This is used when exporting the glTF file, including writing to a file and writing to a byte array. By default, Godot allows the following options: \u0022None\u0022, \u0022PNG\u0022, \u0022JPEG\u0022, \u0022Lossless WebP\u0022, and \u0022Lossy WebP\u0022. Support for more image formats can be added in [GLTFDocumentExtension] classes. A single extension class can provide multiple options for the specific format to use, or even an option that uses multiple formats at once.",
+      "defaultValue": "\u0022PNG\u0022",
+      "godotName": "image_format",
+      "xmlDocId": "P:Godot.GLTFDocument.ImageFormat",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "LossyQuality",
+      "kind": "Property",
+      "signature": "public float LossyQuality { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If [member image_format] is a lossy image format, this determines the lossy quality of the image. On a range of [code]0.0[/code] to [code]1.0[/code], where [code]0.0[/code] is the lowest quality and [code]1.0[/code] is the highest quality. A lossy quality of [code]1.0[/code] is not the same as lossless.",
+      "defaultValue": "0.75",
+      "godotName": "lossy_quality",
+      "xmlDocId": "P:Godot.GLTFDocument.LossyQuality",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "RootNodeMode",
+      "kind": "Property",
+      "signature": "public int RootNodeMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "How to process the root node during export. The default and recommended value is [constant ROOT_NODE_MODE_SINGLE_ROOT]. [b]Note:[/b] Regardless of how the glTF file is exported, when importing, the root node type and name can be overridden in the scene import settings tab.",
+      "defaultValue": "0",
+      "godotName": "root_node_mode",
+      "xmlDocId": "P:Godot.GLTFDocument.RootNodeMode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "TextureMapMode",
+      "kind": "Property",
+      "signature": "public int TextureMapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "How to handle texture maps during import. The default and recommended value is [constant TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL], which automatically remaps from glTF\u0027s flexible texture map system to the more specific texture map slots in Godot\u0027s [StandardMaterial3D] class. Alternatively, [constant TEXTURE_MAP_MODE_DO_NOT_REMAP] can be used to preserve the original texture maps from the glTF file, which may be desirable if using the glTF file with custom shaders, but may not display correctly with Godot\u0027s built-in materials.",
+      "defaultValue": "1",
+      "godotName": "texture_map_mode",
+      "xmlDocId": "P:Godot.GLTFDocument.TextureMapMode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "VisibilityMode",
+      "kind": "Property",
+      "signature": "public int VisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "How to deal with node visibility during export. This setting does nothing if all nodes are visible. The default and recommended value is [constant VISIBILITY_MODE_INCLUDE_REQUIRED], which uses the [code]KHR_node_visibility[/code] extension.",
+      "defaultValue": "0",
+      "godotName": "visibility_mode",
+      "xmlDocId": "P:Godot.GLTFDocument.VisibilityMode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ImportFlags",
+      "values": [
+        {
+          "name": "IMPORT_FLAG_DISCARD_MESHES_AND_MATERIALS",
+          "value": "32",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "Ignore meshes and materials on import. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "IMPORT_FLAG_FORCE_DISABLE_MESH_COMPRESSION",
+          "value": "64",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "IMPORT_FLAG_GENERATE_TANGENT_ARRAYS",
+          "value": "8",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the input meshes don\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "IMPORT_FLAG_USE_NAMED_SKIN_BINDS",
+          "value": "16",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If checked, use named [Skin]s for animation. The [MeshInstance3D] node contains 3 properties of relevance here: a skeleton [NodePath] pointing to the [Skeleton3D] node (usually [code]..[/code]), a mesh, and a skin: - The [Skeleton3D] node contains a list of bones with names, their pose and rest, a name, and a parent bone. - The mesh is all of the raw vertex data needed to display a mesh. In terms of the mesh, it knows how vertices are weight-painted and uses some internal numbering often imported from 3D modeling software. - The skin contains the information necessary to bind this mesh onto this Skeleton3D. For each of the internal bone IDs chosen by the 3D modeling software, it contains two things. Firstly, a matrix known as the Bind Pose Matrix, Inverse Bind Matrix, or IBM for short. Secondly, the [Skin] contains each bone\u0027s name (if this flag is enabled), or the bone\u0027s index within the [Skeleton3D] list (if this flag is disabled). Together, this information is enough to tell Godot how to use the bone poses in the [Skeleton3D] node to render the mesh from each [MeshInstance3D]. Note that each [MeshInstance3D] may share binds, as is common in models exported from Blender, or each [MeshInstance3D] may use a separate [Skin] object, as is common in models exported from other tools such as Maya.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        }
+      ]
+    },
+    {
+      "name": "RootNodeMode",
+      "values": [
+        {
+          "name": "ROOT_NODE_MODE_KEEP_ROOT",
+          "value": "1",
+          "enum": "RootNodeMode",
+          "kind": "EnumValue",
+          "summary": "Treat the Godot scene\u0027s root node as the root node of the glTF file, but do not mark it as anything special. An extra root node will be generated when importing into Godot. This uses only vanilla glTF features. This is equivalent to the behavior in Godot 4.1 and earlier.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "ROOT_NODE_MODE_MULTI_ROOT",
+          "value": "2",
+          "enum": "RootNodeMode",
+          "kind": "EnumValue",
+          "summary": "Treat the Godot scene\u0027s root node as the name of the glTF scene, and add all of its children as root nodes of the glTF file. This uses only vanilla glTF features. This avoids an extra root node, but only the name of the Godot scene\u0027s root node will be preserved, as it will not be saved as a node.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "ROOT_NODE_MODE_SINGLE_ROOT",
+          "value": "0",
+          "enum": "RootNodeMode",
+          "kind": "EnumValue",
+          "summary": "Treat the Godot scene\u0027s root node as the root node of the glTF file, and mark it as the single root node via the [code]GODOT_single_root[/code] glTF extension. This will be parsed the same as [constant ROOT_NODE_MODE_KEEP_ROOT] if the implementation does not support [code]GODOT_single_root[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureMapMode",
+      "values": [
+        {
+          "name": "TEXTURE_MAP_MODE_DO_NOT_REMAP",
+          "value": "0",
+          "enum": "TextureMapMode",
+          "kind": "EnumValue",
+          "summary": "Import the texture maps in the glTF file as they are, without trying to fit them into specific texture slots suitable for Godot\u0027s built-in materials. This may be desirable if using the glTF file with custom shaders, but may not display correctly with Godot\u0027s built-in materials. This is equivalent to the behavior in Godot 4.6 and earlier.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL",
+          "value": "1",
+          "enum": "TextureMapMode",
+          "kind": "EnumValue",
+          "summary": "Import the texture maps in the glTF file remapped to the most suitable texture slots based on Godot\u0027s [StandardMaterial3D] class. This is the default behavior.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        }
+      ]
+    },
+    {
+      "name": "VisibilityMode",
+      "values": [
+        {
+          "name": "VISIBILITY_MODE_EXCLUDE",
+          "value": "2",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "If the scene contains any non-visible nodes, do not include them in the export. This is the same as the behavior in Godot 4.4 and earlier. Downside: Invisible nodes will not exist in the exported file.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "VISIBILITY_MODE_INCLUDE_OPTIONAL",
+          "value": "1",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "If the scene contains any non-visible nodes, include them, mark them as non-visible with [code]KHR_node_visibility[/code], and do not impose any requirements on importers. Downside: If the importer does not support [code]KHR_node_visibility[/code], invisible objects will be visible.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        },
+        {
+          "name": "VISIBILITY_MODE_INCLUDE_REQUIRED",
+          "value": "0",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "If the scene contains any non-visible nodes, include them, mark them as non-visible with [code]KHR_node_visibility[/code], and require that importers respect their non-visibility. Downside: If the importer does not support [code]KHR_node_visibility[/code], the file cannot be imported.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ROOT_NODE_MODE_SINGLE_ROOT",
+      "value": "0",
+      "enum": "RootNodeMode",
+      "kind": "EnumValue",
+      "summary": "Treat the Godot scene\u0027s root node as the root node of the glTF file, and mark it as the single root node via the [code]GODOT_single_root[/code] glTF extension. This will be parsed the same as [constant ROOT_NODE_MODE_KEEP_ROOT] if the implementation does not support [code]GODOT_single_root[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "ROOT_NODE_MODE_KEEP_ROOT",
+      "value": "1",
+      "enum": "RootNodeMode",
+      "kind": "EnumValue",
+      "summary": "Treat the Godot scene\u0027s root node as the root node of the glTF file, but do not mark it as anything special. An extra root node will be generated when importing into Godot. This uses only vanilla glTF features. This is equivalent to the behavior in Godot 4.1 and earlier.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "ROOT_NODE_MODE_MULTI_ROOT",
+      "value": "2",
+      "enum": "RootNodeMode",
+      "kind": "EnumValue",
+      "summary": "Treat the Godot scene\u0027s root node as the name of the glTF scene, and add all of its children as root nodes of the glTF file. This uses only vanilla glTF features. This avoids an extra root node, but only the name of the Godot scene\u0027s root node will be preserved, as it will not be saved as a node.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "TEXTURE_MAP_MODE_DO_NOT_REMAP",
+      "value": "0",
+      "enum": "TextureMapMode",
+      "kind": "EnumValue",
+      "summary": "Import the texture maps in the glTF file as they are, without trying to fit them into specific texture slots suitable for Godot\u0027s built-in materials. This may be desirable if using the glTF file with custom shaders, but may not display correctly with Godot\u0027s built-in materials. This is equivalent to the behavior in Godot 4.6 and earlier.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL",
+      "value": "1",
+      "enum": "TextureMapMode",
+      "kind": "EnumValue",
+      "summary": "Import the texture maps in the glTF file remapped to the most suitable texture slots based on Godot\u0027s [StandardMaterial3D] class. This is the default behavior.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "VISIBILITY_MODE_INCLUDE_REQUIRED",
+      "value": "0",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "If the scene contains any non-visible nodes, include them, mark them as non-visible with [code]KHR_node_visibility[/code], and require that importers respect their non-visibility. Downside: If the importer does not support [code]KHR_node_visibility[/code], the file cannot be imported.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "VISIBILITY_MODE_INCLUDE_OPTIONAL",
+      "value": "1",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "If the scene contains any non-visible nodes, include them, mark them as non-visible with [code]KHR_node_visibility[/code], and do not impose any requirements on importers. Downside: If the importer does not support [code]KHR_node_visibility[/code], invisible objects will be visible.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "VISIBILITY_MODE_EXCLUDE",
+      "value": "2",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "If the scene contains any non-visible nodes, do not include them in the export. This is the same as the behavior in Godot 4.4 and earlier. Downside: Invisible nodes will not exist in the exported file.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "IMPORT_FLAG_GENERATE_TANGENT_ARRAYS",
+      "value": "8",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the input meshes don\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "IMPORT_FLAG_USE_NAMED_SKIN_BINDS",
+      "value": "16",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If checked, use named [Skin]s for animation. The [MeshInstance3D] node contains 3 properties of relevance here: a skeleton [NodePath] pointing to the [Skeleton3D] node (usually [code]..[/code]), a mesh, and a skin: - The [Skeleton3D] node contains a list of bones with names, their pose and rest, a name, and a parent bone. - The mesh is all of the raw vertex data needed to display a mesh. In terms of the mesh, it knows how vertices are weight-painted and uses some internal numbering often imported from 3D modeling software. - The skin contains the information necessary to bind this mesh onto this Skeleton3D. For each of the internal bone IDs chosen by the 3D modeling software, it contains two things. Firstly, a matrix known as the Bind Pose Matrix, Inverse Bind Matrix, or IBM for short. Secondly, the [Skin] contains each bone\u0027s name (if this flag is enabled), or the bone\u0027s index within the [Skeleton3D] list (if this flag is disabled). Together, this information is enough to tell Godot how to use the bone poses in the [Skeleton3D] node to render the mesh from each [MeshInstance3D]. Note that each [MeshInstance3D] may share binds, as is common in models exported from Blender, or each [MeshInstance3D] may use a separate [Skin] object, as is common in models exported from other tools such as Maya.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "IMPORT_FLAG_DISCARD_MESHES_AND_MATERIALS",
+      "value": "32",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "Ignore meshes and materials on import. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    },
+    {
+      "name": "IMPORT_FLAG_FORCE_DISABLE_MESH_COMPRESSION",
+      "value": "64",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocument.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFDocument.xml",
+      "sha256": "379f4497ffe9eccf27544b84c27f587ecf6a4d8533e5a2a0f8aeff29dee1db2c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

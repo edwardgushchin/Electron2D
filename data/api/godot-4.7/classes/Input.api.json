@@ -1,0 +1,1636 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Input",
+    "namespace": "Godot",
+    "fullName": "Godot.Input",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "Input",
+    "documentationPath": "doc/classes/Input.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_input.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionPress",
+      "kind": "Method",
+      "signature": "public void ActionPress(StringName action, float strength)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "strength",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "This will simulate pressing the specified action. The strength can be used for non-boolean actions, it\u0027s ranged between 0 and 1 representing the intensity of the given action. [b]Note:[/b] This method will not cause any [method Node._input] calls. It is intended to be used with [method is_action_pressed] and [method is_action_just_pressed]. If you want to simulate [code]_input[/code], use [method parse_input_event] instead.",
+      "godotName": "action_press",
+      "xmlDocId": "M:Godot.Input.ActionPress(StringName,float)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "ActionRelease",
+      "kind": "Method",
+      "signature": "public void ActionRelease(StringName action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "If the specified action is already pressed, this will release it.",
+      "godotName": "action_release",
+      "xmlDocId": "M:Godot.Input.ActionRelease(StringName)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "AddJoyMapping",
+      "kind": "Method",
+      "signature": "public void AddJoyMapping(String mapping, bool updateExisting)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mapping",
+          "type": "String"
+        },
+        {
+          "name": "update_existing",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a new mapping entry (in SDL2 format) to the mapping database. Optionally update already connected devices.",
+      "godotName": "add_joy_mapping",
+      "xmlDocId": "M:Godot.Input.AddJoyMapping(String,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "ClearJoyMotionSensorsCalibration",
+      "kind": "Method",
+      "signature": "public void ClearJoyMotionSensorsCalibration(int device)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Clears the calibration information for the specified joypad\u0027s motion sensors, if it has any and if they were calibrated. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "clear_joy_motion_sensors_calibration",
+      "xmlDocId": "M:Godot.Input.ClearJoyMotionSensorsCalibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "FlushBufferedEvents",
+      "kind": "Method",
+      "signature": "public void FlushBufferedEvents()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sends all input events which are in the current buffer to the game loop. These events may have been buffered as a result of accumulated input ([member use_accumulated_input]) or agile input flushing ([member ProjectSettings.input_devices/buffering/agile_event_flushing]). The engine will already do this itself at key execution points (at least once per frame). However, this can be useful in advanced cases where you want precise control over the timing of event handling.",
+      "godotName": "flush_buffered_events",
+      "xmlDocId": "M:Godot.Input.FlushBufferedEvents",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetAccelerometer",
+      "kind": "Method",
+      "signature": "public Vector3 GetAccelerometer()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the acceleration in m/s\u00B2 of the device\u0027s accelerometer sensor, if the device has one. Otherwise, the method returns [constant Vector3.ZERO]. Note this method returns an empty [Vector3] when running from the editor even when your device has an accelerometer. You must export your project to a supported device to read values from the accelerometer. [b]Note:[/b] This method only works on Android and iOS. On other platforms, it always returns [constant Vector3.ZERO]. [b]Note:[/b] For Android, [member ProjectSettings.input_devices/sensors/enable_accelerometer] must be enabled.",
+      "godotName": "get_accelerometer",
+      "xmlDocId": "M:Godot.Input.GetAccelerometer",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetActionRawStrength",
+      "kind": "Method",
+      "signature": "public float GetActionRawStrength(StringName action, bool exactMatch)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the action\u0027s deadzone. In most cases, you should use [method get_action_strength] instead. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "get_action_raw_strength",
+      "xmlDocId": "M:Godot.Input.GetActionRawStrength(StringName,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetActionStrength",
+      "kind": "Method",
+      "signature": "public float GetActionStrength(StringName action, bool exactMatch)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the closer the value will be to 1. If the action is mapped to a control that has no axis such as the keyboard, the value returned will be 0 or 1. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "get_action_strength",
+      "xmlDocId": "M:Godot.Input.GetActionStrength(StringName,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetAxis",
+      "kind": "Method",
+      "signature": "public float GetAxis(StringName negativeAction, StringName positiveAction)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "negative_action",
+          "type": "StringName"
+        },
+        {
+          "name": "positive_action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Get axis input by specifying two actions, one negative and one positive. This is a shorthand for writing [code]Input.get_action_strength(\u0022positive_action\u0022) - Input.get_action_strength(\u0022negative_action\u0022)[/code].",
+      "godotName": "get_axis",
+      "xmlDocId": "M:Godot.Input.GetAxis(StringName,StringName)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetConnectedJoypads",
+      "kind": "Method",
+      "signature": "public int[] GetConnectedJoypads()",
+      "returnType": "int[]",
+      "parameters": [],
+      "summary": "Returns an [Array] containing the device IDs of all currently connected joypads. [b]Note:[/b] The order of connected joypads can not be guaranteed to be the same after a project and/or the editor is restarted, because Godot doesn\u0027t save the order of joypad connections. Joypads are registered in the order they are discovered by Godot.",
+      "godotName": "get_connected_joypads",
+      "xmlDocId": "M:Godot.Input.GetConnectedJoypads",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetCurrentCursorShape",
+      "kind": "Method",
+      "signature": "public int GetCurrentCursorShape()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the currently assigned cursor shape.",
+      "godotName": "get_current_cursor_shape",
+      "xmlDocId": "M:Godot.Input.GetCurrentCursorShape",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetGravity",
+      "kind": "Method",
+      "signature": "public Vector3 GetGravity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the gravity in m/s\u00B2 of the device\u0027s accelerometer sensor, if the device has one. Otherwise, the method returns [constant Vector3.ZERO]. [b]Note:[/b] This method only works on Android and iOS. On other platforms, it always returns [constant Vector3.ZERO]. [b]Note:[/b] For Android, [member ProjectSettings.input_devices/sensors/enable_gravity] must be enabled.",
+      "godotName": "get_gravity",
+      "xmlDocId": "M:Godot.Input.GetGravity",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetGyroscope",
+      "kind": "Method",
+      "signature": "public Vector3 GetGyroscope()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the rotation rate in rad/s around a device\u0027s X, Y, and Z axes of the gyroscope sensor, if the device has one. Otherwise, the method returns [constant Vector3.ZERO]. [b]Note:[/b] This method only works on Android and iOS. On other platforms, it always returns [constant Vector3.ZERO]. [b]Note:[/b] For Android, [member ProjectSettings.input_devices/sensors/enable_gyroscope] must be enabled.",
+      "godotName": "get_gyroscope",
+      "xmlDocId": "M:Godot.Input.GetGyroscope",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyAccelerometer",
+      "kind": "Method",
+      "signature": "public Vector3 GetJoyAccelerometer(int device)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the acceleration, including the force of gravity, in m/s\u00B2 of the joypad\u0027s accelerometer sensor, if the joypad has one and it\u0027s currently enabled. Otherwise, the method returns [constant Vector3.ZERO]. See also [method get_joy_gravity] and [method set_joy_motion_sensors_enabled]. For a joypad held in front of you, the returned axes are defined as follows: \u002BX ... -X: left ... right; \u002BY ... -Y: bottom ... top; \u002BZ ... -Z: farther ... closer. The gravity part value is measured as a vector with length of [code]9.8[/code] away from the center of the Earth, which is a negative Y value. [b]Note:[/b] This feature is only supported on Windows, Linux, and macOS. On iOS, joypad accelerometer sensor reading is not supported due to OS limitations.",
+      "godotName": "get_joy_accelerometer",
+      "xmlDocId": "M:Godot.Input.GetJoyAccelerometer(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyAxis",
+      "kind": "Method",
+      "signature": "public float GetJoyAxis(int device, int axis)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the current value of the joypad axis at index [param axis].",
+      "godotName": "get_joy_axis",
+      "xmlDocId": "M:Godot.Input.GetJoyAxis(int,int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyGravity",
+      "kind": "Method",
+      "signature": "public Vector3 GetJoyGravity(int device)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity in m/s\u00B2 of the joypad\u0027s accelerometer sensor, if the joypad has one and it\u0027s currently enabled. Otherwise, the method returns [constant Vector3.ZERO]. See also [method get_joy_accelerometer] and [method set_joy_motion_sensors_enabled]. For a joypad held in front of you, the returned axes are defined as follows: \u002BX ... -X: left ... right; \u002BY ... -Y: bottom ... top; \u002BZ ... -Z: farther ... closer. The gravity part value is measured as a vector with length of [code]9.8[/code] away from the center of the Earth, which is a negative Y value. [b]Note:[/b] This feature is only supported on Windows, Linux, and macOS. On iOS, joypad accelerometer sensor reading is not supported due to OS limitations.",
+      "godotName": "get_joy_gravity",
+      "xmlDocId": "M:Godot.Input.GetJoyGravity(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyGuid",
+      "kind": "Method",
+      "signature": "public String GetJoyGuid(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an SDL-compatible device GUID on platforms that use gamepad remapping, e.g. [code]030000004c050000c405000000010000[/code]. Returns an empty string if it cannot be found. Godot uses SDL\u0027s internal mappings, supplemented by community-contributed mappings, to determine gamepad names and mappings based on this GUID. On Windows, all XInput joypad GUIDs will be overridden by Godot to [code]__XINPUT_DEVICE__[/code], because their mappings are the same.",
+      "godotName": "get_joy_guid",
+      "xmlDocId": "M:Godot.Input.GetJoyGuid(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyGyroscope",
+      "kind": "Method",
+      "signature": "public Vector3 GetJoyGyroscope(int device)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation rate in rad/s around a joypad\u0027s X, Y, and Z axes of the gyroscope sensor, if the joypad has one and it\u0027s currently enabled. Otherwise, the method returns [constant Vector3.ZERO]. See also [method set_joy_motion_sensors_enabled]. The rotation is positive in the counter-clockwise direction. For a joypad held in front of you, the returned axes are defined as follows: X: Angular speed around the X axis (pitch); Y: Angular speed around the Y axis (yaw); Z: Angular speed around the Z axis (roll). See [method start_joy_motion_sensors_calibration] for an example on how to use joypad gyroscope and gyroscope calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "get_joy_gyroscope",
+      "xmlDocId": "M:Godot.Input.GetJoyGyroscope(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyInfo",
+      "kind": "Method",
+      "signature": "public Dictionary GetJoyInfo(int device)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a dictionary with extra platform-specific information about the device, e.g. the raw gamepad name from the OS or the Steam Input index. On Windows, Linux, macOS, and iOS, the dictionary contains the following fields: [code]raw_name[/code]: The name of the controller as it came from the OS, before getting renamed by the controller database. [code]vendor_id[/code]: The USB vendor ID of the device. [code]product_id[/code]: The USB product ID of the device. [code]serial_number[/code]: The serial number of the device. This key won\u0027t be present if the serial number is unavailable. The dictionary can also include the following fields under selected platforms: [code]steam_input_index[/code]: The Steam Input gamepad index (Windows, Linux, and macOS only). If the device is not a Steam Input device this key won\u0027t be present. [code]xinput_index[/code]: The index of the controller in the XInput system (Windows only). This key won\u0027t be present for devices not handled by XInput. [b]Note:[/b] The returned dictionary is always empty on Android and Web.",
+      "godotName": "get_joy_info",
+      "xmlDocId": "M:Godot.Input.GetJoyInfo(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyMotionSensorsCalibration",
+      "kind": "Method",
+      "signature": "public Dictionary GetJoyMotionSensorsCalibration(int device)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the calibration information about the specified joypad\u0027s motion sensors in the form of a [Dictionary], if it has any and if they have been calibrated, otherwise returns an empty [Dictionary]. The dictionary contains the following fields: [code]gyroscope_offset[/code]: average offset in gyroscope values from [constant Vector2.ZERO] in rad/s. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "get_joy_motion_sensors_calibration",
+      "xmlDocId": "M:Godot.Input.GetJoyMotionSensorsCalibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyMotionSensorsRate",
+      "kind": "Method",
+      "signature": "public float GetJoyMotionSensorsRate(int device)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joypad\u0027s motion sensor rate in Hz, if the joypad has motion sensors and they\u0027re currently enabled. See also [method set_joy_motion_sensors_enabled]. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "get_joy_motion_sensors_rate",
+      "xmlDocId": "M:Godot.Input.GetJoyMotionSensorsRate(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyName",
+      "kind": "Method",
+      "signature": "public String GetJoyName(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the joypad at the specified device index, e.g. [code]PS4 Controller[/code]. Godot uses the [url=https://github.com/gabomdq/SDL_GameControllerDB]SDL2 game controller database[/url] to determine gamepad names.",
+      "godotName": "get_joy_name",
+      "xmlDocId": "M:Godot.Input.GetJoyName(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyVibrationDuration",
+      "kind": "Method",
+      "signature": "public float GetJoyVibrationDuration(int device)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the duration of the current vibration effect in seconds. [b]Note:[/b] This method returns the same value that was passed to [method start_joy_vibration], and this value does [b]not[/b] change when the joypad\u0027s vibration runs out, it only gets reset after a call to [method stop_joy_vibration]. If you want to check if a joypad is still vibrating, use [method is_joy_vibrating] instead.",
+      "godotName": "get_joy_vibration_duration",
+      "xmlDocId": "M:Godot.Input.GetJoyVibrationDuration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyVibrationRemainingDuration",
+      "kind": "Method",
+      "signature": "public float GetJoyVibrationRemainingDuration(int device)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the remaining duration of the current vibration effect in seconds.",
+      "godotName": "get_joy_vibration_remaining_duration",
+      "xmlDocId": "M:Godot.Input.GetJoyVibrationRemainingDuration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetJoyVibrationStrength",
+      "kind": "Method",
+      "signature": "public Vector2 GetJoyVibrationStrength(int device)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the strength of the joypad vibration: x is the strength of the weak motor, and y is the strength of the strong motor. [b]Note:[/b] This method returns the same values that were passed to [method start_joy_vibration], and these values do [b]not[/b] change when the joypad\u0027s vibration runs out, they only get reset after a call to [method stop_joy_vibration]. If you want to check if a joypad is still vibrating, use [method is_joy_vibrating] instead.",
+      "godotName": "get_joy_vibration_strength",
+      "xmlDocId": "M:Godot.Input.GetJoyVibrationStrength(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetLastMouseScreenVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 GetLastMouseScreenVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the last mouse velocity in screen coordinates. To provide a precise and jitter-free velocity, mouse velocity is only calculated every 0.1s. Therefore, mouse velocity will lag mouse movements.",
+      "godotName": "get_last_mouse_screen_velocity",
+      "xmlDocId": "M:Godot.Input.GetLastMouseScreenVelocity",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetLastMouseVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 GetLastMouseVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the last mouse velocity. To provide a precise and jitter-free velocity, mouse velocity is only calculated every 0.1s. Therefore, mouse velocity will lag mouse movements.",
+      "godotName": "get_last_mouse_velocity",
+      "xmlDocId": "M:Godot.Input.GetLastMouseVelocity",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetMagnetometer",
+      "kind": "Method",
+      "signature": "public Vector3 GetMagnetometer()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the magnetic field strength in micro-Tesla for all axes of the device\u0027s magnetometer sensor, if the device has one. Otherwise, the method returns [constant Vector3.ZERO]. [b]Note:[/b] This method only works on Android and iOS. On other platforms, it always returns [constant Vector3.ZERO]. [b]Note:[/b] For Android, [member ProjectSettings.input_devices/sensors/enable_magnetometer] must be enabled.",
+      "godotName": "get_magnetometer",
+      "xmlDocId": "M:Godot.Input.GetMagnetometer",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetMouseButtonMask",
+      "kind": "Method",
+      "signature": "public int GetMouseButtonMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns mouse buttons as a bitmask. If multiple mouse buttons are pressed at the same time, the bits are added together. Equivalent to [method DisplayServer.mouse_get_button_state].",
+      "godotName": "get_mouse_button_mask",
+      "xmlDocId": "M:Godot.Input.GetMouseButtonMask",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "GetVector",
+      "kind": "Method",
+      "signature": "public Vector2 GetVector(StringName negativeX, StringName positiveX, StringName negativeY, StringName positiveY, float deadzone)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "negative_x",
+          "type": "StringName"
+        },
+        {
+          "name": "positive_x",
+          "type": "StringName"
+        },
+        {
+          "name": "negative_y",
+          "type": "StringName"
+        },
+        {
+          "name": "positive_y",
+          "type": "StringName"
+        },
+        {
+          "name": "deadzone",
+          "type": "float",
+          "defaultValue": "-1.0"
+        }
+      ],
+      "summary": "Gets an input vector by specifying four actions for the positive and negative X and Y axes. This method is useful when getting vector input, such as from a joystick, directional pad, arrows, or WASD. The vector has its length limited to 1 and has a circular deadzone, which is useful for using vector input as movement. By default, the deadzone is automatically calculated from the average of the action deadzones. However, you can override the deadzone to be whatever you want (on the range of 0 to 1).",
+      "godotName": "get_vector",
+      "xmlDocId": "M:Godot.Input.GetVector(StringName,StringName,StringName,StringName,float)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "HasJoyLight",
+      "kind": "Method",
+      "signature": "public bool HasJoyLight(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad has an LED light that can change colors and/or brightness. See also [method set_joy_light]. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "has_joy_light",
+      "xmlDocId": "M:Godot.Input.HasJoyLight(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "HasJoyMotionSensors",
+      "kind": "Method",
+      "signature": "public bool HasJoyMotionSensors(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad has motion sensors (accelerometer and gyroscope). [b]Note:[/b] On iOS, joypad accelerometer sensor reading is not supported due to OS limitations. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "has_joy_motion_sensors",
+      "xmlDocId": "M:Godot.Input.HasJoyMotionSensors(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "HasJoyVibration",
+      "kind": "Method",
+      "signature": "public bool HasJoyVibration(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad supports vibration. See also [method start_joy_vibration]. [b]Note:[/b] For macOS, vibration is only supported in macOS 11 and later. When connected via USB, vibration is only supported for major brand controllers (except Xbox One and Xbox Series X/S controllers) due to macOS limitations.",
+      "godotName": "has_joy_vibration",
+      "xmlDocId": "M:Godot.Input.HasJoyVibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsActionJustPressed",
+      "kind": "Method",
+      "signature": "public bool IsActionJustPressed(StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] when the user has [i]started[/i] pressing the action event in the current frame or physics tick. It will only return [code]true[/code] on the frame or tick that the user pressed down the button. This is useful for code that needs to run only once when an action is pressed, instead of every frame while it\u0027s pressed. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] Returning [code]true[/code] does not imply that the action is [i]still[/i] pressed. An action can be pressed and released again rapidly, and [code]true[/code] will still be returned so as not to miss input. [b]Note:[/b] Due to keyboard ghosting, [method is_action_just_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information. [b]Note:[/b] During input handling (e.g. [method Node._input]), use [method InputEvent.is_action_pressed] instead to query the action state of the current event. See also [method is_action_just_pressed_by_event].",
+      "godotName": "is_action_just_pressed",
+      "xmlDocId": "M:Godot.Input.IsActionJustPressed(StringName,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsActionJustPressedByEvent",
+      "kind": "Method",
+      "signature": "public bool IsActionJustPressedByEvent(StringName action, InputEvent @event, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] when the user has [i]started[/i] pressing the action event in the current frame or physics tick, and the first event that triggered action press in the current frame/physics tick was [param event]. It will only return [code]true[/code] on the frame or tick that the user pressed down the button. This is useful for code that needs to run only once when an action is pressed, and the action is processed during input handling (e.g. [method Node._input]). If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] Returning [code]true[/code] does not imply that the action is [i]still[/i] pressed. An action can be pressed and released again rapidly, and [code]true[/code] will still be returned so as not to miss input. [b]Note:[/b] Due to keyboard ghosting, [method is_action_just_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information.",
+      "godotName": "is_action_just_pressed_by_event",
+      "xmlDocId": "M:Godot.Input.IsActionJustPressedByEvent(StringName,InputEvent,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsActionJustReleased",
+      "kind": "Method",
+      "signature": "public bool IsActionJustReleased(StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] when the user [i]stops[/i] pressing the action event in the current frame or physics tick. It will only return [code]true[/code] on the frame or tick that the user releases the button. [b]Note:[/b] Returning [code]true[/code] does not imply that the action is [i]still[/i] not pressed. An action can be released and pressed again rapidly, and [code]true[/code] will still be returned so as not to miss input. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] During input handling (e.g. [method Node._input]), use [method InputEvent.is_action_released] instead to query the action state of the current event. See also [method is_action_just_released_by_event].",
+      "godotName": "is_action_just_released",
+      "xmlDocId": "M:Godot.Input.IsActionJustReleased(StringName,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsActionJustReleasedByEvent",
+      "kind": "Method",
+      "signature": "public bool IsActionJustReleasedByEvent(StringName action, InputEvent @event, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] when the user [i]stops[/i] pressing the action event in the current frame or physics tick, and the first event that triggered action release in the current frame/physics tick was [param event]. It will only return [code]true[/code] on the frame or tick that the user releases the button. This is useful when an action is processed during input handling (e.g. [method Node._input]). [b]Note:[/b] Returning [code]true[/code] does not imply that the action is [i]still[/i] not pressed. An action can be released and pressed again rapidly, and [code]true[/code] will still be returned so as not to miss input. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "is_action_just_released_by_event",
+      "xmlDocId": "M:Godot.Input.IsActionJustReleasedByEvent(StringName,InputEvent,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsActionPressed",
+      "kind": "Method",
+      "signature": "public bool IsActionPressed(StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the action event. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] Due to keyboard ghosting, [method is_action_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information.",
+      "godotName": "is_action_pressed",
+      "xmlDocId": "M:Godot.Input.IsActionPressed(StringName,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsAnythingPressed",
+      "kind": "Method",
+      "signature": "public bool IsAnythingPressed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if any action, key, joypad button, or mouse button is being pressed. This will also return [code]true[/code] if any action is simulated via code by calling [method action_press].",
+      "godotName": "is_anything_pressed",
+      "xmlDocId": "M:Godot.Input.IsAnythingPressed",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyButtonPressed",
+      "kind": "Method",
+      "signature": "public bool IsJoyButtonPressed(int device, int button)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "button",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the joypad button at index [param button]. [b]Note:[/b] If you want to check if a joypad button was just pressed, use Godot\u0027s input action system with [method is_action_just_pressed] or use the [method Node._input] method like this instead: [codeblocks] [gdscript] func _input(event): if event is InputEventJoypadButton and event.is_pressed() and event.button_index == JOY_BUTTON_A: pass # Your code here. [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventJoypadButton eventButton \u0026\u0026 eventButton.Pressed \u0026\u0026 eventButton.ButtonIndex == JoyButton.A) { // Your code here. } } [/csharp] [/codeblocks]",
+      "godotName": "is_joy_button_pressed",
+      "xmlDocId": "M:Godot.Input.IsJoyButtonPressed(int,int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyKnown",
+      "kind": "Method",
+      "signature": "public bool IsJoyKnown(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the system knows the specified device. This means that it sets all button and axis indices. Unknown joypads are not expected to match these constants, but you can still retrieve events from them.",
+      "godotName": "is_joy_known",
+      "xmlDocId": "M:Godot.Input.IsJoyKnown(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyMotionSensorsCalibrated",
+      "kind": "Method",
+      "signature": "public bool IsJoyMotionSensorsCalibrated(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad\u0027s motion sensors have been calibrated. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "is_joy_motion_sensors_calibrated",
+      "xmlDocId": "M:Godot.Input.IsJoyMotionSensorsCalibrated(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyMotionSensorsCalibrating",
+      "kind": "Method",
+      "signature": "public bool IsJoyMotionSensorsCalibrating(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad\u0027s motion sensors are currently being calibrated. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "is_joy_motion_sensors_calibrating",
+      "xmlDocId": "M:Godot.Input.IsJoyMotionSensorsCalibrating(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyMotionSensorsEnabled",
+      "kind": "Method",
+      "signature": "public bool IsJoyMotionSensorsEnabled(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the requested joypad has motion sensors (accelerometer and gyroscope) and they are currently enabled. See also [method set_joy_motion_sensors_enabled] and [method has_joy_motion_sensors]. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "is_joy_motion_sensors_enabled",
+      "xmlDocId": "M:Godot.Input.IsJoyMotionSensorsEnabled(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsJoyVibrating",
+      "kind": "Method",
+      "signature": "public bool IsJoyVibrating(int device)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the joypad is still vibrating after a call to [method start_joy_vibration]. Unlike [method get_joy_vibration_strength] and [method get_joy_vibration_duration], this method returns [code]false[/code] after the joypad\u0027s vibration runs out.",
+      "godotName": "is_joy_vibrating",
+      "xmlDocId": "M:Godot.Input.IsJoyVibrating(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsKeyLabelPressed",
+      "kind": "Method",
+      "signature": "public bool IsKeyLabelPressed(int keycode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keycode",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the key with the [param keycode] printed on it. You can pass a [enum Key] constant or any Unicode character code. [b]Note:[/b] If you want to check if a key was just pressed by using its label, use Godot\u0027s input action system with [method is_action_just_pressed] or use the [method Node._input] method like this instead: [codeblocks] [gdscript] func _input(event): if event is InputEventKey and not event.is_echo() and event.is_pressed() and event.key_label == KEY_SPACE: pass # Your code here. [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventKey eventKey \u0026\u0026 !eventKey.IsEcho() \u0026\u0026 eventKey.Pressed \u0026\u0026 eventKey.KeyLabel == Key.Space) { // Your code here. } } [/csharp] [/codeblocks]",
+      "godotName": "is_key_label_pressed",
+      "xmlDocId": "M:Godot.Input.IsKeyLabelPressed(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsKeyPressed",
+      "kind": "Method",
+      "signature": "public bool IsKeyPressed(int keycode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keycode",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the Latin key in the current keyboard layout. You can pass a [enum Key] constant. [method is_key_pressed] is only recommended over [method is_physical_key_pressed] in non-game applications. This ensures that shortcut keys behave as expected depending on the user\u0027s keyboard layout, as keyboard shortcuts are generally dependent on the keyboard layout in non-game applications. If in doubt, use [method is_physical_key_pressed]. [b]Note:[/b] Due to keyboard ghosting, [method is_key_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information. [b]Note:[/b] If you want to check if a key was just pressed by using its keycode, use Godot\u0027s input action system with [method is_action_just_pressed] or use the [method Node._input] method like this instead: [codeblocks] [gdscript] func _input(event): if event is InputEventKey and not event.is_echo() and event.is_pressed() and event.keycode == KEY_SPACE: pass # Your code here. [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventKey eventKey \u0026\u0026 !eventKey.IsEcho() \u0026\u0026 eventKey.Pressed \u0026\u0026 eventKey.Keycode == Key.Space) { // Your code here. } } [/csharp] [/codeblocks]",
+      "godotName": "is_key_pressed",
+      "xmlDocId": "M:Godot.Input.IsKeyPressed(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsMouseButtonPressed",
+      "kind": "Method",
+      "signature": "public bool IsMouseButtonPressed(int button)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "button",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the mouse button specified with [enum MouseButton]. [b]Note:[/b] If you want to check if a mouse button was just pressed, use Godot\u0027s input action system with [method is_action_just_pressed] or use the [method Node._input] method like this instead: [codeblocks] [gdscript] func _input(event): if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT: pass # Your code here. [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventMouseButton eventMouseButton \u0026\u0026 eventMouseButton.Pressed \u0026\u0026 eventMouseButton.ButtonIndex == MouseButton.Left) { // Your code here. } } [/csharp] [/codeblocks]",
+      "godotName": "is_mouse_button_pressed",
+      "xmlDocId": "M:Godot.Input.IsMouseButtonPressed(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IsPhysicalKeyPressed",
+      "kind": "Method",
+      "signature": "public bool IsPhysicalKeyPressed(int keycode)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keycode",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if you are pressing the key in the physical location on the 101/102-key US QWERTY keyboard. You can pass a [enum Key] constant. [method is_physical_key_pressed] is recommended over [method is_key_pressed] for in-game actions, as it will make [kbd]W[/kbd]/[kbd]A[/kbd]/[kbd]S[/kbd]/[kbd]D[/kbd] layouts work regardless of the user\u0027s keyboard layout. [method is_physical_key_pressed] will also ensure that the top row number keys work on any keyboard layout. If in doubt, use [method is_physical_key_pressed]. [b]Note:[/b] Due to keyboard ghosting, [method is_physical_key_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information. [b]Note:[/b] If you want to check if a key was just pressed by using its physical keycode, use Godot\u0027s input action system with [method is_action_just_pressed] or use the [method Node._input] method like this instead: [codeblocks] [gdscript] func _input(event): if event is InputEventKey and not event.is_echo() and event.is_pressed() and event.physical_keycode == KEY_SPACE: pass # Your code here. [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventKey eventKey \u0026\u0026 !eventKey.IsEcho() \u0026\u0026 eventKey.Pressed \u0026\u0026 eventKey.PhysicalKeycode == Key.Space) { // Your code here. } } [/csharp] [/codeblocks]",
+      "godotName": "is_physical_key_pressed",
+      "xmlDocId": "M:Godot.Input.IsPhysicalKeyPressed(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "ParseInputEvent",
+      "kind": "Method",
+      "signature": "public void ParseInputEvent(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Feeds an [InputEvent] to the game. Can be used to artificially trigger input events from code. Also generates [method Node._input] calls. [codeblocks] [gdscript] var cancel_event = InputEventAction.new() cancel_event.action = \u0022ui_cancel\u0022 cancel_event.pressed = true Input.parse_input_event(cancel_event) [/gdscript] [csharp] var cancelEvent = new InputEventAction(); cancelEvent.Action = \u0022ui_cancel\u0022; cancelEvent.Pressed = true; Input.ParseInputEvent(cancelEvent); [/csharp] [/codeblocks] [b]Note:[/b] Calling this function has no influence on the operating system. So for example sending an [InputEventMouseMotion] will not move the OS mouse cursor to the specified position (use [method warp_mouse] instead) and sending [kbd]Alt/Cmd \u002B Tab[/kbd] as [InputEventKey] won\u0027t toggle between active windows.",
+      "godotName": "parse_input_event",
+      "xmlDocId": "M:Godot.Input.ParseInputEvent(InputEvent)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "RemoveJoyMapping",
+      "kind": "Method",
+      "signature": "public void RemoveJoyMapping(String guid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "guid",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes all mappings from the internal database that match the given GUID. All currently connected joypads that use this GUID will become unmapped. On Android, Godot will map to an internal fallback mapping.",
+      "godotName": "remove_joy_mapping",
+      "xmlDocId": "M:Godot.Input.RemoveJoyMapping(String)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetAccelerometer",
+      "kind": "Method",
+      "signature": "public void SetAccelerometer(Vector3 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the acceleration value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC. [b]Note:[/b] This value can be immediately overwritten by the hardware sensor value on Android and iOS.",
+      "godotName": "set_accelerometer",
+      "xmlDocId": "M:Godot.Input.SetAccelerometer(Vector3)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetCustomMouseCursor",
+      "kind": "Method",
+      "signature": "public void SetCustomMouseCursor(Resource image, int shape, Vector2 hotspot)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Resource"
+        },
+        {
+          "name": "shape",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "hotspot",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Sets a custom mouse cursor image, which is only visible inside the game window, for the given mouse [param shape]. The hotspot can also be specified. Passing [code]null[/code] to the image parameter resets to the system cursor. [param image] can be either [Texture2D] or [Image] and its size must be lower than or equal to 256\u00D7256. To avoid rendering issues, sizes lower than or equal to 128\u00D7128 are recommended. [param hotspot] must be within [param image]\u0027s size. [b]Note:[/b] [AnimatedTexture]s aren\u0027t supported as custom mouse cursors. If using an [AnimatedTexture], only the first frame will be displayed. [b]Note:[/b] The [b]Lossless[/b], [b]Lossy[/b] or [b]Uncompressed[/b] compression modes are recommended. The [b]Video RAM[/b] compression mode can be used, but it will be decompressed on the CPU, which means loading times are slowed down and no memory is saved compared to lossless modes. [b]Note:[/b] On the web platform, the maximum allowed cursor image size is 128\u00D7128. Cursor images larger than 32\u00D732 will also only be displayed if the mouse cursor image is entirely located within the page for [url=https://chromestatus.com/feature/5825971391299584]security reasons[/url].",
+      "godotName": "set_custom_mouse_cursor",
+      "xmlDocId": "M:Godot.Input.SetCustomMouseCursor(Resource,int,Vector2)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetDefaultCursorShape",
+      "kind": "Method",
+      "signature": "public void SetDefaultCursorShape(int shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the default cursor shape to be used in the viewport instead of [constant CURSOR_ARROW]. [b]Note:[/b] If you want to change the default cursor shape for [Control]\u0027s nodes, use [member Control.mouse_default_cursor_shape] instead. [b]Note:[/b] This method generates an [InputEventMouseMotion] to update cursor immediately.",
+      "godotName": "set_default_cursor_shape",
+      "xmlDocId": "M:Godot.Input.SetDefaultCursorShape(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetGravity",
+      "kind": "Method",
+      "signature": "public void SetGravity(Vector3 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the gravity value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC. [b]Note:[/b] This value can be immediately overwritten by the hardware sensor value on Android and iOS.",
+      "godotName": "set_gravity",
+      "xmlDocId": "M:Godot.Input.SetGravity(Vector3)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetGyroscope",
+      "kind": "Method",
+      "signature": "public void SetGyroscope(Vector3 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the value of the rotation rate of the gyroscope sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC. [b]Note:[/b] This value can be immediately overwritten by the hardware sensor value on Android and iOS.",
+      "godotName": "set_gyroscope",
+      "xmlDocId": "M:Godot.Input.SetGyroscope(Vector3)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetJoyLight",
+      "kind": "Method",
+      "signature": "public void SetJoyLight(int device, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the joypad\u0027s LED light, if available, to the specified color. See also [method has_joy_light]. [b]Note:[/b] There is no way to get the color of the light from a joypad. If you need to know the assigned color, store it separately. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "set_joy_light",
+      "xmlDocId": "M:Godot.Input.SetJoyLight(int,Color)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetJoyMotionSensorsCalibration",
+      "kind": "Method",
+      "signature": "public void SetJoyMotionSensorsCalibration(int device, Dictionary calibrationInfo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "calibration_info",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Sets the specified joypad\u0027s calibration information. See also [method get_joy_motion_sensors_calibration]. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "set_joy_motion_sensors_calibration",
+      "xmlDocId": "M:Godot.Input.SetJoyMotionSensorsCalibration(int,Dictionary)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetJoyMotionSensorsEnabled",
+      "kind": "Method",
+      "signature": "public void SetJoyMotionSensorsEnabled(int device, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables the motion sensors (accelerometer and gyroscope), if available, on the specified joypad. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. It\u0027s recommended to disable the motion sensors when they\u0027re no longer being used, because otherwise it might drain the controller battery faster. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "set_joy_motion_sensors_enabled",
+      "xmlDocId": "M:Godot.Input.SetJoyMotionSensorsEnabled(int,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "SetMagnetometer",
+      "kind": "Method",
+      "signature": "public void SetMagnetometer(Vector3 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the value of the magnetic field of the magnetometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC. [b]Note:[/b] This value can be immediately overwritten by the hardware sensor value on Android and iOS.",
+      "godotName": "set_magnetometer",
+      "xmlDocId": "M:Godot.Input.SetMagnetometer(Vector3)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "ShouldIgnoreDevice",
+      "kind": "Method",
+      "signature": "public bool ShouldIgnoreDevice(int vendorId, int productId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "vendor_id",
+          "type": "int"
+        },
+        {
+          "name": "product_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Queries whether an input device should be ignored or not. Devices can be ignored by setting the environment variable [code]SDL_GAMECONTROLLER_IGNORE_DEVICES[/code]. Read the [url=https://wiki.libsdl.org/SDL2]SDL documentation[/url] for more information. [b]Note:[/b] Some 3rd party tools can contribute to the list of ignored devices. For example, [i]SteamInput[/i] creates virtual devices from physical devices for remapping purposes. To avoid handling the same input device twice, the original device is added to the ignore list.",
+      "godotName": "should_ignore_device",
+      "xmlDocId": "M:Godot.Input.ShouldIgnoreDevice(int,int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "StartJoyMotionSensorsCalibration",
+      "kind": "Method",
+      "signature": "public void StartJoyMotionSensorsCalibration(int device)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Starts the process of calibrating the specified joypad\u0027s gyroscope, if it has one. Once a joypad\u0027s gyroscope has been calibrated correctly (e.g. laying still on a table without being rotated), [method get_joy_gyroscope] will return values close or equal to [constant Vector3.ZERO] when the joypad is not being rotated. Here\u0027s an example of how to use joypad gyroscope and gyroscope calibration in your games: [codeblocks] [gdscript] const GYRO_SENSITIVITY = 10.0 func _ready(): # In this example we only use the first connected joypad (id 0). if 0 not in Input.get_connected_joypads(): return if not Input.has_joy_motion_sensors(0): return # We must enable the motion sensors before using them. Input.set_joy_motion_sensors_enabled(0, true) # (Tell the users here that they need to put their joypads on a flat surface and wait for confirmation.) # Start the calibration process. calibrate_motion() func _process(delta): # Only move the object if the joypad motion sensors are calibrated. if Input.is_joy_motion_sensors_calibrated(0): move_object(delta) func calibrate_motion(): Input.start_joy_motion_sensors_calibration(0) # Wait for some time. await get_tree().create_timer(1.0).timeout Input.stop_joy_motion_sensors_calibration(0) # The joypad is now calibrated. func move_object(delta): var node: Node3D = ... # Put your node here. var gyro := Input.get_joy_gyroscope(0) node.rotation.x -= -gyro.y * GYRO_SENSITIVITY * delta # Use rotation around the Y axis (yaw) here. node.rotation.y \u002B= -gyro.x * GYRO_SENSITIVITY * delta # Use rotation around the X axis (pitch) here. [/gdscript] [csharp] private const float GyroSensitivity = 10.0; public override void _Ready() { // In this example we only use the first connected joypad (id 0). if (!Input.GetConnectedJoypads().Contains(0)) { return; } if (!Input.HasJoyMotionSensors(0)) { return; } // We must enable the accelerometer and the gyroscope before using them. Input.SetJoyMotionSensorsEnabled(0, true); // (Tell the users here that they need to put their joypads on a flat surface and wait for confirmation.) // Start the calibration process. CalibrateMotion(); } public override void _Process(double delta) { // Only move the object if the joypad motion sensors are calibrated. if (Input.IsJoyMotionSensorsCalibrated(0)) { MoveObject(delta); } } private async Task CalibrateMotion() { Input.StartJoyMotionSensorsCalibration(0); // Wait for some time. await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout); Input.StopJoyMotionSensorsCalibration(0); // The joypad is now calibrated. } private void MoveObject(double delta) { Node3D node = ... ; // Put your object here. Vector3 gyro = Input.GetJoyGyroscope(0); Vector3 rotation = node.Rotation; rotation.X -= -gyro.Y * GyroSensitivity * (float)delta; // Use rotation around the Y axis (yaw) here. rotation.Y \u002B= -gyro.X * GyroSensitivity * (float)delta; // Use rotation around the X axis (pitch) here. node.Rotation = rotation; } [/csharp] [/codeblocks] [b]Note:[/b] Accelerometer sensor doesn\u0027t usually require calibration. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "start_joy_motion_sensors_calibration",
+      "xmlDocId": "M:Godot.Input.StartJoyMotionSensorsCalibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "StartJoyVibration",
+      "kind": "Method",
+      "signature": "public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "weak_magnitude",
+          "type": "float"
+        },
+        {
+          "name": "strong_magnitude",
+          "type": "float"
+        },
+        {
+          "name": "duration",
+          "type": "float",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Starts to vibrate the joypad. See also [method has_joy_vibration] and [method is_joy_vibrating]. Joypads usually come with two rumble motors, a strong and a weak one. [param weak_magnitude] is the strength of the weak motor (between [code]0.0[/code] and [code]1.0[/code]). [param strong_magnitude] is the strength of the strong motor (between [code]0.0[/code] and [code]1.0[/code]). [param duration] is the duration of the effect in seconds (a duration of [code]0.0[/code] will try to play the vibration as long as possible, which is about 65 seconds). The vibration can be stopped early by calling [method stop_joy_vibration]. See also [method get_joy_vibration_strength] and [method get_joy_vibration_duration]. [b]Note:[/b] For macOS, vibration is only supported in macOS 11 and later. When connected via USB, vibration is only supported for major brand controllers (except Xbox One and Xbox Series X/S controllers) due to macOS limitations.",
+      "godotName": "start_joy_vibration",
+      "xmlDocId": "M:Godot.Input.StartJoyVibration(int,float,float,float)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "StopJoyMotionSensorsCalibration",
+      "kind": "Method",
+      "signature": "public void StopJoyMotionSensorsCalibration(int device)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Stops the calibration process of the specified joypad\u0027s motion sensors. See [method start_joy_motion_sensors_calibration] for an example on how to use joypad motion sensors and calibration in your games. [b]Note:[/b] This feature is only supported on Windows, Linux, macOS, and iOS.",
+      "godotName": "stop_joy_motion_sensors_calibration",
+      "xmlDocId": "M:Godot.Input.StopJoyMotionSensorsCalibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "StopJoyVibration",
+      "kind": "Method",
+      "signature": "public void StopJoyVibration(int device)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Stops the vibration of the joypad started with [method start_joy_vibration].",
+      "godotName": "stop_joy_vibration",
+      "xmlDocId": "M:Godot.Input.StopJoyVibration(int)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "VibrateHandheld",
+      "kind": "Method",
+      "signature": "public void VibrateHandheld(int durationMs, float amplitude)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "duration_ms",
+          "type": "int",
+          "defaultValue": "500"
+        },
+        {
+          "name": "amplitude",
+          "type": "float",
+          "defaultValue": "-1.0"
+        }
+      ],
+      "summary": "Vibrate the handheld device for the specified duration in milliseconds. [param amplitude] is the strength of the vibration, as a value between [code]0.0[/code] and [code]1.0[/code]. If set to [code]-1.0[/code], the default vibration strength of the device is used. [b]Note:[/b] This method is implemented on Android, iOS, and Web. It has no effect on other platforms. [b]Note:[/b] For Android, [method vibrate_handheld] requires enabling the [code]VIBRATE[/code] permission in the export preset. Otherwise, [method vibrate_handheld] will have no effect. [b]Note:[/b] For iOS, specifying the duration is only supported in iOS 13 and later. [b]Note:[/b] For Web, the amplitude cannot be changed. [b]Note:[/b] Some web browsers such as Safari and Firefox for Android do not support [method vibrate_handheld]. [b]Note:[/b] Device settings such as vibration on/off, \u0022do not disturb\u0022 mode or specific haptic feedback on/off may prevent [method vibrate_handheld] effects.",
+      "godotName": "vibrate_handheld",
+      "xmlDocId": "M:Godot.Input.VibrateHandheld(int,float)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "WarpMouse",
+      "kind": "Method",
+      "signature": "public void WarpMouse(Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the mouse position to the specified vector, provided in pixels and relative to an origin at the upper left corner of the currently focused Window Manager game window. Mouse position is clipped to the limits of the screen resolution, or to the limits of the game window if [enum MouseMode] is set to [constant MOUSE_MODE_CONFINED] or [constant MOUSE_MODE_CONFINED_HIDDEN]. [b]Note:[/b] [method warp_mouse] is only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.",
+      "godotName": "warp_mouse",
+      "xmlDocId": "M:Godot.Input.WarpMouse(Vector2)",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "EmulateMouseFromTouch",
+      "kind": "Property",
+      "signature": "public bool EmulateMouseFromTouch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], sends mouse input events when tapping or swiping on the touchscreen. See also [member ProjectSettings.input_devices/pointing/emulate_mouse_from_touch].",
+      "godotName": "emulate_mouse_from_touch",
+      "xmlDocId": "P:Godot.Input.EmulateMouseFromTouch",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "EmulateTouchFromMouse",
+      "kind": "Property",
+      "signature": "public bool EmulateTouchFromMouse { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], sends touch input events when clicking or dragging the mouse. See also [member ProjectSettings.input_devices/pointing/emulate_touch_from_mouse].",
+      "godotName": "emulate_touch_from_mouse",
+      "xmlDocId": "P:Godot.Input.EmulateTouchFromMouse",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "IgnoreJoypadOnUnfocusedApplication",
+      "kind": "Property",
+      "signature": "public bool IgnoreJoypadOnUnfocusedApplication { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], joypad input (including motion sensors) and LED light changes will be ignored and joypad vibration will be stopped when the application is not focused.",
+      "godotName": "ignore_joypad_on_unfocused_application",
+      "xmlDocId": "P:Godot.Input.IgnoreJoypadOnUnfocusedApplication",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MouseMode",
+      "kind": "Property",
+      "signature": "public int MouseMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the mouse mode.",
+      "godotName": "mouse_mode",
+      "xmlDocId": "P:Godot.Input.MouseMode",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "UseAccumulatedInput",
+      "kind": "Property",
+      "signature": "public bool UseAccumulatedInput { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], similar input events sent by the operating system are accumulated. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS. Input accumulation can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input. [b]Note:[/b] Input accumulation is [i]enabled[/i] by default.",
+      "godotName": "use_accumulated_input",
+      "xmlDocId": "P:Godot.Input.UseAccumulatedInput",
+      "sourcePath": "doc/classes/Input.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "JoyConnectionChanged",
+      "kind": "Signal",
+      "signature": "public event JoyConnectionChangedHandler JoyConnectionChanged",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "connected",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when a joypad device has been connected or disconnected.",
+      "godotName": "joy_connection_changed",
+      "xmlDocId": "E:Godot.Input.JoyConnectionChanged(int,bool)",
+      "sourcePath": "doc/classes/Input.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CursorShape",
+      "values": [
+        {
+          "name": "CURSOR_ARROW",
+          "value": "0",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Arrow cursor. Standard, default pointing cursor.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_BDIAGSIZE",
+          "value": "11",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Window resize mouse cursor. The cursor is a double-headed arrow that goes from the bottom left to the top right. It tells the user they can resize the window or the panel both horizontally and vertically.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_BUSY",
+          "value": "5",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Busy cursor. Indicates that the application is busy performing an operation, and that it is still usable during the operation.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_CAN_DROP",
+          "value": "7",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Can drop cursor. Usually displayed when dragging something to indicate that it can be dropped at the current position.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_CROSS",
+          "value": "3",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Cross cursor. Typically appears over regions in which a drawing operation can be performed or for selections.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_DRAG",
+          "value": "6",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Drag cursor. Usually displayed when dragging something. [b]Note:[/b] Windows lacks a dragging cursor, so [constant CURSOR_DRAG] is the same as [constant CURSOR_MOVE] for this platform.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_FDIAGSIZE",
+          "value": "12",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Window resize mouse cursor. The cursor is a double-headed arrow that goes from the top left to the bottom right, the opposite of [constant CURSOR_BDIAGSIZE]. It tells the user they can resize the window or the panel both horizontally and vertically.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_FORBIDDEN",
+          "value": "8",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Forbidden cursor. Indicates that the current action is forbidden (for example, when dragging something) or that the control at a position is disabled.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_HELP",
+          "value": "16",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Help cursor. Usually a question mark.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_HSIZE",
+          "value": "10",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Horizontal resize mouse cursor. A double-headed horizontal arrow. It tells the user they can resize the window or the panel horizontally.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_HSPLIT",
+          "value": "15",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Horizontal split mouse cursor. On Windows, it\u0027s the same as [constant CURSOR_HSIZE].",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_IBEAM",
+          "value": "1",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "I-beam cursor. Usually used to show where the text cursor will appear when the mouse is clicked.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_MOVE",
+          "value": "13",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Move cursor. Indicates that something can be moved.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_POINTING_HAND",
+          "value": "2",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Pointing hand cursor. Usually used to indicate the pointer is over a link or other interactable item.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_VSIZE",
+          "value": "9",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Vertical resize mouse cursor. A double-headed vertical arrow. It tells the user they can resize the window or the panel vertically.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_VSPLIT",
+          "value": "14",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Vertical split mouse cursor. On Windows, it\u0027s the same as [constant CURSOR_VSIZE].",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "CURSOR_WAIT",
+          "value": "4",
+          "enum": "CursorShape",
+          "kind": "EnumValue",
+          "summary": "Wait cursor. Indicates that the application is busy performing an operation, and that it cannot be used during the operation (e.g. something is blocking its main thread).",
+          "sourcePath": "doc/classes/Input.xml"
+        }
+      ]
+    },
+    {
+      "name": "MouseMode",
+      "values": [
+        {
+          "name": "MOUSE_MODE_CAPTURED",
+          "value": "2",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Captures the mouse. The mouse will be hidden and its position locked at the center of the window manager\u0027s window. [b]Note:[/b] If you want to process the mouse\u0027s movement in this mode, you need to use [member InputEventMouseMotion.relative].",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "MOUSE_MODE_CONFINED",
+          "value": "3",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Confines the mouse cursor to the game window, and make it visible.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "MOUSE_MODE_CONFINED_HIDDEN",
+          "value": "4",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Confines the mouse cursor to the game window, and make it hidden.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "MOUSE_MODE_HIDDEN",
+          "value": "1",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Makes the mouse cursor hidden if it is visible.",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "MOUSE_MODE_MAX",
+          "value": "5",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Max value of the [enum MouseMode].",
+          "sourcePath": "doc/classes/Input.xml"
+        },
+        {
+          "name": "MOUSE_MODE_VISIBLE",
+          "value": "0",
+          "enum": "MouseMode",
+          "kind": "EnumValue",
+          "summary": "Makes the mouse cursor visible if it is hidden.",
+          "sourcePath": "doc/classes/Input.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MOUSE_MODE_VISIBLE",
+      "value": "0",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Makes the mouse cursor visible if it is hidden.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MOUSE_MODE_HIDDEN",
+      "value": "1",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Makes the mouse cursor hidden if it is visible.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MOUSE_MODE_CAPTURED",
+      "value": "2",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Captures the mouse. The mouse will be hidden and its position locked at the center of the window manager\u0027s window. [b]Note:[/b] If you want to process the mouse\u0027s movement in this mode, you need to use [member InputEventMouseMotion.relative].",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MOUSE_MODE_CONFINED",
+      "value": "3",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Confines the mouse cursor to the game window, and make it visible.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MOUSE_MODE_CONFINED_HIDDEN",
+      "value": "4",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Confines the mouse cursor to the game window, and make it hidden.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "MOUSE_MODE_MAX",
+      "value": "5",
+      "enum": "MouseMode",
+      "kind": "EnumValue",
+      "summary": "Max value of the [enum MouseMode].",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_ARROW",
+      "value": "0",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Arrow cursor. Standard, default pointing cursor.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_IBEAM",
+      "value": "1",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "I-beam cursor. Usually used to show where the text cursor will appear when the mouse is clicked.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_POINTING_HAND",
+      "value": "2",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Pointing hand cursor. Usually used to indicate the pointer is over a link or other interactable item.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_CROSS",
+      "value": "3",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Cross cursor. Typically appears over regions in which a drawing operation can be performed or for selections.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_WAIT",
+      "value": "4",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Wait cursor. Indicates that the application is busy performing an operation, and that it cannot be used during the operation (e.g. something is blocking its main thread).",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_BUSY",
+      "value": "5",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Busy cursor. Indicates that the application is busy performing an operation, and that it is still usable during the operation.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_DRAG",
+      "value": "6",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Drag cursor. Usually displayed when dragging something. [b]Note:[/b] Windows lacks a dragging cursor, so [constant CURSOR_DRAG] is the same as [constant CURSOR_MOVE] for this platform.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_CAN_DROP",
+      "value": "7",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Can drop cursor. Usually displayed when dragging something to indicate that it can be dropped at the current position.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_FORBIDDEN",
+      "value": "8",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Forbidden cursor. Indicates that the current action is forbidden (for example, when dragging something) or that the control at a position is disabled.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_VSIZE",
+      "value": "9",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Vertical resize mouse cursor. A double-headed vertical arrow. It tells the user they can resize the window or the panel vertically.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_HSIZE",
+      "value": "10",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Horizontal resize mouse cursor. A double-headed horizontal arrow. It tells the user they can resize the window or the panel horizontally.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_BDIAGSIZE",
+      "value": "11",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Window resize mouse cursor. The cursor is a double-headed arrow that goes from the bottom left to the top right. It tells the user they can resize the window or the panel both horizontally and vertically.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_FDIAGSIZE",
+      "value": "12",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Window resize mouse cursor. The cursor is a double-headed arrow that goes from the top left to the bottom right, the opposite of [constant CURSOR_BDIAGSIZE]. It tells the user they can resize the window or the panel both horizontally and vertically.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_MOVE",
+      "value": "13",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Move cursor. Indicates that something can be moved.",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_VSPLIT",
+      "value": "14",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Vertical split mouse cursor. On Windows, it\u0027s the same as [constant CURSOR_VSIZE].",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_HSPLIT",
+      "value": "15",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Horizontal split mouse cursor. On Windows, it\u0027s the same as [constant CURSOR_HSIZE].",
+      "sourcePath": "doc/classes/Input.xml"
+    },
+    {
+      "name": "CURSOR_HELP",
+      "value": "16",
+      "enum": "CursorShape",
+      "kind": "EnumValue",
+      "summary": "Help cursor. Usually a question mark.",
+      "sourcePath": "doc/classes/Input.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Input.xml",
+      "sha256": "bf3e3072edcf7976b05a3361f53d7fc7ce03df95da069aefa591b21442a22e01"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

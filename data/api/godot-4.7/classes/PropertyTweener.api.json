@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PropertyTweener",
+    "namespace": "Godot",
+    "fullName": "Godot.PropertyTweener",
+    "kind": "class",
+    "baseType": "Tweener",
+    "interfaces": [],
+    "godotReference": "PropertyTweener",
+    "documentationPath": "doc/classes/PropertyTweener.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_propertytweener.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AsRelative",
+      "kind": "Method",
+      "signature": "public PropertyTweener AsRelative()",
+      "returnType": "PropertyTweener",
+      "parameters": [],
+      "summary": "When called, the final value will be used as a relative value instead. [b]Example:[/b] Move the node by [code]100[/code] pixels to the right. [codeblocks] [gdscript] var tween = get_tree().create_tween() tween.tween_property(self, \u0022position\u0022, Vector2.RIGHT * 100, 1).as_relative() [/gdscript] [csharp] Tween tween = GetTree().CreateTween(); tween.TweenProperty(this, \u0022position\u0022, Vector2.Right * 100.0f, 1.0f).AsRelative(); [/csharp] [/codeblocks]",
+      "godotName": "as_relative",
+      "xmlDocId": "M:Godot.PropertyTweener.AsRelative",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "From",
+      "kind": "Method",
+      "signature": "public PropertyTweener From(Variant value)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets a custom initial value to the [PropertyTweener]. [b]Example:[/b] Move the node from position [code](100, 100)[/code] to [code](200, 100)[/code]. [codeblocks] [gdscript] var tween = get_tree().create_tween() tween.tween_property(self, \u0022position\u0022, Vector2(200, 100), 1).from(Vector2(100, 100)) [/gdscript] [csharp] Tween tween = GetTree().CreateTween(); tween.TweenProperty(this, \u0022position\u0022, new Vector2(200.0f, 100.0f), 1.0f).From(new Vector2(100.0f, 100.0f)); [/csharp] [/codeblocks]",
+      "godotName": "from",
+      "xmlDocId": "M:Godot.PropertyTweener.From(Variant)",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "FromCurrent",
+      "kind": "Method",
+      "signature": "public PropertyTweener FromCurrent()",
+      "returnType": "PropertyTweener",
+      "parameters": [],
+      "summary": "Makes the [PropertyTweener] use the current property value (i.e. at the time of creating this [PropertyTweener]) as a starting point. This is equivalent of using [method from] with the current value. These two calls will do the same: [codeblocks] [gdscript] tween.tween_property(self, \u0022position\u0022, Vector2(200, 100), 1).from(position) tween.tween_property(self, \u0022position\u0022, Vector2(200, 100), 1).from_current() [/gdscript] [csharp] tween.TweenProperty(this, \u0022position\u0022, new Vector2(200.0f, 100.0f), 1.0f).From(Position); tween.TweenProperty(this, \u0022position\u0022, new Vector2(200.0f, 100.0f), 1.0f).FromCurrent(); [/csharp] [/codeblocks]",
+      "godotName": "from_current",
+      "xmlDocId": "M:Godot.PropertyTweener.FromCurrent",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "SetCustomInterpolator",
+      "kind": "Method",
+      "signature": "public PropertyTweener SetCustomInterpolator(Callable interpolatorMethod)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "interpolator_method",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Allows interpolating the value with a custom easing function. The provided [param interpolator_method] will be called with a value ranging from [code]0.0[/code] to [code]1.0[/code] and is expected to return a value within the same range (values outside the range can be used for overshoot). The return value of the method is then used for interpolation between initial and final value. Note that the parameter passed to the method is still subject to the tweener\u0027s own easing. [codeblocks] [gdscript] @export var curve: Curve func _ready(): var tween = create_tween() # Interpolate the value using a custom curve. tween.tween_property(self, \u0022position:x\u0022, 300, 1).as_relative().set_custom_interpolator(tween_curve) func tween_curve(v): return curve.sample_baked(v) [/gdscript] [csharp] [Export] public Curve Curve { get; set; } public override void _Ready() { Tween tween = CreateTween(); // Interpolate the value using a custom curve. Callable tweenCurveCallable = Callable.From\u003Cfloat, float\u003E(TweenCurve); tween.TweenProperty(this, \u0022position:x\u0022, 300.0f, 1.0f).AsRelative().SetCustomInterpolator(tweenCurveCallable); } private float TweenCurve(float value) { return Curve.SampleBaked(value); } [/csharp] [/codeblocks]",
+      "godotName": "set_custom_interpolator",
+      "xmlDocId": "M:Godot.PropertyTweener.SetCustomInterpolator(Callable)",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "SetDelay",
+      "kind": "Method",
+      "signature": "public PropertyTweener SetDelay(float delay)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "delay",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the time in seconds after which the [PropertyTweener] will start interpolating. By default there\u0027s no delay.",
+      "godotName": "set_delay",
+      "xmlDocId": "M:Godot.PropertyTweener.SetDelay(float)",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "SetEase",
+      "kind": "Method",
+      "signature": "public PropertyTweener SetEase(int ease)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "ease",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the type of used easing from [enum Tween.EaseType]. If not set, the default easing is used from the [Tween] that contains this Tweener.",
+      "godotName": "set_ease",
+      "xmlDocId": "M:Godot.PropertyTweener.SetEase(int)",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    },
+    {
+      "name": "SetTrans",
+      "kind": "Method",
+      "signature": "public PropertyTweener SetTrans(int trans)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "trans",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the type of used transition from [enum Tween.TransitionType]. If not set, the default transition is used from the [Tween] that contains this Tweener.",
+      "godotName": "set_trans",
+      "xmlDocId": "M:Godot.PropertyTweener.SetTrans(int)",
+      "sourcePath": "doc/classes/PropertyTweener.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PropertyTweener.xml",
+      "sha256": "c073eac3ec0f751b7be7f81b7554d9d07c0b369dea226e60f45936bd6a9cc0a2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

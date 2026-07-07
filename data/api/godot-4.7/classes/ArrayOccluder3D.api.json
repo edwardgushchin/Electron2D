@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ArrayOccluder3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ArrayOccluder3D",
+    "kind": "class",
+    "baseType": "Occluder3D",
+    "interfaces": [],
+    "godotReference": "ArrayOccluder3D",
+    "documentationPath": "doc/classes/ArrayOccluder3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_arrayoccluder3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetArrays",
+      "kind": "Method",
+      "signature": "public void SetArrays(PackedVector3Array vertices, PackedInt32Array indices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "indices",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Sets [member indices] and [member vertices], while updating the final occluder only once after both values are set.",
+      "godotName": "set_arrays",
+      "xmlDocId": "M:Godot.ArrayOccluder3D.SetArrays(PackedVector3Array,PackedInt32Array)",
+      "sourcePath": "doc/classes/ArrayOccluder3D.xml"
+    },
+    {
+      "name": "Indices",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Indices { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "The occluder\u0027s index position. Indices determine which points from the [member vertices] array should be drawn, and in which order. [b]Note:[/b] The occluder is always updated after setting this value. If creating occluders procedurally, consider using [method set_arrays] instead to avoid updating the occluder twice when it\u0027s created.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "indices",
+      "xmlDocId": "P:Godot.ArrayOccluder3D.Indices",
+      "sourcePath": "doc/classes/ArrayOccluder3D.xml"
+    },
+    {
+      "name": "Vertices",
+      "kind": "Property",
+      "signature": "public PackedVector3Array Vertices { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "The occluder\u0027s vertex positions in local 3D coordinates. [b]Note:[/b] The occluder is always updated after setting this value. If creating occluders procedurally, consider using [method set_arrays] instead to avoid updating the occluder twice when it\u0027s created.",
+      "defaultValue": "PackedVector3Array()",
+      "godotName": "vertices",
+      "xmlDocId": "P:Godot.ArrayOccluder3D.Vertices",
+      "sourcePath": "doc/classes/ArrayOccluder3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ArrayOccluder3D.xml",
+      "sha256": "6652725f4a36a13ca357fbfbdae1cdc36b58f44b43aa44f07e138503dbee19b5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

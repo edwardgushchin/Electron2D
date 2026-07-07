@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptEditorBase",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptEditorBase",
+    "kind": "class",
+    "baseType": "VBoxContainer",
+    "interfaces": [],
+    "godotReference": "ScriptEditorBase",
+    "documentationPath": "doc/classes/ScriptEditorBase.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scripteditorbase.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddSyntaxHighlighter",
+      "kind": "Method",
+      "signature": "public void AddSyntaxHighlighter(EditorSyntaxHighlighter highlighter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "highlighter",
+          "type": "EditorSyntaxHighlighter"
+        }
+      ],
+      "summary": "Adds an [EditorSyntaxHighlighter] to the open script.",
+      "godotName": "add_syntax_highlighter",
+      "xmlDocId": "M:Godot.ScriptEditorBase.AddSyntaxHighlighter(EditorSyntaxHighlighter)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "GetBaseEditor",
+      "kind": "Method",
+      "signature": "public Control GetBaseEditor()",
+      "returnType": "Control",
+      "parameters": [],
+      "summary": "Returns the underlying [Control] used for editing scripts. For text scripts, this is a [CodeEdit].",
+      "godotName": "get_base_editor",
+      "xmlDocId": "M:Godot.ScriptEditorBase.GetBaseEditor",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "EditedScriptChanged",
+      "kind": "Signal",
+      "signature": "public event EditedScriptChangedHandler EditedScriptChanged",
+      "parameters": [],
+      "summary": "Emitted after script validation.",
+      "godotName": "edited_script_changed",
+      "xmlDocId": "E:Godot.ScriptEditorBase.EditedScriptChanged",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "GoToHelp",
+      "kind": "Signal",
+      "signature": "public event GoToHelpHandler GoToHelp",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user requests a specific documentation page.",
+      "godotName": "go_to_help",
+      "xmlDocId": "E:Godot.ScriptEditorBase.GoToHelp(String)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "GoToMethod",
+      "kind": "Signal",
+      "signature": "public event GoToMethodHandler GoToMethod",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user requests to view a specific method of a script, similar to [signal request_open_script_at_line].",
+      "godotName": "go_to_method",
+      "xmlDocId": "E:Godot.ScriptEditorBase.GoToMethod(Object,String)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "NameChanged",
+      "kind": "Signal",
+      "signature": "public event NameChangedHandler NameChanged",
+      "parameters": [],
+      "summary": "Emitted after script validation or when the edited resource has changed.",
+      "godotName": "name_changed",
+      "xmlDocId": "E:Godot.ScriptEditorBase.NameChanged",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "ReplaceInFilesRequested",
+      "kind": "Signal",
+      "signature": "public event ReplaceInFilesRequestedHandler ReplaceInFilesRequested",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user request to find and replace text in the file system.",
+      "godotName": "replace_in_files_requested",
+      "xmlDocId": "E:Godot.ScriptEditorBase.ReplaceInFilesRequested(String)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "RequestHelp",
+      "kind": "Signal",
+      "signature": "public event RequestHelpHandler RequestHelp",
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user requests contextual help.",
+      "godotName": "request_help",
+      "xmlDocId": "E:Godot.ScriptEditorBase.RequestHelp(String)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "RequestOpenScriptAtLine",
+      "kind": "Signal",
+      "signature": "public event RequestOpenScriptAtLineHandler RequestOpenScriptAtLine",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Object"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user requests to view a specific line of a script, similar to [signal go_to_method].",
+      "godotName": "request_open_script_at_line",
+      "xmlDocId": "E:Godot.ScriptEditorBase.RequestOpenScriptAtLine(Object,int)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "RequestSaveHistory",
+      "kind": "Signal",
+      "signature": "public event RequestSaveHistoryHandler RequestSaveHistory",
+      "parameters": [],
+      "summary": "Emitted when the user contextual goto and the item is in the same script.",
+      "godotName": "request_save_history",
+      "xmlDocId": "E:Godot.ScriptEditorBase.RequestSaveHistory",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "RequestSavePreviousState",
+      "kind": "Signal",
+      "signature": "public event RequestSavePreviousStateHandler RequestSavePreviousState",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Emitted when the user changes current script or moves caret by 10 or more columns within the same script.",
+      "godotName": "request_save_previous_state",
+      "xmlDocId": "E:Godot.ScriptEditorBase.RequestSavePreviousState(Dictionary)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    },
+    {
+      "name": "SearchInFilesRequested",
+      "kind": "Signal",
+      "signature": "public event SearchInFilesRequestedHandler SearchInFilesRequested",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user request to search text in the file system.",
+      "godotName": "search_in_files_requested",
+      "xmlDocId": "E:Godot.ScriptEditorBase.SearchInFilesRequested(String)",
+      "sourcePath": "doc/classes/ScriptEditorBase.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptEditorBase.xml",
+      "sha256": "28d737dbbf2ea6ebbd5cb823ba71d6a1cc6354a28341b7a5fd263530e6c4691f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

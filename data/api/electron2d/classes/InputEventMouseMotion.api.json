@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMouseMotion",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventMouseMotion",
+    "kind": "class",
+    "baseType": "Electron2D.InputEventMouse",
+    "interfaces": [],
+    "godotReference": "InputEventMouseMotion",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventMouseMotion",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventMouseMotion()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventMouseMotion type.",
+      "xmlDocId": "M:Electron2D.InputEventMouseMotion.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventMouseMotion",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventMouseMotion()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventMouseMotion type.",
+      "xmlDocId": "M:Electron2D.InputEventMouseMotion.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PenInverted",
+      "kind": "Property",
+      "signature": "public System.Boolean PenInverted { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the eraser end of a stylus pen is active.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.PenInverted",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public System.Single Pressure { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the pen pressure from 0.0 to 1.0.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.Pressure",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Relative",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Relative { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the mouse position relative to the previous mouse position.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.Relative",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScreenRelative",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 ScreenRelative { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the unscaled mouse position relative to the previous mouse position.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.ScreenRelative",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ScreenVelocity",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 ScreenVelocity { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the unscaled mouse velocity in pixels per second.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.ScreenVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tilt",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Tilt { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the pen tilt.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.Tilt",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Velocity { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the mouse velocity in pixels per second.",
+      "xmlDocId": "P:Electron2D.InputEventMouseMotion.Velocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

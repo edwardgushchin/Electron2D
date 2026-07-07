@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeOneShot",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeOneShot",
+    "kind": "class",
+    "baseType": "AnimationNodeSync",
+    "interfaces": [],
+    "godotReference": "AnimationNodeOneShot",
+    "documentationPath": "doc/classes/AnimationNodeOneShot.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodeoneshot.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AbortOnReset",
+      "kind": "Property",
+      "signature": "public bool AbortOnReset { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the sub-animation will abort if resumed with a reset after a prior interruption.",
+      "defaultValue": "false",
+      "godotName": "abort_on_reset",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.AbortOnReset",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "Autorestart",
+      "kind": "Property",
+      "signature": "public bool Autorestart { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the sub-animation will restart automatically after finishing. In other words, to start auto restarting, the animation must be played once with the [constant ONE_SHOT_REQUEST_FIRE] request. The [constant ONE_SHOT_REQUEST_ABORT] request stops the auto restarting, but it does not disable the [member autorestart] itself. So, the [constant ONE_SHOT_REQUEST_FIRE] request will start auto restarting again.",
+      "defaultValue": "false",
+      "godotName": "autorestart",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.Autorestart",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "AutorestartDelay",
+      "kind": "Property",
+      "signature": "public float AutorestartDelay { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The delay after which the automatic restart is triggered, in seconds.",
+      "defaultValue": "1.0",
+      "godotName": "autorestart_delay",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.AutorestartDelay",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "AutorestartRandomDelay",
+      "kind": "Property",
+      "signature": "public float AutorestartRandomDelay { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If [member autorestart] is [code]true[/code], a random additional delay (in seconds) between 0 and this value will be added to [member autorestart_delay].",
+      "defaultValue": "0.0",
+      "godotName": "autorestart_random_delay",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.AutorestartRandomDelay",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "BreakLoopAtEnd",
+      "kind": "Property",
+      "signature": "public bool BreakLoopAtEnd { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], breaks the loop at the end of the loop cycle for transition, even if the animation is looping.",
+      "defaultValue": "false",
+      "godotName": "break_loop_at_end",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.BreakLoopAtEnd",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "FadeinCurve",
+      "kind": "Property",
+      "signature": "public Curve FadeinCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Determines how cross-fading between animations is eased. If empty, the transition will be linear. Should be a unit [Curve].",
+      "godotName": "fadein_curve",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.FadeinCurve",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "FadeinTime",
+      "kind": "Property",
+      "signature": "public float FadeinTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fade-in duration. For example, setting this to [code]1.0[/code] for a 5 second length animation will produce a cross-fade that starts at 0 second and ends at 1 second during the animation. [b]Note:[/b] [AnimationNodeOneShot] transitions the current state after the fading has finished.",
+      "defaultValue": "0.0",
+      "godotName": "fadein_time",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.FadeinTime",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "FadeoutCurve",
+      "kind": "Property",
+      "signature": "public Curve FadeoutCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Determines how cross-fading between animations is eased. If empty, the transition will be linear. Should be a unit [Curve].",
+      "godotName": "fadeout_curve",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.FadeoutCurve",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "FadeoutTime",
+      "kind": "Property",
+      "signature": "public float FadeoutTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fade-out duration. For example, setting this to [code]1.0[/code] for a 5 second length animation will produce a cross-fade that starts at 4 second and ends at 5 second during the animation. [b]Note:[/b] [AnimationNodeOneShot] transitions the current state after the fading has finished.",
+      "defaultValue": "0.0",
+      "godotName": "fadeout_time",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.FadeoutTime",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "MixMode",
+      "kind": "Property",
+      "signature": "public int MixMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The blend type.",
+      "defaultValue": "0",
+      "godotName": "mix_mode",
+      "xmlDocId": "P:Godot.AnimationNodeOneShot.MixMode",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "MixMode",
+      "values": [
+        {
+          "name": "MIX_MODE_ADD",
+          "value": "1",
+          "enum": "MixMode",
+          "kind": "EnumValue",
+          "summary": "Blends two animations additively. See also [AnimationNodeAdd2].",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        },
+        {
+          "name": "MIX_MODE_BLEND",
+          "value": "0",
+          "enum": "MixMode",
+          "kind": "EnumValue",
+          "summary": "Blends two animations. See also [AnimationNodeBlend2].",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        }
+      ]
+    },
+    {
+      "name": "OneShotRequest",
+      "values": [
+        {
+          "name": "ONE_SHOT_REQUEST_ABORT",
+          "value": "2",
+          "enum": "OneShotRequest",
+          "kind": "EnumValue",
+          "summary": "The request to stop the animation connected to \u0022shot\u0022 port.",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        },
+        {
+          "name": "ONE_SHOT_REQUEST_FADE_OUT",
+          "value": "3",
+          "enum": "OneShotRequest",
+          "kind": "EnumValue",
+          "summary": "The request to fade out the animation connected to \u0022shot\u0022 port.",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        },
+        {
+          "name": "ONE_SHOT_REQUEST_FIRE",
+          "value": "1",
+          "enum": "OneShotRequest",
+          "kind": "EnumValue",
+          "summary": "The request to play the animation connected to \u0022shot\u0022 port.",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        },
+        {
+          "name": "ONE_SHOT_REQUEST_NONE",
+          "value": "0",
+          "enum": "OneShotRequest",
+          "kind": "EnumValue",
+          "summary": "The default state of the request. Nothing is done.",
+          "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ONE_SHOT_REQUEST_NONE",
+      "value": "0",
+      "enum": "OneShotRequest",
+      "kind": "EnumValue",
+      "summary": "The default state of the request. Nothing is done.",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "ONE_SHOT_REQUEST_FIRE",
+      "value": "1",
+      "enum": "OneShotRequest",
+      "kind": "EnumValue",
+      "summary": "The request to play the animation connected to \u0022shot\u0022 port.",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "ONE_SHOT_REQUEST_ABORT",
+      "value": "2",
+      "enum": "OneShotRequest",
+      "kind": "EnumValue",
+      "summary": "The request to stop the animation connected to \u0022shot\u0022 port.",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "ONE_SHOT_REQUEST_FADE_OUT",
+      "value": "3",
+      "enum": "OneShotRequest",
+      "kind": "EnumValue",
+      "summary": "The request to fade out the animation connected to \u0022shot\u0022 port.",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "MIX_MODE_BLEND",
+      "value": "0",
+      "enum": "MixMode",
+      "kind": "EnumValue",
+      "summary": "Blends two animations. See also [AnimationNodeBlend2].",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    },
+    {
+      "name": "MIX_MODE_ADD",
+      "value": "1",
+      "enum": "MixMode",
+      "kind": "EnumValue",
+      "summary": "Blends two animations additively. See also [AnimationNodeAdd2].",
+      "sourcePath": "doc/classes/AnimationNodeOneShot.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeOneShot.xml",
+      "sha256": "ce9de6702e1e9d2c9ddf3468ab3e5d2971f7941396ca3a98fefd74fb85ba1f82"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Material",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Material",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Material",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Material",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Material()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Material type.",
+      "xmlDocId": "M:Electron2D.Material.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Material",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Material()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Material type.",
+      "xmlDocId": "M:Electron2D.Material.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NextPass",
+      "kind": "Property",
+      "signature": "public Electron2D.Material NextPass { get; set; }",
+      "returnType": "Electron2D.Material",
+      "parameters": [],
+      "summary": "Gets or sets the material used for the next rendering pass.",
+      "xmlDocId": "P:Electron2D.Material.NextPass",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenderPriority",
+      "kind": "Property",
+      "signature": "public System.Int32 RenderPriority { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the material render priority.",
+      "xmlDocId": "P:Electron2D.Material.RenderPriority",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

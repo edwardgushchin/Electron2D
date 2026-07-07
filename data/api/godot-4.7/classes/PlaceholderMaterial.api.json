@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "PlaceholderMaterial",
+    "documentationPath": "doc/classes/PlaceholderMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdermaterial.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderMaterial.xml",
+      "sha256": "e6f5550f9fe3b240cd693aa4adce3f9c5a5fcde2c4f53c82e1e7be6c0c3c624b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

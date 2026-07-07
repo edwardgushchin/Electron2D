@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DStackHolder",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DStackHolder",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DStackHolder",
+    "documentationPath": "doc/classes/SkeletonModification2DStackHolder.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dstackholder.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHeldModificationStack",
+      "kind": "Method",
+      "signature": "public SkeletonModificationStack2D GetHeldModificationStack()",
+      "returnType": "SkeletonModificationStack2D",
+      "parameters": [],
+      "summary": "Returns the [SkeletonModificationStack2D] that this modification is holding.",
+      "godotName": "get_held_modification_stack",
+      "xmlDocId": "M:Godot.SkeletonModification2DStackHolder.GetHeldModificationStack",
+      "sourcePath": "doc/classes/SkeletonModification2DStackHolder.xml"
+    },
+    {
+      "name": "SetHeldModificationStack",
+      "kind": "Method",
+      "signature": "public void SetHeldModificationStack(SkeletonModificationStack2D heldModificationStack)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "held_modification_stack",
+          "type": "SkeletonModificationStack2D"
+        }
+      ],
+      "summary": "Sets the [SkeletonModificationStack2D] that this modification is holding. This modification stack will then be executed when this modification is executed.",
+      "godotName": "set_held_modification_stack",
+      "xmlDocId": "M:Godot.SkeletonModification2DStackHolder.SetHeldModificationStack(SkeletonModificationStack2D)",
+      "sourcePath": "doc/classes/SkeletonModification2DStackHolder.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DStackHolder.xml",
+      "sha256": "be0931ca923ee843e79a0ae935e14729c2c8ba1f1ef2ceeff35331b6d1558c39"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

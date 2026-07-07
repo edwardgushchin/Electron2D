@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EngineProfiler",
+    "namespace": "Godot",
+    "fullName": "Godot.EngineProfiler",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EngineProfiler",
+    "documentationPath": "doc/classes/EngineProfiler.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_engineprofiler.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AddFrame",
+      "kind": "Method",
+      "signature": "public void _AddFrame(Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Array"
+        }
+      ],
+      "summary": "Called when data is added to profiler using [method EngineDebugger.profiler_add_frame_data].",
+      "godotName": "_add_frame",
+      "xmlDocId": "M:Godot.EngineProfiler._AddFrame(Array)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    },
+    {
+      "name": "_Tick",
+      "kind": "Method",
+      "signature": "public void _Tick(float frameTime, float processTime, float physicsTime, float physicsFrameTime)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "frame_time",
+          "type": "float"
+        },
+        {
+          "name": "process_time",
+          "type": "float"
+        },
+        {
+          "name": "physics_time",
+          "type": "float"
+        },
+        {
+          "name": "physics_frame_time",
+          "type": "float"
+        }
+      ],
+      "summary": "Called once every engine iteration when the profiler is active with information about the current frame. All time values are in seconds. Lower values represent faster processing times and are therefore considered better.",
+      "godotName": "_tick",
+      "xmlDocId": "M:Godot.EngineProfiler._Tick(float,float,float,float)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    },
+    {
+      "name": "_Toggle",
+      "kind": "Method",
+      "signature": "public void _Toggle(bool enable, Array options)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "options",
+          "type": "Array"
+        }
+      ],
+      "summary": "Called when the profiler is enabled/disabled, along with a set of [param options].",
+      "godotName": "_toggle",
+      "xmlDocId": "M:Godot.EngineProfiler._Toggle(bool,Array)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AddFrame",
+      "kind": "Method",
+      "signature": "public void _AddFrame(Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Array"
+        }
+      ],
+      "summary": "Called when data is added to profiler using [method EngineDebugger.profiler_add_frame_data].",
+      "godotName": "_add_frame",
+      "xmlDocId": "M:Godot.EngineProfiler._AddFrame(Array)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    },
+    {
+      "name": "_Tick",
+      "kind": "Method",
+      "signature": "public void _Tick(float frameTime, float processTime, float physicsTime, float physicsFrameTime)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "frame_time",
+          "type": "float"
+        },
+        {
+          "name": "process_time",
+          "type": "float"
+        },
+        {
+          "name": "physics_time",
+          "type": "float"
+        },
+        {
+          "name": "physics_frame_time",
+          "type": "float"
+        }
+      ],
+      "summary": "Called once every engine iteration when the profiler is active with information about the current frame. All time values are in seconds. Lower values represent faster processing times and are therefore considered better.",
+      "godotName": "_tick",
+      "xmlDocId": "M:Godot.EngineProfiler._Tick(float,float,float,float)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    },
+    {
+      "name": "_Toggle",
+      "kind": "Method",
+      "signature": "public void _Toggle(bool enable, Array options)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "options",
+          "type": "Array"
+        }
+      ],
+      "summary": "Called when the profiler is enabled/disabled, along with a set of [param options].",
+      "godotName": "_toggle",
+      "xmlDocId": "M:Godot.EngineProfiler._Toggle(bool,Array)",
+      "sourcePath": "doc/classes/EngineProfiler.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EngineProfiler.xml",
+      "sha256": "e40b36d19fa9cb8daf8e5db99e42d1b26764245980ea3d2ad1045b55dedcaa5e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

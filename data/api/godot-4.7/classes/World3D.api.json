@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "World3D",
+    "namespace": "Godot",
+    "fullName": "Godot.World3D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "World3D",
+    "documentationPath": "doc/classes/World3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_world3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CameraAttributes",
+      "kind": "Property",
+      "signature": "public CameraAttributes CameraAttributes { get; set; }",
+      "returnType": "CameraAttributes",
+      "parameters": [],
+      "summary": "The default [CameraAttributes] resource to use if none set on the [Camera3D].",
+      "godotName": "camera_attributes",
+      "xmlDocId": "P:Godot.World3D.CameraAttributes",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "DirectSpaceState",
+      "kind": "Property",
+      "signature": "public PhysicsDirectSpaceState3D DirectSpaceState { get; set; }",
+      "returnType": "PhysicsDirectSpaceState3D",
+      "parameters": [],
+      "summary": "Direct access to the world\u0027s physics 3D space state. Used for querying current and potential collisions. When using multi-threaded physics, access is limited to [method Node._physics_process] in the main thread.",
+      "godotName": "direct_space_state",
+      "xmlDocId": "P:Godot.World3D.DirectSpaceState",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "Environment",
+      "kind": "Property",
+      "signature": "public Environment Environment { get; set; }",
+      "returnType": "Environment",
+      "parameters": [],
+      "summary": "The World3D\u0027s [Environment].",
+      "godotName": "environment",
+      "xmlDocId": "P:Godot.World3D.Environment",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "FallbackEnvironment",
+      "kind": "Property",
+      "signature": "public Environment FallbackEnvironment { get; set; }",
+      "returnType": "Environment",
+      "parameters": [],
+      "summary": "The World3D\u0027s fallback environment will be used if [member environment] fails or is missing.",
+      "godotName": "fallback_environment",
+      "xmlDocId": "P:Godot.World3D.FallbackEnvironment",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "NavigationMap",
+      "kind": "Property",
+      "signature": "public RID NavigationMap { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The [RID] of this world\u0027s navigation map. Used by the [NavigationServer3D].",
+      "godotName": "navigation_map",
+      "xmlDocId": "P:Godot.World3D.NavigationMap",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "Scenario",
+      "kind": "Property",
+      "signature": "public RID Scenario { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The World3D\u0027s visual scenario.",
+      "godotName": "scenario",
+      "xmlDocId": "P:Godot.World3D.Scenario",
+      "sourcePath": "doc/classes/World3D.xml"
+    },
+    {
+      "name": "Space",
+      "kind": "Property",
+      "signature": "public RID Space { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The World3D\u0027s physics space.",
+      "godotName": "space",
+      "xmlDocId": "P:Godot.World3D.Space",
+      "sourcePath": "doc/classes/World3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/World3D.xml",
+      "sha256": "4894e58d637171937c8584155e0e1d271df2cd9275580479654ad66e5240a211"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

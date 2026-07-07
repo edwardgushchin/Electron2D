@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVec2Constant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVec2Constant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVec2Constant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVec2Constant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevec2constant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public Vector2 Constant { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "A [Vector2] constant which represents the state of this node.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeVec2Constant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVec2Constant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVec2Constant.xml",
+      "sha256": "bfdc6b060794f43b7f585d83540ef59dcf0fdeed6b71e9ecaed2d3083d142b9f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

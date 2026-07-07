@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.XRTracker",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "XRTracker",
+    "documentationPath": "doc/classes/XRTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrtracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Description",
+      "kind": "Property",
+      "signature": "public String Description { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The description of this tracker.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "description",
+      "xmlDocId": "P:Godot.XRTracker.Description",
+      "sourcePath": "doc/classes/XRTracker.xml"
+    },
+    {
+      "name": "Name",
+      "kind": "Property",
+      "signature": "public StringName Name { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The unique name of this tracker. The trackers that are available differ between various XR runtimes and can often be configured by the user. Godot maintains a number of reserved names that it expects the [XRInterface] to implement if applicable: - [code]\u0022head\u0022[/code] identifies the [XRPositionalTracker] of the player\u0027s head - [code]\u0022left_hand\u0022[/code] identifies the [XRControllerTracker] in the player\u0027s left hand - [code]\u0022right_hand\u0022[/code] identifies the [XRControllerTracker] in the player\u0027s right hand - [code]\u0022/user/hand_tracker/left\u0022[/code] identifies the [XRHandTracker] for the player\u0027s left hand - [code]\u0022/user/hand_tracker/right\u0022[/code] identifies the [XRHandTracker] for the player\u0027s right hand - [code]\u0022/user/body_tracker\u0022[/code] identifies the [XRBodyTracker] for the player\u0027s body - [code]\u0022/user/face_tracker\u0022[/code] identifies the [XRFaceTracker] for the player\u0027s face",
+      "defaultValue": "\u0026\u0022Unknown\u0022",
+      "godotName": "name",
+      "xmlDocId": "P:Godot.XRTracker.Name",
+      "sourcePath": "doc/classes/XRTracker.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of tracker.",
+      "defaultValue": "128",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.XRTracker.Type",
+      "sourcePath": "doc/classes/XRTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRTracker.xml",
+      "sha256": "fb89d9cdb6069a334a8a94301df18e55b4c060e80dd755a7163069037b4def5a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

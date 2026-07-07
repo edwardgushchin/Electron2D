@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceSaver",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceSaver",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ResourceSaver",
+    "documentationPath": "doc/classes/ResourceSaver.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourcesaver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddResourceFormatSaver",
+      "kind": "Method",
+      "signature": "public void AddResourceFormatSaver(ResourceFormatSaver formatSaver, bool atFront)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format_saver",
+          "type": "ResourceFormatSaver"
+        },
+        {
+          "name": "at_front",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Registers a new [ResourceFormatSaver]. The ResourceSaver will use the ResourceFormatSaver as described in [method save]. This method is performed implicitly for ResourceFormatSavers written in GDScript (see [ResourceFormatSaver] for more information).",
+      "godotName": "add_resource_format_saver",
+      "xmlDocId": "M:Godot.ResourceSaver.AddResourceFormatSaver(ResourceFormatSaver,bool)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetRecognizedExtensions(Resource type)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Returns the list of extensions available for saving a resource of a given type.",
+      "godotName": "get_recognized_extensions",
+      "xmlDocId": "M:Godot.ResourceSaver.GetRecognizedExtensions(Resource)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "GetResourceIdForPath",
+      "kind": "Method",
+      "signature": "public int GetResourceIdForPath(String path, bool generate)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "generate",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the resource ID for the given path. If [param generate] is [code]true[/code], a new resource ID will be generated if one for the path is not found. If [param generate] is [code]false[/code] and the path is not found, [constant ResourceUID.INVALID_ID] is returned.",
+      "godotName": "get_resource_id_for_path",
+      "xmlDocId": "M:Godot.ResourceSaver.GetResourceIdForPath(String,bool)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "RemoveResourceFormatSaver",
+      "kind": "Method",
+      "signature": "public void RemoveResourceFormatSaver(ResourceFormatSaver formatSaver)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format_saver",
+          "type": "ResourceFormatSaver"
+        }
+      ],
+      "summary": "Unregisters the given [ResourceFormatSaver].",
+      "godotName": "remove_resource_format_saver",
+      "xmlDocId": "M:Godot.ResourceSaver.RemoveResourceFormatSaver(ResourceFormatSaver)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "Save",
+      "kind": "Method",
+      "signature": "public int Save(Resource resource, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Saves a resource to disk to the given path, using a [ResourceFormatSaver] that recognizes the resource object. If [param path] is empty, [ResourceSaver] will try to use [member Resource.resource_path]. The [param flags] bitmask can be specified to customize the save behavior. Returns [constant OK] on success. [b]Note:[/b] When the project is running, any generated UID associated with the resource will not be saved as the required code is only executed in editor mode.",
+      "godotName": "save",
+      "xmlDocId": "M:Godot.ResourceSaver.Save(Resource,String,int)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "SetUid",
+      "kind": "Method",
+      "signature": "public int SetUid(String resource, int uid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "String"
+        },
+        {
+          "name": "uid",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the UID of the given [param resource] path to [param uid]. You can generate a new UID using [method ResourceUID.create_id]. Since resources will normally get a UID automatically, this method is only useful in very specific cases.",
+      "godotName": "set_uid",
+      "xmlDocId": "M:Godot.ResourceSaver.SetUid(String,int)",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "SaverFlags",
+      "values": [
+        {
+          "name": "FLAG_BUNDLE_RESOURCES",
+          "value": "2",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Bundles external resources.",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_CHANGE_PATH",
+          "value": "4",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Changes the [member Resource.resource_path] of the saved resource to match its new location.",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_COMPRESS",
+          "value": "32",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Compress the resource on save using [constant FileAccess.COMPRESSION_ZSTD]. Only available for binary resource types.",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_NONE",
+          "value": "0",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "No resource saving option.",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_OMIT_EDITOR_PROPERTIES",
+          "value": "8",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Do not save editor-specific metadata (identified by their [code]__editor[/code] prefix).",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_RELATIVE_PATHS",
+          "value": "1",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Save the resource with a path relative to the scene which uses it.",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_REPLACE_SUBRESOURCE_PATHS",
+          "value": "64",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Take over the paths of the saved subresources (see [method Resource.take_over_path]).",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        },
+        {
+          "name": "FLAG_SAVE_BIG_ENDIAN",
+          "value": "16",
+          "enum": "SaverFlags",
+          "kind": "EnumValue",
+          "summary": "Save as big endian (see [member FileAccess.big_endian]).",
+          "sourcePath": "doc/classes/ResourceSaver.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FLAG_NONE",
+      "value": "0",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "No resource saving option.",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_RELATIVE_PATHS",
+      "value": "1",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Save the resource with a path relative to the scene which uses it.",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_BUNDLE_RESOURCES",
+      "value": "2",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Bundles external resources.",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_CHANGE_PATH",
+      "value": "4",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Changes the [member Resource.resource_path] of the saved resource to match its new location.",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_OMIT_EDITOR_PROPERTIES",
+      "value": "8",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Do not save editor-specific metadata (identified by their [code]__editor[/code] prefix).",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_SAVE_BIG_ENDIAN",
+      "value": "16",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Save as big endian (see [member FileAccess.big_endian]).",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_COMPRESS",
+      "value": "32",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Compress the resource on save using [constant FileAccess.COMPRESSION_ZSTD]. Only available for binary resource types.",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    },
+    {
+      "name": "FLAG_REPLACE_SUBRESOURCE_PATHS",
+      "value": "64",
+      "enum": "SaverFlags",
+      "kind": "EnumValue",
+      "summary": "Take over the paths of the saved subresources (see [method Resource.take_over_path]).",
+      "sourcePath": "doc/classes/ResourceSaver.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceSaver.xml",
+      "sha256": "c6a90e46a0c08143e0a371c3c2c73ff67b9a9335434958d79f10b23731b8740c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVectorDistance",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVectorDistance",
+    "kind": "class",
+    "baseType": "VisualShaderNodeVectorBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVectorDistance",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorDistance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevectordistance.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVectorDistance.xml",
+      "sha256": "a8753ef698cb1f8a7e6852e6650973d93d572754f3668adca82f17ed86e4485a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

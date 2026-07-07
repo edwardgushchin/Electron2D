@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectSpectrumAnalyzerInstance",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectSpectrumAnalyzerInstance",
+    "kind": "class",
+    "baseType": "AudioEffectInstance",
+    "interfaces": [],
+    "godotReference": "AudioEffectSpectrumAnalyzerInstance",
+    "documentationPath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectspectrumanalyzerinstance.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMagnitudeForFrequencyRange",
+      "kind": "Method",
+      "signature": "public Vector2 GetMagnitudeForFrequencyRange(float fromHz, float toHz, int mode)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "from_hz",
+          "type": "float"
+        },
+        {
+          "name": "to_hz",
+          "type": "float"
+        },
+        {
+          "name": "mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Returns the magnitude of the frequencies from [param from_hz] to [param to_hz] in linear energy as a Vector2. The [code]x[/code] component of the return value represents the left stereo channel, and [code]y[/code] represents the right channel. [param mode] determines how the frequency range will be processed.",
+      "godotName": "get_magnitude_for_frequency_range",
+      "xmlDocId": "M:Godot.AudioEffectSpectrumAnalyzerInstance.GetMagnitudeForFrequencyRange(float,float,int)",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "MagnitudeMode",
+      "values": [
+        {
+          "name": "MAGNITUDE_AVERAGE",
+          "value": "0",
+          "enum": "MagnitudeMode",
+          "kind": "EnumValue",
+          "summary": "Use the average value across the frequency range as magnitude.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml"
+        },
+        {
+          "name": "MAGNITUDE_MAX",
+          "value": "1",
+          "enum": "MagnitudeMode",
+          "kind": "EnumValue",
+          "summary": "Use the maximum value of the frequency range as magnitude.",
+          "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MAGNITUDE_AVERAGE",
+      "value": "0",
+      "enum": "MagnitudeMode",
+      "kind": "EnumValue",
+      "summary": "Use the average value across the frequency range as magnitude.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml"
+    },
+    {
+      "name": "MAGNITUDE_MAX",
+      "value": "1",
+      "enum": "MagnitudeMode",
+      "kind": "EnumValue",
+      "summary": "Use the maximum value of the frequency range as magnitude.",
+      "sourcePath": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectSpectrumAnalyzerInstance.xml",
+      "sha256": "d6a7d46028b006360d6168af22eb273eaba7c8369d882c5739a823a5e6ffe525"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

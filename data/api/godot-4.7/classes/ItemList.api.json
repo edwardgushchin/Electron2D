@@ -1,0 +1,1408 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ItemList",
+    "namespace": "Godot",
+    "fullName": "Godot.ItemList",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "ItemList",
+    "documentationPath": "doc/classes/ItemList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_itemlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddIconItem",
+      "kind": "Method",
+      "signature": "public int AddIconItem(Texture2D icon, bool selectable)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        },
+        {
+          "name": "selectable",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Adds an item to the item list with no text, only an icon. Returns the index of an added item.",
+      "godotName": "add_icon_item",
+      "xmlDocId": "M:Godot.ItemList.AddIconItem(Texture2D,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AddItem",
+      "kind": "Method",
+      "signature": "public int AddItem(String text, Texture2D icon, bool selectable)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        },
+        {
+          "name": "selectable",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Adds an item to the item list with specified text. Returns the index of an added item. Specify an [param icon], or use [code]null[/code] as the [param icon] for a list item with no icon. If [param selectable] is [code]true[/code], the list item will be selectable.",
+      "godotName": "add_item",
+      "xmlDocId": "M:Godot.ItemList.AddItem(String,Texture2D,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "CenterOnCurrent",
+      "kind": "Method",
+      "signature": "public void CenterOnCurrent(bool centerVerically, bool centerHorizontally)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "center_verically",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "center_horizontally",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Ensures the currently selected item (the first selected item if multiple selection is enabled) is visible, adjusting the scroll position as necessary to place the item at the center of the list if possible. See also [method ensure_current_is_visible]. Fails and prints an error if both arguments are [code]false[/code].",
+      "godotName": "center_on_current",
+      "xmlDocId": "M:Godot.ItemList.CenterOnCurrent(bool,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all items from the list.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.ItemList.Clear",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "Deselect",
+      "kind": "Method",
+      "signature": "public void Deselect(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Ensures the item associated with the specified index is not selected.",
+      "godotName": "deselect",
+      "xmlDocId": "M:Godot.ItemList.Deselect(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "DeselectAll",
+      "kind": "Method",
+      "signature": "public void DeselectAll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Ensures there are no items selected.",
+      "godotName": "deselect_all",
+      "xmlDocId": "M:Godot.ItemList.DeselectAll",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "EnsureCurrentIsVisible",
+      "kind": "Method",
+      "signature": "public void EnsureCurrentIsVisible()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Ensures the currently selected item (the first selected item if multiple selection is enabled) is visible, adjusting the scroll position as necessary. See also [method center_on_current].",
+      "godotName": "ensure_current_is_visible",
+      "xmlDocId": "M:Godot.ItemList.EnsureCurrentIsVisible",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ForceUpdateListSize",
+      "kind": "Method",
+      "signature": "public void ForceUpdateListSize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces an update to the list size based on its items. This happens automatically whenever size of the items, or other relevant settings like [member auto_height], change. The method can be used to trigger the update ahead of next drawing pass.",
+      "godotName": "force_update_list_size",
+      "xmlDocId": "M:Godot.ItemList.ForceUpdateListSize",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetHScrollBar",
+      "kind": "Method",
+      "signature": "public HScrollBar GetHScrollBar()",
+      "returnType": "HScrollBar",
+      "parameters": [],
+      "summary": "Returns the horizontal scrollbar. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_h_scroll_bar",
+      "xmlDocId": "M:Godot.ItemList.GetHScrollBar",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemAtPosition",
+      "kind": "Method",
+      "signature": "public int GetItemAtPosition(Vector2 position, bool exact)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "exact",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the item index at the given [param position]. When there is no item at that point, -1 will be returned if [param exact] is [code]true[/code], and the closest item index will be returned otherwise. [b]Note:[/b] The returned value is unreliable if called right after modifying the [ItemList], before it redraws in the next frame.",
+      "godotName": "get_item_at_position",
+      "xmlDocId": "M:Godot.ItemList.GetItemAtPosition(Vector2,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public int GetItemAutoTranslateMode(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns item\u0027s auto translate mode.",
+      "godotName": "get_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.ItemList.GetItemAutoTranslateMode(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemCustomBgColor",
+      "kind": "Method",
+      "signature": "public Color GetItemCustomBgColor(int idx)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the custom background color of the item specified by [param idx] index.",
+      "godotName": "get_item_custom_bg_color",
+      "xmlDocId": "M:Godot.ItemList.GetItemCustomBgColor(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemCustomFgColor",
+      "kind": "Method",
+      "signature": "public Color GetItemCustomFgColor(int idx)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the custom foreground color of the item specified by [param idx] index.",
+      "godotName": "get_item_custom_fg_color",
+      "xmlDocId": "M:Godot.ItemList.GetItemCustomFgColor(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetItemIcon(int idx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the icon associated with the specified index.",
+      "godotName": "get_item_icon",
+      "xmlDocId": "M:Godot.ItemList.GetItemIcon(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemIconModulate",
+      "kind": "Method",
+      "signature": "public Color GetItemIconModulate(int idx)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Color] modulating item\u0027s icon at the specified index.",
+      "godotName": "get_item_icon_modulate",
+      "xmlDocId": "M:Godot.ItemList.GetItemIconModulate(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemIconRegion",
+      "kind": "Method",
+      "signature": "public Rect2 GetItemIconRegion(int idx)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the region of item\u0027s icon used. The whole icon will be used if the region has no area.",
+      "godotName": "get_item_icon_region",
+      "xmlDocId": "M:Godot.ItemList.GetItemIconRegion(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemLanguage",
+      "kind": "Method",
+      "signature": "public String GetItemLanguage(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns item\u0027s text language code.",
+      "godotName": "get_item_language",
+      "xmlDocId": "M:Godot.ItemList.GetItemLanguage(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetItemMetadata(int idx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the metadata value of the specified index.",
+      "godotName": "get_item_metadata",
+      "xmlDocId": "M:Godot.ItemList.GetItemMetadata(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetItemRect(int idx, bool expand)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "expand",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the position and size of the item with the specified index, in the coordinate system of the [ItemList] node. If [param expand] is [code]true[/code] the last column expands to fill the rest of the row. [b]Note:[/b] The returned value is unreliable if called right after modifying the [ItemList], before it redraws in the next frame.",
+      "godotName": "get_item_rect",
+      "xmlDocId": "M:Godot.ItemList.GetItemRect(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemText",
+      "kind": "Method",
+      "signature": "public String GetItemText(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text associated with the specified index.",
+      "godotName": "get_item_text",
+      "xmlDocId": "M:Godot.ItemList.GetItemText(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemTextDirection",
+      "kind": "Method",
+      "signature": "public int GetItemTextDirection(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns item\u0027s text base writing direction.",
+      "godotName": "get_item_text_direction",
+      "xmlDocId": "M:Godot.ItemList.GetItemTextDirection(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetItemTooltip",
+      "kind": "Method",
+      "signature": "public String GetItemTooltip(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tooltip hint associated with the specified index.",
+      "godotName": "get_item_tooltip",
+      "xmlDocId": "M:Godot.ItemList.GetItemTooltip(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetSelectedItems",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetSelectedItems()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns an array with the indexes of the selected items.",
+      "godotName": "get_selected_items",
+      "xmlDocId": "M:Godot.ItemList.GetSelectedItems",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "GetVScrollBar",
+      "kind": "Method",
+      "signature": "public VScrollBar GetVScrollBar()",
+      "returnType": "VScrollBar",
+      "parameters": [],
+      "summary": "Returns the vertical scrollbar. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_v_scroll_bar",
+      "xmlDocId": "M:Godot.ItemList.GetVScrollBar",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsAnythingSelected",
+      "kind": "Method",
+      "signature": "public bool IsAnythingSelected()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if one or more items are selected.",
+      "godotName": "is_anything_selected",
+      "xmlDocId": "M:Godot.ItemList.IsAnythingSelected",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsItemDisabled",
+      "kind": "Method",
+      "signature": "public bool IsItemDisabled(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the specified index is disabled.",
+      "godotName": "is_item_disabled",
+      "xmlDocId": "M:Godot.ItemList.IsItemDisabled(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsItemIconTransposed",
+      "kind": "Method",
+      "signature": "public bool IsItemIconTransposed(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item icon will be drawn transposed, i.e. the X and Y axes are swapped.",
+      "godotName": "is_item_icon_transposed",
+      "xmlDocId": "M:Godot.ItemList.IsItemIconTransposed(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsItemSelectable",
+      "kind": "Method",
+      "signature": "public bool IsItemSelectable(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the specified index is selectable.",
+      "godotName": "is_item_selectable",
+      "xmlDocId": "M:Godot.ItemList.IsItemSelectable(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsItemTooltipEnabled",
+      "kind": "Method",
+      "signature": "public bool IsItemTooltipEnabled(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the tooltip is enabled for specified item index.",
+      "godotName": "is_item_tooltip_enabled",
+      "xmlDocId": "M:Godot.ItemList.IsItemTooltipEnabled(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IsSelected",
+      "kind": "Method",
+      "signature": "public bool IsSelected(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the item at the specified index is currently selected.",
+      "godotName": "is_selected",
+      "xmlDocId": "M:Godot.ItemList.IsSelected(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "MoveItem",
+      "kind": "Method",
+      "signature": "public void MoveItem(int fromIdx, int toIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_idx",
+          "type": "int"
+        },
+        {
+          "name": "to_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves item from index [param from_idx] to [param to_idx].",
+      "godotName": "move_item",
+      "xmlDocId": "M:Godot.ItemList.MoveItem(int,int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "RemoveItem",
+      "kind": "Method",
+      "signature": "public void RemoveItem(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the item specified by [param idx] index from the list.",
+      "godotName": "remove_item",
+      "xmlDocId": "M:Godot.ItemList.RemoveItem(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public void Select(int idx, bool single)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "single",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Selects the item at the specified index. [b]Note:[/b] This method does not trigger the item selection signal.",
+      "godotName": "select",
+      "xmlDocId": "M:Godot.ItemList.Select(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemAutoTranslateMode",
+      "kind": "Method",
+      "signature": "public void SetItemAutoTranslateMode(int idx, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the auto translate mode of the item associated with the specified index. Items use [constant Node.AUTO_TRANSLATE_MODE_INHERIT] by default, which uses the same auto translate mode as the [ItemList] itself.",
+      "godotName": "set_item_auto_translate_mode",
+      "xmlDocId": "M:Godot.ItemList.SetItemAutoTranslateMode(int,int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemCustomBgColor",
+      "kind": "Method",
+      "signature": "public void SetItemCustomBgColor(int idx, Color customBgColor)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "custom_bg_color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the background color of the item specified by [param idx] index to the specified [Color].",
+      "godotName": "set_item_custom_bg_color",
+      "xmlDocId": "M:Godot.ItemList.SetItemCustomBgColor(int,Color)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemCustomFgColor",
+      "kind": "Method",
+      "signature": "public void SetItemCustomFgColor(int idx, Color customFgColor)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "custom_fg_color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the foreground color of the item specified by [param idx] index to the specified [Color].",
+      "godotName": "set_item_custom_fg_color",
+      "xmlDocId": "M:Godot.ItemList.SetItemCustomFgColor(int,Color)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemDisabled",
+      "kind": "Method",
+      "signature": "public void SetItemDisabled(int idx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Disables (or enables) the item at the specified index. Disabled items cannot be selected and do not trigger activation signals (when double-clicking or pressing [kbd]Enter[/kbd]).",
+      "godotName": "set_item_disabled",
+      "xmlDocId": "M:Godot.ItemList.SetItemDisabled(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemIcon",
+      "kind": "Method",
+      "signature": "public void SetItemIcon(int idx, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets (or replaces) the icon\u0027s [Texture2D] associated with the specified index.",
+      "godotName": "set_item_icon",
+      "xmlDocId": "M:Godot.ItemList.SetItemIcon(int,Texture2D)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemIconModulate",
+      "kind": "Method",
+      "signature": "public void SetItemIconModulate(int idx, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets a modulating [Color] of the item associated with the specified index.",
+      "godotName": "set_item_icon_modulate",
+      "xmlDocId": "M:Godot.ItemList.SetItemIconModulate(int,Color)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemIconRegion",
+      "kind": "Method",
+      "signature": "public void SetItemIconRegion(int idx, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Sets the region of item\u0027s icon used. The whole icon will be used if the region has no area.",
+      "godotName": "set_item_icon_region",
+      "xmlDocId": "M:Godot.ItemList.SetItemIconRegion(int,Rect2)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemIconTransposed",
+      "kind": "Method",
+      "signature": "public void SetItemIconTransposed(int idx, bool transposed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "transposed",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the item icon will be drawn transposed.",
+      "godotName": "set_item_icon_transposed",
+      "xmlDocId": "M:Godot.ItemList.SetItemIconTransposed(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemLanguage",
+      "kind": "Method",
+      "signature": "public void SetItemLanguage(int idx, String language)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the language code of the text for the item at the given index to [param language]. This is used for line-breaking and text shaping algorithms. If [param language] is empty, the current locale is used.",
+      "godotName": "set_item_language",
+      "xmlDocId": "M:Godot.ItemList.SetItemLanguage(int,String)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemMetadata",
+      "kind": "Method",
+      "signature": "public void SetItemMetadata(int idx, Variant metadata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "metadata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets a value (of any type) to be stored with the item associated with the specified index.",
+      "godotName": "set_item_metadata",
+      "xmlDocId": "M:Godot.ItemList.SetItemMetadata(int,Variant)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemSelectable",
+      "kind": "Method",
+      "signature": "public void SetItemSelectable(int idx, bool selectable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "selectable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Allows or disallows selection of the item associated with the specified index.",
+      "godotName": "set_item_selectable",
+      "xmlDocId": "M:Godot.ItemList.SetItemSelectable(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemText",
+      "kind": "Method",
+      "signature": "public void SetItemText(int idx, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets text of the item associated with the specified index.",
+      "godotName": "set_item_text",
+      "xmlDocId": "M:Godot.ItemList.SetItemText(int,String)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemTextDirection",
+      "kind": "Method",
+      "signature": "public void SetItemTextDirection(int idx, int direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets item\u0027s text base writing direction.",
+      "godotName": "set_item_text_direction",
+      "xmlDocId": "M:Godot.ItemList.SetItemTextDirection(int,int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemTooltip",
+      "kind": "Method",
+      "signature": "public void SetItemTooltip(int idx, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the tooltip hint for the item associated with the specified index.",
+      "godotName": "set_item_tooltip",
+      "xmlDocId": "M:Godot.ItemList.SetItemTooltip(int,String)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SetItemTooltipEnabled",
+      "kind": "Method",
+      "signature": "public void SetItemTooltipEnabled(int idx, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the tooltip hint is enabled for specified item index.",
+      "godotName": "set_item_tooltip_enabled",
+      "xmlDocId": "M:Godot.ItemList.SetItemTooltipEnabled(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SortItemsByText",
+      "kind": "Method",
+      "signature": "public void SortItemsByText()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts items in the list by their text.",
+      "godotName": "sort_items_by_text",
+      "xmlDocId": "M:Godot.ItemList.SortItemsByText",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AllowReselect",
+      "kind": "Property",
+      "signature": "public bool AllowReselect { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the currently selected item can be selected again.",
+      "defaultValue": "false",
+      "godotName": "allow_reselect",
+      "xmlDocId": "P:Godot.ItemList.AllowReselect",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AllowRmbSelect",
+      "kind": "Property",
+      "signature": "public bool AllowRmbSelect { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], right mouse button click can select items.",
+      "defaultValue": "false",
+      "godotName": "allow_rmb_select",
+      "xmlDocId": "P:Godot.ItemList.AllowRmbSelect",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AllowSearch",
+      "kind": "Property",
+      "signature": "public bool AllowSearch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows navigating the [ItemList] with letter keys through incremental search.",
+      "defaultValue": "true",
+      "godotName": "allow_search",
+      "xmlDocId": "P:Godot.ItemList.AllowSearch",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AutoHeight",
+      "kind": "Property",
+      "signature": "public bool AutoHeight { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the control will automatically resize the height to fit its content.",
+      "defaultValue": "false",
+      "godotName": "auto_height",
+      "xmlDocId": "P:Godot.ItemList.AutoHeight",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "AutoWidth",
+      "kind": "Property",
+      "signature": "public bool AutoWidth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the control will automatically resize the width to fit its content.",
+      "defaultValue": "false",
+      "godotName": "auto_width",
+      "xmlDocId": "P:Godot.ItemList.AutoWidth",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ClipContents",
+      "kind": "Property",
+      "signature": "public bool ClipContents { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "clip_contents",
+      "xmlDocId": "P:Godot.ItemList.ClipContents",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "FixedColumnWidth",
+      "kind": "Property",
+      "signature": "public int FixedColumnWidth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width all columns will be adjusted to. A value of zero disables the adjustment, each item will have a width equal to the width of its content and the columns will have an uneven width.",
+      "defaultValue": "0",
+      "godotName": "fixed_column_width",
+      "xmlDocId": "P:Godot.ItemList.FixedColumnWidth",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "FixedIconSize",
+      "kind": "Property",
+      "signature": "public Vector2i FixedIconSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The size all icons will be adjusted to. If either X or Y component is not greater than zero, icon size won\u0027t be affected.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "fixed_icon_size",
+      "xmlDocId": "P:Godot.ItemList.FixedIconSize",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.ItemList.FocusMode",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IconMode",
+      "kind": "Property",
+      "signature": "public int IconMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The icon position, whether above or to the left of the text. See the [enum IconMode] constants.",
+      "defaultValue": "1",
+      "godotName": "icon_mode",
+      "xmlDocId": "P:Godot.ItemList.IconMode",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "IconScale",
+      "kind": "Property",
+      "signature": "public float IconScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The scale of icon applied after [member fixed_icon_size] and transposing takes effect.",
+      "defaultValue": "1.0",
+      "godotName": "icon_scale",
+      "xmlDocId": "P:Godot.ItemList.IconScale",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ItemCount",
+      "kind": "Property",
+      "signature": "public int ItemCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of items currently in the list.",
+      "defaultValue": "0",
+      "godotName": "item_count",
+      "xmlDocId": "P:Godot.ItemList.ItemCount",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "MaxColumns",
+      "kind": "Property",
+      "signature": "public int MaxColumns { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum columns the list will have. If greater than zero, the content will be split among the specified columns. A value of zero means unlimited columns, i.e. all items will be put in the same row.",
+      "defaultValue": "1",
+      "godotName": "max_columns",
+      "xmlDocId": "P:Godot.ItemList.MaxColumns",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "MaxTextLines",
+      "kind": "Property",
+      "signature": "public int MaxTextLines { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum lines of text allowed in each item. Space will be reserved even when there is not enough lines of text to display. [b]Note:[/b] This property takes effect only when [member icon_mode] is [constant ICON_MODE_TOP]. To make the text wrap, [member fixed_column_width] should be greater than zero.",
+      "defaultValue": "1",
+      "godotName": "max_text_lines",
+      "xmlDocId": "P:Godot.ItemList.MaxTextLines",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SameColumnWidth",
+      "kind": "Property",
+      "signature": "public bool SameColumnWidth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether all columns will have the same width. If [code]true[/code], the width is equal to the largest column width of all columns.",
+      "defaultValue": "false",
+      "godotName": "same_column_width",
+      "xmlDocId": "P:Godot.ItemList.SameColumnWidth",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ScrollHintMode",
+      "kind": "Property",
+      "signature": "public int ScrollHintMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The way which scroll hints (indicators that show that the content can still be scrolled in a certain direction) will be shown.",
+      "defaultValue": "0",
+      "godotName": "scroll_hint_mode",
+      "xmlDocId": "P:Godot.ItemList.ScrollHintMode",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SelectMode",
+      "kind": "Property",
+      "signature": "public int SelectMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Allows single or multiple item selection. See the [enum SelectMode] constants.",
+      "defaultValue": "0",
+      "godotName": "select_mode",
+      "xmlDocId": "P:Godot.ItemList.SelectMode",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clipping behavior when the text exceeds an item\u0027s bounding rectangle.",
+      "defaultValue": "3",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.ItemList.TextOverrunBehavior",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "TileScrollHint",
+      "kind": "Property",
+      "signature": "public bool TileScrollHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the scroll hint texture will be tiled instead of stretched. See [member scroll_hint_mode].",
+      "defaultValue": "false",
+      "godotName": "tile_scroll_hint",
+      "xmlDocId": "P:Godot.ItemList.TileScrollHint",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "WraparoundItems",
+      "kind": "Property",
+      "signature": "public bool WraparoundItems { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the control will automatically move items into a new row to fit its content. See also [HFlowContainer] for this behavior. If [code]false[/code], the control will add a horizontal scrollbar to make all items visible.",
+      "defaultValue": "true",
+      "godotName": "wraparound_items",
+      "xmlDocId": "P:Godot.ItemList.WraparoundItems",
+      "sourcePath": "doc/classes/ItemList.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "item_{index}/disabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is disabled. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "item_{index}/disabled",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "item_{index}/icon",
+      "kind": "RawProperty",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The icon of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "godotName": "item_{index}/icon",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "item_{index}/selectable",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the item at [code]index[/code] is selectable. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "true",
+      "godotName": "item_{index}/selectable",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "item_{index}/text",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text of the item at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. item_count - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "item_{index}/text",
+      "sourcePath": "doc/classes/ItemList.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "EmptyClicked",
+      "kind": "Signal",
+      "signature": "public event EmptyClickedHandler EmptyClicked",
+      "parameters": [
+        {
+          "name": "at_position",
+          "type": "Vector2"
+        },
+        {
+          "name": "mouse_button_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when any mouse click is issued within the rect of the list but on empty space. [param at_position] is the click position in this control\u0027s local coordinate system.",
+      "godotName": "empty_clicked",
+      "xmlDocId": "E:Godot.ItemList.EmptyClicked(Vector2,int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ItemActivated",
+      "kind": "Signal",
+      "signature": "public event ItemActivatedHandler ItemActivated",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when specified list item is activated via double-clicking or by pressing [kbd]Enter[/kbd].",
+      "godotName": "item_activated",
+      "xmlDocId": "E:Godot.ItemList.ItemActivated(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ItemClicked",
+      "kind": "Signal",
+      "signature": "public event ItemClickedHandler ItemClicked",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "at_position",
+          "type": "Vector2"
+        },
+        {
+          "name": "mouse_button_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when specified list item has been clicked with any mouse button. [param at_position] is the click position in this control\u0027s local coordinate system.",
+      "godotName": "item_clicked",
+      "xmlDocId": "E:Godot.ItemList.ItemClicked(int,Vector2,int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ItemSelected",
+      "kind": "Signal",
+      "signature": "public event ItemSelectedHandler ItemSelected",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when specified item has been selected. Only applicable in single selection mode. [member allow_reselect] must be enabled to reselect an item.",
+      "godotName": "item_selected",
+      "xmlDocId": "E:Godot.ItemList.ItemSelected(int)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "MultiSelected",
+      "kind": "Signal",
+      "signature": "public event MultiSelectedHandler MultiSelected",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "selected",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when a multiple selection is altered on a list allowing multiple selection.",
+      "godotName": "multi_selected",
+      "xmlDocId": "E:Godot.ItemList.MultiSelected(int,bool)",
+      "sourcePath": "doc/classes/ItemList.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "IconMode",
+      "values": [
+        {
+          "name": "ICON_MODE_LEFT",
+          "value": "1",
+          "enum": "IconMode",
+          "kind": "EnumValue",
+          "summary": "Icon is drawn to the left of the text.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "ICON_MODE_TOP",
+          "value": "0",
+          "enum": "IconMode",
+          "kind": "EnumValue",
+          "summary": "Icon is drawn above the text.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        }
+      ]
+    },
+    {
+      "name": "ScrollHintMode",
+      "values": [
+        {
+          "name": "SCROLL_HINT_MODE_BOTH",
+          "value": "1",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will be shown at the top and bottom.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_BOTTOM",
+          "value": "3",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Only the bottom scroll hint will be shown.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_DISABLED",
+          "value": "0",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Scroll hints will never be shown.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "SCROLL_HINT_MODE_TOP",
+          "value": "2",
+          "enum": "ScrollHintMode",
+          "kind": "EnumValue",
+          "summary": "Only the top scroll hint will be shown.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        }
+      ]
+    },
+    {
+      "name": "SelectMode",
+      "values": [
+        {
+          "name": "SELECT_MULTI",
+          "value": "1",
+          "enum": "SelectMode",
+          "kind": "EnumValue",
+          "summary": "Allows selecting multiple items by holding [kbd]Ctrl[/kbd] or [kbd]Shift[/kbd].",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "SELECT_SINGLE",
+          "value": "0",
+          "enum": "SelectMode",
+          "kind": "EnumValue",
+          "summary": "Only allow selecting a single item.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        },
+        {
+          "name": "SELECT_TOGGLE",
+          "value": "2",
+          "enum": "SelectMode",
+          "kind": "EnumValue",
+          "summary": "Allows selecting multiple items by toggling them on and off.",
+          "sourcePath": "doc/classes/ItemList.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ICON_MODE_TOP",
+      "value": "0",
+      "enum": "IconMode",
+      "kind": "EnumValue",
+      "summary": "Icon is drawn above the text.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "ICON_MODE_LEFT",
+      "value": "1",
+      "enum": "IconMode",
+      "kind": "EnumValue",
+      "summary": "Icon is drawn to the left of the text.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SELECT_SINGLE",
+      "value": "0",
+      "enum": "SelectMode",
+      "kind": "EnumValue",
+      "summary": "Only allow selecting a single item.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SELECT_MULTI",
+      "value": "1",
+      "enum": "SelectMode",
+      "kind": "EnumValue",
+      "summary": "Allows selecting multiple items by holding [kbd]Ctrl[/kbd] or [kbd]Shift[/kbd].",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SELECT_TOGGLE",
+      "value": "2",
+      "enum": "SelectMode",
+      "kind": "EnumValue",
+      "summary": "Allows selecting multiple items by toggling them on and off.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_DISABLED",
+      "value": "0",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will never be shown.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_BOTH",
+      "value": "1",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Scroll hints will be shown at the top and bottom.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_TOP",
+      "value": "2",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Only the top scroll hint will be shown.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    },
+    {
+      "name": "SCROLL_HINT_MODE_BOTTOM",
+      "value": "3",
+      "enum": "ScrollHintMode",
+      "kind": "EnumValue",
+      "summary": "Only the bottom scroll hint will be shown.",
+      "sourcePath": "doc/classes/ItemList.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ItemList.xml",
+      "sha256": "c7d56661084cf2a6e19d587a88bb62575dd52c3b67c306e8d788cd8fb4b9b240"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

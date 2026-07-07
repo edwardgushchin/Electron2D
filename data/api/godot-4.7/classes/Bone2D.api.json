@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Bone2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Bone2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Bone2D",
+    "documentationPath": "doc/classes/Bone2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_bone2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ApplyRest",
+      "kind": "Method",
+      "signature": "public void ApplyRest()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resets the bone to the rest pose. This is equivalent to setting [member Node2D.transform] to [member rest].",
+      "godotName": "apply_rest",
+      "xmlDocId": "M:Godot.Bone2D.ApplyRest",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "GetAutocalculateLengthAndAngle",
+      "kind": "Method",
+      "signature": "public bool GetAutocalculateLengthAndAngle()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether this [Bone2D] is going to autocalculate its length and bone angle using its first [Bone2D] child node, if one exists. If there are no [Bone2D] children, then it cannot autocalculate these values and will print a warning.",
+      "godotName": "get_autocalculate_length_and_angle",
+      "xmlDocId": "M:Godot.Bone2D.GetAutocalculateLengthAndAngle",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "GetBoneAngle",
+      "kind": "Method",
+      "signature": "public float GetBoneAngle()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the angle of the bone in the [Bone2D]. [b]Note:[/b] This is different from the [Bone2D]\u0027s rotation. The bone\u0027s angle is the rotation of the bone shown by the gizmo, which is unaffected by the [Bone2D]\u0027s [member Node2D.transform].",
+      "godotName": "get_bone_angle",
+      "xmlDocId": "M:Godot.Bone2D.GetBoneAngle",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "GetIndexInSkeleton",
+      "kind": "Method",
+      "signature": "public int GetIndexInSkeleton()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the node\u0027s index as part of the entire skeleton. See [Skeleton2D].",
+      "godotName": "get_index_in_skeleton",
+      "xmlDocId": "M:Godot.Bone2D.GetIndexInSkeleton",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "GetLength",
+      "kind": "Method",
+      "signature": "public float GetLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the length of the bone in the [Bone2D] node.",
+      "godotName": "get_length",
+      "xmlDocId": "M:Godot.Bone2D.GetLength",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "GetSkeletonRest",
+      "kind": "Method",
+      "signature": "public Transform2D GetSkeletonRest()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the node\u0027s [member rest] [Transform2D] if it doesn\u0027t have a parent, or its rest pose relative to its parent.",
+      "godotName": "get_skeleton_rest",
+      "xmlDocId": "M:Godot.Bone2D.GetSkeletonRest",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "SetAutocalculateLengthAndAngle",
+      "kind": "Method",
+      "signature": "public void SetAutocalculateLengthAndAngle(bool autoCalculate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "auto_calculate",
+          "type": "bool"
+        }
+      ],
+      "summary": "When set to [code]true[/code], the [Bone2D] node will attempt to automatically calculate the bone angle and length using the first child [Bone2D] node, if one exists. If none exist, the [Bone2D] cannot automatically calculate these values and will print a warning.",
+      "godotName": "set_autocalculate_length_and_angle",
+      "xmlDocId": "M:Godot.Bone2D.SetAutocalculateLengthAndAngle(bool)",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "SetBoneAngle",
+      "kind": "Method",
+      "signature": "public void SetBoneAngle(float angle)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the bone angle for the [Bone2D]. This is typically set to the rotation from the [Bone2D] to a child [Bone2D] node. [b]Note:[/b] This is different from the [Bone2D]\u0027s rotation. The bone\u0027s angle is the rotation of the bone shown by the gizmo, which is unaffected by the [Bone2D]\u0027s [member Node2D.transform].",
+      "godotName": "set_bone_angle",
+      "xmlDocId": "M:Godot.Bone2D.SetBoneAngle(float)",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "SetLength",
+      "kind": "Method",
+      "signature": "public void SetLength(float length)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the length of the bone in the [Bone2D].",
+      "godotName": "set_length",
+      "xmlDocId": "M:Godot.Bone2D.SetLength(float)",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    },
+    {
+      "name": "Rest",
+      "kind": "Property",
+      "signature": "public Transform2D Rest { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Rest transform of the bone. You can reset the node\u0027s transforms to this value using [method apply_rest].",
+      "defaultValue": "Transform2D(0, 0, 0, 0, 0, 0)",
+      "godotName": "rest",
+      "xmlDocId": "P:Godot.Bone2D.Rest",
+      "sourcePath": "doc/classes/Bone2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Bone2D.xml",
+      "sha256": "1525d9983810dc49a682668b0f01f19cf00d1acd00da7aa8c9e0fd9b70d668d3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

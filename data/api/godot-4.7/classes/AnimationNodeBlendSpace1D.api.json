@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeBlendSpace1D",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeBlendSpace1D",
+    "kind": "class",
+    "baseType": "AnimationRootNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeBlendSpace1D",
+    "documentationPath": "doc/classes/AnimationNodeBlendSpace1D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodeblendspace1d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBlendPoint",
+      "kind": "Method",
+      "signature": "public void AddBlendPoint(AnimationRootNode node, float pos, int atIndex, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "AnimationRootNode"
+        },
+        {
+          "name": "pos",
+          "type": "float"
+        },
+        {
+          "name": "at_index",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "name",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a new point with [param name] that represents a [param node] on the virtual axis at a given position set by [param pos]. You can insert it at a specific index using the [param at_index] argument. If you use the default value for [param at_index], the point is inserted at the end of the blend points array. [b]Note:[/b] If no name is provided, safe index is used as reference. In the future, empty names will be deprecated, so explicitly passing a name is recommended.",
+      "godotName": "add_blend_point",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.AddBlendPoint(AnimationRootNode,float,int,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "FindBlendPointByName",
+      "kind": "Method",
+      "signature": "public int FindBlendPointByName(StringName name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the index of the blend point with the given [param name]. Returns [code]-1[/code] if no blend point with that name is found.",
+      "godotName": "find_blend_point_by_name",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.FindBlendPointByName(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "GetBlendPointCount",
+      "kind": "Method",
+      "signature": "public int GetBlendPointCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of points on the blend axis.",
+      "godotName": "get_blend_point_count",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.GetBlendPointCount",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "GetBlendPointName",
+      "kind": "Method",
+      "signature": "public StringName GetBlendPointName(int point)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the blend point at index [param point].",
+      "godotName": "get_blend_point_name",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.GetBlendPointName(int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "GetBlendPointNode",
+      "kind": "Method",
+      "signature": "public AnimationRootNode GetBlendPointNode(int point)",
+      "returnType": "AnimationRootNode",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [AnimationNode] referenced by the point at index [param point].",
+      "godotName": "get_blend_point_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.GetBlendPointNode(int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "GetBlendPointPosition",
+      "kind": "Method",
+      "signature": "public float GetBlendPointPosition(int point)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the point at index [param point].",
+      "godotName": "get_blend_point_position",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.GetBlendPointPosition(int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "RemoveBlendPoint",
+      "kind": "Method",
+      "signature": "public void RemoveBlendPoint(int point)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the point at index [param point] from the blend axis.",
+      "godotName": "remove_blend_point",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.RemoveBlendPoint(int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "ReorderBlendPoint",
+      "kind": "Method",
+      "signature": "public void ReorderBlendPoint(int fromIndex, int toIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_index",
+          "type": "int"
+        },
+        {
+          "name": "to_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Swaps the blend points at indices [param from_index] and [param to_index], exchanging their positions and properties.",
+      "godotName": "reorder_blend_point",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.ReorderBlendPoint(int,int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SetBlendPointName",
+      "kind": "Method",
+      "signature": "public void SetBlendPointName(int point, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the name of the blend point at index [param point]. If the name conflicts with an existing point, a unique name will be generated automatically.",
+      "godotName": "set_blend_point_name",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.SetBlendPointName(int,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SetBlendPointNode",
+      "kind": "Method",
+      "signature": "public void SetBlendPointNode(int point, AnimationRootNode node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        },
+        {
+          "name": "node",
+          "type": "AnimationRootNode"
+        }
+      ],
+      "summary": "Changes the [AnimationNode] referenced by the point at index [param point].",
+      "godotName": "set_blend_point_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.SetBlendPointNode(int,AnimationRootNode)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SetBlendPointPosition",
+      "kind": "Method",
+      "signature": "public void SetBlendPointPosition(int point, float pos)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        },
+        {
+          "name": "pos",
+          "type": "float"
+        }
+      ],
+      "summary": "Updates the position of the point at index [param point] on the blend axis.",
+      "godotName": "set_blend_point_position",
+      "xmlDocId": "M:Godot.AnimationNodeBlendSpace1D.SetBlendPointPosition(int,float)",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "BlendMode",
+      "kind": "Property",
+      "signature": "public int BlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the interpolation between animations.",
+      "defaultValue": "0",
+      "godotName": "blend_mode",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.BlendMode",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "CyclicLength",
+      "kind": "Property",
+      "signature": "public float CyclicLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The cycle length in seconds used by [constant SYNC_MODE_CYCLIC_CONSTANT]. All animations are time-scaled so they complete one full cycle in this duration. Must be greater than [code]0[/code] for cyclic sync to take effect.",
+      "defaultValue": "0.0",
+      "godotName": "cyclic_length",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.CyclicLength",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "MaxSpace",
+      "kind": "Property",
+      "signature": "public float MaxSpace { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The blend space\u0027s axis\u0027s upper limit for the points\u0027 position. See [method add_blend_point].",
+      "defaultValue": "1.0",
+      "godotName": "max_space",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.MaxSpace",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "MinSpace",
+      "kind": "Property",
+      "signature": "public float MinSpace { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The blend space\u0027s axis\u0027s lower limit for the points\u0027 position. See [method add_blend_point].",
+      "defaultValue": "-1.0",
+      "godotName": "min_space",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.MinSpace",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "Snap",
+      "kind": "Property",
+      "signature": "public float Snap { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Position increment to snap to when moving a point on the axis.",
+      "defaultValue": "0.1",
+      "godotName": "snap",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.Snap",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "Sync",
+      "kind": "Property",
+      "signature": "public bool Sync { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], sync mode is enabled (equivalent to [constant SYNC_MODE_INDEPENDENT]). This property is kept for backward compatibility.",
+      "godotName": "sync",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.Sync",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SyncMode",
+      "kind": "Property",
+      "signature": "public int SyncMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how animations are synced when blended. See [enum SyncMode] for available options.",
+      "defaultValue": "0",
+      "godotName": "sync_mode",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.SyncMode",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "ValueLabel",
+      "kind": "Property",
+      "signature": "public String ValueLabel { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Label of the virtual axis of the blend space.",
+      "defaultValue": "\u0022value\u0022",
+      "godotName": "value_label",
+      "xmlDocId": "P:Godot.AnimationNodeBlendSpace1D.ValueLabel",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BlendMode",
+      "values": [
+        {
+          "name": "BLEND_MODE_DISCRETE",
+          "value": "1",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The blend space plays the animation of the animation node which blending position is closest to. Useful for frame-by-frame 2D animations.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        },
+        {
+          "name": "BLEND_MODE_DISCRETE_CARRY",
+          "value": "2",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Similar to [constant BLEND_MODE_DISCRETE], but starts the new animation at the last animation\u0027s playback position.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        },
+        {
+          "name": "BLEND_MODE_INTERPOLATED",
+          "value": "0",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The interpolation between animations is linear.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        }
+      ]
+    },
+    {
+      "name": "SyncMode",
+      "values": [
+        {
+          "name": "SYNC_MODE_CYCLIC_CONSTANT",
+          "value": "3",
+          "enum": "SyncMode",
+          "kind": "EnumValue",
+          "summary": "All animations are time-scaled so they complete one cycle in [member cyclic_length] seconds, keeping them in sync regardless of their individual lengths. [b]Note:[/b] If you apply [AnimationNodeTimeSeek] to the result when handling animations of different lengths, synchronization will be broken. In such cases, it is recommended to use [member AnimationNodeAnimation.use_custom_timeline] to align the animation lengths.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        },
+        {
+          "name": "SYNC_MODE_CYCLIC_MUTABLE",
+          "value": "2",
+          "enum": "SyncMode",
+          "kind": "EnumValue",
+          "summary": "All animations are time-scaled so they stay in sync, with the cycle length dynamically computed from active blend weights. This is self-normalizing: a solo animation plays at normal speed. [b]Note:[/b] If you apply [AnimationNodeTimeSeek] to the result when handling animations of different lengths, synchronization will be broken. In such cases, it is recommended to use [member AnimationNodeAnimation.use_custom_timeline] to align the animation lengths.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        },
+        {
+          "name": "SYNC_MODE_INDEPENDENT",
+          "value": "1",
+          "enum": "SyncMode",
+          "kind": "EnumValue",
+          "summary": "Inactive animations advance with a weight of [code]0[/code]. This is equivalent to the previous [code]sync = true[/code] behavior.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        },
+        {
+          "name": "SYNC_MODE_NONE",
+          "value": "0",
+          "enum": "SyncMode",
+          "kind": "EnumValue",
+          "summary": "Inactive animations are frozen and do not advance.",
+          "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BLEND_MODE_INTERPOLATED",
+      "value": "0",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The interpolation between animations is linear.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "BLEND_MODE_DISCRETE",
+      "value": "1",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The blend space plays the animation of the animation node which blending position is closest to. Useful for frame-by-frame 2D animations.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "BLEND_MODE_DISCRETE_CARRY",
+      "value": "2",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Similar to [constant BLEND_MODE_DISCRETE], but starts the new animation at the last animation\u0027s playback position.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SYNC_MODE_NONE",
+      "value": "0",
+      "enum": "SyncMode",
+      "kind": "EnumValue",
+      "summary": "Inactive animations are frozen and do not advance.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SYNC_MODE_INDEPENDENT",
+      "value": "1",
+      "enum": "SyncMode",
+      "kind": "EnumValue",
+      "summary": "Inactive animations advance with a weight of [code]0[/code]. This is equivalent to the previous [code]sync = true[/code] behavior.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SYNC_MODE_CYCLIC_MUTABLE",
+      "value": "2",
+      "enum": "SyncMode",
+      "kind": "EnumValue",
+      "summary": "All animations are time-scaled so they stay in sync, with the cycle length dynamically computed from active blend weights. This is self-normalizing: a solo animation plays at normal speed. [b]Note:[/b] If you apply [AnimationNodeTimeSeek] to the result when handling animations of different lengths, synchronization will be broken. In such cases, it is recommended to use [member AnimationNodeAnimation.use_custom_timeline] to align the animation lengths.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    },
+    {
+      "name": "SYNC_MODE_CYCLIC_CONSTANT",
+      "value": "3",
+      "enum": "SyncMode",
+      "kind": "EnumValue",
+      "summary": "All animations are time-scaled so they complete one cycle in [member cyclic_length] seconds, keeping them in sync regardless of their individual lengths. [b]Note:[/b] If you apply [AnimationNodeTimeSeek] to the result when handling animations of different lengths, synchronization will be broken. In such cases, it is recommended to use [member AnimationNodeAnimation.use_custom_timeline] to align the animation lengths.",
+      "sourcePath": "doc/classes/AnimationNodeBlendSpace1D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeBlendSpace1D.xml",
+      "sha256": "bfb7e24f26a07aa968c8574d7dce2d956a18d9e0ee6e213809e8ee903e57eb61"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

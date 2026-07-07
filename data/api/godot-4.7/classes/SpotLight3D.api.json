@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpotLight3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SpotLight3D",
+    "kind": "class",
+    "baseType": "Light3D",
+    "interfaces": [],
+    "godotReference": "SpotLight3D",
+    "documentationPath": "doc/classes/SpotLight3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_spotlight3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LightSpecular",
+      "kind": "Property",
+      "signature": "public float LightSpecular { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.5",
+      "godotName": "light_specular",
+      "xmlDocId": "P:Godot.SpotLight3D.LightSpecular",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "ShadowBias",
+      "kind": "Property",
+      "signature": "public float ShadowBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.03",
+      "godotName": "shadow_bias",
+      "xmlDocId": "P:Godot.SpotLight3D.ShadowBias",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "ShadowNormalBias",
+      "kind": "Property",
+      "signature": "public float ShadowNormalBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "shadow_normal_bias",
+      "xmlDocId": "P:Godot.SpotLight3D.ShadowNormalBias",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "SpotAngle",
+      "kind": "Property",
+      "signature": "public float SpotAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The spotlight\u0027s angle in degrees. This is the angular radius, meaning the angle from the -Z axis, the cone\u0027s center, to the edge of the cone. The default angular radius of 45 degrees corresponds to a cone with an angular diameter of 90 degrees. [b]Note:[/b] [member spot_angle] is not affected by [member Node3D.scale] (the light\u0027s scale or its parent\u0027s scale).",
+      "defaultValue": "45.0",
+      "godotName": "spot_angle",
+      "xmlDocId": "P:Godot.SpotLight3D.SpotAngle",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "SpotAngleAttenuation",
+      "kind": "Property",
+      "signature": "public float SpotAngleAttenuation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The spotlight\u0027s [i]angular[/i] attenuation curve. See also [member spot_attenuation].",
+      "defaultValue": "1.0",
+      "godotName": "spot_angle_attenuation",
+      "xmlDocId": "P:Godot.SpotLight3D.SpotAngleAttenuation",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "SpotAttenuation",
+      "kind": "Property",
+      "signature": "public float SpotAttenuation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the distance attenuation function for spotlights. A value of [code]0.0[/code] will maintain a constant brightness through most of the range, but smoothly attenuate the light at the edge of the range. Use a value of [code]2.0[/code] for physically accurate lights as it results in the proper inverse square attenutation. [b]Note:[/b] Setting attenuation to [code]2.0[/code] or higher may result in distant objects receiving minimal light, even within range. For example, with a range of [code]4096[/code], an object at [code]100[/code] units is attenuated by a factor of [code]0.0001[/code]. With a default brightness of [code]1[/code], the light would not be visible at that distance. [b]Note:[/b] Using negative or values higher than [code]10.0[/code] may lead to unexpected results.",
+      "defaultValue": "1.0",
+      "godotName": "spot_attenuation",
+      "xmlDocId": "P:Godot.SpotLight3D.SpotAttenuation",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    },
+    {
+      "name": "SpotRange",
+      "kind": "Property",
+      "signature": "public float SpotRange { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximal range that can be reached by the spotlight. Note that the effectively lit area may appear to be smaller depending on the [member spot_attenuation] in use. No matter the [member spot_attenuation] in use, the light will never reach anything outside this range. [b]Note:[/b] [member spot_range] is not affected by [member Node3D.scale] (the light\u0027s scale or its parent\u0027s scale).",
+      "defaultValue": "5.0",
+      "godotName": "spot_range",
+      "xmlDocId": "P:Godot.SpotLight3D.SpotRange",
+      "sourcePath": "doc/classes/SpotLight3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpotLight3D.xml",
+      "sha256": "06f111e00b8d86059e299e758280c3b59ee56ac96cfcfc99789205385876f74f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

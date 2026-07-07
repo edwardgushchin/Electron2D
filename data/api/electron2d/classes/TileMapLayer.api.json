@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileMapLayer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TileMapLayer",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "TileMapLayer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TileMapLayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileMapLayer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileMapLayer\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TileMapLayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileMapLayer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileMapLayer\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all cells from this layer.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EraseCell",
+      "kind": "Method",
+      "signature": "public System.Void EraseCell(Electron2D.Vector2I coords)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Erases a tile cell at map coordinates.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.EraseCell(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCellAlternativeTile",
+      "kind": "Method",
+      "signature": "public System.Int32 GetCellAlternativeTile(Electron2D.Vector2I coords)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Gets the alternative tile id stored in a cell.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetCellAlternativeTile(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCellAtlasCoords",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I GetCellAtlasCoords(Electron2D.Vector2I coords)",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Gets the atlas coordinates stored in a cell.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetCellAtlasCoords(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCellSourceId",
+      "kind": "Method",
+      "signature": "public System.Int32 GetCellSourceId(Electron2D.Vector2I coords)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Gets the source id stored in a cell.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetCellSourceId(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCellTileData",
+      "kind": "Method",
+      "signature": "public Electron2D.TileData GetCellTileData(Electron2D.Vector2I coords)",
+      "returnType": "Electron2D.TileData",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Gets the tile data referenced by a cell.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetCellTileData(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCoordsForBodyRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I GetCoordsForBodyRid(Electron2D.Rid body)",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Gets cell coordinates for a body RID when they are unambiguous.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetCoordsForBodyRid(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetUsedCells",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I[] GetUsedCells()",
+      "returnType": "Electron2D.Vector2I[]",
+      "parameters": [],
+      "summary": "Gets all used cell coordinates.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetUsedCells",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetUsedCellsById",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I[] GetUsedCellsById(System.Int32 sourceId, Electron2D.Vector2I? atlasCoords, System.Int32 alternativeTile)",
+      "returnType": "Electron2D.Vector2I[]",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I?"
+        },
+        {
+          "name": "alternativeTile",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Gets used cell coordinates filtered by stored tile identifiers.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetUsedCellsById(System.Int32,System.Nullable{Electron2D.Vector2I},System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetUsedRect",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I GetUsedRect()",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [],
+      "summary": "Gets the rectangle enclosing all used cells.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.GetUsedRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasBodyRid",
+      "kind": "Method",
+      "signature": "public System.Boolean HasBodyRid(Electron2D.Rid body)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Checks whether a body RID belongs to this tilemap layer.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.HasBodyRid(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LocalToMap",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I LocalToMap(Electron2D.Vector2 localPosition)",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [
+        {
+          "name": "localPosition",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Converts a local position to map coordinates.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.LocalToMap(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MapToLocal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 MapToLocal(Electron2D.Vector2I mapPosition)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "mapPosition",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Converts map coordinates to a local cell-center position.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.MapToLocal(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NotifyRuntimeTileDataUpdate",
+      "kind": "Method",
+      "signature": "public System.Void NotifyRuntimeTileDataUpdate()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Notifies the layer that runtime tile data has changed.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.NotifyRuntimeTileDataUpdate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCell",
+      "kind": "Method",
+      "signature": "public System.Void SetCell(Electron2D.Vector2I coords, System.Int32 sourceId, Electron2D.Vector2I atlasCoords, System.Int32 alternativeTile)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "sourceId",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "atlasCoords",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "alternativeTile",
+          "type": "System.Int32",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Stores a tile cell at map coordinates.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.SetCell(Electron2D.Vector2I,System.Int32,Electron2D.Vector2I,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "UpdateInternals",
+      "kind": "Method",
+      "signature": "public System.Void UpdateInternals()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Applies pending tilemap updates immediately.",
+      "xmlDocId": "M:Electron2D.TileMapLayer.UpdateInternals",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionEnabled",
+      "kind": "Property",
+      "signature": "public System.Boolean CollisionEnabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether tile collision polygons participate in physics.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.CollisionEnabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public System.Boolean Enabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this layer is active.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.Enabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PhysicsQuadrantSize",
+      "kind": "Property",
+      "signature": "public System.Int32 PhysicsQuadrantSize { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the physics quadrant size.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.PhysicsQuadrantSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenderingQuadrantSize",
+      "kind": "Property",
+      "signature": "public System.Int32 RenderingQuadrantSize { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the rendering quadrant size.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.RenderingQuadrantSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileSet",
+      "kind": "Property",
+      "signature": "public Electron2D.TileSet TileSet { get; set; }",
+      "returnType": "Electron2D.TileSet",
+      "parameters": [],
+      "summary": "Gets or sets the tile set used by this layer.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.TileSet",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "XDrawOrderReversed",
+      "kind": "Property",
+      "signature": "public System.Boolean XDrawOrderReversed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether tile draw order is reversed on the X axis.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.XDrawOrderReversed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "YSortOrigin",
+      "kind": "Property",
+      "signature": "public System.Int32 YSortOrigin { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the Y-sort origin offset for submitted tiles.",
+      "xmlDocId": "P:Electron2D.TileMapLayer.YSortOrigin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

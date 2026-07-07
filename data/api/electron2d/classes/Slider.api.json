@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Slider",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Slider",
+    "kind": "class",
+    "baseType": "Electron2D.Range",
+    "interfaces": [],
+    "godotReference": "Slider",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Slider",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Slider()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Slider\u0060 class.",
+      "xmlDocId": "M:Electron2D.Slider.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Slider",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Slider()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Slider\u0060 class.",
+      "xmlDocId": "M:Electron2D.Slider.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this slider.",
+      "xmlDocId": "M:Electron2D.Slider._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the slider track and fill.",
+      "xmlDocId": "M:Electron2D.Slider._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this slider.",
+      "xmlDocId": "M:Electron2D.Slider._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public System.Boolean Editable { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether user input can change the slider.",
+      "xmlDocId": "P:Electron2D.Slider.Editable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scrollable",
+      "kind": "Property",
+      "signature": "public System.Boolean Scrollable { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether wheel-like scrolling is allowed.",
+      "xmlDocId": "P:Electron2D.Slider.Scrollable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ticks",
+      "kind": "Property",
+      "signature": "public System.Int32 Ticks { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the number of visual ticks.",
+      "xmlDocId": "P:Electron2D.Slider.Ticks",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TicksOnBorders",
+      "kind": "Property",
+      "signature": "public System.Boolean TicksOnBorders { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether ticks are drawn on borders.",
+      "xmlDocId": "P:Electron2D.Slider.TicksOnBorders",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this slider.",
+      "xmlDocId": "M:Electron2D.Slider._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the slider track and fill.",
+      "xmlDocId": "M:Electron2D.Slider._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this slider.",
+      "xmlDocId": "M:Electron2D.Slider._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

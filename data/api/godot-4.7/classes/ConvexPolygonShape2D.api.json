@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConvexPolygonShape2D",
+    "namespace": "Godot",
+    "fullName": "Godot.ConvexPolygonShape2D",
+    "kind": "class",
+    "baseType": "Shape2D",
+    "interfaces": [],
+    "godotReference": "ConvexPolygonShape2D",
+    "documentationPath": "doc/classes/ConvexPolygonShape2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_convexpolygonshape2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetPointCloud",
+      "kind": "Method",
+      "signature": "public void SetPointCloud(PackedVector2Array pointCloud)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point_cloud",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Based on the set of points provided, this assigns the [member points] property using the convex hull algorithm, removing all unneeded points. See [method Geometry2D.convex_hull] for details.",
+      "godotName": "set_point_cloud",
+      "xmlDocId": "M:Godot.ConvexPolygonShape2D.SetPointCloud(PackedVector2Array)",
+      "sourcePath": "doc/classes/ConvexPolygonShape2D.xml"
+    },
+    {
+      "name": "Points",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Points { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "The polygon\u0027s list of vertices that form a convex hull. Can be in either clockwise or counterclockwise order. [b]Warning:[/b] Only set this property to a list of points that actually form a convex hull. Use [method set_point_cloud] to generate the convex hull of an arbitrary set of points.",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "points",
+      "xmlDocId": "P:Godot.ConvexPolygonShape2D.Points",
+      "sourcePath": "doc/classes/ConvexPolygonShape2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConvexPolygonShape2D.xml",
+      "sha256": "3da01596d9f163cb3413c05907d645dd6654cad54f672368ca4b9bc5b9045801"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

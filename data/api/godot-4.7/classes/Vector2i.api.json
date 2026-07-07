@@ -1,0 +1,758 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Vector2i",
+    "namespace": "Godot",
+    "fullName": "Godot.Vector2i",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Vector2i",
+    "documentationPath": "doc/classes/Vector2i.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vector2i.html"
+  },
+  "constructors": [
+    {
+      "name": "Vector2i",
+      "kind": "Constructor",
+      "signature": "public Vector2i()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Constructs a default-initialized [Vector2i] with all components set to [code]0[/code].",
+      "godotName": "Vector2i",
+      "xmlDocId": "M:Godot.Vector2i.#ctor",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Vector2i",
+      "kind": "Constructor",
+      "signature": "public Vector2i(Vector2i from)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Constructs a [Vector2i] as a copy of the given [Vector2i].",
+      "godotName": "Vector2i",
+      "xmlDocId": "M:Godot.Vector2i.#ctor(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Vector2i",
+      "kind": "Constructor",
+      "signature": "public Vector2i(Vector2 from)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Constructs a new [Vector2i] from the given [Vector2] by truncating components\u0027 fractional parts (rounding towards zero). For a different behavior consider passing the result of [method Vector2.ceil], [method Vector2.floor] or [method Vector2.round] to this constructor instead.",
+      "godotName": "Vector2i",
+      "xmlDocId": "M:Godot.Vector2i.#ctor(Vector2)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Vector2i",
+      "kind": "Constructor",
+      "signature": "public Vector2i(int x, int y)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Constructs a new [Vector2i] from the given [param x] and [param y].",
+      "godotName": "Vector2i",
+      "xmlDocId": "M:Godot.Vector2i.#ctor(int,int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Vector2i Abs()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns a new vector with all components in absolute values (i.e. positive).",
+      "godotName": "abs",
+      "xmlDocId": "M:Godot.Vector2i.Abs",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Aspect",
+      "kind": "Method",
+      "signature": "public float Aspect()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the aspect ratio of this vector, the ratio of [member x] to [member y].",
+      "godotName": "aspect",
+      "xmlDocId": "M:Godot.Vector2i.Aspect",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public Vector2i Clamp(Vector2i min, Vector2i max)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "Vector2i"
+        },
+        {
+          "name": "max",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns a new vector with all components clamped between the components of [param min] and [param max], by running [method @GlobalScope.clamp] on each component.",
+      "godotName": "clamp",
+      "xmlDocId": "M:Godot.Vector2i.Clamp(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Clampi",
+      "kind": "Method",
+      "signature": "public Vector2i Clampi(int min, int max)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "int"
+        },
+        {
+          "name": "max",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a new vector with all components clamped between [param min] and [param max], by running [method @GlobalScope.clamp] on each component.",
+      "godotName": "clampi",
+      "xmlDocId": "M:Godot.Vector2i.Clampi(int,int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "DistanceSquaredTo",
+      "kind": "Method",
+      "signature": "public int DistanceSquaredTo(Vector2i to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the squared [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean distance[/url] between this vector and [param to]. This method runs faster than [method distance_to], so prefer it if you need to compare vectors or need the squared distance for some formula.",
+      "godotName": "distance_squared_to",
+      "xmlDocId": "M:Godot.Vector2i.DistanceSquaredTo(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "DistanceTo",
+      "kind": "Method",
+      "signature": "public float DistanceTo(Vector2i to)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Euclidean_distance]Euclidean distance[/url] between this vector and [param to].",
+      "godotName": "distance_to",
+      "xmlDocId": "M:Godot.Vector2i.DistanceTo(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Length",
+      "kind": "Method",
+      "signature": "public float Length()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the length (magnitude) of this vector.",
+      "godotName": "length",
+      "xmlDocId": "M:Godot.Vector2i.Length",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "LengthSquared",
+      "kind": "Method",
+      "signature": "public int LengthSquared()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the squared length (squared magnitude) of this vector. This method runs faster than [method length], so prefer it if you need to compare vectors or need the squared distance for some formula.",
+      "godotName": "length_squared",
+      "xmlDocId": "M:Godot.Vector2i.LengthSquared",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Method",
+      "signature": "public Vector2i Max(Vector2i with)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the component-wise maximum of this and [param with], equivalent to [code]Vector2i(maxi(x, with.x), maxi(y, with.y))[/code].",
+      "godotName": "max",
+      "xmlDocId": "M:Godot.Vector2i.Max(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "MaxAxisIndex",
+      "kind": "Method",
+      "signature": "public int MaxAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the axis of the vector\u0027s highest value. See [code]AXIS_*[/code] constants. If all components are equal, this method returns [constant AXIS_X].",
+      "godotName": "max_axis_index",
+      "xmlDocId": "M:Godot.Vector2i.MaxAxisIndex",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Maxi",
+      "kind": "Method",
+      "signature": "public Vector2i Maxi(int with)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the component-wise maximum of this and [param with], equivalent to [code]Vector2i(maxi(x, with), maxi(y, with))[/code].",
+      "godotName": "maxi",
+      "xmlDocId": "M:Godot.Vector2i.Maxi(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Method",
+      "signature": "public Vector2i Min(Vector2i with)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the component-wise minimum of this and [param with], equivalent to [code]Vector2i(mini(x, with.x), mini(y, with.y))[/code].",
+      "godotName": "min",
+      "xmlDocId": "M:Godot.Vector2i.Min(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "MinAxisIndex",
+      "kind": "Method",
+      "signature": "public int MinAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the axis of the vector\u0027s lowest value. See [code]AXIS_*[/code] constants. If all components are equal, this method returns [constant AXIS_Y].",
+      "godotName": "min_axis_index",
+      "xmlDocId": "M:Godot.Vector2i.MinAxisIndex",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Mini",
+      "kind": "Method",
+      "signature": "public Vector2i Mini(int with)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the component-wise minimum of this and [param with], equivalent to [code]Vector2i(mini(x, with), mini(y, with))[/code].",
+      "godotName": "mini",
+      "xmlDocId": "M:Godot.Vector2i.Mini(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Sign",
+      "kind": "Method",
+      "signature": "public Vector2i Sign()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns a new vector with each component set to [code]1[/code] if it\u0027s positive, [code]-1[/code] if it\u0027s negative, and [code]0[/code] if it\u0027s zero. The result is identical to calling [method @GlobalScope.sign] on each component.",
+      "godotName": "sign",
+      "xmlDocId": "M:Godot.Vector2i.Sign",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Snapped",
+      "kind": "Method",
+      "signature": "public Vector2i Snapped(Vector2i step)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns a new vector with each component snapped to the closest multiple of the corresponding component in [param step].",
+      "godotName": "snapped",
+      "xmlDocId": "M:Godot.Vector2i.Snapped(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Snappedi",
+      "kind": "Method",
+      "signature": "public Vector2i Snappedi(int step)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a new vector with each component snapped to the closest multiple of [param step].",
+      "godotName": "snappedi",
+      "xmlDocId": "M:Godot.Vector2i.Snappedi(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public int X { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The vector\u0027s X component. Also accessible by using the index position [code][0][/code].",
+      "defaultValue": "0",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Vector2i.X",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public int Y { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The vector\u0027s Y component. Also accessible by using the index position [code][1][/code].",
+      "defaultValue": "0",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Vector2i.Y",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Axis",
+      "values": [
+        {
+          "name": "AXIS_X",
+          "value": "0",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the X axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector2i.xml"
+        },
+        {
+          "name": "AXIS_Y",
+          "value": "1",
+          "enum": "Axis",
+          "kind": "EnumValue",
+          "summary": "Enumerated value for the Y axis. Returned by [method max_axis_index] and [method min_axis_index].",
+          "sourcePath": "doc/classes/Vector2i.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "AXIS_X",
+      "value": "0",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the X axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "AXIS_Y",
+      "value": "1",
+      "enum": "Axis",
+      "kind": "EnumValue",
+      "summary": "Enumerated value for the Y axis. Returned by [method max_axis_index] and [method min_axis_index].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "ZERO",
+      "value": "Vector2i(0, 0)",
+      "kind": "Constant",
+      "summary": "Zero vector, a vector with all components set to [code]0[/code].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "ONE",
+      "value": "Vector2i(1, 1)",
+      "kind": "Constant",
+      "summary": "One vector, a vector with all components set to [code]1[/code].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "MIN",
+      "value": "Vector2i(-2147483648, -2147483648)",
+      "kind": "Constant",
+      "summary": "Min vector, a vector with all components equal to [code]INT32_MIN[/code]. Can be used as a negative integer equivalent of [constant Vector2.INF].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "MAX",
+      "value": "Vector2i(2147483647, 2147483647)",
+      "kind": "Constant",
+      "summary": "Max vector, a vector with all components equal to [code]INT32_MAX[/code]. Can be used as an integer equivalent of [constant Vector2.INF].",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "LEFT",
+      "value": "Vector2i(-1, 0)",
+      "kind": "Constant",
+      "summary": "Left unit vector. Represents the direction of left.",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "RIGHT",
+      "value": "Vector2i(1, 0)",
+      "kind": "Constant",
+      "summary": "Right unit vector. Represents the direction of right.",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "UP",
+      "value": "Vector2i(0, -1)",
+      "kind": "Constant",
+      "summary": "Up unit vector. Y is down in 2D, so this vector points -Y.",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "DOWN",
+      "value": "Vector2i(0, 1)",
+      "kind": "Constant",
+      "summary": "Down unit vector. Y is down in 2D, so this vector points \u002BY.",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the vectors are not equal.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Vector2i.operator !=(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator %",
+      "kind": "Operator",
+      "signature": "public Vector2i operator %(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Gets the remainder of each component of the [Vector2i] with the components of the given [Vector2i]. This operation uses truncated division, which is often not desired as it does not work well with negative numbers. Consider using [method @GlobalScope.posmod] instead if you want to handle negative numbers. [codeblock] print(Vector2i(10, -20) % Vector2i(7, 8)) # Prints (3, -4) [/codeblock]",
+      "godotName": "operator %",
+      "xmlDocId": "M:Godot.Vector2i.operator %(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator %",
+      "kind": "Operator",
+      "signature": "public Vector2i operator %(int right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the remainder of each component of the [Vector2i] with the given [int]. This operation uses truncated division, which is often not desired as it does not work well with negative numbers. Consider using [method @GlobalScope.posmod] instead if you want to handle negative numbers. [codeblock] print(Vector2i(10, -20) % 7) # Prints (3, -6) [/codeblock]",
+      "godotName": "operator %",
+      "xmlDocId": "M:Godot.Vector2i.operator %(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2i operator *(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2i] by the components of the given [Vector2i]. [codeblock] print(Vector2i(10, 20) * Vector2i(3, 4)) # Prints (30, 80) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector2i.operator *(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2 operator *(float right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2i] by the given [float]. Returns a [Vector2]. [codeblock] print(Vector2i(10, 15) * 0.9) # Prints (9.0, 13.5) [/codeblock]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector2i.operator *(float)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector2i operator *(int right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies each component of the [Vector2i] by the given [int].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Vector2i.operator *(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public Vector2i operator \u002B(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Adds each component of the [Vector2i] by the components of the given [Vector2i]. [codeblock] print(Vector2i(10, 20) \u002B Vector2i(3, 4)) # Prints (13, 24) [/codeblock]",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.Vector2i.operator \u002B(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public Vector2i operator -(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Subtracts each component of the [Vector2i] by the components of the given [Vector2i]. [codeblock] print(Vector2i(10, 20) - Vector2i(3, 4)) # Prints (7, 16) [/codeblock]",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.Vector2i.operator -(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector2i operator /(Vector2i right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Divides each component of the [Vector2i] by the components of the given [Vector2i]. [codeblock] print(Vector2i(10, 20) / Vector2i(2, 5)) # Prints (5, 4) [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector2i.operator /(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector2 operator /(float right)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides each component of the [Vector2i] by the given [float]. Returns a [Vector2]. [codeblock] print(Vector2i(1, 2) / 2.5) # Prints (0.4, 0.8) [/codeblock]",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector2i.operator /(float)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Vector2i operator /(int right)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides each component of the [Vector2i] by the given [int].",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Vector2i.operator /(int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Compares two [Vector2i] vectors by first checking if the X value of the left vector is less than the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors. This operator is useful for sorting vectors.",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.Vector2i.operator \u003C(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Compares two [Vector2i] vectors by first checking if the X value of the left vector is less than or equal to the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors. This operator is useful for sorting vectors.",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.Vector2i.operator \u003C=(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the vectors are equal.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Vector2i.operator ==(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Compares two [Vector2i] vectors by first checking if the X value of the left vector is greater than the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors. This operator is useful for sorting vectors.",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.Vector2i.operator \u003E(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(Vector2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Compares two [Vector2i] vectors by first checking if the X value of the left vector is greater than or equal to the X value of the [param right] vector. If the X values are exactly equal, then it repeats this check with the Y values of the two vectors. This operator is useful for sorting vectors.",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.Vector2i.operator \u003E=(Vector2i)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public int operator [](int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Access vector components using their [param index]. [code]v[0][/code] is equivalent to [code]v.x[/code], and [code]v[1][/code] is equivalent to [code]v.y[/code].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Vector2i.operator [](int)",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public Vector2i operator unary\u002B()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.Vector2i.operator unary\u002B",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public Vector2i operator unary-()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the negative value of the [Vector2i]. This is the same as writing [code]Vector2i(-v.x, -v.y)[/code]. This operation flips the direction of the vector while keeping the same magnitude.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.Vector2i.operator unary-",
+      "sourcePath": "doc/classes/Vector2i.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Vector2i.xml",
+      "sha256": "3da2c73501852bf6c49fe40104ec9872a037f3299a947a8a789ddc294a2db087"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

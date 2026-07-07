@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeColorOp",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeColorOp",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeColorOp",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecolorop.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Operator",
+      "kind": "Property",
+      "signature": "public int Operator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "An operator to be applied to the inputs.",
+      "defaultValue": "0",
+      "godotName": "operator",
+      "xmlDocId": "P:Godot.VisualShaderNodeColorOp.Operator",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operator",
+      "values": [
+        {
+          "name": "OP_BURN",
+          "value": "6",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a burn effect with the following formula: [codeblock] result = vec3(1.0) - (vec3(1.0) - a) / b; [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_DARKEN",
+          "value": "2",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a darken effect with the following formula: [codeblock] result = min(a, b); [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_DIFFERENCE",
+          "value": "1",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a difference effect with the following formula: [codeblock] result = abs(a - b); [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_DODGE",
+          "value": "5",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a dodge effect with the following formula: [codeblock] result = a / (vec3(1.0) - b); [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_HARD_LIGHT",
+          "value": "8",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a hard light effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = base * (2.0 * blend); } else { result[i] = 1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)); } } [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_LIGHTEN",
+          "value": "3",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a lighten effect with the following formula: [codeblock] result = max(a, b); [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_MAX",
+          "value": "9",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Operator] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_OVERLAY",
+          "value": "4",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce an overlay effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = 2.0 * base * blend; } else { result[i] = 1.0 - 2.0 * (1.0 - blend) * (1.0 - base); } } [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_SCREEN",
+          "value": "0",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a screen effect with the following formula: [codeblock] result = vec3(1.0) - (vec3(1.0) - a) * (vec3(1.0) - b); [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        },
+        {
+          "name": "OP_SOFT_LIGHT",
+          "value": "7",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Produce a soft light effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = base * (blend \u002B 0.5); } else { result[i] = 1.0 - (1.0 - base) * (1.0 - (blend - 0.5)); } } [/codeblock]",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_SCREEN",
+      "value": "0",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a screen effect with the following formula: [codeblock] result = vec3(1.0) - (vec3(1.0) - a) * (vec3(1.0) - b); [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_DIFFERENCE",
+      "value": "1",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a difference effect with the following formula: [codeblock] result = abs(a - b); [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_DARKEN",
+      "value": "2",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a darken effect with the following formula: [codeblock] result = min(a, b); [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_LIGHTEN",
+      "value": "3",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a lighten effect with the following formula: [codeblock] result = max(a, b); [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_OVERLAY",
+      "value": "4",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce an overlay effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = 2.0 * base * blend; } else { result[i] = 1.0 - 2.0 * (1.0 - blend) * (1.0 - base); } } [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_DODGE",
+      "value": "5",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a dodge effect with the following formula: [codeblock] result = a / (vec3(1.0) - b); [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_BURN",
+      "value": "6",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a burn effect with the following formula: [codeblock] result = vec3(1.0) - (vec3(1.0) - a) / b; [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_SOFT_LIGHT",
+      "value": "7",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a soft light effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = base * (blend \u002B 0.5); } else { result[i] = 1.0 - (1.0 - base) * (1.0 - (blend - 0.5)); } } [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_HARD_LIGHT",
+      "value": "8",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Produce a hard light effect with the following formula: [codeblock] for (int i = 0; i \u003C 3; i\u002B\u002B) { float base = a[i]; float blend = b[i]; if (base \u003C 0.5) { result[i] = base * (2.0 * blend); } else { result[i] = 1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)); } } [/codeblock]",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    },
+    {
+      "name": "OP_MAX",
+      "value": "9",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Operator] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeColorOp.xml",
+      "sha256": "b3994c050d6f472d1136504f45c935e7d391024d01099fdff9efa285d33fdcb8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

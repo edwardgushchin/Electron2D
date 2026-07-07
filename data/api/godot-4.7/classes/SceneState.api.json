@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneState",
+    "namespace": "Godot",
+    "fullName": "Godot.SceneState",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "SceneState",
+    "documentationPath": "doc/classes/SceneState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scenestate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBaseSceneState",
+      "kind": "Method",
+      "signature": "public SceneState GetBaseSceneState()",
+      "returnType": "SceneState",
+      "parameters": [],
+      "summary": "Returns the [SceneState] of the scene that this scene inherits from, or [code]null[/code] if it doesn\u0027t inherit from any scene.",
+      "godotName": "get_base_scene_state",
+      "xmlDocId": "M:Godot.SceneState.GetBaseSceneState",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionBinds",
+      "kind": "Method",
+      "signature": "public Array GetConnectionBinds(int idx)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the list of bound parameters for the signal at [param idx].",
+      "godotName": "get_connection_binds",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionBinds(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionCount",
+      "kind": "Method",
+      "signature": "public int GetConnectionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of signal connections in the scene. The [code]idx[/code] argument used to query connection metadata in other [code]get_connection_*[/code] methods in the interval [code][0, get_connection_count() - 1][/code].",
+      "godotName": "get_connection_count",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionCount",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionFlags",
+      "kind": "Method",
+      "signature": "public int GetConnectionFlags(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the connection flags for the signal at [param idx]. See [enum Object.ConnectFlags] constants.",
+      "godotName": "get_connection_flags",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionFlags(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionMethod",
+      "kind": "Method",
+      "signature": "public StringName GetConnectionMethod(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the method connected to the signal at [param idx].",
+      "godotName": "get_connection_method",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionMethod(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionSignal",
+      "kind": "Method",
+      "signature": "public StringName GetConnectionSignal(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the signal at [param idx].",
+      "godotName": "get_connection_signal",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionSignal(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionSource",
+      "kind": "Method",
+      "signature": "public NodePath GetConnectionSource(int idx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the node that owns the signal at [param idx], relative to the root node.",
+      "godotName": "get_connection_source",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionSource(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionTarget",
+      "kind": "Method",
+      "signature": "public NodePath GetConnectionTarget(int idx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the node that owns the method connected to the signal at [param idx], relative to the root node.",
+      "godotName": "get_connection_target",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionTarget(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetConnectionUnbinds",
+      "kind": "Method",
+      "signature": "public int GetConnectionUnbinds(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of unbound parameters for the signal at [param idx].",
+      "godotName": "get_connection_unbinds",
+      "xmlDocId": "M:Godot.SceneState.GetConnectionUnbinds(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeCount",
+      "kind": "Method",
+      "signature": "public int GetNodeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of nodes in the scene. The [code]idx[/code] argument used to query node data in other [code]get_node_*[/code] methods in the interval [code][0, get_node_count() - 1][/code].",
+      "godotName": "get_node_count",
+      "xmlDocId": "M:Godot.SceneState.GetNodeCount",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeGroups",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetNodeGroups(int idx)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the list of group names associated with the node at [param idx].",
+      "godotName": "get_node_groups",
+      "xmlDocId": "M:Godot.SceneState.GetNodeGroups(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeIndex",
+      "kind": "Method",
+      "signature": "public int GetNodeIndex(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the node\u0027s index, which is its position relative to its siblings. This is only relevant and saved in scenes for cases where new nodes are added to an instantiated or inherited scene among siblings from the base scene. Despite the name, this index is not related to the [param idx] argument used here and in other methods.",
+      "godotName": "get_node_index",
+      "xmlDocId": "M:Godot.SceneState.GetNodeIndex(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeInstance",
+      "kind": "Method",
+      "signature": "public PackedScene GetNodeInstance(int idx)",
+      "returnType": "PackedScene",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [PackedScene] for the node at [param idx] (i.e. the whole branch starting at this node, with its child nodes and resources), or [code]null[/code] if the node is not an instance.",
+      "godotName": "get_node_instance",
+      "xmlDocId": "M:Godot.SceneState.GetNodeInstance(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeInstancePlaceholder",
+      "kind": "Method",
+      "signature": "public String GetNodeInstancePlaceholder(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the represented scene file if the node at [param idx] is an [InstancePlaceholder].",
+      "godotName": "get_node_instance_placeholder",
+      "xmlDocId": "M:Godot.SceneState.GetNodeInstancePlaceholder(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeName",
+      "kind": "Method",
+      "signature": "public StringName GetNodeName(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the node at [param idx].",
+      "godotName": "get_node_name",
+      "xmlDocId": "M:Godot.SceneState.GetNodeName(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeOwnerPath",
+      "kind": "Method",
+      "signature": "public NodePath GetNodeOwnerPath(int idx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the owner of the node at [param idx], relative to the root node.",
+      "godotName": "get_node_owner_path",
+      "xmlDocId": "M:Godot.SceneState.GetNodeOwnerPath(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodePath",
+      "kind": "Method",
+      "signature": "public NodePath GetNodePath(int idx, bool forParent)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "for_parent",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the path to the node at [param idx]. If [param for_parent] is [code]true[/code], returns the path of the [param idx] node\u0027s parent instead.",
+      "godotName": "get_node_path",
+      "xmlDocId": "M:Godot.SceneState.GetNodePath(int,bool)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodePropertyCount",
+      "kind": "Method",
+      "signature": "public int GetNodePropertyCount(int idx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of exported or overridden properties for the node at [param idx]. The [code]prop_idx[/code] argument used to query node property data in other [code]get_node_property_*[/code] methods in the interval [code][0, get_node_property_count() - 1][/code].",
+      "godotName": "get_node_property_count",
+      "xmlDocId": "M:Godot.SceneState.GetNodePropertyCount(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodePropertyName",
+      "kind": "Method",
+      "signature": "public StringName GetNodePropertyName(int idx, int propIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "prop_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the property at [param prop_idx] for the node at [param idx].",
+      "godotName": "get_node_property_name",
+      "xmlDocId": "M:Godot.SceneState.GetNodePropertyName(int,int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodePropertyValue",
+      "kind": "Method",
+      "signature": "public Variant GetNodePropertyValue(int idx, int propIdx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "prop_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the property at [param prop_idx] for the node at [param idx].",
+      "godotName": "get_node_property_value",
+      "xmlDocId": "M:Godot.SceneState.GetNodePropertyValue(int,int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetNodeType",
+      "kind": "Method",
+      "signature": "public StringName GetNodeType(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type of the node at [param idx].",
+      "godotName": "get_node_type",
+      "xmlDocId": "M:Godot.SceneState.GetNodeType(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GetPath",
+      "kind": "Method",
+      "signature": "public String GetPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the resource path to the represented [PackedScene].",
+      "godotName": "get_path",
+      "xmlDocId": "M:Godot.SceneState.GetPath",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "IsNodeInstancePlaceholder",
+      "kind": "Method",
+      "signature": "public bool IsNodeInstancePlaceholder(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the node at [param idx] is an [InstancePlaceholder].",
+      "godotName": "is_node_instance_placeholder",
+      "xmlDocId": "M:Godot.SceneState.IsNodeInstancePlaceholder(int)",
+      "sourcePath": "doc/classes/SceneState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "GenEditState",
+      "values": [
+        {
+          "name": "GEN_EDIT_STATE_DISABLED",
+          "value": "0",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method PackedScene.instantiate], blocks edits to the scene state.",
+          "sourcePath": "doc/classes/SceneState.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_INSTANCE",
+          "value": "1",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method PackedScene.instantiate], provides inherited scene resources to the local scene. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/SceneState.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_MAIN",
+          "value": "2",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method PackedScene.instantiate], provides local scene resources to the local scene. Only the main scene should receive the main edit state. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/SceneState.xml"
+        },
+        {
+          "name": "GEN_EDIT_STATE_MAIN_INHERITED",
+          "value": "3",
+          "enum": "GenEditState",
+          "kind": "EnumValue",
+          "summary": "If passed to [method PackedScene.instantiate], it\u0027s similar to [constant GEN_EDIT_STATE_MAIN], but for the case where the scene is being instantiated to be the base of another one. [b]Note:[/b] Only available in editor builds.",
+          "sourcePath": "doc/classes/SceneState.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GEN_EDIT_STATE_DISABLED",
+      "value": "0",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method PackedScene.instantiate], blocks edits to the scene state.",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_INSTANCE",
+      "value": "1",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method PackedScene.instantiate], provides inherited scene resources to the local scene. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_MAIN",
+      "value": "2",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method PackedScene.instantiate], provides local scene resources to the local scene. Only the main scene should receive the main edit state. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/SceneState.xml"
+    },
+    {
+      "name": "GEN_EDIT_STATE_MAIN_INHERITED",
+      "value": "3",
+      "enum": "GenEditState",
+      "kind": "EnumValue",
+      "summary": "If passed to [method PackedScene.instantiate], it\u0027s similar to [constant GEN_EDIT_STATE_MAIN], but for the case where the scene is being instantiated to be the base of another one. [b]Note:[/b] Only available in editor builds.",
+      "sourcePath": "doc/classes/SceneState.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SceneState.xml",
+      "sha256": "d2d1987f13cc42dff822f627fedb8aea671bb054ca3c54002e03a0b1be267b80"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

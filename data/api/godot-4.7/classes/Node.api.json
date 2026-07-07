@@ -1,0 +1,2865 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Node",
+    "namespace": "Godot",
+    "fullName": "Godot.Node",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "Node",
+    "documentationPath": "doc/classes/Node.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_node.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_EnterTree",
+      "kind": "Method",
+      "signature": "public void _EnterTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node enters the [SceneTree] (e.g. upon instantiating, scene changing, or after calling [method add_child] in a script). If the node has children, its [method _enter_tree] callback will be called first, and then that of the children. Corresponds to the [constant NOTIFICATION_ENTER_TREE] notification in [method Object._notification].",
+      "godotName": "_enter_tree",
+      "xmlDocId": "M:Godot.Node._EnterTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_ExitTree",
+      "kind": "Method",
+      "signature": "public void _ExitTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node is about to leave the [SceneTree] (e.g. upon freeing, scene changing, or after calling [method remove_child] in a script). If the node has children, its [method _exit_tree] callback will be called last, after all its children have left the tree. Corresponds to the [constant NOTIFICATION_EXIT_TREE] notification in [method Object._notification] and signal [signal tree_exiting]. To get notified when the node has already left the active tree, connect to the [signal tree_exited].",
+      "godotName": "_exit_tree",
+      "xmlDocId": "M:Godot.Node._ExitTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetAccessibilityConfigurationWarnings",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetAccessibilityConfigurationWarnings()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The elements in the array returned from this method are displayed as warnings in the Scene dock if the script that overrides it is a [code]tool[/code] script, and accessibility warnings are enabled in the editor settings. Returning an empty array produces no warnings.",
+      "godotName": "_get_accessibility_configuration_warnings",
+      "xmlDocId": "M:Godot.Node._GetAccessibilityConfigurationWarnings",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetConfigurationWarnings",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetConfigurationWarnings()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The elements in the array returned from this method are displayed as warnings in the Scene dock if the script that overrides it is a [code]tool[/code] script. Returning an empty array produces no warnings. Call [method update_configuration_warnings] when the warnings need to be updated for this node. [codeblock] @export var energy = 0: set(value): energy = value update_configuration_warnings() func _get_configuration_warnings(): if energy \u003C 0: return [\u0022Energy must be 0 or greater.\u0022] else: return [] [/codeblock]",
+      "godotName": "_get_configuration_warnings",
+      "xmlDocId": "M:Godot.Node._GetConfigurationWarnings",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetFocusedAccessibilityElement",
+      "kind": "Method",
+      "signature": "public RID _GetFocusedAccessibilityElement()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Called during accessibility information updates to determine the currently focused sub-element, should return a sub-element RID or the value returned by [method get_accessibility_element].",
+      "godotName": "_get_focused_accessibility_element",
+      "xmlDocId": "M:Godot.Node._GetFocusedAccessibilityElement",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Input",
+      "kind": "Method",
+      "signature": "public void _Input(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when there is an input event. The input event propagates up through the node tree until a node consumes it. It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. For gameplay input, [method _unhandled_input] and [method _unhandled_key_input] are usually a better fit as they allow the GUI to intercept the events first. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_input",
+      "xmlDocId": "M:Godot.Node._Input(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_PhysicsProcess",
+      "kind": "Method",
+      "signature": "public void _PhysicsProcess(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called once on each physics tick, and allows Nodes to synchronize their logic with physics ticks. [param delta] is the logical time between physics ticks in seconds and is equal to [member Engine.time_scale] / [member Engine.physics_ticks_per_second]. It is only called if physics processing is enabled for this Node, which is done automatically if this method is overridden, and can be toggled with [method set_physics_process]. Processing happens in order of [member process_physics_priority], lower priority values are called first. Nodes with the same priority are processed in tree order, or top to bottom as seen in the editor (also known as pre-order traversal). Corresponds to the [constant NOTIFICATION_PHYSICS_PROCESS] notification in [method Object._notification]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan). [b]Note:[/b] Accumulated [param delta] may diverge from real world seconds.",
+      "godotName": "_physics_process",
+      "xmlDocId": "M:Godot.Node._PhysicsProcess(float)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called on each idle frame, prior to rendering, and after physics ticks have been processed. [param delta] is the time between frames in seconds. It is only called if processing is enabled for this Node, which is done automatically if this method is overridden, and can be toggled with [method set_process]. Processing happens in order of [member process_priority], lower priority values are called first. Nodes with the same priority are processed in tree order, or top to bottom as seen in the editor (also known as pre-order traversal). Corresponds to the [constant NOTIFICATION_PROCESS] notification in [method Object._notification]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan). [b]Note:[/b] When the engine is struggling and the frame rate is lowered, [param delta] will increase. When [param delta] is increased, it\u0027s capped at a maximum of [member Engine.time_scale] * [member Engine.max_physics_steps_per_frame] / [member Engine.physics_ticks_per_second]. As a result, accumulated [param delta] may not represent real world time. [b]Note:[/b] When [code]--fixed-fps[/code] is enabled or the engine is running in Movie Maker mode (see [MovieWriter]), process [param delta] will always be the same for every frame, regardless of how much time the frame took to render. [b]Note:[/b] Frame delta may be post-processed by [member OS.delta_smoothing] if this is enabled for the project.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.Node._Process(float)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Ready",
+      "kind": "Method",
+      "signature": "public void _Ready()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node is \u0022ready\u0022, i.e. when both the node and its children have entered the scene tree. If the node has children, their [method _ready] callbacks get triggered first, and the parent node will receive the ready notification afterwards. Corresponds to the [constant NOTIFICATION_READY] notification in [method Object._notification]. See also the [code]@onready[/code] annotation for variables. Usually used for initialization. For even earlier initialization, [method Object._init] may be used. See also [method _enter_tree]. [b]Note:[/b] This method may be called only once for each node. After removing a node from the scene tree and adding it again, [method _ready] will [b]not[/b] be called a second time. This can be bypassed by requesting another call with [method request_ready], which may be called anywhere before adding the node again.",
+      "godotName": "_ready",
+      "xmlDocId": "M:Godot.Node._Ready",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_ShortcutInput",
+      "kind": "Method",
+      "signature": "public void _ShortcutInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEventKey], [InputEventShortcut], or [InputEventJoypadButton] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called before [method _unhandled_key_input] and [method _unhandled_input]. The input event propagates up through the node tree until a node consumes it. It is only called if shortcut processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_shortcut_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. This method can be used to handle shortcuts. For generic GUI events, use [method _input] instead. Gameplay events should usually be handled with either [method _unhandled_input] or [method _unhandled_key_input]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not orphan).",
+      "godotName": "_shortcut_input",
+      "xmlDocId": "M:Godot.Node._ShortcutInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_UnhandledInput",
+      "kind": "Method",
+      "signature": "public void _UnhandledInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEvent] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called after [method _shortcut_input] and after [method _unhandled_key_input]. The input event propagates up through the node tree until a node consumes it. It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. For gameplay input, this method is usually a better fit than [method _input], as GUI events need a higher priority. For keyboard shortcuts, consider using [method _shortcut_input] instead, as it is called before this method. Finally, to handle keyboard events, consider using [method _unhandled_key_input] for performance reasons. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_unhandled_input",
+      "xmlDocId": "M:Godot.Node._UnhandledInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_UnhandledKeyInput",
+      "kind": "Method",
+      "signature": "public void _UnhandledKeyInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEventKey] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called after [method _shortcut_input] but before [method _unhandled_input]. The input event propagates up through the node tree until a node consumes it. It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_key_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. This method can be used to handle Unicode character input with [kbd]Alt[/kbd], [kbd]Alt \u002B Ctrl[/kbd], and [kbd]Alt \u002B Shift[/kbd] modifiers, after shortcuts were handled. For gameplay input, this and [method _unhandled_input] are usually a better fit than [method _input], as GUI events should be handled first. This method also performs better than [method _unhandled_input], since unrelated events such as [InputEventMouseMotion] are automatically filtered. For shortcuts, consider using [method _shortcut_input] instead. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_unhandled_key_input",
+      "xmlDocId": "M:Godot.Node._UnhandledKeyInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AddChild",
+      "kind": "Method",
+      "signature": "public void AddChild(Node node, bool forceReadableName, int @internal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "force_readable_name",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "internal",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a child [param node]. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node. If [param force_readable_name] is [code]true[/code], improves the readability of the added [param node]. If not named, the [param node] is renamed to its type, and if it shares [member name] with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to [code]false[/code], which assigns a dummy name featuring [code]@[/code] in both situations. If [param internal] is different than [constant INTERNAL_MODE_DISABLED], the child will be added as internal node. These nodes are ignored by methods like [method get_children], unless their parameter [code]include_internal[/code] is [code]true[/code]. It also prevents these nodes being duplicated with their parent. The intended usage is to hide the internal nodes from the user, so the user won\u0027t accidentally delete or modify them. Used by some GUI nodes, e.g. [ColorPicker]. [b]Note:[/b] If [param node] already has a parent, this method will fail. Use [method remove_child] first to remove [param node] from its current parent. For example: [codeblocks] [gdscript] var child_node = get_child(0) if child_node.get_parent(): child_node.get_parent().remove_child(child_node) add_child(child_node) [/gdscript] [csharp] Node childNode = GetChild(0); if (childNode.GetParent() != null) { childNode.GetParent().RemoveChild(childNode); } AddChild(childNode); [/csharp] [/codeblocks] If you need the child node to be added below a specific node in the list of children, use [method add_sibling] instead of this method. [b]Note:[/b] If you want a child to be persisted to a [PackedScene], you must set [member owner] in addition to calling [method add_child]. This is typically relevant for [url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html]tool scripts[/url] and [url=$DOCS_URL/tutorials/plugins/editor/index.html]editor plugins[/url]. If [method add_child] is called without setting [member owner], the newly added [Node] will not be visible in the scene tree, though it will be visible in the 2D/3D view.",
+      "godotName": "add_child",
+      "xmlDocId": "M:Godot.Node.AddChild(Node,bool,int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AddSibling",
+      "kind": "Method",
+      "signature": "public void AddSibling(Node sibling, bool forceReadableName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "sibling",
+          "type": "Node"
+        },
+        {
+          "name": "force_readable_name",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a [param sibling] node to this node\u0027s parent, and moves the added sibling right below this node. If [param force_readable_name] is [code]true[/code], improves the readability of the added [param sibling]. If not named, the [param sibling] is renamed to its type, and if it shares [member name] with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to [code]false[/code], which assigns a dummy name featuring [code]@[/code] in both situations. Use [method add_child] instead of this method if you don\u0027t need the child node to be added below a specific node in the list of children. [b]Note:[/b] If this node is internal, the added sibling will be internal too (see [method add_child]\u0027s [code]internal[/code] parameter).",
+      "godotName": "add_sibling",
+      "xmlDocId": "M:Godot.Node.AddSibling(Node,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AddToGroup",
+      "kind": "Method",
+      "signature": "public void AddToGroup(StringName group, bool persistent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        },
+        {
+          "name": "persistent",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds the node to the [param group]. Groups can be helpful to organize a subset of nodes, for example [code]\u0022enemies\u0022[/code] or [code]\u0022collectables\u0022[/code]. See notes in the description, and the group methods in [SceneTree]. If [param persistent] is [code]true[/code], the group will be stored when saved inside a [PackedScene]. All groups created and displayed in the Groups dock are persistent. [b]Note:[/b] To improve performance, the order of group names is [i]not[/i] guaranteed and may vary between project runs. Therefore, do not rely on the group order. [b]Note:[/b] [SceneTree]\u0027s group methods will [i]not[/i] work on this node if not inside the tree (see [method is_inside_tree]).",
+      "godotName": "add_to_group",
+      "xmlDocId": "M:Godot.Node.AddToGroup(StringName,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Atr",
+      "kind": "Method",
+      "signature": "public String Atr(String message, StringName context)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Translates a [param message], using the translation catalogs configured in the Project Settings. Further [param context] can be specified to help with the translation. Note that most [Control] nodes automatically translate their strings, so this method is mostly useful for formatted strings or custom drawn text. This method works the same as [method Object.tr], with the addition of respecting the [member auto_translate_mode] state. If [method Object.can_translate_messages] is [code]false[/code], or no translation is available, this method returns the [param message] without changes. See [method Object.set_message_translation]. For detailed examples, see [url=$DOCS_URL/tutorials/i18n/internationalizing_games.html]Internationalizing games[/url].",
+      "godotName": "atr",
+      "xmlDocId": "M:Godot.Node.Atr(String,StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AtrN",
+      "kind": "Method",
+      "signature": "public String AtrN(String message, StringName pluralMessage, int n, StringName context)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Translates a [param message] or [param plural_message], using the translation catalogs configured in the Project Settings. Further [param context] can be specified to help with the translation. This method works the same as [method Object.tr_n], with the addition of respecting the [member auto_translate_mode] state. If [method Object.can_translate_messages] is [code]false[/code], or no translation is available, this method returns [param message] or [param plural_message], without changes. See [method Object.set_message_translation]. The [param n] is the number, or amount, of the message\u0027s subject. It is used by the translation system to fetch the correct plural form for the current language. For detailed examples, see [url=$DOCS_URL/tutorials/i18n/localization_using_gettext.html]Localization using gettext[/url]. [b]Note:[/b] Negative and [float] numbers may not properly apply to some countable subjects. It\u0027s recommended to handle these cases with [method atr].",
+      "godotName": "atr_n",
+      "xmlDocId": "M:Godot.Node.AtrN(String,StringName,int,StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "CallDeferredThreadGroup",
+      "kind": "Method",
+      "signature": "public Variant CallDeferredThreadGroup(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "This function is similar to [method Object.call_deferred] except that the call will take place when the node thread group is processed. If the node thread group processes in sub-threads, then the call will be done on that thread, right before [constant NOTIFICATION_PROCESS] or [constant NOTIFICATION_PHYSICS_PROCESS], the [method _process] or [method _physics_process] or their internal versions are called.",
+      "godotName": "call_deferred_thread_group",
+      "xmlDocId": "M:Godot.Node.CallDeferredThreadGroup(StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "CallThreadSafe",
+      "kind": "Method",
+      "signature": "public Variant CallThreadSafe(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "This function ensures that the calling of this function will succeed, no matter whether it\u0027s being done from a thread or not. If called from a thread that is not allowed to call the function, the call will become deferred. Otherwise, the call will go through directly.",
+      "godotName": "call_thread_safe",
+      "xmlDocId": "M:Godot.Node.CallThreadSafe(StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "CanAutoTranslate",
+      "kind": "Method",
+      "signature": "public bool CanAutoTranslate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this node can automatically translate messages depending on the current locale. See [member auto_translate_mode], [method atr], and [method atr_n].",
+      "godotName": "can_auto_translate",
+      "xmlDocId": "M:Godot.Node.CanAutoTranslate",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "CanProcess",
+      "kind": "Method",
+      "signature": "public bool CanProcess()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node can receive processing notifications and input callbacks ([constant NOTIFICATION_PROCESS], [method _input], etc.) from the [SceneTree] and [Viewport]. The returned value depends on [member process_mode]: - If set to [constant PROCESS_MODE_PAUSABLE], returns [code]true[/code] when the game is processing, i.e. [member SceneTree.paused] is [code]false[/code]; - If set to [constant PROCESS_MODE_WHEN_PAUSED], returns [code]true[/code] when the game is paused, i.e. [member SceneTree.paused] is [code]true[/code]; - If set to [constant PROCESS_MODE_ALWAYS], always returns [code]true[/code]; - If set to [constant PROCESS_MODE_DISABLED], always returns [code]false[/code]; - If set to [constant PROCESS_MODE_INHERIT], use the parent node\u0027s [member process_mode] to determine the result. If the node is not inside the tree, returns [code]false[/code] no matter the value of [member process_mode].",
+      "godotName": "can_process",
+      "xmlDocId": "M:Godot.Node.CanProcess",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "CreateTween",
+      "kind": "Method",
+      "signature": "public Tween CreateTween()",
+      "returnType": "Tween",
+      "parameters": [],
+      "summary": "Creates a new [Tween] and binds it to this node. This is the equivalent of doing: [codeblocks] [gdscript] get_tree().create_tween().bind_node(self) [/gdscript] [csharp] GetTree().CreateTween().BindNode(this); [/csharp] [/codeblocks] The Tween will start automatically on the next process frame or physics frame (depending on [enum Tween.TweenProcessMode]). See [method Tween.bind_node] for more info on Tweens bound to nodes. [b]Note:[/b] The method can still be used when the node is not inside [SceneTree]. It can fail in an unlikely case of using a custom [MainLoop].",
+      "godotName": "create_tween",
+      "xmlDocId": "M:Godot.Node.CreateTween",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public Node Duplicate(int flags)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "15"
+        }
+      ],
+      "summary": "Duplicates the node, returning a new node with all of its properties, signals, groups, and children copied from the original, recursively. The behavior can be tweaked through the [param flags] (see [enum DuplicateFlags]). Internal nodes are not duplicated. [b]Note:[/b] For nodes with a [Script] attached, if [method Object._init] has been defined with required parameters, the duplicated node will not have a [Script]. [b]Note:[/b] By default, this method will duplicate only properties marked for serialization (i.e. using [constant @GlobalScope.PROPERTY_USAGE_STORAGE], or in GDScript, [annotation @GDScript.@export]). If you want to duplicate all properties, use [constant DUPLICATE_INTERNAL_STATE].",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.Node.Duplicate(int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FindChild",
+      "kind": "Method",
+      "signature": "public Node FindChild(String pattern, bool recursive, bool owned)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "String"
+        },
+        {
+          "name": "recursive",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "owned",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the first descendant of this node whose [member name] matches [param pattern], returning [code]null[/code] if no match is found. The matching is done against node names, [i]not[/i] their paths, through [method String.match]. As such, it is case-sensitive, [code]\u0022*\u0022[/code] matches zero or more characters, and [code]\u0022?\u0022[/code] matches any single character. If [param recursive] is [code]false[/code], only this node\u0027s direct children are checked. Nodes are checked in tree order, so this node\u0027s first direct child is checked first, then its own direct children, etc., before moving to the second direct child, and so on. Internal children are also included in the search (see [code]internal[/code] parameter in [method add_child]). If [param owned] is [code]true[/code], only descendants with a valid [member owner] node are checked. [b]Note:[/b] This method can be very slow. Consider storing a reference to the found node in a variable. Alternatively, use [method get_node] with unique names (see [member unique_name_in_owner]). [b]Note:[/b] To find all descendant nodes matching a pattern or a class type, see [method find_children].",
+      "godotName": "find_child",
+      "xmlDocId": "M:Godot.Node.FindChild(String,bool,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FindChildren",
+      "kind": "Method",
+      "signature": "public Node[] FindChildren(String pattern, String type, bool recursive, bool owned)",
+      "returnType": "Node[]",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "recursive",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "owned",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds all descendants of this node whose names match [param pattern], returning an empty [Array] if no match is found. The matching is done against node names, [i]not[/i] their paths, through [method String.match]. As such, it is case-sensitive, [code]\u0022*\u0022[/code] matches zero or more characters, and [code]\u0022?\u0022[/code] matches any single character. If [param type] is not empty, only descendants inheriting from [param type] are included (see [method Object.is_class]). If [param recursive] is [code]false[/code], only this node\u0027s direct children are checked. Nodes are checked in tree order, so this node\u0027s first direct child is checked first, then its own direct children, etc., before moving to the second direct child, and so on. Internal children are also included in the search (see [code]internal[/code] parameter in [method add_child]). If [param owned] is [code]true[/code], only descendants with a valid [member owner] node are checked. [b]Note:[/b] This method can be very slow. Consider storing references to the found nodes in a variable. [b]Note:[/b] To find a single descendant node matching a pattern, see [method find_child].",
+      "godotName": "find_children",
+      "xmlDocId": "M:Godot.Node.FindChildren(String,String,bool,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FindParent",
+      "kind": "Method",
+      "signature": "public Node FindParent(String pattern)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "String"
+        }
+      ],
+      "summary": "Finds the first ancestor of this node whose [member name] matches [param pattern], returning [code]null[/code] if no match is found. The matching is done through [method String.match]. As such, it is case-sensitive, [code]\u0022*\u0022[/code] matches zero or more characters, and [code]\u0022?\u0022[/code] matches any single character. See also [method find_child] and [method find_children]. [b]Note:[/b] As this method walks upwards in the scene tree, it can be slow in large, deeply nested nodes. Consider storing a reference to the found node in a variable. Alternatively, use [method get_node] with unique names (see [member unique_name_in_owner]).",
+      "godotName": "find_parent",
+      "xmlDocId": "M:Godot.Node.FindParent(String)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetAccessibilityElement",
+      "kind": "Method",
+      "signature": "public RID GetAccessibilityElement()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns main accessibility element RID. [b]Note:[/b] This method should be called only during accessibility information updates ([constant NOTIFICATION_ACCESSIBILITY_UPDATE]).",
+      "godotName": "get_accessibility_element",
+      "xmlDocId": "M:Godot.Node.GetAccessibilityElement",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetChild",
+      "kind": "Method",
+      "signature": "public Node GetChild(int idx, bool includeInternal)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "include_internal",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Fetches a child node by its index. Each child node has an index relative to its siblings (see [method get_index]). The first child is at index 0. Negative values can also be used to start from the end of the list. This method can be used in combination with [method get_child_count] to iterate over this node\u0027s children. If no child exists at the given index, this method returns [code]null[/code] and an error is generated. If [param include_internal] is [code]false[/code], internal children are ignored (see [method add_child]\u0027s [code]internal[/code] parameter). [codeblock] # Assuming the following are children of this node, in order: # First, Middle, Last. var a = get_child(0).name # a is \u0022First\u0022 var b = get_child(1).name # b is \u0022Middle\u0022 var b = get_child(2).name # b is \u0022Last\u0022 var c = get_child(-1).name # c is \u0022Last\u0022 [/codeblock] [b]Note:[/b] To fetch a node by [NodePath], use [method get_node].",
+      "godotName": "get_child",
+      "xmlDocId": "M:Godot.Node.GetChild(int,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetChildCount",
+      "kind": "Method",
+      "signature": "public int GetChildCount(bool includeInternal)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "include_internal",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the number of children of this node. If [param include_internal] is [code]false[/code], internal children are not counted (see [method add_child]\u0027s [code]internal[/code] parameter).",
+      "godotName": "get_child_count",
+      "xmlDocId": "M:Godot.Node.GetChildCount(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetChildren",
+      "kind": "Method",
+      "signature": "public Node[] GetChildren(bool includeInternal)",
+      "returnType": "Node[]",
+      "parameters": [
+        {
+          "name": "include_internal",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns all children of this node inside an [Array]. If [param include_internal] is [code]false[/code], excludes internal children from the returned array (see [method add_child]\u0027s [code]internal[/code] parameter).",
+      "godotName": "get_children",
+      "xmlDocId": "M:Godot.Node.GetChildren(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetGroups",
+      "kind": "Method",
+      "signature": "public StringName[] GetGroups()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of group names that the node has been added to. [b]Note:[/b] To improve performance, the order of group names is [i]not[/i] guaranteed and may vary between project runs. Therefore, do not rely on the group order. [b]Note:[/b] This method may also return some group names starting with an underscore ([code]_[/code]). These are internally used by the engine. To avoid conflicts, do not use custom groups starting with underscores. To exclude internal groups, see the following code snippet: [codeblocks] [gdscript] # Stores the node\u0027s non-internal groups only (as an array of StringNames). var non_internal_groups = [] for group in get_groups(): if not str(group).begins_with(\u0022_\u0022): non_internal_groups.push_back(group) [/gdscript] [csharp] // Stores the node\u0027s non-internal groups only (as a List of StringNames). List\u003Cstring\u003E nonInternalGroups = new List\u003Cstring\u003E(); foreach (string group in GetGroups()) { if (!group.BeginsWith(\u0022_\u0022)) nonInternalGroups.Add(group); } [/csharp] [/codeblocks]",
+      "godotName": "get_groups",
+      "xmlDocId": "M:Godot.Node.GetGroups",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetIndex",
+      "kind": "Method",
+      "signature": "public int GetIndex(bool includeInternal)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "include_internal",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns this node\u0027s order among its siblings. The first node\u0027s index is [code]0[/code]. See also [method get_child]. If [param include_internal] is [code]false[/code], returns the index ignoring internal children. The first, non-internal child will have an index of [code]0[/code] (see [method add_child]\u0027s [code]internal[/code] parameter).",
+      "godotName": "get_index",
+      "xmlDocId": "M:Godot.Node.GetIndex(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetLastExclusiveWindow",
+      "kind": "Method",
+      "signature": "public Window GetLastExclusiveWindow()",
+      "returnType": "Window",
+      "parameters": [],
+      "summary": "Returns the [Window] that contains this node, or the last exclusive child in a chain of windows starting with the one that contains this node.",
+      "godotName": "get_last_exclusive_window",
+      "xmlDocId": "M:Godot.Node.GetLastExclusiveWindow",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetMultiplayerAuthority",
+      "kind": "Method",
+      "signature": "public int GetMultiplayerAuthority()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the peer ID of the multiplayer authority for this node. See [method set_multiplayer_authority].",
+      "godotName": "get_multiplayer_authority",
+      "xmlDocId": "M:Godot.Node.GetMultiplayerAuthority",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetNode",
+      "kind": "Method",
+      "signature": "public Node GetNode(NodePath path)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Fetches a node. The [NodePath] can either be a relative path (from this node), or an absolute path (from the [member SceneTree.root]) to a node. If [param path] does not point to a valid node, generates an error and returns [code]null[/code]. Attempts to access methods on the return value will result in an [i]\u0022Attempt to call \u003Cmethod\u003E on a null instance.\u0022[/i] error. [b]Note:[/b] Fetching by absolute path only works when the node is inside the scene tree (see [method is_inside_tree]). [b]Example:[/b] Assume this method is called from the Character node, inside the following tree: [codeblock lang=text] \u2516\u2574root \u2520\u2574Character (you are here!) \u2503 \u2520\u2574Sword \u2503 \u2516\u2574Backpack \u2503 \u2516\u2574Dagger \u2520\u2574MyGame \u2516\u2574Swamp \u2520\u2574Alligator \u2520\u2574Mosquito \u2516\u2574Goblin [/codeblock] The following calls will return a valid node: [codeblocks] [gdscript] get_node(\u0022Sword\u0022) get_node(\u0022Backpack/Dagger\u0022) get_node(\u0022../Swamp/Alligator\u0022) get_node(\u0022/root/MyGame\u0022) [/gdscript] [csharp] GetNode(\u0022Sword\u0022); GetNode(\u0022Backpack/Dagger\u0022); GetNode(\u0022../Swamp/Alligator\u0022); GetNode(\u0022/root/MyGame\u0022); [/csharp] [/codeblocks]",
+      "godotName": "get_node",
+      "xmlDocId": "M:Godot.Node.GetNode(NodePath)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetNodeAndResource",
+      "kind": "Method",
+      "signature": "public Array GetNodeAndResource(NodePath path)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Fetches a node and its most nested resource as specified by the [NodePath]\u0027s subname. Returns an [Array] of size [code]3[/code] where: - Element [code]0[/code] is the [Node], or [code]null[/code] if not found; - Element [code]1[/code] is the subname\u0027s last nested [Resource], or [code]null[/code] if not found; - Element [code]2[/code] is the remaining [NodePath], referring to an existing, non-[Resource] property (see [method Object.get_indexed]). [b]Example:[/b] Assume that the child\u0027s [member Sprite2D.texture] has been assigned an [AtlasTexture]: [codeblocks] [gdscript] var a = get_node_and_resource(\u0022Area2D/Sprite2D\u0022) print(a[0].name) # Prints Sprite2D print(a[1]) # Prints \u003Cnull\u003E print(a[2]) # Prints ^\u0022\u0022 var b = get_node_and_resource(\u0022Area2D/Sprite2D:texture:atlas\u0022) print(b[0].name) # Prints Sprite2D print(b[1].get_class()) # Prints AtlasTexture print(b[2]) # Prints ^\u0022\u0022 var c = get_node_and_resource(\u0022Area2D/Sprite2D:texture:atlas:region\u0022) print(c[0].name) # Prints Sprite2D print(c[1].get_class()) # Prints AtlasTexture print(c[2]) # Prints ^\u0022:region\u0022 [/gdscript] [csharp] var a = GetNodeAndResource(NodePath(\u0022Area2D/Sprite2D\u0022)); GD.Print(a[0].Name); // Prints Sprite2D GD.Print(a[1]); // Prints \u003Cnull\u003E GD.Print(a[2]); // Prints ^\u0022 var b = GetNodeAndResource(NodePath(\u0022Area2D/Sprite2D:texture:atlas\u0022)); GD.Print(b[0].name); // Prints Sprite2D GD.Print(b[1].get_class()); // Prints AtlasTexture GD.Print(b[2]); // Prints ^\u0022\u0022 var c = GetNodeAndResource(NodePath(\u0022Area2D/Sprite2D:texture:atlas:region\u0022)); GD.Print(c[0].name); // Prints Sprite2D GD.Print(c[1].get_class()); // Prints AtlasTexture GD.Print(c[2]); // Prints ^\u0022:region\u0022 [/csharp] [/codeblocks]",
+      "godotName": "get_node_and_resource",
+      "xmlDocId": "M:Godot.Node.GetNodeAndResource(NodePath)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetNodeOrNull",
+      "kind": "Method",
+      "signature": "public Node GetNodeOrNull(NodePath path)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Fetches a node by [NodePath]. Similar to [method get_node], but does not generate an error if [param path] does not point to a valid node.",
+      "godotName": "get_node_or_null",
+      "xmlDocId": "M:Godot.Node.GetNodeOrNull(NodePath)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetNodeRpcConfig",
+      "kind": "Method",
+      "signature": "public Variant GetNodeRpcConfig()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] mapping method names to their RPC configuration defined for this node using [method rpc_config]. [b]Note:[/b] This method only returns the RPC configuration assigned via [method rpc_config]. See [method Script.get_rpc_config] to retrieve the RPCs defined by the [Script].",
+      "godotName": "get_node_rpc_config",
+      "xmlDocId": "M:Godot.Node.GetNodeRpcConfig",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetOrphanNodeIds",
+      "kind": "Method",
+      "signature": "public int[] GetOrphanNodeIds()",
+      "returnType": "int[]",
+      "parameters": [],
+      "summary": "Returns object IDs of all orphan nodes (nodes outside the [SceneTree]). Used for debugging. [b]Note:[/b] [method get_orphan_node_ids] only works in debug builds. When called in a project exported in release mode, [method get_orphan_node_ids] will return an empty array.",
+      "godotName": "get_orphan_node_ids",
+      "xmlDocId": "M:Godot.Node.GetOrphanNodeIds",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetParent",
+      "kind": "Method",
+      "signature": "public Node GetParent()",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "Returns this node\u0027s parent node, or [code]null[/code] if the node doesn\u0027t have a parent.",
+      "godotName": "get_parent",
+      "xmlDocId": "M:Godot.Node.GetParent",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetPath",
+      "kind": "Method",
+      "signature": "public NodePath GetPath()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Returns the node\u0027s absolute path, relative to the [member SceneTree.root]. If the node is not inside the scene tree, this method fails and returns an empty [NodePath].",
+      "godotName": "get_path",
+      "xmlDocId": "M:Godot.Node.GetPath",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetPathTo",
+      "kind": "Method",
+      "signature": "public NodePath GetPathTo(Node node, bool useUniquePath)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "use_unique_path",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the relative [NodePath] from this node to the specified [param node]. Both nodes must be in the same [SceneTree] or scene hierarchy, otherwise this method fails and returns an empty [NodePath]. If [param use_unique_path] is [code]true[/code], returns the shortest path accounting for this node\u0027s unique name (see [member unique_name_in_owner]). [b]Note:[/b] If you get a relative path which starts from a unique node, the path may be longer than a normal relative path, due to the addition of the unique node\u0027s name.",
+      "godotName": "get_path_to",
+      "xmlDocId": "M:Godot.Node.GetPathTo(Node,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetPhysicsProcessDeltaTime",
+      "kind": "Method",
+      "signature": "public float GetPhysicsProcessDeltaTime()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the time elapsed (in seconds) since the last physics callback. This value is identical to [method _physics_process]\u0027s [code]delta[/code] parameter, and is often consistent at run-time, unless [member Engine.physics_ticks_per_second] is changed. See also [constant NOTIFICATION_PHYSICS_PROCESS]. [b]Note:[/b] The returned value will be larger than expected if running at a framerate lower than [member Engine.physics_ticks_per_second] / [member Engine.max_physics_steps_per_frame] FPS. This is done to avoid \u0022spiral of death\u0022 scenarios where performance would plummet due to an ever-increasing number of physics steps per frame. This behavior affects both [method _process] and [method _physics_process]. As a result, avoid using [code]delta[/code] for time measurements in real-world seconds. Use the [Time] singleton\u0027s methods for this purpose instead, such as [method Time.get_ticks_usec].",
+      "godotName": "get_physics_process_delta_time",
+      "xmlDocId": "M:Godot.Node.GetPhysicsProcessDeltaTime",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetProcessDeltaTime",
+      "kind": "Method",
+      "signature": "public float GetProcessDeltaTime()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the time elapsed (in seconds) since the last process callback. This value is identical to [method _process]\u0027s [code]delta[/code] parameter, and may vary from frame to frame. See also [constant NOTIFICATION_PROCESS]. [b]Note:[/b] The returned value will be larger than expected if running at a framerate lower than [member Engine.physics_ticks_per_second] / [member Engine.max_physics_steps_per_frame] FPS. This is done to avoid \u0022spiral of death\u0022 scenarios where performance would plummet due to an ever-increasing number of physics steps per frame. This behavior affects both [method _process] and [method _physics_process]. As a result, avoid using [code]delta[/code] for time measurements in real-world seconds. Use the [Time] singleton\u0027s methods for this purpose instead, such as [method Time.get_ticks_usec].",
+      "godotName": "get_process_delta_time",
+      "xmlDocId": "M:Godot.Node.GetProcessDeltaTime",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetSceneInstanceLoadPlaceholder",
+      "kind": "Method",
+      "signature": "public bool GetSceneInstanceLoadPlaceholder()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this node is an instance load placeholder. See [InstancePlaceholder] and [method set_scene_instance_load_placeholder].",
+      "godotName": "get_scene_instance_load_placeholder",
+      "xmlDocId": "M:Godot.Node.GetSceneInstanceLoadPlaceholder",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetTree",
+      "kind": "Method",
+      "signature": "public SceneTree GetTree()",
+      "returnType": "SceneTree",
+      "parameters": [],
+      "summary": "Returns the [SceneTree] that contains this node. If this node is not inside the tree, generates an error and returns [code]null[/code]. See also [method is_inside_tree].",
+      "godotName": "get_tree",
+      "xmlDocId": "M:Godot.Node.GetTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetTreeString",
+      "kind": "Method",
+      "signature": "public String GetTreeString()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the tree as a [String]. Used mainly for debugging purposes. This version displays the path relative to the current node, and is good for copy/pasting into the [method get_node] function. It also can be used in game UI/UX. May print, for example: [codeblock lang=text] TheGame TheGame/Menu TheGame/Menu/Label TheGame/Menu/Camera2D TheGame/SplashScreen TheGame/SplashScreen/Camera2D [/codeblock]",
+      "godotName": "get_tree_string",
+      "xmlDocId": "M:Godot.Node.GetTreeString",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetTreeStringPretty",
+      "kind": "Method",
+      "signature": "public String GetTreeStringPretty()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Similar to [method get_tree_string], this returns the tree as a [String]. This version displays a more graphical representation similar to what is displayed in the Scene Dock. It is useful for inspecting larger trees. May print, for example: [codeblock lang=text] \u2516\u2574TheGame \u2520\u2574Menu \u2503 \u2520\u2574Label \u2503 \u2516\u2574Camera2D \u2516\u2574SplashScreen \u2516\u2574Camera2D [/codeblock]",
+      "godotName": "get_tree_string_pretty",
+      "xmlDocId": "M:Godot.Node.GetTreeStringPretty",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetViewport",
+      "kind": "Method",
+      "signature": "public Viewport GetViewport()",
+      "returnType": "Viewport",
+      "parameters": [],
+      "summary": "Returns the node\u0027s closest [Viewport] ancestor, if the node is inside the tree. Otherwise, returns [code]null[/code].",
+      "godotName": "get_viewport",
+      "xmlDocId": "M:Godot.Node.GetViewport",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "GetWindow",
+      "kind": "Method",
+      "signature": "public Window GetWindow()",
+      "returnType": "Window",
+      "parameters": [],
+      "summary": "Returns the [Window] that contains this node. If the node is in the main window, this is equivalent to getting the root node ([code]get_tree().get_root()[/code]).",
+      "godotName": "get_window",
+      "xmlDocId": "M:Godot.Node.GetWindow",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "HasNode",
+      "kind": "Method",
+      "signature": "public bool HasNode(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param path] points to a valid node. See also [method get_node].",
+      "godotName": "has_node",
+      "xmlDocId": "M:Godot.Node.HasNode(NodePath)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "HasNodeAndResource",
+      "kind": "Method",
+      "signature": "public bool HasNodeAndResource(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param path] points to a valid node and its subnames point to a valid [Resource], e.g. [code]Area2D/CollisionShape2D:shape[/code]. Properties that are not [Resource] types (such as nodes or other [Variant] types) are not considered. See also [method get_node_and_resource].",
+      "godotName": "has_node_and_resource",
+      "xmlDocId": "M:Godot.Node.HasNodeAndResource(NodePath)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsAncestorOf",
+      "kind": "Method",
+      "signature": "public bool IsAncestorOf(Node node)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param node] is a direct or indirect child of this node.",
+      "godotName": "is_ancestor_of",
+      "xmlDocId": "M:Godot.Node.IsAncestorOf(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsDisplayedFolded",
+      "kind": "Method",
+      "signature": "public bool IsDisplayedFolded()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is folded (collapsed) in the Scene dock. This method is intended to be used in editor plugins and tools. See also [method set_display_folded].",
+      "godotName": "is_displayed_folded",
+      "xmlDocId": "M:Godot.Node.IsDisplayedFolded",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsEditableInstance",
+      "kind": "Method",
+      "signature": "public bool IsEditableInstance(Node node)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param node] has editable children enabled relative to this node. This method is intended to be used in editor plugins and tools. See also [method set_editable_instance].",
+      "godotName": "is_editable_instance",
+      "xmlDocId": "M:Godot.Node.IsEditableInstance(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsGreaterThan",
+      "kind": "Method",
+      "signature": "public bool IsGreaterThan(Node node)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param node] occurs later in the scene hierarchy than this node. A node occurring later is usually processed last.",
+      "godotName": "is_greater_than",
+      "xmlDocId": "M:Godot.Node.IsGreaterThan(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsInGroup",
+      "kind": "Method",
+      "signature": "public bool IsInGroup(StringName group)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this node has been added to the given [param group]. See [method add_to_group] and [method remove_from_group]. See also notes in the description, and the [SceneTree]\u0027s group methods.",
+      "godotName": "is_in_group",
+      "xmlDocId": "M:Godot.Node.IsInGroup(StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsInsideTree",
+      "kind": "Method",
+      "signature": "public bool IsInsideTree()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this node is currently inside a [SceneTree]. See also [method get_tree].",
+      "godotName": "is_inside_tree",
+      "xmlDocId": "M:Godot.Node.IsInsideTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsMultiplayerAuthority",
+      "kind": "Method",
+      "signature": "public bool IsMultiplayerAuthority()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the local system is the multiplayer authority of this node.",
+      "godotName": "is_multiplayer_authority",
+      "xmlDocId": "M:Godot.Node.IsMultiplayerAuthority",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsNodeReady",
+      "kind": "Method",
+      "signature": "public bool IsNodeReady()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is ready, i.e. it\u0027s inside scene tree and all its children are initialized. [method request_ready] resets it back to [code]false[/code].",
+      "godotName": "is_node_ready",
+      "xmlDocId": "M:Godot.Node.IsNodeReady",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsPartOfEditedScene",
+      "kind": "Method",
+      "signature": "public bool IsPartOfEditedScene()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is part of the scene currently opened in the editor.",
+      "godotName": "is_part_of_edited_scene",
+      "xmlDocId": "M:Godot.Node.IsPartOfEditedScene",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsPhysicsInterpolated",
+      "kind": "Method",
+      "signature": "public bool IsPhysicsInterpolated()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if physics interpolation is enabled for this node (see [member physics_interpolation_mode]). [b]Note:[/b] Interpolation will only be active if both the flag is set [b]and[/b] physics interpolation is enabled within the [SceneTree]. This can be tested using [method is_physics_interpolated_and_enabled].",
+      "godotName": "is_physics_interpolated",
+      "xmlDocId": "M:Godot.Node.IsPhysicsInterpolated",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsPhysicsInterpolatedAndEnabled",
+      "kind": "Method",
+      "signature": "public bool IsPhysicsInterpolatedAndEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if physics interpolation is enabled (see [member physics_interpolation_mode]) [b]and[/b] enabled in the [SceneTree]. This is a convenience version of [method is_physics_interpolated] that also checks whether physics interpolation is enabled globally. See [member SceneTree.physics_interpolation] and [member ProjectSettings.physics/common/physics_interpolation].",
+      "godotName": "is_physics_interpolated_and_enabled",
+      "xmlDocId": "M:Godot.Node.IsPhysicsInterpolatedAndEnabled",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsPhysicsProcessing",
+      "kind": "Method",
+      "signature": "public bool IsPhysicsProcessing()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if physics processing is enabled (see [method set_physics_process]).",
+      "godotName": "is_physics_processing",
+      "xmlDocId": "M:Godot.Node.IsPhysicsProcessing",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsPhysicsProcessingInternal",
+      "kind": "Method",
+      "signature": "public bool IsPhysicsProcessingInternal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if internal physics processing is enabled (see [method set_physics_process_internal]).",
+      "godotName": "is_physics_processing_internal",
+      "xmlDocId": "M:Godot.Node.IsPhysicsProcessingInternal",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessing",
+      "kind": "Method",
+      "signature": "public bool IsProcessing()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if processing is enabled (see [method set_process]).",
+      "godotName": "is_processing",
+      "xmlDocId": "M:Godot.Node.IsProcessing",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessingInput",
+      "kind": "Method",
+      "signature": "public bool IsProcessingInput()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is processing input (see [method set_process_input]).",
+      "godotName": "is_processing_input",
+      "xmlDocId": "M:Godot.Node.IsProcessingInput",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessingInternal",
+      "kind": "Method",
+      "signature": "public bool IsProcessingInternal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if internal processing is enabled (see [method set_process_internal]).",
+      "godotName": "is_processing_internal",
+      "xmlDocId": "M:Godot.Node.IsProcessingInternal",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessingShortcutInput",
+      "kind": "Method",
+      "signature": "public bool IsProcessingShortcutInput()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is processing shortcuts (see [method set_process_shortcut_input]).",
+      "godotName": "is_processing_shortcut_input",
+      "xmlDocId": "M:Godot.Node.IsProcessingShortcutInput",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessingUnhandledInput",
+      "kind": "Method",
+      "signature": "public bool IsProcessingUnhandledInput()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is processing unhandled input (see [method set_process_unhandled_input]).",
+      "godotName": "is_processing_unhandled_input",
+      "xmlDocId": "M:Godot.Node.IsProcessingUnhandledInput",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "IsProcessingUnhandledKeyInput",
+      "kind": "Method",
+      "signature": "public bool IsProcessingUnhandledKeyInput()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is processing unhandled key input (see [method set_process_unhandled_key_input]).",
+      "godotName": "is_processing_unhandled_key_input",
+      "xmlDocId": "M:Godot.Node.IsProcessingUnhandledKeyInput",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "MoveChild",
+      "kind": "Method",
+      "signature": "public void MoveChild(Node childNode, int toIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "child_node",
+          "type": "Node"
+        },
+        {
+          "name": "to_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves [param child_node] to the given index. A node\u0027s index is the order among its siblings. If [param to_index] is negative, the index is counted from the end of the list. See also [method get_child] and [method get_index]. [b]Note:[/b] The processing order of several engine callbacks ([method _ready], [method _process], etc.) and notifications sent through [method propagate_notification] is affected by tree order. [CanvasItem] nodes are also rendered in tree order. See also [member process_priority].",
+      "godotName": "move_child",
+      "xmlDocId": "M:Godot.Node.MoveChild(Node,int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NotifyDeferredThreadGroup",
+      "kind": "Method",
+      "signature": "public void NotifyDeferredThreadGroup(int what)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Similar to [method call_deferred_thread_group], but for notifications.",
+      "godotName": "notify_deferred_thread_group",
+      "xmlDocId": "M:Godot.Node.NotifyDeferredThreadGroup(int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NotifyThreadSafe",
+      "kind": "Method",
+      "signature": "public void NotifyThreadSafe(int what)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Similar to [method call_thread_safe], but for notifications.",
+      "godotName": "notify_thread_safe",
+      "xmlDocId": "M:Godot.Node.NotifyThreadSafe(int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PrintOrphanNodes",
+      "kind": "Method",
+      "signature": "public void PrintOrphanNodes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Prints all orphan nodes (nodes outside the [SceneTree]). Useful for debugging. [b]Note:[/b] This method only works in debug builds. It does nothing in a project exported in release mode.",
+      "godotName": "print_orphan_nodes",
+      "xmlDocId": "M:Godot.Node.PrintOrphanNodes",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PrintTree",
+      "kind": "Method",
+      "signature": "public void PrintTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Prints the node and its children to the console, recursively. The node does not have to be inside the tree. This method outputs [NodePath]s relative to this node, and is good for copy/pasting into [method get_node]. See also [method print_tree_pretty]. May print, for example: [codeblock lang=text] . Menu Menu/Label Menu/Camera2D SplashScreen SplashScreen/Camera2D [/codeblock]",
+      "godotName": "print_tree",
+      "xmlDocId": "M:Godot.Node.PrintTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PrintTreePretty",
+      "kind": "Method",
+      "signature": "public void PrintTreePretty()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Prints the node and its children to the console, recursively. The node does not have to be inside the tree. Similar to [method print_tree], but the graphical representation looks like what is displayed in the editor\u0027s Scene dock. It is useful for inspecting larger trees. May print, for example: [codeblock lang=text] \u2516\u2574TheGame \u2520\u2574Menu \u2503 \u2520\u2574Label \u2503 \u2516\u2574Camera2D \u2516\u2574SplashScreen \u2516\u2574Camera2D [/codeblock]",
+      "godotName": "print_tree_pretty",
+      "xmlDocId": "M:Godot.Node.PrintTreePretty",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PropagateCall",
+      "kind": "Method",
+      "signature": "public void PropagateCall(StringName method, Array args, bool parentFirst)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "args",
+          "type": "Array",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "parent_first",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Calls the given [param method] name, passing [param args] as arguments, on this node and all of its children, recursively. If [param parent_first] is [code]true[/code], the method is called on this node first, then on all of its children. If [code]false[/code], the children\u0027s methods are called first.",
+      "godotName": "propagate_call",
+      "xmlDocId": "M:Godot.Node.PropagateCall(StringName,Array,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PropagateNotification",
+      "kind": "Method",
+      "signature": "public void PropagateNotification(int what)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Calls [method Object.notification] with [param what] on this node and all of its children, recursively.",
+      "godotName": "propagate_notification",
+      "xmlDocId": "M:Godot.Node.PropagateNotification(int)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "QueueAccessibilityUpdate",
+      "kind": "Method",
+      "signature": "public void QueueAccessibilityUpdate()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Queues an accessibility information update for this node.",
+      "godotName": "queue_accessibility_update",
+      "xmlDocId": "M:Godot.Node.QueueAccessibilityUpdate",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "QueueFree",
+      "kind": "Method",
+      "signature": "public void QueueFree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Queues this node to be deleted at the end of the current frame. When deleted, all of its children are deleted as well, and all references to the node and its children become invalid. Unlike with [method Object.free], the node is not deleted instantly, and it can still be accessed before deletion. It is also safe to call [method queue_free] multiple times. Use [method Object.is_queued_for_deletion] to check if the node will be deleted at the end of the frame. [b]Note:[/b] The node will only be freed after all other deferred calls are finished. Using this method is not always the same as calling [method Object.free] through [method Object.call_deferred].",
+      "godotName": "queue_free",
+      "xmlDocId": "M:Godot.Node.QueueFree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "RemoveChild",
+      "kind": "Method",
+      "signature": "public void RemoveChild(Node node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Removes a child [param node]. The [param node], along with its children, are [b]not[/b] deleted. To delete a node, see [method queue_free]. [b]Note:[/b] When this node is inside the tree, this method sets the [member owner] of the removed [param node] (or its descendants) to [code]null[/code], if their [member owner] is no longer an ancestor (see [method is_ancestor_of]).",
+      "godotName": "remove_child",
+      "xmlDocId": "M:Godot.Node.RemoveChild(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "RemoveFromGroup",
+      "kind": "Method",
+      "signature": "public void RemoveFromGroup(StringName group)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the node from the given [param group]. Does nothing if the node is not in the [param group]. See also notes in the description, and the [SceneTree]\u0027s group methods.",
+      "godotName": "remove_from_group",
+      "xmlDocId": "M:Godot.Node.RemoveFromGroup(StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Reparent",
+      "kind": "Method",
+      "signature": "public void Reparent(Node newParent, bool keepGlobalTransform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "new_parent",
+          "type": "Node"
+        },
+        {
+          "name": "keep_global_transform",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Changes the parent of this [Node] to the [param new_parent]. The node needs to already have a parent. The node\u0027s [member owner] is preserved if its owner is still reachable from the new location (i.e., the node is still a descendant of the new parent after the operation). If [param keep_global_transform] is [code]true[/code], the node\u0027s global transform will be preserved if supported. [Node2D], [Node3D] and [Control] support this argument (but [Control] keeps only position). [b]Warning:[/b] If [member ProjectSettings.physics/common/physics_interpolation] is enabled and reparenting causes a large change in global transform, the object may appear to move from its old position to its new one over the next physics tick. To avoid this, call [method reset_physics_interpolation] after reparenting.",
+      "godotName": "reparent",
+      "xmlDocId": "M:Godot.Node.Reparent(Node,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ReplaceBy",
+      "kind": "Method",
+      "signature": "public void ReplaceBy(Node node, bool keepGroups)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "keep_groups",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Replaces this node by the given [param node]. All children of this node are moved to [param node]. If [param keep_groups] is [code]true[/code], the [param node] is added to the same groups that the replaced node is in (see [method add_to_group]). [b]Warning:[/b] The replaced node is removed from the tree, but it is [b]not[/b] deleted. To prevent memory leaks, store a reference to the node in a variable, or use [method Object.free].",
+      "godotName": "replace_by",
+      "xmlDocId": "M:Godot.Node.ReplaceBy(Node,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "RequestReady",
+      "kind": "Method",
+      "signature": "public void RequestReady()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Requests [method _ready] to be called again the next time the node enters the tree. Does [b]not[/b] immediately call [method _ready]. [b]Note:[/b] This method only affects the current node. If the node\u0027s children also need to request ready, this method needs to be called for each one of them. When the node and its children enter the tree again, the order of [method _ready] callbacks will be the same as normal.",
+      "godotName": "request_ready",
+      "xmlDocId": "M:Godot.Node.RequestReady",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ResetPhysicsInterpolation",
+      "kind": "Method",
+      "signature": "public void ResetPhysicsInterpolation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "When physics interpolation is active, moving a node to a radically different transform (such as placement within a level) can result in a visible glitch as the object is rendered moving from the old to new position over the physics tick. That glitch can be prevented by calling this method, which temporarily disables interpolation until the physics tick is complete. The notification [constant NOTIFICATION_RESET_PHYSICS_INTERPOLATION] will be received by the node and all children recursively. [b]Note:[/b] This function should be called [b]after[/b] moving the node, rather than before.",
+      "godotName": "reset_physics_interpolation",
+      "xmlDocId": "M:Godot.Node.ResetPhysicsInterpolation",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Rpc",
+      "kind": "Method",
+      "signature": "public int Rpc(StringName method)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sends a remote procedure call request for the given [param method] to peers on the network (and locally), sending additional arguments to the method called by the RPC. The call request will only be received by nodes with the same [NodePath], including the exact same [member name]. Behavior depends on the RPC configuration for the given [param method] (see [method rpc_config] and [annotation @GDScript.@rpc]). By default, methods are not exposed to RPCs. May return [constant OK] if the call is successful, [constant ERR_INVALID_PARAMETER] if the arguments passed in the [param method] do not match, [constant ERR_UNCONFIGURED] if the node\u0027s [member multiplayer] cannot be fetched (such as when the node is not inside the tree), [constant ERR_CONNECTION_ERROR] if [member multiplayer]\u0027s connection is not available. [b]Note:[/b] You can only safely use RPCs on clients after you received the [signal MultiplayerAPI.connected_to_server] signal from the [MultiplayerAPI]. You also need to keep track of the connection state, either by the [MultiplayerAPI] signals like [signal MultiplayerAPI.server_disconnected] or by checking ([code]get_multiplayer().peer.get_connection_status() == CONNECTION_CONNECTED[/code]).",
+      "godotName": "rpc",
+      "xmlDocId": "M:Godot.Node.Rpc(StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "RpcConfig",
+      "kind": "Method",
+      "signature": "public void RpcConfig(StringName method, Variant config)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "config",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Changes the RPC configuration for the given [param method]. [param config] should either be [code]null[/code] to disable the feature (as by default), or a [Dictionary] containing the following entries: - [code]rpc_mode[/code]: see [enum MultiplayerAPI.RPCMode]; - [code]transfer_mode[/code]: see [enum MultiplayerPeer.TransferMode]; - [code]call_local[/code]: if [code]true[/code], the method will also be called locally; - [code]channel[/code]: an [int] representing the channel to send the RPC on. [b]Note:[/b] In GDScript, this method corresponds to the [annotation @GDScript.@rpc] annotation, with various parameters passed ([code]@rpc(any)[/code], [code]@rpc(authority)[/code]...). See also the [url=$DOCS_URL/tutorials/networking/high_level_multiplayer.html]high-level multiplayer[/url] tutorial.",
+      "godotName": "rpc_config",
+      "xmlDocId": "M:Godot.Node.RpcConfig(StringName,Variant)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "RpcId",
+      "kind": "Method",
+      "signature": "public int RpcId(int peerId, StringName method)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peer_id",
+          "type": "int"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sends a [method rpc] to a specific peer identified by [param peer_id] (see [method MultiplayerPeer.set_target_peer]). May return [constant OK] if the call is successful, [constant ERR_INVALID_PARAMETER] if the arguments passed in the [param method] do not match, [constant ERR_UNCONFIGURED] if the node\u0027s [member multiplayer] cannot be fetched (such as when the node is not inside the tree), [constant ERR_CONNECTION_ERROR] if [member multiplayer]\u0027s connection is not available.",
+      "godotName": "rpc_id",
+      "xmlDocId": "M:Godot.Node.RpcId(int,StringName)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetDeferredThreadGroup",
+      "kind": "Method",
+      "signature": "public void SetDeferredThreadGroup(StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Similar to [method call_deferred_thread_group], but for setting properties.",
+      "godotName": "set_deferred_thread_group",
+      "xmlDocId": "M:Godot.Node.SetDeferredThreadGroup(StringName,Variant)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetDisplayFolded",
+      "kind": "Method",
+      "signature": "public void SetDisplayFolded(bool fold)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "fold",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], the node appears folded in the Scene dock. As a result, all of its children are hidden. This method is intended to be used in editor plugins and tools, but it also works in release builds. See also [method is_displayed_folded].",
+      "godotName": "set_display_folded",
+      "xmlDocId": "M:Godot.Node.SetDisplayFolded(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetEditableInstance",
+      "kind": "Method",
+      "signature": "public void SetEditableInstance(Node node, bool isEditable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "is_editable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set to [code]true[/code] to allow all nodes owned by [param node] to be available, and editable, in the Scene dock, even if their [member owner] is not the scene root. This method is intended to be used in editor plugins and tools, but it also works in release builds. See also [method is_editable_instance].",
+      "godotName": "set_editable_instance",
+      "xmlDocId": "M:Godot.Node.SetEditableInstance(Node,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetMultiplayerAuthority",
+      "kind": "Method",
+      "signature": "public void SetMultiplayerAuthority(int id, bool recursive)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "recursive",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Sets the node\u0027s multiplayer authority to the peer with the given peer [param id]. The multiplayer authority is the peer that has authority over the node on the network. Defaults to peer ID 1 (the server). Useful in conjunction with [method rpc_config] and the [MultiplayerAPI]. If [param recursive] is [code]true[/code], the given peer is recursively set as the authority for all children of this node. [b]Warning:[/b] This does [b]not[/b] automatically replicate the new authority to other peers. It is the developer\u0027s responsibility to do so. You may replicate the new authority\u0027s information using [member MultiplayerSpawner.spawn_function], an RPC, or a [MultiplayerSynchronizer]. Furthermore, the parent\u0027s authority does [b]not[/b] propagate to newly added children.",
+      "godotName": "set_multiplayer_authority",
+      "xmlDocId": "M:Godot.Node.SetMultiplayerAuthority(int,bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetPhysicsProcess",
+      "kind": "Method",
+      "signature": "public void SetPhysicsProcess(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables physics (fixed framerate) processing. When a node is being processed, it will receive a [constant NOTIFICATION_PHYSICS_PROCESS] at a fixed (usually 60 FPS, see [member Engine.physics_ticks_per_second] to change) interval (and the [method _physics_process] callback will be called if it exists). [b]Note:[/b] If [method _physics_process] is overridden, this will be automatically enabled before [method _ready] is called.",
+      "godotName": "set_physics_process",
+      "xmlDocId": "M:Godot.Node.SetPhysicsProcess(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetPhysicsProcessInternal",
+      "kind": "Method",
+      "signature": "public void SetPhysicsProcessInternal(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables internal physics for this node. Internal physics processing happens in isolation from the normal [method _physics_process] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting ([method set_physics_process]). [b]Warning:[/b] Built-in nodes rely on internal processing for their internal logic. Disabling it is unsafe and may lead to unexpected behavior. Use this method if you know what you are doing.",
+      "godotName": "set_physics_process_internal",
+      "xmlDocId": "M:Godot.Node.SetPhysicsProcessInternal(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcess",
+      "kind": "Method",
+      "signature": "public void SetProcess(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables processing. When a node is being processed, it will receive a [constant NOTIFICATION_PROCESS] on every drawn frame (and the [method _process] callback will be called if it exists). [b]Note:[/b] If [method _process] is overridden, this will be automatically enabled before [method _ready] is called. [b]Note:[/b] This method only affects the [method _process] callback, i.e. it has no effect on other callbacks like [method _physics_process]. If you want to disable all processing for the node, set [member process_mode] to [constant PROCESS_MODE_DISABLED].",
+      "godotName": "set_process",
+      "xmlDocId": "M:Godot.Node.SetProcess(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcessInput",
+      "kind": "Method",
+      "signature": "public void SetProcessInput(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables input processing. [b]Note:[/b] If [method _input] is overridden, this will be automatically enabled before [method _ready] is called. Input processing is also already enabled for GUI controls, such as [Button] and [TextEdit].",
+      "godotName": "set_process_input",
+      "xmlDocId": "M:Godot.Node.SetProcessInput(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcessInternal",
+      "kind": "Method",
+      "signature": "public void SetProcessInternal(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables internal processing for this node. Internal processing happens in isolation from the normal [method _process] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting ([method set_process]). [b]Warning:[/b] Built-in nodes rely on internal processing for their internal logic. Disabling it is unsafe and may lead to unexpected behavior. Use this method if you know what you are doing.",
+      "godotName": "set_process_internal",
+      "xmlDocId": "M:Godot.Node.SetProcessInternal(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcessShortcutInput",
+      "kind": "Method",
+      "signature": "public void SetProcessShortcutInput(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables shortcut processing for this node. [b]Note:[/b] If [method _shortcut_input] is overridden, this will be automatically enabled before [method _ready] is called.",
+      "godotName": "set_process_shortcut_input",
+      "xmlDocId": "M:Godot.Node.SetProcessShortcutInput(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcessUnhandledInput",
+      "kind": "Method",
+      "signature": "public void SetProcessUnhandledInput(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables unhandled input processing. It enables the node to receive all input that was not previously handled (usually by a [Control]). [b]Note:[/b] If [method _unhandled_input] is overridden, this will be automatically enabled before [method _ready] is called. Unhandled input processing is also already enabled for GUI controls, such as [Button] and [TextEdit].",
+      "godotName": "set_process_unhandled_input",
+      "xmlDocId": "M:Godot.Node.SetProcessUnhandledInput(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetProcessUnhandledKeyInput",
+      "kind": "Method",
+      "signature": "public void SetProcessUnhandledKeyInput(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], enables unhandled key input processing. [b]Note:[/b] If [method _unhandled_key_input] is overridden, this will be automatically enabled before [method _ready] is called.",
+      "godotName": "set_process_unhandled_key_input",
+      "xmlDocId": "M:Godot.Node.SetProcessUnhandledKeyInput(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetSceneInstanceLoadPlaceholder",
+      "kind": "Method",
+      "signature": "public void SetSceneInstanceLoadPlaceholder(bool loadPlaceholder)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "load_placeholder",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], the node becomes an [InstancePlaceholder] when packed and instantiated from a [PackedScene]. See also [method get_scene_instance_load_placeholder].",
+      "godotName": "set_scene_instance_load_placeholder",
+      "xmlDocId": "M:Godot.Node.SetSceneInstanceLoadPlaceholder(bool)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetThreadSafe",
+      "kind": "Method",
+      "signature": "public void SetThreadSafe(StringName property, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Similar to [method call_thread_safe], but for setting properties.",
+      "godotName": "set_thread_safe",
+      "xmlDocId": "M:Godot.Node.SetThreadSafe(StringName,Variant)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SetTranslationDomainInherited",
+      "kind": "Method",
+      "signature": "public void SetTranslationDomainInherited()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes this node inherit the translation domain from its parent node. If this node has no parent, the main translation domain will be used. This is the default behavior for all nodes. Calling [method Object.set_translation_domain] disables this behavior.",
+      "godotName": "set_translation_domain_inherited",
+      "xmlDocId": "M:Godot.Node.SetTranslationDomainInherited",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "UpdateConfigurationWarnings",
+      "kind": "Method",
+      "signature": "public void UpdateConfigurationWarnings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Refreshes the warnings displayed for this node in the Scene dock. Use [method _get_configuration_warnings] to customize the warning messages to display.",
+      "godotName": "update_configuration_warnings",
+      "xmlDocId": "M:Godot.Node.UpdateConfigurationWarnings",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AutoTranslateMode",
+      "kind": "Property",
+      "signature": "public int AutoTranslateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines if any text should automatically change to its translated version depending on the current locale (for nodes such as [Label], [RichTextLabel], [Window], etc.). Also decides if the node\u0027s strings should be parsed for translation template generation. [b]Note:[/b] For the root node, auto translate mode can also be set via [member ProjectSettings.internationalization/rendering/root_node_auto_translate].",
+      "defaultValue": "0",
+      "godotName": "auto_translate_mode",
+      "xmlDocId": "P:Godot.Node.AutoTranslateMode",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "EditorDescription",
+      "kind": "Property",
+      "signature": "public String EditorDescription { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "An optional description to the node. It will be displayed as a tooltip when hovering over the node in the editor\u0027s Scene dock.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "editor_description",
+      "xmlDocId": "P:Godot.Node.EditorDescription",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Multiplayer",
+      "kind": "Property",
+      "signature": "public MultiplayerAPI Multiplayer { get; set; }",
+      "returnType": "MultiplayerAPI",
+      "parameters": [],
+      "summary": "The [MultiplayerAPI] instance associated with this node. See [method SceneTree.get_multiplayer]. [b]Note:[/b] Renaming the node, or moving it in the tree, will not move the [MultiplayerAPI] to the new path, you will have to update this manually.",
+      "godotName": "multiplayer",
+      "xmlDocId": "P:Godot.Node.Multiplayer",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Name",
+      "kind": "Property",
+      "signature": "public StringName Name { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the node. This name must be unique among the siblings (other child nodes from the same parent). When set to an existing sibling\u0027s name, the node is automatically renamed. [b]Note:[/b] When changing the name, the following characters will be replaced with an underscore: ([code].[/code] [code]:[/code] [code]@[/code] [code]/[/code] [code]\u0022[/code] [code]%[/code]). In particular, the [code]@[/code] character is reserved for auto-generated names. See also [method String.validate_node_name].",
+      "godotName": "name",
+      "xmlDocId": "P:Godot.Node.Name",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Owner",
+      "kind": "Property",
+      "signature": "public Node Owner { get; set; }",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "The owner of this node. The owner must be an ancestor of this node. When packing the owner node in a [PackedScene], all the nodes it owns are also saved with it. See also [member unique_name_in_owner]. [b]Note:[/b] In the editor, nodes not owned by the scene root are usually not displayed in the Scene dock, and will [b]not[/b] be saved. To prevent this, remember to set the owner after calling [method add_child]. [b]Note:[/b] The owner needs to be the current scene root. See [url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html#instancing-scenes]Instancing scenes[/url] in the documentation for more information.",
+      "godotName": "owner",
+      "xmlDocId": "P:Godot.Node.Owner",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics interpolation mode to use for this node. Only effective if [member ProjectSettings.physics/common/physics_interpolation] or [member SceneTree.physics_interpolation] is [code]true[/code]. By default, nodes inherit the physics interpolation mode from their parent. This property can enable or disable physics interpolation individually for each node, regardless of their parents\u0027 physics interpolation mode. [b]Note:[/b] Some node types like [VehicleWheel3D] have physics interpolation disabled by default, as they rely on their own custom solution. [b]Note:[/b] When teleporting a node to a distant position, it\u0027s recommended to temporarily disable interpolation with [method Node.reset_physics_interpolation] [i]after[/i] moving the node. This avoids creating a visual streak between the old and new positions.",
+      "defaultValue": "0",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.Node.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessMode",
+      "kind": "Property",
+      "signature": "public int ProcessMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The node\u0027s processing behavior. To check if the node can process in its current mode, use [method can_process].",
+      "defaultValue": "0",
+      "godotName": "process_mode",
+      "xmlDocId": "P:Godot.Node.ProcessMode",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessPhysicsPriority",
+      "kind": "Property",
+      "signature": "public int ProcessPhysicsPriority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Similar to [member process_priority] but for [constant NOTIFICATION_PHYSICS_PROCESS], [method _physics_process], or [constant NOTIFICATION_INTERNAL_PHYSICS_PROCESS].",
+      "defaultValue": "0",
+      "godotName": "process_physics_priority",
+      "xmlDocId": "P:Godot.Node.ProcessPhysicsPriority",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessPriority",
+      "kind": "Property",
+      "signature": "public int ProcessPriority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The node\u0027s execution order of the process callbacks ([method _process], [constant NOTIFICATION_PROCESS], and [constant NOTIFICATION_INTERNAL_PROCESS]). Nodes whose priority value is [i]lower[/i] call their process callbacks first, regardless of tree order.",
+      "defaultValue": "0",
+      "godotName": "process_priority",
+      "xmlDocId": "P:Godot.Node.ProcessPriority",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessThreadGroup",
+      "kind": "Property",
+      "signature": "public int ProcessThreadGroup { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set the process thread group for this node (basically, whether it receives [constant NOTIFICATION_PROCESS], [constant NOTIFICATION_PHYSICS_PROCESS], [method _process] or [method _physics_process] (and the internal versions) on the main thread or in a sub-thread. By default, the thread group is [constant PROCESS_THREAD_GROUP_INHERIT], which means that this node belongs to the same thread group as the parent node. The thread groups means that nodes in a specific thread group will process together, separate to other thread groups (depending on [member process_thread_group_order]). If the value is set is [constant PROCESS_THREAD_GROUP_SUB_THREAD], this thread group will occur on a sub thread (not the main thread), otherwise if set to [constant PROCESS_THREAD_GROUP_MAIN_THREAD] it will process on the main thread. If there is not a parent or grandparent node set to something other than inherit, the node will belong to the [i]default thread group[/i]. This default group will process on the main thread and its group order is 0. During processing in a sub-thread, accessing most functions in nodes outside the thread group is forbidden (and it will result in an error in debug mode). Use [method Object.call_deferred], [method call_thread_safe], [method call_deferred_thread_group] and the likes in order to communicate from the thread groups to the main thread (or to other thread groups). To better understand process thread groups, the idea is that any node set to any other value than [constant PROCESS_THREAD_GROUP_INHERIT] will include any child (and grandchild) nodes set to inherit into its process thread group. This means that the processing of all the nodes in the group will happen together, at the same time as the node including them.",
+      "defaultValue": "0",
+      "godotName": "process_thread_group",
+      "xmlDocId": "P:Godot.Node.ProcessThreadGroup",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessThreadGroupOrder",
+      "kind": "Property",
+      "signature": "public int ProcessThreadGroupOrder { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Change the process thread group order. Groups with a lesser order will process before groups with a greater order. This is useful when a large amount of nodes process in sub thread and, afterwards, another group wants to collect their result in the main thread, as an example.",
+      "godotName": "process_thread_group_order",
+      "xmlDocId": "P:Godot.Node.ProcessThreadGroupOrder",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ProcessThreadMessages",
+      "kind": "Property",
+      "signature": "public int ProcessThreadMessages { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set whether the current thread group will process messages (calls to [method call_deferred_thread_group] on threads), and whether it wants to receive them during regular process or physics process callbacks.",
+      "godotName": "process_thread_messages",
+      "xmlDocId": "P:Godot.Node.ProcessThreadMessages",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "SceneFilePath",
+      "kind": "Property",
+      "signature": "public String SceneFilePath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The original scene\u0027s file path, if the node has been instantiated from a [PackedScene] file. Only scene root nodes contains this.",
+      "godotName": "scene_file_path",
+      "xmlDocId": "P:Godot.Node.SceneFilePath",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "UniqueNameInOwner",
+      "kind": "Property",
+      "signature": "public bool UniqueNameInOwner { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the node can be accessed from any node sharing the same [member owner] or from the [member owner] itself, with special [code]%Name[/code] syntax in [method get_node]. [b]Note:[/b] If another node with the same [member owner] shares the same [member name] as this node, the other node will no longer be accessible as unique.",
+      "defaultValue": "false",
+      "godotName": "unique_name_in_owner",
+      "xmlDocId": "P:Godot.Node.UniqueNameInOwner",
+      "sourcePath": "doc/classes/Node.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ChildEnteredTree",
+      "kind": "Signal",
+      "signature": "public event ChildEnteredTreeHandler ChildEnteredTree",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the child [param node] enters the [SceneTree], usually because this node entered the tree (see [signal tree_entered]), or [method add_child] has been called. This signal is emitted [i]after[/i] the child node\u0027s own [constant NOTIFICATION_ENTER_TREE] and [signal tree_entered].",
+      "godotName": "child_entered_tree",
+      "xmlDocId": "E:Godot.Node.ChildEnteredTree(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ChildExitingTree",
+      "kind": "Signal",
+      "signature": "public event ChildExitingTreeHandler ChildExitingTree",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the child [param node] is about to exit the [SceneTree], usually because this node is exiting the tree (see [signal tree_exiting]), or because the child [param node] is being removed or freed. When this signal is received, the child [param node] is still accessible inside the tree. This signal is emitted [i]after[/i] the child node\u0027s own [signal tree_exiting] and [constant NOTIFICATION_EXIT_TREE].",
+      "godotName": "child_exiting_tree",
+      "xmlDocId": "E:Godot.Node.ChildExitingTree(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ChildOrderChanged",
+      "kind": "Signal",
+      "signature": "public event ChildOrderChangedHandler ChildOrderChanged",
+      "parameters": [],
+      "summary": "Emitted when the list of children is changed. This happens when child nodes are added, moved or removed.",
+      "godotName": "child_order_changed",
+      "xmlDocId": "E:Godot.Node.ChildOrderChanged",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "EditorDescriptionChanged",
+      "kind": "Signal",
+      "signature": "public event EditorDescriptionChangedHandler EditorDescriptionChanged",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the node\u0027s editor description field changed.",
+      "godotName": "editor_description_changed",
+      "xmlDocId": "E:Godot.Node.EditorDescriptionChanged(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "EditorStateChanged",
+      "kind": "Signal",
+      "signature": "public event EditorStateChangedHandler EditorStateChanged",
+      "parameters": [],
+      "summary": "Emitted when an attribute of the node that is relevant to the editor is changed. Only emitted in the editor.",
+      "godotName": "editor_state_changed",
+      "xmlDocId": "E:Godot.Node.EditorStateChanged",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Ready",
+      "kind": "Signal",
+      "signature": "public event ReadyHandler Ready",
+      "parameters": [],
+      "summary": "Emitted when the node is considered ready, after [method _ready] is called.",
+      "godotName": "ready",
+      "xmlDocId": "E:Godot.Node.Ready",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "Renamed",
+      "kind": "Signal",
+      "signature": "public event RenamedHandler Renamed",
+      "parameters": [],
+      "summary": "Emitted when the node\u0027s [member name] is changed, if the node is inside the tree.",
+      "godotName": "renamed",
+      "xmlDocId": "E:Godot.Node.Renamed",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "ReplacingBy",
+      "kind": "Signal",
+      "signature": "public event ReplacingByHandler ReplacingBy",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when this node is being replaced by the [param node], see [method replace_by]. This signal is emitted [i]after[/i] [param node] has been added as a child of the original parent node, but [i]before[/i] all original child nodes have been reparented to [param node].",
+      "godotName": "replacing_by",
+      "xmlDocId": "E:Godot.Node.ReplacingBy(Node)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "TreeEntered",
+      "kind": "Signal",
+      "signature": "public event TreeEnteredHandler TreeEntered",
+      "parameters": [],
+      "summary": "Emitted when the node enters the tree. This signal is emitted [i]after[/i] the related [constant NOTIFICATION_ENTER_TREE] notification.",
+      "godotName": "tree_entered",
+      "xmlDocId": "E:Godot.Node.TreeEntered",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "TreeExited",
+      "kind": "Signal",
+      "signature": "public event TreeExitedHandler TreeExited",
+      "parameters": [],
+      "summary": "Emitted after the node exits the tree and is no longer active. This signal is emitted [i]after[/i] the related [constant NOTIFICATION_EXIT_TREE] notification.",
+      "godotName": "tree_exited",
+      "xmlDocId": "E:Godot.Node.TreeExited",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "TreeExiting",
+      "kind": "Signal",
+      "signature": "public event TreeExitingHandler TreeExiting",
+      "parameters": [],
+      "summary": "Emitted when the node is just about to exit the tree. The node is still valid. As such, this is the right place for de-initialization (or a \u0022destructor\u0022, if you will). This signal is emitted [i]after[/i] the node\u0027s [method _exit_tree], and [i]before[/i] the related [constant NOTIFICATION_EXIT_TREE].",
+      "godotName": "tree_exiting",
+      "xmlDocId": "E:Godot.Node.TreeExiting",
+      "sourcePath": "doc/classes/Node.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AutoTranslateMode",
+      "values": [
+        {
+          "name": "AUTO_TRANSLATE_MODE_ALWAYS",
+          "value": "1",
+          "enum": "AutoTranslateMode",
+          "kind": "EnumValue",
+          "summary": "Always automatically translate. This is the inverse of [constant AUTO_TRANSLATE_MODE_DISABLED], and the default for the root node.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "AUTO_TRANSLATE_MODE_DISABLED",
+          "value": "2",
+          "enum": "AutoTranslateMode",
+          "kind": "EnumValue",
+          "summary": "Never automatically translate. This is the inverse of [constant AUTO_TRANSLATE_MODE_ALWAYS]. String parsing for translation template generation will be skipped for this node and children that are set to [constant AUTO_TRANSLATE_MODE_INHERIT].",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "AUTO_TRANSLATE_MODE_INHERIT",
+          "value": "0",
+          "enum": "AutoTranslateMode",
+          "kind": "EnumValue",
+          "summary": "Inherits [member auto_translate_mode] from the node\u0027s parent. This is the default for any newly created node.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "DuplicateFlags",
+      "values": [
+        {
+          "name": "DUPLICATE_DEFAULT",
+          "value": "15",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate using default flags. This constant is useful to add or remove a single flag. [codeblock] # Duplicate non-exported variables. var dupe = duplicate(DUPLICATE_DEFAULT | DUPLICATE_INTERNAL_STATE) [/codeblock]",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "DUPLICATE_GROUPS",
+          "value": "2",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate the node\u0027s groups.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "DUPLICATE_INTERNAL_STATE",
+          "value": "16",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate also non-serializable variables (i.e. without [constant @GlobalScope.PROPERTY_USAGE_STORAGE]).",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "DUPLICATE_SCRIPTS",
+          "value": "4",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate the node\u0027s script (also overriding the duplicated children\u0027s scripts, if combined with [constant DUPLICATE_USE_INSTANTIATION]).",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "DUPLICATE_SIGNALS",
+          "value": "1",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate the node\u0027s signal connections that are connected with the [constant Object.CONNECT_PERSIST] flag.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "DUPLICATE_USE_INSTANTIATION",
+          "value": "8",
+          "enum": "DuplicateFlags",
+          "kind": "EnumValue",
+          "summary": "Duplicate using [method PackedScene.instantiate]. If the node comes from a scene saved on disk, reuses [method PackedScene.instantiate] as the base for the duplicated node and its children.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "InternalMode",
+      "values": [
+        {
+          "name": "INTERNAL_MODE_BACK",
+          "value": "2",
+          "enum": "InternalMode",
+          "kind": "EnumValue",
+          "summary": "The node will be placed at the end of the parent\u0027s children, after any non-internal sibling.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "INTERNAL_MODE_DISABLED",
+          "value": "0",
+          "enum": "InternalMode",
+          "kind": "EnumValue",
+          "summary": "The node will not be internal.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "INTERNAL_MODE_FRONT",
+          "value": "1",
+          "enum": "InternalMode",
+          "kind": "EnumValue",
+          "summary": "The node will be placed at the beginning of the parent\u0027s children, before any non-internal sibling.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "values": [
+        {
+          "name": "PHYSICS_INTERPOLATION_MODE_INHERIT",
+          "value": "0",
+          "enum": "PhysicsInterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Inherits [member physics_interpolation_mode] from the node\u0027s parent. This is the default for any newly created node.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PHYSICS_INTERPOLATION_MODE_OFF",
+          "value": "2",
+          "enum": "PhysicsInterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Disables physics interpolation for this node and for children set to [constant PHYSICS_INTERPOLATION_MODE_INHERIT].",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PHYSICS_INTERPOLATION_MODE_ON",
+          "value": "1",
+          "enum": "PhysicsInterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Enables physics interpolation for this node and for children set to [constant PHYSICS_INTERPOLATION_MODE_INHERIT]. This is the default for the root node.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "ProcessMode",
+      "values": [
+        {
+          "name": "PROCESS_MODE_ALWAYS",
+          "value": "3",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Always processes. Keeps processing, ignoring [member SceneTree.paused]. This is the inverse of [constant PROCESS_MODE_DISABLED].",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_MODE_DISABLED",
+          "value": "4",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Never processes. Completely disables processing, ignoring [member SceneTree.paused]. This is the inverse of [constant PROCESS_MODE_ALWAYS].",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_MODE_INHERIT",
+          "value": "0",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Inherits [member process_mode] from the node\u0027s parent. This is the default for any newly created node.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_MODE_PAUSABLE",
+          "value": "1",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Processes when [member SceneTree.paused] is [code]false[/code]. This is the inverse of [constant PROCESS_MODE_WHEN_PAUSED], and the default for the root node.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_MODE_WHEN_PAUSED",
+          "value": "2",
+          "enum": "ProcessMode",
+          "kind": "EnumValue",
+          "summary": "Processes [b]only[/b] when [member SceneTree.paused] is [code]true[/code]. This is the inverse of [constant PROCESS_MODE_PAUSABLE].",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "ProcessThreadGroup",
+      "values": [
+        {
+          "name": "PROCESS_THREAD_GROUP_INHERIT",
+          "value": "0",
+          "enum": "ProcessThreadGroup",
+          "kind": "EnumValue",
+          "summary": "Process this node based on the thread group mode of the first parent (or grandparent) node that has a thread group mode that is not inherit. See [member process_thread_group] for more information.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_THREAD_GROUP_MAIN_THREAD",
+          "value": "1",
+          "enum": "ProcessThreadGroup",
+          "kind": "EnumValue",
+          "summary": "Process this node (and child nodes set to inherit) on the main thread. See [member process_thread_group] for more information.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "PROCESS_THREAD_GROUP_SUB_THREAD",
+          "value": "2",
+          "enum": "ProcessThreadGroup",
+          "kind": "EnumValue",
+          "summary": "Process this node (and child nodes set to inherit) on a sub-thread. See [member process_thread_group] for more information.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    },
+    {
+      "name": "ProcessThreadMessages",
+      "values": [
+        {
+          "name": "FLAG_PROCESS_THREAD_MESSAGES",
+          "value": "1",
+          "enum": "ProcessThreadMessages",
+          "kind": "EnumValue",
+          "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before [method _process] is called.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "FLAG_PROCESS_THREAD_MESSAGES_ALL",
+          "value": "3",
+          "enum": "ProcessThreadMessages",
+          "kind": "EnumValue",
+          "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before either [method _process] or [method _physics_process] are called.",
+          "sourcePath": "doc/classes/Node.xml"
+        },
+        {
+          "name": "FLAG_PROCESS_THREAD_MESSAGES_PHYSICS",
+          "value": "2",
+          "enum": "ProcessThreadMessages",
+          "kind": "EnumValue",
+          "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before [method _physics_process] is called.",
+          "sourcePath": "doc/classes/Node.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "NOTIFICATION_ENTER_TREE",
+      "value": "10",
+      "kind": "Constant",
+      "summary": "Notification received when the node enters a [SceneTree]. See [method _enter_tree]. This notification is received [i]before[/i] the related [signal tree_entered] signal.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_EXIT_TREE",
+      "value": "11",
+      "kind": "Constant",
+      "summary": "Notification received when the node is about to exit a [SceneTree]. See [method _exit_tree]. This notification is received [i]after[/i] the related [signal tree_exiting] signal. This notification is sent in reversed order.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_MOVED_IN_PARENT",
+      "value": "12",
+      "kind": "Constant",
+      "summary": "",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_READY",
+      "value": "13",
+      "kind": "Constant",
+      "summary": "Notification received when the node is ready. See [method _ready].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_PAUSED",
+      "value": "14",
+      "kind": "Constant",
+      "summary": "Notification received when the node is paused. See [member process_mode].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_UNPAUSED",
+      "value": "15",
+      "kind": "Constant",
+      "summary": "Notification received when the node is unpaused. See [member process_mode].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_PHYSICS_PROCESS",
+      "value": "16",
+      "kind": "Constant",
+      "summary": "Notification received from the tree every physics frame when [method is_physics_processing] returns [code]true[/code]. See [method _physics_process].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_PROCESS",
+      "value": "17",
+      "kind": "Constant",
+      "summary": "Notification received from the tree every rendered frame when [method is_processing] returns [code]true[/code]. See [method _process].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_PARENTED",
+      "value": "18",
+      "kind": "Constant",
+      "summary": "Notification received when the node is set as a child of another node (see [method add_child] and [method add_sibling]). [b]Note:[/b] This does [i]not[/i] mean that the node entered the [SceneTree].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_UNPARENTED",
+      "value": "19",
+      "kind": "Constant",
+      "summary": "Notification received when the parent node calls [method remove_child] on this node. [b]Note:[/b] This does [i]not[/i] mean that the node exited the [SceneTree].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_SCENE_INSTANTIATED",
+      "value": "20",
+      "kind": "Constant",
+      "summary": "Notification received [i]only[/i] by the newly instantiated scene root node, when [method PackedScene.instantiate] is completed.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_DRAG_BEGIN",
+      "value": "21",
+      "kind": "Constant",
+      "summary": "Notification received when a drag operation begins. All nodes receive this notification, not only the dragged one. Can be triggered either by dragging a [Control] that provides drag data (see [method Control._get_drag_data]) or using [method Control.force_drag]. Use [method Viewport.gui_get_drag_data] to get the dragged data.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_DRAG_END",
+      "value": "22",
+      "kind": "Constant",
+      "summary": "Notification received when a drag operation ends. Use [method Viewport.gui_is_drag_successful] to check if the drag succeeded.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_PATH_RENAMED",
+      "value": "23",
+      "kind": "Constant",
+      "summary": "Notification received when the node\u0027s [member name] or one of its ancestors\u0027 [member name] is changed. This notification is [i]not[/i] received when the node is removed from the [SceneTree].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_CHILD_ORDER_CHANGED",
+      "value": "24",
+      "kind": "Constant",
+      "summary": "Notification received when the list of children is changed. This happens when child nodes are added, moved or removed.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_INTERNAL_PROCESS",
+      "value": "25",
+      "kind": "Constant",
+      "summary": "Notification received from the tree every rendered frame when [method is_processing_internal] returns [code]true[/code].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_INTERNAL_PHYSICS_PROCESS",
+      "value": "26",
+      "kind": "Constant",
+      "summary": "Notification received from the tree every physics frame when [method is_physics_processing_internal] returns [code]true[/code].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_POST_ENTER_TREE",
+      "value": "27",
+      "kind": "Constant",
+      "summary": "Notification received when the node enters the tree, just before [constant NOTIFICATION_READY] may be received. Unlike the latter, it is sent every time the node enters tree, not just once.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_DISABLED",
+      "value": "28",
+      "kind": "Constant",
+      "summary": "Notification received when the node is disabled. See [constant PROCESS_MODE_DISABLED].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_ENABLED",
+      "value": "29",
+      "kind": "Constant",
+      "summary": "Notification received when the node is enabled again after being disabled. See [constant PROCESS_MODE_DISABLED].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_RESET_PHYSICS_INTERPOLATION",
+      "value": "2001",
+      "kind": "Constant",
+      "summary": "Notification received when [method reset_physics_interpolation] is called on the node or its ancestors.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_EDITOR_PRE_SAVE",
+      "value": "9001",
+      "kind": "Constant",
+      "summary": "Notification received right before the scene with the node is saved in the editor. This notification is only sent in the Godot editor and will not occur in exported projects.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_EDITOR_POST_SAVE",
+      "value": "9002",
+      "kind": "Constant",
+      "summary": "Notification received right after the scene with the node is saved in the editor. This notification is only sent in the Godot editor and will not occur in exported projects.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_MOUSE_ENTER",
+      "value": "1002",
+      "kind": "Constant",
+      "summary": "Notification received when the mouse enters the window. Implemented for embedded windows and on desktop and web platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_MOUSE_EXIT",
+      "value": "1003",
+      "kind": "Constant",
+      "summary": "Notification received when the mouse leaves the window. Implemented for embedded windows and on desktop and web platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_WINDOW_FOCUS_IN",
+      "value": "1004",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the node\u0027s [Window] ancestor is focused. This may be a change of focus between two windows of the same engine instance, or from the OS desktop or a third-party application to a window of the game (in which case [constant NOTIFICATION_APPLICATION_FOCUS_IN] is also received). A [Window] node receives this notification when it is focused.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_WINDOW_FOCUS_OUT",
+      "value": "1005",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the node\u0027s [Window] ancestor is defocused. This may be a change of focus between two windows of the same engine instance, or from a window of the game to the OS desktop or a third-party application (in which case [constant NOTIFICATION_APPLICATION_FOCUS_OUT] is also received). A [Window] node receives this notification when it is defocused.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_CLOSE_REQUEST",
+      "value": "1006",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when a close request is sent (e.g. closing the window with a \u0022Close\u0022 button or [kbd]Alt \u002B F4[/kbd]). Implemented on desktop platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_GO_BACK_REQUEST",
+      "value": "1007",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when a go back request is sent (e.g. pressing the \u0022Back\u0022 button on Android). Implemented only on Android.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_SIZE_CHANGED",
+      "value": "1008",
+      "kind": "Constant",
+      "summary": "Notification received when the window is resized. [b]Note:[/b] Only the resized [Window] node receives this notification, and it\u0027s not propagated to the child nodes.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_DPI_CHANGE",
+      "value": "1009",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the screen\u0027s dots per inch (DPI) scale is changed. Only implemented on macOS.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_VP_MOUSE_ENTER",
+      "value": "1010",
+      "kind": "Constant",
+      "summary": "Notification received when the mouse cursor enters the [Viewport]\u0027s visible area, that is not occluded behind other [Control]s or [Window]s, provided its [member Viewport.gui_disable_input] is [code]false[/code] and regardless if it\u0027s currently focused or not.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_VP_MOUSE_EXIT",
+      "value": "1011",
+      "kind": "Constant",
+      "summary": "Notification received when the mouse cursor leaves the [Viewport]\u0027s visible area, that is not occluded behind other [Control]s or [Window]s, provided its [member Viewport.gui_disable_input] is [code]false[/code] and regardless if it\u0027s currently focused or not.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_POSITION_CHANGED",
+      "value": "1012",
+      "kind": "Constant",
+      "summary": "Notification received when the window is moved.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED",
+      "value": "1013",
+      "kind": "Constant",
+      "summary": "Notification received when the output max linear value returned by [method Window.get_output_max_linear_value] has changed. This occurs when HDR output is enabled or disabled and when any HDR output luminance values of the window have changed, such as when the player adjusts their screen brightness setting or moves the window to a different screen.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_OS_MEMORY_WARNING",
+      "value": "2009",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is exceeding its allocated memory. Implemented only on iOS.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_TRANSLATION_CHANGED",
+      "value": "2010",
+      "kind": "Constant",
+      "summary": "Notification received when translations may have changed. Can be triggered by the user changing the locale, changing [member auto_translate_mode] or when the node enters the scene tree. Can be used to respond to language changes, for example to change the UI strings on the fly. Useful when working with the built-in translation support, like [method Object.tr]. [b]Note:[/b] This notification is received alongside [constant NOTIFICATION_ENTER_TREE], so if you are instantiating a scene, the child nodes will not be initialized yet. You can use it to setup translations for this node, child nodes created from script, or if you want to access child nodes added in the editor, make sure the node is ready using [method is_node_ready]. [codeblock] func _notification(what): if what == NOTIFICATION_TRANSLATION_CHANGED: if not is_node_ready(): await ready # Wait until ready signal. $Label.text = atr(\u0022%d Bananas\u0022) % banana_counter [/codeblock]",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_ABOUT",
+      "value": "2011",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when a request for \u0022About\u0022 information is sent. Implemented only on macOS.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_CRASH",
+      "value": "2012",
+      "kind": "Constant",
+      "summary": "Notification received from Godot\u0027s crash handler when the engine is about to crash. Implemented on desktop platforms, if the crash handler is enabled.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_OS_IME_UPDATE",
+      "value": "2013",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when an update of the Input Method Engine occurs (e.g. change of IME cursor position or composition string). Implemented on desktop and web platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_RESUMED",
+      "value": "2014",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is resumed. Specific to the Android and iOS platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PAUSED",
+      "value": "2015",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is paused. Specific to the Android and iOS platforms. [b]Note:[/b] On iOS, you only have approximately 5 seconds to finish a task started by this signal. If you go over this allotment, iOS will kill the app instead of pausing it.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_FOCUS_IN",
+      "value": "2016",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is focused, i.e. when changing the focus from the OS desktop or a thirdparty application to any open window of the Godot instance. Implemented on desktop and mobile platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_FOCUS_OUT",
+      "value": "2017",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is defocused, i.e. when changing the focus from any open window of the Godot instance to the OS desktop or a thirdparty application. Implemented on desktop and mobile platforms.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_TEXT_SERVER_CHANGED",
+      "value": "2018",
+      "kind": "Constant",
+      "summary": "Notification received when the [TextServer] is changed.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PIP_MODE_ENTERED",
+      "value": "2019",
+      "kind": "Constant",
+      "summary": "Notification received when the application enters picture-in-picture mode.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PIP_MODE_EXITED",
+      "value": "2020",
+      "kind": "Constant",
+      "summary": "Notification received when the application exits picture-in-picture mode.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_ACCESSIBILITY_UPDATE",
+      "value": "3000",
+      "kind": "Constant",
+      "summary": "Notification received when an accessibility information update is required.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "NOTIFICATION_ACCESSIBILITY_INVALIDATE",
+      "value": "3001",
+      "kind": "Constant",
+      "summary": "Notification received when accessibility elements are invalidated. All node accessibility elements are automatically deleted after receiving this message, therefore all existing references to such elements should be discarded.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_MODE_INHERIT",
+      "value": "0",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Inherits [member process_mode] from the node\u0027s parent. This is the default for any newly created node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_MODE_PAUSABLE",
+      "value": "1",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Processes when [member SceneTree.paused] is [code]false[/code]. This is the inverse of [constant PROCESS_MODE_WHEN_PAUSED], and the default for the root node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_MODE_WHEN_PAUSED",
+      "value": "2",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Processes [b]only[/b] when [member SceneTree.paused] is [code]true[/code]. This is the inverse of [constant PROCESS_MODE_PAUSABLE].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_MODE_ALWAYS",
+      "value": "3",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Always processes. Keeps processing, ignoring [member SceneTree.paused]. This is the inverse of [constant PROCESS_MODE_DISABLED].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_MODE_DISABLED",
+      "value": "4",
+      "enum": "ProcessMode",
+      "kind": "EnumValue",
+      "summary": "Never processes. Completely disables processing, ignoring [member SceneTree.paused]. This is the inverse of [constant PROCESS_MODE_ALWAYS].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_THREAD_GROUP_INHERIT",
+      "value": "0",
+      "enum": "ProcessThreadGroup",
+      "kind": "EnumValue",
+      "summary": "Process this node based on the thread group mode of the first parent (or grandparent) node that has a thread group mode that is not inherit. See [member process_thread_group] for more information.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_THREAD_GROUP_MAIN_THREAD",
+      "value": "1",
+      "enum": "ProcessThreadGroup",
+      "kind": "EnumValue",
+      "summary": "Process this node (and child nodes set to inherit) on the main thread. See [member process_thread_group] for more information.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PROCESS_THREAD_GROUP_SUB_THREAD",
+      "value": "2",
+      "enum": "ProcessThreadGroup",
+      "kind": "EnumValue",
+      "summary": "Process this node (and child nodes set to inherit) on a sub-thread. See [member process_thread_group] for more information.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FLAG_PROCESS_THREAD_MESSAGES",
+      "value": "1",
+      "enum": "ProcessThreadMessages",
+      "kind": "EnumValue",
+      "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before [method _process] is called.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FLAG_PROCESS_THREAD_MESSAGES_PHYSICS",
+      "value": "2",
+      "enum": "ProcessThreadMessages",
+      "kind": "EnumValue",
+      "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before [method _physics_process] is called.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "FLAG_PROCESS_THREAD_MESSAGES_ALL",
+      "value": "3",
+      "enum": "ProcessThreadMessages",
+      "kind": "EnumValue",
+      "summary": "Allows this node to process threaded messages created with [method call_deferred_thread_group] right before either [method _process] or [method _physics_process] are called.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PHYSICS_INTERPOLATION_MODE_INHERIT",
+      "value": "0",
+      "enum": "PhysicsInterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Inherits [member physics_interpolation_mode] from the node\u0027s parent. This is the default for any newly created node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PHYSICS_INTERPOLATION_MODE_ON",
+      "value": "1",
+      "enum": "PhysicsInterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Enables physics interpolation for this node and for children set to [constant PHYSICS_INTERPOLATION_MODE_INHERIT]. This is the default for the root node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "PHYSICS_INTERPOLATION_MODE_OFF",
+      "value": "2",
+      "enum": "PhysicsInterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Disables physics interpolation for this node and for children set to [constant PHYSICS_INTERPOLATION_MODE_INHERIT].",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_SIGNALS",
+      "value": "1",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate the node\u0027s signal connections that are connected with the [constant Object.CONNECT_PERSIST] flag.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_GROUPS",
+      "value": "2",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate the node\u0027s groups.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_SCRIPTS",
+      "value": "4",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate the node\u0027s script (also overriding the duplicated children\u0027s scripts, if combined with [constant DUPLICATE_USE_INSTANTIATION]).",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_USE_INSTANTIATION",
+      "value": "8",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate using [method PackedScene.instantiate]. If the node comes from a scene saved on disk, reuses [method PackedScene.instantiate] as the base for the duplicated node and its children.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_INTERNAL_STATE",
+      "value": "16",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate also non-serializable variables (i.e. without [constant @GlobalScope.PROPERTY_USAGE_STORAGE]).",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "DUPLICATE_DEFAULT",
+      "value": "15",
+      "enum": "DuplicateFlags",
+      "kind": "EnumValue",
+      "summary": "Duplicate using default flags. This constant is useful to add or remove a single flag. [codeblock] # Duplicate non-exported variables. var dupe = duplicate(DUPLICATE_DEFAULT | DUPLICATE_INTERNAL_STATE) [/codeblock]",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "INTERNAL_MODE_DISABLED",
+      "value": "0",
+      "enum": "InternalMode",
+      "kind": "EnumValue",
+      "summary": "The node will not be internal.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "INTERNAL_MODE_FRONT",
+      "value": "1",
+      "enum": "InternalMode",
+      "kind": "EnumValue",
+      "summary": "The node will be placed at the beginning of the parent\u0027s children, before any non-internal sibling.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "INTERNAL_MODE_BACK",
+      "value": "2",
+      "enum": "InternalMode",
+      "kind": "EnumValue",
+      "summary": "The node will be placed at the end of the parent\u0027s children, after any non-internal sibling.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AUTO_TRANSLATE_MODE_INHERIT",
+      "value": "0",
+      "enum": "AutoTranslateMode",
+      "kind": "EnumValue",
+      "summary": "Inherits [member auto_translate_mode] from the node\u0027s parent. This is the default for any newly created node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AUTO_TRANSLATE_MODE_ALWAYS",
+      "value": "1",
+      "enum": "AutoTranslateMode",
+      "kind": "EnumValue",
+      "summary": "Always automatically translate. This is the inverse of [constant AUTO_TRANSLATE_MODE_DISABLED], and the default for the root node.",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "AUTO_TRANSLATE_MODE_DISABLED",
+      "value": "2",
+      "enum": "AutoTranslateMode",
+      "kind": "EnumValue",
+      "summary": "Never automatically translate. This is the inverse of [constant AUTO_TRANSLATE_MODE_ALWAYS]. String parsing for translation template generation will be skipped for this node and children that are set to [constant AUTO_TRANSLATE_MODE_INHERIT].",
+      "sourcePath": "doc/classes/Node.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_EnterTree",
+      "kind": "Method",
+      "signature": "public void _EnterTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node enters the [SceneTree] (e.g. upon instantiating, scene changing, or after calling [method add_child] in a script). If the node has children, its [method _enter_tree] callback will be called first, and then that of the children. Corresponds to the [constant NOTIFICATION_ENTER_TREE] notification in [method Object._notification].",
+      "godotName": "_enter_tree",
+      "xmlDocId": "M:Godot.Node._EnterTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_ExitTree",
+      "kind": "Method",
+      "signature": "public void _ExitTree()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node is about to leave the [SceneTree] (e.g. upon freeing, scene changing, or after calling [method remove_child] in a script). If the node has children, its [method _exit_tree] callback will be called last, after all its children have left the tree. Corresponds to the [constant NOTIFICATION_EXIT_TREE] notification in [method Object._notification] and signal [signal tree_exiting]. To get notified when the node has already left the active tree, connect to the [signal tree_exited].",
+      "godotName": "_exit_tree",
+      "xmlDocId": "M:Godot.Node._ExitTree",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetAccessibilityConfigurationWarnings",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetAccessibilityConfigurationWarnings()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The elements in the array returned from this method are displayed as warnings in the Scene dock if the script that overrides it is a [code]tool[/code] script, and accessibility warnings are enabled in the editor settings. Returning an empty array produces no warnings.",
+      "godotName": "_get_accessibility_configuration_warnings",
+      "xmlDocId": "M:Godot.Node._GetAccessibilityConfigurationWarnings",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetConfigurationWarnings",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetConfigurationWarnings()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The elements in the array returned from this method are displayed as warnings in the Scene dock if the script that overrides it is a [code]tool[/code] script. Returning an empty array produces no warnings. Call [method update_configuration_warnings] when the warnings need to be updated for this node. [codeblock] @export var energy = 0: set(value): energy = value update_configuration_warnings() func _get_configuration_warnings(): if energy \u003C 0: return [\u0022Energy must be 0 or greater.\u0022] else: return [] [/codeblock]",
+      "godotName": "_get_configuration_warnings",
+      "xmlDocId": "M:Godot.Node._GetConfigurationWarnings",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_GetFocusedAccessibilityElement",
+      "kind": "Method",
+      "signature": "public RID _GetFocusedAccessibilityElement()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Called during accessibility information updates to determine the currently focused sub-element, should return a sub-element RID or the value returned by [method get_accessibility_element].",
+      "godotName": "_get_focused_accessibility_element",
+      "xmlDocId": "M:Godot.Node._GetFocusedAccessibilityElement",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Input",
+      "kind": "Method",
+      "signature": "public void _Input(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when there is an input event. The input event propagates up through the node tree until a node consumes it. It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. For gameplay input, [method _unhandled_input] and [method _unhandled_key_input] are usually a better fit as they allow the GUI to intercept the events first. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_input",
+      "xmlDocId": "M:Godot.Node._Input(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_PhysicsProcess",
+      "kind": "Method",
+      "signature": "public void _PhysicsProcess(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called once on each physics tick, and allows Nodes to synchronize their logic with physics ticks. [param delta] is the logical time between physics ticks in seconds and is equal to [member Engine.time_scale] / [member Engine.physics_ticks_per_second]. It is only called if physics processing is enabled for this Node, which is done automatically if this method is overridden, and can be toggled with [method set_physics_process]. Processing happens in order of [member process_physics_priority], lower priority values are called first. Nodes with the same priority are processed in tree order, or top to bottom as seen in the editor (also known as pre-order traversal). Corresponds to the [constant NOTIFICATION_PHYSICS_PROCESS] notification in [method Object._notification]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan). [b]Note:[/b] Accumulated [param delta] may diverge from real world seconds.",
+      "godotName": "_physics_process",
+      "xmlDocId": "M:Godot.Node._PhysicsProcess(float)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called on each idle frame, prior to rendering, and after physics ticks have been processed. [param delta] is the time between frames in seconds. It is only called if processing is enabled for this Node, which is done automatically if this method is overridden, and can be toggled with [method set_process]. Processing happens in order of [member process_priority], lower priority values are called first. Nodes with the same priority are processed in tree order, or top to bottom as seen in the editor (also known as pre-order traversal). Corresponds to the [constant NOTIFICATION_PROCESS] notification in [method Object._notification]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan). [b]Note:[/b] When the engine is struggling and the frame rate is lowered, [param delta] will increase. When [param delta] is increased, it\u0027s capped at a maximum of [member Engine.time_scale] * [member Engine.max_physics_steps_per_frame] / [member Engine.physics_ticks_per_second]. As a result, accumulated [param delta] may not represent real world time. [b]Note:[/b] When [code]--fixed-fps[/code] is enabled or the engine is running in Movie Maker mode (see [MovieWriter]), process [param delta] will always be the same for every frame, regardless of how much time the frame took to render. [b]Note:[/b] Frame delta may be post-processed by [member OS.delta_smoothing] if this is enabled for the project.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.Node._Process(float)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_Ready",
+      "kind": "Method",
+      "signature": "public void _Ready()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the node is \u0022ready\u0022, i.e. when both the node and its children have entered the scene tree. If the node has children, their [method _ready] callbacks get triggered first, and the parent node will receive the ready notification afterwards. Corresponds to the [constant NOTIFICATION_READY] notification in [method Object._notification]. See also the [code]@onready[/code] annotation for variables. Usually used for initialization. For even earlier initialization, [method Object._init] may be used. See also [method _enter_tree]. [b]Note:[/b] This method may be called only once for each node. After removing a node from the scene tree and adding it again, [method _ready] will [b]not[/b] be called a second time. This can be bypassed by requesting another call with [method request_ready], which may be called anywhere before adding the node again.",
+      "godotName": "_ready",
+      "xmlDocId": "M:Godot.Node._Ready",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_ShortcutInput",
+      "kind": "Method",
+      "signature": "public void _ShortcutInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEventKey], [InputEventShortcut], or [InputEventJoypadButton] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called before [method _unhandled_key_input] and [method _unhandled_input]. The input event propagates up through the node tree until a node consumes it. It is only called if shortcut processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_shortcut_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. This method can be used to handle shortcuts. For generic GUI events, use [method _input] instead. Gameplay events should usually be handled with either [method _unhandled_input] or [method _unhandled_key_input]. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not orphan).",
+      "godotName": "_shortcut_input",
+      "xmlDocId": "M:Godot.Node._ShortcutInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_UnhandledInput",
+      "kind": "Method",
+      "signature": "public void _UnhandledInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEvent] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called after [method _shortcut_input] and after [method _unhandled_key_input]. The input event propagates up through the node tree until a node consumes it. It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. For gameplay input, this method is usually a better fit than [method _input], as GUI events need a higher priority. For keyboard shortcuts, consider using [method _shortcut_input] instead, as it is called before this method. Finally, to handle keyboard events, consider using [method _unhandled_key_input] for performance reasons. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_unhandled_input",
+      "xmlDocId": "M:Godot.Node._UnhandledInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    },
+    {
+      "name": "_UnhandledKeyInput",
+      "kind": "Method",
+      "signature": "public void _UnhandledKeyInput(InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Called when an [InputEventKey] hasn\u0027t been consumed by [method _input] or any GUI [Control] item. It is called after [method _shortcut_input] but before [method _unhandled_input]. The input event propagates up through the node tree until a node consumes it. It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_key_input]. To consume the input event and stop it propagating further to other nodes, [method Viewport.set_input_as_handled] can be called. This method can be used to handle Unicode character input with [kbd]Alt[/kbd], [kbd]Alt \u002B Ctrl[/kbd], and [kbd]Alt \u002B Shift[/kbd] modifiers, after shortcuts were handled. For gameplay input, this and [method _unhandled_input] are usually a better fit than [method _input], as GUI events should be handled first. This method also performs better than [method _unhandled_input], since unrelated events such as [InputEventMouseMotion] are automatically filtered. For shortcuts, consider using [method _shortcut_input] instead. [b]Note:[/b] This method is only called if the node is present in the scene tree (i.e. if it\u0027s not an orphan).",
+      "godotName": "_unhandled_key_input",
+      "xmlDocId": "M:Godot.Node._UnhandledKeyInput(InputEvent)",
+      "sourcePath": "doc/classes/Node.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Node.xml",
+      "sha256": "a01a3f510be5ff6fc3389c28b7347f01823edc359ac2e4b1f60bf343177b1f5d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

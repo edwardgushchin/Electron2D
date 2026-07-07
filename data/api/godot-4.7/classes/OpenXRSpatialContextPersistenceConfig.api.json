@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialContextPersistenceConfig",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialContextPersistenceConfig",
+    "kind": "class",
+    "baseType": "OpenXRStructureBase",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialContextPersistenceConfig",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialContextPersistenceConfig.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcontextpersistenceconfig.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPersistenceContext",
+      "kind": "Method",
+      "signature": "public void AddPersistenceContext(RID persistenceContext)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "persistence_context",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a persistence context to this configuration. You must add at least one persistence context to create a valid configuration. You can create a persistence context by calling [method OpenXRSpatialAnchorCapability.create_persistence_context].",
+      "godotName": "add_persistence_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialContextPersistenceConfig.AddPersistenceContext(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialContextPersistenceConfig.xml"
+    },
+    {
+      "name": "GetPersistenceContexts",
+      "kind": "Method",
+      "signature": "public Array GetPersistenceContexts()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Gets the persistence context(s) (as [RID]s) received by [method add_persistence_context].",
+      "godotName": "get_persistence_contexts",
+      "xmlDocId": "M:Godot.OpenXRSpatialContextPersistenceConfig.GetPersistenceContexts",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialContextPersistenceConfig.xml"
+    },
+    {
+      "name": "RemovePersistenceContext",
+      "kind": "Method",
+      "signature": "public void RemovePersistenceContext(RID persistenceContext)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "persistence_context",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes a persistence context.",
+      "godotName": "remove_persistence_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialContextPersistenceConfig.RemovePersistenceContext(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialContextPersistenceConfig.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialContextPersistenceConfig.xml",
+      "sha256": "8214b72f82212c0b273d3aaa8086f402b9d352e607dd1d78690578f46ebe5fb7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,832 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionObject2D",
+    "namespace": "Godot",
+    "fullName": "Godot.CollisionObject2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "CollisionObject2D",
+    "documentationPath": "doc/classes/CollisionObject2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_collisionobject2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_InputEvent",
+      "kind": "Method",
+      "signature": "public void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "viewport",
+          "type": "Viewport"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Accepts unhandled [InputEvent]s. [param shape_idx] is the child index of the clicked [Shape2D]. Connect to [signal input_event] to easily pick up these events. [b]Note:[/b] [method _input_event] requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set.",
+      "godotName": "_input_event",
+      "xmlDocId": "M:Godot.CollisionObject2D._InputEvent(Viewport,InputEvent,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseEnter",
+      "kind": "Method",
+      "signature": "public void _MouseEnter()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the mouse pointer enters any of this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this function to be called.",
+      "godotName": "_mouse_enter",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseEnter",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseExit",
+      "kind": "Method",
+      "signature": "public void _MouseExit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the mouse pointer exits all this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this function to be called.",
+      "godotName": "_mouse_exit",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseExit",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseShapeEnter",
+      "kind": "Method",
+      "signature": "public void _MouseShapeEnter(int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the mouse pointer enters any of this object\u0027s shapes or moves from one shape to another. [param shape_idx] is the child index of the newly entered [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be called.",
+      "godotName": "_mouse_shape_enter",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseShapeEnter(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseShapeExit",
+      "kind": "Method",
+      "signature": "public void _MouseShapeExit(int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the mouse pointer exits any of this object\u0027s shapes. [param shape_idx] is the child index of the exited [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be called.",
+      "godotName": "_mouse_shape_exit",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseShapeExit(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "CreateShapeOwner",
+      "kind": "Method",
+      "signature": "public int CreateShapeOwner(Object owner)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "owner",
+          "type": "Object"
+        }
+      ],
+      "summary": "Creates a new shape owner for the given object. Returns [code]owner_id[/code] of the new owner for future reference.",
+      "godotName": "create_shape_owner",
+      "xmlDocId": "M:Godot.CollisionObject2D.CreateShapeOwner(Object)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_layer] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_layer_value",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetCollisionLayerValue(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the object\u0027s [RID].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetRid",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetShapeOwnerOneWayCollisionDirection",
+      "kind": "Method",
+      "signature": "public Vector2 GetShapeOwnerOneWayCollisionDirection(int ownerId)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [code]one_way_collision_direction[/code] of the shape owner identified by the given [param owner_id].",
+      "godotName": "get_shape_owner_one_way_collision_direction",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetShapeOwnerOneWayCollisionDirection(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetShapeOwnerOneWayCollisionMargin",
+      "kind": "Method",
+      "signature": "public float GetShapeOwnerOneWayCollisionMargin(int ownerId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [code]one_way_collision_margin[/code] of the shape owner identified by given [param owner_id].",
+      "godotName": "get_shape_owner_one_way_collision_margin",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetShapeOwnerOneWayCollisionMargin(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "GetShapeOwners",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetShapeOwners()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns an [Array] of [code]owner_id[/code] identifiers. You can use these ids in other methods that take [code]owner_id[/code] as an argument.",
+      "godotName": "get_shape_owners",
+      "xmlDocId": "M:Godot.CollisionObject2D.GetShapeOwners",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "IsShapeOwnerDisabled",
+      "kind": "Method",
+      "signature": "public bool IsShapeOwnerDisabled(int ownerId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "If [code]true[/code], the shape owner and its shapes are disabled.",
+      "godotName": "is_shape_owner_disabled",
+      "xmlDocId": "M:Godot.CollisionObject2D.IsShapeOwnerDisabled(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "IsShapeOwnerOneWayCollisionEnabled",
+      "kind": "Method",
+      "signature": "public bool IsShapeOwnerOneWayCollisionEnabled(int ownerId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if collisions for the shape owner originating from this [CollisionObject2D] will not be reported to collided with [CollisionObject2D]s.",
+      "godotName": "is_shape_owner_one_way_collision_enabled",
+      "xmlDocId": "M:Godot.CollisionObject2D.IsShapeOwnerOneWayCollisionEnabled(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "RemoveShapeOwner",
+      "kind": "Method",
+      "signature": "public void RemoveShapeOwner(int ownerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the given shape owner.",
+      "godotName": "remove_shape_owner",
+      "xmlDocId": "M:Godot.CollisionObject2D.RemoveShapeOwner(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "SetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_layer], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_layer_value",
+      "xmlDocId": "M:Godot.CollisionObject2D.SetCollisionLayerValue(int,bool)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.CollisionObject2D.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeFindOwner",
+      "kind": "Method",
+      "signature": "public int ShapeFindOwner(int shapeIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [code]owner_id[/code] of the given shape.",
+      "godotName": "shape_find_owner",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeFindOwner(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerAddShape",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerAddShape(int ownerId, Shape2D shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "Shape2D"
+        }
+      ],
+      "summary": "Adds a [Shape2D] to the shape owner.",
+      "godotName": "shape_owner_add_shape",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerAddShape(int,Shape2D)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerClearShapes",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerClearShapes(int ownerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes all shapes from the shape owner.",
+      "godotName": "shape_owner_clear_shapes",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerClearShapes(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerGetOwner",
+      "kind": "Method",
+      "signature": "public Object ShapeOwnerGetOwner(int ownerId)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the parent object of the given shape owner.",
+      "godotName": "shape_owner_get_owner",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerGetOwner(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerGetShape",
+      "kind": "Method",
+      "signature": "public Shape2D ShapeOwnerGetShape(int ownerId, int shapeId)",
+      "returnType": "Shape2D",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "shape_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Shape2D] with the given ID from the given shape owner.",
+      "godotName": "shape_owner_get_shape",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerGetShape(int,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerGetShapeCount",
+      "kind": "Method",
+      "signature": "public int ShapeOwnerGetShapeCount(int ownerId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of shapes the given shape owner contains.",
+      "godotName": "shape_owner_get_shape_count",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerGetShapeCount(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerGetShapeIndex",
+      "kind": "Method",
+      "signature": "public int ShapeOwnerGetShapeIndex(int ownerId, int shapeId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "shape_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the child index of the [Shape2D] with the given ID from the given shape owner.",
+      "godotName": "shape_owner_get_shape_index",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerGetShapeIndex(int,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerGetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D ShapeOwnerGetTransform(int ownerId)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the shape owner\u0027s [Transform2D].",
+      "godotName": "shape_owner_get_transform",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerGetTransform(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerRemoveShape",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerRemoveShape(int ownerId, int shapeId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "shape_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a shape from the given shape owner.",
+      "godotName": "shape_owner_remove_shape",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerRemoveShape(int,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerSetDisabled",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerSetDisabled(int ownerId, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], disables the given shape owner.",
+      "godotName": "shape_owner_set_disabled",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerSetDisabled(int,bool)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerSetOneWayCollision",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerSetOneWayCollision(int ownerId, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enable] is [code]true[/code], collisions for the shape owner originating from this [CollisionObject2D] will not be reported to collided with [CollisionObject2D]s.",
+      "godotName": "shape_owner_set_one_way_collision",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerSetOneWayCollision(int,bool)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerSetOneWayCollisionDirection",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerSetOneWayCollisionDirection(int ownerId, Vector2 direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "direction",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the [code]one_way_collision_direction[/code] of the shape owner identified by the given [param owner_id] to [param direction].",
+      "godotName": "shape_owner_set_one_way_collision_direction",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerSetOneWayCollisionDirection(int,Vector2)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerSetOneWayCollisionMargin",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerSetOneWayCollisionMargin(int ownerId, float margin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [code]one_way_collision_margin[/code] of the shape owner identified by given [param owner_id] to [param margin] pixels.",
+      "godotName": "shape_owner_set_one_way_collision_margin",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerSetOneWayCollisionMargin(int,float)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "ShapeOwnerSetTransform",
+      "kind": "Method",
+      "signature": "public void ShapeOwnerSetTransform(int ownerId, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "owner_id",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets the [Transform2D] of the given shape owner.",
+      "godotName": "shape_owner_set_transform",
+      "xmlDocId": "M:Godot.CollisionObject2D.ShapeOwnerSetTransform(int,Transform2D)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public int CollisionLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also [member collision_mask]. [b]Note:[/b] Object A can detect a contact with object B only if object B is in any of the layers that object A scans. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_layer",
+      "xmlDocId": "P:Godot.CollisionObject2D.CollisionLayer",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this CollisionObject2D scans. Collision objects can scan one or more of 32 different layers. See also [member collision_layer]. [b]Note:[/b] Object A can detect a contact with object B only if object B is in any of the layers that object A scans. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.CollisionObject2D.CollisionMask",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "CollisionPriority",
+      "kind": "Property",
+      "signature": "public float CollisionPriority { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The priority used to solve colliding when occurring penetration. The higher the priority is, the lower the penetration into the object will be. This can for example be used to prevent the player from breaking through the boundaries of a level.",
+      "defaultValue": "1.0",
+      "godotName": "collision_priority",
+      "xmlDocId": "P:Godot.CollisionObject2D.CollisionPriority",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "DisableMode",
+      "kind": "Property",
+      "signature": "public int DisableMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the behavior in physics when [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "disable_mode",
+      "xmlDocId": "P:Godot.CollisionObject2D.DisableMode",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "InputPickable",
+      "kind": "Property",
+      "signature": "public bool InputPickable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one [member collision_layer] bit to be set.",
+      "defaultValue": "true",
+      "godotName": "input_pickable",
+      "xmlDocId": "P:Godot.CollisionObject2D.InputPickable",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "InputEvent",
+      "kind": "Signal",
+      "signature": "public event InputEventHandler InputEvent",
+      "parameters": [
+        {
+          "name": "viewport",
+          "type": "Node"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when an input event occurs. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. See [method _input_event] for details.",
+      "godotName": "input_event",
+      "xmlDocId": "E:Godot.CollisionObject2D.InputEvent(Node,InputEvent,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "MouseEntered",
+      "kind": "Signal",
+      "signature": "public event MouseEnteredHandler MouseEntered",
+      "parameters": [],
+      "summary": "Emitted when the mouse pointer enters any of this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this signal to be emitted. [b]Note:[/b] Due to the lack of continuous collision detection, this signal may not be emitted in the expected order if the mouse moves fast enough and the [CollisionObject2D]\u0027s area is small. This signal may also not be emitted if another [CollisionObject2D] is overlapping the [CollisionObject2D] in question.",
+      "godotName": "mouse_entered",
+      "xmlDocId": "E:Godot.CollisionObject2D.MouseEntered",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "MouseExited",
+      "kind": "Signal",
+      "signature": "public event MouseExitedHandler MouseExited",
+      "parameters": [],
+      "summary": "Emitted when the mouse pointer exits all this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this signal to be emitted. [b]Note:[/b] Due to the lack of continuous collision detection, this signal may not be emitted in the expected order if the mouse moves fast enough and the [CollisionObject2D]\u0027s area is small. This signal may also not be emitted if another [CollisionObject2D] is overlapping the [CollisionObject2D] in question.",
+      "godotName": "mouse_exited",
+      "xmlDocId": "E:Godot.CollisionObject2D.MouseExited",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "MouseShapeEntered",
+      "kind": "Signal",
+      "signature": "public event MouseShapeEnteredHandler MouseShapeEntered",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the mouse pointer enters any of this object\u0027s shapes or moves from one shape to another. [param shape_idx] is the child index of the newly entered [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set.",
+      "godotName": "mouse_shape_entered",
+      "xmlDocId": "E:Godot.CollisionObject2D.MouseShapeEntered(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "MouseShapeExited",
+      "kind": "Signal",
+      "signature": "public event MouseShapeExitedHandler MouseShapeExited",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the mouse pointer exits any of this object\u0027s shapes. [param shape_idx] is the child index of the exited [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set.",
+      "godotName": "mouse_shape_exited",
+      "xmlDocId": "E:Godot.CollisionObject2D.MouseShapeExited(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DisableMode",
+      "values": [
+        {
+          "name": "DISABLE_MODE_KEEP_ACTIVE",
+          "value": "2",
+          "enum": "DisableMode",
+          "kind": "EnumValue",
+          "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], do not affect the physics simulation.",
+          "sourcePath": "doc/classes/CollisionObject2D.xml"
+        },
+        {
+          "name": "DISABLE_MODE_MAKE_STATIC",
+          "value": "1",
+          "enum": "DisableMode",
+          "kind": "EnumValue",
+          "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], make the body static. Doesn\u0027t affect [Area2D]. [PhysicsBody2D] can\u0027t be affected by forces or other bodies while static. Automatically set [PhysicsBody2D] back to its original mode when the [Node] is processed again.",
+          "sourcePath": "doc/classes/CollisionObject2D.xml"
+        },
+        {
+          "name": "DISABLE_MODE_REMOVE",
+          "value": "0",
+          "enum": "DisableMode",
+          "kind": "EnumValue",
+          "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], remove from the physics simulation to stop all physics interactions with this [CollisionObject2D]. Automatically re-added to the physics simulation when the [Node] is processed again.",
+          "sourcePath": "doc/classes/CollisionObject2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DISABLE_MODE_REMOVE",
+      "value": "0",
+      "enum": "DisableMode",
+      "kind": "EnumValue",
+      "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], remove from the physics simulation to stop all physics interactions with this [CollisionObject2D]. Automatically re-added to the physics simulation when the [Node] is processed again.",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "DISABLE_MODE_MAKE_STATIC",
+      "value": "1",
+      "enum": "DisableMode",
+      "kind": "EnumValue",
+      "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], make the body static. Doesn\u0027t affect [Area2D]. [PhysicsBody2D] can\u0027t be affected by forces or other bodies while static. Automatically set [PhysicsBody2D] back to its original mode when the [Node] is processed again.",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "DISABLE_MODE_KEEP_ACTIVE",
+      "value": "2",
+      "enum": "DisableMode",
+      "kind": "EnumValue",
+      "summary": "When [member Node.process_mode] is set to [constant Node.PROCESS_MODE_DISABLED], do not affect the physics simulation.",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_InputEvent",
+      "kind": "Method",
+      "signature": "public void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "viewport",
+          "type": "Viewport"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Accepts unhandled [InputEvent]s. [param shape_idx] is the child index of the clicked [Shape2D]. Connect to [signal input_event] to easily pick up these events. [b]Note:[/b] [method _input_event] requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set.",
+      "godotName": "_input_event",
+      "xmlDocId": "M:Godot.CollisionObject2D._InputEvent(Viewport,InputEvent,int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseEnter",
+      "kind": "Method",
+      "signature": "public void _MouseEnter()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the mouse pointer enters any of this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this function to be called.",
+      "godotName": "_mouse_enter",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseEnter",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseExit",
+      "kind": "Method",
+      "signature": "public void _MouseExit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the mouse pointer exits all this object\u0027s shapes. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be set. Note that moving between different shapes within a single [CollisionObject2D] won\u0027t cause this function to be called.",
+      "godotName": "_mouse_exit",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseExit",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseShapeEnter",
+      "kind": "Method",
+      "signature": "public void _MouseShapeEnter(int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the mouse pointer enters any of this object\u0027s shapes or moves from one shape to another. [param shape_idx] is the child index of the newly entered [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be called.",
+      "godotName": "_mouse_shape_enter",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseShapeEnter(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    },
+    {
+      "name": "_MouseShapeExit",
+      "kind": "Method",
+      "signature": "public void _MouseShapeExit(int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the mouse pointer exits any of this object\u0027s shapes. [param shape_idx] is the child index of the exited [Shape2D]. Requires [member input_pickable] to be [code]true[/code] and at least one [member collision_layer] bit to be called.",
+      "godotName": "_mouse_shape_exit",
+      "xmlDocId": "M:Godot.CollisionObject2D._MouseShapeExit(int)",
+      "sourcePath": "doc/classes/CollisionObject2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CollisionObject2D.xml",
+      "sha256": "78060baf4895acb64ecebd1d9a48466c27e29a031c84b13c657de1fafd9c0e7a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

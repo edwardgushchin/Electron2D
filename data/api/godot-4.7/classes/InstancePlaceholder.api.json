@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InstancePlaceholder",
+    "namespace": "Godot",
+    "fullName": "Godot.InstancePlaceholder",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "InstancePlaceholder",
+    "documentationPath": "doc/classes/InstancePlaceholder.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_instanceplaceholder.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateInstance",
+      "kind": "Method",
+      "signature": "public Node CreateInstance(bool replace, PackedScene customScene)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "replace",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "custom_scene",
+          "type": "PackedScene",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Call this method to actually load in the node. The created node will be placed as a sibling [i]above[/i] the [InstancePlaceholder] in the scene tree. The [Node]\u0027s reference is also returned for convenience. [b]Note:[/b] [method create_instance] is not thread-safe. Use [method Object.call_deferred] if calling from a thread.",
+      "godotName": "create_instance",
+      "xmlDocId": "M:Godot.InstancePlaceholder.CreateInstance(bool,PackedScene)",
+      "sourcePath": "doc/classes/InstancePlaceholder.xml"
+    },
+    {
+      "name": "GetInstancePath",
+      "kind": "Method",
+      "signature": "public String GetInstancePath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the path to the [PackedScene] resource file that is loaded by default when calling [method create_instance]. Not thread-safe. Use [method Object.call_deferred] if calling from a thread.",
+      "godotName": "get_instance_path",
+      "xmlDocId": "M:Godot.InstancePlaceholder.GetInstancePath",
+      "sourcePath": "doc/classes/InstancePlaceholder.xml"
+    },
+    {
+      "name": "GetStoredValues",
+      "kind": "Method",
+      "signature": "public Dictionary GetStoredValues(bool withOrder)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "with_order",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the list of properties that will be applied to the node when [method create_instance] is called. If [param with_order] is [code]true[/code], a key named [code].order[/code] (note the leading period) is added to the dictionary. This [code].order[/code] key is an [Array] of [String] property names specifying the order in which properties will be applied (with index 0 being the first).",
+      "godotName": "get_stored_values",
+      "xmlDocId": "M:Godot.InstancePlaceholder.GetStoredValues(bool)",
+      "sourcePath": "doc/classes/InstancePlaceholder.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InstancePlaceholder.xml",
+      "sha256": "57f4a851e984ec97f1a0f778c532e9acffa76c741f4439d44961df9b6f78d862"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

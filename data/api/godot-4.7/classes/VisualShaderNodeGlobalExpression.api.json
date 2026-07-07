@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeGlobalExpression",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeGlobalExpression",
+    "kind": "class",
+    "baseType": "VisualShaderNodeExpression",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeGlobalExpression",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeGlobalExpression.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeglobalexpression.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeGlobalExpression.xml",
+      "sha256": "64fa3b5aa39dabe48fa80e97ea1b57c12a3ce3a15522c5f0576b8acd35c662be"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Skeleton2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Skeleton2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Skeleton2D",
+    "documentationPath": "doc/classes/Skeleton2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeleton2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ExecuteModifications",
+      "kind": "Method",
+      "signature": "public void ExecuteModifications(float delta, int executionMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        },
+        {
+          "name": "execution_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Executes all the modifications on the [SkeletonModificationStack2D], if the Skeleton2D has one assigned.",
+      "godotName": "execute_modifications",
+      "xmlDocId": "M:Godot.Skeleton2D.ExecuteModifications(float,int)",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "GetBone",
+      "kind": "Method",
+      "signature": "public Bone2D GetBone(int idx)",
+      "returnType": "Bone2D",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Bone2D] from the node hierarchy parented by Skeleton2D. The object to return is identified by the parameter [param idx]. Bones are indexed by descending the node hierarchy from top to bottom, adding the children of each branch before moving to the next sibling.",
+      "godotName": "get_bone",
+      "xmlDocId": "M:Godot.Skeleton2D.GetBone(int)",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "GetBoneCount",
+      "kind": "Method",
+      "signature": "public int GetBoneCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of [Bone2D] nodes in the node hierarchy parented by Skeleton2D.",
+      "godotName": "get_bone_count",
+      "xmlDocId": "M:Godot.Skeleton2D.GetBoneCount",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "GetBoneLocalPoseOverride",
+      "kind": "Method",
+      "signature": "public Transform2D GetBoneLocalPoseOverride(int boneIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local pose override transform for [param bone_idx].",
+      "godotName": "get_bone_local_pose_override",
+      "xmlDocId": "M:Godot.Skeleton2D.GetBoneLocalPoseOverride(int)",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "GetModificationStack",
+      "kind": "Method",
+      "signature": "public SkeletonModificationStack2D GetModificationStack()",
+      "returnType": "SkeletonModificationStack2D",
+      "parameters": [],
+      "summary": "Returns the [SkeletonModificationStack2D] attached to this skeleton, if one exists.",
+      "godotName": "get_modification_stack",
+      "xmlDocId": "M:Godot.Skeleton2D.GetModificationStack",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public RID GetSkeleton()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of a Skeleton2D instance.",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.Skeleton2D.GetSkeleton",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "SetBoneLocalPoseOverride",
+      "kind": "Method",
+      "signature": "public void SetBoneLocalPoseOverride(int boneIdx, Transform2D overridePose, float strength, bool persistent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "override_pose",
+          "type": "Transform2D"
+        },
+        {
+          "name": "strength",
+          "type": "float"
+        },
+        {
+          "name": "persistent",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the local pose transform, [param override_pose], for the bone at [param bone_idx]. [param strength] is the interpolation strength that will be used when applying the pose, and [param persistent] determines if the applied pose will remain. [b]Note:[/b] The pose transform needs to be a local transform relative to the [Bone2D] node at [param bone_idx]!",
+      "godotName": "set_bone_local_pose_override",
+      "xmlDocId": "M:Godot.Skeleton2D.SetBoneLocalPoseOverride(int,Transform2D,float,bool)",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    },
+    {
+      "name": "SetModificationStack",
+      "kind": "Method",
+      "signature": "public void SetModificationStack(SkeletonModificationStack2D modificationStack)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "modification_stack",
+          "type": "SkeletonModificationStack2D"
+        }
+      ],
+      "summary": "Sets the [SkeletonModificationStack2D] attached to this skeleton.",
+      "godotName": "set_modification_stack",
+      "xmlDocId": "M:Godot.Skeleton2D.SetModificationStack(SkeletonModificationStack2D)",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BoneSetupChanged",
+      "kind": "Signal",
+      "signature": "public event BoneSetupChangedHandler BoneSetupChanged",
+      "parameters": [],
+      "summary": "Emitted when the [Bone2D] setup attached to this skeletons changes. This is primarily used internally within the skeleton.",
+      "godotName": "bone_setup_changed",
+      "xmlDocId": "E:Godot.Skeleton2D.BoneSetupChanged",
+      "sourcePath": "doc/classes/Skeleton2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Skeleton2D.xml",
+      "sha256": "4e5eebfe8ce4f26024b0321a6a7b4bd79654c07ca6d467c817bd225c2cb9cc51"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

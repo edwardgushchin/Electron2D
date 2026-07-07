@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2D.SpaceParameter",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsServer2D.SpaceParameter",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "PhysicsServer2D.SpaceParameter",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BodyAngularVelocitySleepThreshold",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter BodyAngularVelocitySleepThreshold",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Angular velocity threshold below which a body can sleep.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.BodyAngularVelocitySleepThreshold",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BodyLinearVelocitySleepThreshold",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter BodyLinearVelocitySleepThreshold",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Linear velocity threshold below which a body can sleep.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.BodyLinearVelocitySleepThreshold",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BodyTimeToSleep",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter BodyTimeToSleep",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Time a low-activity body must remain below thresholds before sleeping.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.BodyTimeToSleep",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConstraintDefaultBias",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter ConstraintDefaultBias",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Default constraint solver bias.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.ConstraintDefaultBias",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactDefaultBias",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter ContactDefaultBias",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Default contact solver bias.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.ContactDefaultBias",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactMaxAllowedPenetration",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter ContactMaxAllowedPenetration",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Maximum allowed penetration before solver correction.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.ContactMaxAllowedPenetration",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactMaxSeparation",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter ContactMaxSeparation",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Maximum separation still considered for contact persistence.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.ContactMaxSeparation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactRecycleRadius",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter ContactRecycleRadius",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Contact recycle radius.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.ContactRecycleRadius",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SolverIterations",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.SpaceParameter SolverIterations",
+      "returnType": "Electron2D.PhysicsServer2D.SpaceParameter",
+      "parameters": [],
+      "summary": "Number of solver iterations used by the space.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.SpaceParameter.SolverIterations",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "BodyAngularVelocitySleepThreshold",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Angular velocity threshold below which a body can sleep.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BodyLinearVelocitySleepThreshold",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Linear velocity threshold below which a body can sleep.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BodyTimeToSleep",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Time a low-activity body must remain below thresholds before sleeping.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConstraintDefaultBias",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Default constraint solver bias.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactDefaultBias",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Default contact solver bias.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactMaxAllowedPenetration",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Maximum allowed penetration before solver correction.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactMaxSeparation",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Maximum separation still considered for contact persistence.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ContactRecycleRadius",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Contact recycle radius.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SolverIterations",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Number of solver iterations used by the space.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

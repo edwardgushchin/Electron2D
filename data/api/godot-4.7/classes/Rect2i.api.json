@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Rect2i",
+    "namespace": "Godot",
+    "fullName": "Godot.Rect2i",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Rect2i",
+    "documentationPath": "doc/classes/Rect2i.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rect2i.html"
+  },
+  "constructors": [
+    {
+      "name": "Rect2i",
+      "kind": "Constructor",
+      "signature": "public Rect2i()",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "Constructs a [Rect2i] with its [member position] and [member size] set to [constant Vector2i.ZERO].",
+      "godotName": "Rect2i",
+      "xmlDocId": "M:Godot.Rect2i.#ctor",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Rect2i",
+      "kind": "Constructor",
+      "signature": "public Rect2i(Rect2i from)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Constructs a [Rect2i] as a copy of the given [Rect2i].",
+      "godotName": "Rect2i",
+      "xmlDocId": "M:Godot.Rect2i.#ctor(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Rect2i",
+      "kind": "Constructor",
+      "signature": "public Rect2i(Rect2 from)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Constructs a [Rect2i] from a [Rect2]. The floating-point coordinates are truncated.",
+      "godotName": "Rect2i",
+      "xmlDocId": "M:Godot.Rect2i.#ctor(Rect2)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Rect2i",
+      "kind": "Constructor",
+      "signature": "public Rect2i(Vector2i position, Vector2i size)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Constructs a [Rect2i] by [param position] and [param size].",
+      "godotName": "Rect2i",
+      "xmlDocId": "M:Godot.Rect2i.#ctor(Vector2i,Vector2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Rect2i",
+      "kind": "Constructor",
+      "signature": "public Rect2i(int x, int y, int width, int height)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        }
+      ],
+      "summary": "Constructs a [Rect2i] by setting its [member position] to ([param x], [param y]), and its [member size] to ([param width], [param height]).",
+      "godotName": "Rect2i",
+      "xmlDocId": "M:Godot.Rect2i.#ctor(int,int,int,int)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Rect2i Abs()",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "Returns a [Rect2i] equivalent to this rectangle, with its width and height modified to be non-negative values, and with its [member position] being the top-left corner of the rectangle. [codeblocks] [gdscript] var rect = Rect2i(25, 25, -100, -50) var absolute = rect.abs() # absolute is Rect2i(-75, -25, 100, 50) [/gdscript] [csharp] var rect = new Rect2I(25, 25, -100, -50); var absolute = rect.Abs(); // absolute is Rect2I(-75, -25, 100, 50) [/csharp] [/codeblocks] [b]Note:[/b] It\u0027s recommended to use this method when [member size] is negative, as most other methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner.",
+      "godotName": "abs",
+      "xmlDocId": "M:Godot.Rect2i.Abs",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Encloses",
+      "kind": "Method",
+      "signature": "public bool Encloses(Rect2i b)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [Rect2i] completely encloses another one.",
+      "godotName": "encloses",
+      "xmlDocId": "M:Godot.Rect2i.Encloses(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Expand",
+      "kind": "Method",
+      "signature": "public Rect2i Expand(Vector2i to)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle expanded to align the edges with the given [param to] point, if necessary. [codeblocks] [gdscript] var rect = Rect2i(0, 0, 5, 2) rect = rect.expand(Vector2i(10, 0)) # rect is Rect2i(0, 0, 10, 2) rect = rect.expand(Vector2i(-5, 5)) # rect is Rect2i(-5, 0, 15, 5) [/gdscript] [csharp] var rect = new Rect2I(0, 0, 5, 2); rect = rect.Expand(new Vector2I(10, 0)); // rect is Rect2I(0, 0, 10, 2) rect = rect.Expand(new Vector2I(-5, 5)); // rect is Rect2I(-5, 0, 15, 5) [/csharp] [/codeblocks]",
+      "godotName": "expand",
+      "xmlDocId": "M:Godot.Rect2i.Expand(Vector2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "GetArea",
+      "kind": "Method",
+      "signature": "public int GetArea()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the rectangle\u0027s area. This is equivalent to [code]size.x * size.y[/code]. See also [method has_area].",
+      "godotName": "get_area",
+      "xmlDocId": "M:Godot.Rect2i.GetArea",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "GetCenter",
+      "kind": "Method",
+      "signature": "public Vector2i GetCenter()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the center point of the rectangle. This is the same as [code]position \u002B (size / 2)[/code]. [b]Note:[/b] If the [member size] is odd, the result will be rounded towards [member position].",
+      "godotName": "get_center",
+      "xmlDocId": "M:Godot.Rect2i.GetCenter",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Grow",
+      "kind": "Method",
+      "signature": "public Rect2i Grow(int amount)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle extended on all sides by the given [param amount]. A negative [param amount] shrinks the rectangle instead. See also [method grow_individual] and [method grow_side]. [codeblocks] [gdscript] var a = Rect2i(4, 4, 8, 8).grow(4) # a is Rect2i(0, 0, 16, 16) var b = Rect2i(0, 0, 8, 4).grow(2) # b is Rect2i(-2, -2, 12, 8) [/gdscript] [csharp] var a = new Rect2I(4, 4, 8, 8).Grow(4); // a is Rect2I(0, 0, 16, 16) var b = new Rect2I(0, 0, 8, 4).Grow(2); // b is Rect2I(-2, -2, 12, 8) [/csharp] [/codeblocks]",
+      "godotName": "grow",
+      "xmlDocId": "M:Godot.Rect2i.Grow(int)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "GrowIndividual",
+      "kind": "Method",
+      "signature": "public Rect2i GrowIndividual(int left, int top, int right, int bottom)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "int"
+        },
+        {
+          "name": "top",
+          "type": "int"
+        },
+        {
+          "name": "right",
+          "type": "int"
+        },
+        {
+          "name": "bottom",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle with its [param left], [param top], [param right], and [param bottom] sides extended by the given amounts. Negative values shrink the sides, instead. See also [method grow] and [method grow_side].",
+      "godotName": "grow_individual",
+      "xmlDocId": "M:Godot.Rect2i.GrowIndividual(int,int,int,int)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "GrowSide",
+      "kind": "Method",
+      "signature": "public Rect2i GrowSide(int side, int amount)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "side",
+          "type": "int"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle with its [param side] extended by the given [param amount] (see [enum Side] constants). A negative [param amount] shrinks the rectangle, instead. See also [method grow] and [method grow_individual].",
+      "godotName": "grow_side",
+      "xmlDocId": "M:Godot.Rect2i.GrowSide(int,int)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "HasArea",
+      "kind": "Method",
+      "signature": "public bool HasArea()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this rectangle has positive width and height. See also [method get_area].",
+      "godotName": "has_area",
+      "xmlDocId": "M:Godot.Rect2i.HasArea",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public bool HasPoint(Vector2i point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the rectangle contains the given [param point]. By convention, points on the right and bottom edges are [b]not[/b] included. [b]Note:[/b] This method is not reliable for [Rect2i] with a [i]negative[/i] [member size]. Use [method abs] first to get a valid rectangle.",
+      "godotName": "has_point",
+      "xmlDocId": "M:Godot.Rect2i.HasPoint(Vector2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Intersection",
+      "kind": "Method",
+      "signature": "public Rect2i Intersection(Rect2i b)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns the intersection between this rectangle and [param b]. If the rectangles do not intersect, returns an empty [Rect2i]. [codeblocks] [gdscript] var a = Rect2i(0, 0, 5, 10) var b = Rect2i(2, 0, 8, 4) var c = a.intersection(b) # c is Rect2i(2, 0, 3, 4) [/gdscript] [csharp] var a = new Rect2I(0, 0, 5, 10); var b = new Rect2I(2, 0, 8, 4); var c = rect1.Intersection(rect2); // c is Rect2I(2, 0, 3, 4) [/csharp] [/codeblocks] [b]Note:[/b] If you only need to know whether two rectangles are overlapping, use [method intersects], instead.",
+      "godotName": "intersection",
+      "xmlDocId": "M:Godot.Rect2i.Intersection(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Intersects",
+      "kind": "Method",
+      "signature": "public bool Intersects(Rect2i b)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this rectangle overlaps with the [param b] rectangle. The edges of both rectangles are excluded.",
+      "godotName": "intersects",
+      "xmlDocId": "M:Godot.Rect2i.Intersects(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public Rect2i Merge(Rect2i b)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns a [Rect2i] that encloses both this rectangle and [param b] around the edges. See also [method encloses].",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.Rect2i.Merge(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "End",
+      "kind": "Property",
+      "signature": "public Vector2i End { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The ending point. This is usually the bottom-right corner of the rectangle, and is equivalent to [code]position \u002B size[/code]. Setting this point affects the [member size].",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "end",
+      "xmlDocId": "P:Godot.Rect2i.End",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2i Position { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The origin point. This is usually the top-left corner of the rectangle.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.Rect2i.Position",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The rectangle\u0027s width and height, starting from [member position]. Setting this value also affects the [member end] point. [b]Note:[/b] It\u0027s recommended setting the width and height to non-negative values, as most methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner. To get an equivalent rectangle with non-negative size, use [method abs].",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.Rect2i.Size",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Rect2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [member position] or [member size] of both rectangles are not equal.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Rect2i.operator !=(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Rect2i right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both [member position] and [member size] of the rectangles are equal, respectively.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Rect2i.operator ==(Rect2i)",
+      "sourcePath": "doc/classes/Rect2i.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Rect2i.xml",
+      "sha256": "c1a5d9217140ca2301c023ef17bc29c94f7d4ce21c25331105a2526f889e47d7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

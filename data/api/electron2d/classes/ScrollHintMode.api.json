@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScrollHintMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ScrollHintMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "ScrollContainer.ScrollHintMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "All",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollHintMode All",
+      "returnType": "Electron2D.ScrollHintMode",
+      "parameters": [],
+      "summary": "Allows scroll hints on every edge.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.ScrollHintMode.All",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BottomAndRight",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollHintMode BottomAndRight",
+      "returnType": "Electron2D.ScrollHintMode",
+      "parameters": [],
+      "summary": "Allows hints on the bottom and right edges.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.ScrollHintMode.BottomAndRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollHintMode Disabled",
+      "returnType": "Electron2D.ScrollHintMode",
+      "parameters": [],
+      "summary": "Disables scroll hints.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.ScrollHintMode.Disabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TopAndLeft",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollHintMode TopAndLeft",
+      "returnType": "Electron2D.ScrollHintMode",
+      "parameters": [],
+      "summary": "Allows hints on the top and left edges.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.ScrollHintMode.TopAndLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "All",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Allows scroll hints on every edge.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BottomAndRight",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Allows hints on the bottom and right edges.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Disables scroll hints.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TopAndLeft",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Allows hints on the top and left edges.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

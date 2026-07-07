@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDPipelineColorBlendState",
+    "namespace": "Godot",
+    "fullName": "Godot.RDPipelineColorBlendState",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDPipelineColorBlendState",
+    "documentationPath": "doc/classes/RDPipelineColorBlendState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdpipelinecolorblendstate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Attachments",
+      "kind": "Property",
+      "signature": "public RDPipelineColorBlendStateAttachment[] Attachments { get; set; }",
+      "returnType": "RDPipelineColorBlendStateAttachment[]",
+      "parameters": [],
+      "summary": "The attachments that are blended together.",
+      "defaultValue": "[]",
+      "godotName": "attachments",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendState.Attachments",
+      "sourcePath": "doc/classes/RDPipelineColorBlendState.xml"
+    },
+    {
+      "name": "BlendConstant",
+      "kind": "Property",
+      "signature": "public Color BlendConstant { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The constant color to blend with. See also [method RenderingDevice.draw_list_set_blend_constants].",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "blend_constant",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendState.BlendConstant",
+      "sourcePath": "doc/classes/RDPipelineColorBlendState.xml"
+    },
+    {
+      "name": "EnableLogicOp",
+      "kind": "Property",
+      "signature": "public bool EnableLogicOp { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], performs the logic operation defined in [member logic_op].",
+      "defaultValue": "false",
+      "godotName": "enable_logic_op",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendState.EnableLogicOp",
+      "sourcePath": "doc/classes/RDPipelineColorBlendState.xml"
+    },
+    {
+      "name": "LogicOp",
+      "kind": "Property",
+      "signature": "public int LogicOp { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The logic operation to perform for blending. Only effective if [member enable_logic_op] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "logic_op",
+      "xmlDocId": "P:Godot.RDPipelineColorBlendState.LogicOp",
+      "sourcePath": "doc/classes/RDPipelineColorBlendState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDPipelineColorBlendState.xml",
+      "sha256": "37ba5aae35e4de606c224692c1ec4a8bd88b26e0cbf8f9c36fc19434316e58d2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

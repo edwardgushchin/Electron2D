@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVectorBase",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVectorBase",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVectorBase",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevectorbase.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A vector type that this operation is performed on.",
+      "defaultValue": "1",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeVectorBase.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVectorBase.xml",
+      "sha256": "c44821a8b14c2beafee33b62574a144fe3947983713eb2f0886ad220b8af9fef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

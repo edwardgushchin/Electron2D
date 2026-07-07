@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoxOccluder3D",
+    "namespace": "Godot",
+    "fullName": "Godot.BoxOccluder3D",
+    "kind": "class",
+    "baseType": "Occluder3D",
+    "interfaces": [],
+    "godotReference": "BoxOccluder3D",
+    "documentationPath": "doc/classes/BoxOccluder3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_boxoccluder3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The box\u0027s size in 3D units.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.BoxOccluder3D.Size",
+      "sourcePath": "doc/classes/BoxOccluder3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoxOccluder3D.xml",
+      "sha256": "ce2350025157ef348de504fdd3a3a3a9827e020651bd8263bc693ad2cdaffbb9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedColorArray",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedColorArray",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedColorArray",
+    "documentationPath": "doc/classes/PackedColorArray.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedcolorarray.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedColorArray",
+      "kind": "Constructor",
+      "signature": "public PackedColorArray()",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedColorArray].",
+      "godotName": "PackedColorArray",
+      "xmlDocId": "M:Godot.PackedColorArray.#ctor",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "PackedColorArray",
+      "kind": "Constructor",
+      "signature": "public PackedColorArray(PackedColorArray from)",
+      "returnType": "PackedColorArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Constructs a [PackedColorArray] as a copy of the given [PackedColorArray].",
+      "godotName": "PackedColorArray",
+      "xmlDocId": "M:Godot.PackedColorArray.#ctor(PackedColorArray)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "PackedColorArray",
+      "kind": "Constructor",
+      "signature": "public PackedColorArray(Array from)",
+      "returnType": "PackedColorArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedColorArray]. Optionally, you can pass in a generic [Array] that will be converted. [b]Note:[/b] When initializing a [PackedColorArray] with elements, it must be initialized with an [Array] of [Color] values: [codeblock] var array = PackedColorArray([Color(0.1, 0.2, 0.3), Color(0.4, 0.5, 0.6)]) [/codeblock]",
+      "godotName": "PackedColorArray",
+      "xmlDocId": "M:Godot.PackedColorArray.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(Color value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedColorArray.Append(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedColorArray array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Appends a [PackedColorArray] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedColorArray.AppendArray(PackedColorArray)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(Color value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedColorArray.Bsearch(Color,bool)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedColorArray.Clear",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(Color value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedColorArray.Count(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedColorArray Duplicate()",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedColorArray.Duplicate",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(Color value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedColorArray.Erase(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(Color value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedColorArray.Fill(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(Color value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedColorArray.Find(Color,int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public Color Get(int index)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]Color(0, 0, 0, 1)[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedColorArray.Get(int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(Color value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedColorArray.Has(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, Color value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedColorArray.Insert(int,Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedColorArray.IsEmpty",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(Color value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Appends a value to the array.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedColorArray.PushBack(Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedColorArray.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedColorArray.Resize(int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedColorArray.Reverse",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(Color value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Color"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedColorArray.Rfind(Color,int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, Color value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Color"
+        }
+      ],
+      "summary": "Changes the [Color] at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedColorArray.Set(int,Color)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedColorArray.Size",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedColorArray Slice(int begin, int end)",
+      "returnType": "PackedColorArray",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedColorArray], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedColorArray]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedColorArray.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedColorArray.Sort",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "ToByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a [PackedByteArray] with each color encoded as bytes.",
+      "godotName": "to_byte_array",
+      "xmlDocId": "M:Godot.PackedColorArray.ToByteArray",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedColorArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedColorArray.operator !=(PackedColorArray)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedColorArray operator \u002B(PackedColorArray right)",
+      "returnType": "PackedColorArray",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Returns a new [PackedColorArray] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedColorArray.operator \u002B(PackedColorArray)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedColorArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedColorArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal [Color]s at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedColorArray.operator ==(PackedColorArray)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Color operator [](int index)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Color] at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedColorArray.operator [](int)",
+      "sourcePath": "doc/classes/PackedColorArray.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedColorArray.xml",
+      "sha256": "29cc342ae00b3f17c311c57606a199214dcb70a218ca921626242e7b425521da"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

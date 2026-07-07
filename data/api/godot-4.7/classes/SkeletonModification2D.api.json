@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2D",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2D",
+    "documentationPath": "doc/classes/SkeletonModification2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_DrawEditorGizmo",
+      "kind": "Method",
+      "signature": "public void _DrawEditorGizmo()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Used for drawing [b]editor-only[/b] modification gizmos. This function will only be called in the Godot editor and can be overridden to draw custom gizmos. [b]Note:[/b] You will need to use the Skeleton2D from [method SkeletonModificationStack2D.get_skeleton] and it\u0027s draw functions, as the [SkeletonModification2D] resource cannot draw on its own.",
+      "godotName": "_draw_editor_gizmo",
+      "xmlDocId": "M:Godot.SkeletonModification2D._DrawEditorGizmo",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "_Execute",
+      "kind": "Method",
+      "signature": "public void _Execute(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Executes the given modification. This is where the modification performs whatever function it is designed to do.",
+      "godotName": "_execute",
+      "xmlDocId": "M:Godot.SkeletonModification2D._Execute(float)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "_SetupModification",
+      "kind": "Method",
+      "signature": "public void _SetupModification(SkeletonModificationStack2D modificationStack)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "modification_stack",
+          "type": "SkeletonModificationStack2D"
+        }
+      ],
+      "summary": "Called when the modification is setup. This is where the modification performs initialization.",
+      "godotName": "_setup_modification",
+      "xmlDocId": "M:Godot.SkeletonModification2D._SetupModification(SkeletonModificationStack2D)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "ClampAngle",
+      "kind": "Method",
+      "signature": "public float ClampAngle(float angle, float min, float max, bool invert)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "float"
+        },
+        {
+          "name": "min",
+          "type": "float"
+        },
+        {
+          "name": "max",
+          "type": "float"
+        },
+        {
+          "name": "invert",
+          "type": "bool"
+        }
+      ],
+      "summary": "Takes an angle and clamps it so it is within the passed-in [param min] and [param max] range. [param invert] will inversely clamp the angle, clamping it to the range outside of the given bounds.",
+      "godotName": "clamp_angle",
+      "xmlDocId": "M:Godot.SkeletonModification2D.ClampAngle(float,float,float,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "GetEditorDrawGizmo",
+      "kind": "Method",
+      "signature": "public bool GetEditorDrawGizmo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether this modification will call [method _draw_editor_gizmo] in the Godot editor to draw modification-specific gizmos.",
+      "godotName": "get_editor_draw_gizmo",
+      "xmlDocId": "M:Godot.SkeletonModification2D.GetEditorDrawGizmo",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "GetIsSetup",
+      "kind": "Method",
+      "signature": "public bool GetIsSetup()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether this modification has been successfully setup or not.",
+      "godotName": "get_is_setup",
+      "xmlDocId": "M:Godot.SkeletonModification2D.GetIsSetup",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "GetModificationStack",
+      "kind": "Method",
+      "signature": "public SkeletonModificationStack2D GetModificationStack()",
+      "returnType": "SkeletonModificationStack2D",
+      "parameters": [],
+      "summary": "Returns the [SkeletonModificationStack2D] that this modification is bound to. Through the modification stack, you can access the Skeleton2D the modification is operating on.",
+      "godotName": "get_modification_stack",
+      "xmlDocId": "M:Godot.SkeletonModification2D.GetModificationStack",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "SetEditorDrawGizmo",
+      "kind": "Method",
+      "signature": "public void SetEditorDrawGizmo(bool drawGizmo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "draw_gizmo",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether this modification will call [method _draw_editor_gizmo] in the Godot editor to draw modification-specific gizmos.",
+      "godotName": "set_editor_draw_gizmo",
+      "xmlDocId": "M:Godot.SkeletonModification2D.SetEditorDrawGizmo(bool)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "SetIsSetup",
+      "kind": "Method",
+      "signature": "public void SetIsSetup(bool isSetup)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "is_setup",
+          "type": "bool"
+        }
+      ],
+      "summary": "Manually allows you to set the setup state of the modification. This function should only rarely be used, as the [SkeletonModificationStack2D] the modification is bound to should handle setting the modification up.",
+      "godotName": "set_is_setup",
+      "xmlDocId": "M:Godot.SkeletonModification2D.SetIsSetup(bool)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the modification\u0027s [method _execute] function will be called by the [SkeletonModificationStack2D].",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.SkeletonModification2D.Enabled",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "ExecutionMode",
+      "kind": "Property",
+      "signature": "public int ExecutionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The execution mode for the modification. This tells the modification stack when to execute the modification. Some modifications have settings that are only available in certain execution modes.",
+      "defaultValue": "0",
+      "godotName": "execution_mode",
+      "xmlDocId": "P:Godot.SkeletonModification2D.ExecutionMode",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_DrawEditorGizmo",
+      "kind": "Method",
+      "signature": "public void _DrawEditorGizmo()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Used for drawing [b]editor-only[/b] modification gizmos. This function will only be called in the Godot editor and can be overridden to draw custom gizmos. [b]Note:[/b] You will need to use the Skeleton2D from [method SkeletonModificationStack2D.get_skeleton] and it\u0027s draw functions, as the [SkeletonModification2D] resource cannot draw on its own.",
+      "godotName": "_draw_editor_gizmo",
+      "xmlDocId": "M:Godot.SkeletonModification2D._DrawEditorGizmo",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "_Execute",
+      "kind": "Method",
+      "signature": "public void _Execute(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Executes the given modification. This is where the modification performs whatever function it is designed to do.",
+      "godotName": "_execute",
+      "xmlDocId": "M:Godot.SkeletonModification2D._Execute(float)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    },
+    {
+      "name": "_SetupModification",
+      "kind": "Method",
+      "signature": "public void _SetupModification(SkeletonModificationStack2D modificationStack)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "modification_stack",
+          "type": "SkeletonModificationStack2D"
+        }
+      ],
+      "summary": "Called when the modification is setup. This is where the modification performs initialization.",
+      "godotName": "_setup_modification",
+      "xmlDocId": "M:Godot.SkeletonModification2D._SetupModification(SkeletonModificationStack2D)",
+      "sourcePath": "doc/classes/SkeletonModification2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2D.xml",
+      "sha256": "9a1528fbaaeb491683911191c2644f567f0356e9b8069b13929704ceaa18731f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

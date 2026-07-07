@@ -1,0 +1,3160 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AccessibilityServer",
+    "namespace": "Godot",
+    "fullName": "Godot.AccessibilityServer",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "AccessibilityServer",
+    "documentationPath": "doc/classes/AccessibilityServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_accessibilityserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateElement",
+      "kind": "Method",
+      "signature": "public RID CreateElement(int windowId, int role)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "window_id",
+          "type": "int"
+        },
+        {
+          "name": "role",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a new, empty accessibility element resource. [b]Note:[/b] An accessibility element is created and freed automatically for each [Node]. In general, this function should not be called manually.",
+      "godotName": "create_element",
+      "xmlDocId": "M:Godot.AccessibilityServer.CreateElement(int,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "CreateSubElement",
+      "kind": "Method",
+      "signature": "public RID CreateSubElement(RID parentRid, int role, int insertPos)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "parent_rid",
+          "type": "RID"
+        },
+        {
+          "name": "role",
+          "type": "int"
+        },
+        {
+          "name": "insert_pos",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Creates a new, empty accessibility sub-element resource. Sub-elements can be used to provide accessibility information for objects which are not [Node]s, such as list items, table cells, or menu items. Sub-elements are freed automatically when the parent element is freed, or can be freed early using the [method free_element] method.",
+      "godotName": "create_sub_element",
+      "xmlDocId": "M:Godot.AccessibilityServer.CreateSubElement(RID,int,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "CreateSubTextEditElements",
+      "kind": "Method",
+      "signature": "public RID CreateSubTextEditElements(RID parentRid, RID shapedText, float minHeight, int insertPos, bool isLastLine)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "parent_rid",
+          "type": "RID"
+        },
+        {
+          "name": "shaped_text",
+          "type": "RID"
+        },
+        {
+          "name": "min_height",
+          "type": "float"
+        },
+        {
+          "name": "insert_pos",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "is_last_line",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new, empty accessibility sub-element from the shaped text buffer. Sub-elements are freed automatically when the parent element is freed, or can be freed early using the [method free_element] method. If [param is_last_line] is [code]true[/code], no trailing newline is appended to the text content. Set to [code]true[/code] for the last line in multi-line text fields and for single-line text fields.",
+      "godotName": "create_sub_text_edit_elements",
+      "xmlDocId": "M:Godot.AccessibilityServer.CreateSubTextEditElements(RID,RID,float,int,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ElementGetMeta",
+      "kind": "Method",
+      "signature": "public Variant ElementGetMeta(RID id)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the metadata of the accessibility element [param id].",
+      "godotName": "element_get_meta",
+      "xmlDocId": "M:Godot.AccessibilityServer.ElementGetMeta(RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ElementSetMeta",
+      "kind": "Method",
+      "signature": "public void ElementSetMeta(RID id, Variant meta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "meta",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata of the accessibility element [param id] to [param meta].",
+      "godotName": "element_set_meta",
+      "xmlDocId": "M:Godot.AccessibilityServer.ElementSetMeta(RID,Variant)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FreeElement",
+      "kind": "Method",
+      "signature": "public void FreeElement(RID id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Frees the accessibility element [param id] created by [method create_element], [method create_sub_element], or [method create_sub_text_edit_elements].",
+      "godotName": "free_element",
+      "xmlDocId": "M:Godot.AccessibilityServer.FreeElement(RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "GetWindowRoot",
+      "kind": "Method",
+      "signature": "public RID GetWindowRoot(int windowId)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "window_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the main accessibility element of the OS native window.",
+      "godotName": "get_window_root",
+      "xmlDocId": "M:Godot.AccessibilityServer.GetWindowRoot(int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "HasElement",
+      "kind": "Method",
+      "signature": "public bool HasElement(RID id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param id] is a valid accessibility element.",
+      "godotName": "has_element",
+      "xmlDocId": "M:Godot.AccessibilityServer.HasElement(RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "IsSupported",
+      "kind": "Method",
+      "signature": "public bool IsSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if screen reader is support by this implementation.",
+      "godotName": "is_supported",
+      "xmlDocId": "M:Godot.AccessibilityServer.IsSupported",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SetWindowFocused",
+      "kind": "Method",
+      "signature": "public void SetWindowFocused(int windowId, bool focused)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "window_id",
+          "type": "int"
+        },
+        {
+          "name": "focused",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the window focused state for assistive apps. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Advanced users only! [Window] objects call this method automatically.",
+      "godotName": "set_window_focused",
+      "xmlDocId": "M:Godot.AccessibilityServer.SetWindowFocused(int,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SetWindowRect",
+      "kind": "Method",
+      "signature": "public void SetWindowRect(int windowId, Rect2 rectOut, Rect2 rectIn)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "window_id",
+          "type": "int"
+        },
+        {
+          "name": "rect_out",
+          "type": "Rect2"
+        },
+        {
+          "name": "rect_in",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Sets window outer (with decorations) and inner (without decorations) bounds for assistive apps. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] Advanced users only! [Window] objects call this method automatically.",
+      "godotName": "set_window_rect",
+      "xmlDocId": "M:Godot.AccessibilityServer.SetWindowRect(int,Rect2,Rect2)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddAction",
+      "kind": "Method",
+      "signature": "public void UpdateAddAction(RID id, int action, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "action",
+          "type": "int"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Adds a callback for the accessibility action (action which can be performed by using a special screen reader command or buttons on the Braille display), and marks this action as supported. The action callback receives one [Variant] argument, which value depends on action type.",
+      "godotName": "update_add_action",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddAction(RID,int,Callable)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddChild",
+      "kind": "Method",
+      "signature": "public void UpdateAddChild(RID id, RID childId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "child_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a child accessibility element. [b]Note:[/b] [Node] children and sub-elements are added to the child list automatically.",
+      "godotName": "update_add_child",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddChild(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddCustomAction",
+      "kind": "Method",
+      "signature": "public void UpdateAddCustomAction(RID id, int actionId, String actionDescription)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "action_id",
+          "type": "int"
+        },
+        {
+          "name": "action_description",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds support for a custom accessibility action. [param action_id] is passed as an argument to the callback of [constant ACTION_CUSTOM] action.",
+      "godotName": "update_add_custom_action",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddCustomAction(RID,int,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedControls",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedControls(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that is controlled by this element.",
+      "godotName": "update_add_related_controls",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedControls(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedDescribedBy",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedDescribedBy(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that describes this element.",
+      "godotName": "update_add_related_described_by",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedDescribedBy(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedDetails",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedDetails(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that details this element.",
+      "godotName": "update_add_related_details",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedDetails(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedFlowTo",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedFlowTo(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that this element flow into.",
+      "godotName": "update_add_related_flow_to",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedFlowTo(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedLabeledBy",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedLabeledBy(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that labels this element.",
+      "godotName": "update_add_related_labeled_by",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedLabeledBy(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateAddRelatedRadioGroup",
+      "kind": "Method",
+      "signature": "public void UpdateAddRelatedRadioGroup(RID id, RID relatedId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "related_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that is part of the same radio group. [b]Note:[/b] This method should be called on each element of the group, using all other elements as [param related_id].",
+      "godotName": "update_add_related_radio_group",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateAddRelatedRadioGroup(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetActiveDescendant",
+      "kind": "Method",
+      "signature": "public void UpdateSetActiveDescendant(RID id, RID otherId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "other_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds an element that is an active descendant of this element.",
+      "godotName": "update_set_active_descendant",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetActiveDescendant(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetBackgroundColor",
+      "kind": "Method",
+      "signature": "public void UpdateSetBackgroundColor(RID id, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets element background color.",
+      "godotName": "update_set_background_color",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetBackgroundColor(RID,Color)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetBounds",
+      "kind": "Method",
+      "signature": "public void UpdateSetBounds(RID id, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Sets element bounding box, relative to the node position.",
+      "godotName": "update_set_bounds",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetBounds(RID,Rect2)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetBrailleLabel",
+      "kind": "Method",
+      "signature": "public void UpdateSetBrailleLabel(RID id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility label for Braille display.",
+      "godotName": "update_set_braille_label",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetBrailleLabel(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetBrailleRoleDescription",
+      "kind": "Method",
+      "signature": "public void UpdateSetBrailleRoleDescription(RID id, String description)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "description",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility role description for Braille display.",
+      "godotName": "update_set_braille_role_description",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetBrailleRoleDescription(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetChecked",
+      "kind": "Method",
+      "signature": "public void UpdateSetChecked(RID id, bool checekd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "checekd",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets element checked state.",
+      "godotName": "update_set_checked",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetChecked(RID,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetClassname",
+      "kind": "Method",
+      "signature": "public void UpdateSetClassname(RID id, String classname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "classname",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element class name.",
+      "godotName": "update_set_classname",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetClassname(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetColorValue",
+      "kind": "Method",
+      "signature": "public void UpdateSetColorValue(RID id, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets element color value.",
+      "godotName": "update_set_color_value",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetColorValue(RID,Color)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetDescription",
+      "kind": "Method",
+      "signature": "public void UpdateSetDescription(RID id, String description)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "description",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility description.",
+      "godotName": "update_set_description",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetDescription(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetErrorMessage",
+      "kind": "Method",
+      "signature": "public void UpdateSetErrorMessage(RID id, RID otherId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "other_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets an element which contains an error message for this element.",
+      "godotName": "update_set_error_message",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetErrorMessage(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetExtraInfo",
+      "kind": "Method",
+      "signature": "public void UpdateSetExtraInfo(RID id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility extra information added to the element name.",
+      "godotName": "update_set_extra_info",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetExtraInfo(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetFlag",
+      "kind": "Method",
+      "signature": "public void UpdateSetFlag(RID id, int flag, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets element flag.",
+      "godotName": "update_set_flag",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetFlag(RID,int,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetFocus",
+      "kind": "Method",
+      "signature": "public void UpdateSetFocus(RID id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets currently focused element.",
+      "godotName": "update_set_focus",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetFocus(RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetForegroundColor",
+      "kind": "Method",
+      "signature": "public void UpdateSetForegroundColor(RID id, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets element foreground color.",
+      "godotName": "update_set_foreground_color",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetForegroundColor(RID,Color)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetInPageLinkTarget",
+      "kind": "Method",
+      "signature": "public void UpdateSetInPageLinkTarget(RID id, RID otherId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "other_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets target element for the link.",
+      "godotName": "update_set_in_page_link_target",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetInPageLinkTarget(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetLanguage",
+      "kind": "Method",
+      "signature": "public void UpdateSetLanguage(RID id, String language)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element text language.",
+      "godotName": "update_set_language",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetLanguage(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListItemCount",
+      "kind": "Method",
+      "signature": "public void UpdateSetListItemCount(RID id, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets number of items in the list.",
+      "godotName": "update_set_list_item_count",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListItemCount(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListItemExpanded",
+      "kind": "Method",
+      "signature": "public void UpdateSetListItemExpanded(RID id, bool expanded)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "expanded",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets list/tree item expanded status.",
+      "godotName": "update_set_list_item_expanded",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListItemExpanded(RID,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListItemIndex",
+      "kind": "Method",
+      "signature": "public void UpdateSetListItemIndex(RID id, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the position of the element in the list.",
+      "godotName": "update_set_list_item_index",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListItemIndex(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListItemLevel",
+      "kind": "Method",
+      "signature": "public void UpdateSetListItemLevel(RID id, int level)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the hierarchical level of the element in the list.",
+      "godotName": "update_set_list_item_level",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListItemLevel(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListItemSelected",
+      "kind": "Method",
+      "signature": "public void UpdateSetListItemSelected(RID id, bool selected)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "selected",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets list/tree item selected status.",
+      "godotName": "update_set_list_item_selected",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListItemSelected(RID,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetListOrientation",
+      "kind": "Method",
+      "signature": "public void UpdateSetListOrientation(RID id, bool vertical)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "vertical",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the orientation of the list elements.",
+      "godotName": "update_set_list_orientation",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetListOrientation(RID,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetLive",
+      "kind": "Method",
+      "signature": "public void UpdateSetLive(RID id, int live)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "live",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the priority of the live region updates.",
+      "godotName": "update_set_live",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetLive(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetMemberOf",
+      "kind": "Method",
+      "signature": "public void UpdateSetMemberOf(RID id, RID groupId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "group_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the element to be a member of the group.",
+      "godotName": "update_set_member_of",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetMemberOf(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetName",
+      "kind": "Method",
+      "signature": "public void UpdateSetName(RID id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility name.",
+      "godotName": "update_set_name",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetName(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetNextOnLine",
+      "kind": "Method",
+      "signature": "public void UpdateSetNextOnLine(RID id, RID otherId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "other_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets next element on the line.",
+      "godotName": "update_set_next_on_line",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetNextOnLine(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetNumJump",
+      "kind": "Method",
+      "signature": "public void UpdateSetNumJump(RID id, float jump)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "jump",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets numeric value jump.",
+      "godotName": "update_set_num_jump",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetNumJump(RID,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetNumRange",
+      "kind": "Method",
+      "signature": "public void UpdateSetNumRange(RID id, float min, float max)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "min",
+          "type": "float"
+        },
+        {
+          "name": "max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets numeric value range.",
+      "godotName": "update_set_num_range",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetNumRange(RID,float,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetNumStep",
+      "kind": "Method",
+      "signature": "public void UpdateSetNumStep(RID id, float step)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "step",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets numeric value step.",
+      "godotName": "update_set_num_step",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetNumStep(RID,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetNumValue",
+      "kind": "Method",
+      "signature": "public void UpdateSetNumValue(RID id, float position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets numeric value.",
+      "godotName": "update_set_num_value",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetNumValue(RID,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetPlaceholder",
+      "kind": "Method",
+      "signature": "public void UpdateSetPlaceholder(RID id, String placeholder)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "placeholder",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets placeholder text.",
+      "godotName": "update_set_placeholder",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetPlaceholder(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetPopupType",
+      "kind": "Method",
+      "signature": "public void UpdateSetPopupType(RID id, int popup)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "popup",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets popup type for popup buttons.",
+      "godotName": "update_set_popup_type",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetPopupType(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetPreviousOnLine",
+      "kind": "Method",
+      "signature": "public void UpdateSetPreviousOnLine(RID id, RID otherId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "other_id",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets previous element on the line.",
+      "godotName": "update_set_previous_on_line",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetPreviousOnLine(RID,RID)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetRole",
+      "kind": "Method",
+      "signature": "public void UpdateSetRole(RID id, int role)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "role",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets element accessibility role.",
+      "godotName": "update_set_role",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetRole(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetRoleDescription",
+      "kind": "Method",
+      "signature": "public void UpdateSetRoleDescription(RID id, String description)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "description",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element accessibility role description text.",
+      "godotName": "update_set_role_description",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetRoleDescription(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetScrollX",
+      "kind": "Method",
+      "signature": "public void UpdateSetScrollX(RID id, float position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets scroll bar x position.",
+      "godotName": "update_set_scroll_x",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetScrollX(RID,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetScrollXRange",
+      "kind": "Method",
+      "signature": "public void UpdateSetScrollXRange(RID id, float min, float max)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "min",
+          "type": "float"
+        },
+        {
+          "name": "max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets scroll bar x range.",
+      "godotName": "update_set_scroll_x_range",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetScrollXRange(RID,float,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetScrollY",
+      "kind": "Method",
+      "signature": "public void UpdateSetScrollY(RID id, float position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets scroll bar y position.",
+      "godotName": "update_set_scroll_y",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetScrollY(RID,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetScrollYRange",
+      "kind": "Method",
+      "signature": "public void UpdateSetScrollYRange(RID id, float min, float max)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "min",
+          "type": "float"
+        },
+        {
+          "name": "max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets scroll bar y range.",
+      "godotName": "update_set_scroll_y_range",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetScrollYRange(RID,float,float)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetShortcut",
+      "kind": "Method",
+      "signature": "public void UpdateSetShortcut(RID id, String shortcut)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "shortcut",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the list of keyboard shortcuts used by element.",
+      "godotName": "update_set_shortcut",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetShortcut(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetStateDescription",
+      "kind": "Method",
+      "signature": "public void UpdateSetStateDescription(RID id, String description)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "description",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets human-readable description of the current checked state.",
+      "godotName": "update_set_state_description",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetStateDescription(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableCellPosition",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableCellPosition(RID id, int rowIndex, int columnIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "row_index",
+          "type": "int"
+        },
+        {
+          "name": "column_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets cell position in the table.",
+      "godotName": "update_set_table_cell_position",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableCellPosition(RID,int,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableCellSpan",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableCellSpan(RID id, int rowSpan, int columnSpan)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "row_span",
+          "type": "int"
+        },
+        {
+          "name": "column_span",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets cell row/column span.",
+      "godotName": "update_set_table_cell_span",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableCellSpan(RID,int,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableColumnCount",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableColumnCount(RID id, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets number of columns in the table.",
+      "godotName": "update_set_table_column_count",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableColumnCount(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableColumnIndex",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableColumnIndex(RID id, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets position of the column.",
+      "godotName": "update_set_table_column_index",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableColumnIndex(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableRowCount",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableRowCount(RID id, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets number of rows in the table.",
+      "godotName": "update_set_table_row_count",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableRowCount(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTableRowIndex",
+      "kind": "Method",
+      "signature": "public void UpdateSetTableRowIndex(RID id, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets position of the row in the table.",
+      "godotName": "update_set_table_row_index",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTableRowIndex(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTextAlign",
+      "kind": "Method",
+      "signature": "public void UpdateSetTextAlign(RID id, int align)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "align",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets element text alignment.",
+      "godotName": "update_set_text_align",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTextAlign(RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTextDecorations",
+      "kind": "Method",
+      "signature": "public void UpdateSetTextDecorations(RID id, bool underline, bool strikethrough, bool overline, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "underline",
+          "type": "bool"
+        },
+        {
+          "name": "strikethrough",
+          "type": "bool"
+        },
+        {
+          "name": "overline",
+          "type": "bool"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(0, 0, 0, 1)"
+        }
+      ],
+      "summary": "Sets text underline/overline/strikethrough.",
+      "godotName": "update_set_text_decorations",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTextDecorations(RID,bool,bool,bool,Color)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTextOrientation",
+      "kind": "Method",
+      "signature": "public void UpdateSetTextOrientation(RID id, bool vertical)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "vertical",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets text orientation.",
+      "godotName": "update_set_text_orientation",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTextOrientation(RID,bool)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTextSelection",
+      "kind": "Method",
+      "signature": "public void UpdateSetTextSelection(RID id, RID textStartId, int startChar, RID textEndId, int endChar)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "text_start_id",
+          "type": "RID"
+        },
+        {
+          "name": "start_char",
+          "type": "int"
+        },
+        {
+          "name": "text_end_id",
+          "type": "RID"
+        },
+        {
+          "name": "end_char",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets text selection to the text field. [param text_start_id] and [param text_end_id] should be elements created by [method create_sub_text_edit_elements]. Character offsets are relative to the corresponding element.",
+      "godotName": "update_set_text_selection",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTextSelection(RID,RID,int,RID,int)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTooltip",
+      "kind": "Method",
+      "signature": "public void UpdateSetTooltip(RID id, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets tooltip text.",
+      "godotName": "update_set_tooltip",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTooltip(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetTransform",
+      "kind": "Method",
+      "signature": "public void UpdateSetTransform(RID id, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets element 2D transform.",
+      "godotName": "update_set_transform",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetTransform(RID,Transform2D)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetUrl",
+      "kind": "Method",
+      "signature": "public void UpdateSetUrl(RID id, String url)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "url",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets link URL.",
+      "godotName": "update_set_url",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetUrl(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "UpdateSetValue",
+      "kind": "Method",
+      "signature": "public void UpdateSetValue(RID id, String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "RID"
+        },
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets element text value.",
+      "godotName": "update_set_value",
+      "xmlDocId": "M:Godot.AccessibilityServer.UpdateSetValue(RID,String)",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AccessibilityAction",
+      "values": [
+        {
+          "name": "ACTION_BLUR",
+          "value": "2",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Blur action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_CLICK",
+          "value": "0",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Single click action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_COLLAPSE",
+          "value": "3",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Collapse action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_CUSTOM",
+          "value": "22",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Custom action, callback argument is set to the integer action ID.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_DECREMENT",
+          "value": "5",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Decrement action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_EXPAND",
+          "value": "4",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Expand action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_FOCUS",
+          "value": "1",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Focus action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_HIDE_TOOLTIP",
+          "value": "7",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Hide tooltip action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_INCREMENT",
+          "value": "6",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Increment action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_REPLACE_SELECTED_TEXT",
+          "value": "10",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Replace text action, callback argument is set to [String] with the replacement text.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_BACKWARD",
+          "value": "11",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll backward action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_DOWN",
+          "value": "12",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll down action, callback argument is set to [enum AccessibilityScrollUnit].",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_FORWARD",
+          "value": "13",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll forward action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_INTO_VIEW",
+          "value": "17",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll into view action, callback argument is set to [enum AccessibilityScrollHint].",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_LEFT",
+          "value": "14",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll left action, callback argument is set to [enum AccessibilityScrollUnit].",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_RIGHT",
+          "value": "15",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll right action, callback argument is set to [enum AccessibilityScrollUnit].",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_TO_POINT",
+          "value": "18",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll to point action, callback argument is set to [Vector2] with the relative point coordinates.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SCROLL_UP",
+          "value": "16",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Scroll up action, callback argument is set to [enum AccessibilityScrollUnit].",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SET_SCROLL_OFFSET",
+          "value": "19",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Set scroll offset action, callback argument is set to [Vector2] with the scroll offset.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SET_TEXT_SELECTION",
+          "value": "9",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Set text selection action, callback argument is set to [Dictionary] with the following keys: - [code]\u0022start_element\u0022[/code] accessibility element of the selection start. - [code]\u0022start_char\u0022[/code] character offset relative to the accessibility element of the selection start. - [code]\u0022end_element\u0022[/code] accessibility element of the selection end. - [code]\u0022end_char\u0022[/code] character offset relative to the accessibility element of the selection end.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SET_VALUE",
+          "value": "20",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Set value action, callback argument is set to [String] or number with the new value.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SHOW_CONTEXT_MENU",
+          "value": "21",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Show context menu action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ACTION_SHOW_TOOLTIP",
+          "value": "8",
+          "enum": "AccessibilityAction",
+          "kind": "EnumValue",
+          "summary": "Show tooltip action, callback argument is not set.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityFlags",
+      "values": [
+        {
+          "name": "FLAG_BUSY",
+          "value": "4",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element content is not ready (e.g. loading).",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_CLIPS_CHILDREN",
+          "value": "9",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element clips children.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_DISABLED",
+          "value": "8",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element is disabled.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_HIDDEN",
+          "value": "0",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element is hidden for accessibility tools.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_MODAL",
+          "value": "5",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element is modal window.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_MULTISELECTABLE",
+          "value": "1",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element supports multiple item selection.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_READONLY",
+          "value": "7",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element is text field with selectable but read-only text.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_REQUIRED",
+          "value": "2",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element require user input.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_TOUCH_PASSTHROUGH",
+          "value": "6",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element allows touches to be passed through when a screen reader is in touch exploration mode.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "FLAG_VISITED",
+          "value": "3",
+          "enum": "AccessibilityFlags",
+          "kind": "EnumValue",
+          "summary": "Element is a visited link.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityLiveMode",
+      "values": [
+        {
+          "name": "LIVE_ASSERTIVE",
+          "value": "2",
+          "enum": "AccessibilityLiveMode",
+          "kind": "EnumValue",
+          "summary": "Indicates that updates to the live region have the highest priority and should be presented immediately.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "LIVE_OFF",
+          "value": "0",
+          "enum": "AccessibilityLiveMode",
+          "kind": "EnumValue",
+          "summary": "Indicates that updates to the live region should not be presented.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "LIVE_POLITE",
+          "value": "1",
+          "enum": "AccessibilityLiveMode",
+          "kind": "EnumValue",
+          "summary": "Indicates that updates to the live region should be presented at the next opportunity (for example at the end of speaking the current sentence).",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityPopupType",
+      "values": [
+        {
+          "name": "POPUP_DIALOG",
+          "value": "3",
+          "enum": "AccessibilityPopupType",
+          "kind": "EnumValue",
+          "summary": "Popup dialog.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "POPUP_LIST",
+          "value": "1",
+          "enum": "AccessibilityPopupType",
+          "kind": "EnumValue",
+          "summary": "Popup list.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "POPUP_MENU",
+          "value": "0",
+          "enum": "AccessibilityPopupType",
+          "kind": "EnumValue",
+          "summary": "Popup menu.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "POPUP_TREE",
+          "value": "2",
+          "enum": "AccessibilityPopupType",
+          "kind": "EnumValue",
+          "summary": "Popup tree view.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityRole",
+      "values": [
+        {
+          "name": "ROLE_AUDIO",
+          "value": "2",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Audio player element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_BUTTON",
+          "value": "7",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Button element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_CELL",
+          "value": "22",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table/tree cell element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_CHECK_BOX",
+          "value": "9",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Check box element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_CHECK_BUTTON",
+          "value": "11",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Check button element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_COLOR_PICKER",
+          "value": "20",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Color picker element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_COLUMN_HEADER",
+          "value": "26",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table/tree column header element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_CONTAINER",
+          "value": "5",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Container element. Elements with this role are used for internal structure and ignored by screen readers.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_DEFAULT_BUTTON",
+          "value": "1",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Default dialog button element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_DIALOG",
+          "value": "44",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Dialog window element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_IMAGE",
+          "value": "41",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Image element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_LINK",
+          "value": "8",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Link element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_LIST",
+          "value": "29",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "List element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_LIST_BOX",
+          "value": "31",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "List view element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_LIST_BOX_OPTION",
+          "value": "32",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "List view item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_LIST_ITEM",
+          "value": "30",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "List item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MENU",
+          "value": "37",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Popup menu element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MENU_BAR",
+          "value": "36",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Menu bar element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MENU_ITEM",
+          "value": "38",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Popup menu item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MENU_ITEM_CHECK_BOX",
+          "value": "39",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Popup menu check button item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MENU_ITEM_RADIO",
+          "value": "40",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Popup menu radio button item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_MULTILINE_TEXT_FIELD",
+          "value": "19",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Multiline editable text field element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_PANEL",
+          "value": "6",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Panel container element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_PROGRESS_INDICATOR",
+          "value": "17",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Progress indicator element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_RADIO_BUTTON",
+          "value": "10",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Radio button element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_REGION",
+          "value": "46",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Region/landmark element. Screen readers can navigate between regions using landmark navigation.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_ROW",
+          "value": "23",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table/tree row element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_ROW_GROUP",
+          "value": "24",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table/tree row group element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_ROW_HEADER",
+          "value": "25",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table/tree row header element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_SCROLL_BAR",
+          "value": "12",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Scroll bar element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_SCROLL_VIEW",
+          "value": "13",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Scroll container element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_SLIDER",
+          "value": "15",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Slider element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_SPIN_BUTTON",
+          "value": "16",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Spin box element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_SPLITTER",
+          "value": "14",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Container splitter handle element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_STATIC_TEXT",
+          "value": "4",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Non-editable text label.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TAB",
+          "value": "34",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tab bar item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TABLE",
+          "value": "21",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Table element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TAB_BAR",
+          "value": "33",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tab bar element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TAB_PANEL",
+          "value": "35",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tab panel element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TEXT_FIELD",
+          "value": "18",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Editable text field element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TEXT_RUN",
+          "value": "47",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Unifor text run. Note: This role is used for internal text elements, and should not be assigned to nodes.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TITLE_BAR",
+          "value": "43",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Embedded window title bar element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TOOLTIP",
+          "value": "45",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tooltip element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TREE",
+          "value": "27",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tree view element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_TREE_ITEM",
+          "value": "28",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Tree view item element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_UNKNOWN",
+          "value": "0",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Unknown or custom role.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_VIDEO",
+          "value": "3",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Video player element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "ROLE_WINDOW",
+          "value": "42",
+          "enum": "AccessibilityRole",
+          "kind": "EnumValue",
+          "summary": "Window element.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityScrollHint",
+      "values": [
+        {
+          "name": "SCROLL_HINT_BOTTOM_EDGE",
+          "value": "3",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Bottom edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_BOTTOM_RIGHT",
+          "value": "1",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Bottom-right edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_LEFT_EDGE",
+          "value": "4",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Left edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_RIGHT_EDGE",
+          "value": "5",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Right edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_TOP_EDGE",
+          "value": "2",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Top edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_HINT_TOP_LEFT",
+          "value": "0",
+          "enum": "AccessibilityScrollHint",
+          "kind": "EnumValue",
+          "summary": "A preferred position for the node scrolled into view. Top-left edge of the scroll container.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AccessibilityScrollUnit",
+      "values": [
+        {
+          "name": "SCROLL_UNIT_ITEM",
+          "value": "0",
+          "enum": "AccessibilityScrollUnit",
+          "kind": "EnumValue",
+          "summary": "The amount by which to scroll. A single item of a list, line of text.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        },
+        {
+          "name": "SCROLL_UNIT_PAGE",
+          "value": "1",
+          "enum": "AccessibilityScrollUnit",
+          "kind": "EnumValue",
+          "summary": "The amount by which to scroll. A single page.",
+          "sourcePath": "doc/classes/AccessibilityServer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ROLE_UNKNOWN",
+      "value": "0",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Unknown or custom role.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_DEFAULT_BUTTON",
+      "value": "1",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Default dialog button element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_AUDIO",
+      "value": "2",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Audio player element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_VIDEO",
+      "value": "3",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Video player element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_STATIC_TEXT",
+      "value": "4",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Non-editable text label.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_CONTAINER",
+      "value": "5",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Container element. Elements with this role are used for internal structure and ignored by screen readers.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_PANEL",
+      "value": "6",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Panel container element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_BUTTON",
+      "value": "7",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Button element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_LINK",
+      "value": "8",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Link element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_CHECK_BOX",
+      "value": "9",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Check box element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_RADIO_BUTTON",
+      "value": "10",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Radio button element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_CHECK_BUTTON",
+      "value": "11",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Check button element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_SCROLL_BAR",
+      "value": "12",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Scroll bar element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_SCROLL_VIEW",
+      "value": "13",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Scroll container element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_SPLITTER",
+      "value": "14",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Container splitter handle element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_SLIDER",
+      "value": "15",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Slider element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_SPIN_BUTTON",
+      "value": "16",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Spin box element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_PROGRESS_INDICATOR",
+      "value": "17",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Progress indicator element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TEXT_FIELD",
+      "value": "18",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Editable text field element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MULTILINE_TEXT_FIELD",
+      "value": "19",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Multiline editable text field element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_COLOR_PICKER",
+      "value": "20",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Color picker element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TABLE",
+      "value": "21",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_CELL",
+      "value": "22",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table/tree cell element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_ROW",
+      "value": "23",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table/tree row element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_ROW_GROUP",
+      "value": "24",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table/tree row group element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_ROW_HEADER",
+      "value": "25",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table/tree row header element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_COLUMN_HEADER",
+      "value": "26",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Table/tree column header element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TREE",
+      "value": "27",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tree view element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TREE_ITEM",
+      "value": "28",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tree view item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_LIST",
+      "value": "29",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "List element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_LIST_ITEM",
+      "value": "30",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "List item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_LIST_BOX",
+      "value": "31",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "List view element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_LIST_BOX_OPTION",
+      "value": "32",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "List view item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TAB_BAR",
+      "value": "33",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tab bar element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TAB",
+      "value": "34",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tab bar item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TAB_PANEL",
+      "value": "35",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tab panel element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MENU_BAR",
+      "value": "36",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Menu bar element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MENU",
+      "value": "37",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Popup menu element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MENU_ITEM",
+      "value": "38",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Popup menu item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MENU_ITEM_CHECK_BOX",
+      "value": "39",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Popup menu check button item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_MENU_ITEM_RADIO",
+      "value": "40",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Popup menu radio button item element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_IMAGE",
+      "value": "41",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Image element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_WINDOW",
+      "value": "42",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Window element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TITLE_BAR",
+      "value": "43",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Embedded window title bar element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_DIALOG",
+      "value": "44",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Dialog window element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TOOLTIP",
+      "value": "45",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Tooltip element.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_REGION",
+      "value": "46",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Region/landmark element. Screen readers can navigate between regions using landmark navigation.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ROLE_TEXT_RUN",
+      "value": "47",
+      "enum": "AccessibilityRole",
+      "kind": "EnumValue",
+      "summary": "Unifor text run. Note: This role is used for internal text elements, and should not be assigned to nodes.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "POPUP_MENU",
+      "value": "0",
+      "enum": "AccessibilityPopupType",
+      "kind": "EnumValue",
+      "summary": "Popup menu.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "POPUP_LIST",
+      "value": "1",
+      "enum": "AccessibilityPopupType",
+      "kind": "EnumValue",
+      "summary": "Popup list.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "POPUP_TREE",
+      "value": "2",
+      "enum": "AccessibilityPopupType",
+      "kind": "EnumValue",
+      "summary": "Popup tree view.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "POPUP_DIALOG",
+      "value": "3",
+      "enum": "AccessibilityPopupType",
+      "kind": "EnumValue",
+      "summary": "Popup dialog.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_HIDDEN",
+      "value": "0",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element is hidden for accessibility tools.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_MULTISELECTABLE",
+      "value": "1",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element supports multiple item selection.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_REQUIRED",
+      "value": "2",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element require user input.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_VISITED",
+      "value": "3",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element is a visited link.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_BUSY",
+      "value": "4",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element content is not ready (e.g. loading).",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_MODAL",
+      "value": "5",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element is modal window.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_TOUCH_PASSTHROUGH",
+      "value": "6",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element allows touches to be passed through when a screen reader is in touch exploration mode.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_READONLY",
+      "value": "7",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element is text field with selectable but read-only text.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_DISABLED",
+      "value": "8",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element is disabled.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "FLAG_CLIPS_CHILDREN",
+      "value": "9",
+      "enum": "AccessibilityFlags",
+      "kind": "EnumValue",
+      "summary": "Element clips children.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_CLICK",
+      "value": "0",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Single click action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_FOCUS",
+      "value": "1",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Focus action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_BLUR",
+      "value": "2",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Blur action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_COLLAPSE",
+      "value": "3",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Collapse action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_EXPAND",
+      "value": "4",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Expand action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_DECREMENT",
+      "value": "5",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Decrement action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_INCREMENT",
+      "value": "6",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Increment action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_HIDE_TOOLTIP",
+      "value": "7",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Hide tooltip action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SHOW_TOOLTIP",
+      "value": "8",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Show tooltip action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SET_TEXT_SELECTION",
+      "value": "9",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Set text selection action, callback argument is set to [Dictionary] with the following keys: - [code]\u0022start_element\u0022[/code] accessibility element of the selection start. - [code]\u0022start_char\u0022[/code] character offset relative to the accessibility element of the selection start. - [code]\u0022end_element\u0022[/code] accessibility element of the selection end. - [code]\u0022end_char\u0022[/code] character offset relative to the accessibility element of the selection end.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_REPLACE_SELECTED_TEXT",
+      "value": "10",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Replace text action, callback argument is set to [String] with the replacement text.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_BACKWARD",
+      "value": "11",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll backward action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_DOWN",
+      "value": "12",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll down action, callback argument is set to [enum AccessibilityScrollUnit].",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_FORWARD",
+      "value": "13",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll forward action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_LEFT",
+      "value": "14",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll left action, callback argument is set to [enum AccessibilityScrollUnit].",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_RIGHT",
+      "value": "15",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll right action, callback argument is set to [enum AccessibilityScrollUnit].",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_UP",
+      "value": "16",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll up action, callback argument is set to [enum AccessibilityScrollUnit].",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_INTO_VIEW",
+      "value": "17",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll into view action, callback argument is set to [enum AccessibilityScrollHint].",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SCROLL_TO_POINT",
+      "value": "18",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Scroll to point action, callback argument is set to [Vector2] with the relative point coordinates.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SET_SCROLL_OFFSET",
+      "value": "19",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Set scroll offset action, callback argument is set to [Vector2] with the scroll offset.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SET_VALUE",
+      "value": "20",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Set value action, callback argument is set to [String] or number with the new value.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_SHOW_CONTEXT_MENU",
+      "value": "21",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Show context menu action, callback argument is not set.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "ACTION_CUSTOM",
+      "value": "22",
+      "enum": "AccessibilityAction",
+      "kind": "EnumValue",
+      "summary": "Custom action, callback argument is set to the integer action ID.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "LIVE_OFF",
+      "value": "0",
+      "enum": "AccessibilityLiveMode",
+      "kind": "EnumValue",
+      "summary": "Indicates that updates to the live region should not be presented.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "LIVE_POLITE",
+      "value": "1",
+      "enum": "AccessibilityLiveMode",
+      "kind": "EnumValue",
+      "summary": "Indicates that updates to the live region should be presented at the next opportunity (for example at the end of speaking the current sentence).",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "LIVE_ASSERTIVE",
+      "value": "2",
+      "enum": "AccessibilityLiveMode",
+      "kind": "EnumValue",
+      "summary": "Indicates that updates to the live region have the highest priority and should be presented immediately.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_UNIT_ITEM",
+      "value": "0",
+      "enum": "AccessibilityScrollUnit",
+      "kind": "EnumValue",
+      "summary": "The amount by which to scroll. A single item of a list, line of text.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_UNIT_PAGE",
+      "value": "1",
+      "enum": "AccessibilityScrollUnit",
+      "kind": "EnumValue",
+      "summary": "The amount by which to scroll. A single page.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_TOP_LEFT",
+      "value": "0",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Top-left edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_BOTTOM_RIGHT",
+      "value": "1",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Bottom-right edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_TOP_EDGE",
+      "value": "2",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Top edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_BOTTOM_EDGE",
+      "value": "3",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Bottom edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_LEFT_EDGE",
+      "value": "4",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Left edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    },
+    {
+      "name": "SCROLL_HINT_RIGHT_EDGE",
+      "value": "5",
+      "enum": "AccessibilityScrollHint",
+      "kind": "EnumValue",
+      "summary": "A preferred position for the node scrolled into view. Right edge of the scroll container.",
+      "sourcePath": "doc/classes/AccessibilityServer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AccessibilityServer.xml",
+      "sha256": "466f7a18ec16d85b23b7cc8eb0969da67db0d19b74054343ba51ad0d285e848b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

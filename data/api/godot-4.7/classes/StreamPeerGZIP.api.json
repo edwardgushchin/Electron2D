@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerGZIP",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerGZIP",
+    "kind": "class",
+    "baseType": "StreamPeer",
+    "interfaces": [],
+    "godotReference": "StreamPeerGZIP",
+    "documentationPath": "doc/classes/StreamPeerGZIP.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeergzip.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears this stream, resetting the internal state.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.StreamPeerGZIP.Clear",
+      "sourcePath": "doc/classes/StreamPeerGZIP.xml"
+    },
+    {
+      "name": "Finish",
+      "kind": "Method",
+      "signature": "public int Finish()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Finalizes the stream, compressing any buffered chunk left. You must call it only when you are compressing.",
+      "godotName": "finish",
+      "xmlDocId": "M:Godot.StreamPeerGZIP.Finish",
+      "sourcePath": "doc/classes/StreamPeerGZIP.xml"
+    },
+    {
+      "name": "StartCompression",
+      "kind": "Method",
+      "signature": "public int StartCompression(bool useDeflate, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "use_deflate",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int",
+          "defaultValue": "65535"
+        }
+      ],
+      "summary": "Start the stream in compression mode with the given [param buffer_size], if [param use_deflate] is [code]true[/code] uses deflate instead of GZIP.",
+      "godotName": "start_compression",
+      "xmlDocId": "M:Godot.StreamPeerGZIP.StartCompression(bool,int)",
+      "sourcePath": "doc/classes/StreamPeerGZIP.xml"
+    },
+    {
+      "name": "StartDecompression",
+      "kind": "Method",
+      "signature": "public int StartDecompression(bool useDeflate, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "use_deflate",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int",
+          "defaultValue": "65535"
+        }
+      ],
+      "summary": "Start the stream in decompression mode with the given [param buffer_size], if [param use_deflate] is [code]true[/code] uses deflate instead of GZIP.",
+      "godotName": "start_decompression",
+      "xmlDocId": "M:Godot.StreamPeerGZIP.StartDecompression(bool,int)",
+      "sourcePath": "doc/classes/StreamPeerGZIP.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerGZIP.xml",
+      "sha256": "a255e96d72ae5220abcc583b14efbe763c78650a033c8e51eb9710bc430990ba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,856 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRAPIExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRAPIExtension",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "OpenXRAPIExtension",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrapiextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionGetHandle",
+      "kind": "Method",
+      "signature": "public int ActionGetHandle(RID action)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the corresponding [code]XrAction[/code] OpenXR handle for the given action RID.",
+      "godotName": "action_get_handle",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.ActionGetHandle(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "BeginDebugLabelRegion",
+      "kind": "Method",
+      "signature": "public void BeginDebugLabelRegion(String labelName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Begins a new debug label region, this label will be reported in debug messages for any calls following this until [method end_debug_label_region] is called. Debug labels can be stacked.",
+      "godotName": "begin_debug_label_region",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.BeginDebugLabelRegion(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "CanRender",
+      "kind": "Method",
+      "signature": "public bool CanRender()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR is initialized for rendering with an XR viewport.",
+      "godotName": "can_render",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.CanRender",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "EndDebugLabelRegion",
+      "kind": "Method",
+      "signature": "public void EndDebugLabelRegion()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Marks the end of a debug label region. Removes the latest debug label region added by calling [method begin_debug_label_region].",
+      "godotName": "end_debug_label_region",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.EndDebugLabelRegion",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "FindAction",
+      "kind": "Method",
+      "signature": "public RID FindAction(String name, RID actionSet)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "action_set",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [RID] corresponding to an [code]Action[/code] of a matching name, optionally limited to a specified action set.",
+      "godotName": "find_action",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.FindAction(String,RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetErrorString",
+      "kind": "Method",
+      "signature": "public String GetErrorString(int result)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "result",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an error string for the given [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrResult.html]XrResult[/url].",
+      "godotName": "get_error_string",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetErrorString(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetHandTracker",
+      "kind": "Method",
+      "signature": "public int GetHandTracker(int handIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "hand_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the corresponding [code]XRHandTrackerEXT[/code] handle for the given hand index value.",
+      "godotName": "get_hand_tracker",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetHandTracker(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetInstance",
+      "kind": "Method",
+      "signature": "public int GetInstance()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrInstance.html]XrInstance[/url] created during the initialization of the OpenXR API.",
+      "godotName": "get_instance",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetInstance",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetInstanceProcAddr",
+      "kind": "Method",
+      "signature": "public int GetInstanceProcAddr(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the function pointer of the OpenXR function with the specified name, cast to an integer. If the function with the given name does not exist, the method returns [code]0[/code]. [b]Note:[/b] [code]openxr/util.h[/code] contains utility macros for acquiring OpenXR functions, e.g. [code]GDEXTENSION_INIT_XR_FUNC_V(xrCreateAction)[/code].",
+      "godotName": "get_instance_proc_addr",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetInstanceProcAddr(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetNextFrameTime",
+      "kind": "Method",
+      "signature": "public int GetNextFrameTime()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the predicted display timing for the next frame.",
+      "godotName": "get_next_frame_time",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetNextFrameTime",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetOpenxrVersion",
+      "kind": "Method",
+      "signature": "public int GetOpenxrVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the version of OpenXR that was initialized. Only valid after the OpenXR instance has been created. See [url=https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_MAKE_VERSION]XR_MAKE_VERSION[/url] for how the version is calculated.",
+      "godotName": "get_openxr_version",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetOpenxrVersion",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetPlaySpace",
+      "kind": "Method",
+      "signature": "public int GetPlaySpace()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the play space, which is an [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrSpace.html]XrSpace[/url] cast to an integer.",
+      "godotName": "get_play_space",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetPlaySpace",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetPredictedDisplayTime",
+      "kind": "Method",
+      "signature": "public int GetPredictedDisplayTime()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the predicted display timing for the current frame.",
+      "godotName": "get_predicted_display_time",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetPredictedDisplayTime",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetProjectionLayer",
+      "kind": "Method",
+      "signature": "public int GetProjectionLayer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a pointer to the render state\u0027s [code]XrCompositionLayerProjection[/code] struct. [b]Note:[/b] This method should only be called from the rendering thread.",
+      "godotName": "get_projection_layer",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetProjectionLayer",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetRenderStateZFar",
+      "kind": "Method",
+      "signature": "public float GetRenderStateZFar()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the far boundary value of the camera frustum. [b]Note:[/b] This is only accessible in the render thread.",
+      "godotName": "get_render_state_z_far",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetRenderStateZFar",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetRenderStateZNear",
+      "kind": "Method",
+      "signature": "public float GetRenderStateZNear()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the near boundary value of the camera frustum. [b]Note:[/b] This is only accessible in the render thread.",
+      "godotName": "get_render_state_z_near",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetRenderStateZNear",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetSession",
+      "kind": "Method",
+      "signature": "public int GetSession()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the OpenXR session, which is an [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrSession.html]XrSession[/url] cast to an integer.",
+      "godotName": "get_session",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetSession",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetSupportedSwapchainFormats",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetSupportedSwapchainFormats()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns an array of supported swapchain formats.",
+      "godotName": "get_supported_swapchain_formats",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetSupportedSwapchainFormats",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetSwapchainFormatName",
+      "kind": "Method",
+      "signature": "public String GetSwapchainFormatName(int swapchainFormat)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "swapchain_format",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the specified swapchain format.",
+      "godotName": "get_swapchain_format_name",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetSwapchainFormatName(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetSystemId",
+      "kind": "Method",
+      "signature": "public int GetSystemId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the system, which is an [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrSystemId.html]XrSystemId[/url] cast to an integer.",
+      "godotName": "get_system_id",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetSystemId",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetViewConfiguration",
+      "kind": "Method",
+      "signature": "public int GetViewConfiguration()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the view configuration type, which is an [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrViewConfigurationType.html]XrViewConfigurationType[/url] cast to an integer.",
+      "godotName": "get_view_configuration",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetViewConfiguration",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "GetViewCount",
+      "kind": "Method",
+      "signature": "public int GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of views. It is usually two, one for each eye, but may differ with different view configurations.",
+      "godotName": "get_view_count",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.GetViewCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "InsertDebugLabel",
+      "kind": "Method",
+      "signature": "public void InsertDebugLabel(String labelName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "label_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Inserts a debug label, this label is reported in any debug message resulting from the OpenXR calls that follows, until any of [method begin_debug_label_region], [method end_debug_label_region], or [method insert_debug_label] is called.",
+      "godotName": "insert_debug_label",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.InsertDebugLabel(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "IsEnvironmentBlendModeAlphaSupported",
+      "kind": "Method",
+      "signature": "public int IsEnvironmentBlendModeAlphaSupported()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns [enum OpenXRAPIExtension.OpenXRAlphaBlendModeSupport] denoting if [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] is really supported, emulated or not supported at all.",
+      "godotName": "is_environment_blend_mode_alpha_supported",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.IsEnvironmentBlendModeAlphaSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "IsInitialized",
+      "kind": "Method",
+      "signature": "public bool IsInitialized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR is initialized.",
+      "godotName": "is_initialized",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.IsInitialized",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "IsRunning",
+      "kind": "Method",
+      "signature": "public bool IsRunning()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR is running ([url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrBeginSession.html]xrBeginSession[/url] was successfully called and the swapchains were created).",
+      "godotName": "is_running",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.IsRunning",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrIsEnabled",
+      "kind": "Method",
+      "signature": "public bool OpenxrIsEnabled(bool checkRunInEditor)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "check_run_in_editor",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if OpenXR is enabled.",
+      "godotName": "openxr_is_enabled",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrIsEnabled(bool)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainAcquire",
+      "kind": "Method",
+      "signature": "public void OpenxrSwapchainAcquire(int swapchain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "swapchain",
+          "type": "int"
+        }
+      ],
+      "summary": "Acquires the image of the provided swapchain.",
+      "godotName": "openxr_swapchain_acquire",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainAcquire(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainCreate",
+      "kind": "Method",
+      "signature": "public int OpenxrSwapchainCreate(int createFlags, int usageFlags, int swapchainFormat, int width, int height, int sampleCount, int arraySize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "create_flags",
+          "type": "int"
+        },
+        {
+          "name": "usage_flags",
+          "type": "int"
+        },
+        {
+          "name": "swapchain_format",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "type": "int"
+        },
+        {
+          "name": "sample_count",
+          "type": "int"
+        },
+        {
+          "name": "array_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a pointer to a new swapchain created using the provided parameters.",
+      "godotName": "openxr_swapchain_create",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainCreate(int,int,int,int,int,int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainFree",
+      "kind": "Method",
+      "signature": "public void OpenxrSwapchainFree(int swapchain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "swapchain",
+          "type": "int"
+        }
+      ],
+      "summary": "Destroys the provided swapchain and frees it from memory.",
+      "godotName": "openxr_swapchain_free",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainFree(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainGetImage",
+      "kind": "Method",
+      "signature": "public RID OpenxrSwapchainGetImage(int swapchain)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "swapchain",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the RID of the provided swapchain\u0027s image.",
+      "godotName": "openxr_swapchain_get_image",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainGetImage(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainGetSwapchain",
+      "kind": "Method",
+      "signature": "public int OpenxrSwapchainGetSwapchain(int swapchain)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "swapchain",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [code]XrSwapchain[/code] handle of the provided swapchain.",
+      "godotName": "openxr_swapchain_get_swapchain",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainGetSwapchain(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OpenxrSwapchainRelease",
+      "kind": "Method",
+      "signature": "public void OpenxrSwapchainRelease(int swapchain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "swapchain",
+          "type": "int"
+        }
+      ],
+      "summary": "Releases the image of the provided swapchain.",
+      "godotName": "openxr_swapchain_release",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.OpenxrSwapchainRelease(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "RegisterCompositionLayerProvider",
+      "kind": "Method",
+      "signature": "public void RegisterCompositionLayerProvider(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Registers the given extension as a composition layer provider. [b]Note:[/b] This cannot be called after the OpenXR session has started. However, it can be called in [method OpenXRExtensionWrapper._on_session_created].",
+      "godotName": "register_composition_layer_provider",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.RegisterCompositionLayerProvider(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "RegisterFrameInfoExtension",
+      "kind": "Method",
+      "signature": "public void RegisterFrameInfoExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Registers the given extension as modifying frame info via the [method OpenXRExtensionWrapper._set_frame_wait_info_and_get_next_pointer], [method OpenXRExtensionWrapper._set_view_locate_info_and_get_next_pointer], or [method OpenXRExtensionWrapper._set_frame_end_info_and_get_next_pointer] virtual methods. [b]Note:[/b] This cannot be called after the OpenXR session has started. However, it can be called in [method OpenXRExtensionWrapper._on_session_created].",
+      "godotName": "register_frame_info_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.RegisterFrameInfoExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "RegisterProjectionLayerExtension",
+      "kind": "Method",
+      "signature": "public void RegisterProjectionLayerExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Registers the given extension as modifying [code]XrCompositionLayerProjection[/code] via the [method OpenXRExtensionWrapper._set_projection_layer_and_get_next_pointer] virtual method. [b]Note:[/b] This cannot be called after the OpenXR session has started. However, it can be called in [method OpenXRExtensionWrapper._on_session_created].",
+      "godotName": "register_projection_layer_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.RegisterProjectionLayerExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "RegisterProjectionViewsExtension",
+      "kind": "Method",
+      "signature": "public void RegisterProjectionViewsExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Registers the given extension as a provider of additional data structures to projections views. [b]Note:[/b] This cannot be called after the OpenXR session has started. However, it can be called in [method OpenXRExtensionWrapper._on_session_created].",
+      "godotName": "register_projection_views_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.RegisterProjectionViewsExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetCustomPlaySpace",
+      "kind": "Method",
+      "signature": "public void SetCustomPlaySpace(const void* space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "const void*"
+        }
+      ],
+      "summary": "Sets the reference space used by OpenXR to the given [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrSpace.html]XrSpace[/url] (cast to a [code]void *[/code]).",
+      "godotName": "set_custom_play_space",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetCustomPlaySpace(const void*)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetEmulateEnvironmentBlendModeAlphaBlend",
+      "kind": "Method",
+      "signature": "public void SetEmulateEnvironmentBlendModeAlphaBlend(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], an OpenXR extension is loaded which is capable of emulating the [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] blend mode.",
+      "godotName": "set_emulate_environment_blend_mode_alpha_blend",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetEmulateEnvironmentBlendModeAlphaBlend(bool)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetObjectName",
+      "kind": "Method",
+      "signature": "public void SetObjectName(int objectType, int objectHandle, String objectName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object_type",
+          "type": "int"
+        },
+        {
+          "name": "object_handle",
+          "type": "int"
+        },
+        {
+          "name": "object_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Set the object name of an OpenXR object, used for debug output. [param object_type] must be a valid OpenXR [code]XrObjectType[/code] enum and [param object_handle] must be a valid OpenXR object handle.",
+      "godotName": "set_object_name",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetObjectName(int,int,String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetRenderRegion",
+      "kind": "Method",
+      "signature": "public void SetRenderRegion(Rect2i renderRegion)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_region",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Sets the render region to [param render_region], overriding the normal render target\u0027s rect.",
+      "godotName": "set_render_region",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetRenderRegion(Rect2i)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetVelocityDepthTexture",
+      "kind": "Method",
+      "signature": "public void SetVelocityDepthTexture(RID renderTarget)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the render target of the velocity depth texture.",
+      "godotName": "set_velocity_depth_texture",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetVelocityDepthTexture(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetVelocityTargetSize",
+      "kind": "Method",
+      "signature": "public void SetVelocityTargetSize(Vector2i targetSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "target_size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Sets the target size of the velocity and velocity depth textures.",
+      "godotName": "set_velocity_target_size",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetVelocityTargetSize(Vector2i)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "SetVelocityTexture",
+      "kind": "Method",
+      "signature": "public void SetVelocityTexture(RID renderTarget)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "render_target",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the render target of the velocity texture.",
+      "godotName": "set_velocity_texture",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.SetVelocityTexture(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "TransformFromPose",
+      "kind": "Method",
+      "signature": "public Transform3D TransformFromPose(const void* pose)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "pose",
+          "type": "const void*"
+        }
+      ],
+      "summary": "Creates a [Transform3D] from an [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrPosef.html]XrPosef[/url].",
+      "godotName": "transform_from_pose",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.TransformFromPose(const void*)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "UnregisterCompositionLayerProvider",
+      "kind": "Method",
+      "signature": "public void UnregisterCompositionLayerProvider(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Unregisters the given extension as a composition layer provider. [b]Note:[/b] This cannot be called while the OpenXR session is still running.",
+      "godotName": "unregister_composition_layer_provider",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.UnregisterCompositionLayerProvider(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "UnregisterFrameInfoExtension",
+      "kind": "Method",
+      "signature": "public void UnregisterFrameInfoExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Unregisters the given extension as modifying frame info. [b]Note:[/b] This cannot be called while the OpenXR session is still running.",
+      "godotName": "unregister_frame_info_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.UnregisterFrameInfoExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "UnregisterProjectionLayerExtension",
+      "kind": "Method",
+      "signature": "public void UnregisterProjectionLayerExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Unregisters the given extension as modifying [code]XrCompositionLayerProjection[/code]. [b]Note:[/b] This cannot be called while the OpenXR session is still running.",
+      "godotName": "unregister_projection_layer_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.UnregisterProjectionLayerExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "UnregisterProjectionViewsExtension",
+      "kind": "Method",
+      "signature": "public void UnregisterProjectionViewsExtension(OpenXRExtensionWrapper extension)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension",
+          "type": "OpenXRExtensionWrapper"
+        }
+      ],
+      "summary": "Unregisters the given extension as a provider of additional data structures to projections views. [b]Note:[/b] This cannot be called while the OpenXR session is still running.",
+      "godotName": "unregister_projection_views_extension",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.UnregisterProjectionViewsExtension(OpenXRExtensionWrapper)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "UpdateMainSwapchainSize",
+      "kind": "Method",
+      "signature": "public void UpdateMainSwapchainSize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Request the recommended resolution from the OpenXR runtime and update the main swapchain size if it has changed.",
+      "godotName": "update_main_swapchain_size",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.UpdateMainSwapchainSize",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "XrResult",
+      "kind": "Method",
+      "signature": "public bool XrResult(int result, String format, Array args)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "result",
+          "type": "int"
+        },
+        {
+          "name": "format",
+          "type": "String"
+        },
+        {
+          "name": "args",
+          "type": "Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrResult.html]XrResult[/url] (cast to an integer) is successful. Otherwise returns [code]false[/code] and prints the [url=https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrResult.html]XrResult[/url] converted to a string, with the specified additional information.",
+      "godotName": "xr_result",
+      "xmlDocId": "M:Godot.OpenXRAPIExtension.XrResult(int,String,Array)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpenXRAlphaBlendModeSupport",
+      "values": [
+        {
+          "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_EMULATING",
+          "value": "2",
+          "enum": "OpenXRAlphaBlendModeSupport",
+          "kind": "EnumValue",
+          "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] is emulated.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+        },
+        {
+          "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_NONE",
+          "value": "0",
+          "enum": "OpenXRAlphaBlendModeSupport",
+          "kind": "EnumValue",
+          "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] isn\u0027t supported at all.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+        },
+        {
+          "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_REAL",
+          "value": "1",
+          "enum": "OpenXRAlphaBlendModeSupport",
+          "kind": "EnumValue",
+          "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] is really supported.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_NONE",
+      "value": "0",
+      "enum": "OpenXRAlphaBlendModeSupport",
+      "kind": "EnumValue",
+      "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] isn\u0027t supported at all.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_REAL",
+      "value": "1",
+      "enum": "OpenXRAlphaBlendModeSupport",
+      "kind": "EnumValue",
+      "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] is really supported.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    },
+    {
+      "name": "OPENXR_ALPHA_BLEND_MODE_SUPPORT_EMULATING",
+      "value": "2",
+      "enum": "OpenXRAlphaBlendModeSupport",
+      "kind": "EnumValue",
+      "summary": "Means that [constant XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND] is emulated.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAPIExtension.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRAPIExtension.xml",
+      "sha256": "66c994966cc742034885b0dde1834775746495208f128295df530930a24cb912"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

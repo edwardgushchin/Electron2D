@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoneAttachment3D",
+    "namespace": "Godot",
+    "fullName": "Godot.BoneAttachment3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "BoneAttachment3D",
+    "documentationPath": "doc/classes/BoneAttachment3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_boneattachment3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetSkeleton",
+      "kind": "Method",
+      "signature": "public Skeleton3D GetSkeleton()",
+      "returnType": "Skeleton3D",
+      "parameters": [],
+      "summary": "Returns the parent or external [Skeleton3D] node if it exists, otherwise returns [code]null[/code].",
+      "godotName": "get_skeleton",
+      "xmlDocId": "M:Godot.BoneAttachment3D.GetSkeleton",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "OnSkeletonUpdate",
+      "kind": "Method",
+      "signature": "public void OnSkeletonUpdate()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "A function that is called automatically when the [Skeleton3D] is updated. This function is where the [BoneAttachment3D] node updates its position so it is correctly bound when it is [i]not[/i] set to override the bone pose.",
+      "godotName": "on_skeleton_update",
+      "xmlDocId": "M:Godot.BoneAttachment3D.OnSkeletonUpdate",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "BoneIdx",
+      "kind": "Property",
+      "signature": "public int BoneIdx { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the attached bone.",
+      "defaultValue": "-1",
+      "godotName": "bone_idx",
+      "xmlDocId": "P:Godot.BoneAttachment3D.BoneIdx",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "BoneName",
+      "kind": "Property",
+      "signature": "public String BoneName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the attached bone.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "bone_name",
+      "xmlDocId": "P:Godot.BoneAttachment3D.BoneName",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "ExternalSkeleton",
+      "kind": "Property",
+      "signature": "public NodePath ExternalSkeleton { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [NodePath] to the external [Skeleton3D] node.",
+      "godotName": "external_skeleton",
+      "xmlDocId": "P:Godot.BoneAttachment3D.ExternalSkeleton",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "OverridePose",
+      "kind": "Property",
+      "signature": "public bool OverridePose { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether the [BoneAttachment3D] node will override the bone pose of the bone it is attached to. When set to [code]true[/code], the [BoneAttachment3D] node can change the pose of the bone. When set to [code]false[/code], the [BoneAttachment3D] will always be set to the bone\u0027s transform. [b]Note:[/b] This override performs interruptively in the skeleton update process using signals due to the old design. It may cause unintended behavior when used at the same time with [SkeletonModifier3D].",
+      "defaultValue": "false",
+      "godotName": "override_pose",
+      "xmlDocId": "P:Godot.BoneAttachment3D.OverridePose",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.BoneAttachment3D.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    },
+    {
+      "name": "UseExternalSkeleton",
+      "kind": "Property",
+      "signature": "public bool UseExternalSkeleton { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether the [BoneAttachment3D] node will use an external [Skeleton3D] node rather than attempting to use its parent node as the [Skeleton3D]. When set to [code]true[/code], the [BoneAttachment3D] node will use the external [Skeleton3D] node set in [member external_skeleton].",
+      "defaultValue": "false",
+      "godotName": "use_external_skeleton",
+      "xmlDocId": "P:Godot.BoneAttachment3D.UseExternalSkeleton",
+      "sourcePath": "doc/classes/BoneAttachment3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoneAttachment3D.xml",
+      "sha256": "c474ebef1776e48296ad1894ed4e31fca8f0ade916b7175c08c1d6ec3a14062b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

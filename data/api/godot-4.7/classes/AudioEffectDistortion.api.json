@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectDistortion",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectDistortion",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectDistortion",
+    "documentationPath": "doc/classes/AudioEffectDistortion.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectdistortion.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Drive",
+      "kind": "Property",
+      "signature": "public float Drive { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distortion intensity. Controls how much of the input audio is affected by the distortion curve by moving from a linear function to a nonlinear one. Value can range from 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "drive",
+      "xmlDocId": "P:Godot.AudioEffectDistortion.Drive",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "KeepHfHz",
+      "kind": "Property",
+      "signature": "public float KeepHfHz { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "High-pass filter, in Hz. Frequencies higher than this value will not be affected by the distortion. Value can range from 1 to 20000.",
+      "defaultValue": "16000.0",
+      "godotName": "keep_hf_hz",
+      "xmlDocId": "P:Godot.AudioEffectDistortion.KeepHfHz",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "Mode",
+      "kind": "Property",
+      "signature": "public int Mode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Distortion type. Changes the nonlinear function used to distort the waveform. See [enum Mode].",
+      "defaultValue": "0",
+      "godotName": "mode",
+      "xmlDocId": "P:Godot.AudioEffectDistortion.Mode",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "PostGain",
+      "kind": "Property",
+      "signature": "public float PostGain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain after the effect, in dB. Value can range from -80 to 24.",
+      "defaultValue": "0.0",
+      "godotName": "post_gain",
+      "xmlDocId": "P:Godot.AudioEffectDistortion.PostGain",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "PreGain",
+      "kind": "Property",
+      "signature": "public float PreGain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain before the effect, in dB. Value can range from -60 to 60.",
+      "defaultValue": "0.0",
+      "godotName": "pre_gain",
+      "xmlDocId": "P:Godot.AudioEffectDistortion.PreGain",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "MODE_ATAN",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Flattens the waveform in a smooth manner, following an arctangent curve. The audio decreases in volume, before flattening peaks to [code]PI * 4.0[/code] (linear value), if it was normalized beforehand.",
+          "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+        },
+        {
+          "name": "MODE_CLIP",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Flattens the waveform at 0 dB in a sharp manner. [member drive] increases amplitude of samples exponentially. This mode functions as a hard clipper if [member drive] is set to 0, and is the only mode that clips audio signals at 0 dB.",
+          "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+        },
+        {
+          "name": "MODE_LOFI",
+          "value": "2",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Decreases audio bit depth to achieve a low-resolution audio signal, going from 16-bit to 2-bit. Can be used to emulate the sound of early digital audio devices.",
+          "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+        },
+        {
+          "name": "MODE_OVERDRIVE",
+          "value": "3",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Emulates the warm distortion produced by a field effect transistor, which is commonly used in solid-state musical instrument amplifiers. [member drive] has no effect in this mode.",
+          "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+        },
+        {
+          "name": "MODE_WAVESHAPE",
+          "value": "4",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Flattens the waveform in a smooth manner, until it reaches a sharp peak at [code]drive = 1[/code], following a generic absolute sigmoid function.",
+          "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_CLIP",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Flattens the waveform at 0 dB in a sharp manner. [member drive] increases amplitude of samples exponentially. This mode functions as a hard clipper if [member drive] is set to 0, and is the only mode that clips audio signals at 0 dB.",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "MODE_ATAN",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Flattens the waveform in a smooth manner, following an arctangent curve. The audio decreases in volume, before flattening peaks to [code]PI * 4.0[/code] (linear value), if it was normalized beforehand.",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "MODE_LOFI",
+      "value": "2",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Decreases audio bit depth to achieve a low-resolution audio signal, going from 16-bit to 2-bit. Can be used to emulate the sound of early digital audio devices.",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "MODE_OVERDRIVE",
+      "value": "3",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Emulates the warm distortion produced by a field effect transistor, which is commonly used in solid-state musical instrument amplifiers. [member drive] has no effect in this mode.",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    },
+    {
+      "name": "MODE_WAVESHAPE",
+      "value": "4",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Flattens the waveform in a smooth manner, until it reaches a sharp peak at [code]drive = 1[/code], following a generic absolute sigmoid function.",
+      "sourcePath": "doc/classes/AudioEffectDistortion.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectDistortion.xml",
+      "sha256": "7e336fb5822d819f54a75a840c1668595a23e75ac79d95b8c9df24a2f2132d79"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

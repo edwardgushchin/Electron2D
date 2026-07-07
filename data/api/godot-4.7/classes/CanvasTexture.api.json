@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "CanvasTexture",
+    "documentationPath": "doc/classes/CanvasTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvastexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DiffuseTexture",
+      "kind": "Property",
+      "signature": "public Texture2D DiffuseTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The diffuse (color) texture to use. This is the main texture you want to set in most cases.",
+      "godotName": "diffuse_texture",
+      "xmlDocId": "P:Godot.CanvasTexture.DiffuseTexture",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "NormalTexture",
+      "kind": "Property",
+      "signature": "public Texture2D NormalTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The normal map texture to use. Only has a visible effect if [Light2D]s are affecting this [CanvasTexture]. [b]Note:[/b] Godot expects the normal map to use X\u002B, Y\u002B, and Z\u002B coordinates. See [url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates]this page[/url] for a comparison of normal map coordinates expected by popular engines.",
+      "godotName": "normal_texture",
+      "xmlDocId": "P:Godot.CanvasTexture.NormalTexture",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.CanvasTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "SpecularColor",
+      "kind": "Property",
+      "signature": "public Color SpecularColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The multiplier for specular reflection colors. The [Light2D]\u0027s color is also taken into account when determining the reflection color. Only has a visible effect if [Light2D]s are affecting this [CanvasTexture].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "specular_color",
+      "xmlDocId": "P:Godot.CanvasTexture.SpecularColor",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "SpecularShininess",
+      "kind": "Property",
+      "signature": "public float SpecularShininess { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The specular exponent for [Light2D] specular reflections. Higher values result in a more glossy/\u0022wet\u0022 look, with reflections becoming more localized and less visible overall. The default value of [code]1.0[/code] disables specular reflections entirely. Only has a visible effect if [Light2D]s are affecting this [CanvasTexture].",
+      "defaultValue": "1.0",
+      "godotName": "specular_shininess",
+      "xmlDocId": "P:Godot.CanvasTexture.SpecularShininess",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "SpecularTexture",
+      "kind": "Property",
+      "signature": "public Texture2D SpecularTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The specular map to use for [Light2D] specular reflections. This should be a grayscale or colored texture, with brighter areas resulting in a higher [member specular_shininess] value. Using a colored [member specular_texture] allows controlling specular shininess on a per-channel basis. Only has a visible effect if [Light2D]s are affecting this [CanvasTexture].",
+      "godotName": "specular_texture",
+      "xmlDocId": "P:Godot.CanvasTexture.SpecularTexture",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "TextureFilter",
+      "kind": "Property",
+      "signature": "public int TextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture filtering mode to use when drawing this [CanvasTexture].",
+      "defaultValue": "0",
+      "godotName": "texture_filter",
+      "xmlDocId": "P:Godot.CanvasTexture.TextureFilter",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    },
+    {
+      "name": "TextureRepeat",
+      "kind": "Property",
+      "signature": "public int TextureRepeat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture repeat mode to use when drawing this [CanvasTexture].",
+      "defaultValue": "0",
+      "godotName": "texture_repeat",
+      "xmlDocId": "P:Godot.CanvasTexture.TextureRepeat",
+      "sourcePath": "doc/classes/CanvasTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasTexture.xml",
+      "sha256": "f0d9044ab882ef575d95b250795d3c0c11f7ae429d8dc476e76ca5575c7affa4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

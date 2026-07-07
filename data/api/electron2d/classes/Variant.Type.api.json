@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Variant.Type",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Variant.Type",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Variant.Type",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Array",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Array",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents an \u0060Electron2D.Collections.Array\u0060 value.",
+      "value": "17",
+      "xmlDocId": "F:Electron2D.Variant.Type.Array",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bool",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Bool",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a Boolean value.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Variant.Type.Bool",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Callable",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Callable",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Callable\u0060 value.",
+      "value": "15",
+      "xmlDocId": "F:Electron2D.Variant.Type.Callable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Color",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Color",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Color\u0060 value.",
+      "value": "10",
+      "xmlDocId": "F:Electron2D.Variant.Type.Color",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Dictionary",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Dictionary",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents an \u0060Electron2D.Collections.Dictionary\u0060 value.",
+      "value": "16",
+      "xmlDocId": "F:Electron2D.Variant.Type.Dictionary",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Float",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Float",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a 64-bit floating-point value.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.Variant.Type.Float",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Int",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Int",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a signed 64-bit integer value.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.Variant.Type.Int",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Nil",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Nil",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a null-like value.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Variant.Type.Nil",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NodePath",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type NodePath",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.NodePath\u0060 value.",
+      "value": "12",
+      "xmlDocId": "F:Electron2D.Variant.Type.NodePath",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Object",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Object",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents an \u0060Electron2D.Object\u0060 or derived instance.",
+      "value": "14",
+      "xmlDocId": "F:Electron2D.Variant.Type.Object",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Rect2",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rect2\u0060 value.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.Variant.Type.Rect2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2I",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Rect2I",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rect2I\u0060 value.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.Variant.Type.Rect2I",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rid",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Rid",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rid\u0060 value.",
+      "value": "13",
+      "xmlDocId": "F:Electron2D.Variant.Type.Rid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "String",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type String",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a UTF-16 .NET string value.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.Variant.Type.String",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StringName",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type StringName",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.StringName\u0060 value.",
+      "value": "11",
+      "xmlDocId": "F:Electron2D.Variant.Type.StringName",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Transform2D",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Transform2D\u0060 value.",
+      "value": "9",
+      "xmlDocId": "F:Electron2D.Variant.Type.Transform2D",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Vector2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Vector2",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Vector2\u0060 value.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.Variant.Type.Vector2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Vector2I",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Variant.Type Vector2I",
+      "returnType": "Electron2D.Variant.Type",
+      "parameters": [],
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Vector2I\u0060 value.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.Variant.Type.Vector2I",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Array",
+      "value": "17",
+      "kind": "EnumValue",
+      "summary": "Represents an \u0060Electron2D.Collections.Array\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bool",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Represents a Boolean value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Callable",
+      "value": "15",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Callable\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Color",
+      "value": "10",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Color\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Dictionary",
+      "value": "16",
+      "kind": "EnumValue",
+      "summary": "Represents an \u0060Electron2D.Collections.Dictionary\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Float",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Represents a 64-bit floating-point value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Int",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Represents a signed 64-bit integer value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Nil",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Represents a null-like value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NodePath",
+      "value": "12",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.NodePath\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Object",
+      "value": "14",
+      "kind": "EnumValue",
+      "summary": "Represents an \u0060Electron2D.Object\u0060 or derived instance.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rect2\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2I",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rect2I\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rid",
+      "value": "13",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Rid\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "String",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Represents a UTF-16 .NET string value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StringName",
+      "value": "11",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.StringName\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform2D",
+      "value": "9",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Transform2D\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Vector2",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Vector2\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Vector2I",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Represents a \u0060Electron2D.Variant.Type.Vector2I\u0060 value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VehicleBody3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VehicleBody3D",
+    "kind": "class",
+    "baseType": "RigidBody3D",
+    "interfaces": [],
+    "godotReference": "VehicleBody3D",
+    "documentationPath": "doc/classes/VehicleBody3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vehiclebody3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Brake",
+      "kind": "Property",
+      "signature": "public float Brake { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Slows down the vehicle by applying a braking force. The vehicle is only slowed down if the wheels are in contact with a surface. The force you need to apply to adequately slow down your vehicle depends on the [member RigidBody3D.mass] of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 30 range for hard braking.",
+      "defaultValue": "0.0",
+      "godotName": "brake",
+      "xmlDocId": "P:Godot.VehicleBody3D.Brake",
+      "sourcePath": "doc/classes/VehicleBody3D.xml"
+    },
+    {
+      "name": "EngineForce",
+      "kind": "Property",
+      "signature": "public float EngineForce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Accelerates the vehicle by applying an engine force. The vehicle is only sped up if the wheels that have [member VehicleWheel3D.use_as_traction] set to [code]true[/code] and are in contact with a surface. The [member RigidBody3D.mass] of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration. [b]Note:[/b] The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears. A negative value will result in the vehicle reversing.",
+      "defaultValue": "0.0",
+      "godotName": "engine_force",
+      "xmlDocId": "P:Godot.VehicleBody3D.EngineForce",
+      "sourcePath": "doc/classes/VehicleBody3D.xml"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public float Mass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "40.0",
+      "godotName": "mass",
+      "xmlDocId": "P:Godot.VehicleBody3D.Mass",
+      "sourcePath": "doc/classes/VehicleBody3D.xml"
+    },
+    {
+      "name": "Steering",
+      "kind": "Property",
+      "signature": "public float Steering { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The steering angle for the vehicle. Setting this to a non-zero value will result in the vehicle turning when it\u0027s moving. Wheels that have [member VehicleWheel3D.use_as_steering] set to [code]true[/code] will automatically be rotated. [b]Note:[/b] This property is edited in the inspector in degrees. In code the property is set in radians.",
+      "defaultValue": "0.0",
+      "godotName": "steering",
+      "xmlDocId": "P:Godot.VehicleBody3D.Steering",
+      "sourcePath": "doc/classes/VehicleBody3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VehicleBody3D.xml",
+      "sha256": "91ccfa733677ac72899a3a5da85b16a958467729bbad0fe887a4ddb2b252acf8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

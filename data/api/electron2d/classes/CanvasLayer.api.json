@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasLayer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CanvasLayer",
+    "kind": "class",
+    "baseType": "Electron2D.Node",
+    "interfaces": [],
+    "godotReference": "CanvasLayer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CanvasLayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CanvasLayer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CanvasLayer type.",
+      "xmlDocId": "M:Electron2D.CanvasLayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CanvasLayer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CanvasLayer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CanvasLayer type.",
+      "xmlDocId": "M:Electron2D.CanvasLayer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetFinalTransform",
+      "kind": "Method",
+      "signature": "public Electron2D.Transform2D GetFinalTransform()",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets the transform applied to descendant canvas items during submission.",
+      "xmlDocId": "M:Electron2D.CanvasLayer.GetFinalTransform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Hide",
+      "kind": "Method",
+      "signature": "public System.Void Hide()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Hides this canvas layer and its submitted descendants.",
+      "xmlDocId": "M:Electron2D.CanvasLayer.Hide",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Show",
+      "kind": "Method",
+      "signature": "public System.Void Show()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Shows this canvas layer.",
+      "xmlDocId": "M:Electron2D.CanvasLayer.Show",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Layer",
+      "kind": "Property",
+      "signature": "public System.Int32 Layer { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the numeric draw layer.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Layer",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Offset { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the layer offset.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Offset",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rotation",
+      "kind": "Property",
+      "signature": "public System.Single Rotation { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the layer rotation in radians.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Rotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RotationDegrees",
+      "kind": "Property",
+      "signature": "public System.Single RotationDegrees { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the layer rotation in degrees.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.RotationDegrees",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scale",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Scale { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the layer scale.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Scale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Electron2D.Transform2D Transform { get; set; }",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets or sets the layer transform.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Transform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public System.Boolean Visible { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this canvas layer is visible.",
+      "xmlDocId": "P:Electron2D.CanvasLayer.Visible",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

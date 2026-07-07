@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedVector2Array",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedVector2Array",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedVector2Array",
+    "documentationPath": "doc/classes/PackedVector2Array.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedvector2array.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedVector2Array",
+      "kind": "Constructor",
+      "signature": "public PackedVector2Array()",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedVector2Array].",
+      "godotName": "PackedVector2Array",
+      "xmlDocId": "M:Godot.PackedVector2Array.#ctor",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "PackedVector2Array",
+      "kind": "Constructor",
+      "signature": "public PackedVector2Array(PackedVector2Array from)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Constructs a [PackedVector2Array] as a copy of the given [PackedVector2Array].",
+      "godotName": "PackedVector2Array",
+      "xmlDocId": "M:Godot.PackedVector2Array.#ctor(PackedVector2Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "PackedVector2Array",
+      "kind": "Constructor",
+      "signature": "public PackedVector2Array(Array from)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedVector2Array]. Optionally, you can pass in a generic [Array] that will be converted. [b]Note:[/b] When initializing a [PackedVector2Array] with elements, it must be initialized with an [Array] of [Vector2] values: [codeblock] var array = PackedVector2Array([Vector2(12, 34), Vector2(56, 78)]) [/codeblock]",
+      "godotName": "PackedVector2Array",
+      "xmlDocId": "M:Godot.PackedVector2Array.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(Vector2 value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedVector2Array.Append(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedVector2Array array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Appends a [PackedVector2Array] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedVector2Array.AppendArray(PackedVector2Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(Vector2 value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedVector2Array.Bsearch(Vector2,bool)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedVector2Array.Clear",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(Vector2 value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedVector2Array.Count(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedVector2Array Duplicate()",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedVector2Array.Duplicate",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(Vector2 value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedVector2Array.Erase(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(Vector2 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedVector2Array.Fill(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(Vector2 value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedVector2Array.Find(Vector2,int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public Vector2 Get(int index)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Vector2] at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]Vector2(0, 0)[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedVector2Array.Get(int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(Vector2 value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value]. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedVector2Array.Has(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, Vector2 value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedVector2Array.Insert(int,Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedVector2Array.IsEmpty",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(Vector2 value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Inserts a [Vector2] at the end.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedVector2Array.PushBack(Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedVector2Array.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedVector2Array.Resize(int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedVector2Array.Reverse",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(Vector2 value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Vector2"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedVector2Array.Rfind(Vector2,int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, Vector2 value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Changes the [Vector2] at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedVector2Array.Set(int,Vector2)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedVector2Array.Size",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedVector2Array Slice(int begin, int end)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedVector2Array], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedVector2Array]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedVector2Array.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order. [b]Note:[/b] Vectors with [constant @GDScript.NAN] elements don\u0027t behave the same as other vectors. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedVector2Array.Sort",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "ToByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a [PackedByteArray] with each vector encoded as bytes.",
+      "godotName": "to_byte_array",
+      "xmlDocId": "M:Godot.PackedVector2Array.ToByteArray",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedVector2Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedVector2Array.operator !=(PackedVector2Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public PackedVector2Array operator *(Transform2D right)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Returns a new [PackedVector2Array] with all vectors in this array inversely transformed (multiplied) by the given [Transform2D] transformation matrix, under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection is fine, scaling/skew is not). [code]array * transform[/code] is equivalent to [code]transform.inverse() * array[/code]. See [method Transform2D.inverse]. For transforming by inverse of an affine transformation (e.g. with scaling) [code]transform.affine_inverse() * array[/code] can be used instead. See [method Transform2D.affine_inverse].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.PackedVector2Array.operator *(Transform2D)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedVector2Array operator \u002B(PackedVector2Array right)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Returns a new [PackedVector2Array] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedVector2Array.operator \u002B(PackedVector2Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedVector2Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal [Vector2]s at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedVector2Array.operator ==(PackedVector2Array)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Vector2 operator [](int index)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Vector2] at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedVector2Array.operator [](int)",
+      "sourcePath": "doc/classes/PackedVector2Array.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedVector2Array.xml",
+      "sha256": "0cccc80bd292df56a6bcb477a631ad71d3ba182e52292bad6c6ab0229a76cd4a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

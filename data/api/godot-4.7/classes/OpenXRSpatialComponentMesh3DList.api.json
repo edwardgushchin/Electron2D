@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentMesh3DList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentMesh3DList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentMesh3DList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh3DList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentmesh3dlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMesh",
+      "kind": "Method",
+      "signature": "public Mesh GetMesh(int index)",
+      "returnType": "Mesh",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the mesh for the entity at this [param index].",
+      "godotName": "get_mesh",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMesh3DList.GetMesh(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh3DList.xml"
+    },
+    {
+      "name": "GetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetTransform(int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for positioning our mesh for the entity at this [param index].",
+      "godotName": "get_transform",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMesh3DList.GetTransform(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh3DList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh3DList.xml",
+      "sha256": "715ea9f7211b46772ce1e7bb2d66a51f56d3743b08c6a6c3d631d7fc69a6a5df"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

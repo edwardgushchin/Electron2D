@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioListener3D",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioListener3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "AudioListener3D",
+    "documentationPath": "doc/classes/AudioListener3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiolistener3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearCurrent",
+      "kind": "Method",
+      "signature": "public void ClearCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disables the listener to use the current camera\u0027s listener instead.",
+      "godotName": "clear_current",
+      "xmlDocId": "M:Godot.AudioListener3D.ClearCurrent",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "GetListenerTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetListenerTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the listener\u0027s global orthonormalized [Transform3D].",
+      "godotName": "get_listener_transform",
+      "xmlDocId": "M:Godot.AudioListener3D.GetListenerTransform",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "IsCurrent",
+      "kind": "Method",
+      "signature": "public bool IsCurrent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the listener was made current using [method make_current], [code]false[/code] otherwise. [b]Note:[/b] There may be more than one AudioListener3D marked as \u0022current\u0022 in the scene tree, but only the one that was made current last will be used.",
+      "godotName": "is_current",
+      "xmlDocId": "M:Godot.AudioListener3D.IsCurrent",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "MakeCurrent",
+      "kind": "Method",
+      "signature": "public void MakeCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Enables the listener. This will override the current camera\u0027s listener.",
+      "godotName": "make_current",
+      "xmlDocId": "M:Godot.AudioListener3D.MakeCurrent",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "DopplerTracking",
+      "kind": "Property",
+      "signature": "public int DopplerTracking { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If not [constant DOPPLER_TRACKING_DISABLED], this listener will simulate the [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] for objects changed in particular [code]_process[/code] methods. [b]Note:[/b] The Doppler effect will only be heard on [AudioStreamPlayer3D]s if [member AudioStreamPlayer3D.doppler_tracking] is not set to [constant AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "doppler_tracking",
+      "xmlDocId": "P:Godot.AudioListener3D.DopplerTracking",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DopplerTracking",
+      "values": [
+        {
+          "name": "DOPPLER_TRACKING_DISABLED",
+          "value": "0",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Disables [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] simulation (default).",
+          "sourcePath": "doc/classes/AudioListener3D.xml"
+        },
+        {
+          "name": "DOPPLER_TRACKING_IDLE_STEP",
+          "value": "1",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_process[/code]. Changes in the relative velocity of this listener compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+          "sourcePath": "doc/classes/AudioListener3D.xml"
+        },
+        {
+          "name": "DOPPLER_TRACKING_PHYSICS_STEP",
+          "value": "2",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_physics_process[/code]. Changes in the relative velocity of this listener compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+          "sourcePath": "doc/classes/AudioListener3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DOPPLER_TRACKING_DISABLED",
+      "value": "0",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Disables [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] simulation (default).",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "DOPPLER_TRACKING_IDLE_STEP",
+      "value": "1",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_process[/code]. Changes in the relative velocity of this listener compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    },
+    {
+      "name": "DOPPLER_TRACKING_PHYSICS_STEP",
+      "value": "2",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_physics_process[/code]. Changes in the relative velocity of this listener compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+      "sourcePath": "doc/classes/AudioListener3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioListener3D.xml",
+      "sha256": "c830e0e34e60a70ad659e48321ca84b0c87191d42f394819aaadb77aaf06d507"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

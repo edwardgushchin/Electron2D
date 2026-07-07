@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerSpawner",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerSpawner",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "MultiplayerSpawner",
+    "documentationPath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayerspawner.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddSpawnableScene",
+      "kind": "Method",
+      "signature": "public void AddSpawnableScene(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a scene path to spawnable scenes, making it automatically replicated from the multiplayer authority to other peers when added as children of the node pointed by [member spawn_path].",
+      "godotName": "add_spawnable_scene",
+      "xmlDocId": "M:Godot.MultiplayerSpawner.AddSpawnableScene(String)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "ClearSpawnableScenes",
+      "kind": "Method",
+      "signature": "public void ClearSpawnableScenes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all spawnable scenes. Does not despawn existing instances on remote peers.",
+      "godotName": "clear_spawnable_scenes",
+      "xmlDocId": "M:Godot.MultiplayerSpawner.ClearSpawnableScenes",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "GetSpawnableScene",
+      "kind": "Method",
+      "signature": "public String GetSpawnableScene(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the spawnable scene path by index.",
+      "godotName": "get_spawnable_scene",
+      "xmlDocId": "M:Godot.MultiplayerSpawner.GetSpawnableScene(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "GetSpawnableSceneCount",
+      "kind": "Method",
+      "signature": "public int GetSpawnableSceneCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the count of spawnable scene paths.",
+      "godotName": "get_spawnable_scene_count",
+      "xmlDocId": "M:Godot.MultiplayerSpawner.GetSpawnableSceneCount",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "Spawn",
+      "kind": "Method",
+      "signature": "public Node Spawn(Variant data)",
+      "returnType": "Node",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Requests a custom spawn, with [param data] passed to [member spawn_function] on all peers. Returns the locally spawned node instance already inside the scene tree, and added as a child of the node pointed by [member spawn_path]. [b]Note:[/b] Spawnable scenes are spawned automatically. [method spawn] is only needed for custom spawns.",
+      "godotName": "spawn",
+      "xmlDocId": "M:Godot.MultiplayerSpawner.Spawn(Variant)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "SpawnFunction",
+      "kind": "Property",
+      "signature": "public Callable SpawnFunction { get; set; }",
+      "returnType": "Callable",
+      "parameters": [],
+      "summary": "Method called on all peers when a custom [method spawn] is requested by the authority. Will receive the [code]data[/code] parameter, and should return a [Node] that is not in the scene tree. [b]Note:[/b] The returned node should [b]not[/b] be added to the scene with [method Node.add_child]. This is done automatically.",
+      "godotName": "spawn_function",
+      "xmlDocId": "P:Godot.MultiplayerSpawner.SpawnFunction",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "SpawnLimit",
+      "kind": "Property",
+      "signature": "public int SpawnLimit { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum number of nodes allowed to be spawned by this spawner. Includes both spawnable scenes and custom spawns. When set to [code]0[/code] (the default), there is no limit.",
+      "defaultValue": "0",
+      "godotName": "spawn_limit",
+      "xmlDocId": "P:Godot.MultiplayerSpawner.SpawnLimit",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "SpawnPath",
+      "kind": "Property",
+      "signature": "public NodePath SpawnPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to the spawn root. Spawnable scenes that are added as direct children are replicated to other peers.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "spawn_path",
+      "xmlDocId": "P:Godot.MultiplayerSpawner.SpawnPath",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Despawned",
+      "kind": "Signal",
+      "signature": "public event DespawnedHandler Despawned",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when a spawnable scene or custom spawn was despawned by the multiplayer authority. Only called on remote peers.",
+      "godotName": "despawned",
+      "xmlDocId": "E:Godot.MultiplayerSpawner.Despawned(Node)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    },
+    {
+      "name": "Spawned",
+      "kind": "Signal",
+      "signature": "public event SpawnedHandler Spawned",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when a spawnable scene or custom spawn was spawned by the multiplayer authority. Only called on remote peers.",
+      "godotName": "spawned",
+      "xmlDocId": "E:Godot.MultiplayerSpawner.Spawned(Node)",
+      "sourcePath": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/multiplayer/doc_classes/MultiplayerSpawner.xml",
+      "sha256": "f7747d79238232c7f100cc6006df3c0fa1e052713980af3b3687bc01a471d349"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

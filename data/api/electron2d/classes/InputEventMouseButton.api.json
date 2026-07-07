@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMouseButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventMouseButton",
+    "kind": "class",
+    "baseType": "Electron2D.InputEventMouse",
+    "interfaces": [],
+    "godotReference": "InputEventMouseButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventMouseButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventMouseButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventMouseButton type.",
+      "xmlDocId": "M:Electron2D.InputEventMouseButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventMouseButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventMouseButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventMouseButton type.",
+      "xmlDocId": "M:Electron2D.InputEventMouseButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ButtonIndex",
+      "kind": "Property",
+      "signature": "public Electron2D.MouseButton ButtonIndex { get; set; }",
+      "returnType": "Electron2D.MouseButton",
+      "parameters": [],
+      "summary": "Gets or sets the mouse button or wheel constant.",
+      "xmlDocId": "P:Electron2D.InputEventMouseButton.ButtonIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Canceled",
+      "kind": "Property",
+      "signature": "public System.Boolean Canceled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the platform canceled this mouse button event.",
+      "xmlDocId": "P:Electron2D.InputEventMouseButton.Canceled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DoubleClick",
+      "kind": "Property",
+      "signature": "public System.Boolean DoubleClick { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this event represents a double-click.",
+      "xmlDocId": "P:Electron2D.InputEventMouseButton.DoubleClick",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Factor",
+      "kind": "Property",
+      "signature": "public System.Single Factor { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the wheel delta or high-precision scroll amount.",
+      "xmlDocId": "P:Electron2D.InputEventMouseButton.Factor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public System.Boolean Pressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the button is pressed.",
+      "xmlDocId": "P:Electron2D.InputEventMouseButton.Pressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

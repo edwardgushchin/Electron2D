@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "UDPServer",
+    "namespace": "Godot",
+    "fullName": "Godot.UDPServer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "UDPServer",
+    "documentationPath": "doc/classes/UDPServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_udpserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetLocalPort",
+      "kind": "Method",
+      "signature": "public int GetLocalPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the local port this server is listening to.",
+      "godotName": "get_local_port",
+      "xmlDocId": "M:Godot.UDPServer.GetLocalPort",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "IsConnectionAvailable",
+      "kind": "Method",
+      "signature": "public bool IsConnectionAvailable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a packet with a new address/port combination was received on the socket.",
+      "godotName": "is_connection_available",
+      "xmlDocId": "M:Godot.UDPServer.IsConnectionAvailable",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "IsListening",
+      "kind": "Method",
+      "signature": "public bool IsListening()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the socket is open and listening on a port.",
+      "godotName": "is_listening",
+      "xmlDocId": "M:Godot.UDPServer.IsListening",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "Listen",
+      "kind": "Method",
+      "signature": "public int Listen(int port, String bindAddress)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "bind_address",
+          "type": "String",
+          "defaultValue": "\u0022*\u0022"
+        }
+      ],
+      "summary": "Starts the server by opening a UDP socket listening on the given [param port]. You can optionally specify a [param bind_address] to only listen for packets sent to that address. See also [method PacketPeerUDP.bind].",
+      "godotName": "listen",
+      "xmlDocId": "M:Godot.UDPServer.Listen(int,String)",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public int Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Call this method at regular intervals (e.g. inside [method Node._process]) to process new packets. Any packet from a known address/port pair will be delivered to the appropriate [PacketPeerUDP], while any packet received from an unknown address/port pair will be added as a pending connection (see [method is_connection_available] and [method take_connection]). The maximum number of pending connections is defined via [member max_pending_connections].",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.UDPServer.Poll",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the server, closing the UDP socket if open. Will close all connected [PacketPeerUDP] accepted via [method take_connection] (remote peers will not be notified).",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.UDPServer.Stop",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "TakeConnection",
+      "kind": "Method",
+      "signature": "public PacketPeerUDP TakeConnection()",
+      "returnType": "PacketPeerUDP",
+      "parameters": [],
+      "summary": "Returns the first pending connection (connected to the appropriate address/port). Will return [code]null[/code] if no new connection is available. See also [method is_connection_available], [method PacketPeerUDP.connect_to_host].",
+      "godotName": "take_connection",
+      "xmlDocId": "M:Godot.UDPServer.TakeConnection",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    },
+    {
+      "name": "MaxPendingConnections",
+      "kind": "Property",
+      "signature": "public int MaxPendingConnections { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Define the maximum number of pending connections, during [method poll], any new pending connection exceeding that value will be automatically dropped. Setting this value to [code]0[/code] effectively prevents any new pending connection to be accepted (e.g. when all your players have connected).",
+      "defaultValue": "16",
+      "godotName": "max_pending_connections",
+      "xmlDocId": "P:Godot.UDPServer.MaxPendingConnections",
+      "sourcePath": "doc/classes/UDPServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/UDPServer.xml",
+      "sha256": "e79385784d24503b5efc5625fb55695a21face514c38222689a4a896c6f9ac20"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

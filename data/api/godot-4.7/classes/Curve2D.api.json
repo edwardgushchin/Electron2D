@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Curve2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Curve2D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Curve2D",
+    "documentationPath": "doc/classes/Curve2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_curve2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPoint",
+      "kind": "Method",
+      "signature": "public void AddPoint(Vector2 position, Vector2 @in, Vector2 @out, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "in",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        },
+        {
+          "name": "out",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a point with the specified [param position] relative to the curve\u0027s own position, with control points [param in] and [param out]. Appends the new point at the end of the point list. If [param index] is given, the new point is inserted before the existing point identified by index [param index]. Every existing point starting from [param index] is shifted further down the list of points. The index must be greater than or equal to [code]0[/code] and must not exceed the number of existing points in the line. See [member point_count].",
+      "godotName": "add_point",
+      "xmlDocId": "M:Godot.Curve2D.AddPoint(Vector2,Vector2,Vector2,int)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "ClearPoints",
+      "kind": "Method",
+      "signature": "public void ClearPoints()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all points from the curve.",
+      "godotName": "clear_points",
+      "xmlDocId": "M:Godot.Curve2D.ClearPoints",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetBakedLength",
+      "kind": "Method",
+      "signature": "public float GetBakedLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the total length of the curve, based on the cached points. Given enough density (see [member bake_interval]), it should be approximate enough.",
+      "godotName": "get_baked_length",
+      "xmlDocId": "M:Godot.Curve2D.GetBakedLength",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetBakedPoints",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetBakedPoints()",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Returns the cache of points as a [PackedVector2Array].",
+      "godotName": "get_baked_points",
+      "xmlDocId": "M:Godot.Curve2D.GetBakedPoints",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetClosestOffset",
+      "kind": "Method",
+      "signature": "public float GetClosestOffset(Vector2 toPoint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the closest offset to [param to_point]. This offset is meant to be used in [method sample_baked]. [param to_point] must be in this curve\u0027s local space.",
+      "godotName": "get_closest_offset",
+      "xmlDocId": "M:Godot.Curve2D.GetClosestOffset(Vector2)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetClosestPoint",
+      "kind": "Method",
+      "signature": "public Vector2 GetClosestPoint(Vector2 toPoint)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "to_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the closest point on baked segments (in curve\u0027s local space) to [param to_point]. [param to_point] must be in this curve\u0027s local space.",
+      "godotName": "get_closest_point",
+      "xmlDocId": "M:Godot.Curve2D.GetClosestPoint(Vector2)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetPointIn",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointIn(int idx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the control point leading to the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].",
+      "godotName": "get_point_in",
+      "xmlDocId": "M:Godot.Curve2D.GetPointIn(int)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetPointOut",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointOut(int idx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the control point leading out of the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].",
+      "godotName": "get_point_out",
+      "xmlDocId": "M:Godot.Curve2D.GetPointOut(int)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "GetPointPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointPosition(int idx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].",
+      "godotName": "get_point_position",
+      "xmlDocId": "M:Godot.Curve2D.GetPointPosition(int)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "RemovePoint",
+      "kind": "Method",
+      "signature": "public void RemovePoint(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Deletes the point [param idx] from the curve. Sends an error to the console if [param idx] is out of bounds.",
+      "godotName": "remove_point",
+      "xmlDocId": "M:Godot.Curve2D.RemovePoint(int)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "Sample",
+      "kind": "Method",
+      "signature": "public Vector2 Sample(int idx, float t)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "t",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the position between the vertex [param idx] and the vertex [code]idx \u002B 1[/code], where [param t] controls if the point is the first vertex ([code]t = 0.0[/code]), the last vertex ([code]t = 1.0[/code]), or in between. Values of [param t] outside the range ([code]0.0 \u003C= t \u003C= 1.0[/code]) give strange, but predictable results. If [param idx] is out of bounds it is truncated to the first or last vertex, and [param t] is ignored. If the curve has no points, the function sends an error to the console, and returns [code](0, 0)[/code].",
+      "godotName": "sample",
+      "xmlDocId": "M:Godot.Curve2D.Sample(int,float)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "SampleBaked",
+      "kind": "Method",
+      "signature": "public Vector2 SampleBaked(float offset, bool cubic)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "cubic",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a point within the curve at position [param offset], where [param offset] is measured as a pixel distance along the curve. To do that, it finds the two cached points where the [param offset] lies between, then interpolates the values. This interpolation is cubic if [param cubic] is set to [code]true[/code], or linear if set to [code]false[/code]. Cubic interpolation tends to follow the curves better, but linear is faster (and often, precise enough).",
+      "godotName": "sample_baked",
+      "xmlDocId": "M:Godot.Curve2D.SampleBaked(float,bool)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "SampleBakedWithRotation",
+      "kind": "Method",
+      "signature": "public Transform2D SampleBakedWithRotation(float offset, bool cubic)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "cubic",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Similar to [method sample_baked], but returns [Transform2D] that includes a rotation along the curve, with [member Transform2D.origin] as the point position and the [member Transform2D.x] vector pointing in the direction of the path at that point. Returns an empty transform if the length of the curve is [code]0[/code]. [codeblock] var baked = curve.sample_baked_with_rotation(offset) # The returned Transform2D can be set directly. transform = baked # You can also read the origin and rotation separately from the returned Transform2D. position = baked.get_origin() rotation = baked.get_rotation() [/codeblock]",
+      "godotName": "sample_baked_with_rotation",
+      "xmlDocId": "M:Godot.Curve2D.SampleBakedWithRotation(float,bool)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "Samplef",
+      "kind": "Method",
+      "signature": "public Vector2 Samplef(float fofs)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "fofs",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the position at the vertex [param fofs]. It calls [method sample] using the integer part of [param fofs] as [code]idx[/code], and its fractional part as [code]t[/code].",
+      "godotName": "samplef",
+      "xmlDocId": "M:Godot.Curve2D.Samplef(float)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "SetPointIn",
+      "kind": "Method",
+      "signature": "public void SetPointIn(int idx, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the position of the control point leading to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.",
+      "godotName": "set_point_in",
+      "xmlDocId": "M:Godot.Curve2D.SetPointIn(int,Vector2)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "SetPointOut",
+      "kind": "Method",
+      "signature": "public void SetPointOut(int idx, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the position of the control point leading out of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.",
+      "godotName": "set_point_out",
+      "xmlDocId": "M:Godot.Curve2D.SetPointOut(int,Vector2)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "SetPointPosition",
+      "kind": "Method",
+      "signature": "public void SetPointPosition(int idx, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the position for the vertex [param idx]. If the index is out of bounds, the function sends an error to the console.",
+      "godotName": "set_point_position",
+      "xmlDocId": "M:Godot.Curve2D.SetPointPosition(int,Vector2)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "Tessellate",
+      "kind": "Method",
+      "signature": "public PackedVector2Array Tessellate(int maxStages, float toleranceDegrees)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "max_stages",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "tolerance_degrees",
+          "type": "float",
+          "defaultValue": "4"
+        }
+      ],
+      "summary": "Returns a list of points along the curve, with a curvature controlled point density. That is, the curvier parts will have more points than the straighter parts. This approximation makes straight segments between each point, then subdivides those segments until the resulting shape is similar enough. [param max_stages] controls how many subdivisions a curve segment may face before it is considered approximate enough. Each subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions per curve segment. Increase with care! [param tolerance_degrees] controls how many degrees the midpoint of a segment may deviate from the real curve, before the segment has to be subdivided.",
+      "godotName": "tessellate",
+      "xmlDocId": "M:Godot.Curve2D.Tessellate(int,float)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "TessellateEvenLength",
+      "kind": "Method",
+      "signature": "public PackedVector2Array TessellateEvenLength(int maxStages, float toleranceLength)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "max_stages",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "tolerance_length",
+          "type": "float",
+          "defaultValue": "20.0"
+        }
+      ],
+      "summary": "Returns a list of points along the curve, with almost uniform density. [param max_stages] controls how many subdivisions a curve segment may face before it is considered approximate enough. Each subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions per curve segment. Increase with care! [param tolerance_length] controls the maximal distance between two neighboring points, before the segment has to be subdivided.",
+      "godotName": "tessellate_even_length",
+      "xmlDocId": "M:Godot.Curve2D.TessellateEvenLength(int,float)",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "BakeInterval",
+      "kind": "Property",
+      "signature": "public float BakeInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance in pixels between two adjacent cached points. Changing it forces the cache to be recomputed the next time the [method get_baked_points] or [method get_baked_length] function is called. The smaller the distance, the more points in the cache and the more memory it will consume, so use with care.",
+      "defaultValue": "5.0",
+      "godotName": "bake_interval",
+      "xmlDocId": "P:Godot.Curve2D.BakeInterval",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "PointCount",
+      "kind": "Property",
+      "signature": "public int PointCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of points describing the curve.",
+      "defaultValue": "0",
+      "godotName": "point_count",
+      "xmlDocId": "P:Godot.Curve2D.PointCount",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "point_{index}/in",
+      "kind": "RawProperty",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position of the control point leading to the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "point_{index}/in",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "point_{index}/out",
+      "kind": "RawProperty",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position of the control point leading out of the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "point_{index}/out",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    },
+    {
+      "name": "point_{index}/position",
+      "kind": "RawProperty",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position of for the vertex at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "point_{index}/position",
+      "sourcePath": "doc/classes/Curve2D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Curve2D.xml",
+      "sha256": "e9ef7af40667b21ac2e92bd2bdb71fc412e04362650b736cecda1a7d350ac7bb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

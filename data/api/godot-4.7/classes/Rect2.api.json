@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Rect2",
+    "namespace": "Godot",
+    "fullName": "Godot.Rect2",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Rect2",
+    "documentationPath": "doc/classes/Rect2.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rect2.html"
+  },
+  "constructors": [
+    {
+      "name": "Rect2",
+      "kind": "Constructor",
+      "signature": "public Rect2()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Constructs a [Rect2] with its [member position] and [member size] set to [constant Vector2.ZERO].",
+      "godotName": "Rect2",
+      "xmlDocId": "M:Godot.Rect2.#ctor",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Rect2",
+      "kind": "Constructor",
+      "signature": "public Rect2(Rect2 from)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Constructs a [Rect2] as a copy of the given [Rect2].",
+      "godotName": "Rect2",
+      "xmlDocId": "M:Godot.Rect2.#ctor(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Rect2",
+      "kind": "Constructor",
+      "signature": "public Rect2(Rect2i from)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Rect2i"
+        }
+      ],
+      "summary": "Constructs a [Rect2] from a [Rect2i].",
+      "godotName": "Rect2",
+      "xmlDocId": "M:Godot.Rect2.#ctor(Rect2i)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Rect2",
+      "kind": "Constructor",
+      "signature": "public Rect2(Vector2 position, Vector2 size)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "size",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Constructs a [Rect2] by [param position] and [param size].",
+      "godotName": "Rect2",
+      "xmlDocId": "M:Godot.Rect2.#ctor(Vector2,Vector2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Rect2",
+      "kind": "Constructor",
+      "signature": "public Rect2(float x, float y, float width, float height)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        },
+        {
+          "name": "width",
+          "type": "float"
+        },
+        {
+          "name": "height",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Rect2] by setting its [member position] to ([param x], [param y]), and its [member size] to ([param width], [param height]).",
+      "godotName": "Rect2",
+      "xmlDocId": "M:Godot.Rect2.#ctor(float,float,float,float)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Rect2 Abs()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns a [Rect2] equivalent to this rectangle, with its width and height modified to be non-negative values, and with its [member position] being the top-left corner of the rectangle. [codeblocks] [gdscript] var rect = Rect2(25, 25, -100, -50) var absolute = rect.abs() # absolute is Rect2(-75, -25, 100, 50) [/gdscript] [csharp] var rect = new Rect2(25, 25, -100, -50); var absolute = rect.Abs(); // absolute is Rect2(-75, -25, 100, 50) [/csharp] [/codeblocks] [b]Note:[/b] It\u0027s recommended to use this method when [member size] is negative, as most other methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner.",
+      "godotName": "abs",
+      "xmlDocId": "M:Godot.Rect2.Abs",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Encloses",
+      "kind": "Method",
+      "signature": "public bool Encloses(Rect2 b)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this rectangle [i]completely[/i] encloses the [param b] rectangle.",
+      "godotName": "encloses",
+      "xmlDocId": "M:Godot.Rect2.Encloses(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Expand",
+      "kind": "Method",
+      "signature": "public Rect2 Expand(Vector2 to)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle expanded to align the edges with the given [param to] point, if necessary. [codeblocks] [gdscript] var rect = Rect2(0, 0, 5, 2) rect = rect.expand(Vector2(10, 0)) # rect is Rect2(0, 0, 10, 2) rect = rect.expand(Vector2(-5, 5)) # rect is Rect2(-5, 0, 15, 5) [/gdscript] [csharp] var rect = new Rect2(0, 0, 5, 2); rect = rect.Expand(new Vector2(10, 0)); // rect is Rect2(0, 0, 10, 2) rect = rect.Expand(new Vector2(-5, 5)); // rect is Rect2(-5, 0, 15, 5) [/csharp] [/codeblocks]",
+      "godotName": "expand",
+      "xmlDocId": "M:Godot.Rect2.Expand(Vector2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "GetArea",
+      "kind": "Method",
+      "signature": "public float GetArea()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the rectangle\u0027s area. This is equivalent to [code]size.x * size.y[/code]. See also [method has_area].",
+      "godotName": "get_area",
+      "xmlDocId": "M:Godot.Rect2.GetArea",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "GetCenter",
+      "kind": "Method",
+      "signature": "public Vector2 GetCenter()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the center point of the rectangle. This is the same as [code]position \u002B (size / 2.0)[/code].",
+      "godotName": "get_center",
+      "xmlDocId": "M:Godot.Rect2.GetCenter",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "GetSupport",
+      "kind": "Method",
+      "signature": "public Vector2 GetSupport(Vector2 direction)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "direction",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the vertex\u0027s position of this rect that\u0027s the farthest in the given direction. This point is commonly known as the support point in collision detection algorithms.",
+      "godotName": "get_support",
+      "xmlDocId": "M:Godot.Rect2.GetSupport(Vector2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Grow",
+      "kind": "Method",
+      "signature": "public Rect2 Grow(float amount)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle extended on all sides by the given [param amount]. A negative [param amount] shrinks the rectangle instead. See also [method grow_individual] and [method grow_side]. [codeblocks] [gdscript] var a = Rect2(4, 4, 8, 8).grow(4) # a is Rect2(0, 0, 16, 16) var b = Rect2(0, 0, 8, 4).grow(2) # b is Rect2(-2, -2, 12, 8) [/gdscript] [csharp] var a = new Rect2(4, 4, 8, 8).Grow(4); // a is Rect2(0, 0, 16, 16) var b = new Rect2(0, 0, 8, 4).Grow(2); // b is Rect2(-2, -2, 12, 8) [/csharp] [/codeblocks]",
+      "godotName": "grow",
+      "xmlDocId": "M:Godot.Rect2.Grow(float)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "GrowIndividual",
+      "kind": "Method",
+      "signature": "public Rect2 GrowIndividual(float left, float top, float right, float bottom)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "float"
+        },
+        {
+          "name": "top",
+          "type": "float"
+        },
+        {
+          "name": "right",
+          "type": "float"
+        },
+        {
+          "name": "bottom",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle with its [param left], [param top], [param right], and [param bottom] sides extended by the given amounts. Negative values shrink the sides, instead. See also [method grow] and [method grow_side].",
+      "godotName": "grow_individual",
+      "xmlDocId": "M:Godot.Rect2.GrowIndividual(float,float,float,float)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "GrowSide",
+      "kind": "Method",
+      "signature": "public Rect2 GrowSide(int side, float amount)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "side",
+          "type": "int"
+        },
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this rectangle with its [param side] extended by the given [param amount] (see [enum Side] constants). A negative [param amount] shrinks the rectangle, instead. See also [method grow] and [method grow_individual].",
+      "godotName": "grow_side",
+      "xmlDocId": "M:Godot.Rect2.GrowSide(int,float)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "HasArea",
+      "kind": "Method",
+      "signature": "public bool HasArea()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this rectangle has positive width and height. See also [method get_area].",
+      "godotName": "has_area",
+      "xmlDocId": "M:Godot.Rect2.HasArea",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public bool HasPoint(Vector2 point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the rectangle contains the given [param point]. By convention, points on the right and bottom edges are [b]not[/b] included. [b]Note:[/b] This method is not reliable for [Rect2] with a [i]negative[/i] [member size]. Use [method abs] first to get a valid rectangle.",
+      "godotName": "has_point",
+      "xmlDocId": "M:Godot.Rect2.HasPoint(Vector2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Intersection",
+      "kind": "Method",
+      "signature": "public Rect2 Intersection(Rect2 b)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns the intersection between this rectangle and [param b]. If the rectangles do not intersect, returns an empty [Rect2]. [codeblocks] [gdscript] var rect1 = Rect2(0, 0, 5, 10) var rect2 = Rect2(2, 0, 8, 4) var a = rect1.intersection(rect2) # a is Rect2(2, 0, 3, 4) [/gdscript] [csharp] var rect1 = new Rect2(0, 0, 5, 10); var rect2 = new Rect2(2, 0, 8, 4); var a = rect1.Intersection(rect2); // a is Rect2(2, 0, 3, 4) [/csharp] [/codeblocks] [b]Note:[/b] If you only need to know whether two rectangles are overlapping, use [method intersects], instead.",
+      "godotName": "intersection",
+      "xmlDocId": "M:Godot.Rect2.Intersection(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Intersects",
+      "kind": "Method",
+      "signature": "public bool Intersects(Rect2 b, bool includeBorders)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2"
+        },
+        {
+          "name": "include_borders",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this rectangle overlaps with the [param b] rectangle. The edges of both rectangles are excluded, unless [param include_borders] is [code]true[/code].",
+      "godotName": "intersects",
+      "xmlDocId": "M:Godot.Rect2.Intersects(Rect2,bool)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Rect2 rect)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this rectangle and [param rect] are approximately equal, by calling [method Vector2.is_equal_approx] on the [member position] and the [member size].",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Rect2.IsEqualApprox(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this rectangle\u0027s values are finite, by calling [method Vector2.is_finite] on the [member position] and the [member size].",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Rect2.IsFinite",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public Rect2 Merge(Rect2 b)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns a [Rect2] that encloses both this rectangle and [param b] around the edges. See also [method encloses].",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.Rect2.Merge(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "End",
+      "kind": "Property",
+      "signature": "public Vector2 End { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The ending point. This is usually the bottom-right corner of the rectangle, and is equivalent to [code]position \u002B size[/code]. Setting this point affects the [member size].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "end",
+      "xmlDocId": "P:Godot.Rect2.End",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The origin point. This is usually the top-left corner of the rectangle.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.Rect2.Position",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The rectangle\u0027s width and height, starting from [member position]. Setting this value also affects the [member end] point. [b]Note:[/b] It\u0027s recommended setting the width and height to non-negative values, as most methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner. To get an equivalent rectangle with non-negative size, use [method abs].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.Rect2.Size",
+      "sourcePath": "doc/classes/Rect2.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Rect2 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [member position] or [member size] of both rectangles are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Rect2.operator !=(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Rect2 operator *(Transform2D right)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Inversely transforms (multiplies) the [Rect2] by the given [Transform2D] transformation matrix, under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection is fine, scaling/skew is not). [code]rect * transform[/code] is equivalent to [code]transform.inverse() * rect[/code]. See [method Transform2D.inverse]. For transforming by inverse of an affine transformation (e.g. with scaling) [code]transform.affine_inverse() * rect[/code] can be used instead. See [method Transform2D.affine_inverse].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Rect2.operator *(Transform2D)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Rect2 right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both [member position] and [member size] of the rectangles are exactly equal, respectively. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Rect2.operator ==(Rect2)",
+      "sourcePath": "doc/classes/Rect2.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Rect2.xml",
+      "sha256": "48e74b25e8317bb6889615da1671643b5c5092f083da26a9e7934eb1099aff0d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

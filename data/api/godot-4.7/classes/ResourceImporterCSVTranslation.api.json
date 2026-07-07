@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterCSVTranslation",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterCSVTranslation",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterCSVTranslation",
+    "documentationPath": "doc/classes/ResourceImporterCSVTranslation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimportercsvtranslation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Compress",
+      "kind": "Property",
+      "signature": "public int Compress { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "- [b]Disabled[/b]: Creates a [Translation]. - [b]Auto[/b]: Creates an [OptimizedTranslation] when possible. This makes the resulting file smaller at the cost of a small CPU overhead. Falls back to [Translation] for translations with context or plural forms.",
+      "defaultValue": "1",
+      "godotName": "compress",
+      "xmlDocId": "P:Godot.ResourceImporterCSVTranslation.Compress",
+      "sourcePath": "doc/classes/ResourceImporterCSVTranslation.xml"
+    },
+    {
+      "name": "Delimiter",
+      "kind": "Property",
+      "signature": "public int Delimiter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The delimiter to use in the CSV file. The default value matches the common CSV convention. Tab-separated values are sometimes called TSV files.",
+      "defaultValue": "0",
+      "godotName": "delimiter",
+      "xmlDocId": "P:Godot.ResourceImporterCSVTranslation.Delimiter",
+      "sourcePath": "doc/classes/ResourceImporterCSVTranslation.xml"
+    },
+    {
+      "name": "UnescapeKeys",
+      "kind": "Property",
+      "signature": "public bool UnescapeKeys { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], message keys in the CSV file are unescaped using [method String.c_unescape] during the import process.",
+      "defaultValue": "false",
+      "godotName": "unescape_keys",
+      "xmlDocId": "P:Godot.ResourceImporterCSVTranslation.UnescapeKeys",
+      "sourcePath": "doc/classes/ResourceImporterCSVTranslation.xml"
+    },
+    {
+      "name": "UnescapeTranslations",
+      "kind": "Property",
+      "signature": "public bool UnescapeTranslations { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], message translations in the CSV file are unescaped using [method String.c_unescape] during the import process.",
+      "defaultValue": "true",
+      "godotName": "unescape_translations",
+      "xmlDocId": "P:Godot.ResourceImporterCSVTranslation.UnescapeTranslations",
+      "sourcePath": "doc/classes/ResourceImporterCSVTranslation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterCSVTranslation.xml",
+      "sha256": "6474d515caf1d83e919d7846fc2e14407d35e5b24170b550513ceec820c2197c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PanelContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.PanelContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "PanelContainer",
+    "documentationPath": "doc/classes/PanelContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_panelcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.PanelContainer.MouseFilter",
+      "sourcePath": "doc/classes/PanelContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PanelContainer.xml",
+      "sha256": "8bbde06c8b084d1de99b4b0f088026ef550b1d8b737a14b180d40525060ff447"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

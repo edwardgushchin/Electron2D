@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureButton",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TextureButton",
+    "kind": "class",
+    "baseType": "Electron2D.BaseButton",
+    "interfaces": [],
+    "godotReference": "TextureButton",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TextureButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TextureButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TextureButton\u0060 class.",
+      "xmlDocId": "M:Electron2D.TextureButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TextureButton",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TextureButton()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TextureButton\u0060 class.",
+      "xmlDocId": "M:Electron2D.TextureButton.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this texture button.",
+      "xmlDocId": "M:Electron2D.TextureButton._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the selected texture for the current button state.",
+      "xmlDocId": "M:Electron2D.TextureButton._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IgnoreTextureSize",
+      "kind": "Property",
+      "signature": "public System.Boolean IgnoreTextureSize { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the texture size is ignored for minimum-size calculation.",
+      "xmlDocId": "P:Electron2D.TextureButton.IgnoreTextureSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StretchMode",
+      "kind": "Property",
+      "signature": "public Electron2D.TextureButton.StretchMode StretchMode { get; set; }",
+      "returnType": "Electron2D.TextureButton.StretchMode",
+      "parameters": [],
+      "summary": "Gets or sets how the selected texture is drawn.",
+      "xmlDocId": "P:Electron2D.TextureButton.StretchMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureClickMask",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TextureClickMask { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the optional click-mask texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TextureClickMask",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureDisabled",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TextureDisabled { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the disabled-state texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TextureDisabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureFocused",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TextureFocused { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the focus overlay texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TextureFocused",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureHover",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TextureHover { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the hover-state texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TextureHover",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureNormal",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TextureNormal { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the default texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TextureNormal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TexturePressed",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D TexturePressed { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the pressed-state texture.",
+      "xmlDocId": "P:Electron2D.TextureButton.TexturePressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this texture button.",
+      "xmlDocId": "M:Electron2D.TextureButton._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the selected texture for the current button state.",
+      "xmlDocId": "M:Electron2D.TextureButton._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

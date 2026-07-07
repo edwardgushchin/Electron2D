@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TabContainer.TabPosition",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TabContainer.TabPosition",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "TabContainer.TabPosition",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bottom",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TabContainer.TabPosition Bottom",
+      "returnType": "Electron2D.TabContainer.TabPosition",
+      "parameters": [],
+      "summary": "Places the tab header below the selected page.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.TabContainer.TabPositionEnum.Bottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Top",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.TabContainer.TabPosition Top",
+      "returnType": "Electron2D.TabContainer.TabPosition",
+      "parameters": [],
+      "summary": "Places the tab header above the selected page.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.TabContainer.TabPositionEnum.Top",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Bottom",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Places the tab header below the selected page.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Top",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Places the tab header above the selected page.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

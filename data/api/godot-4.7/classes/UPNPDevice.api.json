@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "UPNPDevice",
+    "namespace": "Godot",
+    "fullName": "Godot.UPNPDevice",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "UPNPDevice",
+    "documentationPath": "modules/upnp/doc_classes/UPNPDevice.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_upnpdevice.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPortMapping",
+      "kind": "Method",
+      "signature": "public int AddPortMapping(int port, int portInternal, String desc, String proto, int duration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "port_internal",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "desc",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "proto",
+          "type": "String",
+          "defaultValue": "\u0022UDP\u0022"
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a port mapping to forward the given external port on this [UPNPDevice] for the given protocol to the local machine. See [method UPNP.add_port_mapping].",
+      "godotName": "add_port_mapping",
+      "xmlDocId": "M:Godot.UPNPDevice.AddPortMapping(int,int,String,String,int)",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "DeletePortMapping",
+      "kind": "Method",
+      "signature": "public int DeletePortMapping(int port, String proto)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "proto",
+          "type": "String",
+          "defaultValue": "\u0022UDP\u0022"
+        }
+      ],
+      "summary": "Deletes the port mapping identified by the given port and protocol combination on this device. See [method UPNP.delete_port_mapping].",
+      "godotName": "delete_port_mapping",
+      "xmlDocId": "M:Godot.UPNPDevice.DeletePortMapping(int,String)",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IsValidGateway",
+      "kind": "Method",
+      "signature": "public bool IsValidGateway()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this is a valid IGD (InternetGatewayDevice) which potentially supports port forwarding.",
+      "godotName": "is_valid_gateway",
+      "xmlDocId": "M:Godot.UPNPDevice.IsValidGateway",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "QueryExternalAddress",
+      "kind": "Method",
+      "signature": "public String QueryExternalAddress()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the external IP address of this [UPNPDevice] or an empty string.",
+      "godotName": "query_external_address",
+      "xmlDocId": "M:Godot.UPNPDevice.QueryExternalAddress",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "DescriptionUrl",
+      "kind": "Property",
+      "signature": "public String DescriptionUrl { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "URL to the device description.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "description_url",
+      "xmlDocId": "P:Godot.UPNPDevice.DescriptionUrl",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IgdControlUrl",
+      "kind": "Property",
+      "signature": "public String IgdControlUrl { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "IDG control URL.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "igd_control_url",
+      "xmlDocId": "P:Godot.UPNPDevice.IgdControlUrl",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IgdOurAddr",
+      "kind": "Property",
+      "signature": "public String IgdOurAddr { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Address of the local machine in the network connecting it to this [UPNPDevice].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "igd_our_addr",
+      "xmlDocId": "P:Godot.UPNPDevice.IgdOurAddr",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IgdServiceType",
+      "kind": "Property",
+      "signature": "public String IgdServiceType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "IGD service type.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "igd_service_type",
+      "xmlDocId": "P:Godot.UPNPDevice.IgdServiceType",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IgdStatus",
+      "kind": "Property",
+      "signature": "public int IgdStatus { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "IGD status.",
+      "defaultValue": "9",
+      "godotName": "igd_status",
+      "xmlDocId": "P:Godot.UPNPDevice.IgdStatus",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "ServiceType",
+      "kind": "Property",
+      "signature": "public String ServiceType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Service type.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "service_type",
+      "xmlDocId": "P:Godot.UPNPDevice.ServiceType",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "IGDStatus",
+      "values": [
+        {
+          "name": "IGD_STATUS_DISCONNECTED",
+          "value": "5",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Disconnected.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_HTTP_EMPTY",
+          "value": "2",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Empty HTTP response.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_HTTP_ERROR",
+          "value": "1",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "HTTP error.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_INVALID_CONTROL",
+          "value": "7",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Invalid control.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_MALLOC_ERROR",
+          "value": "8",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Memory allocation error.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_NO_IGD",
+          "value": "4",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Not a valid IGD.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_NO_URLS",
+          "value": "3",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Returned response contained no URLs.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_OK",
+          "value": "0",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "OK.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_UNKNOWN_DEVICE",
+          "value": "6",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Unknown device.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        },
+        {
+          "name": "IGD_STATUS_UNKNOWN_ERROR",
+          "value": "9",
+          "enum": "IGDStatus",
+          "kind": "EnumValue",
+          "summary": "Unknown error.",
+          "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "IGD_STATUS_OK",
+      "value": "0",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "OK.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_HTTP_ERROR",
+      "value": "1",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "HTTP error.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_HTTP_EMPTY",
+      "value": "2",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Empty HTTP response.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_NO_URLS",
+      "value": "3",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Returned response contained no URLs.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_NO_IGD",
+      "value": "4",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Not a valid IGD.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_DISCONNECTED",
+      "value": "5",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Disconnected.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_UNKNOWN_DEVICE",
+      "value": "6",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Unknown device.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_INVALID_CONTROL",
+      "value": "7",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Invalid control.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_MALLOC_ERROR",
+      "value": "8",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Memory allocation error.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    },
+    {
+      "name": "IGD_STATUS_UNKNOWN_ERROR",
+      "value": "9",
+      "enum": "IGDStatus",
+      "kind": "EnumValue",
+      "summary": "Unknown error.",
+      "sourcePath": "modules/upnp/doc_classes/UPNPDevice.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/upnp/doc_classes/UPNPDevice.xml",
+      "sha256": "a24f3d41efd56b029de76040cb76f1d140803ab42e2c9ab9d121a32279424519"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FlowContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.FlowContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "FlowContainer",
+    "documentationPath": "doc/classes/FlowContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_flowcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetLineCount",
+      "kind": "Method",
+      "signature": "public int GetLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current line count.",
+      "godotName": "get_line_count",
+      "xmlDocId": "M:Godot.FlowContainer.GetLineCount",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The alignment of the container\u0027s children (must be one of [constant ALIGNMENT_BEGIN], [constant ALIGNMENT_CENTER], or [constant ALIGNMENT_END]).",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.FlowContainer.Alignment",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "LastWrapAlignment",
+      "kind": "Property",
+      "signature": "public int LastWrapAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The wrap behavior of the last, partially filled row or column (must be one of [constant LAST_WRAP_ALIGNMENT_INHERIT], [constant LAST_WRAP_ALIGNMENT_BEGIN], [constant LAST_WRAP_ALIGNMENT_CENTER], or [constant LAST_WRAP_ALIGNMENT_END]).",
+      "defaultValue": "0",
+      "godotName": "last_wrap_alignment",
+      "xmlDocId": "P:Godot.FlowContainer.LastWrapAlignment",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "ReverseFill",
+      "kind": "Property",
+      "signature": "public bool ReverseFill { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], reverses fill direction. Horizontal [FlowContainer]s will fill rows bottom to top, vertical [FlowContainer]s will fill columns right to left. When using a vertical [FlowContainer] with a right to left [member Control.layout_direction], columns will fill left to right instead.",
+      "defaultValue": "false",
+      "godotName": "reverse_fill",
+      "xmlDocId": "P:Godot.FlowContainer.ReverseFill",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "Vertical",
+      "kind": "Property",
+      "signature": "public bool Vertical { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [FlowContainer] will arrange its children vertically, rather than horizontally. Can\u0027t be changed when using [HFlowContainer] and [VFlowContainer].",
+      "defaultValue": "false",
+      "godotName": "vertical",
+      "xmlDocId": "P:Godot.FlowContainer.Vertical",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AlignmentMode",
+      "values": [
+        {
+          "name": "ALIGNMENT_BEGIN",
+          "value": "0",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be arranged at the beginning of the container, i.e. top if orientation is vertical, left if orientation is horizontal (right for RTL layout).",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_CENTER",
+          "value": "1",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be centered in the container.",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_END",
+          "value": "2",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The child controls will be arranged at the end of the container, i.e. bottom if orientation is vertical, right if orientation is horizontal (left for RTL layout).",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        }
+      ]
+    },
+    {
+      "name": "LastWrapAlignmentMode",
+      "values": [
+        {
+          "name": "LAST_WRAP_ALIGNMENT_BEGIN",
+          "value": "1",
+          "enum": "LastWrapAlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The last partially filled row or column will wrap aligned to the beginning of the previous row or column.",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        },
+        {
+          "name": "LAST_WRAP_ALIGNMENT_CENTER",
+          "value": "2",
+          "enum": "LastWrapAlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The last partially filled row or column will wrap aligned to the center of the previous row or column.",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        },
+        {
+          "name": "LAST_WRAP_ALIGNMENT_END",
+          "value": "3",
+          "enum": "LastWrapAlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The last partially filled row or column will wrap aligned to the end of the previous row or column.",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        },
+        {
+          "name": "LAST_WRAP_ALIGNMENT_INHERIT",
+          "value": "0",
+          "enum": "LastWrapAlignmentMode",
+          "kind": "EnumValue",
+          "summary": "The last partially filled row or column will wrap aligned to the previous row or column in accordance with [member alignment].",
+          "sourcePath": "doc/classes/FlowContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ALIGNMENT_BEGIN",
+      "value": "0",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be arranged at the beginning of the container, i.e. top if orientation is vertical, left if orientation is horizontal (right for RTL layout).",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_CENTER",
+      "value": "1",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be centered in the container.",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_END",
+      "value": "2",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The child controls will be arranged at the end of the container, i.e. bottom if orientation is vertical, right if orientation is horizontal (left for RTL layout).",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "LAST_WRAP_ALIGNMENT_INHERIT",
+      "value": "0",
+      "enum": "LastWrapAlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The last partially filled row or column will wrap aligned to the previous row or column in accordance with [member alignment].",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "LAST_WRAP_ALIGNMENT_BEGIN",
+      "value": "1",
+      "enum": "LastWrapAlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The last partially filled row or column will wrap aligned to the beginning of the previous row or column.",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "LAST_WRAP_ALIGNMENT_CENTER",
+      "value": "2",
+      "enum": "LastWrapAlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The last partially filled row or column will wrap aligned to the center of the previous row or column.",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    },
+    {
+      "name": "LAST_WRAP_ALIGNMENT_END",
+      "value": "3",
+      "enum": "LastWrapAlignmentMode",
+      "kind": "EnumValue",
+      "summary": "The last partially filled row or column will wrap aligned to the end of the previous row or column.",
+      "sourcePath": "doc/classes/FlowContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FlowContainer.xml",
+      "sha256": "a4fe8f8da488f2e1d52f459ece7a2be32f002b679ec596cad70bb836de510327"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

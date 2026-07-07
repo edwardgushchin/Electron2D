@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFMesh",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFMesh",
+    "documentationPath": "modules/gltf/doc_classes/GLTFMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAdditionalData",
+      "kind": "Method",
+      "signature": "public Variant GetAdditionalData(StringName extensionName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Gets additional arbitrary data in this [GLTFMesh] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the return value can be anything you set. If nothing was set, the return value is [code]null[/code].",
+      "godotName": "get_additional_data",
+      "xmlDocId": "M:Godot.GLTFMesh.GetAdditionalData(StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    },
+    {
+      "name": "SetAdditionalData",
+      "kind": "Method",
+      "signature": "public void SetAdditionalData(StringName extensionName, Variant additionalData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        },
+        {
+          "name": "additional_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets additional arbitrary data in this [GLTFMesh] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The first argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the second argument can be anything you want.",
+      "godotName": "set_additional_data",
+      "xmlDocId": "M:Godot.GLTFMesh.SetAdditionalData(StringName,Variant)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    },
+    {
+      "name": "BlendWeights",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array BlendWeights { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "An array of floats representing the blend weights of the mesh.",
+      "defaultValue": "PackedFloat32Array()",
+      "godotName": "blend_weights",
+      "xmlDocId": "P:Godot.GLTFMesh.BlendWeights",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    },
+    {
+      "name": "InstanceMaterials",
+      "kind": "Property",
+      "signature": "public Material[] InstanceMaterials { get; set; }",
+      "returnType": "Material[]",
+      "parameters": [],
+      "summary": "An array of Material objects representing the materials used in the mesh.",
+      "defaultValue": "[]",
+      "godotName": "instance_materials",
+      "xmlDocId": "P:Godot.GLTFMesh.InstanceMaterials",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public ImporterMesh Mesh { get; set; }",
+      "returnType": "ImporterMesh",
+      "parameters": [],
+      "summary": "The [ImporterMesh] object representing the mesh itself.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.GLTFMesh.Mesh",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    },
+    {
+      "name": "OriginalName",
+      "kind": "Property",
+      "signature": "public String OriginalName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The original name of the mesh.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "original_name",
+      "xmlDocId": "P:Godot.GLTFMesh.OriginalName",
+      "sourcePath": "modules/gltf/doc_classes/GLTFMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFMesh.xml",
+      "sha256": "fe3b33cbfd5fe5bba8a57d6984f7dc780decbd5b7fcfba7379ee7c7fdc8f74c6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

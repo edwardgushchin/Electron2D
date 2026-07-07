@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsServer2D",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PhysicsServer2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AreaCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid AreaCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a new 2D area object.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.AreaCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BodyCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid BodyCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a new 2D body object.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.BodyCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CapsuleShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid CapsuleShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a capsule shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.CapsuleShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CircleShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid CircleShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a circle shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.CircleShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConcavePolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid ConcavePolygonShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a concave polygon shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.ConcavePolygonShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConvexPolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid ConvexPolygonShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a convex polygon shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.ConvexPolygonShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FreeRid",
+      "kind": "Method",
+      "signature": "public static System.Void FreeRid(Electron2D.Rid rid)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Frees a physics server RID.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.FreeRid(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetProcessInfo",
+      "kind": "Method",
+      "signature": "public static System.Int32 GetProcessInfo(Electron2D.PhysicsServer2D.ProcessInfo processInfo)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "processInfo",
+          "type": "Electron2D.PhysicsServer2D.ProcessInfo"
+        }
+      ],
+      "summary": "Gets a physics process statistic.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.GetProcessInfo(Electron2D.PhysicsServer2D.ProcessInfo)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "JointCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid JointCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a new 2D joint object.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.JointCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RectangleShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid RectangleShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a rectangle shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.RectangleShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SegmentShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid SegmentShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a segment shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SegmentShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SeparationRayShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid SeparationRayShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a separation ray shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SeparationRayShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetActive",
+      "kind": "Method",
+      "signature": "public static System.Void SetActive(System.Boolean active)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Activates or deactivates physics processing in the active backend.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SetActive(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShapeGetType",
+      "kind": "Method",
+      "signature": "public static Electron2D.PhysicsServer2D.ShapeType ShapeGetType(Electron2D.Rid shape)",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Gets the Electron2D shape type stored for a physics shape RID.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.ShapeGetType(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpaceCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid SpaceCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a new 2D physics space.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SpaceCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpaceGetParam",
+      "kind": "Method",
+      "signature": "public static System.Single SpaceGetParam(Electron2D.Rid space, Electron2D.PhysicsServer2D.SpaceParameter param)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "Electron2D.Rid"
+        },
+        {
+          "name": "param",
+          "type": "Electron2D.PhysicsServer2D.SpaceParameter"
+        }
+      ],
+      "summary": "Gets a numeric parameter from a physics space.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SpaceGetParam(Electron2D.Rid,Electron2D.PhysicsServer2D.SpaceParameter)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpaceIsActive",
+      "kind": "Method",
+      "signature": "public static System.Boolean SpaceIsActive(Electron2D.Rid space)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "Electron2D.Rid"
+        }
+      ],
+      "summary": "Checks whether a physics space is active.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SpaceIsActive(Electron2D.Rid)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpaceSetActive",
+      "kind": "Method",
+      "signature": "public static System.Void SpaceSetActive(Electron2D.Rid space, System.Boolean active)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "Electron2D.Rid"
+        },
+        {
+          "name": "active",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a physics space is active.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SpaceSetActive(Electron2D.Rid,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SpaceSetParam",
+      "kind": "Method",
+      "signature": "public static System.Void SpaceSetParam(Electron2D.Rid space, Electron2D.PhysicsServer2D.SpaceParameter param, System.Single value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "Electron2D.Rid"
+        },
+        {
+          "name": "param",
+          "type": "Electron2D.PhysicsServer2D.SpaceParameter"
+        },
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets a numeric parameter on a physics space.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.SpaceSetParam(Electron2D.Rid,Electron2D.PhysicsServer2D.SpaceParameter,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WorldBoundaryShapeCreate",
+      "kind": "Method",
+      "signature": "public static Electron2D.Rid WorldBoundaryShapeCreate()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Creates a world boundary shape.",
+      "xmlDocId": "M:Electron2D.PhysicsServer2D.WorldBoundaryShapeCreate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

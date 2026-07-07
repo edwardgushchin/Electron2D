@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialCapabilityConfigurationPlaneTracking",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialCapabilityConfigurationPlaneTracking",
+    "kind": "class",
+    "baseType": "OpenXRSpatialCapabilityConfigurationBaseHeader",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialCapabilityConfigurationPlaneTracking",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcapabilityconfigurationplanetracking.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEnabledComponents",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetEnabledComponents()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns the components enabled by this configuration. [b]Note:[/b] Only valid after this configuration was used to create a spatial context.",
+      "godotName": "get_enabled_components",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationPlaneTracking.GetEnabledComponents",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml"
+    },
+    {
+      "name": "SupportsLabels",
+      "kind": "Method",
+      "signature": "public bool SupportsLabels()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if we support the plane semantic label component (only valid after the OpenXR session has started). You can query these using the [OpenXRSpatialComponentPlaneSemanticLabelList] data object.",
+      "godotName": "supports_labels",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationPlaneTracking.SupportsLabels",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml"
+    },
+    {
+      "name": "SupportsMesh2d",
+      "kind": "Method",
+      "signature": "public bool SupportsMesh2d()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if we support the mesh 2D component (only valid after the OpenXR session has started). You can query these using the [OpenXRSpatialComponentMesh2DList] data object.",
+      "godotName": "supports_mesh_2d",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationPlaneTracking.SupportsMesh2d",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml"
+    },
+    {
+      "name": "SupportsPolygons",
+      "kind": "Method",
+      "signature": "public bool SupportsPolygons()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if we support the polygon 2D component (only valid after the OpenXR session has started). You can query these using the [OpenXRSpatialComponentPolygon2DList] data object.",
+      "godotName": "supports_polygons",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationPlaneTracking.SupportsPolygons",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationPlaneTracking.xml",
+      "sha256": "d6e411e102e2a6fbda12331111011cb26f3b2ab9f8a10c6b2bbeb4121a0c2050"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

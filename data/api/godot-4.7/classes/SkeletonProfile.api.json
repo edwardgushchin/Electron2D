@@ -1,0 +1,526 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonProfile",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonProfile",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SkeletonProfile",
+    "documentationPath": "doc/classes/SkeletonProfile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonprofile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FindBone",
+      "kind": "Method",
+      "signature": "public int FindBone(StringName boneName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bone_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the bone index that matches [param bone_name] as its name.",
+      "godotName": "find_bone",
+      "xmlDocId": "M:Godot.SkeletonProfile.FindBone(StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetBoneName",
+      "kind": "Method",
+      "signature": "public StringName GetBoneName(int boneIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bone at [param bone_idx] that will be the key name in the [BoneMap]. In the retargeting process, the returned bone name is the bone name of the target skeleton.",
+      "godotName": "get_bone_name",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetBoneName(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetBoneParent",
+      "kind": "Method",
+      "signature": "public StringName GetBoneParent(int boneIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bone which is the parent to the bone at [param bone_idx]. The result is empty if the bone has no parent.",
+      "godotName": "get_bone_parent",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetBoneParent(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetBoneTail",
+      "kind": "Method",
+      "signature": "public StringName GetBoneTail(int boneIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bone which is the tail of the bone at [param bone_idx].",
+      "godotName": "get_bone_tail",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetBoneTail(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetGroup",
+      "kind": "Method",
+      "signature": "public StringName GetGroup(int boneIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the group of the bone at [param bone_idx].",
+      "godotName": "get_group",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetGroup(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetGroupName",
+      "kind": "Method",
+      "signature": "public StringName GetGroupName(int groupIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "group_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the group at [param group_idx] that will be the drawing group in the [BoneMap] editor.",
+      "godotName": "get_group_name",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetGroupName(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetHandleOffset",
+      "kind": "Method",
+      "signature": "public Vector2 GetHandleOffset(int boneIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the offset of the bone at [param bone_idx] that will be the button position in the [BoneMap] editor. This is the offset with origin at the top left corner of the square.",
+      "godotName": "get_handle_offset",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetHandleOffset(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetReferencePose",
+      "kind": "Method",
+      "signature": "public Transform3D GetReferencePose(int boneIdx)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference pose transform for bone [param bone_idx].",
+      "godotName": "get_reference_pose",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetReferencePose(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetTailDirection",
+      "kind": "Method",
+      "signature": "public int GetTailDirection(int boneIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tail direction of the bone at [param bone_idx].",
+      "godotName": "get_tail_direction",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetTailDirection(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GetTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetTexture(int groupIdx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "group_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the texture of the group at [param group_idx] that will be the drawing group background image in the [BoneMap] editor.",
+      "godotName": "get_texture",
+      "xmlDocId": "M:Godot.SkeletonProfile.GetTexture(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "IsRequired",
+      "kind": "Method",
+      "signature": "public bool IsRequired(int boneIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the bone at [param bone_idx] is required for retargeting. This value is used by the bone map editor. If this method returns [code]true[/code], and no bone is assigned, the handle color will be red on the bone map editor.",
+      "godotName": "is_required",
+      "xmlDocId": "M:Godot.SkeletonProfile.IsRequired(int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetBoneName",
+      "kind": "Method",
+      "signature": "public void SetBoneName(int boneIdx, StringName boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the name of the bone at [param bone_idx] that will be the key name in the [BoneMap]. In the retargeting process, the setting bone name is the bone name of the target skeleton.",
+      "godotName": "set_bone_name",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetBoneName(int,StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetBoneParent",
+      "kind": "Method",
+      "signature": "public void SetBoneParent(int boneIdx, StringName boneParent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_parent",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the bone with name [param bone_parent] as the parent of the bone at [param bone_idx]. If an empty string is passed, then the bone has no parent.",
+      "godotName": "set_bone_parent",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetBoneParent(int,StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetBoneTail",
+      "kind": "Method",
+      "signature": "public void SetBoneTail(int boneIdx, StringName boneTail)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_tail",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the bone with name [param bone_tail] as the tail of the bone at [param bone_idx].",
+      "godotName": "set_bone_tail",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetBoneTail(int,StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetGroup",
+      "kind": "Method",
+      "signature": "public void SetGroup(int boneIdx, StringName group)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "group",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the group of the bone at [param bone_idx].",
+      "godotName": "set_group",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetGroup(int,StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetGroupName",
+      "kind": "Method",
+      "signature": "public void SetGroupName(int groupIdx, StringName groupName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group_idx",
+          "type": "int"
+        },
+        {
+          "name": "group_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the name of the group at [param group_idx] that will be the drawing group in the [BoneMap] editor.",
+      "godotName": "set_group_name",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetGroupName(int,StringName)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetHandleOffset",
+      "kind": "Method",
+      "signature": "public void SetHandleOffset(int boneIdx, Vector2 handleOffset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "handle_offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the offset of the bone at [param bone_idx] that will be the button position in the [BoneMap] editor. This is the offset with origin at the top left corner of the square.",
+      "godotName": "set_handle_offset",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetHandleOffset(int,Vector2)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetReferencePose",
+      "kind": "Method",
+      "signature": "public void SetReferencePose(int boneIdx, Transform3D boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the reference pose transform for bone [param bone_idx].",
+      "godotName": "set_reference_pose",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetReferencePose(int,Transform3D)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetRequired",
+      "kind": "Method",
+      "signature": "public void SetRequired(int boneIdx, bool required)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "required",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the required status for bone [param bone_idx] to [param required].",
+      "godotName": "set_required",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetRequired(int,bool)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetTailDirection",
+      "kind": "Method",
+      "signature": "public void SetTailDirection(int boneIdx, int tailDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        },
+        {
+          "name": "tail_direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the tail direction of the bone at [param bone_idx]. [b]Note:[/b] This only specifies the method of calculation. The actual coordinates required should be stored in an external skeleton, so the calculation itself needs to be done externally.",
+      "godotName": "set_tail_direction",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetTailDirection(int,int)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "SetTexture",
+      "kind": "Method",
+      "signature": "public void SetTexture(int groupIdx, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "group_idx",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the texture of the group at [param group_idx] that will be the drawing group background image in the [BoneMap] editor.",
+      "godotName": "set_texture",
+      "xmlDocId": "M:Godot.SkeletonProfile.SetTexture(int,Texture2D)",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "BoneSize",
+      "kind": "Property",
+      "signature": "public int BoneSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of bones in retargeting section\u0027s [BoneMap] editor. For example, [SkeletonProfileHumanoid] has 56 bones. The size of elements in [BoneMap] updates when changing this property in it\u0027s assigned [SkeletonProfile].",
+      "defaultValue": "0",
+      "godotName": "bone_size",
+      "xmlDocId": "P:Godot.SkeletonProfile.BoneSize",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "GroupSize",
+      "kind": "Property",
+      "signature": "public int GroupSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of groups of bones in retargeting section\u0027s [BoneMap] editor. For example, [SkeletonProfileHumanoid] has 4 groups. This property exists to separate the bone list into several sections in the editor.",
+      "defaultValue": "0",
+      "godotName": "group_size",
+      "xmlDocId": "P:Godot.SkeletonProfile.GroupSize",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "RootBone",
+      "kind": "Property",
+      "signature": "public StringName RootBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "A bone name that will be used as the root bone in [AnimationTree]. This should be the bone of the parent of hips that exists at the world origin.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "root_bone",
+      "xmlDocId": "P:Godot.SkeletonProfile.RootBone",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "ScaleBaseBone",
+      "kind": "Property",
+      "signature": "public StringName ScaleBaseBone { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "A bone name which will use model\u0027s height as the coefficient for normalization. For example, [SkeletonProfileHumanoid] defines it as [code]Hips[/code].",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "scale_base_bone",
+      "xmlDocId": "P:Godot.SkeletonProfile.ScaleBaseBone",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ProfileUpdated",
+      "kind": "Signal",
+      "signature": "public event ProfileUpdatedHandler ProfileUpdated",
+      "parameters": [],
+      "summary": "This signal is emitted when change the value in profile. This is used to update key name in the [BoneMap] and to redraw the [BoneMap] editor. [b]Note:[/b] This signal is not connected directly to editor to simplify the reference, instead it is passed on to editor through the [BoneMap].",
+      "godotName": "profile_updated",
+      "xmlDocId": "E:Godot.SkeletonProfile.ProfileUpdated",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TailDirection",
+      "values": [
+        {
+          "name": "TAIL_DIRECTION_AVERAGE_CHILDREN",
+          "value": "0",
+          "enum": "TailDirection",
+          "kind": "EnumValue",
+          "summary": "Direction to the average coordinates of bone children.",
+          "sourcePath": "doc/classes/SkeletonProfile.xml"
+        },
+        {
+          "name": "TAIL_DIRECTION_END",
+          "value": "2",
+          "enum": "TailDirection",
+          "kind": "EnumValue",
+          "summary": "Direction is not calculated.",
+          "sourcePath": "doc/classes/SkeletonProfile.xml"
+        },
+        {
+          "name": "TAIL_DIRECTION_SPECIFIC_CHILD",
+          "value": "1",
+          "enum": "TailDirection",
+          "kind": "EnumValue",
+          "summary": "Direction to the coordinates of specified bone child.",
+          "sourcePath": "doc/classes/SkeletonProfile.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TAIL_DIRECTION_AVERAGE_CHILDREN",
+      "value": "0",
+      "enum": "TailDirection",
+      "kind": "EnumValue",
+      "summary": "Direction to the average coordinates of bone children.",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "TAIL_DIRECTION_SPECIFIC_CHILD",
+      "value": "1",
+      "enum": "TailDirection",
+      "kind": "EnumValue",
+      "summary": "Direction to the coordinates of specified bone child.",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    },
+    {
+      "name": "TAIL_DIRECTION_END",
+      "value": "2",
+      "enum": "TailDirection",
+      "kind": "EnumValue",
+      "summary": "Direction is not calculated.",
+      "sourcePath": "doc/classes/SkeletonProfile.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonProfile.xml",
+      "sha256": "7bc535dd3dc403eb2bdbad48cce7a2a6016d401a8d4392c14bbe738302bdc317"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

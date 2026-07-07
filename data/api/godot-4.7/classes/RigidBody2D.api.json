@@ -1,0 +1,803 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RigidBody2D",
+    "namespace": "Godot",
+    "fullName": "Godot.RigidBody2D",
+    "kind": "class",
+    "baseType": "PhysicsBody2D",
+    "interfaces": [],
+    "godotReference": "RigidBody2D",
+    "documentationPath": "doc/classes/RigidBody2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rigidbody2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces(PhysicsDirectBodyState2D state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "PhysicsDirectBodyState2D"
+        }
+      ],
+      "summary": "Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it is called before the standard force integration, but the [member custom_integrator] property allows you to disable the standard force integration and do fully custom force integration for a body.",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.RigidBody2D._IntegrateForces(PhysicsDirectBodyState2D)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void AddConstantCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]constant_force = Vector2(0, 0)[/code]. This is equivalent to using [method add_constant_force] at the body\u0027s center of mass.",
+      "godotName": "add_constant_central_force",
+      "xmlDocId": "M:Godot.RigidBody2D.AddConstantCentralForce(Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AddConstantForce",
+      "kind": "Method",
+      "signature": "public void AddConstantForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]constant_force = Vector2(0, 0)[/code]. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "add_constant_force",
+      "xmlDocId": "M:Godot.RigidBody2D.AddConstantForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void AddConstantTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Adds a constant rotational force without affecting position that keeps being applied over time until cleared with [code]constant_torque = 0[/code].",
+      "godotName": "add_constant_torque",
+      "xmlDocId": "M:Godot.RigidBody2D.AddConstantTorque(float)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void ApplyCentralForce(Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Applies a directional force without affecting rotation. A force is time dependent and meant to be applied every physics update. This is equivalent to using [method apply_force] at the body\u0027s center of mass.",
+      "godotName": "apply_central_force",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyCentralForce(Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyCentralImpulse(Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Applies a directional impulse without affecting rotation. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). This is equivalent to using [method apply_impulse] at the body\u0027s center of mass.",
+      "godotName": "apply_central_impulse",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyCentralImpulse(Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyForce",
+      "kind": "Method",
+      "signature": "public void ApplyForce(Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned force to the body. A force is time dependent and meant to be applied every physics update. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "apply_force",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyForce(Vector2,Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyImpulse(Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned impulse to the body. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "apply_impulse",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyImpulse(Vector2,Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyTorque",
+      "kind": "Method",
+      "signature": "public void ApplyTorque(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Applies a rotational force without affecting position. A force is time dependent and meant to be applied every physics update. [b]Note:[/b] [member inertia] is required for this to work. To have [member inertia], an active [CollisionShape2D] must be a child of the node, or you can manually set [member inertia].",
+      "godotName": "apply_torque",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyTorque(float)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyTorqueImpulse(float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Applies a rotational impulse to the body without affecting the position. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). [b]Note:[/b] [member inertia] is required for this to work. To have [member inertia], an active [CollisionShape2D] must be a child of the node, or you can manually set [member inertia].",
+      "godotName": "apply_torque_impulse",
+      "xmlDocId": "M:Godot.RigidBody2D.ApplyTorqueImpulse(float)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "GetCollidingBodies",
+      "kind": "Method",
+      "signature": "public Node2D[] GetCollidingBodies()",
+      "returnType": "Node2D[]",
+      "parameters": [],
+      "summary": "Returns a list of the bodies colliding with this one. Requires [member contact_monitor] to be set to [code]true[/code] and [member max_contacts_reported] to be set high enough to detect all the collisions. [b]Note:[/b] The result of this test is not immediate after moving objects. For performance, list of collisions is updated once per frame and before the physics step. Consider using signals instead.",
+      "godotName": "get_colliding_bodies",
+      "xmlDocId": "M:Godot.RigidBody2D.GetCollidingBodies",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "GetContactCount",
+      "kind": "Method",
+      "signature": "public int GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of contacts this body has with other bodies. By default, this returns 0 unless bodies are configured to monitor contacts (see [member contact_monitor]). [b]Note:[/b] To retrieve the colliding bodies, use [method get_colliding_bodies].",
+      "godotName": "get_contact_count",
+      "xmlDocId": "M:Godot.RigidBody2D.GetContactCount",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "SetAxisVelocity",
+      "kind": "Method",
+      "signature": "public void SetAxisVelocity(Vector2 axisVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "axis_velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the body\u0027s velocity on the given axis. The velocity in the given vector axis will be set as the given vector length. This is useful for jumping behavior.",
+      "godotName": "set_axis_velocity",
+      "xmlDocId": "M:Godot.RigidBody2D.SetAxisVelocity(Vector2)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AngularDamp",
+      "kind": "Property",
+      "signature": "public float AngularDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Damps the body\u0027s rotation. By default, the body will use the [member ProjectSettings.physics/2d/default_angular_damp] setting or any value override set by an [Area2D] the body is in. Depending on [member angular_damp_mode], you can set [member angular_damp] to be added to or to replace the body\u0027s damping value. See [member ProjectSettings.physics/2d/default_angular_damp] for more details about damping.",
+      "defaultValue": "0.0",
+      "godotName": "angular_damp",
+      "xmlDocId": "P:Godot.RigidBody2D.AngularDamp",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AngularDampMode",
+      "kind": "Property",
+      "signature": "public int AngularDampMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines how [member angular_damp] is applied.",
+      "defaultValue": "0",
+      "godotName": "angular_damp_mode",
+      "xmlDocId": "P:Godot.RigidBody2D.AngularDampMode",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public float AngularVelocity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s rotational velocity in [i]radians[/i] per second.",
+      "defaultValue": "0.0",
+      "godotName": "angular_velocity",
+      "xmlDocId": "P:Godot.RigidBody2D.AngularVelocity",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CanSleep",
+      "kind": "Property",
+      "signature": "public bool CanSleep { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body can enter sleep mode when there is no movement. See [member sleeping].",
+      "defaultValue": "true",
+      "godotName": "can_sleep",
+      "xmlDocId": "P:Godot.RigidBody2D.CanSleep",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CenterOfMass",
+      "kind": "Property",
+      "signature": "public Vector2 CenterOfMass { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The body\u0027s custom center of mass, relative to the body\u0027s origin position, when [member center_of_mass_mode] is set to [constant CENTER_OF_MASS_MODE_CUSTOM]. This is the balanced point of the body, where applied forces only cause linear acceleration. Applying forces outside of the center of mass causes angular acceleration. When [member center_of_mass_mode] is set to [constant CENTER_OF_MASS_MODE_AUTO] (default value), the center of mass is automatically determined, but this does not update the value of [member center_of_mass].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "center_of_mass",
+      "xmlDocId": "P:Godot.RigidBody2D.CenterOfMass",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CenterOfMassMode",
+      "kind": "Property",
+      "signature": "public int CenterOfMassMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the way the body\u0027s center of mass is set.",
+      "defaultValue": "0",
+      "godotName": "center_of_mass_mode",
+      "xmlDocId": "P:Godot.RigidBody2D.CenterOfMassMode",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ConstantForce",
+      "kind": "Property",
+      "signature": "public Vector2 ConstantForce { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The body\u0027s total constant positional forces applied during each physics update. See [method add_constant_force] and [method add_constant_central_force].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "constant_force",
+      "xmlDocId": "P:Godot.RigidBody2D.ConstantForce",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ConstantTorque",
+      "kind": "Property",
+      "signature": "public float ConstantTorque { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s total constant rotational forces applied during each physics update. See [method add_constant_torque].",
+      "defaultValue": "0.0",
+      "godotName": "constant_torque",
+      "xmlDocId": "P:Godot.RigidBody2D.ConstantTorque",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ContactMonitor",
+      "kind": "Property",
+      "signature": "public bool ContactMonitor { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the RigidBody2D will emit signals when it collides with another body. [b]Note:[/b] By default the maximum contacts reported is set to 0, meaning nothing will be recorded, see [member max_contacts_reported].",
+      "defaultValue": "false",
+      "godotName": "contact_monitor",
+      "xmlDocId": "P:Godot.RigidBody2D.ContactMonitor",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "ContinuousCd",
+      "kind": "Property",
+      "signature": "public int ContinuousCd { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Continuous collision detection mode. Continuous collision detection tries to predict where a moving body will collide instead of moving it and correcting its movement after collision. Continuous collision detection is slower, but more precise and misses fewer collisions with small, fast-moving objects. Raycasting and shapecasting methods are available.",
+      "defaultValue": "0",
+      "godotName": "continuous_cd",
+      "xmlDocId": "P:Godot.RigidBody2D.ContinuousCd",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CustomIntegrator",
+      "kind": "Property",
+      "signature": "public bool CustomIntegrator { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the standard force integration (like gravity or damping) will be disabled for this body. Other than collision response, the body will only move as determined by the [method _integrate_forces] method, if that virtual method is overridden. Setting this property will call the method [method PhysicsServer2D.body_set_omit_force_integration] internally.",
+      "defaultValue": "false",
+      "godotName": "custom_integrator",
+      "xmlDocId": "P:Godot.RigidBody2D.CustomIntegrator",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "Freeze",
+      "kind": "Property",
+      "signature": "public bool Freeze { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body is frozen. Gravity and forces are not applied anymore. See [member freeze_mode] to set the body\u0027s behavior when frozen. [b]Note:[/b] For a body that is always frozen, use [StaticBody2D] or [AnimatableBody2D] instead.",
+      "defaultValue": "false",
+      "godotName": "freeze",
+      "xmlDocId": "P:Godot.RigidBody2D.Freeze",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "FreezeMode",
+      "kind": "Property",
+      "signature": "public int FreezeMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The body\u0027s freeze mode. Determines the body\u0027s behavior when [member freeze] is [code]true[/code]. [b]Note:[/b] For a body that is always frozen, use [StaticBody2D] or [AnimatableBody2D] instead.",
+      "defaultValue": "0",
+      "godotName": "freeze_mode",
+      "xmlDocId": "P:Godot.RigidBody2D.FreezeMode",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "GravityScale",
+      "kind": "Property",
+      "signature": "public float GravityScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplies the gravity applied to the body. The body\u0027s gravity is calculated from the [member ProjectSettings.physics/2d/default_gravity] project setting and/or any additional gravity vector applied by [Area2D]s.",
+      "defaultValue": "1.0",
+      "godotName": "gravity_scale",
+      "xmlDocId": "P:Godot.RigidBody2D.GravityScale",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "Inertia",
+      "kind": "Property",
+      "signature": "public float Inertia { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s moment of inertia. This is like mass, but for rotation: it determines how much torque it takes to rotate the body. The moment of inertia is usually computed automatically from the mass and the shapes, but this property allows you to set a custom value. If set to [code]0[/code], inertia is automatically computed (default value). [b]Note:[/b] This value does not change when inertia is automatically computed. Use [PhysicsServer2D] to get the computed inertia. [codeblocks] [gdscript] @onready var ball = $Ball func get_ball_inertia(): return 1.0 / PhysicsServer2D.body_get_direct_state(ball.get_rid()).inverse_inertia [/gdscript] [csharp] private RigidBody2D _ball; public override void _Ready() { _ball = GetNode\u003CRigidBody2D\u003E(\u0022Ball\u0022); } private float GetBallInertia() { return 1.0f / PhysicsServer2D.BodyGetDirectState(_ball.GetRid()).InverseInertia; } [/csharp] [/codeblocks]",
+      "defaultValue": "0.0",
+      "godotName": "inertia",
+      "xmlDocId": "P:Godot.RigidBody2D.Inertia",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "LinearDamp",
+      "kind": "Property",
+      "signature": "public float LinearDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Damps the body\u0027s movement. By default, the body will use the [member ProjectSettings.physics/2d/default_linear_damp] setting or any value override set by an [Area2D] the body is in. Depending on [member linear_damp_mode], you can set [member linear_damp] to be added to or to replace the body\u0027s damping value. See [member ProjectSettings.physics/2d/default_linear_damp] for more details about damping.",
+      "defaultValue": "0.0",
+      "godotName": "linear_damp",
+      "xmlDocId": "P:Godot.RigidBody2D.LinearDamp",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "LinearDampMode",
+      "kind": "Property",
+      "signature": "public int LinearDampMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines how [member linear_damp] is applied.",
+      "defaultValue": "0",
+      "godotName": "linear_damp_mode",
+      "xmlDocId": "P:Godot.RigidBody2D.LinearDampMode",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Vector2 LinearVelocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The body\u0027s linear velocity in pixels per second. Can be used sporadically, but [b]don\u0027t set this every frame[/b], because physics may run in another thread and runs at a different granularity. Use [method _integrate_forces] as your process loop for precise control of the body state.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "linear_velocity",
+      "xmlDocId": "P:Godot.RigidBody2D.LinearVelocity",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "LockRotation",
+      "kind": "Property",
+      "signature": "public bool LockRotation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body cannot rotate. Gravity and forces only apply linear movement.",
+      "defaultValue": "false",
+      "godotName": "lock_rotation",
+      "xmlDocId": "P:Godot.RigidBody2D.LockRotation",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public float Mass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s mass.",
+      "defaultValue": "1.0",
+      "godotName": "mass",
+      "xmlDocId": "P:Godot.RigidBody2D.Mass",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "MaxContactsReported",
+      "kind": "Property",
+      "signature": "public int MaxContactsReported { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of contacts that will be recorded. Requires a value greater than 0 and [member contact_monitor] to be set to [code]true[/code] to start to register contacts. Use [method get_contact_count] to retrieve the count or [method get_colliding_bodies] to retrieve bodies that have been collided with. [b]Note:[/b] The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end), and collisions between parallel faces will result in four contacts (one at each corner).",
+      "defaultValue": "0",
+      "godotName": "max_contacts_reported",
+      "xmlDocId": "P:Godot.RigidBody2D.MaxContactsReported",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "PhysicsMaterialOverride",
+      "kind": "Property",
+      "signature": "public PhysicsMaterial PhysicsMaterialOverride { get; set; }",
+      "returnType": "PhysicsMaterial",
+      "parameters": [],
+      "summary": "The physics material override for the body. If a material is assigned to this property, it will be used instead of any other physics material, such as an inherited one.",
+      "godotName": "physics_material_override",
+      "xmlDocId": "P:Godot.RigidBody2D.PhysicsMaterialOverride",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "Sleeping",
+      "kind": "Property",
+      "signature": "public bool Sleeping { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body will not move and will not calculate forces until woken up by another body through, for example, a collision, or by using the [method apply_impulse] or [method apply_force] methods.",
+      "defaultValue": "false",
+      "godotName": "sleeping",
+      "xmlDocId": "P:Godot.RigidBody2D.Sleeping",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BodyEntered",
+      "kind": "Signal",
+      "signature": "public event BodyEnteredHandler BodyEntered",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when a collision with another [PhysicsBody2D] or [TileMap] occurs. Requires [member contact_monitor] to be set to [code]true[/code] and [member max_contacts_reported] to be set high enough to detect all the collisions. [TileMap]s are detected if the [TileSet] has Collision [Shape2D]s. [param body] the [Node], if it exists in the tree, of the other [PhysicsBody2D] or [TileMap].",
+      "godotName": "body_entered",
+      "xmlDocId": "E:Godot.RigidBody2D.BodyEntered(Node)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "BodyExited",
+      "kind": "Signal",
+      "signature": "public event BodyExitedHandler BodyExited",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Emitted when the collision with another [PhysicsBody2D] or [TileMap] ends. Requires [member contact_monitor] to be set to [code]true[/code] and [member max_contacts_reported] to be set high enough to detect all the collisions. [TileMap]s are detected if the [TileSet] has Collision [Shape2D]s. [param body] the [Node], if it exists in the tree, of the other [PhysicsBody2D] or [TileMap].",
+      "godotName": "body_exited",
+      "xmlDocId": "E:Godot.RigidBody2D.BodyExited(Node)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "BodyShapeEntered",
+      "kind": "Signal",
+      "signature": "public event BodyShapeEnteredHandler BodyShapeEntered",
+      "parameters": [
+        {
+          "name": "body_rid",
+          "type": "RID"
+        },
+        {
+          "name": "body",
+          "type": "Node"
+        },
+        {
+          "name": "body_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one of this RigidBody2D\u0027s [Shape2D]s collides with another [PhysicsBody2D] or [TileMap]\u0027s [Shape2D]s. Requires [member contact_monitor] to be set to [code]true[/code] and [member max_contacts_reported] to be set high enough to detect all the collisions. [TileMap]s are detected if the [TileSet] has Collision [Shape2D]s. [param body_rid] the [RID] of the other [PhysicsBody2D] or [TileSet]\u0027s [CollisionObject2D] used by the [PhysicsServer2D]. [param body] the [Node], if it exists in the tree, of the other [PhysicsBody2D] or [TileMap]. [param body_shape_index] the index of the [Shape2D] of the other [PhysicsBody2D] or [TileMap] used by the [PhysicsServer2D]. Get the [CollisionShape2D] node with [code]body.shape_owner_get_owner(body.shape_find_owner(body_shape_index))[/code]. [param local_shape_index] the index of the [Shape2D] of this RigidBody2D used by the [PhysicsServer2D]. Get the [CollisionShape2D] node with [code]self.shape_owner_get_owner(self.shape_find_owner(local_shape_index))[/code].",
+      "godotName": "body_shape_entered",
+      "xmlDocId": "E:Godot.RigidBody2D.BodyShapeEntered(RID,Node,int,int)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "BodyShapeExited",
+      "kind": "Signal",
+      "signature": "public event BodyShapeExitedHandler BodyShapeExited",
+      "parameters": [
+        {
+          "name": "body_rid",
+          "type": "RID"
+        },
+        {
+          "name": "body",
+          "type": "Node"
+        },
+        {
+          "name": "body_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the collision between one of this RigidBody2D\u0027s [Shape2D]s and another [PhysicsBody2D] or [TileMap]\u0027s [Shape2D]s ends. Requires [member contact_monitor] to be set to [code]true[/code] and [member max_contacts_reported] to be set high enough to detect all the collisions. [TileMap]s are detected if the [TileSet] has Collision [Shape2D]s. [param body_rid] the [RID] of the other [PhysicsBody2D] or [TileSet]\u0027s [CollisionObject2D] used by the [PhysicsServer2D]. [param body] the [Node], if it exists in the tree, of the other [PhysicsBody2D] or [TileMap]. [param body_shape_index] the index of the [Shape2D] of the other [PhysicsBody2D] or [TileMap] used by the [PhysicsServer2D]. Get the [CollisionShape2D] node with [code]body.shape_owner_get_owner(body.shape_find_owner(body_shape_index))[/code]. [param local_shape_index] the index of the [Shape2D] of this RigidBody2D used by the [PhysicsServer2D]. Get the [CollisionShape2D] node with [code]self.shape_owner_get_owner(self.shape_find_owner(local_shape_index))[/code].",
+      "godotName": "body_shape_exited",
+      "xmlDocId": "E:Godot.RigidBody2D.BodyShapeExited(RID,Node,int,int)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "SleepingStateChanged",
+      "kind": "Signal",
+      "signature": "public event SleepingStateChangedHandler SleepingStateChanged",
+      "parameters": [],
+      "summary": "Emitted when the physics engine changes the body\u0027s sleeping state. [b]Note:[/b] Changing the value [member sleeping] will not trigger this signal. It is only emitted if the sleeping state is changed by the physics engine or [code]emit_signal(\u0022sleeping_state_changed\u0022)[/code] is used.",
+      "godotName": "sleeping_state_changed",
+      "xmlDocId": "E:Godot.RigidBody2D.SleepingStateChanged",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CCDMode",
+      "values": [
+        {
+          "name": "CCD_MODE_CAST_RAY",
+          "value": "1",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Continuous collision detection enabled using raycasting. This is faster than shapecasting but less precise.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        },
+        {
+          "name": "CCD_MODE_CAST_SHAPE",
+          "value": "2",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Continuous collision detection enabled using shapecasting. This is the slowest CCD method and the most precise.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        },
+        {
+          "name": "CCD_MODE_DISABLED",
+          "value": "0",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Continuous collision detection disabled. This is the fastest way to detect body collisions, but can miss small, fast-moving objects.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "CenterOfMassMode",
+      "values": [
+        {
+          "name": "CENTER_OF_MASS_MODE_AUTO",
+          "value": "0",
+          "enum": "CenterOfMassMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s center of mass is calculated automatically based on its shapes. This assumes that the shapes\u0027 origins are also their center of mass.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        },
+        {
+          "name": "CENTER_OF_MASS_MODE_CUSTOM",
+          "value": "1",
+          "enum": "CenterOfMassMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s center of mass is set through [member center_of_mass]. Defaults to the body\u0027s origin position.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DampMode",
+      "values": [
+        {
+          "name": "DAMP_MODE_COMBINE",
+          "value": "0",
+          "enum": "DampMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s damping value is added to any value set in areas or the default value.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        },
+        {
+          "name": "DAMP_MODE_REPLACE",
+          "value": "1",
+          "enum": "DampMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s damping value replaces any value set in areas or the default value.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "FreezeMode",
+      "values": [
+        {
+          "name": "FREEZE_MODE_KINEMATIC",
+          "value": "1",
+          "enum": "FreezeMode",
+          "kind": "EnumValue",
+          "summary": "Kinematic body freeze mode. Similar to [constant FREEZE_MODE_STATIC], but collides with other bodies along its path when moved. Useful for a frozen body that needs to be animated.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        },
+        {
+          "name": "FREEZE_MODE_STATIC",
+          "value": "0",
+          "enum": "FreezeMode",
+          "kind": "EnumValue",
+          "summary": "Static body freeze mode (default). The body is not affected by gravity and forces. It can be only moved by user code and doesn\u0027t collide with other bodies along its path.",
+          "sourcePath": "doc/classes/RigidBody2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FREEZE_MODE_STATIC",
+      "value": "0",
+      "enum": "FreezeMode",
+      "kind": "EnumValue",
+      "summary": "Static body freeze mode (default). The body is not affected by gravity and forces. It can be only moved by user code and doesn\u0027t collide with other bodies along its path.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "FREEZE_MODE_KINEMATIC",
+      "value": "1",
+      "enum": "FreezeMode",
+      "kind": "EnumValue",
+      "summary": "Kinematic body freeze mode. Similar to [constant FREEZE_MODE_STATIC], but collides with other bodies along its path when moved. Useful for a frozen body that needs to be animated.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CENTER_OF_MASS_MODE_AUTO",
+      "value": "0",
+      "enum": "CenterOfMassMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s center of mass is calculated automatically based on its shapes. This assumes that the shapes\u0027 origins are also their center of mass.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CENTER_OF_MASS_MODE_CUSTOM",
+      "value": "1",
+      "enum": "CenterOfMassMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s center of mass is set through [member center_of_mass]. Defaults to the body\u0027s origin position.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "DAMP_MODE_COMBINE",
+      "value": "0",
+      "enum": "DampMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s damping value is added to any value set in areas or the default value.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "DAMP_MODE_REPLACE",
+      "value": "1",
+      "enum": "DampMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s damping value replaces any value set in areas or the default value.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CCD_MODE_DISABLED",
+      "value": "0",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Continuous collision detection disabled. This is the fastest way to detect body collisions, but can miss small, fast-moving objects.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CCD_MODE_CAST_RAY",
+      "value": "1",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Continuous collision detection enabled using raycasting. This is faster than shapecasting but less precise.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    },
+    {
+      "name": "CCD_MODE_CAST_SHAPE",
+      "value": "2",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Continuous collision detection enabled using shapecasting. This is the slowest CCD method and the most precise.",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces(PhysicsDirectBodyState2D state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "PhysicsDirectBodyState2D"
+        }
+      ],
+      "summary": "Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it is called before the standard force integration, but the [member custom_integrator] property allows you to disable the standard force integration and do fully custom force integration for a body.",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.RigidBody2D._IntegrateForces(PhysicsDirectBodyState2D)",
+      "sourcePath": "doc/classes/RigidBody2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RigidBody2D.xml",
+      "sha256": "f4321863fb88a7c4c9003cf74197db5f3d79f5c569e7151be9ff6e97eceb38f5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

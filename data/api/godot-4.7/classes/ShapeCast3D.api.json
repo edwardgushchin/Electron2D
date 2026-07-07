@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ShapeCast3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ShapeCast3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "ShapeCast3D",
+    "documentationPath": "doc/classes/ShapeCast3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_shapecast3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddException",
+      "kind": "Method",
+      "signature": "public void AddException(CollisionObject3D node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "CollisionObject3D"
+        }
+      ],
+      "summary": "Adds a collision exception so the shape does not report collisions with the specified node.",
+      "godotName": "add_exception",
+      "xmlDocId": "M:Godot.ShapeCast3D.AddException(CollisionObject3D)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "AddExceptionRid",
+      "kind": "Method",
+      "signature": "public void AddExceptionRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a collision exception so the shape does not report collisions with the specified [RID].",
+      "godotName": "add_exception_rid",
+      "xmlDocId": "M:Godot.ShapeCast3D.AddExceptionRid(RID)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "ClearExceptions",
+      "kind": "Method",
+      "signature": "public void ClearExceptions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all collision exceptions for this shape.",
+      "godotName": "clear_exceptions",
+      "xmlDocId": "M:Godot.ShapeCast3D.ClearExceptions",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "ForceShapecastUpdate",
+      "kind": "Method",
+      "signature": "public void ForceShapecastUpdate()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Updates the collision information for the shape immediately, without waiting for the next [code]_physics_process[/code] call. Use this method, for example, when the shape or its parent has changed state. [b]Note:[/b] Setting [member enabled] to [code]true[/code] is not required for this to work.",
+      "godotName": "force_shapecast_update",
+      "xmlDocId": "M:Godot.ShapeCast3D.ForceShapecastUpdate",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetClosestCollisionSafeFraction",
+      "kind": "Method",
+      "signature": "public float GetClosestCollisionSafeFraction()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the fraction from this cast\u0027s origin to its [member target_position] of how far the shape can move without triggering a collision, as a value between [code]0.0[/code] and [code]1.0[/code].",
+      "godotName": "get_closest_collision_safe_fraction",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetClosestCollisionSafeFraction",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetClosestCollisionUnsafeFraction",
+      "kind": "Method",
+      "signature": "public float GetClosestCollisionUnsafeFraction()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the fraction from this cast\u0027s origin to its [member target_position] of how far the shape must move to trigger a collision, as a value between [code]0.0[/code] and [code]1.0[/code]. In ideal conditions this would be the same as [method get_closest_collision_safe_fraction], however shape casting is calculated in discrete steps, so the precise point of collision can occur between two calculated positions.",
+      "godotName": "get_closest_collision_unsafe_fraction",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetClosestCollisionUnsafeFraction",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Object GetCollider(int index)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collided [Object] of one of the multiple collisions at [param index], or [code]null[/code] if no object is intersecting the shape (i.e. [method is_colliding] returns [code]false[/code]).",
+      "godotName": "get_collider",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetCollider(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public RID GetColliderRid(int index)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [RID] of the collided object of one of the multiple collisions at [param index].",
+      "godotName": "get_collider_rid",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetColliderRid(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public int GetColliderShape(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the shape ID of the colliding shape of one of the multiple collisions at [param index], or [code]0[/code] if no object is intersecting the shape (i.e. [method is_colliding] returns [code]false[/code]).",
+      "godotName": "get_collider_shape",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetColliderShape(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetCollisionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of collisions detected at the point of impact. Use this to iterate over multiple collisions as provided by [method get_collider], [method get_collider_shape], [method get_collision_point], and [method get_collision_normal] methods.",
+      "godotName": "get_collision_count",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetCollisionCount",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetCollisionNormal",
+      "kind": "Method",
+      "signature": "public Vector3 GetCollisionNormal(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the normal of one of the multiple collisions at [param index] of the intersecting object.",
+      "godotName": "get_collision_normal",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetCollisionNormal(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "GetCollisionPoint",
+      "kind": "Method",
+      "signature": "public Vector3 GetCollisionPoint(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collision point of one of the multiple collisions at [param index] where the shape intersects the colliding object. [b]Note:[/b] This point is in the [b]global[/b] coordinate system.",
+      "godotName": "get_collision_point",
+      "xmlDocId": "M:Godot.ShapeCast3D.GetCollisionPoint(int)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "IsColliding",
+      "kind": "Method",
+      "signature": "public bool IsColliding()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether any object is intersecting with the shape\u0027s vector (considering the vector length).",
+      "godotName": "is_colliding",
+      "xmlDocId": "M:Godot.ShapeCast3D.IsColliding",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "RemoveException",
+      "kind": "Method",
+      "signature": "public void RemoveException(CollisionObject3D node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "CollisionObject3D"
+        }
+      ],
+      "summary": "Removes a collision exception so the shape does report collisions with the specified node.",
+      "godotName": "remove_exception",
+      "xmlDocId": "M:Godot.ShapeCast3D.RemoveException(CollisionObject3D)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "RemoveExceptionRid",
+      "kind": "Method",
+      "signature": "public void RemoveExceptionRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes a collision exception so the shape does report collisions with the specified [RID].",
+      "godotName": "remove_exception_rid",
+      "xmlDocId": "M:Godot.ShapeCast3D.RemoveExceptionRid(RID)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "ResourceChanged",
+      "kind": "Method",
+      "signature": "public void ResourceChanged(Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "This method does nothing.",
+      "godotName": "resource_changed",
+      "xmlDocId": "M:Godot.ShapeCast3D.ResourceChanged(Resource)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.ShapeCast3D.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public bool CollideWithAreas { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions with [Area3D]s will be reported.",
+      "defaultValue": "false",
+      "godotName": "collide_with_areas",
+      "xmlDocId": "P:Godot.ShapeCast3D.CollideWithAreas",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public bool CollideWithBodies { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions with [PhysicsBody3D]s will be reported.",
+      "defaultValue": "true",
+      "godotName": "collide_with_bodies",
+      "xmlDocId": "P:Godot.ShapeCast3D.CollideWithBodies",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The shape\u0027s collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.ShapeCast3D.CollisionMask",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "CollisionResult",
+      "kind": "Property",
+      "signature": "public Array CollisionResult { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns the complete collision information from the collision sweep. The data returned is the same as in the [method PhysicsDirectSpaceState3D.get_rest_info] method.",
+      "defaultValue": "[]",
+      "godotName": "collision_result",
+      "xmlDocId": "P:Godot.ShapeCast3D.CollisionResult",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "DebugShapeCustomColor",
+      "kind": "Property",
+      "signature": "public Color DebugShapeCustomColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The custom color to use to draw the shape in the editor and at run-time if [b]Visible Collision Shapes[/b] is enabled in the [b]Debug[/b] menu. This color will be highlighted at run-time if the [ShapeCast3D] is colliding with something. If set to [code]Color(0.0, 0.0, 0.0)[/code] (by default), the color set in [member ProjectSettings.debug/shapes/collision/shape_color] is used.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "debug_shape_custom_color",
+      "xmlDocId": "P:Godot.ShapeCast3D.DebugShapeCustomColor",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], collisions will be reported.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.ShapeCast3D.Enabled",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "ExcludeParent",
+      "kind": "Property",
+      "signature": "public bool ExcludeParent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the parent node will be excluded from collision detection.",
+      "defaultValue": "true",
+      "godotName": "exclude_parent",
+      "xmlDocId": "P:Godot.ShapeCast3D.ExcludeParent",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "Margin",
+      "kind": "Property",
+      "signature": "public float Margin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The collision margin for the shape. A larger margin helps detecting collisions more consistently, at the cost of precision.",
+      "defaultValue": "0.0",
+      "godotName": "margin",
+      "xmlDocId": "P:Godot.ShapeCast3D.Margin",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "MaxResults",
+      "kind": "Property",
+      "signature": "public int MaxResults { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of intersections can be limited with this parameter, to reduce the processing time.",
+      "defaultValue": "32",
+      "godotName": "max_results",
+      "xmlDocId": "P:Godot.ShapeCast3D.MaxResults",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Shape3D Shape { get; set; }",
+      "returnType": "Shape3D",
+      "parameters": [],
+      "summary": "The shape to be used for collision queries.",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.ShapeCast3D.Shape",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    },
+    {
+      "name": "TargetPosition",
+      "kind": "Property",
+      "signature": "public Vector3 TargetPosition { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The shape\u0027s destination point, relative to this node\u0027s [member Node3D.position].",
+      "defaultValue": "Vector3(0, -1, 0)",
+      "godotName": "target_position",
+      "xmlDocId": "P:Godot.ShapeCast3D.TargetPosition",
+      "sourcePath": "doc/classes/ShapeCast3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ShapeCast3D.xml",
+      "sha256": "138e85080d9a554d2db77d3cffa65ee8a1400e892a2ecd134f1b05a2ce384969"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

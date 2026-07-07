@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WebSocketMultiplayerPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.WebSocketMultiplayerPeer",
+    "kind": "class",
+    "baseType": "MultiplayerPeer",
+    "interfaces": [],
+    "godotReference": "WebSocketMultiplayerPeer",
+    "documentationPath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_websocketmultiplayerpeer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateClient",
+      "kind": "Method",
+      "signature": "public int CreateClient(String url, TLSOptions tlsClientOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "String"
+        },
+        {
+          "name": "tls_client_options",
+          "type": "TLSOptions",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Starts a new multiplayer client connecting to the given [param url]. TLS certificates will be verified against the hostname when connecting using the [code]wss://[/code] protocol. You can pass the optional [param tls_client_options] parameter to customize the trusted certification authorities, or disable the common name verification. See [method TLSOptions.client] and [method TLSOptions.client_unsafe]. [b]Note:[/b] It is recommended to specify the scheme part of the URL, i.e. the [param url] should start with either [code]ws://[/code] or [code]wss://[/code].",
+      "godotName": "create_client",
+      "xmlDocId": "M:Godot.WebSocketMultiplayerPeer.CreateClient(String,TLSOptions)",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "CreateServer",
+      "kind": "Method",
+      "signature": "public int CreateServer(int port, String bindAddress, TLSOptions tlsServerOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "bind_address",
+          "type": "String",
+          "defaultValue": "\u0022*\u0022"
+        },
+        {
+          "name": "tls_server_options",
+          "type": "TLSOptions",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Starts a new multiplayer server listening on the given [param port]. You can optionally specify a [param bind_address], and provide valid [param tls_server_options] to use TLS. See [method TLSOptions.server].",
+      "godotName": "create_server",
+      "xmlDocId": "M:Godot.WebSocketMultiplayerPeer.CreateServer(int,String,TLSOptions)",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPeer",
+      "kind": "Method",
+      "signature": "public WebSocketPeer GetPeer(int peerId)",
+      "returnType": "WebSocketPeer",
+      "parameters": [
+        {
+          "name": "peer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [WebSocketPeer] associated to the given [param peer_id].",
+      "godotName": "get_peer",
+      "xmlDocId": "M:Godot.WebSocketMultiplayerPeer.GetPeer(int)",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPeerAddress",
+      "kind": "Method",
+      "signature": "public String GetPeerAddress(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the IP address of the given peer.",
+      "godotName": "get_peer_address",
+      "xmlDocId": "M:Godot.WebSocketMultiplayerPeer.GetPeerAddress(int)",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPeerPort",
+      "kind": "Method",
+      "signature": "public int GetPeerPort(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the remote port of the given peer.",
+      "godotName": "get_peer_port",
+      "xmlDocId": "M:Godot.WebSocketMultiplayerPeer.GetPeerPort(int)",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "HandshakeHeaders",
+      "kind": "Property",
+      "signature": "public PackedStringArray HandshakeHeaders { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The extra headers to use during handshake. See [member WebSocketPeer.handshake_headers] for more details.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "handshake_headers",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.HandshakeHeaders",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "HandshakeTimeout",
+      "kind": "Property",
+      "signature": "public float HandshakeTimeout { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum time each peer can stay in a connecting state before being dropped.",
+      "defaultValue": "3.0",
+      "godotName": "handshake_timeout",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.HandshakeTimeout",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "InboundBufferSize",
+      "kind": "Property",
+      "signature": "public int InboundBufferSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The inbound buffer size for connected peers. See [member WebSocketPeer.inbound_buffer_size] for more details.",
+      "defaultValue": "65535",
+      "godotName": "inbound_buffer_size",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.InboundBufferSize",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "MaxQueuedPackets",
+      "kind": "Property",
+      "signature": "public int MaxQueuedPackets { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of queued packets for connected peers. See [member WebSocketPeer.max_queued_packets] for more details.",
+      "defaultValue": "4096",
+      "godotName": "max_queued_packets",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.MaxQueuedPackets",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "OutboundBufferSize",
+      "kind": "Property",
+      "signature": "public int OutboundBufferSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The outbound buffer size for connected peers. See [member WebSocketPeer.outbound_buffer_size] for more details.",
+      "defaultValue": "65535",
+      "godotName": "outbound_buffer_size",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.OutboundBufferSize",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    },
+    {
+      "name": "SupportedProtocols",
+      "kind": "Property",
+      "signature": "public PackedStringArray SupportedProtocols { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The supported WebSocket sub-protocols. See [member WebSocketPeer.supported_protocols] for more details.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "supported_protocols",
+      "xmlDocId": "P:Godot.WebSocketMultiplayerPeer.SupportedProtocols",
+      "sourcePath": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml",
+      "sha256": "8ced0986515277f71edd0615c00e209a54adbe90f61bbb9ea0c4febefb1ece5e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

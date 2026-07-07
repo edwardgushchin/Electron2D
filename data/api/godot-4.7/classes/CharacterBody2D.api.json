@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CharacterBody2D",
+    "namespace": "Godot",
+    "fullName": "Godot.CharacterBody2D",
+    "kind": "class",
+    "baseType": "PhysicsBody2D",
+    "interfaces": [],
+    "godotReference": "CharacterBody2D",
+    "documentationPath": "doc/classes/CharacterBody2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_characterbody2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ApplyFloorSnap",
+      "kind": "Method",
+      "signature": "public void ApplyFloorSnap()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Allows to manually apply a snap to the floor regardless of the body\u0027s velocity. This function does nothing when [method is_on_floor] returns [code]true[/code].",
+      "godotName": "apply_floor_snap",
+      "xmlDocId": "M:Godot.CharacterBody2D.ApplyFloorSnap",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetFloorAngle",
+      "kind": "Method",
+      "signature": "public float GetFloorAngle(Vector2 upDirection)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "up_direction",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, -1)"
+        }
+      ],
+      "summary": "Returns the floor\u0027s collision angle at the last collision point according to [param up_direction], which is [constant Vector2.UP] by default. This value is always positive and only valid after calling [method move_and_slide] and when [method is_on_floor] returns [code]true[/code].",
+      "godotName": "get_floor_angle",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetFloorAngle(Vector2)",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetFloorNormal",
+      "kind": "Method",
+      "signature": "public Vector2 GetFloorNormal()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the collision normal of the floor at the last collision point. Only valid after calling [method move_and_slide] and when [method is_on_floor] returns [code]true[/code]. [b]Warning:[/b] The collision normal is not always the same as the surface normal.",
+      "godotName": "get_floor_normal",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetFloorNormal",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetLastMotion",
+      "kind": "Method",
+      "signature": "public Vector2 GetLastMotion()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the last motion applied to the [CharacterBody2D] during the last call to [method move_and_slide]. The movement can be split into multiple motions when sliding occurs, and this method return the last one, which is useful to retrieve the current direction of the movement.",
+      "godotName": "get_last_motion",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetLastMotion",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetLastSlideCollision",
+      "kind": "Method",
+      "signature": "public KinematicCollision2D GetLastSlideCollision()",
+      "returnType": "KinematicCollision2D",
+      "parameters": [],
+      "summary": "Returns a [KinematicCollision2D] if a collision occurred. The returned value contains information about the latest collision that occurred during the last call to [method move_and_slide]. Returns [code]null[/code] if no collision occurred. See also [method get_slide_collision].",
+      "godotName": "get_last_slide_collision",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetLastSlideCollision",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetPlatformVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 GetPlatformVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the linear velocity of the platform at the last collision point. Only valid after calling [method move_and_slide].",
+      "godotName": "get_platform_velocity",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetPlatformVelocity",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetPositionDelta",
+      "kind": "Method",
+      "signature": "public Vector2 GetPositionDelta()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the travel (position delta) that occurred during the last call to [method move_and_slide].",
+      "godotName": "get_position_delta",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetPositionDelta",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetRealVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 GetRealVelocity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the current real velocity since the last call to [method move_and_slide]. For example, when you climb a slope, you will move diagonally even though the velocity is horizontal. This method returns the diagonal movement, as opposed to [member velocity] which returns the requested velocity.",
+      "godotName": "get_real_velocity",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetRealVelocity",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetSlideCollision",
+      "kind": "Method",
+      "signature": "public KinematicCollision2D GetSlideCollision(int slideIdx)",
+      "returnType": "KinematicCollision2D",
+      "parameters": [
+        {
+          "name": "slide_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [KinematicCollision2D], which contains information about a collision that occurred during the last call to [method move_and_slide]. Since the body can collide several times in a single call to [method move_and_slide], you must specify the index of the collision in the range 0 to ([method get_slide_collision_count] - 1). See also [method get_last_slide_collision]. [b]Example:[/b] Iterate through the collisions with a [code]for[/code] loop: [codeblocks] [gdscript] for i in get_slide_collision_count(): var collision = get_slide_collision(i) print(\u0022Collided with: \u0022, collision.get_collider().name) [/gdscript] [csharp] for (int i = 0; i \u003C GetSlideCollisionCount(); i\u002B\u002B) { KinematicCollision2D collision = GetSlideCollision(i); GD.Print(\u0022Collided with: \u0022, (collision.GetCollider() as Node).Name); } [/csharp] [/codeblocks]",
+      "godotName": "get_slide_collision",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetSlideCollision(int)",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetSlideCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetSlideCollisionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of times the body collided and changed direction during the last call to [method move_and_slide].",
+      "godotName": "get_slide_collision_count",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetSlideCollisionCount",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "GetWallNormal",
+      "kind": "Method",
+      "signature": "public Vector2 GetWallNormal()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the collision normal of the wall at the last collision point. Only valid after calling [method move_and_slide] and when [method is_on_wall] returns [code]true[/code]. [b]Warning:[/b] The collision normal is not always the same as the surface normal.",
+      "godotName": "get_wall_normal",
+      "xmlDocId": "M:Godot.CharacterBody2D.GetWallNormal",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnCeiling",
+      "kind": "Method",
+      "signature": "public bool IsOnCeiling()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided with the ceiling on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022ceiling\u0022 or not.",
+      "godotName": "is_on_ceiling",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnCeiling",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnCeilingOnly",
+      "kind": "Method",
+      "signature": "public bool IsOnCeilingOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided only with the ceiling on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022ceiling\u0022 or not.",
+      "godotName": "is_on_ceiling_only",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnCeilingOnly",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnFloor",
+      "kind": "Method",
+      "signature": "public bool IsOnFloor()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided with the floor on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022floor\u0022 or not.",
+      "godotName": "is_on_floor",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnFloor",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnFloorOnly",
+      "kind": "Method",
+      "signature": "public bool IsOnFloorOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided only with the floor on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022floor\u0022 or not.",
+      "godotName": "is_on_floor_only",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnFloorOnly",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnWall",
+      "kind": "Method",
+      "signature": "public bool IsOnWall()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided with a wall on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022wall\u0022 or not.",
+      "godotName": "is_on_wall",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnWall",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "IsOnWallOnly",
+      "kind": "Method",
+      "signature": "public bool IsOnWallOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the body collided only with a wall on the last call of [method move_and_slide]. Otherwise, returns [code]false[/code]. The [member up_direction] and [member floor_max_angle] are used to determine whether a surface is \u0022wall\u0022 or not.",
+      "godotName": "is_on_wall_only",
+      "xmlDocId": "M:Godot.CharacterBody2D.IsOnWallOnly",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "MoveAndSlide",
+      "kind": "Method",
+      "signature": "public bool MoveAndSlide()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Moves the body based on [member velocity]. If the body collides with another, it will slide along the other body (by default only on floor) rather than stop immediately. If the other body is a [CharacterBody2D] or [RigidBody2D], it will also be affected by the motion of the other body. You can use this to make moving and rotating platforms, or to make nodes push other nodes. This method should be used in [method Node._physics_process] (or in a method called by [method Node._physics_process]), as it uses the physics step\u0027s [code]delta[/code] value automatically in calculations. Otherwise, the simulation will run at an incorrect speed. Modifies [member velocity] if a slide collision occurred. To get the latest collision call [method get_last_slide_collision], for detailed information about collisions that occurred, use [method get_slide_collision]. When the body touches a moving platform, the platform\u0027s velocity is automatically added to the body motion. If a collision occurs due to the platform\u0027s motion, it will always be first in the slide collisions. The general behavior and available properties change according to the [member motion_mode]. Returns [code]true[/code] if the body collided, otherwise, returns [code]false[/code].",
+      "godotName": "move_and_slide",
+      "xmlDocId": "M:Godot.CharacterBody2D.MoveAndSlide",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "FloorBlockOnWall",
+      "kind": "Property",
+      "signature": "public bool FloorBlockOnWall { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body will be able to move on the floor only. This option avoids to be able to walk on walls, it will however allow to slide down along them.",
+      "defaultValue": "true",
+      "godotName": "floor_block_on_wall",
+      "xmlDocId": "P:Godot.CharacterBody2D.FloorBlockOnWall",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "FloorConstantSpeed",
+      "kind": "Property",
+      "signature": "public bool FloorConstantSpeed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code] (by default), the body will move faster on downward slopes and slower on upward slopes. If [code]true[/code], the body will always move at the same speed on the ground no matter the slope. Note that you need to use [member floor_snap_length] to stick along a downward slope at constant speed.",
+      "defaultValue": "false",
+      "godotName": "floor_constant_speed",
+      "xmlDocId": "P:Godot.CharacterBody2D.FloorConstantSpeed",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "FloorMaxAngle",
+      "kind": "Property",
+      "signature": "public float FloorMaxAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum angle (in radians) where a slope is still considered a floor (or a ceiling), rather than a wall, when calling [method move_and_slide]. The default value equals 45 degrees.",
+      "defaultValue": "0.7853982",
+      "godotName": "floor_max_angle",
+      "xmlDocId": "P:Godot.CharacterBody2D.FloorMaxAngle",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "FloorSnapLength",
+      "kind": "Property",
+      "signature": "public float FloorSnapLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets a snapping distance. When set to a value different from [code]0.0[/code], the body is kept attached to slopes when calling [method move_and_slide]. The snapping vector is determined by the given distance along the opposite direction of the [member up_direction]. As long as the snapping vector is in contact with the ground and the body moves against [member up_direction], the body will remain attached to the surface. Snapping is not applied if the body moves along [member up_direction], meaning it contains vertical rising velocity, so it will be able to detach from the ground when jumping or when the body is pushed up by something. If you want to apply a snap without taking into account the velocity, use [method apply_floor_snap].",
+      "defaultValue": "1.0",
+      "godotName": "floor_snap_length",
+      "xmlDocId": "P:Godot.CharacterBody2D.FloorSnapLength",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "FloorStopOnSlope",
+      "kind": "Property",
+      "signature": "public bool FloorStopOnSlope { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body will not slide on slopes when calling [method move_and_slide] when the body is standing still. If [code]false[/code], the body will slide on floor\u0027s slopes when [member velocity] applies a downward force.",
+      "defaultValue": "true",
+      "godotName": "floor_stop_on_slope",
+      "xmlDocId": "P:Godot.CharacterBody2D.FloorStopOnSlope",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "MaxSlides",
+      "kind": "Property",
+      "signature": "public int MaxSlides { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum number of times the body can change direction before it stops when calling [method move_and_slide]. Must be greater than zero.",
+      "defaultValue": "4",
+      "godotName": "max_slides",
+      "xmlDocId": "P:Godot.CharacterBody2D.MaxSlides",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "MotionMode",
+      "kind": "Property",
+      "signature": "public int MotionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the motion mode which defines the behavior of [method move_and_slide].",
+      "defaultValue": "0",
+      "godotName": "motion_mode",
+      "xmlDocId": "P:Godot.CharacterBody2D.MotionMode",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PlatformFloorLayers",
+      "kind": "Property",
+      "signature": "public int PlatformFloorLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Collision layers that will be included for detecting floor bodies that will act as moving platforms to be followed by the [CharacterBody2D]. By default, all floor bodies are detected and propagate their velocity.",
+      "defaultValue": "4294967295",
+      "godotName": "platform_floor_layers",
+      "xmlDocId": "P:Godot.CharacterBody2D.PlatformFloorLayers",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PlatformOnLeave",
+      "kind": "Property",
+      "signature": "public int PlatformOnLeave { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the behavior to apply when you leave a moving platform. By default, to be physically accurate, when you leave the last platform velocity is applied.",
+      "defaultValue": "0",
+      "godotName": "platform_on_leave",
+      "xmlDocId": "P:Godot.CharacterBody2D.PlatformOnLeave",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PlatformWallLayers",
+      "kind": "Property",
+      "signature": "public int PlatformWallLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Collision layers that will be included for detecting wall bodies that will act as moving platforms to be followed by the [CharacterBody2D]. By default, all wall bodies are ignored.",
+      "defaultValue": "0",
+      "godotName": "platform_wall_layers",
+      "xmlDocId": "P:Godot.CharacterBody2D.PlatformWallLayers",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "SafeMargin",
+      "kind": "Property",
+      "signature": "public float SafeMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Extra margin used for collision recovery when calling [method move_and_slide]. If the body is at least this close to another body, it will consider them to be colliding and will be pushed away before performing the actual motion. A higher value means it\u0027s more flexible for detecting collision, which helps with consistently detecting walls and floors. A lower value forces the collision algorithm to use more exact detection, so it can be used in cases that specifically require precision, e.g at very low scale to avoid visible jittering, or for stability with a stack of character bodies.",
+      "defaultValue": "0.08",
+      "godotName": "safe_margin",
+      "xmlDocId": "P:Godot.CharacterBody2D.SafeMargin",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "SlideOnCeiling",
+      "kind": "Property",
+      "signature": "public bool SlideOnCeiling { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], during a jump against the ceiling, the body will slide, if [code]false[/code] it will be stopped and will fall vertically.",
+      "defaultValue": "true",
+      "godotName": "slide_on_ceiling",
+      "xmlDocId": "P:Godot.CharacterBody2D.SlideOnCeiling",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "UpDirection",
+      "kind": "Property",
+      "signature": "public Vector2 UpDirection { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Vector pointing upwards, used to determine what is a wall and what is a floor (or a ceiling) when calling [method move_and_slide]. Defaults to [constant Vector2.UP]. As the vector will be normalized it can\u0027t be equal to [constant Vector2.ZERO], if you want all collisions to be reported as walls, consider using [constant MOTION_MODE_FLOATING] as [member motion_mode].",
+      "defaultValue": "Vector2(0, -1)",
+      "godotName": "up_direction",
+      "xmlDocId": "P:Godot.CharacterBody2D.UpDirection",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Vector2 Velocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Current velocity vector in pixels per second, used and modified during calls to [method move_and_slide]. [b]Note:[/b] A common mistake is setting this property to the desired velocity multiplied by [code]delta[/code], which produces a motion vector in pixels.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "velocity",
+      "xmlDocId": "P:Godot.CharacterBody2D.Velocity",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "WallMinSlideAngle",
+      "kind": "Property",
+      "signature": "public float WallMinSlideAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum angle (in radians) where the body is allowed to slide when it encounters a wall. The default value equals 15 degrees. This property only affects movement when [member motion_mode] is [constant MOTION_MODE_FLOATING].",
+      "defaultValue": "0.2617994",
+      "godotName": "wall_min_slide_angle",
+      "xmlDocId": "P:Godot.CharacterBody2D.WallMinSlideAngle",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "MotionMode",
+      "values": [
+        {
+          "name": "MOTION_MODE_FLOATING",
+          "value": "1",
+          "enum": "MotionMode",
+          "kind": "EnumValue",
+          "summary": "Apply when there is no notion of floor or ceiling. All collisions will be reported as [code]on_wall[/code]. In this mode, when you slide, the speed will always be constant. This mode is suitable for top-down games.",
+          "sourcePath": "doc/classes/CharacterBody2D.xml"
+        },
+        {
+          "name": "MOTION_MODE_GROUNDED",
+          "value": "0",
+          "enum": "MotionMode",
+          "kind": "EnumValue",
+          "summary": "Apply when notions of walls, ceiling and floor are relevant. In this mode the body motion will react to slopes (acceleration/slowdown). This mode is suitable for sided games like platformers.",
+          "sourcePath": "doc/classes/CharacterBody2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "PlatformOnLeave",
+      "values": [
+        {
+          "name": "PLATFORM_ON_LEAVE_ADD_UPWARD_VELOCITY",
+          "value": "1",
+          "enum": "PlatformOnLeave",
+          "kind": "EnumValue",
+          "summary": "Add the last platform velocity to the [member velocity] when you leave a moving platform, but any downward motion is ignored. It\u0027s useful to keep full jump height even when the platform is moving down.",
+          "sourcePath": "doc/classes/CharacterBody2D.xml"
+        },
+        {
+          "name": "PLATFORM_ON_LEAVE_ADD_VELOCITY",
+          "value": "0",
+          "enum": "PlatformOnLeave",
+          "kind": "EnumValue",
+          "summary": "Add the last platform velocity to the [member velocity] when you leave a moving platform.",
+          "sourcePath": "doc/classes/CharacterBody2D.xml"
+        },
+        {
+          "name": "PLATFORM_ON_LEAVE_DO_NOTHING",
+          "value": "2",
+          "enum": "PlatformOnLeave",
+          "kind": "EnumValue",
+          "summary": "Do nothing when leaving a platform.",
+          "sourcePath": "doc/classes/CharacterBody2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MOTION_MODE_GROUNDED",
+      "value": "0",
+      "enum": "MotionMode",
+      "kind": "EnumValue",
+      "summary": "Apply when notions of walls, ceiling and floor are relevant. In this mode the body motion will react to slopes (acceleration/slowdown). This mode is suitable for sided games like platformers.",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "MOTION_MODE_FLOATING",
+      "value": "1",
+      "enum": "MotionMode",
+      "kind": "EnumValue",
+      "summary": "Apply when there is no notion of floor or ceiling. All collisions will be reported as [code]on_wall[/code]. In this mode, when you slide, the speed will always be constant. This mode is suitable for top-down games.",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PLATFORM_ON_LEAVE_ADD_VELOCITY",
+      "value": "0",
+      "enum": "PlatformOnLeave",
+      "kind": "EnumValue",
+      "summary": "Add the last platform velocity to the [member velocity] when you leave a moving platform.",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PLATFORM_ON_LEAVE_ADD_UPWARD_VELOCITY",
+      "value": "1",
+      "enum": "PlatformOnLeave",
+      "kind": "EnumValue",
+      "summary": "Add the last platform velocity to the [member velocity] when you leave a moving platform, but any downward motion is ignored. It\u0027s useful to keep full jump height even when the platform is moving down.",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    },
+    {
+      "name": "PLATFORM_ON_LEAVE_DO_NOTHING",
+      "value": "2",
+      "enum": "PlatformOnLeave",
+      "kind": "EnumValue",
+      "summary": "Do nothing when leaving a platform.",
+      "sourcePath": "doc/classes/CharacterBody2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CharacterBody2D.xml",
+      "sha256": "bc9dee9e349e99308b7b01523a4e5588340cd68b4c64b59a698425a9c3316f25"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

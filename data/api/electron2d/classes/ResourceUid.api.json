@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceUid",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ResourceUid",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "ResourceUID / ResourceUid",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "InvalidId",
+      "kind": "Constant",
+      "signature": "public const System.Int64 InvalidId",
+      "returnType": "System.Int64",
+      "parameters": [],
+      "summary": "The value used when a resource UID is invalid or cannot be resolved.",
+      "value": "-1",
+      "xmlDocId": "F:Electron2D.ResourceUid.InvalidId",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddId",
+      "kind": "Method",
+      "signature": "public static System.Void AddId(System.Int64 id, System.String path)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        },
+        {
+          "name": "path",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Adds a UID mapping for a resource path.",
+      "xmlDocId": "M:Electron2D.ResourceUid.AddId(System.Int64,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateId",
+      "kind": "Method",
+      "signature": "public static System.Int64 CreateId()",
+      "returnType": "System.Int64",
+      "parameters": [],
+      "summary": "Creates a random UID that is not currently registered.",
+      "xmlDocId": "M:Electron2D.ResourceUid.CreateId",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateIdForPath",
+      "kind": "Method",
+      "signature": "public static System.Int64 CreateIdForPath(System.String path)",
+      "returnType": "System.Int64",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Creates a deterministic UID candidate for a resource path.",
+      "xmlDocId": "M:Electron2D.ResourceUid.CreateIdForPath(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EnsurePath",
+      "kind": "Method",
+      "signature": "public static System.String EnsurePath(System.String pathOrUid)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "pathOrUid",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Returns a path, converting a \u0060uid://\u0060 value when needed.",
+      "xmlDocId": "M:Electron2D.ResourceUid.EnsurePath(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetIdPath",
+      "kind": "Method",
+      "signature": "public static System.String GetIdPath(System.Int64 id)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Gets the path currently associated with a UID.",
+      "xmlDocId": "M:Electron2D.ResourceUid.GetIdPath(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasId",
+      "kind": "Method",
+      "signature": "public static System.Boolean HasId(System.Int64 id)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Reports whether a UID is registered.",
+      "xmlDocId": "M:Electron2D.ResourceUid.HasId(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IdToText",
+      "kind": "Method",
+      "signature": "public static System.String IdToText(System.Int64 id)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Converts a UID value to \u0060uid://\u0060 text.",
+      "xmlDocId": "M:Electron2D.ResourceUid.IdToText(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PathToUid",
+      "kind": "Method",
+      "signature": "public static System.String PathToUid(System.String path)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts a resource path to UID text when the path is registered.",
+      "xmlDocId": "M:Electron2D.ResourceUid.PathToUid(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveId",
+      "kind": "Method",
+      "signature": "public static System.Void RemoveId(System.Int64 id)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        }
+      ],
+      "summary": "Removes a registered UID.",
+      "xmlDocId": "M:Electron2D.ResourceUid.RemoveId(System.Int64)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetId",
+      "kind": "Method",
+      "signature": "public static System.Void SetId(System.Int64 id, System.String path)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int64"
+        },
+        {
+          "name": "path",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Updates the path associated with an existing UID.",
+      "xmlDocId": "M:Electron2D.ResourceUid.SetId(System.Int64,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextToId",
+      "kind": "Method",
+      "signature": "public static System.Int64 TextToId(System.String textId)",
+      "returnType": "System.Int64",
+      "parameters": [
+        {
+          "name": "textId",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Extracts a numeric UID from \u0060uid://\u0060 text.",
+      "xmlDocId": "M:Electron2D.ResourceUid.TextToId(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "UidToPath",
+      "kind": "Method",
+      "signature": "public static System.String UidToPath(System.String uid)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "uid",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Converts UID text to a registered resource path.",
+      "xmlDocId": "M:Electron2D.ResourceUid.UidToPath(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "InvalidId",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "The value used when a resource UID is invalid or cannot be resolved.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

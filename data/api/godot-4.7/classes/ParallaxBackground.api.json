@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ParallaxBackground",
+    "namespace": "Godot",
+    "fullName": "Godot.ParallaxBackground",
+    "kind": "class",
+    "baseType": "CanvasLayer",
+    "interfaces": [],
+    "godotReference": "ParallaxBackground",
+    "documentationPath": "doc/classes/ParallaxBackground.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_parallaxbackground.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Layer",
+      "kind": "Property",
+      "signature": "public int Layer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "-100",
+      "godotName": "layer",
+      "xmlDocId": "P:Godot.ParallaxBackground.Layer",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollBaseOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollBaseOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The base position offset for all [ParallaxLayer] children.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "scroll_base_offset",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollBaseOffset",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollBaseScale",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollBaseScale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The base motion scale for all [ParallaxLayer] children.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "scroll_base_scale",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollBaseScale",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollIgnoreCameraZoom",
+      "kind": "Property",
+      "signature": "public bool ScrollIgnoreCameraZoom { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], elements in [ParallaxLayer] child aren\u0027t affected by the zoom level of the camera.",
+      "defaultValue": "false",
+      "godotName": "scroll_ignore_camera_zoom",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollIgnoreCameraZoom",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollLimitBegin",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollLimitBegin { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Top-left limits for scrolling to begin. If the camera is outside of this limit, the background will stop scrolling. Must be lower than [member scroll_limit_end] to work.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "scroll_limit_begin",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollLimitBegin",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollLimitEnd",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollLimitEnd { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Bottom-right limits for scrolling to end. If the camera is outside of this limit, the background will stop scrolling. Must be higher than [member scroll_limit_begin] to work.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "scroll_limit_end",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollLimitEnd",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    },
+    {
+      "name": "ScrollOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The ParallaxBackground\u0027s scroll value. Calculated automatically when using a [Camera2D], but can be used to manually manage scrolling when no camera is present.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "scroll_offset",
+      "xmlDocId": "P:Godot.ParallaxBackground.ScrollOffset",
+      "sourcePath": "doc/classes/ParallaxBackground.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ParallaxBackground.xml",
+      "sha256": "32e6863e48f9ce437b076fd412b0b2c6abccaca639d87713dd4ffc24be44b627"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

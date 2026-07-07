@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterWAV",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterWAV",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterWAV",
+    "documentationPath": "doc/classes/ResourceImporterWAV.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterwav.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [
+    {
+      "name": "compress/mode",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The compression mode to use on import. - [b]PCM (Uncompressed):[/b] Imports audio data without any form of compression, preserving the highest possible quality. It has the lowest CPU cost, but the highest memory usage. - [b]IMA ADPCM:[/b] Applies fast, lossy compression during import, noticeably decreasing the quality, but with low CPU cost and memory usage. Does not support seeking and only Forward loop mode is supported. - [b][url=https://qoaformat.org/]Quite OK Audio[/url]:[/b] Also applies lossy compression on import, having a slightly higher CPU cost compared to IMA ADPCM, but much higher quality and the lowest memory usage.",
+      "defaultValue": "2",
+      "godotName": "compress/mode",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "edit/loop_begin",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The begin loop point to use when [member edit/loop_mode] is [b]Forward[/b], [b]Ping-Pong[/b], or [b]Backward[/b]. This is set in samples after the beginning of the audio file.",
+      "defaultValue": "0",
+      "godotName": "edit/loop_begin",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "edit/loop_end",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The end loop point to use when [member edit/loop_mode] is [b]Forward[/b], [b]Ping-Pong[/b], or [b]Backward[/b]. This is set in samples after the beginning of the audio file. A value of [code]-1[/code] uses the end of the audio file as the end loop point.",
+      "defaultValue": "-1",
+      "godotName": "edit/loop_end",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "edit/loop_mode",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how audio should loop. - [b]Detect From WAV:[/b] Uses loop information from the WAV metadata. - [b]Disabled:[/b] Don\u0027t loop audio, even if the metadata indicates the file playback should loop. - [b]Forward:[/b] Standard audio looping. Plays the audio forward from the beginning to [member edit/loop_end], then returns to [member edit/loop_begin] and repeats. - [b]Ping-Pong:[/b] Plays the audio forward until [member edit/loop_end], then backwards to [member edit/loop_begin], repeating this cycle. - [b]Backward:[/b] Plays the audio backwards from [member edit/loop_end] to [member edit/loop_begin], then repeats. [b]Note:[/b] In [AudioStreamPlayer], the [signal AudioStreamPlayer.finished] signal won\u0027t be emitted for looping audio when it reaches the end of the audio file, as the audio will keep playing indefinitely.",
+      "defaultValue": "0",
+      "godotName": "edit/loop_mode",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "edit/normalize",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], normalize the audio volume so that its peak volume is equal to 0 dB. When enabled, normalization will make audio sound louder depending on its original peak volume.",
+      "defaultValue": "false",
+      "godotName": "edit/normalize",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "edit/trim",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], automatically trim the beginning and end of the audio if it\u0027s lower than -50 dB after normalization (see [member edit/normalize]). This prevents having files with silence at the beginning or end, which increases their size unnecessarily and adds latency to the moment they are played back. A fade-in/fade-out period of 500 samples is also used during trimming to avoid audible pops.",
+      "defaultValue": "false",
+      "godotName": "edit/trim",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "force/8_bit",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], forces the imported audio to use 8-bit quantization if the source file is 16-bit or higher. Enabling this is generally not recommended, as 8-bit quantization decreases audio quality significantly. If you need smaller file sizes, consider using Ogg Vorbis or MP3 audio instead.",
+      "defaultValue": "false",
+      "godotName": "force/8_bit",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "force/max_rate",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to a value greater than [code]0[/code], forces the audio\u0027s sample rate to be reduced to a value lower than or equal to the value specified in [member force/max_rate_hz]. This can decrease file size noticeably on certain sounds, without impacting quality depending on the actual sound\u0027s contents. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_audio_samples.html#doc-importing-audio-samples-best-practices]Best practices[/url] for more information.",
+      "defaultValue": "false",
+      "godotName": "force/max_rate",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "force/max_rate_hz",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The frequency to limit the imported audio sample to (in Hz). Only effective if [member force/max_rate] is [code]true[/code].",
+      "defaultValue": "44100",
+      "godotName": "force/max_rate_hz",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    },
+    {
+      "name": "force/mono",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], forces the imported audio to be mono if the source file is stereo. This decreases the file size by 50% by merging the two channels into one.",
+      "defaultValue": "false",
+      "godotName": "force/mono",
+      "sourcePath": "doc/classes/ResourceImporterWAV.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterWAV.xml",
+      "sha256": "4cb4d92fb33be79e6a153ba3514eec007d7b1632ca09ab8f5db7a55dfa694c0d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

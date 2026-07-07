@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Range",
+    "namespace": "Godot",
+    "fullName": "Godot.Range",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "Range",
+    "documentationPath": "doc/classes/Range.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_range.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ValueChanged",
+      "kind": "Method",
+      "signature": "public void _ValueChanged(float newValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "new_value",
+          "type": "float"
+        }
+      ],
+      "summary": "Called when the [Range]\u0027s value is changed (following the same conditions as [signal value_changed]).",
+      "godotName": "_value_changed",
+      "xmlDocId": "M:Godot.Range._ValueChanged(float)",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "SetValueNoSignal",
+      "kind": "Method",
+      "signature": "public void SetValueNoSignal(float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [Range]\u0027s current value to the specified [param value], without emitting the [signal value_changed] signal.",
+      "godotName": "set_value_no_signal",
+      "xmlDocId": "M:Godot.Range.SetValueNoSignal(float)",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Share",
+      "kind": "Method",
+      "signature": "public void Share(Node with)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Node"
+        }
+      ],
+      "summary": "Binds two [Range]s together along with any ranges previously grouped with either of them. When any of range\u0027s member variables change, it will share the new value with all other ranges in its group.",
+      "godotName": "share",
+      "xmlDocId": "M:Godot.Range.Share(Node)",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Unshare",
+      "kind": "Method",
+      "signature": "public void Unshare()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the [Range] from sharing its member variables with any other.",
+      "godotName": "unshare",
+      "xmlDocId": "M:Godot.Range.Unshare",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "AllowGreater",
+      "kind": "Property",
+      "signature": "public bool AllowGreater { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member value] may be greater than [member max_value].",
+      "defaultValue": "false",
+      "godotName": "allow_greater",
+      "xmlDocId": "P:Godot.Range.AllowGreater",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "AllowLesser",
+      "kind": "Property",
+      "signature": "public bool AllowLesser { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member value] may be less than [member min_value].",
+      "defaultValue": "false",
+      "godotName": "allow_lesser",
+      "xmlDocId": "P:Godot.Range.AllowLesser",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "ExpEdit",
+      "kind": "Property",
+      "signature": "public bool ExpEdit { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], and [member min_value] is greater or equal to [code]0[/code], [member value] will be represented exponentially rather than linearly.",
+      "defaultValue": "false",
+      "godotName": "exp_edit",
+      "xmlDocId": "P:Godot.Range.ExpEdit",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "MaxValue",
+      "kind": "Property",
+      "signature": "public float MaxValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum value. Range is clamped if [member value] is greater than [member max_value].",
+      "defaultValue": "100.0",
+      "godotName": "max_value",
+      "xmlDocId": "P:Godot.Range.MaxValue",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "MinValue",
+      "kind": "Property",
+      "signature": "public float MinValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Minimum value. Range is clamped if [member value] is less than [member min_value].",
+      "defaultValue": "0.0",
+      "godotName": "min_value",
+      "xmlDocId": "P:Godot.Range.MinValue",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Page",
+      "kind": "Property",
+      "signature": "public float Page { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Page size. Used mainly for [ScrollBar]. A [ScrollBar]\u0027s grabber length is the [ScrollBar]\u0027s size multiplied by [member page] over the difference between [member min_value] and [member max_value].",
+      "defaultValue": "0.0",
+      "godotName": "page",
+      "xmlDocId": "P:Godot.Range.Page",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Ratio",
+      "kind": "Property",
+      "signature": "public float Ratio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The value mapped between 0 and 1.",
+      "godotName": "ratio",
+      "xmlDocId": "P:Godot.Range.Ratio",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Rounded",
+      "kind": "Property",
+      "signature": "public bool Rounded { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member value] will always be rounded to the nearest integer.",
+      "defaultValue": "false",
+      "godotName": "rounded",
+      "xmlDocId": "P:Godot.Range.Rounded",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.Range.SizeFlagsVertical",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If greater than [code]0.0[/code], [member value] will always be rounded to a multiple of this property\u0027s value above [member min_value]. For example, if [member min_value] is [code]0.1[/code] and step is [code]0.2[/code], then [member value] is limited to [code]0.1[/code], [code]0.3[/code], [code]0.5[/code], and so on. If [member rounded] is also [code]true[/code], [member value] will first be rounded to a multiple of this property\u0027s value, then rounded to the nearest integer.",
+      "defaultValue": "0.01",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.Range.Step",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "Value",
+      "kind": "Property",
+      "signature": "public float Value { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Range\u0027s current value. Changing this property (even via code) will trigger [signal value_changed] signal. Use [method set_value_no_signal] if you want to avoid it.",
+      "defaultValue": "0.0",
+      "godotName": "value",
+      "xmlDocId": "P:Godot.Range.Value",
+      "sourcePath": "doc/classes/Range.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Changed",
+      "kind": "Signal",
+      "signature": "public event ChangedHandler Changed",
+      "parameters": [],
+      "summary": "Emitted when [member min_value], [member max_value], [member page], or [member step] change.",
+      "godotName": "changed",
+      "xmlDocId": "E:Godot.Range.Changed",
+      "sourcePath": "doc/classes/Range.xml"
+    },
+    {
+      "name": "ValueChanged",
+      "kind": "Signal",
+      "signature": "public event ValueChangedHandler ValueChanged",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Emitted when [member value] changes. When used on a [Slider], this is called continuously while dragging (potentially every frame). If you are performing an expensive operation in a function connected to [signal value_changed], consider using a [i]debouncing[/i] [Timer] to call the function less often. [b]Note:[/b] Unlike signals such as [signal LineEdit.text_changed], [signal value_changed] is also emitted when [param value] is set directly via code.",
+      "godotName": "value_changed",
+      "xmlDocId": "E:Godot.Range.ValueChanged(float)",
+      "sourcePath": "doc/classes/Range.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ValueChanged",
+      "kind": "Method",
+      "signature": "public void _ValueChanged(float newValue)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "new_value",
+          "type": "float"
+        }
+      ],
+      "summary": "Called when the [Range]\u0027s value is changed (following the same conditions as [signal value_changed]).",
+      "godotName": "_value_changed",
+      "xmlDocId": "M:Godot.Range._ValueChanged(float)",
+      "sourcePath": "doc/classes/Range.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Range.xml",
+      "sha256": "d5a39b78bd958a385b7dc1ae7fa4bfd9f3057c9619cc4bdbbe4e7ed87ffb64fe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

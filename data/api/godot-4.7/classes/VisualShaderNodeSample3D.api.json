@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeSample3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeSample3D",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeSample3D",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodesample3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Source",
+      "kind": "Property",
+      "signature": "public int Source { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "An input source type.",
+      "defaultValue": "0",
+      "godotName": "source",
+      "xmlDocId": "P:Godot.VisualShaderNodeSample3D.Source",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Source",
+      "values": [
+        {
+          "name": "SOURCE_MAX",
+          "value": "2",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Source] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+        },
+        {
+          "name": "SOURCE_PORT",
+          "value": "1",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the uniform texture from sampler port.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+        },
+        {
+          "name": "SOURCE_TEXTURE",
+          "value": "0",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Creates internal uniform and provides a way to assign it within node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SOURCE_TEXTURE",
+      "value": "0",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Creates internal uniform and provides a way to assign it within node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+    },
+    {
+      "name": "SOURCE_PORT",
+      "value": "1",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the uniform texture from sampler port.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+    },
+    {
+      "name": "SOURCE_MAX",
+      "value": "2",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Source] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeSample3D.xml",
+      "sha256": "9b565f04804ee8109a0e63aa966682c379afbb8d24d944bfa763a08e55c621a0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CapsuleMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.CapsuleMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "CapsuleMesh",
+    "documentationPath": "doc/classes/CapsuleMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_capsulemesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Total height of the capsule mesh (including the hemispherical ends). [b]Note:[/b] The [member height] of a capsule must be at least twice its [member radius]. Otherwise, the capsule becomes a circle. If the [member height] is less than twice the [member radius], the properties adjust to a valid value.",
+      "defaultValue": "2.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.CapsuleMesh.Height",
+      "sourcePath": "doc/classes/CapsuleMesh.xml"
+    },
+    {
+      "name": "RadialSegments",
+      "kind": "Property",
+      "signature": "public int RadialSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of radial segments on the capsule mesh.",
+      "defaultValue": "64",
+      "godotName": "radial_segments",
+      "xmlDocId": "P:Godot.CapsuleMesh.RadialSegments",
+      "sourcePath": "doc/classes/CapsuleMesh.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Radius of the capsule mesh. [b]Note:[/b] The [member radius] of a capsule cannot be greater than half of its [member height]. Otherwise, the capsule becomes a circle. If the [member radius] is greater than half of the [member height], the properties adjust to a valid value.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.CapsuleMesh.Radius",
+      "sourcePath": "doc/classes/CapsuleMesh.xml"
+    },
+    {
+      "name": "Rings",
+      "kind": "Property",
+      "signature": "public int Rings { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of rings along the height of the capsule.",
+      "defaultValue": "8",
+      "godotName": "rings",
+      "xmlDocId": "P:Godot.CapsuleMesh.Rings",
+      "sourcePath": "doc/classes/CapsuleMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CapsuleMesh.xml",
+      "sha256": "42bb72220a2e2c79e19e7d861cdd1ed260a39c6bceab445a9febbaddf490c516"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

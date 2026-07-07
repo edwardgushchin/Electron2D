@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ColorPicker",
+    "namespace": "Godot",
+    "fullName": "Godot.ColorPicker",
+    "kind": "class",
+    "baseType": "VBoxContainer",
+    "interfaces": [],
+    "godotReference": "ColorPicker",
+    "documentationPath": "doc/classes/ColorPicker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_colorpicker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPreset",
+      "kind": "Method",
+      "signature": "public void AddPreset(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Adds the given color to a list of color presets. The presets are displayed in the color picker and the user will be able to select them. [b]Note:[/b] The presets list is only for [i]this[/i] color picker.",
+      "godotName": "add_preset",
+      "xmlDocId": "M:Godot.ColorPicker.AddPreset(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "AddRecentPreset",
+      "kind": "Method",
+      "signature": "public void AddRecentPreset(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Adds the given color to a list of color recent presets so that it can be picked later. Recent presets are the colors that were picked recently, a new preset is automatically created and added to recent presets when you pick a new color. [b]Note:[/b] The recent presets list is only for [i]this[/i] color picker.",
+      "godotName": "add_recent_preset",
+      "xmlDocId": "M:Godot.ColorPicker.AddRecentPreset(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "ErasePreset",
+      "kind": "Method",
+      "signature": "public void ErasePreset(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Removes the given color from the list of color presets of this color picker.",
+      "godotName": "erase_preset",
+      "xmlDocId": "M:Godot.ColorPicker.ErasePreset(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "EraseRecentPreset",
+      "kind": "Method",
+      "signature": "public void EraseRecentPreset(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Removes the given color from the list of color recent presets of this color picker.",
+      "godotName": "erase_recent_preset",
+      "xmlDocId": "M:Godot.ColorPicker.EraseRecentPreset(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "GetPresets",
+      "kind": "Method",
+      "signature": "public PackedColorArray GetPresets()",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Returns the list of colors in the presets of the color picker.",
+      "godotName": "get_presets",
+      "xmlDocId": "M:Godot.ColorPicker.GetPresets",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "GetRecentPresets",
+      "kind": "Method",
+      "signature": "public PackedColorArray GetRecentPresets()",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Returns the list of colors in the recent presets of the color picker.",
+      "godotName": "get_recent_presets",
+      "xmlDocId": "M:Godot.ColorPicker.GetRecentPresets",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "CanAddSwatches",
+      "kind": "Property",
+      "signature": "public bool CanAddSwatches { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], it\u0027s possible to add presets under Swatches. If [code]false[/code], the button to add presets is disabled.",
+      "defaultValue": "true",
+      "godotName": "can_add_swatches",
+      "xmlDocId": "P:Godot.ColorPicker.CanAddSwatches",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The currently selected color.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.ColorPicker.Color",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "ColorMode",
+      "kind": "Property",
+      "signature": "public int ColorMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The currently selected color mode.",
+      "defaultValue": "0",
+      "godotName": "color_mode",
+      "xmlDocId": "P:Godot.ColorPicker.ColorMode",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "ColorModesVisible",
+      "kind": "Property",
+      "signature": "public bool ColorModesVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the color mode buttons are visible.",
+      "defaultValue": "true",
+      "godotName": "color_modes_visible",
+      "xmlDocId": "P:Godot.ColorPicker.ColorModesVisible",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "DeferredMode",
+      "kind": "Property",
+      "signature": "public bool DeferredMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the color will apply only after the user releases the mouse button, otherwise it will apply immediately even in mouse motion event (which can cause performance issues).",
+      "defaultValue": "false",
+      "godotName": "deferred_mode",
+      "xmlDocId": "P:Godot.ColorPicker.DeferredMode",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "EditAlpha",
+      "kind": "Property",
+      "signature": "public bool EditAlpha { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows an alpha channel slider (opacity).",
+      "defaultValue": "true",
+      "godotName": "edit_alpha",
+      "xmlDocId": "P:Godot.ColorPicker.EditAlpha",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "EditIntensity",
+      "kind": "Property",
+      "signature": "public bool EditIntensity { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows an intensity slider. The intensity is applied as follows: convert the color to linear encoding, multiply it by [code]2 ** intensity[/code], and then convert it back to nonlinear sRGB encoding.",
+      "defaultValue": "true",
+      "godotName": "edit_intensity",
+      "xmlDocId": "P:Godot.ColorPicker.EditIntensity",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "HexVisible",
+      "kind": "Property",
+      "signature": "public bool HexVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the hex color code input field is visible.",
+      "defaultValue": "true",
+      "godotName": "hex_visible",
+      "xmlDocId": "P:Godot.ColorPicker.HexVisible",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "PickerShape",
+      "kind": "Property",
+      "signature": "public int PickerShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The shape of the color space view.",
+      "defaultValue": "0",
+      "godotName": "picker_shape",
+      "xmlDocId": "P:Godot.ColorPicker.PickerShape",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "PresetsVisible",
+      "kind": "Property",
+      "signature": "public bool PresetsVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the Swatches and Recent Colors presets are visible.",
+      "defaultValue": "true",
+      "godotName": "presets_visible",
+      "xmlDocId": "P:Godot.ColorPicker.PresetsVisible",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SamplerVisible",
+      "kind": "Property",
+      "signature": "public bool SamplerVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the color sampler and color preview are visible.",
+      "defaultValue": "true",
+      "godotName": "sampler_visible",
+      "xmlDocId": "P:Godot.ColorPicker.SamplerVisible",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SlidersVisible",
+      "kind": "Property",
+      "signature": "public bool SlidersVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the color sliders are visible.",
+      "defaultValue": "true",
+      "godotName": "sliders_visible",
+      "xmlDocId": "P:Godot.ColorPicker.SlidersVisible",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ColorChanged",
+      "kind": "Signal",
+      "signature": "public event ColorChangedHandler ColorChanged",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Emitted when the color is changed.",
+      "godotName": "color_changed",
+      "xmlDocId": "E:Godot.ColorPicker.ColorChanged(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "PresetAdded",
+      "kind": "Signal",
+      "signature": "public event PresetAddedHandler PresetAdded",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Emitted when a preset is added.",
+      "godotName": "preset_added",
+      "xmlDocId": "E:Godot.ColorPicker.PresetAdded(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "PresetRemoved",
+      "kind": "Signal",
+      "signature": "public event PresetRemovedHandler PresetRemoved",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Emitted when a preset is removed.",
+      "godotName": "preset_removed",
+      "xmlDocId": "E:Godot.ColorPicker.PresetRemoved(Color)",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ColorModeType",
+      "values": [
+        {
+          "name": "MODE_HSV",
+          "value": "1",
+          "enum": "ColorModeType",
+          "kind": "EnumValue",
+          "summary": "Allows editing the color with Hue/Saturation/Value sliders.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "MODE_LINEAR",
+          "value": "2",
+          "enum": "ColorModeType",
+          "kind": "EnumValue",
+          "summary": "Allows editing the color with Red/Green/Blue sliders in linear color space.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "MODE_OKHSL",
+          "value": "3",
+          "enum": "ColorModeType",
+          "kind": "EnumValue",
+          "summary": "Allows editing the color with Hue/Saturation/Lightness sliders. OKHSL is a new color space similar to HSL but that better match perception by leveraging the Oklab color space which is designed to be simple to use, while doing a good job at predicting perceived lightness, chroma and hue. [url=https://bottosson.github.io/posts/colorpicker/]Okhsv and Okhsl color spaces[/url]",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "MODE_RAW",
+          "value": "2",
+          "enum": "ColorModeType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "MODE_RGB",
+          "value": "0",
+          "enum": "ColorModeType",
+          "kind": "EnumValue",
+          "summary": "Allows editing the color with Red/Green/Blue sliders in sRGB color space.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        }
+      ]
+    },
+    {
+      "name": "PickerShapeType",
+      "values": [
+        {
+          "name": "SHAPE_HSV_RECTANGLE",
+          "value": "0",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "HSV Color Model rectangle color space.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_HSV_WHEEL",
+          "value": "1",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "HSV Color Model rectangle color space with a wheel.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_NONE",
+          "value": "4",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "The color space shape and the shape select button are hidden. Can\u0027t be selected from the shapes popup.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_OKHSL_CIRCLE",
+          "value": "3",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "HSL OK Color Model circle color space.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_OK_HL_RECTANGLE",
+          "value": "6",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "OKHSL Color Model rectangle with constant saturation.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_OK_HS_RECTANGLE",
+          "value": "5",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "OKHSL Color Model rectangle with constant lightness.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        },
+        {
+          "name": "SHAPE_VHS_CIRCLE",
+          "value": "2",
+          "enum": "PickerShapeType",
+          "kind": "EnumValue",
+          "summary": "HSV Color Model circle color space. Use Saturation as a radius.",
+          "sourcePath": "doc/classes/ColorPicker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_RGB",
+      "value": "0",
+      "enum": "ColorModeType",
+      "kind": "EnumValue",
+      "summary": "Allows editing the color with Red/Green/Blue sliders in sRGB color space.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "MODE_HSV",
+      "value": "1",
+      "enum": "ColorModeType",
+      "kind": "EnumValue",
+      "summary": "Allows editing the color with Hue/Saturation/Value sliders.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "MODE_RAW",
+      "value": "2",
+      "enum": "ColorModeType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "MODE_LINEAR",
+      "value": "2",
+      "enum": "ColorModeType",
+      "kind": "EnumValue",
+      "summary": "Allows editing the color with Red/Green/Blue sliders in linear color space.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "MODE_OKHSL",
+      "value": "3",
+      "enum": "ColorModeType",
+      "kind": "EnumValue",
+      "summary": "Allows editing the color with Hue/Saturation/Lightness sliders. OKHSL is a new color space similar to HSL but that better match perception by leveraging the Oklab color space which is designed to be simple to use, while doing a good job at predicting perceived lightness, chroma and hue. [url=https://bottosson.github.io/posts/colorpicker/]Okhsv and Okhsl color spaces[/url]",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_HSV_RECTANGLE",
+      "value": "0",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "HSV Color Model rectangle color space.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_HSV_WHEEL",
+      "value": "1",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "HSV Color Model rectangle color space with a wheel.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_VHS_CIRCLE",
+      "value": "2",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "HSV Color Model circle color space. Use Saturation as a radius.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_OKHSL_CIRCLE",
+      "value": "3",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "HSL OK Color Model circle color space.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_NONE",
+      "value": "4",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "The color space shape and the shape select button are hidden. Can\u0027t be selected from the shapes popup.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_OK_HS_RECTANGLE",
+      "value": "5",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "OKHSL Color Model rectangle with constant lightness.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    },
+    {
+      "name": "SHAPE_OK_HL_RECTANGLE",
+      "value": "6",
+      "enum": "PickerShapeType",
+      "kind": "EnumValue",
+      "summary": "OKHSL Color Model rectangle with constant saturation.",
+      "sourcePath": "doc/classes/ColorPicker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ColorPicker.xml",
+      "sha256": "ade84ef28fe8d0fcd48cca6b3b6f458d2ee53230b6289696c142a6e9243e34b5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

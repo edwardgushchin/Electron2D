@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeUVFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeUVFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeUVFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeuvfunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A function to be applied to the texture coordinates.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeUVFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_MAX",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+        },
+        {
+          "name": "FUNC_PANNING",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Translates [code]uv[/code] by using [code]scale[/code] and [code]offset[/code] values using the following formula: [code]uv = uv \u002B offset * scale[/code]. [code]uv[/code] port is connected to [code]UV[/code] built-in by default.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+        },
+        {
+          "name": "FUNC_SCALING",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Scales [code]uv[/code] by using [code]scale[/code] and [code]pivot[/code] values using the following formula: [code]uv = (uv - pivot) * scale \u002B pivot[/code]. [code]uv[/code] port is connected to [code]UV[/code] built-in by default.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_PANNING",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Translates [code]uv[/code] by using [code]scale[/code] and [code]offset[/code] values using the following formula: [code]uv = uv \u002B offset * scale[/code]. [code]uv[/code] port is connected to [code]UV[/code] built-in by default.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+    },
+    {
+      "name": "FUNC_SCALING",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Scales [code]uv[/code] by using [code]scale[/code] and [code]pivot[/code] values using the following formula: [code]uv = (uv - pivot) * scale \u002B pivot[/code]. [code]uv[/code] port is connected to [code]UV[/code] built-in by default.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeUVFunc.xml",
+      "sha256": "5ab9a158f94c9b514da5d13b921a49ac4e931e7bac7ad0586c263f5b5787f13a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

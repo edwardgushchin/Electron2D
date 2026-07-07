@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SegmentShape2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SegmentShape2D",
+    "kind": "class",
+    "baseType": "Electron2D.Shape2D",
+    "interfaces": [],
+    "godotReference": "SegmentShape2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "SegmentShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SegmentShape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SegmentShape2D type.",
+      "xmlDocId": "M:Electron2D.SegmentShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "SegmentShape2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SegmentShape2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SegmentShape2D type.",
+      "xmlDocId": "M:Electron2D.SegmentShape2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "A",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 A { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the first segment endpoint.",
+      "xmlDocId": "P:Electron2D.SegmentShape2D.A",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "B",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 B { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the second segment endpoint.",
+      "xmlDocId": "P:Electron2D.SegmentShape2D.B",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

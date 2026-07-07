@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RayCast2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RayCast2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "RayCast2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "RayCast2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RayCast2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RayCast2D type.",
+      "xmlDocId": "M:Electron2D.RayCast2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "RayCast2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RayCast2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RayCast2D type.",
+      "xmlDocId": "M:Electron2D.RayCast2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ForceRaycastUpdate",
+      "kind": "Method",
+      "signature": "public System.Void ForceRaycastUpdate()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Updates the cached raycast result immediately.",
+      "xmlDocId": "M:Electron2D.RayCast2D.ForceRaycastUpdate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Electron2D.Object GetCollider()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Gets the object hit by the raycast.",
+      "xmlDocId": "M:Electron2D.RayCast2D.GetCollider",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Rid GetColliderRid()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Gets the RID of the object hit by the raycast.",
+      "xmlDocId": "M:Electron2D.RayCast2D.GetColliderRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public System.Int32 GetColliderShape()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the shape index hit by the raycast.",
+      "xmlDocId": "M:Electron2D.RayCast2D.GetColliderShape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionNormal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetCollisionNormal()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the collision normal reported by the raycast.",
+      "xmlDocId": "M:Electron2D.RayCast2D.GetCollisionNormal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionPoint",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetCollisionPoint()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the collision point reported by the raycast.",
+      "xmlDocId": "M:Electron2D.RayCast2D.GetCollisionPoint",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsColliding",
+      "kind": "Method",
+      "signature": "public System.Boolean IsColliding()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the raycast currently collides with an object.",
+      "xmlDocId": "M:Electron2D.RayCast2D.IsColliding",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public System.Boolean CollideWithAreas { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether areas should be considered by the raycast.",
+      "xmlDocId": "P:Electron2D.RayCast2D.CollideWithAreas",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public System.Boolean CollideWithBodies { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether bodies should be considered by the raycast.",
+      "xmlDocId": "P:Electron2D.RayCast2D.CollideWithBodies",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public System.UInt32 CollisionMask { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the collision mask used by the raycast.",
+      "xmlDocId": "P:Electron2D.RayCast2D.CollisionMask",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public System.Boolean Enabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this raycast is enabled.",
+      "xmlDocId": "P:Electron2D.RayCast2D.Enabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExcludeParent",
+      "kind": "Property",
+      "signature": "public System.Boolean ExcludeParent { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the direct parent should be excluded from results.",
+      "xmlDocId": "P:Electron2D.RayCast2D.ExcludeParent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HitFromInside",
+      "kind": "Property",
+      "signature": "public System.Boolean HitFromInside { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether hits are allowed when the ray starts inside a shape.",
+      "xmlDocId": "P:Electron2D.RayCast2D.HitFromInside",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TargetPosition",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 TargetPosition { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the ray target position in the node\u0027s local coordinates.",
+      "xmlDocId": "P:Electron2D.RayCast2D.TargetPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

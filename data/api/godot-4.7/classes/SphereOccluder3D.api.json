@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SphereOccluder3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SphereOccluder3D",
+    "kind": "class",
+    "baseType": "Occluder3D",
+    "interfaces": [],
+    "godotReference": "SphereOccluder3D",
+    "documentationPath": "doc/classes/SphereOccluder3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_sphereoccluder3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sphere\u0027s radius in 3D units.",
+      "defaultValue": "1.0",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.SphereOccluder3D.Radius",
+      "sourcePath": "doc/classes/SphereOccluder3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SphereOccluder3D.xml",
+      "sha256": "0467e52b9ced189d514f445c7e9141725289b865da1d8a64d39091a7f32a5951"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

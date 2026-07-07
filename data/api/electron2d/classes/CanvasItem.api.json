@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasItem",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CanvasItem",
+    "kind": "class",
+    "baseType": "Electron2D.Node",
+    "interfaces": [],
+    "godotReference": "CanvasItem",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "CanvasItem",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CanvasItem()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CanvasItem type.",
+      "xmlDocId": "M:Electron2D.CanvasItem.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "CanvasItem",
+      "kind": "Constructor",
+      "signature": "public Electron2D.CanvasItem()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the CanvasItem type.",
+      "xmlDocId": "M:Electron2D.CanvasItem.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this canvas item has been requested to redraw.",
+      "xmlDocId": "M:Electron2D.CanvasItem._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawCircle",
+      "kind": "Method",
+      "signature": "public System.Void DrawCircle(Electron2D.Vector2 position, System.Single radius, Electron2D.Color color, System.Boolean filled, System.Single width, System.Boolean antialiased)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "radius",
+          "type": "System.Single"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "filled",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        },
+        {
+          "name": "width",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "antialiased",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a filled or stroked circle in local space.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawCircle(Electron2D.Vector2,System.Single,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawLine",
+      "kind": "Method",
+      "signature": "public System.Void DrawLine(Electron2D.Vector2 from, Electron2D.Vector2 to, Electron2D.Color color, System.Single width, System.Boolean antialiased)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "width",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "antialiased",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a line between two local-space points.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawPolygon",
+      "kind": "Method",
+      "signature": "public System.Void DrawPolygon(Electron2D.Vector2[] points, Electron2D.Color[] colors, Electron2D.Vector2[] uvs, Electron2D.Texture2D texture)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "Electron2D.Vector2[]"
+        },
+        {
+          "name": "colors",
+          "type": "Electron2D.Color[]"
+        },
+        {
+          "name": "uvs",
+          "type": "Electron2D.Vector2[]"
+        },
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Draws a solid polygon using per-point colors.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawPolygon(Electron2D.Vector2[],Electron2D.Color[],Electron2D.Vector2[],Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawRect",
+      "kind": "Method",
+      "signature": "public System.Void DrawRect(Electron2D.Rect2 rect, Electron2D.Color color, System.Boolean filled, System.Single width, System.Boolean antialiased)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2"
+        },
+        {
+          "name": "color",
+          "type": "Electron2D.Color"
+        },
+        {
+          "name": "filled",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        },
+        {
+          "name": "width",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "antialiased",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a filled or stroked rectangle in local space.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawRect(Electron2D.Rect2,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawString",
+      "kind": "Method",
+      "signature": "public System.Void DrawString(Electron2D.Font font, Electron2D.Vector2 position, System.String text, Electron2D.HorizontalAlignment alignment, System.Single width, System.Int32 fontSize, Electron2D.Color? modulate)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Electron2D.Font"
+        },
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "text",
+          "type": "System.String"
+        },
+        {
+          "name": "alignment",
+          "type": "Electron2D.HorizontalAlignment",
+          "defaultValue": "Left"
+        },
+        {
+          "name": "width",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "fontSize",
+          "type": "System.Int32",
+          "defaultValue": "16"
+        },
+        {
+          "name": "modulate",
+          "type": "Electron2D.Color?"
+        }
+      ],
+      "summary": "Draws text using a font at a local-space baseline position.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawString(Electron2D.Font,Electron2D.Vector2,System.String,Electron2D.HorizontalAlignment,System.Single,System.Int32,System.Nullable{Electron2D.Color})",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawTexture",
+      "kind": "Method",
+      "signature": "public System.Void DrawTexture(Electron2D.Texture2D texture, Electron2D.Vector2 position, Electron2D.Color? modulate)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Electron2D.Texture2D"
+        },
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "modulate",
+          "type": "Electron2D.Color?"
+        }
+      ],
+      "summary": "Draws a texture at a local-space position.",
+      "xmlDocId": "M:Electron2D.CanvasItem.DrawTexture(Electron2D.Texture2D,Electron2D.Vector2,System.Nullable{Electron2D.Color})",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetWorld2D",
+      "kind": "Method",
+      "signature": "public Electron2D.World2D GetWorld2D()",
+      "returnType": "Electron2D.World2D",
+      "parameters": [],
+      "summary": "Gets the 2D world associated with this canvas item.",
+      "xmlDocId": "M:Electron2D.CanvasItem.GetWorld2D",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Hide",
+      "kind": "Method",
+      "signature": "public System.Void Hide()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Hides this canvas item.",
+      "xmlDocId": "M:Electron2D.CanvasItem.Hide",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsVisibleInTree",
+      "kind": "Method",
+      "signature": "public System.Boolean IsVisibleInTree()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this canvas item is visible after direct canvas ancestors are considered.",
+      "xmlDocId": "M:Electron2D.CanvasItem.IsVisibleInTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "QueueRedraw",
+      "kind": "Method",
+      "signature": "public System.Void QueueRedraw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Queues this canvas item to redraw during the next processed frame.",
+      "xmlDocId": "M:Electron2D.CanvasItem.QueueRedraw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Show",
+      "kind": "Method",
+      "signature": "public System.Void Show()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Shows this canvas item.",
+      "xmlDocId": "M:Electron2D.CanvasItem.Show",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Electron2D.Color Modulate { get; set; }",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Gets or sets the color multiplied into this item and its direct canvas descendants.",
+      "xmlDocId": "P:Electron2D.CanvasItem.Modulate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SelfModulate",
+      "kind": "Property",
+      "signature": "public Electron2D.Color SelfModulate { get; set; }",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Gets or sets the color multiplied into this item only.",
+      "xmlDocId": "P:Electron2D.CanvasItem.SelfModulate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public System.Boolean Visible { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this canvas item is visible.",
+      "xmlDocId": "P:Electron2D.CanvasItem.Visible",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "YSortEnabled",
+      "kind": "Property",
+      "signature": "public System.Boolean YSortEnabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this item participates in Y-sort ordering.",
+      "xmlDocId": "P:Electron2D.CanvasItem.YSortEnabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ZIndex",
+      "kind": "Property",
+      "signature": "public System.Int32 ZIndex { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the 2D draw-order index inside the current canvas layer.",
+      "xmlDocId": "P:Electron2D.CanvasItem.ZIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this canvas item has been requested to redraw.",
+      "xmlDocId": "M:Electron2D.CanvasItem._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

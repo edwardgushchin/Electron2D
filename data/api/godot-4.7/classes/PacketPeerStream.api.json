@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PacketPeerStream",
+    "namespace": "Godot",
+    "fullName": "Godot.PacketPeerStream",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "PacketPeerStream",
+    "documentationPath": "doc/classes/PacketPeerStream.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packetpeerstream.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "InputBufferMaxSize",
+      "kind": "Property",
+      "signature": "public int InputBufferMaxSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "65532",
+      "godotName": "input_buffer_max_size",
+      "xmlDocId": "P:Godot.PacketPeerStream.InputBufferMaxSize",
+      "sourcePath": "doc/classes/PacketPeerStream.xml"
+    },
+    {
+      "name": "OutputBufferMaxSize",
+      "kind": "Property",
+      "signature": "public int OutputBufferMaxSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "65532",
+      "godotName": "output_buffer_max_size",
+      "xmlDocId": "P:Godot.PacketPeerStream.OutputBufferMaxSize",
+      "sourcePath": "doc/classes/PacketPeerStream.xml"
+    },
+    {
+      "name": "StreamPeer",
+      "kind": "Property",
+      "signature": "public StreamPeer StreamPeer { get; set; }",
+      "returnType": "StreamPeer",
+      "parameters": [],
+      "summary": "The wrapped [StreamPeer] object.",
+      "godotName": "stream_peer",
+      "xmlDocId": "P:Godot.PacketPeerStream.StreamPeer",
+      "sourcePath": "doc/classes/PacketPeerStream.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PacketPeerStream.xml",
+      "sha256": "fec5eb7bc0e7f42af2127d6a7b8995982faef071a0ec8f7dca878119a8ddf3b4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

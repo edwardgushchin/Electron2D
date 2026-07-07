@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderTexture3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderTexture3D",
+    "kind": "class",
+    "baseType": "Texture3D",
+    "interfaces": [],
+    "godotReference": "PlaceholderTexture3D",
+    "documentationPath": "doc/classes/PlaceholderTexture3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdertexture3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3i Size { get; set; }",
+      "returnType": "Vector3i",
+      "parameters": [],
+      "summary": "The texture\u0027s size (in pixels).",
+      "defaultValue": "Vector3i(1, 1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.PlaceholderTexture3D.Size",
+      "sourcePath": "doc/classes/PlaceholderTexture3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderTexture3D.xml",
+      "sha256": "0fcb082e2acd74cc6788b86ed2225402842c5cada8180be32f2e67248db29760"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

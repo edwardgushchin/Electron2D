@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventWithModifiers",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventWithModifiers",
+    "kind": "class",
+    "baseType": "InputEventFromWindow",
+    "interfaces": [],
+    "godotReference": "InputEventWithModifiers",
+    "documentationPath": "doc/classes/InputEventWithModifiers.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventwithmodifiers.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetModifiersMask",
+      "kind": "Method",
+      "signature": "public int GetModifiersMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the keycode combination of modifier keys.",
+      "godotName": "get_modifiers_mask",
+      "xmlDocId": "M:Godot.InputEventWithModifiers.GetModifiersMask",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "IsCommandOrControlPressed",
+      "kind": "Method",
+      "signature": "public bool IsCommandOrControlPressed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "On macOS, returns [code]true[/code] if [kbd]Meta[/kbd] ([kbd]Cmd[/kbd]) is pressed. On other platforms, returns [code]true[/code] if [kbd]Ctrl[/kbd] is pressed.",
+      "godotName": "is_command_or_control_pressed",
+      "xmlDocId": "M:Godot.InputEventWithModifiers.IsCommandOrControlPressed",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "AltPressed",
+      "kind": "Property",
+      "signature": "public bool AltPressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "State of the [kbd]Alt[/kbd] modifier.",
+      "defaultValue": "false",
+      "godotName": "alt_pressed",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.AltPressed",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "CommandOrControlAutoremap",
+      "kind": "Property",
+      "signature": "public bool CommandOrControlAutoremap { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Automatically use [kbd]Meta[/kbd] ([kbd]Cmd[/kbd]) on macOS and [kbd]Ctrl[/kbd] on other platforms. If [code]true[/code], [member ctrl_pressed] and [member meta_pressed] cannot be set.",
+      "defaultValue": "false",
+      "godotName": "command_or_control_autoremap",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.CommandOrControlAutoremap",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "CtrlPressed",
+      "kind": "Property",
+      "signature": "public bool CtrlPressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "State of the [kbd]Ctrl[/kbd] modifier.",
+      "defaultValue": "false",
+      "godotName": "ctrl_pressed",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.CtrlPressed",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "Device",
+      "kind": "Property",
+      "signature": "public int Device { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "16",
+      "godotName": "device",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.Device",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "MetaPressed",
+      "kind": "Property",
+      "signature": "public bool MetaPressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "State of the [kbd]Meta[/kbd] modifier. On Windows and Linux, this represents the Windows key (sometimes called \u0022meta\u0022 or \u0022super\u0022 on Linux). On macOS, this represents the Command key.",
+      "defaultValue": "false",
+      "godotName": "meta_pressed",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.MetaPressed",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    },
+    {
+      "name": "ShiftPressed",
+      "kind": "Property",
+      "signature": "public bool ShiftPressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "State of the [kbd]Shift[/kbd] modifier.",
+      "defaultValue": "false",
+      "godotName": "shift_pressed",
+      "xmlDocId": "P:Godot.InputEventWithModifiers.ShiftPressed",
+      "sourcePath": "doc/classes/InputEventWithModifiers.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventWithModifiers.xml",
+      "sha256": "9e5066088d9cbb8b7c5c9cf03929a613cd0c8711f87c7f5c8f31647af919585e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

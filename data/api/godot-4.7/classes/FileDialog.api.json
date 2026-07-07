@@ -1,0 +1,1119 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FileDialog",
+    "namespace": "Godot",
+    "fullName": "Godot.FileDialog",
+    "kind": "class",
+    "baseType": "ConfirmationDialog",
+    "interfaces": [],
+    "godotReference": "FileDialog",
+    "documentationPath": "doc/classes/FileDialog.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_filedialog.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddFilter",
+      "kind": "Method",
+      "signature": "public void AddFilter(String filter, String description, String mimeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "String"
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "mime_type",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Adds a comma-separated file extension [param filter] and comma-separated MIME type [param mime_type] option to the [FileDialog] with an optional [param description], which restricts what files can be picked. A [param filter] should be of the form [code]\u0022filename.extension\u0022[/code], where filename and extension can be [code]*[/code] to match any string. Filters starting with [code].[/code] (i.e. empty filenames) are not allowed. For example, a [param filter] of [code]\u0022*.png, *.jpg\u0022[/code], a [param mime_type] of [code]image/png, image/jpeg[/code], and a [param description] of [code]\u0022Images\u0022[/code] results in filter text \u0022Images (*.png, *.jpg)\u0022. [b]Note:[/b] Embedded file dialogs and Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs also support MIME types.",
+      "godotName": "add_filter",
+      "xmlDocId": "M:Godot.FileDialog.AddFilter(String,String,String)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "AddOption",
+      "kind": "Method",
+      "signature": "public void AddOption(String name, PackedStringArray values, int defaultValueIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "values",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "default_value_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds an additional [OptionButton] to the file dialog. If [param values] is empty, a [CheckBox] is added instead. [param default_value_index] should be an index of the value in the [param values]. If [param values] is empty it should be either [code]1[/code] (checked), or [code]0[/code] (unchecked).",
+      "godotName": "add_option",
+      "xmlDocId": "M:Godot.FileDialog.AddOption(String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ClearFilenameFilter",
+      "kind": "Method",
+      "signature": "public void ClearFilenameFilter()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear the filter for file names.",
+      "godotName": "clear_filename_filter",
+      "xmlDocId": "M:Godot.FileDialog.ClearFilenameFilter",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ClearFilters",
+      "kind": "Method",
+      "signature": "public void ClearFilters()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all the added filters in the dialog.",
+      "godotName": "clear_filters",
+      "xmlDocId": "M:Godot.FileDialog.ClearFilters",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DeselectAll",
+      "kind": "Method",
+      "signature": "public void DeselectAll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all currently selected items in the dialog.",
+      "godotName": "deselect_all",
+      "xmlDocId": "M:Godot.FileDialog.DeselectAll",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetFavoriteList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFavoriteList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of favorite directories, which is shared by all [FileDialog] nodes. Useful to store the list of favorites between project sessions. This method can be called only from the main thread.",
+      "godotName": "get_favorite_list",
+      "xmlDocId": "M:Godot.FileDialog.GetFavoriteList",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetLineEdit",
+      "kind": "Method",
+      "signature": "public LineEdit GetLineEdit()",
+      "returnType": "LineEdit",
+      "parameters": [],
+      "summary": "Returns the LineEdit for the selected file. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_line_edit",
+      "xmlDocId": "M:Godot.FileDialog.GetLineEdit",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetOptionDefault",
+      "kind": "Method",
+      "signature": "public int GetOptionDefault(int option)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the default value index of the [OptionButton] or [CheckBox] with index [param option].",
+      "godotName": "get_option_default",
+      "xmlDocId": "M:Godot.FileDialog.GetOptionDefault(int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetOptionName",
+      "kind": "Method",
+      "signature": "public String GetOptionName(int option)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the [OptionButton] or [CheckBox] with index [param option].",
+      "godotName": "get_option_name",
+      "xmlDocId": "M:Godot.FileDialog.GetOptionName(int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetOptionValues",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetOptionValues(int option)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of values of the [OptionButton] with index [param option].",
+      "godotName": "get_option_values",
+      "xmlDocId": "M:Godot.FileDialog.GetOptionValues(int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetRecentList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetRecentList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of recent directories, which is shared by all [FileDialog] nodes. Useful to store the list of recents between project sessions. This method can be called only from the main thread.",
+      "godotName": "get_recent_list",
+      "xmlDocId": "M:Godot.FileDialog.GetRecentList",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetSelectedOptions",
+      "kind": "Method",
+      "signature": "public Dictionary GetSelectedOptions()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] with the selected values of the additional [OptionButton]s and/or [CheckBox]es. [Dictionary] keys are names and values are selected value indices.",
+      "godotName": "get_selected_options",
+      "xmlDocId": "M:Godot.FileDialog.GetSelectedOptions",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "GetVbox",
+      "kind": "Method",
+      "signature": "public VBoxContainer GetVbox()",
+      "returnType": "VBoxContainer",
+      "parameters": [],
+      "summary": "Returns the vertical box container of the dialog, custom controls can be added to it. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property. [b]Note:[/b] Changes to this node are ignored by native file dialogs, use [method add_option] to add custom elements to the dialog instead.",
+      "godotName": "get_vbox",
+      "xmlDocId": "M:Godot.FileDialog.GetVbox",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "Invalidate",
+      "kind": "Method",
+      "signature": "public void Invalidate()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Invalidates and updates this dialog\u0027s content list. [b]Note:[/b] This method does nothing on native file dialogs.",
+      "godotName": "invalidate",
+      "xmlDocId": "M:Godot.FileDialog.Invalidate",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "IsCustomizationFlagEnabled",
+      "kind": "Method",
+      "signature": "public bool IsCustomizationFlagEnabled(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param flag] is enabled.",
+      "godotName": "is_customization_flag_enabled",
+      "xmlDocId": "M:Godot.FileDialog.IsCustomizationFlagEnabled(int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "PopupFileDialog",
+      "kind": "Method",
+      "signature": "public void PopupFileDialog()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shows the [FileDialog] using the default size and position for file dialogs, and selects the file name if there is a current file.",
+      "godotName": "popup_file_dialog",
+      "xmlDocId": "M:Godot.FileDialog.PopupFileDialog",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetCustomizationFlagEnabled",
+      "kind": "Method",
+      "signature": "public void SetCustomizationFlagEnabled(int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the specified customization [param flag], allowing to customize the features available in this [FileDialog].",
+      "godotName": "set_customization_flag_enabled",
+      "xmlDocId": "M:Godot.FileDialog.SetCustomizationFlagEnabled(int,bool)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetFavoriteList",
+      "kind": "Method",
+      "signature": "public void SetFavoriteList(PackedStringArray favorites)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "favorites",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Sets the list of favorite directories, which is shared by all [FileDialog] nodes. Useful to restore the list of favorites saved with [method get_favorite_list]. This method can be called only from the main thread. [b]Note:[/b] [FileDialog] will update its internal [ItemList] of favorites when its visibility changes. Be sure to call this method earlier if you want your changes to have effect.",
+      "godotName": "set_favorite_list",
+      "xmlDocId": "M:Godot.FileDialog.SetFavoriteList(PackedStringArray)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetGetIconCallback",
+      "kind": "Method",
+      "signature": "public void SetGetIconCallback(Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback used by the [FileDialog] nodes to get a file icon, when [constant DISPLAY_LIST] mode is used. The callback should take a single [String] argument (file path), and return a [Texture2D]. If an invalid texture is returned, the [theme_item file] icon will be used instead.",
+      "godotName": "set_get_icon_callback",
+      "xmlDocId": "M:Godot.FileDialog.SetGetIconCallback(Callable)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetGetThumbnailCallback",
+      "kind": "Method",
+      "signature": "public void SetGetThumbnailCallback(Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback used by the [FileDialog] nodes to get a file icon, when [constant DISPLAY_THUMBNAILS] mode is used. The callback should take a single [String] argument (file path), and return a [Texture2D]. If an invalid texture is returned, the [theme_item file_thumbnail] icon will be used instead. Thumbnails are usually more complex and may take a while to load. To avoid stalling the application, you can use [ImageTexture] to asynchronously create the thumbnail. [codeblock] func _ready(): FileDialog.set_get_thumbnail_callback(thumbnail_method) func thumbnail_method(path): var image_texture = ImageTexture.new() make_thumbnail_async(path, image_texture) return image_texture func make_thumbnail_async(path, image_texture): var thumbnail_texture = await generate_thumbnail(path) # Some method that generates a thumbnail. image_texture.set_image(thumbnail_texture.get_image()) [/codeblock]",
+      "godotName": "set_get_thumbnail_callback",
+      "xmlDocId": "M:Godot.FileDialog.SetGetThumbnailCallback(Callable)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetOptionDefault",
+      "kind": "Method",
+      "signature": "public void SetOptionDefault(int option, int defaultValueIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        },
+        {
+          "name": "default_value_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the default value index of the [OptionButton] or [CheckBox] with index [param option].",
+      "godotName": "set_option_default",
+      "xmlDocId": "M:Godot.FileDialog.SetOptionDefault(int,int)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetOptionName",
+      "kind": "Method",
+      "signature": "public void SetOptionName(int option, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the name of the [OptionButton] or [CheckBox] with index [param option].",
+      "godotName": "set_option_name",
+      "xmlDocId": "M:Godot.FileDialog.SetOptionName(int,String)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetOptionValues",
+      "kind": "Method",
+      "signature": "public void SetOptionValues(int option, PackedStringArray values)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        },
+        {
+          "name": "values",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Sets the option values of the [OptionButton] with index [param option].",
+      "godotName": "set_option_values",
+      "xmlDocId": "M:Godot.FileDialog.SetOptionValues(int,PackedStringArray)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "SetRecentList",
+      "kind": "Method",
+      "signature": "public void SetRecentList(PackedStringArray recents)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "recents",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Sets the list of recent directories, which is shared by all [FileDialog] nodes. Useful to restore the list of recents saved with [method set_recent_list]. This method can be called only from the main thread. [b]Note:[/b] [FileDialog] will update its internal [ItemList] of recent directories when its visibility changes. Be sure to call this method earlier if you want your changes to have effect.",
+      "godotName": "set_recent_list",
+      "xmlDocId": "M:Godot.FileDialog.SetRecentList(PackedStringArray)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "Access",
+      "kind": "Property",
+      "signature": "public int Access { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The file system access scope. [b]Warning:[/b] In Web builds, FileDialog cannot access the host file system. In sandboxed Linux and macOS environments, [member use_native_dialog] is automatically used to allow limited access to host file system.",
+      "defaultValue": "0",
+      "godotName": "access",
+      "xmlDocId": "P:Godot.FileDialog.Access",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CurrentDir",
+      "kind": "Property",
+      "signature": "public String CurrentDir { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The current working directory of the file dialog. [b]Note:[/b] For native file dialogs, this property is only treated as a hint and may not be respected by specific OS implementations.",
+      "godotName": "current_dir",
+      "xmlDocId": "P:Godot.FileDialog.CurrentDir",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CurrentFile",
+      "kind": "Property",
+      "signature": "public String CurrentFile { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The currently selected file of the file dialog.",
+      "godotName": "current_file",
+      "xmlDocId": "P:Godot.FileDialog.CurrentFile",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CurrentPath",
+      "kind": "Property",
+      "signature": "public String CurrentPath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The currently selected file path of the file dialog.",
+      "godotName": "current_path",
+      "xmlDocId": "P:Godot.FileDialog.CurrentPath",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DeletingEnabled",
+      "kind": "Property",
+      "signature": "public bool DeletingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the context menu will show the \u0022Delete\u0022 option, which allows moving files and folders to trash.",
+      "defaultValue": "true",
+      "godotName": "deleting_enabled",
+      "xmlDocId": "P:Godot.FileDialog.DeletingEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DialogHideOnOk",
+      "kind": "Property",
+      "signature": "public bool DialogHideOnOk { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "dialog_hide_on_ok",
+      "xmlDocId": "P:Godot.FileDialog.DialogHideOnOk",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DisplayMode",
+      "kind": "Property",
+      "signature": "public int DisplayMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Display mode of the dialog\u0027s file list.",
+      "defaultValue": "0",
+      "godotName": "display_mode",
+      "xmlDocId": "P:Godot.FileDialog.DisplayMode",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FavoritesEnabled",
+      "kind": "Property",
+      "signature": "public bool FavoritesEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the toggle favorite button and favorite list on the left side of the dialog.",
+      "defaultValue": "true",
+      "godotName": "favorites_enabled",
+      "xmlDocId": "P:Godot.FileDialog.FavoritesEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FileFilterToggleEnabled",
+      "kind": "Property",
+      "signature": "public bool FileFilterToggleEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the toggle file filter button.",
+      "defaultValue": "true",
+      "godotName": "file_filter_toggle_enabled",
+      "xmlDocId": "P:Godot.FileDialog.FileFilterToggleEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FileMode",
+      "kind": "Property",
+      "signature": "public int FileMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The dialog\u0027s open or save mode, which affects the selection behavior.",
+      "defaultValue": "4",
+      "godotName": "file_mode",
+      "xmlDocId": "P:Godot.FileDialog.FileMode",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FileSortOptionsEnabled",
+      "kind": "Property",
+      "signature": "public bool FileSortOptionsEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the file sorting options button.",
+      "defaultValue": "true",
+      "godotName": "file_sort_options_enabled",
+      "xmlDocId": "P:Godot.FileDialog.FileSortOptionsEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FilenameFilter",
+      "kind": "Property",
+      "signature": "public String FilenameFilter { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The filter for file names (case-insensitive). When set to a non-empty string, only files that contains the substring will be shown. [member filename_filter] can be edited by the user with the filter button at the top of the file dialog. See also [member filters], which should be used to restrict the file types that can be selected instead of [member filename_filter] which is meant to be set by the user.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "filename_filter",
+      "xmlDocId": "P:Godot.FileDialog.FilenameFilter",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "Filters",
+      "kind": "Property",
+      "signature": "public PackedStringArray Filters { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The available file type filters. Each filter string in the array should be formatted like this: [code]*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg[/code]. The description text of the filter is optional and can be omitted. Both file extensions and MIME type should be always set. [b]Note:[/b] Embedded file dialogs and Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs also support MIME types.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "filters",
+      "xmlDocId": "P:Godot.FileDialog.Filters",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FolderCreationEnabled",
+      "kind": "Property",
+      "signature": "public bool FolderCreationEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the button for creating new directories (when using [constant FILE_MODE_OPEN_DIR], [constant FILE_MODE_OPEN_ANY], or [constant FILE_MODE_SAVE_FILE]), and the context menu will have the \u0022New Folder...\u0022 option.",
+      "defaultValue": "true",
+      "godotName": "folder_creation_enabled",
+      "xmlDocId": "P:Godot.FileDialog.FolderCreationEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "HiddenFilesToggleEnabled",
+      "kind": "Property",
+      "signature": "public bool HiddenFilesToggleEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the toggle hidden files button.",
+      "defaultValue": "true",
+      "godotName": "hidden_files_toggle_enabled",
+      "xmlDocId": "P:Godot.FileDialog.HiddenFilesToggleEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "LayoutToggleEnabled",
+      "kind": "Property",
+      "signature": "public bool LayoutToggleEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the layout switch buttons (list/thumbnails).",
+      "defaultValue": "true",
+      "godotName": "layout_toggle_enabled",
+      "xmlDocId": "P:Godot.FileDialog.LayoutToggleEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ModeOverridesTitle",
+      "kind": "Property",
+      "signature": "public bool ModeOverridesTitle { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], changing the [member file_mode] property will set the window title accordingly (e.g. setting [member file_mode] to [constant FILE_MODE_OPEN_FILE] will change the window title to \u0022Open a File\u0022).",
+      "defaultValue": "true",
+      "godotName": "mode_overrides_title",
+      "xmlDocId": "P:Godot.FileDialog.ModeOverridesTitle",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "OptionCount",
+      "kind": "Property",
+      "signature": "public int OptionCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of additional [OptionButton]s and [CheckBox]es in the dialog.",
+      "defaultValue": "0",
+      "godotName": "option_count",
+      "xmlDocId": "P:Godot.FileDialog.OptionCount",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "OverwriteWarningEnabled",
+      "kind": "Property",
+      "signature": "public bool OverwriteWarningEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [FileDialog] will warn the user before overwriting files in save mode.",
+      "defaultValue": "true",
+      "godotName": "overwrite_warning_enabled",
+      "xmlDocId": "P:Godot.FileDialog.OverwriteWarningEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "RecentListEnabled",
+      "kind": "Property",
+      "signature": "public bool RecentListEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the recent directories list on the left side of the dialog.",
+      "defaultValue": "true",
+      "godotName": "recent_list_enabled",
+      "xmlDocId": "P:Godot.FileDialog.RecentListEnabled",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "RootSubfolder",
+      "kind": "Property",
+      "signature": "public String RootSubfolder { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If non-empty, the given sub-folder will be \u0022root\u0022 of this [FileDialog], i.e. user won\u0027t be able to go to its parent directory. [b]Note:[/b] This property is ignored by native file dialogs.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "root_subfolder",
+      "xmlDocId": "P:Godot.FileDialog.RootSubfolder",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ShowHiddenFiles",
+      "kind": "Property",
+      "signature": "public bool ShowHiddenFiles { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the dialog will show hidden files. [b]Note:[/b] This property is ignored by native file dialogs on Android and Linux.",
+      "defaultValue": "false",
+      "godotName": "show_hidden_files",
+      "xmlDocId": "P:Godot.FileDialog.ShowHiddenFiles",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "Vector2i(640, 360)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.FileDialog.Size",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0022Save a File\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.FileDialog.Title",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "UseNativeDialog",
+      "kind": "Property",
+      "signature": "public bool UseNativeDialog { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], and if supported by the current [DisplayServer], OS native dialog will be used instead of custom one. [b]Note:[/b] On Android, it is only supported when using [constant ACCESS_FILESYSTEM]. For access mode [constant ACCESS_RESOURCES] and [constant ACCESS_USERDATA], the system will fall back to custom FileDialog. [b]Note:[/b] On Linux and macOS, sandboxed apps always use native dialogs to access the host file system. [b]Note:[/b] On macOS, sandboxed apps will save security-scoped bookmarks to retain access to the opened folders across multiple sessions. Use [method OS.get_granted_permissions] to get a list of saved bookmarks. [b]Note:[/b] Native dialogs are isolated from the base process, file dialog properties can\u0027t be modified once the dialog is shown. [b]Note:[/b] This property is ignored in [EditorFileDialog].",
+      "defaultValue": "false",
+      "godotName": "use_native_dialog",
+      "xmlDocId": "P:Godot.FileDialog.UseNativeDialog",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "option_{index}/default",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The default value for the option at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. option_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "option_{index}/default",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "option_{index}/name",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the option at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. option_count - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "option_{index}/name",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "option_{index}/values",
+      "kind": "RawProperty",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "The list of values for the option at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. option_count - 1[/code] range.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "option_{index}/values",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "DirSelected",
+      "kind": "Signal",
+      "signature": "public event DirSelectedHandler DirSelected",
+      "parameters": [
+        {
+          "name": "dir",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user selects a directory.",
+      "godotName": "dir_selected",
+      "xmlDocId": "E:Godot.FileDialog.DirSelected(String)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FileSelected",
+      "kind": "Signal",
+      "signature": "public event FileSelectedHandler FileSelected",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user selects a file by double-clicking it or pressing the [b]OK[/b] button.",
+      "godotName": "file_selected",
+      "xmlDocId": "E:Godot.FileDialog.FileSelected(String)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FilenameFilterChanged",
+      "kind": "Signal",
+      "signature": "public event FilenameFilterChangedHandler FilenameFilterChanged",
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the filter for file names changes.",
+      "godotName": "filename_filter_changed",
+      "xmlDocId": "E:Godot.FileDialog.FilenameFilterChanged(String)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FilesSelected",
+      "kind": "Signal",
+      "signature": "public event FilesSelectedHandler FilesSelected",
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Emitted when the user selects multiple files.",
+      "godotName": "files_selected",
+      "xmlDocId": "E:Godot.FileDialog.FilesSelected(PackedStringArray)",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "Access",
+      "values": [
+        {
+          "name": "ACCESS_FILESYSTEM",
+          "value": "2",
+          "enum": "Access",
+          "kind": "EnumValue",
+          "summary": "The dialog allows accessing files on the whole file system.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "ACCESS_RESOURCES",
+          "value": "0",
+          "enum": "Access",
+          "kind": "EnumValue",
+          "summary": "The dialog only allows accessing files under the [Resource] path ([code]res://[/code]).",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "ACCESS_USERDATA",
+          "value": "1",
+          "enum": "Access",
+          "kind": "EnumValue",
+          "summary": "The dialog only allows accessing files under user data path ([code]user://[/code]).",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        }
+      ]
+    },
+    {
+      "name": "Customization",
+      "values": [
+        {
+          "name": "CUSTOMIZATION_CREATE_FOLDER",
+          "value": "1",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the button for creating new directories (when using [constant FILE_MODE_OPEN_DIR], [constant FILE_MODE_OPEN_ANY], or [constant FILE_MODE_SAVE_FILE]). Equivalent to [member folder_creation_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_DELETE",
+          "value": "8",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, the context menu will show the \u0022Delete\u0022 option, which allows moving files and folders to trash. Equivalent to [member deleting_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_FAVORITES",
+          "value": "4",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the toggle favorite button and favorite list on the left side of the dialog. Equivalent to [member favorites_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_FILE_FILTER",
+          "value": "2",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the toggle file filter button. Equivalent to [member file_filter_toggle_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_FILE_SORT",
+          "value": "3",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the file sorting options button. Equivalent to [member file_sort_options_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_HIDDEN_FILES",
+          "value": "0",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "Toggles visibility of the favorite button, and the favorite list on the left side of the dialog. Equivalent to [member hidden_files_toggle_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_LAYOUT",
+          "value": "6",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the layout switch buttons (list/thumbnails). Equivalent to [member layout_toggle_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_OVERWRITE_WARNING",
+          "value": "7",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, the [FileDialog] will warn the user before overwriting files in save mode. Equivalent to [member overwrite_warning_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "CUSTOMIZATION_RECENT",
+          "value": "5",
+          "enum": "Customization",
+          "kind": "EnumValue",
+          "summary": "If enabled, shows the recent directories list on the left side of the dialog. Equivalent to [member recent_list_enabled].",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        }
+      ]
+    },
+    {
+      "name": "DisplayMode",
+      "values": [
+        {
+          "name": "DISPLAY_LIST",
+          "value": "1",
+          "enum": "DisplayMode",
+          "kind": "EnumValue",
+          "summary": "The dialog displays files as a list of filenames.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "DISPLAY_THUMBNAILS",
+          "value": "0",
+          "enum": "DisplayMode",
+          "kind": "EnumValue",
+          "summary": "The dialog displays files as a grid of thumbnails. Use [theme_item thumbnail_size] to adjust their size.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        }
+      ]
+    },
+    {
+      "name": "FileMode",
+      "values": [
+        {
+          "name": "FILE_MODE_OPEN_ANY",
+          "value": "3",
+          "enum": "FileMode",
+          "kind": "EnumValue",
+          "summary": "The dialog allows selecting one file or directory.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "FILE_MODE_OPEN_DIR",
+          "value": "2",
+          "enum": "FileMode",
+          "kind": "EnumValue",
+          "summary": "The dialog only allows selecting a directory, disallowing the selection of any file.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "FILE_MODE_OPEN_FILE",
+          "value": "0",
+          "enum": "FileMode",
+          "kind": "EnumValue",
+          "summary": "The dialog allows selecting one, and only one file.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "FILE_MODE_OPEN_FILES",
+          "value": "1",
+          "enum": "FileMode",
+          "kind": "EnumValue",
+          "summary": "The dialog allows selecting multiple files.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        },
+        {
+          "name": "FILE_MODE_SAVE_FILE",
+          "value": "4",
+          "enum": "FileMode",
+          "kind": "EnumValue",
+          "summary": "The dialog will warn when a file exists.",
+          "sourcePath": "doc/classes/FileDialog.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILE_MODE_OPEN_FILE",
+      "value": "0",
+      "enum": "FileMode",
+      "kind": "EnumValue",
+      "summary": "The dialog allows selecting one, and only one file.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FILE_MODE_OPEN_FILES",
+      "value": "1",
+      "enum": "FileMode",
+      "kind": "EnumValue",
+      "summary": "The dialog allows selecting multiple files.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FILE_MODE_OPEN_DIR",
+      "value": "2",
+      "enum": "FileMode",
+      "kind": "EnumValue",
+      "summary": "The dialog only allows selecting a directory, disallowing the selection of any file.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FILE_MODE_OPEN_ANY",
+      "value": "3",
+      "enum": "FileMode",
+      "kind": "EnumValue",
+      "summary": "The dialog allows selecting one file or directory.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "FILE_MODE_SAVE_FILE",
+      "value": "4",
+      "enum": "FileMode",
+      "kind": "EnumValue",
+      "summary": "The dialog will warn when a file exists.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ACCESS_RESOURCES",
+      "value": "0",
+      "enum": "Access",
+      "kind": "EnumValue",
+      "summary": "The dialog only allows accessing files under the [Resource] path ([code]res://[/code]).",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ACCESS_USERDATA",
+      "value": "1",
+      "enum": "Access",
+      "kind": "EnumValue",
+      "summary": "The dialog only allows accessing files under user data path ([code]user://[/code]).",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "ACCESS_FILESYSTEM",
+      "value": "2",
+      "enum": "Access",
+      "kind": "EnumValue",
+      "summary": "The dialog allows accessing files on the whole file system.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DISPLAY_THUMBNAILS",
+      "value": "0",
+      "enum": "DisplayMode",
+      "kind": "EnumValue",
+      "summary": "The dialog displays files as a grid of thumbnails. Use [theme_item thumbnail_size] to adjust their size.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "DISPLAY_LIST",
+      "value": "1",
+      "enum": "DisplayMode",
+      "kind": "EnumValue",
+      "summary": "The dialog displays files as a list of filenames.",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_HIDDEN_FILES",
+      "value": "0",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "Toggles visibility of the favorite button, and the favorite list on the left side of the dialog. Equivalent to [member hidden_files_toggle_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_CREATE_FOLDER",
+      "value": "1",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the button for creating new directories (when using [constant FILE_MODE_OPEN_DIR], [constant FILE_MODE_OPEN_ANY], or [constant FILE_MODE_SAVE_FILE]). Equivalent to [member folder_creation_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_FILE_FILTER",
+      "value": "2",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the toggle file filter button. Equivalent to [member file_filter_toggle_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_FILE_SORT",
+      "value": "3",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the file sorting options button. Equivalent to [member file_sort_options_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_FAVORITES",
+      "value": "4",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the toggle favorite button and favorite list on the left side of the dialog. Equivalent to [member favorites_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_RECENT",
+      "value": "5",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the recent directories list on the left side of the dialog. Equivalent to [member recent_list_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_LAYOUT",
+      "value": "6",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, shows the layout switch buttons (list/thumbnails). Equivalent to [member layout_toggle_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_OVERWRITE_WARNING",
+      "value": "7",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, the [FileDialog] will warn the user before overwriting files in save mode. Equivalent to [member overwrite_warning_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    },
+    {
+      "name": "CUSTOMIZATION_DELETE",
+      "value": "8",
+      "enum": "Customization",
+      "kind": "EnumValue",
+      "summary": "If enabled, the context menu will show the \u0022Delete\u0022 option, which allows moving files and folders to trash. Equivalent to [member deleting_enabled].",
+      "sourcePath": "doc/classes/FileDialog.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FileDialog.xml",
+      "sha256": "391cf17cd1b45928bb6de51b92a1de481c16be79128ff1761912243cb758c867"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

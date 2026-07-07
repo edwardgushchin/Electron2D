@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationRootNode",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationRootNode",
+    "kind": "class",
+    "baseType": "AnimationNode",
+    "interfaces": [],
+    "godotReference": "AnimationRootNode",
+    "documentationPath": "doc/classes/AnimationRootNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationrootnode.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationRootNode.xml",
+      "sha256": "47bc478325561902d05e6ab52399eb8f81da9bbd7ea0ac1d57467ae3207e85ed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

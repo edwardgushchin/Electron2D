@@ -1,0 +1,463 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConvertTransformModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ConvertTransformModifier3D",
+    "kind": "class",
+    "baseType": "BoneConstraint3D",
+    "interfaces": [],
+    "godotReference": "ConvertTransformModifier3D",
+    "documentationPath": "doc/classes/ConvertTransformModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_converttransformmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetApplyAxis",
+      "kind": "Method",
+      "signature": "public int GetApplyAxis(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the axis of the remapping destination transform.",
+      "godotName": "get_apply_axis",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetApplyAxis(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetApplyRangeMax",
+      "kind": "Method",
+      "signature": "public float GetApplyRangeMax(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum value of the remapping destination range.",
+      "godotName": "get_apply_range_max",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetApplyRangeMax(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetApplyRangeMin",
+      "kind": "Method",
+      "signature": "public float GetApplyRangeMin(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum value of the remapping destination range.",
+      "godotName": "get_apply_range_min",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetApplyRangeMin(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetApplyTransformMode",
+      "kind": "Method",
+      "signature": "public int GetApplyTransformMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the operation of the remapping destination transform.",
+      "godotName": "get_apply_transform_mode",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetApplyTransformMode(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetReferenceAxis",
+      "kind": "Method",
+      "signature": "public int GetReferenceAxis(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the axis of the remapping source transform.",
+      "godotName": "get_reference_axis",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetReferenceAxis(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetReferenceRangeMax",
+      "kind": "Method",
+      "signature": "public float GetReferenceRangeMax(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum value of the remapping source range.",
+      "godotName": "get_reference_range_max",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetReferenceRangeMax(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetReferenceRangeMin",
+      "kind": "Method",
+      "signature": "public float GetReferenceRangeMin(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum value of the remapping source range.",
+      "godotName": "get_reference_range_min",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetReferenceRangeMin(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "GetReferenceTransformMode",
+      "kind": "Method",
+      "signature": "public int GetReferenceTransformMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the operation of the remapping source transform.",
+      "godotName": "get_reference_transform_mode",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.GetReferenceTransformMode(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAdditive",
+      "kind": "Method",
+      "signature": "public bool IsAdditive(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the additive option is enabled in the setting at [param index].",
+      "godotName": "is_additive",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.IsAdditive(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "IsRelative",
+      "kind": "Method",
+      "signature": "public bool IsRelative(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the relative option is enabled in the setting at [param index].",
+      "godotName": "is_relative",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.IsRelative(int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAdditive",
+      "kind": "Method",
+      "signature": "public void SetAdditive(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets additive option in the setting at [param index] to [param enabled]. This mainly affects the process of applying transform to the [method BoneConstraint3D.set_apply_bone]. If sets [param enabled] to [code]true[/code], the processed transform is added to the pose of the current apply bone. If sets [param enabled] to [code]false[/code], the pose of the current apply bone is replaced with the processed transform. However, if set [method set_relative] to [code]true[/code], the transform is relative to rest.",
+      "godotName": "set_additive",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetAdditive(int,bool)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetApplyAxis",
+      "kind": "Method",
+      "signature": "public void SetApplyAxis(int index, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the axis of the remapping destination transform.",
+      "godotName": "set_apply_axis",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetApplyAxis(int,int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetApplyRangeMax",
+      "kind": "Method",
+      "signature": "public void SetApplyRangeMax(int index, float rangeMax)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "range_max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum value of the remapping destination range.",
+      "godotName": "set_apply_range_max",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetApplyRangeMax(int,float)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetApplyRangeMin",
+      "kind": "Method",
+      "signature": "public void SetApplyRangeMin(int index, float rangeMin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "range_min",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum value of the remapping destination range.",
+      "godotName": "set_apply_range_min",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetApplyRangeMin(int,float)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetApplyTransformMode",
+      "kind": "Method",
+      "signature": "public void SetApplyTransformMode(int index, int transformMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "transform_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the operation of the remapping destination transform.",
+      "godotName": "set_apply_transform_mode",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetApplyTransformMode(int,int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetReferenceAxis",
+      "kind": "Method",
+      "signature": "public void SetReferenceAxis(int index, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the axis of the remapping source transform.",
+      "godotName": "set_reference_axis",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetReferenceAxis(int,int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetReferenceRangeMax",
+      "kind": "Method",
+      "signature": "public void SetReferenceRangeMax(int index, float rangeMax)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "range_max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum value of the remapping source range.",
+      "godotName": "set_reference_range_max",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetReferenceRangeMax(int,float)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetReferenceRangeMin",
+      "kind": "Method",
+      "signature": "public void SetReferenceRangeMin(int index, float rangeMin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "range_min",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum value of the remapping source range.",
+      "godotName": "set_reference_range_min",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetReferenceRangeMin(int,float)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetReferenceTransformMode",
+      "kind": "Method",
+      "signature": "public void SetReferenceTransformMode(int index, int transformMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "transform_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the operation of the remapping source transform.",
+      "godotName": "set_reference_transform_mode",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetReferenceTransformMode(int,int)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SetRelative",
+      "kind": "Method",
+      "signature": "public void SetRelative(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets relative option in the setting at [param index] to [param enabled]. If sets [param enabled] to [code]true[/code], the extracted and applying transform is relative to the rest. If sets [param enabled] to [code]false[/code], the extracted transform is absolute.",
+      "godotName": "set_relative",
+      "xmlDocId": "M:Godot.ConvertTransformModifier3D.SetRelative(int,bool)",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings in the modifier.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.ConvertTransformModifier3D.SettingCount",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "TransformMode",
+      "values": [
+        {
+          "name": "TRANSFORM_MODE_POSITION",
+          "value": "0",
+          "enum": "TransformMode",
+          "kind": "EnumValue",
+          "summary": "Convert with position. Transfer the difference.",
+          "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_MODE_ROTATION",
+          "value": "1",
+          "enum": "TransformMode",
+          "kind": "EnumValue",
+          "summary": "Convert with rotation. The angle is the roll for the specified axis.",
+          "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_MODE_SCALE",
+          "value": "2",
+          "enum": "TransformMode",
+          "kind": "EnumValue",
+          "summary": "Convert with scale. Transfers the ratio, not the difference.",
+          "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TRANSFORM_MODE_POSITION",
+      "value": "0",
+      "enum": "TransformMode",
+      "kind": "EnumValue",
+      "summary": "Convert with position. Transfer the difference.",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_MODE_ROTATION",
+      "value": "1",
+      "enum": "TransformMode",
+      "kind": "EnumValue",
+      "summary": "Convert with rotation. The angle is the roll for the specified axis.",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_MODE_SCALE",
+      "value": "2",
+      "enum": "TransformMode",
+      "kind": "EnumValue",
+      "summary": "Convert with scale. Transfers the ratio, not the difference.",
+      "sourcePath": "doc/classes/ConvertTransformModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConvertTransformModifier3D.xml",
+      "sha256": "4348e0279fe1d9ce44dde7a0b9f4163f5f98fe776236f8d7d006d0634bb445ca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

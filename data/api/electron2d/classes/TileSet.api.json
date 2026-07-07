@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSet",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TileSet",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "TileSet",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TileSet",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileSet()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileSet\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileSet.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TileSet",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileSet()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileSet\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileSet.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddSource",
+      "kind": "Method",
+      "signature": "public System.Int32 AddSource(Electron2D.TileSetSource source, System.Int32 atlasSourceIdOverride)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "source",
+          "type": "Electron2D.TileSetSource"
+        },
+        {
+          "name": "atlasSourceIdOverride",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a source to this tile set.",
+      "xmlDocId": "M:Electron2D.TileSet.AddSource(Electron2D.TileSetSource,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all sources from this tile set.",
+      "xmlDocId": "M:Electron2D.TileSet.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSource",
+      "kind": "Method",
+      "signature": "public Electron2D.TileSetSource GetSource(System.Int32 sourceId)",
+      "returnType": "Electron2D.TileSetSource",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a source by id.",
+      "xmlDocId": "M:Electron2D.TileSet.GetSource(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSourceCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetSourceCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of sources stored by this tile set.",
+      "xmlDocId": "M:Electron2D.TileSet.GetSourceCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSourceId",
+      "kind": "Method",
+      "signature": "public System.Int32 GetSourceId(System.Int32 index)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets a source id by index.",
+      "xmlDocId": "M:Electron2D.TileSet.GetSourceId(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasSource",
+      "kind": "Method",
+      "signature": "public System.Boolean HasSource(System.Int32 sourceId)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a source id exists.",
+      "xmlDocId": "M:Electron2D.TileSet.HasSource(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveSource",
+      "kind": "Method",
+      "signature": "public System.Void RemoveSource(System.Int32 sourceId)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Removes a source from this tile set.",
+      "xmlDocId": "M:Electron2D.TileSet.RemoveSource(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileSize",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I TileSize { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the size of a tilemap cell.",
+      "xmlDocId": "P:Electron2D.TileSet.TileSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

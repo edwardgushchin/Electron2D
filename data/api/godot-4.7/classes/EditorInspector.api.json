@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorInspector",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorInspector",
+    "kind": "class",
+    "baseType": "ScrollContainer",
+    "interfaces": [],
+    "godotReference": "EditorInspector",
+    "documentationPath": "doc/classes/EditorInspector.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorinspector.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CollapseAllFolding",
+      "kind": "Method",
+      "signature": "public void CollapseAllFolding()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Collapses all foldable sections.",
+      "godotName": "collapse_all_folding",
+      "xmlDocId": "M:Godot.EditorInspector.CollapseAllFolding",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "CreateDefaultInspector",
+      "kind": "Method",
+      "signature": "public EditorInspector CreateDefaultInspector(LineEdit filterLineEdit)",
+      "returnType": "EditorInspector",
+      "parameters": [
+        {
+          "name": "filter_line_edit",
+          "type": "LineEdit",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Creates an inspector with the same configuration as the one used in the editor\u0027s Inspector dock. When passing a [LineEdit] into [param filter_line_edit], the inspector will filter its properties based on [member LineEdit.text] whenever [signal LineEdit.text_changed] is emitted.",
+      "godotName": "create_default_inspector",
+      "xmlDocId": "M:Godot.EditorInspector.CreateDefaultInspector(LineEdit)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "Edit",
+      "kind": "Method",
+      "signature": "public void Edit(Object @object)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Shows the properties of the given [param object] in this inspector for editing. To clear the inspector, call this method with [code]null[/code]. [b]Note:[/b] If you want to edit an object in the editor\u0027s main inspector, use the [code]edit_*[/code] methods in [EditorInterface] instead.",
+      "godotName": "edit",
+      "xmlDocId": "M:Godot.EditorInspector.Edit(Object)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "ExpandAllFolding",
+      "kind": "Method",
+      "signature": "public void ExpandAllFolding()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Expands all foldable sections.",
+      "godotName": "expand_all_folding",
+      "xmlDocId": "M:Godot.EditorInspector.ExpandAllFolding",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "ExpandRevertable",
+      "kind": "Method",
+      "signature": "public void ExpandRevertable()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Expands only the foldable sections that contain a revertable (i.e. non-default) property.",
+      "godotName": "expand_revertable",
+      "xmlDocId": "M:Godot.EditorInspector.ExpandRevertable",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "GetEditedObject",
+      "kind": "Method",
+      "signature": "public Object GetEditedObject()",
+      "returnType": "Object",
+      "parameters": [],
+      "summary": "Returns the object currently selected in this inspector.",
+      "godotName": "get_edited_object",
+      "xmlDocId": "M:Godot.EditorInspector.GetEditedObject",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "GetSelectedPath",
+      "kind": "Method",
+      "signature": "public String GetSelectedPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the path of the currently selected property.",
+      "godotName": "get_selected_path",
+      "xmlDocId": "M:Godot.EditorInspector.GetSelectedPath",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "InstantiatePropertyEditor",
+      "kind": "Method",
+      "signature": "public EditorProperty InstantiatePropertyEditor(Object @object, int type, String path, int hint, String hintText, int usage, bool wide)",
+      "returnType": "EditorProperty",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "hint",
+          "type": "int"
+        },
+        {
+          "name": "hint_text",
+          "type": "String"
+        },
+        {
+          "name": "usage",
+          "type": "int"
+        },
+        {
+          "name": "wide",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a property editor that can be used by plugin UI to edit the specified property of an [param object].",
+      "godotName": "instantiate_property_editor",
+      "xmlDocId": "M:Godot.EditorInspector.InstantiatePropertyEditor(Object,int,String,int,String,int,bool)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "DrawFocusBorder",
+      "kind": "Property",
+      "signature": "public bool DrawFocusBorder { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "draw_focus_border",
+      "xmlDocId": "P:Godot.EditorInspector.DrawFocusBorder",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.EditorInspector.FocusMode",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "FollowFocus",
+      "kind": "Property",
+      "signature": "public bool FollowFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "follow_focus",
+      "xmlDocId": "P:Godot.EditorInspector.FollowFocus",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "HorizontalScrollMode",
+      "kind": "Property",
+      "signature": "public int HorizontalScrollMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "horizontal_scroll_mode",
+      "xmlDocId": "P:Godot.EditorInspector.HorizontalScrollMode",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "EditedObjectChanged",
+      "kind": "Signal",
+      "signature": "public event EditedObjectChangedHandler EditedObjectChanged",
+      "parameters": [],
+      "summary": "Emitted when the object being edited by the inspector has changed.",
+      "godotName": "edited_object_changed",
+      "xmlDocId": "E:Godot.EditorInspector.EditedObjectChanged",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "ObjectIdSelected",
+      "kind": "Signal",
+      "signature": "public event ObjectIdSelectedHandler ObjectIdSelected",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the Edit button of an [Object] has been pressed in the inspector. This is mainly used in the remote scene tree Inspector.",
+      "godotName": "object_id_selected",
+      "xmlDocId": "E:Godot.EditorInspector.ObjectIdSelected(int)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "PropertyDeleted",
+      "kind": "Signal",
+      "signature": "public event PropertyDeletedHandler PropertyDeleted",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a property is removed from the inspector.",
+      "godotName": "property_deleted",
+      "xmlDocId": "E:Godot.EditorInspector.PropertyDeleted(String)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "PropertyEdited",
+      "kind": "Signal",
+      "signature": "public event PropertyEditedHandler PropertyEdited",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a property is edited in the inspector.",
+      "godotName": "property_edited",
+      "xmlDocId": "E:Godot.EditorInspector.PropertyEdited(String)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "PropertyKeyed",
+      "kind": "Signal",
+      "signature": "public event PropertyKeyedHandler PropertyKeyed",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "advance",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when a property is keyed in the inspector. Properties can be keyed by clicking the \u0022key\u0022 icon next to a property when the Animation panel is toggled.",
+      "godotName": "property_keyed",
+      "xmlDocId": "E:Godot.EditorInspector.PropertyKeyed(String,Variant,bool)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "PropertySelected",
+      "kind": "Signal",
+      "signature": "public event PropertySelectedHandler PropertySelected",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a property is selected in the inspector.",
+      "godotName": "property_selected",
+      "xmlDocId": "E:Godot.EditorInspector.PropertySelected(String)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "PropertyToggled",
+      "kind": "Signal",
+      "signature": "public event PropertyToggledHandler PropertyToggled",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "String"
+        },
+        {
+          "name": "checked",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when a boolean property is toggled in the inspector. [b]Note:[/b] This signal is never emitted if the internal [code]autoclear[/code] property enabled. Since this property is always enabled in the editor inspector, this signal is never emitted by the editor itself.",
+      "godotName": "property_toggled",
+      "xmlDocId": "E:Godot.EditorInspector.PropertyToggled(String,bool)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "ResourceSelected",
+      "kind": "Signal",
+      "signature": "public event ResourceSelectedHandler ResourceSelected",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a resource is selected in the inspector.",
+      "godotName": "resource_selected",
+      "xmlDocId": "E:Godot.EditorInspector.ResourceSelected(Resource,String)",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    },
+    {
+      "name": "RestartRequested",
+      "kind": "Signal",
+      "signature": "public event RestartRequestedHandler RestartRequested",
+      "parameters": [],
+      "summary": "Emitted when a property that requires a restart to be applied is edited in the inspector. This is only used in the Project Settings and Editor Settings.",
+      "godotName": "restart_requested",
+      "xmlDocId": "E:Godot.EditorInspector.RestartRequested",
+      "sourcePath": "doc/classes/EditorInspector.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorInspector.xml",
+      "sha256": "75724bce6e01f01f7c0d7c7327ba6eece153748cf22b81e93891aa0c2cb9fcd6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

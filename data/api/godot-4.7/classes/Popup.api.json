@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Popup",
+    "namespace": "Godot",
+    "fullName": "Godot.Popup",
+    "kind": "class",
+    "baseType": "Window",
+    "interfaces": [],
+    "godotReference": "Popup",
+    "documentationPath": "doc/classes/Popup.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_popup.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Borderless",
+      "kind": "Property",
+      "signature": "public bool Borderless { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "borderless",
+      "xmlDocId": "P:Godot.Popup.Borderless",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "MaximizeDisabled",
+      "kind": "Property",
+      "signature": "public bool MaximizeDisabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "maximize_disabled",
+      "xmlDocId": "P:Godot.Popup.MaximizeDisabled",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "MinimizeDisabled",
+      "kind": "Property",
+      "signature": "public bool MinimizeDisabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "minimize_disabled",
+      "xmlDocId": "P:Godot.Popup.MinimizeDisabled",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "PopupWindow",
+      "kind": "Property",
+      "signature": "public bool PopupWindow { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "popup_window",
+      "xmlDocId": "P:Godot.Popup.PopupWindow",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "PopupWmHint",
+      "kind": "Property",
+      "signature": "public bool PopupWmHint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "popup_wm_hint",
+      "xmlDocId": "P:Godot.Popup.PopupWmHint",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "Transient",
+      "kind": "Property",
+      "signature": "public bool Transient { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "transient",
+      "xmlDocId": "P:Godot.Popup.Transient",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "Unresizable",
+      "kind": "Property",
+      "signature": "public bool Unresizable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "unresizable",
+      "xmlDocId": "P:Godot.Popup.Unresizable",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.Popup.Visible",
+      "sourcePath": "doc/classes/Popup.xml"
+    },
+    {
+      "name": "WrapControls",
+      "kind": "Property",
+      "signature": "public bool WrapControls { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "wrap_controls",
+      "xmlDocId": "P:Godot.Popup.WrapControls",
+      "sourcePath": "doc/classes/Popup.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PopupHide",
+      "kind": "Signal",
+      "signature": "public event PopupHideHandler PopupHide",
+      "parameters": [],
+      "summary": "Emitted when the popup is hidden.",
+      "godotName": "popup_hide",
+      "xmlDocId": "E:Godot.Popup.PopupHide",
+      "sourcePath": "doc/classes/Popup.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Popup.xml",
+      "sha256": "d75763ba65bc6f02dff4c16878cd85b31534625374062e16965bf9dbf7d3b1a8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

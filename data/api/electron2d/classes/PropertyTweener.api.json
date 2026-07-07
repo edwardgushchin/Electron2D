@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PropertyTweener",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PropertyTweener",
+    "kind": "class",
+    "baseType": "Electron2D.Tweener",
+    "interfaces": [],
+    "godotReference": "PropertyTweener",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetDelay",
+      "kind": "Method",
+      "signature": "public Electron2D.PropertyTweener SetDelay(System.Double delay)",
+      "returnType": "Electron2D.PropertyTweener",
+      "parameters": [
+        {
+          "name": "delay",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Sets a delay before this property tweener starts.",
+      "xmlDocId": "M:Electron2D.PropertyTweener.SetDelay(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetEase",
+      "kind": "Method",
+      "signature": "public Electron2D.PropertyTweener SetEase(Electron2D.Tween.EaseType ease)",
+      "returnType": "Electron2D.PropertyTweener",
+      "parameters": [
+        {
+          "name": "ease",
+          "type": "Electron2D.Tween.EaseType"
+        }
+      ],
+      "summary": "Sets the ease mode for this property tweener.",
+      "xmlDocId": "M:Electron2D.PropertyTweener.SetEase(Electron2D.Tween.EaseType)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTrans",
+      "kind": "Method",
+      "signature": "public Electron2D.PropertyTweener SetTrans(Electron2D.Tween.TransitionType trans)",
+      "returnType": "Electron2D.PropertyTweener",
+      "parameters": [
+        {
+          "name": "trans",
+          "type": "Electron2D.Tween.TransitionType"
+        }
+      ],
+      "summary": "Sets the transition curve for this property tweener.",
+      "xmlDocId": "M:Electron2D.PropertyTweener.SetTrans(Electron2D.Tween.TransitionType)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

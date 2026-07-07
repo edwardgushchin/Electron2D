@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RigidBody2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RigidBody2D",
+    "kind": "class",
+    "baseType": "Electron2D.PhysicsBody2D",
+    "interfaces": [],
+    "godotReference": "RigidBody2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "RigidBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RigidBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RigidBody2D type.",
+      "xmlDocId": "M:Electron2D.RigidBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "RigidBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RigidBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RigidBody2D type.",
+      "xmlDocId": "M:Electron2D.RigidBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public System.Single AngularVelocity { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the current angular velocity.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.AngularVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CanSleep",
+      "kind": "Property",
+      "signature": "public System.Boolean CanSleep { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this body is allowed to sleep.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.CanSleep",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CenterOfMass",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 CenterOfMass { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the custom center of mass.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.CenterOfMass",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CenterOfMassMode",
+      "kind": "Property",
+      "signature": "public Electron2D.RigidBody2D.CenterOfMassMode CenterOfMassMode { get; set; }",
+      "returnType": "Electron2D.RigidBody2D.CenterOfMassMode",
+      "parameters": [],
+      "summary": "Gets or sets how the center of mass should be selected.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.CenterOfMassMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Freeze",
+      "kind": "Property",
+      "signature": "public System.Boolean Freeze { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this rigid body is frozen.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.Freeze",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FreezeMode",
+      "kind": "Property",
+      "signature": "public Electron2D.RigidBody2D.FreezeMode FreezeMode { get; set; }",
+      "returnType": "Electron2D.RigidBody2D.FreezeMode",
+      "parameters": [],
+      "summary": "Gets or sets how this body behaves when frozen.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.FreezeMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GravityScale",
+      "kind": "Property",
+      "signature": "public System.Single GravityScale { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the gravity multiplier for this body.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.GravityScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inertia",
+      "kind": "Property",
+      "signature": "public System.Single Inertia { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the body inertia.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.Inertia",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 LinearVelocity { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the current linear velocity.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.LinearVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LockRotation",
+      "kind": "Property",
+      "signature": "public System.Boolean LockRotation { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether rotation is locked.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.LockRotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public System.Single Mass { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the body mass.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.Mass",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sleeping",
+      "kind": "Property",
+      "signature": "public System.Boolean Sleeping { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the body is sleeping.",
+      "xmlDocId": "P:Electron2D.RigidBody2D.Sleeping",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

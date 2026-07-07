@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "KinematicCollision2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.KinematicCollision2D",
+    "kind": "class",
+    "baseType": "Electron2D.RefCounted",
+    "interfaces": [],
+    "godotReference": "KinematicCollision2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAngle",
+      "kind": "Method",
+      "signature": "public System.Single GetAngle(Electron2D.Vector2? upDirection)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "upDirection",
+          "type": "Electron2D.Vector2?"
+        }
+      ],
+      "summary": "Gets the collision angle relative to an up direction.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetAngle(System.Nullable{Electron2D.Vector2})",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Electron2D.Object GetCollider()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Gets the object collided with by the moving body.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetCollider",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderId",
+      "kind": "Method",
+      "signature": "public System.Int64 GetColliderId()",
+      "returnType": "System.Int64",
+      "parameters": [],
+      "summary": "Gets the instance ID of the object collided with by the moving body.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetColliderId",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public Electron2D.Rid GetColliderRid()",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Gets the physics server RID of the collider.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetColliderRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public Electron2D.Object GetColliderShape()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Gets the collider shape object involved in the collision.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetColliderShape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderShapeIndex",
+      "kind": "Method",
+      "signature": "public System.Int32 GetColliderShapeIndex()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the collider shape index involved in the collision.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetColliderShapeIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColliderVelocity",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetColliderVelocity()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the velocity reported for the collider.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetColliderVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetDepth",
+      "kind": "Method",
+      "signature": "public System.Single GetDepth()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the overlap depth along the collision normal.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetDepth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLocalShape",
+      "kind": "Method",
+      "signature": "public Electron2D.Object GetLocalShape()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Gets the moving body\u0027s local shape object involved in the collision.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetLocalShape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNormal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetNormal()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the collision normal.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetNormal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPosition",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetPosition()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the collision position in global coordinates.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRemainder",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetRemainder()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the remaining motion after the collision.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetRemainder",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTravel",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetTravel()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the motion completed before the collision.",
+      "xmlDocId": "M:Electron2D.KinematicCollision2D.GetTravel",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

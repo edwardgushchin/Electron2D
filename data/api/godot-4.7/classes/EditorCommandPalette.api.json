@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorCommandPalette",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorCommandPalette",
+    "kind": "class",
+    "baseType": "ConfirmationDialog",
+    "interfaces": [],
+    "godotReference": "EditorCommandPalette",
+    "documentationPath": "doc/classes/EditorCommandPalette.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorcommandpalette.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCommand",
+      "kind": "Method",
+      "signature": "public void AddCommand(String commandName, String keyName, Callable bindedCallable, String shortcutText)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "command_name",
+          "type": "String"
+        },
+        {
+          "name": "key_name",
+          "type": "String"
+        },
+        {
+          "name": "binded_callable",
+          "type": "Callable"
+        },
+        {
+          "name": "shortcut_text",
+          "type": "String",
+          "defaultValue": "\u0022None\u0022"
+        }
+      ],
+      "summary": "Adds a custom command to EditorCommandPalette. - [param command_name]: [String] (Name of the [b]Command[/b]. This is displayed to the user.) - [param key_name]: [String] (Name of the key for a particular [b]Command[/b]. This is used to uniquely identify the [b]Command[/b].) - [param binded_callable]: [Callable] (Callable of the [b]Command[/b]. This will be executed when the [b]Command[/b] is selected.) - [param shortcut_text]: [String] (Shortcut text of the [b]Command[/b] if available.)",
+      "godotName": "add_command",
+      "xmlDocId": "M:Godot.EditorCommandPalette.AddCommand(String,String,Callable,String)",
+      "sourcePath": "doc/classes/EditorCommandPalette.xml"
+    },
+    {
+      "name": "RemoveCommand",
+      "kind": "Method",
+      "signature": "public void RemoveCommand(String keyName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "key_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the custom command from EditorCommandPalette. - [param key_name]: [String] (Name of the key for a particular [b]Command[/b].)",
+      "godotName": "remove_command",
+      "xmlDocId": "M:Godot.EditorCommandPalette.RemoveCommand(String)",
+      "sourcePath": "doc/classes/EditorCommandPalette.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorCommandPalette.xml",
+      "sha256": "a159f68a76e7993e78a56174b64007c65494b4ec94f94d684312ded162fbdf7c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

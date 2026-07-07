@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeAnimation",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeAnimation",
+    "kind": "class",
+    "baseType": "AnimationRootNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeAnimation",
+    "documentationPath": "doc/classes/AnimationNodeAnimation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodeanimation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AdvanceOnStart",
+      "kind": "Property",
+      "signature": "public bool AdvanceOnStart { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], on receiving a request to play an animation from the start, the first frame is not drawn, but only processed, and playback starts from the next frame. See also the notes of [method AnimationPlayer.play].",
+      "defaultValue": "false",
+      "godotName": "advance_on_start",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.AdvanceOnStart",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "Animation",
+      "kind": "Property",
+      "signature": "public StringName Animation { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Animation to use as an output. It is one of the animations provided by [member AnimationTree.anim_player].",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "animation",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.Animation",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "LoopMode",
+      "kind": "Property",
+      "signature": "public int LoopMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If [member use_custom_timeline] is [code]true[/code], override the loop settings of the original [Animation] resource with the value. [b]Note:[/b] If the [member Animation.loop_mode] isn\u0027t set to looping, the [method Animation.track_set_interpolation_loop_wrap] option will not be respected. If you cannot get the expected behavior, consider duplicating the [Animation] resource and changing the loop settings.",
+      "godotName": "loop_mode",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.LoopMode",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "PlayMode",
+      "kind": "Property",
+      "signature": "public int PlayMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines the playback direction of the animation.",
+      "defaultValue": "0",
+      "godotName": "play_mode",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.PlayMode",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "StartOffset",
+      "kind": "Property",
+      "signature": "public float StartOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If [member use_custom_timeline] is [code]true[/code], offset the start position of the animation. This is useful for adjusting which foot steps first in 3D walking animations.",
+      "godotName": "start_offset",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.StartOffset",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "StretchTimeScale",
+      "kind": "Property",
+      "signature": "public bool StretchTimeScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], scales the time so that the length specified in [member timeline_length] is one cycle. This is useful for matching the periods of walking and running animations. If [code]false[/code], the original animation length is respected. If you set the loop to [member loop_mode], the animation will loop in [member timeline_length].",
+      "godotName": "stretch_time_scale",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.StretchTimeScale",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "TimelineLength",
+      "kind": "Property",
+      "signature": "public float TimelineLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of the custom timeline. If [member stretch_time_scale] is [code]true[/code], scales the animation to this length.",
+      "godotName": "timeline_length",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.TimelineLength",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "UseCustomTimeline",
+      "kind": "Property",
+      "signature": "public bool UseCustomTimeline { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [AnimationNode] provides an animation based on the [Animation] resource with some parameters adjusted.",
+      "defaultValue": "false",
+      "godotName": "use_custom_timeline",
+      "xmlDocId": "P:Godot.AnimationNodeAnimation.UseCustomTimeline",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PlayMode",
+      "values": [
+        {
+          "name": "PLAY_MODE_BACKWARD",
+          "value": "1",
+          "enum": "PlayMode",
+          "kind": "EnumValue",
+          "summary": "Plays animation in backward direction.",
+          "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+        },
+        {
+          "name": "PLAY_MODE_FORWARD",
+          "value": "0",
+          "enum": "PlayMode",
+          "kind": "EnumValue",
+          "summary": "Plays animation in forward direction.",
+          "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PLAY_MODE_FORWARD",
+      "value": "0",
+      "enum": "PlayMode",
+      "kind": "EnumValue",
+      "summary": "Plays animation in forward direction.",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    },
+    {
+      "name": "PLAY_MODE_BACKWARD",
+      "value": "1",
+      "enum": "PlayMode",
+      "kind": "EnumValue",
+      "summary": "Plays animation in backward direction.",
+      "sourcePath": "doc/classes/AnimationNodeAnimation.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeAnimation.xml",
+      "sha256": "0fcfc83bb6027b51e3074c68ae8d2af8c9456df267de4d43d6728924c2ca9b17"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

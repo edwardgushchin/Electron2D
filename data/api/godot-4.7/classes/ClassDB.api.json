@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ClassDB",
+    "namespace": "Godot",
+    "fullName": "Godot.ClassDB",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ClassDB",
+    "documentationPath": "doc/classes/ClassDB.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_classdb.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanInstantiate",
+      "kind": "Method",
+      "signature": "public bool CanInstantiate(StringName @class)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if objects can be instantiated from the specified [param class], otherwise returns [code]false[/code].",
+      "godotName": "can_instantiate",
+      "xmlDocId": "M:Godot.ClassDB.CanInstantiate(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassCallStatic",
+      "kind": "Method",
+      "signature": "public Variant ClassCallStatic(StringName @class, StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Calls a static method on a class.",
+      "godotName": "class_call_static",
+      "xmlDocId": "M:Godot.ClassDB.ClassCallStatic(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassExists",
+      "kind": "Method",
+      "signature": "public bool ClassExists(StringName @class)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns whether the specified [param class] is available or not.",
+      "godotName": "class_exists",
+      "xmlDocId": "M:Godot.ClassDB.ClassExists(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetApiType",
+      "kind": "Method",
+      "signature": "public int ClassGetApiType(StringName @class)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the API type of the specified [param class].",
+      "godotName": "class_get_api_type",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetApiType(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetEnumConstants",
+      "kind": "Method",
+      "signature": "public PackedStringArray ClassGetEnumConstants(StringName @class, StringName @enum, bool noInheritance)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "enum",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with all the keys in [param enum] of [param class] or its ancestry.",
+      "godotName": "class_get_enum_constants",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetEnumConstants(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetEnumList",
+      "kind": "Method",
+      "signature": "public PackedStringArray ClassGetEnumList(StringName @class, bool noInheritance)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with all the enums of [param class] or its ancestry.",
+      "godotName": "class_get_enum_list",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetEnumList(StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetIntegerConstant",
+      "kind": "Method",
+      "signature": "public int ClassGetIntegerConstant(StringName @class, StringName name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the value of the integer constant [param name] of [param class] or its ancestry. Always returns 0 when the constant could not be found.",
+      "godotName": "class_get_integer_constant",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetIntegerConstant(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetIntegerConstantEnum",
+      "kind": "Method",
+      "signature": "public StringName ClassGetIntegerConstantEnum(StringName @class, StringName name, bool noInheritance)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns which enum the integer constant [param name] of [param class] or its ancestry belongs to.",
+      "godotName": "class_get_integer_constant_enum",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetIntegerConstantEnum(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetIntegerConstantList",
+      "kind": "Method",
+      "signature": "public PackedStringArray ClassGetIntegerConstantList(StringName @class, bool noInheritance)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with the names all the integer constants of [param class] or its ancestry.",
+      "godotName": "class_get_integer_constant_list",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetIntegerConstantList(StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetMethodArgumentCount",
+      "kind": "Method",
+      "signature": "public int ClassGetMethodArgumentCount(StringName @class, StringName method, bool noInheritance)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the number of arguments of the method [param method] of [param class] or its ancestry if [param no_inheritance] is [code]false[/code].",
+      "godotName": "class_get_method_argument_count",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetMethodArgumentCount(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetMethodList",
+      "kind": "Method",
+      "signature": "public Dictionary[] ClassGetMethodList(StringName @class, bool noInheritance)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with all the methods of [param class] or its ancestry if [param no_inheritance] is [code]false[/code]. Every element of the array is a [Dictionary] with the following keys: [code]args[/code], [code]default_args[/code], [code]flags[/code], [code]id[/code], [code]name[/code], [code]return: (class_name, hint, hint_string, name, type, usage)[/code]. [b]Note:[/b] In exported release builds the debug info is not available, so the returned dictionaries will contain only method names.",
+      "godotName": "class_get_method_list",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetMethodList(StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetProperty",
+      "kind": "Method",
+      "signature": "public Variant ClassGetProperty(Object @object, StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the value of [param property] of [param object] or its ancestry.",
+      "godotName": "class_get_property",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetProperty(Object,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant ClassGetPropertyDefaultValue(StringName @class, StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the default value of [param property] of [param class] or its ancestor classes.",
+      "godotName": "class_get_property_default_value",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetPropertyDefaultValue(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetPropertyGetter",
+      "kind": "Method",
+      "signature": "public StringName ClassGetPropertyGetter(StringName @class, StringName property)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the getter method name of [param property] of [param class].",
+      "godotName": "class_get_property_getter",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetPropertyGetter(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] ClassGetPropertyList(StringName @class, bool noInheritance)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with all the properties of [param class] or its ancestry if [param no_inheritance] is [code]false[/code].",
+      "godotName": "class_get_property_list",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetPropertyList(StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetPropertySetter",
+      "kind": "Method",
+      "signature": "public StringName ClassGetPropertySetter(StringName @class, StringName property)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the setter method name of [param property] of [param class].",
+      "godotName": "class_get_property_setter",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetPropertySetter(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetSignal",
+      "kind": "Method",
+      "signature": "public Dictionary ClassGetSignal(StringName @class, StringName signal)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [param signal] data of [param class] or its ancestry. The returned value is a [Dictionary] with the following keys: [code]args[/code], [code]default_args[/code], [code]flags[/code], [code]id[/code], [code]name[/code], [code]return: (class_name, hint, hint_string, name, type, usage)[/code].",
+      "godotName": "class_get_signal",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetSignal(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassGetSignalList",
+      "kind": "Method",
+      "signature": "public Dictionary[] ClassGetSignalList(StringName @class, bool noInheritance)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array with all the signals of [param class] or its ancestry if [param no_inheritance] is [code]false[/code]. Every element of the array is a [Dictionary] as described in [method class_get_signal].",
+      "godotName": "class_get_signal_list",
+      "xmlDocId": "M:Godot.ClassDB.ClassGetSignalList(StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassHasEnum",
+      "kind": "Method",
+      "signature": "public bool ClassHasEnum(StringName @class, StringName name, bool noInheritance)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns whether [param class] or its ancestry has an enum called [param name] or not.",
+      "godotName": "class_has_enum",
+      "xmlDocId": "M:Godot.ClassDB.ClassHasEnum(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassHasIntegerConstant",
+      "kind": "Method",
+      "signature": "public bool ClassHasIntegerConstant(StringName @class, StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns whether [param class] or its ancestry has an integer constant called [param name] or not.",
+      "godotName": "class_has_integer_constant",
+      "xmlDocId": "M:Godot.ClassDB.ClassHasIntegerConstant(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassHasMethod",
+      "kind": "Method",
+      "signature": "public bool ClassHasMethod(StringName @class, StringName method, bool noInheritance)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns whether [param class] (or its ancestry if [param no_inheritance] is [code]false[/code]) has a method called [param method] or not.",
+      "godotName": "class_has_method",
+      "xmlDocId": "M:Godot.ClassDB.ClassHasMethod(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassHasSignal",
+      "kind": "Method",
+      "signature": "public bool ClassHasSignal(StringName @class, StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns whether [param class] or its ancestry has a signal called [param signal] or not.",
+      "godotName": "class_has_signal",
+      "xmlDocId": "M:Godot.ClassDB.ClassHasSignal(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "ClassSetProperty",
+      "kind": "Method",
+      "signature": "public int ClassSetProperty(Object @object, StringName property, Variant value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets [param property] value of [param object] to [param value].",
+      "godotName": "class_set_property",
+      "xmlDocId": "M:Godot.ClassDB.ClassSetProperty(Object,StringName,Variant)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "GetClassList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetClassList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the names of all engine classes available. [b]Note:[/b] Script-defined classes with [code]class_name[/code] are not included in this list. Use [method ProjectSettings.get_global_class_list] to get a list of script-defined classes instead.",
+      "godotName": "get_class_list",
+      "xmlDocId": "M:Godot.ClassDB.GetClassList",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "GetInheritersFromClass",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetInheritersFromClass(StringName @class)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the names of all engine classes that directly or indirectly inherit from [param class].",
+      "godotName": "get_inheriters_from_class",
+      "xmlDocId": "M:Godot.ClassDB.GetInheritersFromClass(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "GetParentClass",
+      "kind": "Method",
+      "signature": "public StringName GetParentClass(StringName @class)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the parent class of [param class].",
+      "godotName": "get_parent_class",
+      "xmlDocId": "M:Godot.ClassDB.GetParentClass(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "Instantiate",
+      "kind": "Method",
+      "signature": "public Variant Instantiate(StringName @class)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Creates an instance of [param class].",
+      "godotName": "instantiate",
+      "xmlDocId": "M:Godot.ClassDB.Instantiate(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "IsClassEnabled",
+      "kind": "Method",
+      "signature": "public bool IsClassEnabled(StringName @class)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns whether this [param class] is enabled or not.",
+      "godotName": "is_class_enabled",
+      "xmlDocId": "M:Godot.ClassDB.IsClassEnabled(StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "IsClassEnumBitfield",
+      "kind": "Method",
+      "signature": "public bool IsClassEnumBitfield(StringName @class, StringName @enum, bool noInheritance)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "enum",
+          "type": "StringName"
+        },
+        {
+          "name": "no_inheritance",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns whether [param class] (or its ancestor classes if [param no_inheritance] is [code]false[/code]) has an enum called [param enum] that is a bitfield.",
+      "godotName": "is_class_enum_bitfield",
+      "xmlDocId": "M:Godot.ClassDB.IsClassEnumBitfield(StringName,StringName,bool)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "IsParentClass",
+      "kind": "Method",
+      "signature": "public bool IsParentClass(StringName @class, StringName inherits)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "class",
+          "type": "StringName"
+        },
+        {
+          "name": "inherits",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns whether [param inherits] is an ancestor of [param class] or not.",
+      "godotName": "is_parent_class",
+      "xmlDocId": "M:Godot.ClassDB.IsParentClass(StringName,StringName)",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "APIType",
+      "values": [
+        {
+          "name": "API_CORE",
+          "value": "0",
+          "enum": "APIType",
+          "kind": "EnumValue",
+          "summary": "Native Core class type.",
+          "sourcePath": "doc/classes/ClassDB.xml"
+        },
+        {
+          "name": "API_EDITOR",
+          "value": "1",
+          "enum": "APIType",
+          "kind": "EnumValue",
+          "summary": "Native Editor class type.",
+          "sourcePath": "doc/classes/ClassDB.xml"
+        },
+        {
+          "name": "API_EDITOR_EXTENSION",
+          "value": "3",
+          "enum": "APIType",
+          "kind": "EnumValue",
+          "summary": "GDExtension Editor class type.",
+          "sourcePath": "doc/classes/ClassDB.xml"
+        },
+        {
+          "name": "API_EXTENSION",
+          "value": "2",
+          "enum": "APIType",
+          "kind": "EnumValue",
+          "summary": "GDExtension class type.",
+          "sourcePath": "doc/classes/ClassDB.xml"
+        },
+        {
+          "name": "API_NONE",
+          "value": "4",
+          "enum": "APIType",
+          "kind": "EnumValue",
+          "summary": "Unknown class type.",
+          "sourcePath": "doc/classes/ClassDB.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "API_CORE",
+      "value": "0",
+      "enum": "APIType",
+      "kind": "EnumValue",
+      "summary": "Native Core class type.",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "API_EDITOR",
+      "value": "1",
+      "enum": "APIType",
+      "kind": "EnumValue",
+      "summary": "Native Editor class type.",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "API_EXTENSION",
+      "value": "2",
+      "enum": "APIType",
+      "kind": "EnumValue",
+      "summary": "GDExtension class type.",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "API_EDITOR_EXTENSION",
+      "value": "3",
+      "enum": "APIType",
+      "kind": "EnumValue",
+      "summary": "GDExtension Editor class type.",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    },
+    {
+      "name": "API_NONE",
+      "value": "4",
+      "enum": "APIType",
+      "kind": "EnumValue",
+      "summary": "Unknown class type.",
+      "sourcePath": "doc/classes/ClassDB.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ClassDB.xml",
+      "sha256": "c0e24cb24749a660bb419c57fa2670588d0c256f2b5d65d7fb08102ccdfdbd78"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

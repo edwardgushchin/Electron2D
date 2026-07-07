@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSharpScript",
+    "namespace": "Godot",
+    "fullName": "Godot.CSharpScript",
+    "kind": "class",
+    "baseType": "Script",
+    "interfaces": [],
+    "godotReference": "CSharpScript",
+    "documentationPath": "modules/mono/doc_classes/CSharpScript.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csharpscript.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "New",
+      "kind": "Method",
+      "signature": "public Variant New()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns a new instance of the script.",
+      "godotName": "new",
+      "xmlDocId": "M:Godot.CSharpScript.New",
+      "sourcePath": "modules/mono/doc_classes/CSharpScript.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/mono/doc_classes/CSharpScript.xml",
+      "sha256": "7d0e8bbd9f08864552abcf3c0fdbd8fedf9c93ff77374132a5fc9b8296ca76a5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

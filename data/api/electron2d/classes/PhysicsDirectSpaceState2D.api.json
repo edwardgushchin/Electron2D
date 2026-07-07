@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectSpaceState2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsDirectSpaceState2D",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectSpaceState2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IntersectPoint",
+      "kind": "Method",
+      "signature": "public Electron2D.Collections.Array IntersectPoint(Electron2D.PhysicsPointQueryParameters2D parameters, System.Int32 maxResults)",
+      "returnType": "Electron2D.Collections.Array",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "Electron2D.PhysicsPointQueryParameters2D"
+        },
+        {
+          "name": "maxResults",
+          "type": "System.Int32",
+          "defaultValue": "32"
+        }
+      ],
+      "summary": "Finds physics objects whose active shapes contain a point.",
+      "xmlDocId": "M:Electron2D.PhysicsDirectSpaceState2D.IntersectPoint(Electron2D.PhysicsPointQueryParameters2D,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IntersectRay",
+      "kind": "Method",
+      "signature": "public Electron2D.Collections.Dictionary IntersectRay(Electron2D.PhysicsRayQueryParameters2D parameters)",
+      "returnType": "Electron2D.Collections.Dictionary",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "Electron2D.PhysicsRayQueryParameters2D"
+        }
+      ],
+      "summary": "Intersects a ray segment with the current 2D physics shapes.",
+      "xmlDocId": "M:Electron2D.PhysicsDirectSpaceState2D.IntersectRay(Electron2D.PhysicsRayQueryParameters2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IntersectShape",
+      "kind": "Method",
+      "signature": "public Electron2D.Collections.Array IntersectShape(Electron2D.PhysicsShapeQueryParameters2D parameters, System.Int32 maxResults)",
+      "returnType": "Electron2D.Collections.Array",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "Electron2D.PhysicsShapeQueryParameters2D"
+        },
+        {
+          "name": "maxResults",
+          "type": "System.Int32",
+          "defaultValue": "32"
+        }
+      ],
+      "summary": "Finds physics objects whose active shapes intersect a query shape.",
+      "xmlDocId": "M:Electron2D.PhysicsDirectSpaceState2D.IntersectShape(Electron2D.PhysicsShapeQueryParameters2D,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

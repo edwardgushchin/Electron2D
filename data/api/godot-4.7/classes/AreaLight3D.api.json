@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AreaLight3D",
+    "namespace": "Godot",
+    "fullName": "Godot.AreaLight3D",
+    "kind": "class",
+    "baseType": "Light3D",
+    "interfaces": [],
+    "godotReference": "AreaLight3D",
+    "documentationPath": "doc/classes/AreaLight3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_arealight3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AreaAttenuation",
+      "kind": "Property",
+      "signature": "public float AreaAttenuation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the distance attenuation function for this area light. A value of [code]0.0[/code] will maintain a constant brightness through most of the range, but will smoothly attenuate the light at the edge of the range. Use a value of [code]2.0[/code] for physically accurate lights as it results in the proper inverse square attenuation. [b]Note:[/b] Setting attenuation to [code]2.0[/code] or higher may result in distant objects receiving minimal light, even when within range. For example, with a range of [code]4096[/code], an object at [code]100[/code] units is attenuated by a factor of [code]0.0001[/code]. With a default brightness of [code]1[/code], the light would not be visible at that distance. [b]Note:[/b] Using negative values or values higher than [code]10.0[/code] may lead to unexpected results.",
+      "defaultValue": "1.0",
+      "godotName": "area_attenuation",
+      "xmlDocId": "P:Godot.AreaLight3D.AreaAttenuation",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "AreaNormalizeEnergy",
+      "kind": "Property",
+      "signature": "public bool AreaNormalizeEnergy { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Defines whether the energy is normalized (divided) by the surface area of the light. If set to [code]true[/code], changing the size does not affect the total energy output, and does not dramatically alter the brightness of the scene.",
+      "defaultValue": "true",
+      "godotName": "area_normalize_energy",
+      "xmlDocId": "P:Godot.AreaLight3D.AreaNormalizeEnergy",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "AreaRange",
+      "kind": "Property",
+      "signature": "public float AreaRange { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The range of the area in meters. This determines the maximum distance from any point on the area at which the area can still emit light.",
+      "defaultValue": "5.0",
+      "godotName": "area_range",
+      "xmlDocId": "P:Godot.AreaLight3D.AreaRange",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "AreaSize",
+      "kind": "Property",
+      "signature": "public Vector2 AreaSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The extents (width and height) of the area in meters.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "area_size",
+      "xmlDocId": "P:Godot.AreaLight3D.AreaSize",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "AreaTexture",
+      "kind": "Property",
+      "signature": "public Texture2D AreaTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "An optional texture to use as a light source. Changing the texture at runtime might impact performance, as it needs to be drawn to the area light atlas with filtered mipmaps. If no texture is assigned, the area light emits uniform light across its surface. [b]Note:[/b] Area light textures are only supported in the Forward\u002B and Mobile rendering methods, not Compatibility. To reduce the performance impact of switching textures at runtime, make sure each dimension of an area texture is either a multiple of 128 pixels, or a power of two. This removes the need for a scaling pass, which slows down texture changes. The textures don\u0027t necessarily have to be square to be optimal. Examples of optimal texture sizes include 32x64, 128x128, and 256x384.",
+      "godotName": "area_texture",
+      "xmlDocId": "P:Godot.AreaLight3D.AreaTexture",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "LightSize",
+      "kind": "Property",
+      "signature": "public float LightSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.5",
+      "godotName": "light_size",
+      "xmlDocId": "P:Godot.AreaLight3D.LightSize",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    },
+    {
+      "name": "ShadowNormalBias",
+      "kind": "Property",
+      "signature": "public float ShadowNormalBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "shadow_normal_bias",
+      "xmlDocId": "P:Godot.AreaLight3D.ShadowNormalBias",
+      "sourcePath": "doc/classes/AreaLight3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AreaLight3D.xml",
+      "sha256": "b919a0330456074987ddd69db28e58b1a72b710b3cfc2bbfb4f3b65ba0c7209e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

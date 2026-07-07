@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisibleOnScreenNotifier2D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisibleOnScreenNotifier2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "VisibleOnScreenNotifier2D",
+    "documentationPath": "doc/classes/VisibleOnScreenNotifier2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visibleonscreennotifier2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsOnScreen",
+      "kind": "Method",
+      "signature": "public bool IsOnScreen()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the bounding rectangle is on the screen. [b]Note:[/b] It takes one frame for the [VisibleOnScreenNotifier2D]\u0027s visibility to be determined once added to the scene tree, so this method will always return [code]false[/code] right after it is instantiated, before the draw pass.",
+      "godotName": "is_on_screen",
+      "xmlDocId": "M:Godot.VisibleOnScreenNotifier2D.IsOnScreen",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier2D.xml"
+    },
+    {
+      "name": "Rect",
+      "kind": "Property",
+      "signature": "public Rect2 Rect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The VisibleOnScreenNotifier2D\u0027s bounding rectangle.",
+      "defaultValue": "Rect2(-10, -10, 20, 20)",
+      "godotName": "rect",
+      "xmlDocId": "P:Godot.VisibleOnScreenNotifier2D.Rect",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier2D.xml"
+    },
+    {
+      "name": "ShowRect",
+      "kind": "Property",
+      "signature": "public bool ShowRect { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shows the rectangle area of [member rect] in the editor with a translucent magenta fill. Unlike changing the visibility of the VisibleOnScreenNotifier2D, this does not affect the screen culling detection.",
+      "defaultValue": "true",
+      "godotName": "show_rect",
+      "xmlDocId": "P:Godot.VisibleOnScreenNotifier2D.ShowRect",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ScreenEntered",
+      "kind": "Signal",
+      "signature": "public event ScreenEnteredHandler ScreenEntered",
+      "parameters": [],
+      "summary": "Emitted when the VisibleOnScreenNotifier2D enters the screen.",
+      "godotName": "screen_entered",
+      "xmlDocId": "E:Godot.VisibleOnScreenNotifier2D.ScreenEntered",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier2D.xml"
+    },
+    {
+      "name": "ScreenExited",
+      "kind": "Signal",
+      "signature": "public event ScreenExitedHandler ScreenExited",
+      "parameters": [],
+      "summary": "Emitted when the VisibleOnScreenNotifier2D exits the screen.",
+      "godotName": "screen_exited",
+      "xmlDocId": "E:Godot.VisibleOnScreenNotifier2D.ScreenExited",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VisibleOnScreenNotifier2D.xml",
+      "sha256": "a9cfdbc5ec271dd8fc0b2f7333ee0e142887b8d9743e669af3720a8523486068"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

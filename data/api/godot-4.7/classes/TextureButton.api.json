@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureButton",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureButton",
+    "kind": "class",
+    "baseType": "BaseButton",
+    "interfaces": [],
+    "godotReference": "TextureButton",
+    "documentationPath": "doc/classes/TextureButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texturebutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public bool FlipH { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped horizontally.",
+      "defaultValue": "false",
+      "godotName": "flip_h",
+      "xmlDocId": "P:Godot.TextureButton.FlipH",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public bool FlipV { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], texture is flipped vertically.",
+      "defaultValue": "false",
+      "godotName": "flip_v",
+      "xmlDocId": "P:Godot.TextureButton.FlipV",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "IgnoreTextureSize",
+      "kind": "Property",
+      "signature": "public bool IgnoreTextureSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the size of the texture won\u0027t be considered for minimum size calculation, so the [TextureButton] can be shrunk down past the texture size.",
+      "defaultValue": "false",
+      "godotName": "ignore_texture_size",
+      "xmlDocId": "P:Godot.TextureButton.IgnoreTextureSize",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "StretchMode",
+      "kind": "Property",
+      "signature": "public int StretchMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the texture\u0027s behavior when you resize the node\u0027s bounding rectangle. See the [enum StretchMode] constants for available options.",
+      "defaultValue": "2",
+      "godotName": "stretch_mode",
+      "xmlDocId": "P:Godot.TextureButton.StretchMode",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TextureClickMask",
+      "kind": "Property",
+      "signature": "public BitMap TextureClickMask { get; set; }",
+      "returnType": "BitMap",
+      "parameters": [],
+      "summary": "Pure black and white [BitMap] image to use for click detection. On the mask, white pixels represent the button\u0027s clickable area. Use it to create buttons with curved shapes.",
+      "godotName": "texture_click_mask",
+      "xmlDocId": "P:Godot.TextureButton.TextureClickMask",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TextureDisabled",
+      "kind": "Property",
+      "signature": "public Texture2D TextureDisabled { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to display when the node is disabled. See [member BaseButton.disabled]. If not assigned, the [TextureButton] displays [member texture_normal] instead.",
+      "godotName": "texture_disabled",
+      "xmlDocId": "P:Godot.TextureButton.TextureDisabled",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TextureFocused",
+      "kind": "Property",
+      "signature": "public Texture2D TextureFocused { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to [i]overlay on the base texture[/i] when the node has mouse or keyboard focus. Because [member texture_focused] is displayed on top of the base texture, a partially transparent texture should be used to ensure the base texture remains visible. A texture that represents an outline or an underline works well for this purpose. To disable the focus visual effect, assign a fully transparent texture of any size. Note that disabling the focus visual effect will harm keyboard/controller navigation usability, so this is not recommended for accessibility reasons.",
+      "godotName": "texture_focused",
+      "xmlDocId": "P:Godot.TextureButton.TextureFocused",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TextureHover",
+      "kind": "Property",
+      "signature": "public Texture2D TextureHover { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to display when the mouse hovers over the node. If not assigned, the [TextureButton] displays [member texture_normal] instead when hovered over.",
+      "godotName": "texture_hover",
+      "xmlDocId": "P:Godot.TextureButton.TextureHover",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TextureNormal",
+      "kind": "Property",
+      "signature": "public Texture2D TextureNormal { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to display by default, when the node is [b]not[/b] in the disabled, hover or pressed state. This texture is still displayed in the focused state, with [member texture_focused] drawn on top.",
+      "godotName": "texture_normal",
+      "xmlDocId": "P:Godot.TextureButton.TextureNormal",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "TexturePressed",
+      "kind": "Property",
+      "signature": "public Texture2D TexturePressed { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to display on mouse down over the node, if the node has keyboard focus and the player presses the Enter key or if the player presses the [member BaseButton.shortcut] key. If not assigned, the [TextureButton] displays [member texture_hover] instead when pressed.",
+      "godotName": "texture_pressed",
+      "xmlDocId": "P:Godot.TextureButton.TexturePressed",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "StretchMode",
+      "values": [
+        {
+          "name": "STRETCH_KEEP",
+          "value": "2",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The texture keeps its original size and stays in the bounding rectangle\u0027s top-left corner.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT",
+          "value": "4",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture to fit the node\u0027s bounding rectangle, but maintain the texture\u0027s aspect ratio.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT_CENTERED",
+          "value": "5",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture to fit the node\u0027s bounding rectangle, center it, and maintain its aspect ratio.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_ASPECT_COVERED",
+          "value": "6",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to the node\u0027s limits.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_KEEP_CENTERED",
+          "value": "3",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The texture keeps its original size and stays centered in the node\u0027s bounding rectangle.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_SCALE",
+          "value": "0",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Scale to fit the node\u0027s bounding rectangle.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        },
+        {
+          "name": "STRETCH_TILE",
+          "value": "1",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "Tile inside the node\u0027s bounding rectangle.",
+          "sourcePath": "doc/classes/TextureButton.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STRETCH_SCALE",
+      "value": "0",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale to fit the node\u0027s bounding rectangle.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_TILE",
+      "value": "1",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Tile inside the node\u0027s bounding rectangle.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_KEEP",
+      "value": "2",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The texture keeps its original size and stays in the bounding rectangle\u0027s top-left corner.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_CENTERED",
+      "value": "3",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The texture keeps its original size and stays centered in the node\u0027s bounding rectangle.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT",
+      "value": "4",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture to fit the node\u0027s bounding rectangle, but maintain the texture\u0027s aspect ratio.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT_CENTERED",
+      "value": "5",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture to fit the node\u0027s bounding rectangle, center it, and maintain its aspect ratio.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    },
+    {
+      "name": "STRETCH_KEEP_ASPECT_COVERED",
+      "value": "6",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to the node\u0027s limits.",
+      "sourcePath": "doc/classes/TextureButton.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureButton.xml",
+      "sha256": "251ab0964f87df0cd9fd1a87f00961dd3cf9ea76ce8442264295a69ad054a3ec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

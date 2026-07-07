@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerPeer",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "MultiplayerPeer",
+    "documentationPath": "doc/classes/MultiplayerPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayerpeer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public void Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Immediately close the multiplayer peer returning to the state [constant CONNECTION_DISCONNECTED]. Connected peers will be dropped without emitting [signal peer_disconnected].",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.MultiplayerPeer.Close",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "DisconnectPeer",
+      "kind": "Method",
+      "signature": "public void DisconnectPeer(int peer, bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "force",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Disconnects the given [param peer] from this host. If [param force] is [code]true[/code] the [signal peer_disconnected] signal will not be emitted for this peer.",
+      "godotName": "disconnect_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeer.DisconnectPeer(int,bool)",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GenerateUniqueId",
+      "kind": "Method",
+      "signature": "public int GenerateUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a randomly generated integer that can be used as a network unique ID.",
+      "godotName": "generate_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GenerateUniqueId",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GetConnectionStatus",
+      "kind": "Method",
+      "signature": "public int GetConnectionStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current state of the connection.",
+      "godotName": "get_connection_status",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GetConnectionStatus",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPacketChannel",
+      "kind": "Method",
+      "signature": "public int GetPacketChannel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the channel over which the next available packet was received. See [method PacketPeer.get_available_packet_count].",
+      "godotName": "get_packet_channel",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GetPacketChannel",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPacketMode",
+      "kind": "Method",
+      "signature": "public int GetPacketMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the transfer mode the remote peer used to send the next available packet. See [method PacketPeer.get_available_packet_count].",
+      "godotName": "get_packet_mode",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GetPacketMode",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPacketPeer",
+      "kind": "Method",
+      "signature": "public int GetPacketPeer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the [MultiplayerPeer] who sent the next available packet. See [method PacketPeer.get_available_packet_count].",
+      "godotName": "get_packet_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GetPacketPeer",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "GetUniqueId",
+      "kind": "Method",
+      "signature": "public int GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of this [MultiplayerPeer].",
+      "godotName": "get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerPeer.GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "IsServerRelaySupported",
+      "kind": "Method",
+      "signature": "public bool IsServerRelaySupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the server can act as a relay in the current configuration. That is, if the higher level [MultiplayerAPI] should notify connected clients of other peers, and implement a relay protocol to allow communication between them.",
+      "godotName": "is_server_relay_supported",
+      "xmlDocId": "M:Godot.MultiplayerPeer.IsServerRelaySupported",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public void Poll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Waits up to 1 second to receive a new network event.",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.MultiplayerPeer.Poll",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "SetTargetPeer",
+      "kind": "Method",
+      "signature": "public void SetTargetPeer(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the peer to which packets will be sent. The [param id] can be one of: [constant TARGET_PEER_BROADCAST] to send to all connected peers, [constant TARGET_PEER_SERVER] to send to the peer acting as server, a valid peer ID to send to that specific peer, a negative peer ID to send to all peers except that one. By default, the target peer is [constant TARGET_PEER_BROADCAST].",
+      "godotName": "set_target_peer",
+      "xmlDocId": "M:Godot.MultiplayerPeer.SetTargetPeer(int)",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "RefuseNewConnections",
+      "kind": "Property",
+      "signature": "public bool RefuseNewConnections { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this [MultiplayerPeer] refuses new connections.",
+      "defaultValue": "false",
+      "godotName": "refuse_new_connections",
+      "xmlDocId": "P:Godot.MultiplayerPeer.RefuseNewConnections",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TransferChannel",
+      "kind": "Property",
+      "signature": "public int TransferChannel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The channel to use to send packets. Many network APIs such as ENet and WebRTC allow the creation of multiple independent channels which behaves, in a way, like separate connections. This means that reliable data will only block delivery of other packets on that channel, and ordering will only be in respect to the channel the packet is being sent on. Using different channels to send [b]different and independent[/b] state updates is a common way to optimize network usage and decrease latency in fast-paced games. [b]Note:[/b] The default channel ([code]0[/code]) actually works as 3 separate channels (one for each [enum TransferMode]) so that [constant TRANSFER_MODE_RELIABLE] and [constant TRANSFER_MODE_UNRELIABLE_ORDERED] does not interact with each other by default. Refer to the specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels correctly.",
+      "defaultValue": "0",
+      "godotName": "transfer_channel",
+      "xmlDocId": "P:Godot.MultiplayerPeer.TransferChannel",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TransferMode",
+      "kind": "Property",
+      "signature": "public int TransferMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The manner in which to send packets to the target peer. See the [method set_target_peer] method.",
+      "defaultValue": "2",
+      "godotName": "transfer_mode",
+      "xmlDocId": "P:Godot.MultiplayerPeer.TransferMode",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PeerConnected",
+      "kind": "Signal",
+      "signature": "public event PeerConnectedHandler PeerConnected",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a remote peer connects.",
+      "godotName": "peer_connected",
+      "xmlDocId": "E:Godot.MultiplayerPeer.PeerConnected(int)",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "PeerDisconnected",
+      "kind": "Signal",
+      "signature": "public event PeerDisconnectedHandler PeerDisconnected",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a remote peer has disconnected.",
+      "godotName": "peer_disconnected",
+      "xmlDocId": "E:Godot.MultiplayerPeer.PeerDisconnected(int)",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ConnectionStatus",
+      "values": [
+        {
+          "name": "CONNECTION_CONNECTED",
+          "value": "2",
+          "enum": "ConnectionStatus",
+          "kind": "EnumValue",
+          "summary": "This MultiplayerPeer is connected.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        },
+        {
+          "name": "CONNECTION_CONNECTING",
+          "value": "1",
+          "enum": "ConnectionStatus",
+          "kind": "EnumValue",
+          "summary": "The MultiplayerPeer is currently connecting to a server.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        },
+        {
+          "name": "CONNECTION_DISCONNECTED",
+          "value": "0",
+          "enum": "ConnectionStatus",
+          "kind": "EnumValue",
+          "summary": "The MultiplayerPeer is disconnected.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        }
+      ]
+    },
+    {
+      "name": "TransferMode",
+      "values": [
+        {
+          "name": "TRANSFER_MODE_RELIABLE",
+          "value": "2",
+          "enum": "TransferMode",
+          "kind": "EnumValue",
+          "summary": "Packets must be received and resend attempts should be made until the packets are acknowledged. Packets must be received in the order they were sent in. Most reliable transfer mode, but potentially the slowest due to the overhead. Use for critical data that must be transmitted and arrive in order, for example an ability being triggered or a chat message. Consider carefully if the information really is critical, and use sparingly.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        },
+        {
+          "name": "TRANSFER_MODE_UNRELIABLE",
+          "value": "0",
+          "enum": "TransferMode",
+          "kind": "EnumValue",
+          "summary": "Packets are not acknowledged, no resend attempts are made for lost packets. Packets may arrive in any order. Potentially faster than [constant TRANSFER_MODE_UNRELIABLE_ORDERED]. Use for non-critical data, and always consider whether the order matters.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        },
+        {
+          "name": "TRANSFER_MODE_UNRELIABLE_ORDERED",
+          "value": "1",
+          "enum": "TransferMode",
+          "kind": "EnumValue",
+          "summary": "Packets are not acknowledged, no resend attempts are made for lost packets. Packets are received in the order they were sent in. Potentially faster than [constant TRANSFER_MODE_RELIABLE]. Use for non-critical data or data that would be outdated if received late due to resend attempt(s) anyway, for example movement and positional data.",
+          "sourcePath": "doc/classes/MultiplayerPeer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CONNECTION_DISCONNECTED",
+      "value": "0",
+      "enum": "ConnectionStatus",
+      "kind": "EnumValue",
+      "summary": "The MultiplayerPeer is disconnected.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "CONNECTION_CONNECTING",
+      "value": "1",
+      "enum": "ConnectionStatus",
+      "kind": "EnumValue",
+      "summary": "The MultiplayerPeer is currently connecting to a server.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "CONNECTION_CONNECTED",
+      "value": "2",
+      "enum": "ConnectionStatus",
+      "kind": "EnumValue",
+      "summary": "This MultiplayerPeer is connected.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TARGET_PEER_BROADCAST",
+      "value": "0",
+      "kind": "Constant",
+      "summary": "Packets are sent to all connected peers.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TARGET_PEER_SERVER",
+      "value": "1",
+      "kind": "Constant",
+      "summary": "Packets are sent to the remote peer acting as server.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TRANSFER_MODE_UNRELIABLE",
+      "value": "0",
+      "enum": "TransferMode",
+      "kind": "EnumValue",
+      "summary": "Packets are not acknowledged, no resend attempts are made for lost packets. Packets may arrive in any order. Potentially faster than [constant TRANSFER_MODE_UNRELIABLE_ORDERED]. Use for non-critical data, and always consider whether the order matters.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TRANSFER_MODE_UNRELIABLE_ORDERED",
+      "value": "1",
+      "enum": "TransferMode",
+      "kind": "EnumValue",
+      "summary": "Packets are not acknowledged, no resend attempts are made for lost packets. Packets are received in the order they were sent in. Potentially faster than [constant TRANSFER_MODE_RELIABLE]. Use for non-critical data or data that would be outdated if received late due to resend attempt(s) anyway, for example movement and positional data.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    },
+    {
+      "name": "TRANSFER_MODE_RELIABLE",
+      "value": "2",
+      "enum": "TransferMode",
+      "kind": "EnumValue",
+      "summary": "Packets must be received and resend attempts should be made until the packets are acknowledged. Packets must be received in the order they were sent in. Most reliable transfer mode, but potentially the slowest due to the overhead. Use for critical data that must be transmitted and arrive in order, for example an ability being triggered or a chat message. Consider carefully if the information really is critical, and use sparingly.",
+      "sourcePath": "doc/classes/MultiplayerPeer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiplayerPeer.xml",
+      "sha256": "6d89ac49d41eb03ab9d877138d66ec3b88b1e04d2eb91c7ce874831ea972f46e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

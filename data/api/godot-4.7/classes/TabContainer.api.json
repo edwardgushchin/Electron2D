@@ -1,0 +1,804 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TabContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.TabContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "TabContainer",
+    "documentationPath": "doc/classes/TabContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tabcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCurrentTabControl",
+      "kind": "Method",
+      "signature": "public Control GetCurrentTabControl()",
+      "returnType": "Control",
+      "parameters": [],
+      "summary": "Returns the child [Control] node located at the active tab index.",
+      "godotName": "get_current_tab_control",
+      "xmlDocId": "M:Godot.TabContainer.GetCurrentTabControl",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetPopup",
+      "kind": "Method",
+      "signature": "public Popup GetPopup()",
+      "returnType": "Popup",
+      "parameters": [],
+      "summary": "Returns the [Popup] node instance if one has been set already with [method set_popup]. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_popup",
+      "xmlDocId": "M:Godot.TabContainer.GetPopup",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetPreviousTab",
+      "kind": "Method",
+      "signature": "public int GetPreviousTab()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the previously active tab index.",
+      "godotName": "get_previous_tab",
+      "xmlDocId": "M:Godot.TabContainer.GetPreviousTab",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabBar",
+      "kind": "Method",
+      "signature": "public TabBar GetTabBar()",
+      "returnType": "TabBar",
+      "parameters": [],
+      "summary": "Returns the [TabBar] contained in this container. [b]Warning:[/b] This is a required internal node, removing and freeing it or editing its tabs may cause a crash. If you wish to edit the tabs, use the methods provided in [TabContainer].",
+      "godotName": "get_tab_bar",
+      "xmlDocId": "M:Godot.TabContainer.GetTabBar",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabButtonIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetTabButtonIcon(int tabIdx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the button icon from the tab at index [param tab_idx].",
+      "godotName": "get_tab_button_icon",
+      "xmlDocId": "M:Godot.TabContainer.GetTabButtonIcon(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabControl",
+      "kind": "Method",
+      "signature": "public Control GetTabControl(int tabIdx)",
+      "returnType": "Control",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Control] node from the tab at index [param tab_idx].",
+      "godotName": "get_tab_control",
+      "xmlDocId": "M:Godot.TabContainer.GetTabControl(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabCount",
+      "kind": "Method",
+      "signature": "public int GetTabCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of tabs.",
+      "godotName": "get_tab_count",
+      "xmlDocId": "M:Godot.TabContainer.GetTabCount",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetTabIcon(int tabIdx)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Texture2D] for the tab at index [param tab_idx] or [code]null[/code] if the tab has no [Texture2D].",
+      "godotName": "get_tab_icon",
+      "xmlDocId": "M:Godot.TabContainer.GetTabIcon(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabIconMaxWidth",
+      "kind": "Method",
+      "signature": "public int GetTabIconMaxWidth(int tabIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum allowed width of the icon for the tab at index [param tab_idx].",
+      "godotName": "get_tab_icon_max_width",
+      "xmlDocId": "M:Godot.TabContainer.GetTabIconMaxWidth(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabIdxAtPoint",
+      "kind": "Method",
+      "signature": "public int GetTabIdxAtPoint(Vector2 point)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the index of the tab at local coordinates [param point]. Returns [code]-1[/code] if the point is outside the control boundaries or if there\u0027s no tab at the queried position.",
+      "godotName": "get_tab_idx_at_point",
+      "xmlDocId": "M:Godot.TabContainer.GetTabIdxAtPoint(Vector2)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabIdxFromControl",
+      "kind": "Method",
+      "signature": "public int GetTabIdxFromControl(Control control)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Returns the index of the tab tied to the given [param control]. The control must be a child of the [TabContainer].",
+      "godotName": "get_tab_idx_from_control",
+      "xmlDocId": "M:Godot.TabContainer.GetTabIdxFromControl(Control)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetTabMetadata(int tabIdx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the metadata value set to the tab at index [param tab_idx] using [method set_tab_metadata]. If no metadata was previously set, returns [code]null[/code] by default.",
+      "godotName": "get_tab_metadata",
+      "xmlDocId": "M:Godot.TabContainer.GetTabMetadata(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabTitle",
+      "kind": "Method",
+      "signature": "public String GetTabTitle(int tabIdx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the title of the tab at index [param tab_idx]. Tab titles default to the name of the indexed child node, but this can be overridden with [method set_tab_title].",
+      "godotName": "get_tab_title",
+      "xmlDocId": "M:Godot.TabContainer.GetTabTitle(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "GetTabTooltip",
+      "kind": "Method",
+      "signature": "public String GetTabTooltip(int tabIdx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tooltip text of the tab at index [param tab_idx].",
+      "godotName": "get_tab_tooltip",
+      "xmlDocId": "M:Godot.TabContainer.GetTabTooltip(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "IsTabDisabled",
+      "kind": "Method",
+      "signature": "public bool IsTabDisabled(int tabIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the tab at index [param tab_idx] is disabled.",
+      "godotName": "is_tab_disabled",
+      "xmlDocId": "M:Godot.TabContainer.IsTabDisabled(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "IsTabHidden",
+      "kind": "Method",
+      "signature": "public bool IsTabHidden(int tabIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the tab at index [param tab_idx] is hidden.",
+      "godotName": "is_tab_hidden",
+      "xmlDocId": "M:Godot.TabContainer.IsTabHidden(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SelectNextAvailable",
+      "kind": "Method",
+      "signature": "public bool SelectNextAvailable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Selects the first available tab with greater index than the currently selected. Returns [code]true[/code] if tab selection changed.",
+      "godotName": "select_next_available",
+      "xmlDocId": "M:Godot.TabContainer.SelectNextAvailable",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SelectPreviousAvailable",
+      "kind": "Method",
+      "signature": "public bool SelectPreviousAvailable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Selects the first available tab with lower index than the currently selected. Returns [code]true[/code] if tab selection changed.",
+      "godotName": "select_previous_available",
+      "xmlDocId": "M:Godot.TabContainer.SelectPreviousAvailable",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetPopup",
+      "kind": "Method",
+      "signature": "public void SetPopup(Node popup)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "popup",
+          "type": "Node"
+        }
+      ],
+      "summary": "If set on a [Popup] node instance, a popup menu icon appears in the top-right corner of the [TabContainer] (setting it to [code]null[/code] will make it go away). Clicking it will expand the [Popup] node.",
+      "godotName": "set_popup",
+      "xmlDocId": "M:Godot.TabContainer.SetPopup(Node)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabButtonIcon",
+      "kind": "Method",
+      "signature": "public void SetTabButtonIcon(int tabIdx, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the button icon from the tab at index [param tab_idx].",
+      "godotName": "set_tab_button_icon",
+      "xmlDocId": "M:Godot.TabContainer.SetTabButtonIcon(int,Texture2D)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabDisabled",
+      "kind": "Method",
+      "signature": "public void SetTabDisabled(int tabIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param disabled] is [code]true[/code], disables the tab at index [param tab_idx], making it non-interactable.",
+      "godotName": "set_tab_disabled",
+      "xmlDocId": "M:Godot.TabContainer.SetTabDisabled(int,bool)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabHidden",
+      "kind": "Method",
+      "signature": "public void SetTabHidden(int tabIdx, bool hidden)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "hidden",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param hidden] is [code]true[/code], hides the tab at index [param tab_idx], making it disappear from the tab area.",
+      "godotName": "set_tab_hidden",
+      "xmlDocId": "M:Godot.TabContainer.SetTabHidden(int,bool)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabIcon",
+      "kind": "Method",
+      "signature": "public void SetTabIcon(int tabIdx, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets an icon for the tab at index [param tab_idx].",
+      "godotName": "set_tab_icon",
+      "xmlDocId": "M:Godot.TabContainer.SetTabIcon(int,Texture2D)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabIconMaxWidth",
+      "kind": "Method",
+      "signature": "public void SetTabIconMaxWidth(int tabIdx, int width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the maximum allowed width of the icon for the tab at index [param tab_idx]. This limit is applied on top of the default size of the icon and on top of [theme_item icon_max_width]. The height is adjusted according to the icon\u0027s ratio.",
+      "godotName": "set_tab_icon_max_width",
+      "xmlDocId": "M:Godot.TabContainer.SetTabIconMaxWidth(int,int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabMetadata",
+      "kind": "Method",
+      "signature": "public void SetTabMetadata(int tabIdx, Variant metadata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "metadata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata value for the tab at index [param tab_idx], which can be retrieved later using [method get_tab_metadata].",
+      "godotName": "set_tab_metadata",
+      "xmlDocId": "M:Godot.TabContainer.SetTabMetadata(int,Variant)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabTitle",
+      "kind": "Method",
+      "signature": "public void SetTabTitle(int tabIdx, String title)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets a custom title for the tab at index [param tab_idx] (tab titles default to the name of the indexed child node). Set it back to the child\u0027s name to make the tab default to it again.",
+      "godotName": "set_tab_title",
+      "xmlDocId": "M:Godot.TabContainer.SetTabTitle(int,String)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SetTabTooltip",
+      "kind": "Method",
+      "signature": "public void SetTabTooltip(int tabIdx, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_idx",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets a custom tooltip text for tab at index [param tab_idx]. [b]Note:[/b] By default, if the [param tooltip] is empty and the tab text is truncated (not all characters fit into the tab), the title will be displayed as a tooltip. To hide the tooltip, assign [code]\u0022 \u0022[/code] as the [param tooltip] text.",
+      "godotName": "set_tab_tooltip",
+      "xmlDocId": "M:Godot.TabContainer.SetTabTooltip(int,String)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "AllTabsInFront",
+      "kind": "Property",
+      "signature": "public bool AllTabsInFront { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "This doesn\u0027t do anything.",
+      "godotName": "all_tabs_in_front",
+      "xmlDocId": "P:Godot.TabContainer.AllTabsInFront",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "ClipTabs",
+      "kind": "Property",
+      "signature": "public bool ClipTabs { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], tabs overflowing this node\u0027s width will be hidden, displaying two navigation buttons instead. Otherwise, this node\u0027s minimum size is updated so that all tabs are visible.",
+      "defaultValue": "true",
+      "godotName": "clip_tabs",
+      "xmlDocId": "P:Godot.TabContainer.ClipTabs",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "CurrentTab",
+      "kind": "Property",
+      "signature": "public int CurrentTab { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The current tab index. When set, this index\u0027s [Control] node\u0027s [code]visible[/code] property is set to [code]true[/code] and all others are set to [code]false[/code]. A value of [code]-1[/code] means that no tab is selected.",
+      "defaultValue": "-1",
+      "godotName": "current_tab",
+      "xmlDocId": "P:Godot.TabContainer.CurrentTab",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "DeselectEnabled",
+      "kind": "Property",
+      "signature": "public bool DeselectEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all tabs can be deselected so that no tab is selected. Click on the [member current_tab] to deselect it. Only the tab header will be shown if no tabs are selected.",
+      "defaultValue": "false",
+      "godotName": "deselect_enabled",
+      "xmlDocId": "P:Godot.TabContainer.DeselectEnabled",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "DragToRearrangeEnabled",
+      "kind": "Property",
+      "signature": "public bool DragToRearrangeEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], tabs can be rearranged with mouse drag.",
+      "defaultValue": "false",
+      "godotName": "drag_to_rearrange_enabled",
+      "xmlDocId": "P:Godot.TabContainer.DragToRearrangeEnabled",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "SwitchOnDragHover",
+      "kind": "Property",
+      "signature": "public bool SwitchOnDragHover { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], hovering over a tab while dragging something will switch to that tab. Does not have effect when hovering another tab to rearrange.",
+      "defaultValue": "true",
+      "godotName": "switch_on_drag_hover",
+      "xmlDocId": "P:Godot.TabContainer.SwitchOnDragHover",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabAlignment",
+      "kind": "Property",
+      "signature": "public int TabAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The position at which tabs will be placed.",
+      "defaultValue": "0",
+      "godotName": "tab_alignment",
+      "xmlDocId": "P:Godot.TabContainer.TabAlignment",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabFocusMode",
+      "kind": "Property",
+      "signature": "public int TabFocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The focus access mode for the internal [TabBar] node.",
+      "defaultValue": "2",
+      "godotName": "tab_focus_mode",
+      "xmlDocId": "P:Godot.TabContainer.TabFocusMode",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabsPosition",
+      "kind": "Property",
+      "signature": "public int TabsPosition { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The horizontal alignment of the tabs.",
+      "defaultValue": "0",
+      "godotName": "tabs_position",
+      "xmlDocId": "P:Godot.TabContainer.TabsPosition",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabsRearrangeGroup",
+      "kind": "Property",
+      "signature": "public int TabsRearrangeGroup { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "[TabContainer]s with the same rearrange group ID will allow dragging the tabs between them. Enable drag with [member drag_to_rearrange_enabled]. Setting this to [code]-1[/code] will disable rearranging between [TabContainer]s.",
+      "defaultValue": "-1",
+      "godotName": "tabs_rearrange_group",
+      "xmlDocId": "P:Godot.TabContainer.TabsRearrangeGroup",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabsVisible",
+      "kind": "Property",
+      "signature": "public bool TabsVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], tabs are visible. If [code]false[/code], tabs\u0027 content and titles are hidden.",
+      "defaultValue": "true",
+      "godotName": "tabs_visible",
+      "xmlDocId": "P:Godot.TabContainer.TabsVisible",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "UseHiddenTabsForMinSize",
+      "kind": "Property",
+      "signature": "public bool UseHiddenTabsForMinSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], child [Control] nodes that are hidden have their minimum size take into account in the total, instead of only the currently visible one.",
+      "defaultValue": "false",
+      "godotName": "use_hidden_tabs_for_min_size",
+      "xmlDocId": "P:Godot.TabContainer.UseHiddenTabsForMinSize",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "tab_{index}/disabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tab at [code]index[/code] is disabled. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. get_tab_count() - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "tab_{index}/disabled",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "tab_{index}/hidden",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tab at [code]index[/code] is hidden. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. get_tab_count() - 1[/code] range.",
+      "defaultValue": "false",
+      "godotName": "tab_{index}/hidden",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "tab_{index}/icon",
+      "kind": "RawProperty",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The title text of the tab at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. get_tab_count() - 1[/code] range.",
+      "godotName": "tab_{index}/icon",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "tab_{index}/title",
+      "kind": "RawProperty",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The tooltip text of the tab at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. get_tab_count() - 1[/code] range.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "tab_{index}/title",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "ActiveTabRearranged",
+      "kind": "Signal",
+      "signature": "public event ActiveTabRearrangedHandler ActiveTabRearranged",
+      "parameters": [
+        {
+          "name": "idx_to",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the active tab is rearranged via mouse drag. See [member drag_to_rearrange_enabled].",
+      "godotName": "active_tab_rearranged",
+      "xmlDocId": "E:Godot.TabContainer.ActiveTabRearranged(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "PrePopupPressed",
+      "kind": "Signal",
+      "signature": "public event PrePopupPressedHandler PrePopupPressed",
+      "parameters": [],
+      "summary": "Emitted when the [TabContainer]\u0027s [Popup] button is clicked. See [method set_popup] for details.",
+      "godotName": "pre_popup_pressed",
+      "xmlDocId": "E:Godot.TabContainer.PrePopupPressed",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabButtonPressed",
+      "kind": "Signal",
+      "signature": "public event TabButtonPressedHandler TabButtonPressed",
+      "parameters": [
+        {
+          "name": "tab",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user clicks on the button icon on this tab.",
+      "godotName": "tab_button_pressed",
+      "xmlDocId": "E:Godot.TabContainer.TabButtonPressed(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabChanged",
+      "kind": "Signal",
+      "signature": "public event TabChangedHandler TabChanged",
+      "parameters": [
+        {
+          "name": "tab",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when switching to another tab.",
+      "godotName": "tab_changed",
+      "xmlDocId": "E:Godot.TabContainer.TabChanged(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabClicked",
+      "kind": "Signal",
+      "signature": "public event TabClickedHandler TabClicked",
+      "parameters": [
+        {
+          "name": "tab",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a tab is clicked, even if it is the current tab.",
+      "godotName": "tab_clicked",
+      "xmlDocId": "E:Godot.TabContainer.TabClicked(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabHovered",
+      "kind": "Signal",
+      "signature": "public event TabHoveredHandler TabHovered",
+      "parameters": [
+        {
+          "name": "tab",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a tab is hovered by the mouse.",
+      "godotName": "tab_hovered",
+      "xmlDocId": "E:Godot.TabContainer.TabHovered(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "TabSelected",
+      "kind": "Signal",
+      "signature": "public event TabSelectedHandler TabSelected",
+      "parameters": [
+        {
+          "name": "tab",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a tab is selected via click, directional input, or script, even if it is the current tab.",
+      "godotName": "tab_selected",
+      "xmlDocId": "E:Godot.TabContainer.TabSelected(int)",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TabPosition",
+      "values": [
+        {
+          "name": "POSITION_BOTTOM",
+          "value": "1",
+          "enum": "TabPosition",
+          "kind": "EnumValue",
+          "summary": "Places the tab bar at the bottom. The tab bar\u0027s [StyleBox] will be flipped vertically.",
+          "sourcePath": "doc/classes/TabContainer.xml"
+        },
+        {
+          "name": "POSITION_MAX",
+          "value": "2",
+          "enum": "TabPosition",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TabPosition] enum.",
+          "sourcePath": "doc/classes/TabContainer.xml"
+        },
+        {
+          "name": "POSITION_TOP",
+          "value": "0",
+          "enum": "TabPosition",
+          "kind": "EnumValue",
+          "summary": "Places the tab bar at the top.",
+          "sourcePath": "doc/classes/TabContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "POSITION_TOP",
+      "value": "0",
+      "enum": "TabPosition",
+      "kind": "EnumValue",
+      "summary": "Places the tab bar at the top.",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "POSITION_BOTTOM",
+      "value": "1",
+      "enum": "TabPosition",
+      "kind": "EnumValue",
+      "summary": "Places the tab bar at the bottom. The tab bar\u0027s [StyleBox] will be flipped vertically.",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    },
+    {
+      "name": "POSITION_MAX",
+      "value": "2",
+      "enum": "TabPosition",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TabPosition] enum.",
+      "sourcePath": "doc/classes/TabContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TabContainer.xml",
+      "sha256": "74e821de17cebc71bf46650133faa4bd03822c3b168ac57614e98ac0e9db289a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpringBoneCollisionSphere3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SpringBoneCollisionSphere3D",
+    "kind": "class",
+    "baseType": "SpringBoneCollision3D",
+    "interfaces": [],
+    "godotReference": "SpringBoneCollisionSphere3D",
+    "documentationPath": "doc/classes/SpringBoneCollisionSphere3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_springbonecollisionsphere3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Inside",
+      "kind": "Property",
+      "signature": "public bool Inside { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the collision acts to trap the joint within the collision.",
+      "defaultValue": "false",
+      "godotName": "inside",
+      "xmlDocId": "P:Godot.SpringBoneCollisionSphere3D.Inside",
+      "sourcePath": "doc/classes/SpringBoneCollisionSphere3D.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sphere\u0027s radius.",
+      "defaultValue": "0.1",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.SpringBoneCollisionSphere3D.Radius",
+      "sourcePath": "doc/classes/SpringBoneCollisionSphere3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpringBoneCollisionSphere3D.xml",
+      "sha256": "3c9997d72dc2aa78c136685c7d7f54a1cfde8edafbde2c7299fd5c764e3fb678"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

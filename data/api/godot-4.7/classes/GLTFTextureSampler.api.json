@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFTextureSampler",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFTextureSampler",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFTextureSampler",
+    "documentationPath": "modules/gltf/doc_classes/GLTFTextureSampler.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltftexturesampler.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MagFilter",
+      "kind": "Property",
+      "signature": "public int MagFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Texture\u0027s magnification filter, used when texture appears larger on screen than the source image.",
+      "defaultValue": "9729",
+      "godotName": "mag_filter",
+      "xmlDocId": "P:Godot.GLTFTextureSampler.MagFilter",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTextureSampler.xml"
+    },
+    {
+      "name": "MinFilter",
+      "kind": "Property",
+      "signature": "public int MinFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Texture\u0027s minification filter, used when the texture appears smaller on screen than the source image.",
+      "defaultValue": "9987",
+      "godotName": "min_filter",
+      "xmlDocId": "P:Godot.GLTFTextureSampler.MinFilter",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTextureSampler.xml"
+    },
+    {
+      "name": "WrapS",
+      "kind": "Property",
+      "signature": "public int WrapS { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapping mode to use for S-axis (horizontal) texture coordinates.",
+      "defaultValue": "10497",
+      "godotName": "wrap_s",
+      "xmlDocId": "P:Godot.GLTFTextureSampler.WrapS",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTextureSampler.xml"
+    },
+    {
+      "name": "WrapT",
+      "kind": "Property",
+      "signature": "public int WrapT { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Wrapping mode to use for T-axis (vertical) texture coordinates.",
+      "defaultValue": "10497",
+      "godotName": "wrap_t",
+      "xmlDocId": "P:Godot.GLTFTextureSampler.WrapT",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTextureSampler.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFTextureSampler.xml",
+      "sha256": "a880e62a49fcdeaf3fde50ee8ee1d2720398b4f5d096870ab6f8390e27ffea52"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

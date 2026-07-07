@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "UDSServer",
+    "namespace": "Godot",
+    "fullName": "Godot.UDSServer",
+    "kind": "class",
+    "baseType": "SocketServer",
+    "interfaces": [],
+    "godotReference": "UDSServer",
+    "documentationPath": "doc/classes/UDSServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_udsserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Listen",
+      "kind": "Method",
+      "signature": "public int Listen(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Listens on the socket at [param path]. The socket file will be created at the specified path. [b]Note:[/b] The socket file must not already exist at the specified path. You may need to remove any existing socket file before calling this method.",
+      "godotName": "listen",
+      "xmlDocId": "M:Godot.UDSServer.Listen(String)",
+      "sourcePath": "doc/classes/UDSServer.xml"
+    },
+    {
+      "name": "TakeConnection",
+      "kind": "Method",
+      "signature": "public StreamPeerUDS TakeConnection()",
+      "returnType": "StreamPeerUDS",
+      "parameters": [],
+      "summary": "If a connection is available, returns a StreamPeerUDS with the connection.",
+      "godotName": "take_connection",
+      "xmlDocId": "M:Godot.UDSServer.TakeConnection",
+      "sourcePath": "doc/classes/UDSServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/UDSServer.xml",
+      "sha256": "52d7b44f1126531fe57788fc16cab8a2763cc3406503baa1901a78e534a42512"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

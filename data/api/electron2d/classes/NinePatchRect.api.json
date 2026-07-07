@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NinePatchRect",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.NinePatchRect",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "NinePatchRect",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "NinePatchRect",
+      "kind": "Constructor",
+      "signature": "public Electron2D.NinePatchRect()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.NinePatchRect\u0060 class.",
+      "xmlDocId": "M:Electron2D.NinePatchRect.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "NinePatchRect",
+      "kind": "Constructor",
+      "signature": "public Electron2D.NinePatchRect()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.NinePatchRect\u0060 class.",
+      "xmlDocId": "M:Electron2D.NinePatchRect.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this nine-patch rectangle.",
+      "xmlDocId": "M:Electron2D.NinePatchRect._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the nine-patch texture segments.",
+      "xmlDocId": "M:Electron2D.NinePatchRect._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AxisStretchHorizontal",
+      "kind": "Property",
+      "signature": "public Electron2D.NinePatchRect.AxisStretchMode AxisStretchHorizontal { get; set; }",
+      "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+      "parameters": [],
+      "summary": "Gets or sets horizontal center stretch behavior.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.AxisStretchHorizontal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AxisStretchVertical",
+      "kind": "Property",
+      "signature": "public Electron2D.NinePatchRect.AxisStretchMode AxisStretchVertical { get; set; }",
+      "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+      "parameters": [],
+      "summary": "Gets or sets vertical center stretch behavior.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.AxisStretchVertical",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DrawCenter",
+      "kind": "Property",
+      "signature": "public System.Boolean DrawCenter { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the center segment is drawn.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.DrawCenter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PatchMarginBottom",
+      "kind": "Property",
+      "signature": "public System.Int32 PatchMarginBottom { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the bottom patch margin in pixels.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.PatchMarginBottom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PatchMarginLeft",
+      "kind": "Property",
+      "signature": "public System.Int32 PatchMarginLeft { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the left patch margin in pixels.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.PatchMarginLeft",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PatchMarginRight",
+      "kind": "Property",
+      "signature": "public System.Int32 PatchMarginRight { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the right patch margin in pixels.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.PatchMarginRight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PatchMarginTop",
+      "kind": "Property",
+      "signature": "public System.Int32 PatchMarginTop { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the top patch margin in pixels.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.PatchMarginTop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Electron2D.Rect2 RegionRect { get; set; }",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets or sets the source region inside \u0060Electron2D.NinePatchRect.Texture\u0060.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.RegionRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D Texture { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the texture drawn by this control.",
+      "xmlDocId": "P:Electron2D.NinePatchRect.Texture",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this nine-patch rectangle.",
+      "xmlDocId": "M:Electron2D.NinePatchRect._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the nine-patch texture segments.",
+      "xmlDocId": "M:Electron2D.NinePatchRect._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

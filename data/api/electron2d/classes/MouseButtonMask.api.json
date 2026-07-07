@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MouseButtonMask",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.MouseButtonMask",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "MouseButtonMask",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Left",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask Left",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "The primary mouse button is held.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.Left",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Middle",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask Middle",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "The middle mouse button is held.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.Middle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask None",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "No mouse buttons are held.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask Right",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "The secondary mouse button is held.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.Right",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton1",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask Xbutton1",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "Extra mouse button 1 is held.",
+      "value": "128",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.Xbutton1",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton2",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseButtonMask Xbutton2",
+      "returnType": "Electron2D.MouseButtonMask",
+      "parameters": [],
+      "summary": "Extra mouse button 2 is held.",
+      "value": "256",
+      "xmlDocId": "F:Electron2D.MouseButtonMask.Xbutton2",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Left",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "The primary mouse button is held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Middle",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "The middle mouse button is held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "No mouse buttons are held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "The secondary mouse button is held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton1",
+      "value": "128",
+      "kind": "EnumValue",
+      "summary": "Extra mouse button 1 is held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Xbutton2",
+      "value": "256",
+      "kind": "EnumValue",
+      "summary": "Extra mouse button 2 is held.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

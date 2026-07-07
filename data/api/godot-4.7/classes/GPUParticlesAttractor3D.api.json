@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GPUParticlesAttractor3D",
+    "namespace": "Godot",
+    "fullName": "Godot.GPUParticlesAttractor3D",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "GPUParticlesAttractor3D",
+    "documentationPath": "doc/classes/GPUParticlesAttractor3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gpuparticlesattractor3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Attenuation",
+      "kind": "Property",
+      "signature": "public float Attenuation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The particle attractor\u0027s attenuation. Higher values result in more gradual pushing of particles as they come closer to the attractor\u0027s origin. Zero or negative values will cause particles to be pushed very fast as soon as the touch the attractor\u0027s edges.",
+      "defaultValue": "1.0",
+      "godotName": "attenuation",
+      "xmlDocId": "P:Godot.GPUParticlesAttractor3D.Attenuation",
+      "sourcePath": "doc/classes/GPUParticlesAttractor3D.xml"
+    },
+    {
+      "name": "CullMask",
+      "kind": "Property",
+      "signature": "public int CullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particle rendering layers ([member VisualInstance3D.layers]) that will be affected by the attractor. By default, all particles are affected by an attractor. After configuring particle nodes accordingly, specific layers can be unchecked to prevent certain particles from being affected by attractors. For example, this can be used if you\u0027re using an attractor as part of a spell effect but don\u0027t want the attractor to affect unrelated weather particles at the same position. Particle attraction can also be disabled on a per-process material basis by setting [member ParticleProcessMaterial.attractor_interaction_enabled] on the [GPUParticles3D] node.",
+      "defaultValue": "4294967295",
+      "godotName": "cull_mask",
+      "xmlDocId": "P:Godot.GPUParticlesAttractor3D.CullMask",
+      "sourcePath": "doc/classes/GPUParticlesAttractor3D.xml"
+    },
+    {
+      "name": "Directionality",
+      "kind": "Property",
+      "signature": "public float Directionality { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Adjusts how directional the attractor is. At [code]0.0[/code], the attractor is not directional at all: it will attract particles towards its center. At [code]1.0[/code], the attractor is fully directional: particles will always be pushed towards local -Z (or \u002BZ if [member strength] is negative). [b]Note:[/b] If [member directionality] is greater than [code]0.0[/code], the direction in which particles are pushed can be changed by rotating the [GPUParticlesAttractor3D] node.",
+      "defaultValue": "0.0",
+      "godotName": "directionality",
+      "xmlDocId": "P:Godot.GPUParticlesAttractor3D.Directionality",
+      "sourcePath": "doc/classes/GPUParticlesAttractor3D.xml"
+    },
+    {
+      "name": "Strength",
+      "kind": "Property",
+      "signature": "public float Strength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Adjusts the strength of the attractor. If [member strength] is negative, particles will be pushed in the opposite direction. Particles will be pushed [i]away[/i] from the attractor\u0027s origin if [member directionality] is [code]0.0[/code], or towards local \u002BZ if [member directionality] is greater than [code]0.0[/code].",
+      "defaultValue": "1.0",
+      "godotName": "strength",
+      "xmlDocId": "P:Godot.GPUParticlesAttractor3D.Strength",
+      "sourcePath": "doc/classes/GPUParticlesAttractor3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GPUParticlesAttractor3D.xml",
+      "sha256": "bf1a68b54885f0b9c3a85ca869218800e821faa6bba1322556fbc6238df0baaf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDFramebufferPass",
+    "namespace": "Godot",
+    "fullName": "Godot.RDFramebufferPass",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDFramebufferPass",
+    "documentationPath": "doc/classes/RDFramebufferPass.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdframebufferpass.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ColorAttachments",
+      "kind": "Property",
+      "signature": "public PackedInt32Array ColorAttachments { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Color attachments in order starting from 0. If this attachment is not used by the shader, pass ATTACHMENT_UNUSED to skip.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "color_attachments",
+      "xmlDocId": "P:Godot.RDFramebufferPass.ColorAttachments",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    },
+    {
+      "name": "DepthAttachment",
+      "kind": "Property",
+      "signature": "public int DepthAttachment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Depth attachment. ATTACHMENT_UNUSED should be used if no depth buffer is required for this pass.",
+      "defaultValue": "-1",
+      "godotName": "depth_attachment",
+      "xmlDocId": "P:Godot.RDFramebufferPass.DepthAttachment",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    },
+    {
+      "name": "InputAttachments",
+      "kind": "Property",
+      "signature": "public PackedInt32Array InputAttachments { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Used for multipass framebuffers (more than one render pass). Converts an attachment to an input. Make sure to also supply it properly in the [RDUniform] for the uniform set.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "input_attachments",
+      "xmlDocId": "P:Godot.RDFramebufferPass.InputAttachments",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    },
+    {
+      "name": "PreserveAttachments",
+      "kind": "Property",
+      "signature": "public PackedInt32Array PreserveAttachments { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Attachments to preserve in this pass (otherwise they are erased).",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "preserve_attachments",
+      "xmlDocId": "P:Godot.RDFramebufferPass.PreserveAttachments",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    },
+    {
+      "name": "ResolveAttachments",
+      "kind": "Property",
+      "signature": "public PackedInt32Array ResolveAttachments { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "If the color attachments are multisampled, non-multisampled resolve attachments can be provided.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "resolve_attachments",
+      "xmlDocId": "P:Godot.RDFramebufferPass.ResolveAttachments",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "ATTACHMENT_UNUSED",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Attachment is unused.",
+      "sourcePath": "doc/classes/RDFramebufferPass.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDFramebufferPass.xml",
+      "sha256": "5887e724100f6843141e96f5f5bb97d277dda2b819f1b11c92429561ccfb08d1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

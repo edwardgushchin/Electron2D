@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeMix",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeMix",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeMix",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodemix.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A type of operands and returned value.",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeMix.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "7",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_SCALAR",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D_SCALAR",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]a[/code] and [code]b[/code] ports use a 2D vector type. The [code]weight[/code] port uses a scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D_SCALAR",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]a[/code] and [code]b[/code] ports use a 3D vector type. The [code]weight[/code] port uses a scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D_SCALAR",
+          "value": "6",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "The [code]a[/code] and [code]b[/code] ports use a 4D vector type. The [code]weight[/code] port uses a scalar type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_SCALAR",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D_SCALAR",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]a[/code] and [code]b[/code] ports use a 2D vector type. The [code]weight[/code] port uses a scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D_SCALAR",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]a[/code] and [code]b[/code] ports use a 3D vector type. The [code]weight[/code] port uses a scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D_SCALAR",
+      "value": "6",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "The [code]a[/code] and [code]b[/code] ports use a 4D vector type. The [code]weight[/code] port uses a scalar type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "7",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeMix.xml",
+      "sha256": "db44a9fc1cf5b7fce42b4b1a204cd2c298e2e1821d5b4c96a4af5e3202995d19"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

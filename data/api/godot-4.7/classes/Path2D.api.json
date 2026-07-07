@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Path2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Path2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Path2D",
+    "documentationPath": "doc/classes/Path2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_path2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Curve",
+      "kind": "Property",
+      "signature": "public Curve2D Curve { get; set; }",
+      "returnType": "Curve2D",
+      "parameters": [],
+      "summary": "A [Curve2D] describing the path.",
+      "godotName": "curve",
+      "xmlDocId": "P:Godot.Path2D.Curve",
+      "sourcePath": "doc/classes/Path2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Path2D.xml",
+      "sha256": "a336862a2e6f94f8b55f39af9e8d536d5f6678c3fdc8e07f28c68b8b6626b12e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

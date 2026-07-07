@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Callable",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Callable",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Callable\u003E"
+    ],
+    "godotReference": "Callable",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Callable",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Callable(Electron2D.Object target, System.String method)",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Electron2D.Object"
+        },
+        {
+          "name": "method",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Initializes a new instance of the Callable type.",
+      "xmlDocId": "M:Electron2D.Callable.#ctor(Electron2D.Object,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Callable",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Callable(Electron2D.Object target, System.String method)",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Electron2D.Object"
+        },
+        {
+          "name": "method",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Initializes a new instance of the Callable type.",
+      "xmlDocId": "M:Electron2D.Callable.#ctor(Electron2D.Object,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Call",
+      "kind": "Method",
+      "signature": "public System.Object Call(System.Object[] args)",
+      "returnType": "System.Object",
+      "parameters": [
+        {
+          "name": "args",
+          "type": "System.Object[]"
+        }
+      ],
+      "summary": "Executes the call operation.",
+      "xmlDocId": "M:Electron2D.Callable.Call(System.Object[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CallDeferred",
+      "kind": "Method",
+      "signature": "public System.Void CallDeferred(System.Object[] args)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "args",
+          "type": "System.Object[]"
+        }
+      ],
+      "summary": "Executes the call deferred operation.",
+      "xmlDocId": "M:Electron2D.Callable.CallDeferred(System.Object[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Callable other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Callable.Equals(Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Callable.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "From",
+      "kind": "Method",
+      "signature": "public static Electron2D.Callable From(System.Action action)",
+      "returnType": "Electron2D.Callable",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.Action"
+        }
+      ],
+      "summary": "Executes the from operation.",
+      "xmlDocId": "M:Electron2D.Callable.From(System.Action)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "From",
+      "kind": "Method",
+      "signature": "public static Electron2D.Callable From(System.Action\u003CT\u003E action)",
+      "returnType": "Electron2D.Callable",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "System.Action\u003CT\u003E"
+        }
+      ],
+      "summary": "Executes the from operation.",
+      "xmlDocId": "M:Electron2D.Callable.From\u0060\u00601(System.Action{\u00600})",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.Callable.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMethod",
+      "kind": "Method",
+      "signature": "public System.String GetMethod()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets the method value.",
+      "xmlDocId": "M:Electron2D.Callable.GetMethod",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetObject",
+      "kind": "Method",
+      "signature": "public Electron2D.Object GetObject()",
+      "returnType": "Electron2D.Object",
+      "parameters": [],
+      "summary": "Gets the object value.",
+      "xmlDocId": "M:Electron2D.Callable.GetObject",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsNull",
+      "kind": "Method",
+      "signature": "public System.Boolean IsNull()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether null is true.",
+      "xmlDocId": "M:Electron2D.Callable.IsNull",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Callable left, Electron2D.Callable right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Callable"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Callable.op_Equality(Electron2D.Callable,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Callable left, Electron2D.Callable right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Callable"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Callable.op_Inequality(Electron2D.Callable,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Callable left, Electron2D.Callable right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Callable"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Callable.op_Equality(Electron2D.Callable,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Callable left, Electron2D.Callable right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Callable"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Callable.op_Inequality(Electron2D.Callable,Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

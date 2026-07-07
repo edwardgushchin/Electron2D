@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PanoramaSkyMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.PanoramaSkyMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "PanoramaSkyMaterial",
+    "documentationPath": "doc/classes/PanoramaSkyMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_panoramaskymaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float EnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sky\u0027s overall brightness multiplier. Higher values result in a brighter sky.",
+      "defaultValue": "1.0",
+      "godotName": "energy_multiplier",
+      "xmlDocId": "P:Godot.PanoramaSkyMaterial.EnergyMultiplier",
+      "sourcePath": "doc/classes/PanoramaSkyMaterial.xml"
+    },
+    {
+      "name": "Filter",
+      "kind": "Property",
+      "signature": "public bool Filter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "A boolean value to determine if the background texture should be filtered or not.",
+      "defaultValue": "true",
+      "godotName": "filter",
+      "xmlDocId": "P:Godot.PanoramaSkyMaterial.Filter",
+      "sourcePath": "doc/classes/PanoramaSkyMaterial.xml"
+    },
+    {
+      "name": "Panorama",
+      "kind": "Property",
+      "signature": "public Texture2D Panorama { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] to be applied to the [PanoramaSkyMaterial].",
+      "godotName": "panorama",
+      "xmlDocId": "P:Godot.PanoramaSkyMaterial.Panorama",
+      "sourcePath": "doc/classes/PanoramaSkyMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PanoramaSkyMaterial.xml",
+      "sha256": "6a0046372fb5bd41e3e645d1cef8aa48cfd45bd731cdeeeae8611151aae4e09b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

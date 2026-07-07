@@ -1,0 +1,701 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Quaternion",
+    "namespace": "Godot",
+    "fullName": "Godot.Quaternion",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Quaternion",
+    "documentationPath": "doc/classes/Quaternion.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_quaternion.html"
+  },
+  "constructors": [
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Constructs a [Quaternion] identical to [constant IDENTITY]. [b]Note:[/b] In C#, this constructs a [Quaternion] with all of its components set to [code]0.0[/code].",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion(Quaternion from)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Constructs a [Quaternion] as a copy of the given [Quaternion].",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion(Vector3 arcFrom, Vector3 arcTo)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "arc_from",
+          "type": "Vector3"
+        },
+        {
+          "name": "arc_to",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a [Quaternion] representing the shortest arc between [param arc_from] and [param arc_to]. These can be imagined as two points intersecting a sphere\u0027s surface, with a radius of [code]1.0[/code].",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor(Vector3,Vector3)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion(Vector3 axis, float angle)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Quaternion] representing rotation around the [param axis] by the given [param angle], in radians. The axis must be a normalized vector.",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor(Vector3,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion(Basis from)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Constructs a [Quaternion] from the given rotation [Basis]. This constructor is faster than [method Basis.get_rotation_quaternion], but the given basis must be [i]orthonormalized[/i] (see [method Basis.orthonormalized]). Otherwise, the constructor fails and returns [constant IDENTITY].",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor(Basis)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Quaternion",
+      "kind": "Constructor",
+      "signature": "public Quaternion(float x, float y, float z, float w)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "float"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        },
+        {
+          "name": "z",
+          "type": "float"
+        },
+        {
+          "name": "w",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Quaternion] defined by the given values. [b]Note:[/b] Only normalized quaternions represent rotation; if these values are not normalized, the new [Quaternion] will not be a valid rotation.",
+      "godotName": "Quaternion",
+      "xmlDocId": "M:Godot.Quaternion.#ctor(float,float,float,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "AngleTo",
+      "kind": "Method",
+      "signature": "public float AngleTo(Quaternion to)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Returns the angle between this quaternion and [param to]. This is the magnitude of the angle you would need to rotate by to get from one to the other. [b]Note:[/b] The magnitude of the floating-point error for this method is abnormally high, so methods such as [code]is_zero_approx[/code] will not work reliably.",
+      "godotName": "angle_to",
+      "xmlDocId": "M:Godot.Quaternion.AngleTo(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Dot",
+      "kind": "Method",
+      "signature": "public float Dot(Quaternion with)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Returns the dot product between this quaternion and [param with]. This is equivalent to [code](quat.x * with.x) \u002B (quat.y * with.y) \u002B (quat.z * with.z) \u002B (quat.w * with.w)[/code].",
+      "godotName": "dot",
+      "xmlDocId": "M:Godot.Quaternion.Dot(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Exp",
+      "kind": "Method",
+      "signature": "public Quaternion Exp()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns the exponential of this quaternion. The rotation axis of the result is the normalized rotation axis of this quaternion, the angle of the result is the length of the vector part of this quaternion.",
+      "godotName": "exp",
+      "xmlDocId": "M:Godot.Quaternion.Exp",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "FromEuler",
+      "kind": "Method",
+      "signature": "public Quaternion FromEuler(Vector3 euler)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "euler",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a new [Quaternion] from the given [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. In Godot, Euler angles always use intrinsic order. This method always uses the intrinsic YXZ convention ([constant EULER_ORDER_YXZ]).",
+      "godotName": "from_euler",
+      "xmlDocId": "M:Godot.Quaternion.FromEuler(Vector3)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "GetAngle",
+      "kind": "Method",
+      "signature": "public float GetAngle()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the angle of the rotation represented by this quaternion. [b]Note:[/b] The quaternion must be normalized.",
+      "godotName": "get_angle",
+      "xmlDocId": "M:Godot.Quaternion.GetAngle",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "GetAxis",
+      "kind": "Method",
+      "signature": "public Vector3 GetAxis()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the rotation axis of the rotation represented by this quaternion.",
+      "godotName": "get_axis",
+      "xmlDocId": "M:Godot.Quaternion.GetAxis",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "GetEuler",
+      "kind": "Method",
+      "signature": "public Vector3 GetEuler(int order)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "order",
+          "type": "int",
+          "defaultValue": "2"
+        }
+      ],
+      "summary": "Returns this quaternion\u0027s rotation as a [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. The order of each consecutive rotation can be changed with [param order] (see [enum EulerOrder] constants). In Godot, Euler angles always use intrinsic order. By default, the intrinsic YXZ convention is used ([constant EULER_ORDER_YXZ]): since we are decomposing, local Z (roll) is calculated first, then local X (pitch), and lastly local Y (yaw). When using the opposite method [method from_euler] to compose a rotation, this order is reversed.",
+      "godotName": "get_euler",
+      "xmlDocId": "M:Godot.Quaternion.GetEuler(int)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Quaternion Inverse()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns the inverse version of this quaternion, inverting the sign of every component except [member w].",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Quaternion.Inverse",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Quaternion to)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this quaternion and [param to] are approximately equal, by calling [method @GlobalScope.is_equal_approx] on each component.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Quaternion.IsEqualApprox(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this quaternion is finite, by calling [method @GlobalScope.is_finite] on each component.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Quaternion.IsFinite",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "IsNormalized",
+      "kind": "Method",
+      "signature": "public bool IsNormalized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this quaternion is normalized. See also [method normalized].",
+      "godotName": "is_normalized",
+      "xmlDocId": "M:Godot.Quaternion.IsNormalized",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Length",
+      "kind": "Method",
+      "signature": "public float Length()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns this quaternion\u0027s length, also called magnitude.",
+      "godotName": "length",
+      "xmlDocId": "M:Godot.Quaternion.Length",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "LengthSquared",
+      "kind": "Method",
+      "signature": "public float LengthSquared()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns this quaternion\u0027s length, squared. [b]Note:[/b] This method is faster than [method length], so prefer it if you only need to compare quaternion lengths.",
+      "godotName": "length_squared",
+      "xmlDocId": "M:Godot.Quaternion.LengthSquared",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Log",
+      "kind": "Method",
+      "signature": "public Quaternion Log()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns the logarithm of this quaternion. Multiplies this quaternion\u0027s rotation axis by its rotation angle, and stores the result in the returned quaternion\u0027s vector part ([member x], [member y], and [member z]). The returned quaternion\u0027s real part ([member w]) is always [code]0.0[/code].",
+      "godotName": "log",
+      "xmlDocId": "M:Godot.Quaternion.Log",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Normalized",
+      "kind": "Method",
+      "signature": "public Quaternion Normalized()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns a copy of this quaternion, normalized so that its length is [code]1.0[/code]. See also [method is_normalized].",
+      "godotName": "normalized",
+      "xmlDocId": "M:Godot.Quaternion.Normalized",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Slerp",
+      "kind": "Method",
+      "signature": "public Quaternion Slerp(Quaternion to, float weight)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Quaternion"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a spherical-linear interpolation with the [param to] quaternion, given a [param weight] and returns the result. Both this quaternion and [param to] must be normalized.",
+      "godotName": "slerp",
+      "xmlDocId": "M:Godot.Quaternion.Slerp(Quaternion,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Slerpni",
+      "kind": "Method",
+      "signature": "public Quaternion Slerpni(Quaternion to, float weight)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Quaternion"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a spherical-linear interpolation with the [param to] quaternion, given a [param weight] and returns the result. Unlike [method slerp], this method does not check if the rotation path is smaller than 90 degrees. Both this quaternion and [param to] must be normalized.",
+      "godotName": "slerpni",
+      "xmlDocId": "M:Godot.Quaternion.Slerpni(Quaternion,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "SphericalCubicInterpolate",
+      "kind": "Method",
+      "signature": "public Quaternion SphericalCubicInterpolate(Quaternion b, Quaternion preA, Quaternion postB, float weight)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Quaternion"
+        },
+        {
+          "name": "pre_a",
+          "type": "Quaternion"
+        },
+        {
+          "name": "post_b",
+          "type": "Quaternion"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a spherical cubic interpolation between quaternions [param pre_a], this vector, [param b], and [param post_b], by the given amount [param weight].",
+      "godotName": "spherical_cubic_interpolate",
+      "xmlDocId": "M:Godot.Quaternion.SphericalCubicInterpolate(Quaternion,Quaternion,Quaternion,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "SphericalCubicInterpolateInTime",
+      "kind": "Method",
+      "signature": "public Quaternion SphericalCubicInterpolateInTime(Quaternion b, Quaternion preA, Quaternion postB, float weight, float bT, float preAT, float postBT)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Quaternion"
+        },
+        {
+          "name": "pre_a",
+          "type": "Quaternion"
+        },
+        {
+          "name": "post_b",
+          "type": "Quaternion"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        },
+        {
+          "name": "b_t",
+          "type": "float"
+        },
+        {
+          "name": "pre_a_t",
+          "type": "float"
+        },
+        {
+          "name": "post_b_t",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a spherical cubic interpolation between quaternions [param pre_a], this vector, [param b], and [param post_b], by the given amount [param weight]. It can perform smoother interpolation than [method spherical_cubic_interpolate] by the time values.",
+      "godotName": "spherical_cubic_interpolate_in_time",
+      "xmlDocId": "M:Godot.Quaternion.SphericalCubicInterpolateInTime(Quaternion,Quaternion,Quaternion,float,float,float,float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "W",
+      "kind": "Property",
+      "signature": "public float W { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "W component of the quaternion. This is the \u0022real\u0022 part. [b]Note:[/b] Quaternion components should usually not be manipulated directly.",
+      "defaultValue": "1.0",
+      "godotName": "w",
+      "xmlDocId": "P:Godot.Quaternion.W",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public float X { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "X component of the quaternion. This is the value along the \u0022imaginary\u0022 [code]i[/code] axis. [b]Note:[/b] Quaternion components should usually not be manipulated directly.",
+      "defaultValue": "0.0",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Quaternion.X",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public float Y { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Y component of the quaternion. This is the value along the \u0022imaginary\u0022 [code]j[/code] axis. [b]Note:[/b] Quaternion components should usually not be manipulated directly.",
+      "defaultValue": "0.0",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Quaternion.Y",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "Z",
+      "kind": "Property",
+      "signature": "public float Z { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Z component of the quaternion. This is the value along the \u0022imaginary\u0022 [code]k[/code] axis. [b]Note:[/b] Quaternion components should usually not be manipulated directly.",
+      "defaultValue": "0.0",
+      "godotName": "z",
+      "xmlDocId": "P:Godot.Quaternion.Z",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "IDENTITY",
+      "value": "Quaternion(0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "The identity quaternion, representing no rotation. This has the same rotation as [constant Basis.IDENTITY]. If a [Vector3] is rotated (multiplied) by this quaternion, it does not change. [b]Note:[/b] In GDScript, this constant is equivalent to creating a [constructor Quaternion] without any arguments. It can be used to make your code clearer, and for consistency with C#.",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Quaternion right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both quaternions are not exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Quaternion.operator !=(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Quaternion operator *(Quaternion right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Composes (multiplies) two quaternions. This rotates the [param right] quaternion (the child) by this quaternion (the parent).",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Quaternion.operator *(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3 right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Rotates (multiplies) the [param right] vector by this quaternion, returning a [Vector3].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Quaternion.operator *(Vector3)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Quaternion operator *(float right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies each component of the [Quaternion] by the right [float] value. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Quaternion.operator *(float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Quaternion operator *(int right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies each component of the [Quaternion] by the right [int] value. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Quaternion.operator *(int)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public Quaternion operator \u002B(Quaternion right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Adds each component of the left [Quaternion] to the right [Quaternion]. This operation is not meaningful on its own, but it can be used as a part of a larger expression, such as approximating an intermediate rotation between two nearby rotations.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.Quaternion.operator \u002B(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator -",
+      "kind": "Operator",
+      "signature": "public Quaternion operator -(Quaternion right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Subtracts each component of the left [Quaternion] by the right [Quaternion]. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator -",
+      "xmlDocId": "M:Godot.Quaternion.operator -(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Quaternion operator /(float right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides each component of the [Quaternion] by the right [float] value. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Quaternion.operator /(float)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Quaternion operator /(int right)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides each component of the [Quaternion] by the right [int] value. This operation is not meaningful on its own, but it can be used as a part of a larger expression.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Quaternion.operator /(int)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Quaternion right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both quaternions are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Quaternion.operator ==(Quaternion)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public float operator [](int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Accesses each component of this quaternion by their index. Index [code]0[/code] is the same as [member x], index [code]1[/code] is the same as [member y], index [code]2[/code] is the same as [member z], and index [code]3[/code] is the same as [member w].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Quaternion.operator [](int)",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator unary\u002B",
+      "kind": "Operator",
+      "signature": "public Quaternion operator unary\u002B()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns the same value as if the [code]\u002B[/code] was not there. Unary [code]\u002B[/code] does nothing, but sometimes it can make your code more readable.",
+      "godotName": "operator unary\u002B",
+      "xmlDocId": "M:Godot.Quaternion.operator unary\u002B",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    },
+    {
+      "name": "operator unary-",
+      "kind": "Operator",
+      "signature": "public Quaternion operator unary-()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns the negative value of the [Quaternion]. This is the same as multiplying all components by [code]-1[/code]. This operation results in a quaternion that represents the same rotation.",
+      "godotName": "operator unary-",
+      "xmlDocId": "M:Godot.Quaternion.operator unary-",
+      "sourcePath": "doc/classes/Quaternion.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Quaternion.xml",
+      "sha256": "4f16ac26bb22c77f7177c19ac8e61c0bb726f544121157f6de3050e22996112e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

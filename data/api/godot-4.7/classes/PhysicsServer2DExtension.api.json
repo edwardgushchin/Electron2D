@@ -1,0 +1,5361 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2DExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsServer2DExtension",
+    "kind": "class",
+    "baseType": "PhysicsServer2D",
+    "interfaces": [],
+    "godotReference": "PhysicsServer2DExtension",
+    "documentationPath": "doc/classes/PhysicsServer2DExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsserver2dextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AreaAddShape",
+      "kind": "Method",
+      "signature": "public void _AreaAddShape(RID area, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_add_shape].",
+      "godotName": "_area_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void _AreaAttachCanvasInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_attach_canvas_instance_id].",
+      "godotName": "_area_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void _AreaAttachObjectInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_attach_object_instance_id].",
+      "godotName": "_area_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaClearShapes",
+      "kind": "Method",
+      "signature": "public void _AreaClearShapes(RID area)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_clear_shapes].",
+      "godotName": "_area_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaCreate",
+      "kind": "Method",
+      "signature": "public RID _AreaCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.area_create].",
+      "godotName": "_area_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int _AreaGetCanvasInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_canvas_instance_id].",
+      "godotName": "_area_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _AreaGetCollisionLayer(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_collision_layer].",
+      "godotName": "_area_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _AreaGetCollisionMask(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_collision_mask].",
+      "godotName": "_area_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int _AreaGetObjectInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_object_instance_id].",
+      "godotName": "_area_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetParam",
+      "kind": "Method",
+      "signature": "public Variant _AreaGetParam(RID area, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_param].",
+      "godotName": "_area_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShape",
+      "kind": "Method",
+      "signature": "public RID _AreaGetShape(RID area, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape].",
+      "godotName": "_area_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShapeCount",
+      "kind": "Method",
+      "signature": "public int _AreaGetShapeCount(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape_count].",
+      "godotName": "_area_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _AreaGetShapeTransform(RID area, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape_transform].",
+      "godotName": "_area_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetSpace",
+      "kind": "Method",
+      "signature": "public RID _AreaGetSpace(RID area)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_space].",
+      "godotName": "_area_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _AreaGetTransform(RID area)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_transform].",
+      "godotName": "_area_get_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetTransform(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaRemoveShape",
+      "kind": "Method",
+      "signature": "public void _AreaRemoveShape(RID area, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_remove_shape].",
+      "godotName": "_area_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetAreaMonitorCallback",
+      "kind": "Method",
+      "signature": "public void _AreaSetAreaMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_area_monitor_callback].",
+      "godotName": "_area_set_area_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetAreaMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _AreaSetCollisionLayer(RID area, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_collision_layer].",
+      "godotName": "_area_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _AreaSetCollisionMask(RID area, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_collision_mask].",
+      "godotName": "_area_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetMonitorCallback",
+      "kind": "Method",
+      "signature": "public void _AreaSetMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_monitor_callback].",
+      "godotName": "_area_set_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetMonitorable",
+      "kind": "Method",
+      "signature": "public void _AreaSetMonitorable(RID area, bool monitorable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "monitorable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_monitorable].",
+      "godotName": "_area_set_monitorable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetMonitorable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetParam",
+      "kind": "Method",
+      "signature": "public void _AreaSetParam(RID area, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_param].",
+      "godotName": "_area_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetPickable",
+      "kind": "Method",
+      "signature": "public void _AreaSetPickable(RID area, bool pickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "pickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], allows the area with the given [RID] to detect mouse inputs when the mouse cursor is hovering on it. Overridable version of [PhysicsServer2D]\u0027s internal [code]area_set_pickable[/code] method. Corresponds to [member CollisionObject2D.input_pickable].",
+      "godotName": "_area_set_pickable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetPickable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShape",
+      "kind": "Method",
+      "signature": "public void _AreaSetShape(RID area, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape].",
+      "godotName": "_area_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void _AreaSetShapeDisabled(RID area, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape_disabled].",
+      "godotName": "_area_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShapeTransform",
+      "kind": "Method",
+      "signature": "public void _AreaSetShapeTransform(RID area, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape_transform].",
+      "godotName": "_area_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetSpace",
+      "kind": "Method",
+      "signature": "public void _AreaSetSpace(RID area, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_space].",
+      "godotName": "_area_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetTransform",
+      "kind": "Method",
+      "signature": "public void _AreaSetTransform(RID area, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_transform].",
+      "godotName": "_area_set_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetTransform(RID,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddCollisionException",
+      "kind": "Method",
+      "signature": "public void _BodyAddCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_collision_exception].",
+      "godotName": "_body_add_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_central_force].",
+      "godotName": "_body_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantForce",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_force].",
+      "godotName": "_body_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_torque].",
+      "godotName": "_body_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddShape",
+      "kind": "Method",
+      "signature": "public void _BodyAddShape(RID body, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_shape].",
+      "godotName": "_body_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _BodyApplyCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_central_force].",
+      "godotName": "_body_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyCentralImpulse(RID body, Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_central_impulse].",
+      "godotName": "_body_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyCentralImpulse(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyForce",
+      "kind": "Method",
+      "signature": "public void _BodyApplyForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_force].",
+      "godotName": "_body_apply_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyImpulse(RID body, Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_impulse].",
+      "godotName": "_body_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyImpulse(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyTorque",
+      "kind": "Method",
+      "signature": "public void _BodyApplyTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_torque].",
+      "godotName": "_body_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyTorqueImpulse(RID body, float impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_torque_impulse].",
+      "godotName": "_body_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyTorqueImpulse(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void _BodyAttachCanvasInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_attach_canvas_instance_id].",
+      "godotName": "_body_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void _BodyAttachObjectInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_attach_object_instance_id].",
+      "godotName": "_body_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyClearShapes",
+      "kind": "Method",
+      "signature": "public void _BodyClearShapes(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_clear_shapes].",
+      "godotName": "_body_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyCollideShape",
+      "kind": "Method",
+      "signature": "public bool _BodyCollideShape(RID body, int bodyShape, RID shape, Transform2D shapeXform, Vector2 motion, void* rResults, int resultMax, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "body_shape",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "shape_xform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "result_max",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Given a [param body], a [param shape], and their respective parameters, this method should return [code]true[/code] if a collision between the two would occur, with additional details passed in [param r_results]. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_collide[/code] method. Corresponds to [method PhysicsDirectSpaceState2D.collide_shape].",
+      "godotName": "_body_collide_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyCollideShape(RID,int,RID,Transform2D,Vector2,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyCreate",
+      "kind": "Method",
+      "signature": "public RID _BodyCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.body_create].",
+      "godotName": "_body_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int _BodyGetCanvasInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_canvas_instance_id].",
+      "godotName": "_body_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionExceptions",
+      "kind": "Method",
+      "signature": "public RID[] _BodyGetCollisionExceptions(RID body)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [RID]s of all bodies added as collision exceptions for the given [param body]. See also [method _body_add_collision_exception] and [method _body_remove_collision_exception]. Overridable version of [PhysicsServer2D]\u0027s internal [code]body_get_collision_exceptions[/code] method. Corresponds to [method PhysicsBody2D.get_collision_exceptions].",
+      "godotName": "_body_get_collision_exceptions",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionExceptions(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _BodyGetCollisionLayer(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_layer].",
+      "godotName": "_body_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _BodyGetCollisionMask(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_mask].",
+      "godotName": "_body_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionPriority",
+      "kind": "Method",
+      "signature": "public float _BodyGetCollisionPriority(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_priority].",
+      "godotName": "_body_get_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionPriority(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector2 _BodyGetConstantForce(RID body)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_constant_force].",
+      "godotName": "_body_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetConstantForce(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetConstantTorque",
+      "kind": "Method",
+      "signature": "public float _BodyGetConstantTorque(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_constant_torque].",
+      "godotName": "_body_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetConstantTorque(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetContactsReportedDepthThreshold",
+      "kind": "Method",
+      "signature": "public float _BodyGetContactsReportedDepthThreshold(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [PhysicsServer2D]\u0027s internal [code]body_get_contacts_reported_depth_threshold[/code] method. [b]Note:[/b] This method is currently unused by Godot\u0027s default physics implementation.",
+      "godotName": "_body_get_contacts_reported_depth_threshold",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetContactsReportedDepthThreshold(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public int _BodyGetContinuousCollisionDetectionMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_continuous_collision_detection_mode].",
+      "godotName": "_body_get_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetContinuousCollisionDetectionMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectBodyState2D _BodyGetDirectState(RID body)",
+      "returnType": "PhysicsDirectBodyState2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_direct_state].",
+      "godotName": "_body_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public int _BodyGetMaxContactsReported(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_max_contacts_reported].",
+      "godotName": "_body_get_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetMaxContactsReported(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetMode",
+      "kind": "Method",
+      "signature": "public int _BodyGetMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_mode].",
+      "godotName": "_body_get_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int _BodyGetObjectInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_object_instance_id].",
+      "godotName": "_body_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetParam",
+      "kind": "Method",
+      "signature": "public Variant _BodyGetParam(RID body, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_param].",
+      "godotName": "_body_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShape",
+      "kind": "Method",
+      "signature": "public RID _BodyGetShape(RID body, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape].",
+      "godotName": "_body_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShapeCount",
+      "kind": "Method",
+      "signature": "public int _BodyGetShapeCount(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape_count].",
+      "godotName": "_body_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _BodyGetShapeTransform(RID body, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape_transform].",
+      "godotName": "_body_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetSpace",
+      "kind": "Method",
+      "signature": "public RID _BodyGetSpace(RID body)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_space].",
+      "godotName": "_body_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetState",
+      "kind": "Method",
+      "signature": "public Variant _BodyGetState(RID body, int state)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_state].",
+      "godotName": "_body_get_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetState(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyIsOmittingForceIntegration",
+      "kind": "Method",
+      "signature": "public bool _BodyIsOmittingForceIntegration(RID body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_is_omitting_force_integration].",
+      "godotName": "_body_is_omitting_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyIsOmittingForceIntegration(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyRemoveCollisionException",
+      "kind": "Method",
+      "signature": "public void _BodyRemoveCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_remove_collision_exception].",
+      "godotName": "_body_remove_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyRemoveCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyRemoveShape",
+      "kind": "Method",
+      "signature": "public void _BodyRemoveShape(RID body, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_remove_shape].",
+      "godotName": "_body_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyResetMassProperties",
+      "kind": "Method",
+      "signature": "public void _BodyResetMassProperties(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_reset_mass_properties].",
+      "godotName": "_body_reset_mass_properties",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyResetMassProperties(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetAxisVelocity",
+      "kind": "Method",
+      "signature": "public void _BodySetAxisVelocity(RID body, Vector2 axisVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "axis_velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_axis_velocity].",
+      "godotName": "_body_set_axis_velocity",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetAxisVelocity(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionLayer(RID body, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_layer].",
+      "godotName": "_body_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionMask(RID body, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_mask].",
+      "godotName": "_body_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionPriority",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionPriority(RID body, float priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "priority",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_priority].",
+      "godotName": "_body_set_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionPriority(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetConstantForce",
+      "kind": "Method",
+      "signature": "public void _BodySetConstantForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_constant_force].",
+      "godotName": "_body_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetConstantForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _BodySetConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_constant_torque].",
+      "godotName": "_body_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetContactsReportedDepthThreshold",
+      "kind": "Method",
+      "signature": "public void _BodySetContactsReportedDepthThreshold(RID body, float threshold)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "threshold",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [PhysicsServer2D]\u0027s internal [code]body_set_contacts_reported_depth_threshold[/code] method. [b]Note:[/b] This method is currently unused by Godot\u0027s default physics implementation.",
+      "godotName": "_body_set_contacts_reported_depth_threshold",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetContactsReportedDepthThreshold(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public void _BodySetContinuousCollisionDetectionMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_continuous_collision_detection_mode].",
+      "godotName": "_body_set_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetContinuousCollisionDetectionMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetForceIntegrationCallback",
+      "kind": "Method",
+      "signature": "public void _BodySetForceIntegrationCallback(RID body, Callable callable, Variant userdata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        },
+        {
+          "name": "userdata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_force_integration_callback].",
+      "godotName": "_body_set_force_integration_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetForceIntegrationCallback(RID,Callable,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public void _BodySetMaxContactsReported(RID body, int amount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_max_contacts_reported].",
+      "godotName": "_body_set_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetMaxContactsReported(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetMode",
+      "kind": "Method",
+      "signature": "public void _BodySetMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_mode].",
+      "godotName": "_body_set_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetOmitForceIntegration",
+      "kind": "Method",
+      "signature": "public void _BodySetOmitForceIntegration(RID body, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_omit_force_integration].",
+      "godotName": "_body_set_omit_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetOmitForceIntegration(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetParam",
+      "kind": "Method",
+      "signature": "public void _BodySetParam(RID body, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_param].",
+      "godotName": "_body_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetPickable",
+      "kind": "Method",
+      "signature": "public void _BodySetPickable(RID body, bool pickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "pickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], allows the body with the given [RID] to detect mouse inputs when the mouse cursor is hovering on it. Overridable version of [PhysicsServer2D]\u0027s internal [code]body_set_pickable[/code] method. Corresponds to [member CollisionObject2D.input_pickable].",
+      "godotName": "_body_set_pickable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetPickable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShape",
+      "kind": "Method",
+      "signature": "public void _BodySetShape(RID body, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape].",
+      "godotName": "_body_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeAsOneWayCollision",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeAsOneWayCollision(RID body, int shapeIdx, bool enable, float margin, Vector2 direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "direction",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_as_one_way_collision].",
+      "godotName": "_body_set_shape_as_one_way_collision",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeAsOneWayCollision(RID,int,bool,float,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeDisabled(RID body, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_disabled].",
+      "godotName": "_body_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeTransform",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeTransform(RID body, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_transform].",
+      "godotName": "_body_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetSpace",
+      "kind": "Method",
+      "signature": "public void _BodySetSpace(RID body, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_space].",
+      "godotName": "_body_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetState",
+      "kind": "Method",
+      "signature": "public void _BodySetState(RID body, int state, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_state].",
+      "godotName": "_body_set_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetState(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetStateSyncCallback",
+      "kind": "Method",
+      "signature": "public void _BodySetStateSyncCallback(RID body, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Assigns the [param body] to call the given [param callable] during the synchronization phase of the loop, before [method _step] is called. See also [method _sync]. Overridable version of [method PhysicsServer2D.body_set_state_sync_callback].",
+      "godotName": "_body_set_state_sync_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetStateSyncCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyTestMotion",
+      "kind": "Method",
+      "signature": "public bool _BodyTestMotion(RID body, Transform2D from, Vector2 motion, float margin, bool collideSeparationRay, bool recoveryAsCollision, PhysicsServer2DExtensionMotionResult* rResult)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "from",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collide_separation_ray",
+          "type": "bool"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool"
+        },
+        {
+          "name": "r_result",
+          "type": "PhysicsServer2DExtensionMotionResult*"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_test_motion]. Unlike the exposed implementation, this method does not receive all of the arguments inside a [PhysicsTestMotionParameters2D].",
+      "godotName": "_body_test_motion",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyTestMotion(RID,Transform2D,Vector2,float,bool,bool,PhysicsServer2DExtensionMotionResult*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_CapsuleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _CapsuleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.capsule_shape_create].",
+      "godotName": "_capsule_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._CapsuleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_CircleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _CircleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.circle_shape_create].",
+      "godotName": "_circle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._CircleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ConcavePolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _ConcavePolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.concave_polygon_shape_create].",
+      "godotName": "_concave_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ConcavePolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ConvexPolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _ConvexPolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.convex_polygon_shape_create].",
+      "godotName": "_convex_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ConvexPolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_DampedSpringJointGetParam",
+      "kind": "Method",
+      "signature": "public float _DampedSpringJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.damped_spring_joint_get_param].",
+      "godotName": "_damped_spring_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._DampedSpringJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_DampedSpringJointSetParam",
+      "kind": "Method",
+      "signature": "public void _DampedSpringJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.damped_spring_joint_set_param].",
+      "godotName": "_damped_spring_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._DampedSpringJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_EndSync",
+      "kind": "Method",
+      "signature": "public void _EndSync()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called to indicate that the physics server has stopped synchronizing. It is in the loop\u0027s iteration/physics phase, and can access physics objects even if running on a separate thread. See also [method _sync]. Overridable version of [PhysicsServer2D]\u0027s internal [code]end_sync[/code] method.",
+      "godotName": "_end_sync",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._EndSync",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Finish",
+      "kind": "Method",
+      "signature": "public void _Finish()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the main loop finalizes to shut down the physics server. See also [method MainLoop._finalize] and [method _init]. Overridable version of [PhysicsServer2D]\u0027s internal [code]finish[/code] method.",
+      "godotName": "_finish",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Finish",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_FlushQueries",
+      "kind": "Method",
+      "signature": "public void _FlushQueries()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called every physics step before [method _step] to process all remaining queries. Overridable version of [PhysicsServer2D]\u0027s internal [code]flush_queries[/code] method.",
+      "godotName": "_flush_queries",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._FlushQueries",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_FreeRid",
+      "kind": "Method",
+      "signature": "public void _FreeRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.free_rid].",
+      "godotName": "_free_rid",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._FreeRid(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_GetProcessInfo",
+      "kind": "Method",
+      "signature": "public int _GetProcessInfo(int processInfo)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "process_info",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.get_process_info].",
+      "godotName": "_get_process_info",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._GetProcessInfo(int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the main loop is initialized and creates a new instance of this physics server. See also [method MainLoop._initialize] and [method _finish]. Overridable version of [PhysicsServer2D]\u0027s internal [code]init[/code] method.",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Init",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_IsFlushingQueries",
+      "kind": "Method",
+      "signature": "public bool _IsFlushingQueries()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Overridable method that should return [code]true[/code] when the physics server is processing queries. See also [method _flush_queries]. Overridable version of [PhysicsServer2D]\u0027s internal [code]is_flushing_queries[/code] method.",
+      "godotName": "_is_flushing_queries",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._IsFlushingQueries",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointClear",
+      "kind": "Method",
+      "signature": "public void _JointClear(RID joint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_clear].",
+      "godotName": "_joint_clear",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointClear(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointCreate",
+      "kind": "Method",
+      "signature": "public RID _JointCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_create].",
+      "godotName": "_joint_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointDisableCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public void _JointDisableCollisionsBetweenBodies(RID joint, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_disable_collisions_between_bodies].",
+      "godotName": "_joint_disable_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointDisableCollisionsBetweenBodies(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointGetParam",
+      "kind": "Method",
+      "signature": "public float _JointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_get_param].",
+      "godotName": "_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointGetType",
+      "kind": "Method",
+      "signature": "public int _JointGetType(RID joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_get_type].",
+      "godotName": "_joint_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointIsDisabledCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public bool _JointIsDisabledCollisionsBetweenBodies(RID joint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_is_disabled_collisions_between_bodies].",
+      "godotName": "_joint_is_disabled_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointIsDisabledCollisionsBetweenBodies(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakeDampedSpring",
+      "kind": "Method",
+      "signature": "public void _JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor_a",
+          "type": "Vector2"
+        },
+        {
+          "name": "anchor_b",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_damped_spring].",
+      "godotName": "_joint_make_damped_spring",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakeDampedSpring(RID,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakeGroove",
+      "kind": "Method",
+      "signature": "public void _JointMakeGroove(RID joint, Vector2 aGroove1, Vector2 aGroove2, Vector2 bAnchor, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "a_groove1",
+          "type": "Vector2"
+        },
+        {
+          "name": "a_groove2",
+          "type": "Vector2"
+        },
+        {
+          "name": "b_anchor",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_groove].",
+      "godotName": "_joint_make_groove",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakeGroove(RID,Vector2,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakePin",
+      "kind": "Method",
+      "signature": "public void _JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_pin].",
+      "godotName": "_joint_make_pin",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakePin(RID,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointSetParam",
+      "kind": "Method",
+      "signature": "public void _JointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_set_param].",
+      "godotName": "_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointGetFlag",
+      "kind": "Method",
+      "signature": "public bool _PinJointGetFlag(RID joint, int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_get_flag].",
+      "godotName": "_pin_joint_get_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointGetFlag(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointGetParam",
+      "kind": "Method",
+      "signature": "public float _PinJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_get_param].",
+      "godotName": "_pin_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointSetFlag",
+      "kind": "Method",
+      "signature": "public void _PinJointSetFlag(RID joint, int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_set_flag].",
+      "godotName": "_pin_joint_set_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointSetFlag(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointSetParam",
+      "kind": "Method",
+      "signature": "public void _PinJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_set_param].",
+      "godotName": "_pin_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_RectangleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _RectangleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.rectangle_shape_create].",
+      "godotName": "_rectangle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._RectangleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SegmentShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _SegmentShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.segment_shape_create].",
+      "godotName": "_segment_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SegmentShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SeparationRayShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _SeparationRayShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.separation_ray_shape_create].",
+      "godotName": "_separation_ray_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SeparationRayShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SetActive",
+      "kind": "Method",
+      "signature": "public void _SetActive(bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.set_active].",
+      "godotName": "_set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SetActive(bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeCollide",
+      "kind": "Method",
+      "signature": "public bool _ShapeCollide(RID shapeA, Transform2D xformA, Vector2 motionA, RID shapeB, Transform2D xformB, Vector2 motionB, void* rResults, int resultMax, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_A",
+          "type": "RID"
+        },
+        {
+          "name": "xform_A",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion_A",
+          "type": "Vector2"
+        },
+        {
+          "name": "shape_B",
+          "type": "RID"
+        },
+        {
+          "name": "xform_B",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion_B",
+          "type": "Vector2"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "result_max",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Given two shapes and their parameters, should return [code]true[/code] if a collision between the two would occur, with additional details passed in [param r_results]. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_collide[/code] method. Corresponds to [method PhysicsDirectSpaceState2D.collide_shape].",
+      "godotName": "_shape_collide",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeCollide(RID,Transform2D,Vector2,RID,Transform2D,Vector2,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetCustomSolverBias",
+      "kind": "Method",
+      "signature": "public float _ShapeGetCustomSolverBias(RID shape)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return the custom solver bias of the given [param shape], which defines how much bodies are forced to separate on contact when this shape is involved. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_get_custom_solver_bias[/code] method. Corresponds to [member Shape2D.custom_solver_bias].",
+      "godotName": "_shape_get_custom_solver_bias",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetCustomSolverBias(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetData",
+      "kind": "Method",
+      "signature": "public Variant _ShapeGetData(RID shape)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_get_data].",
+      "godotName": "_shape_get_data",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetData(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetType",
+      "kind": "Method",
+      "signature": "public int _ShapeGetType(RID shape)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_get_type].",
+      "godotName": "_shape_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeSetCustomSolverBias",
+      "kind": "Method",
+      "signature": "public void _ShapeSetCustomSolverBias(RID shape, float bias)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "bias",
+          "type": "float"
+        }
+      ],
+      "summary": "Should set the custom solver bias for the given [param shape]. It defines how much bodies are forced to separate on contact. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_get_custom_solver_bias[/code] method. Corresponds to [member Shape2D.custom_solver_bias].",
+      "godotName": "_shape_set_custom_solver_bias",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeSetCustomSolverBias(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeSetData",
+      "kind": "Method",
+      "signature": "public void _ShapeSetData(RID shape, Variant data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_set_data].",
+      "godotName": "_shape_set_data",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeSetData(RID,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceCreate",
+      "kind": "Method",
+      "signature": "public RID _SpaceCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.space_create].",
+      "godotName": "_space_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetContactCount",
+      "kind": "Method",
+      "signature": "public int _SpaceGetContactCount(RID space)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return how many contacts have occurred during the last physics step in the given [param space]. See also [method _space_get_contacts] and [method _space_set_debug_contacts]. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_get_contact_count[/code] method.",
+      "godotName": "_space_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetContactCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetContacts",
+      "kind": "Method",
+      "signature": "public PackedVector2Array _SpaceGetContacts(RID space)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return the positions of all contacts that have occurred during the last physics step in the given [param space]. See also [method _space_get_contact_count] and [method _space_set_debug_contacts]. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_get_contacts[/code] method.",
+      "godotName": "_space_get_contacts",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetContacts(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState2D _SpaceGetDirectState(RID space)",
+      "returnType": "PhysicsDirectSpaceState2D",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_get_direct_state].",
+      "godotName": "_space_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetParam",
+      "kind": "Method",
+      "signature": "public float _SpaceGetParam(RID space, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_get_param].",
+      "godotName": "_space_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceIsActive",
+      "kind": "Method",
+      "signature": "public bool _SpaceIsActive(RID space)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_is_active].",
+      "godotName": "_space_is_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceIsActive(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetActive",
+      "kind": "Method",
+      "signature": "public void _SpaceSetActive(RID space, bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_set_active].",
+      "godotName": "_space_set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetActive(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetDebugContacts",
+      "kind": "Method",
+      "signature": "public void _SpaceSetDebugContacts(RID space, int maxContacts)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "max_contacts",
+          "type": "int"
+        }
+      ],
+      "summary": "Used internally to allow the given [param space] to store contact points, up to [param max_contacts]. This is automatically set for the main [World2D]\u0027s space when [member SceneTree.debug_collisions_hint] is [code]true[/code], or by checking \u0022Visible Collision Shapes\u0022 in the editor. Only works in debug builds. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_set_debug_contacts[/code] method.",
+      "godotName": "_space_set_debug_contacts",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetDebugContacts(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetParam",
+      "kind": "Method",
+      "signature": "public void _SpaceSetParam(RID space, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_set_param].",
+      "godotName": "_space_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Step",
+      "kind": "Method",
+      "signature": "public void _Step(float step)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "float"
+        }
+      ],
+      "summary": "Called every physics step to process the physics simulation. [param step] is the time elapsed since the last physics step, in seconds. It is usually the same as the value returned by [method Node.get_physics_process_delta_time]. Overridable version of [PhysicsServer2D]\u0027s internal [code skip-lint]step[/code] method.",
+      "godotName": "_step",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Step(float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Sync",
+      "kind": "Method",
+      "signature": "public void _Sync()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called to indicate that the physics server is synchronizing and cannot access physics states if running on a separate thread. See also [method _end_sync]. Overridable version of [PhysicsServer2D]\u0027s internal [code]sync[/code] method.",
+      "godotName": "_sync",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Sync",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_WorldBoundaryShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _WorldBoundaryShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.world_boundary_shape_create].",
+      "godotName": "_world_boundary_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._WorldBoundaryShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "BodyTestMotionIsExcludingBody",
+      "kind": "Method",
+      "signature": "public bool BodyTestMotionIsExcludingBody(RID body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the body with the given [RID] is being excluded from [method _body_test_motion]. See also [method Object.get_instance_id].",
+      "godotName": "body_test_motion_is_excluding_body",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension.BodyTestMotionIsExcludingBody(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "BodyTestMotionIsExcludingObject",
+      "kind": "Method",
+      "signature": "public bool BodyTestMotionIsExcludingObject(int @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the object with the given instance ID is being excluded from [method _body_test_motion]. See also [method Object.get_instance_id].",
+      "godotName": "body_test_motion_is_excluding_object",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension.BodyTestMotionIsExcludingObject(int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AreaAddShape",
+      "kind": "Method",
+      "signature": "public void _AreaAddShape(RID area, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_add_shape].",
+      "godotName": "_area_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void _AreaAttachCanvasInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_attach_canvas_instance_id].",
+      "godotName": "_area_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void _AreaAttachObjectInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_attach_object_instance_id].",
+      "godotName": "_area_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaClearShapes",
+      "kind": "Method",
+      "signature": "public void _AreaClearShapes(RID area)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_clear_shapes].",
+      "godotName": "_area_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaCreate",
+      "kind": "Method",
+      "signature": "public RID _AreaCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.area_create].",
+      "godotName": "_area_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int _AreaGetCanvasInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_canvas_instance_id].",
+      "godotName": "_area_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _AreaGetCollisionLayer(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_collision_layer].",
+      "godotName": "_area_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _AreaGetCollisionMask(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_collision_mask].",
+      "godotName": "_area_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int _AreaGetObjectInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_object_instance_id].",
+      "godotName": "_area_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetParam",
+      "kind": "Method",
+      "signature": "public Variant _AreaGetParam(RID area, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_param].",
+      "godotName": "_area_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShape",
+      "kind": "Method",
+      "signature": "public RID _AreaGetShape(RID area, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape].",
+      "godotName": "_area_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShapeCount",
+      "kind": "Method",
+      "signature": "public int _AreaGetShapeCount(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape_count].",
+      "godotName": "_area_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _AreaGetShapeTransform(RID area, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_shape_transform].",
+      "godotName": "_area_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetSpace",
+      "kind": "Method",
+      "signature": "public RID _AreaGetSpace(RID area)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_space].",
+      "godotName": "_area_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaGetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _AreaGetTransform(RID area)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_get_transform].",
+      "godotName": "_area_get_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaGetTransform(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaRemoveShape",
+      "kind": "Method",
+      "signature": "public void _AreaRemoveShape(RID area, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_remove_shape].",
+      "godotName": "_area_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetAreaMonitorCallback",
+      "kind": "Method",
+      "signature": "public void _AreaSetAreaMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_area_monitor_callback].",
+      "godotName": "_area_set_area_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetAreaMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _AreaSetCollisionLayer(RID area, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_collision_layer].",
+      "godotName": "_area_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _AreaSetCollisionMask(RID area, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_collision_mask].",
+      "godotName": "_area_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetMonitorCallback",
+      "kind": "Method",
+      "signature": "public void _AreaSetMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_monitor_callback].",
+      "godotName": "_area_set_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetMonitorable",
+      "kind": "Method",
+      "signature": "public void _AreaSetMonitorable(RID area, bool monitorable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "monitorable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_monitorable].",
+      "godotName": "_area_set_monitorable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetMonitorable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetParam",
+      "kind": "Method",
+      "signature": "public void _AreaSetParam(RID area, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_param].",
+      "godotName": "_area_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetPickable",
+      "kind": "Method",
+      "signature": "public void _AreaSetPickable(RID area, bool pickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "pickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], allows the area with the given [RID] to detect mouse inputs when the mouse cursor is hovering on it. Overridable version of [PhysicsServer2D]\u0027s internal [code]area_set_pickable[/code] method. Corresponds to [member CollisionObject2D.input_pickable].",
+      "godotName": "_area_set_pickable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetPickable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShape",
+      "kind": "Method",
+      "signature": "public void _AreaSetShape(RID area, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape].",
+      "godotName": "_area_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void _AreaSetShapeDisabled(RID area, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape_disabled].",
+      "godotName": "_area_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetShapeTransform",
+      "kind": "Method",
+      "signature": "public void _AreaSetShapeTransform(RID area, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_shape_transform].",
+      "godotName": "_area_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetSpace",
+      "kind": "Method",
+      "signature": "public void _AreaSetSpace(RID area, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_space].",
+      "godotName": "_area_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_AreaSetTransform",
+      "kind": "Method",
+      "signature": "public void _AreaSetTransform(RID area, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.area_set_transform].",
+      "godotName": "_area_set_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._AreaSetTransform(RID,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddCollisionException",
+      "kind": "Method",
+      "signature": "public void _BodyAddCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_collision_exception].",
+      "godotName": "_body_add_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_central_force].",
+      "godotName": "_body_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantForce",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_force].",
+      "godotName": "_body_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _BodyAddConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_constant_torque].",
+      "godotName": "_body_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAddShape",
+      "kind": "Method",
+      "signature": "public void _BodyAddShape(RID body, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_add_shape].",
+      "godotName": "_body_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _BodyApplyCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_central_force].",
+      "godotName": "_body_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyCentralImpulse(RID body, Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_central_impulse].",
+      "godotName": "_body_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyCentralImpulse(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyForce",
+      "kind": "Method",
+      "signature": "public void _BodyApplyForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_force].",
+      "godotName": "_body_apply_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyImpulse(RID body, Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_impulse].",
+      "godotName": "_body_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyImpulse(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyTorque",
+      "kind": "Method",
+      "signature": "public void _BodyApplyTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_torque].",
+      "godotName": "_body_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _BodyApplyTorqueImpulse(RID body, float impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_apply_torque_impulse].",
+      "godotName": "_body_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyApplyTorqueImpulse(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void _BodyAttachCanvasInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_attach_canvas_instance_id].",
+      "godotName": "_body_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void _BodyAttachObjectInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_attach_object_instance_id].",
+      "godotName": "_body_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyClearShapes",
+      "kind": "Method",
+      "signature": "public void _BodyClearShapes(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_clear_shapes].",
+      "godotName": "_body_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyCollideShape",
+      "kind": "Method",
+      "signature": "public bool _BodyCollideShape(RID body, int bodyShape, RID shape, Transform2D shapeXform, Vector2 motion, void* rResults, int resultMax, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "body_shape",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "shape_xform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "result_max",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Given a [param body], a [param shape], and their respective parameters, this method should return [code]true[/code] if a collision between the two would occur, with additional details passed in [param r_results]. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_collide[/code] method. Corresponds to [method PhysicsDirectSpaceState2D.collide_shape].",
+      "godotName": "_body_collide_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyCollideShape(RID,int,RID,Transform2D,Vector2,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyCreate",
+      "kind": "Method",
+      "signature": "public RID _BodyCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.body_create].",
+      "godotName": "_body_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int _BodyGetCanvasInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_canvas_instance_id].",
+      "godotName": "_body_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionExceptions",
+      "kind": "Method",
+      "signature": "public RID[] _BodyGetCollisionExceptions(RID body)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [RID]s of all bodies added as collision exceptions for the given [param body]. See also [method _body_add_collision_exception] and [method _body_remove_collision_exception]. Overridable version of [PhysicsServer2D]\u0027s internal [code]body_get_collision_exceptions[/code] method. Corresponds to [method PhysicsBody2D.get_collision_exceptions].",
+      "godotName": "_body_get_collision_exceptions",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionExceptions(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _BodyGetCollisionLayer(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_layer].",
+      "godotName": "_body_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _BodyGetCollisionMask(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_mask].",
+      "godotName": "_body_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetCollisionPriority",
+      "kind": "Method",
+      "signature": "public float _BodyGetCollisionPriority(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_collision_priority].",
+      "godotName": "_body_get_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetCollisionPriority(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector2 _BodyGetConstantForce(RID body)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_constant_force].",
+      "godotName": "_body_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetConstantForce(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetConstantTorque",
+      "kind": "Method",
+      "signature": "public float _BodyGetConstantTorque(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_constant_torque].",
+      "godotName": "_body_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetConstantTorque(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetContactsReportedDepthThreshold",
+      "kind": "Method",
+      "signature": "public float _BodyGetContactsReportedDepthThreshold(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [PhysicsServer2D]\u0027s internal [code]body_get_contacts_reported_depth_threshold[/code] method. [b]Note:[/b] This method is currently unused by Godot\u0027s default physics implementation.",
+      "godotName": "_body_get_contacts_reported_depth_threshold",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetContactsReportedDepthThreshold(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public int _BodyGetContinuousCollisionDetectionMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_continuous_collision_detection_mode].",
+      "godotName": "_body_get_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetContinuousCollisionDetectionMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectBodyState2D _BodyGetDirectState(RID body)",
+      "returnType": "PhysicsDirectBodyState2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_direct_state].",
+      "godotName": "_body_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public int _BodyGetMaxContactsReported(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_max_contacts_reported].",
+      "godotName": "_body_get_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetMaxContactsReported(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetMode",
+      "kind": "Method",
+      "signature": "public int _BodyGetMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_mode].",
+      "godotName": "_body_get_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int _BodyGetObjectInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_object_instance_id].",
+      "godotName": "_body_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetParam",
+      "kind": "Method",
+      "signature": "public Variant _BodyGetParam(RID body, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_param].",
+      "godotName": "_body_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShape",
+      "kind": "Method",
+      "signature": "public RID _BodyGetShape(RID body, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape].",
+      "godotName": "_body_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShapeCount",
+      "kind": "Method",
+      "signature": "public int _BodyGetShapeCount(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape_count].",
+      "godotName": "_body_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D _BodyGetShapeTransform(RID body, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_shape_transform].",
+      "godotName": "_body_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetSpace",
+      "kind": "Method",
+      "signature": "public RID _BodyGetSpace(RID body)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_space].",
+      "godotName": "_body_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyGetState",
+      "kind": "Method",
+      "signature": "public Variant _BodyGetState(RID body, int state)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_get_state].",
+      "godotName": "_body_get_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyGetState(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyIsOmittingForceIntegration",
+      "kind": "Method",
+      "signature": "public bool _BodyIsOmittingForceIntegration(RID body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_is_omitting_force_integration].",
+      "godotName": "_body_is_omitting_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyIsOmittingForceIntegration(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyRemoveCollisionException",
+      "kind": "Method",
+      "signature": "public void _BodyRemoveCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_remove_collision_exception].",
+      "godotName": "_body_remove_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyRemoveCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyRemoveShape",
+      "kind": "Method",
+      "signature": "public void _BodyRemoveShape(RID body, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_remove_shape].",
+      "godotName": "_body_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyResetMassProperties",
+      "kind": "Method",
+      "signature": "public void _BodyResetMassProperties(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_reset_mass_properties].",
+      "godotName": "_body_reset_mass_properties",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyResetMassProperties(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetAxisVelocity",
+      "kind": "Method",
+      "signature": "public void _BodySetAxisVelocity(RID body, Vector2 axisVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "axis_velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_axis_velocity].",
+      "godotName": "_body_set_axis_velocity",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetAxisVelocity(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionLayer(RID body, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_layer].",
+      "godotName": "_body_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionMask(RID body, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_mask].",
+      "godotName": "_body_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetCollisionPriority",
+      "kind": "Method",
+      "signature": "public void _BodySetCollisionPriority(RID body, float priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "priority",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_collision_priority].",
+      "godotName": "_body_set_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetCollisionPriority(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetConstantForce",
+      "kind": "Method",
+      "signature": "public void _BodySetConstantForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_constant_force].",
+      "godotName": "_body_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetConstantForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _BodySetConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_constant_torque].",
+      "godotName": "_body_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetContactsReportedDepthThreshold",
+      "kind": "Method",
+      "signature": "public void _BodySetContactsReportedDepthThreshold(RID body, float threshold)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "threshold",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [PhysicsServer2D]\u0027s internal [code]body_set_contacts_reported_depth_threshold[/code] method. [b]Note:[/b] This method is currently unused by Godot\u0027s default physics implementation.",
+      "godotName": "_body_set_contacts_reported_depth_threshold",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetContactsReportedDepthThreshold(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public void _BodySetContinuousCollisionDetectionMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_continuous_collision_detection_mode].",
+      "godotName": "_body_set_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetContinuousCollisionDetectionMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetForceIntegrationCallback",
+      "kind": "Method",
+      "signature": "public void _BodySetForceIntegrationCallback(RID body, Callable callable, Variant userdata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        },
+        {
+          "name": "userdata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_force_integration_callback].",
+      "godotName": "_body_set_force_integration_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetForceIntegrationCallback(RID,Callable,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public void _BodySetMaxContactsReported(RID body, int amount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_max_contacts_reported].",
+      "godotName": "_body_set_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetMaxContactsReported(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetMode",
+      "kind": "Method",
+      "signature": "public void _BodySetMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_mode].",
+      "godotName": "_body_set_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetOmitForceIntegration",
+      "kind": "Method",
+      "signature": "public void _BodySetOmitForceIntegration(RID body, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_omit_force_integration].",
+      "godotName": "_body_set_omit_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetOmitForceIntegration(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetParam",
+      "kind": "Method",
+      "signature": "public void _BodySetParam(RID body, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_param].",
+      "godotName": "_body_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetPickable",
+      "kind": "Method",
+      "signature": "public void _BodySetPickable(RID body, bool pickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "pickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], allows the body with the given [RID] to detect mouse inputs when the mouse cursor is hovering on it. Overridable version of [PhysicsServer2D]\u0027s internal [code]body_set_pickable[/code] method. Corresponds to [member CollisionObject2D.input_pickable].",
+      "godotName": "_body_set_pickable",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetPickable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShape",
+      "kind": "Method",
+      "signature": "public void _BodySetShape(RID body, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape].",
+      "godotName": "_body_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeAsOneWayCollision",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeAsOneWayCollision(RID body, int shapeIdx, bool enable, float margin, Vector2 direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "direction",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_as_one_way_collision].",
+      "godotName": "_body_set_shape_as_one_way_collision",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeAsOneWayCollision(RID,int,bool,float,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeDisabled(RID body, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_disabled].",
+      "godotName": "_body_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetShapeTransform",
+      "kind": "Method",
+      "signature": "public void _BodySetShapeTransform(RID body, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_shape_transform].",
+      "godotName": "_body_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetSpace",
+      "kind": "Method",
+      "signature": "public void _BodySetSpace(RID body, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_space].",
+      "godotName": "_body_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetState",
+      "kind": "Method",
+      "signature": "public void _BodySetState(RID body, int state, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_set_state].",
+      "godotName": "_body_set_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetState(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodySetStateSyncCallback",
+      "kind": "Method",
+      "signature": "public void _BodySetStateSyncCallback(RID body, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Assigns the [param body] to call the given [param callable] during the synchronization phase of the loop, before [method _step] is called. See also [method _sync]. Overridable version of [method PhysicsServer2D.body_set_state_sync_callback].",
+      "godotName": "_body_set_state_sync_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodySetStateSyncCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_BodyTestMotion",
+      "kind": "Method",
+      "signature": "public bool _BodyTestMotion(RID body, Transform2D from, Vector2 motion, float margin, bool collideSeparationRay, bool recoveryAsCollision, PhysicsServer2DExtensionMotionResult* rResult)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "from",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "collide_separation_ray",
+          "type": "bool"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool"
+        },
+        {
+          "name": "r_result",
+          "type": "PhysicsServer2DExtensionMotionResult*"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.body_test_motion]. Unlike the exposed implementation, this method does not receive all of the arguments inside a [PhysicsTestMotionParameters2D].",
+      "godotName": "_body_test_motion",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._BodyTestMotion(RID,Transform2D,Vector2,float,bool,bool,PhysicsServer2DExtensionMotionResult*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_CapsuleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _CapsuleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.capsule_shape_create].",
+      "godotName": "_capsule_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._CapsuleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_CircleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _CircleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.circle_shape_create].",
+      "godotName": "_circle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._CircleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ConcavePolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _ConcavePolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.concave_polygon_shape_create].",
+      "godotName": "_concave_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ConcavePolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ConvexPolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _ConvexPolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.convex_polygon_shape_create].",
+      "godotName": "_convex_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ConvexPolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_DampedSpringJointGetParam",
+      "kind": "Method",
+      "signature": "public float _DampedSpringJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.damped_spring_joint_get_param].",
+      "godotName": "_damped_spring_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._DampedSpringJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_DampedSpringJointSetParam",
+      "kind": "Method",
+      "signature": "public void _DampedSpringJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.damped_spring_joint_set_param].",
+      "godotName": "_damped_spring_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._DampedSpringJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_EndSync",
+      "kind": "Method",
+      "signature": "public void _EndSync()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called to indicate that the physics server has stopped synchronizing. It is in the loop\u0027s iteration/physics phase, and can access physics objects even if running on a separate thread. See also [method _sync]. Overridable version of [PhysicsServer2D]\u0027s internal [code]end_sync[/code] method.",
+      "godotName": "_end_sync",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._EndSync",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Finish",
+      "kind": "Method",
+      "signature": "public void _Finish()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the main loop finalizes to shut down the physics server. See also [method MainLoop._finalize] and [method _init]. Overridable version of [PhysicsServer2D]\u0027s internal [code]finish[/code] method.",
+      "godotName": "_finish",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Finish",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_FlushQueries",
+      "kind": "Method",
+      "signature": "public void _FlushQueries()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called every physics step before [method _step] to process all remaining queries. Overridable version of [PhysicsServer2D]\u0027s internal [code]flush_queries[/code] method.",
+      "godotName": "_flush_queries",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._FlushQueries",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_FreeRid",
+      "kind": "Method",
+      "signature": "public void _FreeRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.free_rid].",
+      "godotName": "_free_rid",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._FreeRid(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_GetProcessInfo",
+      "kind": "Method",
+      "signature": "public int _GetProcessInfo(int processInfo)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "process_info",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.get_process_info].",
+      "godotName": "_get_process_info",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._GetProcessInfo(int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the main loop is initialized and creates a new instance of this physics server. See also [method MainLoop._initialize] and [method _finish]. Overridable version of [PhysicsServer2D]\u0027s internal [code]init[/code] method.",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Init",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_IsFlushingQueries",
+      "kind": "Method",
+      "signature": "public bool _IsFlushingQueries()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Overridable method that should return [code]true[/code] when the physics server is processing queries. See also [method _flush_queries]. Overridable version of [PhysicsServer2D]\u0027s internal [code]is_flushing_queries[/code] method.",
+      "godotName": "_is_flushing_queries",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._IsFlushingQueries",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointClear",
+      "kind": "Method",
+      "signature": "public void _JointClear(RID joint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_clear].",
+      "godotName": "_joint_clear",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointClear(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointCreate",
+      "kind": "Method",
+      "signature": "public RID _JointCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_create].",
+      "godotName": "_joint_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointDisableCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public void _JointDisableCollisionsBetweenBodies(RID joint, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_disable_collisions_between_bodies].",
+      "godotName": "_joint_disable_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointDisableCollisionsBetweenBodies(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointGetParam",
+      "kind": "Method",
+      "signature": "public float _JointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_get_param].",
+      "godotName": "_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointGetType",
+      "kind": "Method",
+      "signature": "public int _JointGetType(RID joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_get_type].",
+      "godotName": "_joint_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointIsDisabledCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public bool _JointIsDisabledCollisionsBetweenBodies(RID joint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_is_disabled_collisions_between_bodies].",
+      "godotName": "_joint_is_disabled_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointIsDisabledCollisionsBetweenBodies(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakeDampedSpring",
+      "kind": "Method",
+      "signature": "public void _JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor_a",
+          "type": "Vector2"
+        },
+        {
+          "name": "anchor_b",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_damped_spring].",
+      "godotName": "_joint_make_damped_spring",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakeDampedSpring(RID,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakeGroove",
+      "kind": "Method",
+      "signature": "public void _JointMakeGroove(RID joint, Vector2 aGroove1, Vector2 aGroove2, Vector2 bAnchor, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "a_groove1",
+          "type": "Vector2"
+        },
+        {
+          "name": "a_groove2",
+          "type": "Vector2"
+        },
+        {
+          "name": "b_anchor",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_groove].",
+      "godotName": "_joint_make_groove",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakeGroove(RID,Vector2,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointMakePin",
+      "kind": "Method",
+      "signature": "public void _JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_make_pin].",
+      "godotName": "_joint_make_pin",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointMakePin(RID,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_JointSetParam",
+      "kind": "Method",
+      "signature": "public void _JointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.joint_set_param].",
+      "godotName": "_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._JointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointGetFlag",
+      "kind": "Method",
+      "signature": "public bool _PinJointGetFlag(RID joint, int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_get_flag].",
+      "godotName": "_pin_joint_get_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointGetFlag(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointGetParam",
+      "kind": "Method",
+      "signature": "public float _PinJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_get_param].",
+      "godotName": "_pin_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointSetFlag",
+      "kind": "Method",
+      "signature": "public void _PinJointSetFlag(RID joint, int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_set_flag].",
+      "godotName": "_pin_joint_set_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointSetFlag(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_PinJointSetParam",
+      "kind": "Method",
+      "signature": "public void _PinJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.pin_joint_set_param].",
+      "godotName": "_pin_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._PinJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_RectangleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _RectangleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.rectangle_shape_create].",
+      "godotName": "_rectangle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._RectangleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SegmentShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _SegmentShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.segment_shape_create].",
+      "godotName": "_segment_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SegmentShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SeparationRayShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _SeparationRayShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.separation_ray_shape_create].",
+      "godotName": "_separation_ray_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SeparationRayShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SetActive",
+      "kind": "Method",
+      "signature": "public void _SetActive(bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.set_active].",
+      "godotName": "_set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SetActive(bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeCollide",
+      "kind": "Method",
+      "signature": "public bool _ShapeCollide(RID shapeA, Transform2D xformA, Vector2 motionA, RID shapeB, Transform2D xformB, Vector2 motionB, void* rResults, int resultMax, int32_t* rResultCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "shape_A",
+          "type": "RID"
+        },
+        {
+          "name": "xform_A",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion_A",
+          "type": "Vector2"
+        },
+        {
+          "name": "shape_B",
+          "type": "RID"
+        },
+        {
+          "name": "xform_B",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion_B",
+          "type": "Vector2"
+        },
+        {
+          "name": "r_results",
+          "type": "void*"
+        },
+        {
+          "name": "result_max",
+          "type": "int"
+        },
+        {
+          "name": "r_result_count",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "Given two shapes and their parameters, should return [code]true[/code] if a collision between the two would occur, with additional details passed in [param r_results]. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_collide[/code] method. Corresponds to [method PhysicsDirectSpaceState2D.collide_shape].",
+      "godotName": "_shape_collide",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeCollide(RID,Transform2D,Vector2,RID,Transform2D,Vector2,void*,int,int32_t*)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetCustomSolverBias",
+      "kind": "Method",
+      "signature": "public float _ShapeGetCustomSolverBias(RID shape)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return the custom solver bias of the given [param shape], which defines how much bodies are forced to separate on contact when this shape is involved. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_get_custom_solver_bias[/code] method. Corresponds to [member Shape2D.custom_solver_bias].",
+      "godotName": "_shape_get_custom_solver_bias",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetCustomSolverBias(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetData",
+      "kind": "Method",
+      "signature": "public Variant _ShapeGetData(RID shape)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_get_data].",
+      "godotName": "_shape_get_data",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetData(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeGetType",
+      "kind": "Method",
+      "signature": "public int _ShapeGetType(RID shape)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_get_type].",
+      "godotName": "_shape_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeSetCustomSolverBias",
+      "kind": "Method",
+      "signature": "public void _ShapeSetCustomSolverBias(RID shape, float bias)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "bias",
+          "type": "float"
+        }
+      ],
+      "summary": "Should set the custom solver bias for the given [param shape]. It defines how much bodies are forced to separate on contact. Overridable version of [PhysicsServer2D]\u0027s internal [code]shape_get_custom_solver_bias[/code] method. Corresponds to [member Shape2D.custom_solver_bias].",
+      "godotName": "_shape_set_custom_solver_bias",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeSetCustomSolverBias(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_ShapeSetData",
+      "kind": "Method",
+      "signature": "public void _ShapeSetData(RID shape, Variant data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.shape_set_data].",
+      "godotName": "_shape_set_data",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._ShapeSetData(RID,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceCreate",
+      "kind": "Method",
+      "signature": "public RID _SpaceCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.space_create].",
+      "godotName": "_space_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetContactCount",
+      "kind": "Method",
+      "signature": "public int _SpaceGetContactCount(RID space)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return how many contacts have occurred during the last physics step in the given [param space]. See also [method _space_get_contacts] and [method _space_set_debug_contacts]. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_get_contact_count[/code] method.",
+      "godotName": "_space_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetContactCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetContacts",
+      "kind": "Method",
+      "signature": "public PackedVector2Array _SpaceGetContacts(RID space)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Should return the positions of all contacts that have occurred during the last physics step in the given [param space]. See also [method _space_get_contact_count] and [method _space_set_debug_contacts]. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_get_contacts[/code] method.",
+      "godotName": "_space_get_contacts",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetContacts(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState2D _SpaceGetDirectState(RID space)",
+      "returnType": "PhysicsDirectSpaceState2D",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_get_direct_state].",
+      "godotName": "_space_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceGetParam",
+      "kind": "Method",
+      "signature": "public float _SpaceGetParam(RID space, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_get_param].",
+      "godotName": "_space_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceIsActive",
+      "kind": "Method",
+      "signature": "public bool _SpaceIsActive(RID space)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_is_active].",
+      "godotName": "_space_is_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceIsActive(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetActive",
+      "kind": "Method",
+      "signature": "public void _SpaceSetActive(RID space, bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_set_active].",
+      "godotName": "_space_set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetActive(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetDebugContacts",
+      "kind": "Method",
+      "signature": "public void _SpaceSetDebugContacts(RID space, int maxContacts)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "max_contacts",
+          "type": "int"
+        }
+      ],
+      "summary": "Used internally to allow the given [param space] to store contact points, up to [param max_contacts]. This is automatically set for the main [World2D]\u0027s space when [member SceneTree.debug_collisions_hint] is [code]true[/code], or by checking \u0022Visible Collision Shapes\u0022 in the editor. Only works in debug builds. Overridable version of [PhysicsServer2D]\u0027s internal [code]space_set_debug_contacts[/code] method.",
+      "godotName": "_space_set_debug_contacts",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetDebugContacts(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_SpaceSetParam",
+      "kind": "Method",
+      "signature": "public void _SpaceSetParam(RID space, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Overridable version of [method PhysicsServer2D.space_set_param].",
+      "godotName": "_space_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._SpaceSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Step",
+      "kind": "Method",
+      "signature": "public void _Step(float step)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "step",
+          "type": "float"
+        }
+      ],
+      "summary": "Called every physics step to process the physics simulation. [param step] is the time elapsed since the last physics step, in seconds. It is usually the same as the value returned by [method Node.get_physics_process_delta_time]. Overridable version of [PhysicsServer2D]\u0027s internal [code skip-lint]step[/code] method.",
+      "godotName": "_step",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Step(float)",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_Sync",
+      "kind": "Method",
+      "signature": "public void _Sync()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called to indicate that the physics server is synchronizing and cannot access physics states if running on a separate thread. See also [method _end_sync]. Overridable version of [PhysicsServer2D]\u0027s internal [code]sync[/code] method.",
+      "godotName": "_sync",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._Sync",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    },
+    {
+      "name": "_WorldBoundaryShapeCreate",
+      "kind": "Method",
+      "signature": "public RID _WorldBoundaryShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Overridable version of [method PhysicsServer2D.world_boundary_shape_create].",
+      "godotName": "_world_boundary_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2DExtension._WorldBoundaryShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2DExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsServer2DExtension.xml",
+      "sha256": "e532c23dc1c82158d8e14ba0dbee88421e3bac09f8dfcedf6e352af3ad729048"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

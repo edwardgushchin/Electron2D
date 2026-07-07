@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CryptoKey",
+    "namespace": "Godot",
+    "fullName": "Godot.CryptoKey",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "CryptoKey",
+    "documentationPath": "doc/classes/CryptoKey.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cryptokey.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsPublicOnly",
+      "kind": "Method",
+      "signature": "public bool IsPublicOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this CryptoKey only has the public part, and not the private one.",
+      "godotName": "is_public_only",
+      "xmlDocId": "M:Godot.CryptoKey.IsPublicOnly",
+      "sourcePath": "doc/classes/CryptoKey.xml"
+    },
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public int Load(String path, bool publicOnly)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "public_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Loads a key from [param path]. If [param public_only] is [code]true[/code], only the public key will be loaded. [b]Note:[/b] [param path] should be a \u0022*.pub\u0022 file if [param public_only] is [code]true[/code], a \u0022*.key\u0022 file otherwise.",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.CryptoKey.Load(String,bool)",
+      "sourcePath": "doc/classes/CryptoKey.xml"
+    },
+    {
+      "name": "LoadFromString",
+      "kind": "Method",
+      "signature": "public int LoadFromString(String stringKey, bool publicOnly)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "string_key",
+          "type": "String"
+        },
+        {
+          "name": "public_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Loads a key from the given [param string_key]. If [param public_only] is [code]true[/code], only the public key will be loaded.",
+      "godotName": "load_from_string",
+      "xmlDocId": "M:Godot.CryptoKey.LoadFromString(String,bool)",
+      "sourcePath": "doc/classes/CryptoKey.xml"
+    },
+    {
+      "name": "Save",
+      "kind": "Method",
+      "signature": "public int Save(String path, bool publicOnly)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "public_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Saves a key to the given [param path]. If [param public_only] is [code]true[/code], only the public key will be saved. [b]Note:[/b] [param path] should be a \u0022*.pub\u0022 file if [param public_only] is [code]true[/code], a \u0022*.key\u0022 file otherwise.",
+      "godotName": "save",
+      "xmlDocId": "M:Godot.CryptoKey.Save(String,bool)",
+      "sourcePath": "doc/classes/CryptoKey.xml"
+    },
+    {
+      "name": "SaveToString",
+      "kind": "Method",
+      "signature": "public String SaveToString(bool publicOnly)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "public_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a string containing the key in PEM format. If [param public_only] is [code]true[/code], only the public key will be included.",
+      "godotName": "save_to_string",
+      "xmlDocId": "M:Godot.CryptoKey.SaveToString(bool)",
+      "sourcePath": "doc/classes/CryptoKey.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CryptoKey.xml",
+      "sha256": "b280462f804dd5b19ad97a9248c43b0de93132c5790376a131e93556e70ccaf5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

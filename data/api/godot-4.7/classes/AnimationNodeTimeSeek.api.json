@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeTimeSeek",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeTimeSeek",
+    "kind": "class",
+    "baseType": "AnimationNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeTimeSeek",
+    "documentationPath": "doc/classes/AnimationNodeTimeSeek.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodetimeseek.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ExplicitElapse",
+      "kind": "Property",
+      "signature": "public bool ExplicitElapse { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], some processes are executed to handle keys between seeks, such as calculating root motion and finding the nearest discrete key.",
+      "defaultValue": "true",
+      "godotName": "explicit_elapse",
+      "xmlDocId": "P:Godot.AnimationNodeTimeSeek.ExplicitElapse",
+      "sourcePath": "doc/classes/AnimationNodeTimeSeek.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeTimeSeek.xml",
+      "sha256": "1af31065460f67336598f74111e21f9207a4b4bfbcaed3d970f289fc9b34f04a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

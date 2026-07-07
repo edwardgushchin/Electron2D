@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MouseFilter",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.MouseFilter",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Control.MouseFilter",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Ignore",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseFilter Ignore",
+      "returnType": "Electron2D.MouseFilter",
+      "parameters": [],
+      "summary": "The control is skipped by mouse GUI input hit-testing.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.MouseFilter.Ignore",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pass",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseFilter Pass",
+      "returnType": "Electron2D.MouseFilter",
+      "parameters": [],
+      "summary": "The control receives mouse GUI input and lets unhandled events bubble.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.MouseFilter.Pass",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stop",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.MouseFilter Stop",
+      "returnType": "Electron2D.MouseFilter",
+      "parameters": [],
+      "summary": "The control receives mouse GUI input and stops propagation afterward.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.MouseFilter.Stop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Ignore",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "The control is skipped by mouse GUI input hit-testing.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pass",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "The control receives mouse GUI input and lets unhandled events bubble.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stop",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "The control receives mouse GUI input and stops propagation afterward.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

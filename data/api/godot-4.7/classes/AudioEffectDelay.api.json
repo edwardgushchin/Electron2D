@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectDelay",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectDelay",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectDelay",
+    "documentationPath": "doc/classes/AudioEffectDelay.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectdelay.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Dry",
+      "kind": "Property",
+      "signature": "public float Dry { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of the original audio. Value can range from 0 to 1.",
+      "defaultValue": "1.0",
+      "godotName": "dry",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Dry",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "FeedbackActive",
+      "kind": "Property",
+      "signature": "public bool FeedbackActive { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], feedback is enabled, repeating taps after they are played.",
+      "defaultValue": "false",
+      "godotName": "feedback_active",
+      "xmlDocId": "P:Godot.AudioEffectDelay.FeedbackActive",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "FeedbackDelayMs",
+      "kind": "Property",
+      "signature": "public float FeedbackDelayMs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Feedback delay time in milliseconds. Value can range from 0 to 1500.",
+      "defaultValue": "340.0",
+      "godotName": "feedback_delay_ms",
+      "xmlDocId": "P:Godot.AudioEffectDelay.FeedbackDelayMs",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "FeedbackLevelDb",
+      "kind": "Property",
+      "signature": "public float FeedbackLevelDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain for feedback, in dB. Value can range from -60 to 0.",
+      "defaultValue": "-6.0",
+      "godotName": "feedback_level_db",
+      "xmlDocId": "P:Godot.AudioEffectDelay.FeedbackLevelDb",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "FeedbackLowpass",
+      "kind": "Property",
+      "signature": "public float FeedbackLowpass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Low-pass filter for feedback, in Hz. Frequencies above this value are filtered out. Value can range from 1 to 16000.",
+      "defaultValue": "16000.0",
+      "godotName": "feedback_lowpass",
+      "xmlDocId": "P:Godot.AudioEffectDelay.FeedbackLowpass",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap1Active",
+      "kind": "Property",
+      "signature": "public bool Tap1Active { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the first tap will be enabled.",
+      "defaultValue": "true",
+      "godotName": "tap1_active",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap1Active",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap1DelayMs",
+      "kind": "Property",
+      "signature": "public float Tap1DelayMs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "First tap delay time in milliseconds, compared to the original audio. Value can range from 0 to 1500.",
+      "defaultValue": "250.0",
+      "godotName": "tap1_delay_ms",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap1DelayMs",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap1LevelDb",
+      "kind": "Property",
+      "signature": "public float Tap1LevelDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain for the first tap, in dB. Value can range from -60 to 0.",
+      "defaultValue": "-6.0",
+      "godotName": "tap1_level_db",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap1LevelDb",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap1Pan",
+      "kind": "Property",
+      "signature": "public float Tap1Pan { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Pan position for the first tap. Negative values pan the sound to the left, positive pan to the right. Value can range from -1 to 1.",
+      "defaultValue": "0.2",
+      "godotName": "tap1_pan",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap1Pan",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap2Active",
+      "kind": "Property",
+      "signature": "public bool Tap2Active { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the second tap will be enabled.",
+      "defaultValue": "true",
+      "godotName": "tap2_active",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap2Active",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap2DelayMs",
+      "kind": "Property",
+      "signature": "public float Tap2DelayMs { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Second tap delay time in milliseconds, compared to the original audio. Value can range from 0 to 1500.",
+      "defaultValue": "500.0",
+      "godotName": "tap2_delay_ms",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap2DelayMs",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap2LevelDb",
+      "kind": "Property",
+      "signature": "public float Tap2LevelDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain for the second tap, in dB. Value can range from -60 to 0.",
+      "defaultValue": "-12.0",
+      "godotName": "tap2_level_db",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap2LevelDb",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    },
+    {
+      "name": "Tap2Pan",
+      "kind": "Property",
+      "signature": "public float Tap2Pan { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Pan position for the second tap. Negative values pan the sound to the left, positive pan to the right. Value can range from -1 to 1.",
+      "defaultValue": "-0.4",
+      "godotName": "tap2_pan",
+      "xmlDocId": "P:Godot.AudioEffectDelay.Tap2Pan",
+      "sourcePath": "doc/classes/AudioEffectDelay.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectDelay.xml",
+      "sha256": "ecdb6b4be03f7ce210fa5a82ab46f6251f231693a0457422defcecfd864bbe76"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

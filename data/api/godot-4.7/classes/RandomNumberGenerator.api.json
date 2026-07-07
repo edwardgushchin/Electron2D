@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RandomNumberGenerator",
+    "namespace": "Godot",
+    "fullName": "Godot.RandomNumberGenerator",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RandomNumberGenerator",
+    "documentationPath": "doc/classes/RandomNumberGenerator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_randomnumbergenerator.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "RandWeighted",
+      "kind": "Method",
+      "signature": "public int RandWeighted(PackedFloat32Array weights)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "weights",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Returns a random integer between [code]0[/code] and the size of the array that is passed as a parameter. Each value in the array should be a floating-point number that represents the relative likelihood that it will be returned as an index. A higher value means the value is more likely to be returned as an index, while a value of [code]0[/code] means it will never be returned as an index. For example, if [code skip-lint][0.5, 1, 1, 2][/code] is passed as a parameter, then the method is twice as likely to return [code]3[/code] (the index of the value [code]2[/code]) and twice as unlikely to return [code]0[/code] (the index of the value [code]0.5[/code]) compared to the indices [code]1[/code] and [code]2[/code]. Prints an error and returns [code]-1[/code] if the array is empty. [codeblocks] [gdscript] var rng = RandomNumberGenerator.new() var my_array = [\u0022one\u0022, \u0022two\u0022, \u0022three\u0022, \u0022four\u0022] var weights = PackedFloat32Array([0.5, 1, 1, 2]) # Prints one of the four elements in \u0060my_array\u0060. # It is more likely to print \u0022four\u0022, and less likely to print \u0022one\u0022. print(my_array[rng.rand_weighted(weights)]) [/gdscript] [/codeblocks]",
+      "godotName": "rand_weighted",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.RandWeighted(PackedFloat32Array)",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "Randf",
+      "kind": "Method",
+      "signature": "public float Randf()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns a pseudo-random float between [code]0.0[/code] and [code]1.0[/code] (inclusive).",
+      "godotName": "randf",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.Randf",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "RandfRange",
+      "kind": "Method",
+      "signature": "public float RandfRange(float from, float to)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "float"
+        },
+        {
+          "name": "to",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a pseudo-random float between [param from] and [param to] (inclusive).",
+      "godotName": "randf_range",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.RandfRange(float,float)",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "Randfn",
+      "kind": "Method",
+      "signature": "public float Randfn(float mean, float deviation)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "mean",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "deviation",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Returns a [url=https://en.wikipedia.org/wiki/Normal_distribution]normally-distributed[/url], pseudo-random floating-point number from the specified [param mean] and a standard [param deviation]. This is also known as a Gaussian distribution. [b]Note:[/b] This method uses the [url=https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform]Box-Muller transform[/url] algorithm.",
+      "godotName": "randfn",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.Randfn(float,float)",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "Randi",
+      "kind": "Method",
+      "signature": "public int Randi()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a pseudo-random 32-bit unsigned integer between [code]0[/code] and [code]4294967295[/code] (inclusive).",
+      "godotName": "randi",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.Randi",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "RandiRange",
+      "kind": "Method",
+      "signature": "public int RandiRange(int from, int to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int"
+        },
+        {
+          "name": "to",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a pseudo-random 32-bit signed integer between [param from] and [param to] (inclusive).",
+      "godotName": "randi_range",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.RandiRange(int,int)",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "Randomize",
+      "kind": "Method",
+      "signature": "public void Randomize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sets up a time-based seed for this [RandomNumberGenerator] instance. Unlike the [@GlobalScope] random number generation functions, different [RandomNumberGenerator] instances can use different seeds.",
+      "godotName": "randomize",
+      "xmlDocId": "M:Godot.RandomNumberGenerator.Randomize",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "Seed",
+      "kind": "Property",
+      "signature": "public int Seed { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Initializes the random number generator state based on the given seed value. A given seed will give a reproducible sequence of pseudo-random numbers. [b]Note:[/b] The RNG does not have an avalanche effect, and can output similar random streams given similar seeds. Consider using a hash function to improve your seed quality if they\u0027re sourced externally. [b]Note:[/b] The default value of this property is pseudo-random, and changes when calling [method randomize]. The [code]0[/code] value documented here is a placeholder, and not the actual default seed. [b]Note:[/b] Setting this property produces a side effect of changing the internal [member state], so make sure to initialize the seed [i]before[/i] modifying the [member state]: [codeblock] var rng = RandomNumberGenerator.new() rng.seed = hash(\u0022Godot\u0022) rng.state = 100 # Restore to some previously saved state. [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "seed",
+      "xmlDocId": "P:Godot.RandomNumberGenerator.Seed",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    },
+    {
+      "name": "State",
+      "kind": "Property",
+      "signature": "public int State { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The current state of the random number generator. Save and restore this property to restore the generator to a previous state: [codeblock] var rng = RandomNumberGenerator.new() print(rng.randf()) var saved_state = rng.state # Store current state. print(rng.randf()) # Advance internal state. rng.state = saved_state # Restore the state. print(rng.randf()) # Prints the same value as previously. [/codeblock] [b]Note:[/b] Do not set state to arbitrary values, since the random number generator requires the state to have certain qualities to behave properly. It should only be set to values that came from the state property itself. To initialize the random number generator with arbitrary input, use [member seed] instead. [b]Note:[/b] The default value of this property is pseudo-random, and changes when calling [method randomize]. The [code]0[/code] value documented here is a placeholder, and not the actual default state.",
+      "defaultValue": "0",
+      "godotName": "state",
+      "xmlDocId": "P:Godot.RandomNumberGenerator.State",
+      "sourcePath": "doc/classes/RandomNumberGenerator.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RandomNumberGenerator.xml",
+      "sha256": "5c5a99f6784b7225320e9d02018a8d6283b44ec6c951e965debd91d1514f63fb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

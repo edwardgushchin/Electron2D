@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DCCDIK",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DCCDIK",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DCCDIK",
+    "documentationPath": "doc/classes/SkeletonModification2DCCDIK.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dccdik.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCcdikJointBone2dNode",
+      "kind": "Method",
+      "signature": "public NodePath GetCcdikJointBone2dNode(int jointIdx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Bone2D] node assigned to the CCDIK joint at [param joint_idx].",
+      "godotName": "get_ccdik_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointBone2dNode(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointBoneIndex",
+      "kind": "Method",
+      "signature": "public int GetCcdikJointBoneIndex(int jointIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the [Bone2D] node assigned to the CCDIK joint at [param joint_idx].",
+      "godotName": "get_ccdik_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointBoneIndex(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointConstraintAngleInvert",
+      "kind": "Method",
+      "signature": "public bool GetCcdikJointConstraintAngleInvert(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the CCDIK joint at [param joint_idx] uses an inverted joint constraint. See [method set_ccdik_joint_constraint_angle_invert] for details.",
+      "godotName": "get_ccdik_joint_constraint_angle_invert",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointConstraintAngleInvert(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointConstraintAngleMax",
+      "kind": "Method",
+      "signature": "public float GetCcdikJointConstraintAngleMax(int jointIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the maximum angle constraint for the joint at [param joint_idx].",
+      "godotName": "get_ccdik_joint_constraint_angle_max",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointConstraintAngleMax(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointConstraintAngleMin",
+      "kind": "Method",
+      "signature": "public float GetCcdikJointConstraintAngleMin(int jointIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the minimum angle constraint for the joint at [param joint_idx].",
+      "godotName": "get_ccdik_joint_constraint_angle_min",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointConstraintAngleMin(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointEnableConstraint",
+      "kind": "Method",
+      "signature": "public bool GetCcdikJointEnableConstraint(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether angle constraints on the CCDIK joint at [param joint_idx] are enabled.",
+      "godotName": "get_ccdik_joint_enable_constraint",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointEnableConstraint(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "GetCcdikJointRotateFromJoint",
+      "kind": "Method",
+      "signature": "public bool GetCcdikJointRotateFromJoint(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the joint at [param joint_idx] is set to rotate from the joint, [code]true[/code], or to rotate from the tip, [code]false[/code]. The default is to rotate from the tip.",
+      "godotName": "get_ccdik_joint_rotate_from_joint",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.GetCcdikJointRotateFromJoint(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointBone2dNode",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointBone2dNode(int jointIdx, NodePath bone2dNodepath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone2d_nodepath",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [Bone2D] node assigned to the CCDIK joint at [param joint_idx].",
+      "godotName": "set_ccdik_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointBone2dNode(int,NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointBoneIndex",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointBoneIndex(int jointIdx, int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the bone index, [param bone_idx], of the CCDIK joint at [param joint_idx]. When possible, this will also update the [code]bone2d_node[/code] of the CCDIK joint based on data provided by the linked skeleton.",
+      "godotName": "set_ccdik_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointBoneIndex(int,int)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointConstraintAngleInvert",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointConstraintAngleInvert(int jointIdx, bool invert)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "invert",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the CCDIK joint at [param joint_idx] uses an inverted joint constraint. An inverted joint constraint only constraints the CCDIK joint to the angles [i]outside of[/i] the inputted minimum and maximum angles. For this reason, it is referred to as an inverted joint constraint, as it constraints the joint to the outside of the inputted values.",
+      "godotName": "set_ccdik_joint_constraint_angle_invert",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointConstraintAngleInvert(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointConstraintAngleMax",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointConstraintAngleMax(int jointIdx, float angleMax)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "angle_max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum angle constraint for the joint at [param joint_idx].",
+      "godotName": "set_ccdik_joint_constraint_angle_max",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointConstraintAngleMax(int,float)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointConstraintAngleMin",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointConstraintAngleMin(int jointIdx, float angleMin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "angle_min",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the minimum angle constraint for the joint at [param joint_idx].",
+      "godotName": "set_ccdik_joint_constraint_angle_min",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointConstraintAngleMin(int,float)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointEnableConstraint",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointEnableConstraint(int jointIdx, bool enableConstraint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable_constraint",
+          "type": "bool"
+        }
+      ],
+      "summary": "Determines whether angle constraints on the CCDIK joint at [param joint_idx] are enabled. When [code]true[/code], constraints will be enabled and taken into account when solving.",
+      "godotName": "set_ccdik_joint_enable_constraint",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointEnableConstraint(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "SetCcdikJointRotateFromJoint",
+      "kind": "Method",
+      "signature": "public void SetCcdikJointRotateFromJoint(int jointIdx, bool rotateFromJoint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "rotate_from_joint",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the joint at [param joint_idx] is set to rotate from the joint, [code]true[/code], or to rotate from the tip, [code]false[/code].",
+      "godotName": "set_ccdik_joint_rotate_from_joint",
+      "xmlDocId": "M:Godot.SkeletonModification2DCCDIK.SetCcdikJointRotateFromJoint(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "CcdikDataChainLength",
+      "kind": "Property",
+      "signature": "public int CcdikDataChainLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of CCDIK joints in the CCDIK modification.",
+      "defaultValue": "0",
+      "godotName": "ccdik_data_chain_length",
+      "xmlDocId": "P:Godot.SkeletonModification2DCCDIK.CcdikDataChainLength",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "TargetNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TargetNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The NodePath to the node that is the target for the CCDIK modification. This node is what the CCDIK chain will attempt to rotate the bone chain to.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DCCDIK.TargetNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    },
+    {
+      "name": "TipNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TipNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The end position of the CCDIK chain. Typically, this should be a child of a [Bone2D] node attached to the final [Bone2D] in the CCDIK chain.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "tip_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DCCDIK.TipNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DCCDIK.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DCCDIK.xml",
+      "sha256": "4f67ae892a537c48f0f89f38a9e3b69799e227fbcb052fc2bfe67441896a9dad"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

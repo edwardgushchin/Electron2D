@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScrollBar",
+    "namespace": "Godot",
+    "fullName": "Godot.ScrollBar",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "ScrollBar",
+    "documentationPath": "doc/classes/ScrollBar.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scrollbar.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CustomStep",
+      "kind": "Property",
+      "signature": "public float CustomStep { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides the step used when clicking increment and decrement buttons or when using arrow keys when the [ScrollBar] is focused.",
+      "defaultValue": "-1.0",
+      "godotName": "custom_step",
+      "xmlDocId": "P:Godot.ScrollBar.CustomStep",
+      "sourcePath": "doc/classes/ScrollBar.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.ScrollBar.FocusMode",
+      "sourcePath": "doc/classes/ScrollBar.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.ScrollBar.Step",
+      "sourcePath": "doc/classes/ScrollBar.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Scrolling",
+      "kind": "Signal",
+      "signature": "public event ScrollingHandler Scrolling",
+      "parameters": [],
+      "summary": "Emitted when the scrollbar is being scrolled.",
+      "godotName": "scrolling",
+      "xmlDocId": "E:Godot.ScrollBar.Scrolling",
+      "sourcePath": "doc/classes/ScrollBar.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScrollBar.xml",
+      "sha256": "9ff426a5d457b0249527c34209a0b213a9e235e88a0627b12553bb8803aa08e1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

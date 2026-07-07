@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFCamera",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFCamera",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFCamera",
+    "documentationPath": "modules/gltf/doc_classes/GLTFCamera.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfcamera.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFCamera FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFCamera",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFCamera instance by parsing the given [Dictionary].",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFCamera.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "FromNode",
+      "kind": "Method",
+      "signature": "public GLTFCamera FromNode(Camera3D cameraNode)",
+      "returnType": "GLTFCamera",
+      "parameters": [
+        {
+          "name": "camera_node",
+          "type": "Camera3D"
+        }
+      ],
+      "summary": "Create a new GLTFCamera instance from the given Godot [Camera3D] node.",
+      "godotName": "from_node",
+      "xmlDocId": "M:Godot.GLTFCamera.FromNode(Camera3D)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFCamera instance into a [Dictionary].",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFCamera.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "ToNode",
+      "kind": "Method",
+      "signature": "public Camera3D ToNode()",
+      "returnType": "Camera3D",
+      "parameters": [],
+      "summary": "Converts this GLTFCamera instance into a Godot [Camera3D] node.",
+      "godotName": "to_node",
+      "xmlDocId": "M:Godot.GLTFCamera.ToNode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "DepthFar",
+      "kind": "Property",
+      "signature": "public float DepthFar { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to the far culling boundary for this camera relative to its local Z axis, in meters. This maps to glTF\u0027s [code]zfar[/code] property.",
+      "defaultValue": "4000.0",
+      "godotName": "depth_far",
+      "xmlDocId": "P:Godot.GLTFCamera.DepthFar",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "DepthNear",
+      "kind": "Property",
+      "signature": "public float DepthNear { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to the near culling boundary for this camera relative to its local Z axis, in meters. This maps to glTF\u0027s [code]znear[/code] property.",
+      "defaultValue": "0.05",
+      "godotName": "depth_near",
+      "xmlDocId": "P:Godot.GLTFCamera.DepthNear",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "Fov",
+      "kind": "Property",
+      "signature": "public float Fov { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The FOV of the camera. This class and glTF define the camera FOV in radians, while Godot uses degrees. This maps to glTF\u0027s [code]yfov[/code] property. This value is only used for perspective cameras, when [member perspective] is [code]true[/code].",
+      "defaultValue": "1.3089969",
+      "godotName": "fov",
+      "xmlDocId": "P:Godot.GLTFCamera.Fov",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "Perspective",
+      "kind": "Property",
+      "signature": "public bool Perspective { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the camera is in perspective mode. Otherwise, the camera is in orthographic/orthogonal mode. This maps to glTF\u0027s camera [code]type[/code] property. See [member Camera3D.projection] and the glTF spec for more information.",
+      "defaultValue": "true",
+      "godotName": "perspective",
+      "xmlDocId": "P:Godot.GLTFCamera.Perspective",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    },
+    {
+      "name": "SizeMag",
+      "kind": "Property",
+      "signature": "public float SizeMag { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of the camera. This class and glTF define the camera size magnitude as a radius in meters, while Godot defines it as a diameter in meters. This maps to glTF\u0027s [code]ymag[/code] property. This value is only used for orthographic/orthogonal cameras, when [member perspective] is [code]false[/code].",
+      "defaultValue": "0.5",
+      "godotName": "size_mag",
+      "xmlDocId": "P:Godot.GLTFCamera.SizeMag",
+      "sourcePath": "modules/gltf/doc_classes/GLTFCamera.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFCamera.xml",
+      "sha256": "49b29daabebdff86393b596d715862f725d0170cc6788509e940a35113baf834"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

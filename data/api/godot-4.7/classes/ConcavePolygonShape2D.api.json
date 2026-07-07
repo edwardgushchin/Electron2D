@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConcavePolygonShape2D",
+    "namespace": "Godot",
+    "fullName": "Godot.ConcavePolygonShape2D",
+    "kind": "class",
+    "baseType": "Shape2D",
+    "interfaces": [],
+    "godotReference": "ConcavePolygonShape2D",
+    "documentationPath": "doc/classes/ConcavePolygonShape2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_concavepolygonshape2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Segments",
+      "kind": "Property",
+      "signature": "public PackedVector2Array Segments { get; set; }",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "The array of points that make up the [ConcavePolygonShape2D]\u0027s line segments. The array (of length divisible by two) is naturally divided into pairs (one pair for each segment); each pair consists of the starting point of a segment and the endpoint of a segment.",
+      "defaultValue": "PackedVector2Array()",
+      "godotName": "segments",
+      "xmlDocId": "P:Godot.ConcavePolygonShape2D.Segments",
+      "sourcePath": "doc/classes/ConcavePolygonShape2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConcavePolygonShape2D.xml",
+      "sha256": "6f514a9ea16447803a19853c3ed9de01dc6857e519322932d9c3025a261874db"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

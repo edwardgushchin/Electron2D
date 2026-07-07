@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlaybackSynchronized",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlaybackSynchronized",
+    "kind": "class",
+    "baseType": "AudioStreamPlayback",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlaybackSynchronized",
+    "documentationPath": "modules/interactive_music/doc_classes/AudioStreamPlaybackSynchronized.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplaybacksynchronized.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/interactive_music/doc_classes/AudioStreamPlaybackSynchronized.xml",
+      "sha256": "6bae556a2f55ceb98bacbad4b3dfe2aaeca5272d5002993a47da18b227bc3930"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

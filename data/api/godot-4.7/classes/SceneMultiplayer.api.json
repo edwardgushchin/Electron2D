@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneMultiplayer",
+    "namespace": "Godot",
+    "fullName": "Godot.SceneMultiplayer",
+    "kind": "class",
+    "baseType": "MultiplayerAPI",
+    "interfaces": [],
+    "godotReference": "SceneMultiplayer",
+    "documentationPath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scenemultiplayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the current SceneMultiplayer network state (you shouldn\u0027t call this unless you know what you are doing).",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.SceneMultiplayer.Clear",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "CompleteAuth",
+      "kind": "Method",
+      "signature": "public int CompleteAuth(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Mark the authentication step as completed for the remote peer identified by [param id]. The [signal MultiplayerAPI.peer_connected] signal will be emitted for this peer once the remote side also completes the authentication. No further authentication messages are expected to be received from this peer. If a peer disconnects before completing authentication, either due to a network issue, the [member auth_timeout] expiring, or manually calling [method disconnect_peer], the [signal peer_authentication_failed] signal will be emitted instead of [signal MultiplayerAPI.peer_disconnected].",
+      "godotName": "complete_auth",
+      "xmlDocId": "M:Godot.SceneMultiplayer.CompleteAuth(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "DisconnectPeer",
+      "kind": "Method",
+      "signature": "public void DisconnectPeer(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Disconnects the peer identified by [param id], removing it from the list of connected peers, and closing the underlying connection with it.",
+      "godotName": "disconnect_peer",
+      "xmlDocId": "M:Godot.SceneMultiplayer.DisconnectPeer(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "GetAuthenticatingPeers",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetAuthenticatingPeers()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the IDs of the peers currently trying to authenticate with this [MultiplayerAPI].",
+      "godotName": "get_authenticating_peers",
+      "xmlDocId": "M:Godot.SceneMultiplayer.GetAuthenticatingPeers",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "SendAuth",
+      "kind": "Method",
+      "signature": "public int SendAuth(int id, PackedByteArray data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Sends the specified [param data] to the remote peer identified by [param id] as part of an authentication message. This can be used to authenticate peers, and control when [signal MultiplayerAPI.peer_connected] is emitted (and the remote peer accepted as one of the connected peers).",
+      "godotName": "send_auth",
+      "xmlDocId": "M:Godot.SceneMultiplayer.SendAuth(int,PackedByteArray)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "SendBytes",
+      "kind": "Method",
+      "signature": "public int SendBytes(PackedByteArray bytes, int id, int mode, int channel)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "mode",
+          "type": "int",
+          "defaultValue": "2"
+        },
+        {
+          "name": "channel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sends the given raw [param bytes] to a specific peer identified by [param id] (see [method MultiplayerPeer.set_target_peer]). Default ID is [code]0[/code], i.e. broadcast to all peers.",
+      "godotName": "send_bytes",
+      "xmlDocId": "M:Godot.SceneMultiplayer.SendBytes(PackedByteArray,int,int,int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "AllowObjectDecoding",
+      "kind": "Property",
+      "signature": "public bool AllowObjectDecoding { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the MultiplayerAPI will allow encoding and decoding of object during RPCs. [b]Warning:[/b] Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threat such as remote code execution.",
+      "defaultValue": "false",
+      "godotName": "allow_object_decoding",
+      "xmlDocId": "P:Godot.SceneMultiplayer.AllowObjectDecoding",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "AuthCallback",
+      "kind": "Property",
+      "signature": "public Callable AuthCallback { get; set; }",
+      "returnType": "Callable",
+      "parameters": [],
+      "summary": "The callback to execute when receiving authentication data sent via [method send_auth]. If the [Callable] is empty (default), peers will be automatically accepted as soon as they connect.",
+      "defaultValue": "Callable()",
+      "godotName": "auth_callback",
+      "xmlDocId": "P:Godot.SceneMultiplayer.AuthCallback",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "AuthTimeout",
+      "kind": "Property",
+      "signature": "public float AuthTimeout { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set to a value greater than [code]0.0[/code], the maximum duration in seconds peers can stay in the authenticating state, after which the authentication will automatically fail. See the [signal peer_authenticating] and [signal peer_authentication_failed] signals.",
+      "defaultValue": "3.0",
+      "godotName": "auth_timeout",
+      "xmlDocId": "P:Godot.SceneMultiplayer.AuthTimeout",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "MaxDeltaPacketSize",
+      "kind": "Property",
+      "signature": "public int MaxDeltaPacketSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum size of each delta packet. Higher values increase the chance of receiving full updates in a single frame, but also the chance of causing networking congestion (higher latency, disconnections). See [MultiplayerSynchronizer].",
+      "defaultValue": "65535",
+      "godotName": "max_delta_packet_size",
+      "xmlDocId": "P:Godot.SceneMultiplayer.MaxDeltaPacketSize",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "MaxSyncPacketSize",
+      "kind": "Property",
+      "signature": "public int MaxSyncPacketSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum size of each synchronization packet. Higher values increase the chance of receiving full updates in a single frame, but also the chance of packet loss. See [MultiplayerSynchronizer].",
+      "defaultValue": "1350",
+      "godotName": "max_sync_packet_size",
+      "xmlDocId": "P:Godot.SceneMultiplayer.MaxSyncPacketSize",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "RefuseNewConnections",
+      "kind": "Property",
+      "signature": "public bool RefuseNewConnections { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the MultiplayerAPI\u0027s [member MultiplayerAPI.multiplayer_peer] refuses new incoming connections.",
+      "defaultValue": "false",
+      "godotName": "refuse_new_connections",
+      "xmlDocId": "P:Godot.SceneMultiplayer.RefuseNewConnections",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "RootPath",
+      "kind": "Property",
+      "signature": "public NodePath RootPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The root path to use for RPCs and replication. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed. This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "root_path",
+      "xmlDocId": "P:Godot.SceneMultiplayer.RootPath",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "ServerRelay",
+      "kind": "Property",
+      "signature": "public bool ServerRelay { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enable or disable the server feature that notifies clients of other peers\u0027 connection/disconnection, and relays messages between them. When this option is [code]false[/code], clients won\u0027t be automatically notified of other peers and won\u0027t be able to send them packets through the server. [b]Note:[/b] Changing this option while other peers are connected may lead to unexpected behaviors. [b]Note:[/b] Support for this feature may depend on the current [MultiplayerPeer] configuration. See [method MultiplayerPeer.is_server_relay_supported].",
+      "defaultValue": "true",
+      "godotName": "server_relay",
+      "xmlDocId": "P:Godot.SceneMultiplayer.ServerRelay",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PeerAuthenticating",
+      "kind": "Signal",
+      "signature": "public event PeerAuthenticatingHandler PeerAuthenticating",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member MultiplayerAPI.multiplayer_peer] connects to a new peer and a valid [member auth_callback] is set. In this case, the [signal MultiplayerAPI.peer_connected] will not be emitted until [method complete_auth] is called with given peer [param id]. While in this state, the peer will not be included in the list returned by [method MultiplayerAPI.get_peers] (but in the one returned by [method get_authenticating_peers]), and only authentication data will be sent or received. See [method send_auth] for sending authentication data.",
+      "godotName": "peer_authenticating",
+      "xmlDocId": "E:Godot.SceneMultiplayer.PeerAuthenticating(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "PeerAuthenticationFailed",
+      "kind": "Signal",
+      "signature": "public event PeerAuthenticationFailedHandler PeerAuthenticationFailed",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member MultiplayerAPI.multiplayer_peer] disconnects from a peer for which authentication had not yet completed. See [signal peer_authenticating].",
+      "godotName": "peer_authentication_failed",
+      "xmlDocId": "E:Godot.SceneMultiplayer.PeerAuthenticationFailed(int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    },
+    {
+      "name": "PeerPacket",
+      "kind": "Signal",
+      "signature": "public event PeerPacketHandler PeerPacket",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "packet",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member MultiplayerAPI.multiplayer_peer] receives a [param packet] with custom data (see [method send_bytes]). ID is the peer ID of the peer that sent the packet.",
+      "godotName": "peer_packet",
+      "xmlDocId": "E:Godot.SceneMultiplayer.PeerPacket(int,PackedByteArray)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneMultiplayer.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/multiplayer/doc_classes/SceneMultiplayer.xml",
+      "sha256": "6dfc203d1ba5af8a63c4bacfc6ed4f1bf7b90c5df4818c343e6cec0dc4765966"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

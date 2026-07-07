@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsBody3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsBody3D",
+    "kind": "class",
+    "baseType": "CollisionObject3D",
+    "interfaces": [],
+    "godotReference": "PhysicsBody3D",
+    "documentationPath": "doc/classes/PhysicsBody3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsbody3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void AddCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Adds a body to the list of bodies that this body can\u0027t collide with.",
+      "godotName": "add_collision_exception_with",
+      "xmlDocId": "M:Godot.PhysicsBody3D.AddCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "GetAxisLock",
+      "kind": "Method",
+      "signature": "public bool GetAxisLock(int axis)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified linear or rotational [param axis] is locked.",
+      "godotName": "get_axis_lock",
+      "xmlDocId": "M:Godot.PhysicsBody3D.GetAxisLock(int)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "GetCollisionExceptions",
+      "kind": "Method",
+      "signature": "public PhysicsBody3D[] GetCollisionExceptions()",
+      "returnType": "PhysicsBody3D[]",
+      "parameters": [],
+      "summary": "Returns an array of nodes that were added as collision exceptions for this body.",
+      "godotName": "get_collision_exceptions",
+      "xmlDocId": "M:Godot.PhysicsBody3D.GetCollisionExceptions",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "GetGravity",
+      "kind": "Method",
+      "signature": "public Vector3 GetGravity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the gravity vector computed from all sources that can affect the body, including all gravity overrides from [Area3D] nodes and the global world gravity.",
+      "godotName": "get_gravity",
+      "xmlDocId": "M:Godot.PhysicsBody3D.GetGravity",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "MoveAndCollide",
+      "kind": "Method",
+      "signature": "public KinematicCollision3D MoveAndCollide(Vector3 motion, bool testOnly, float safeMargin, bool recoveryAsCollision, int maxCollisions)",
+      "returnType": "KinematicCollision3D",
+      "parameters": [
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "test_only",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "safe_margin",
+          "type": "float",
+          "defaultValue": "0.001"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "max_collisions",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Moves the body along the vector [param motion]. In order to be frame rate independent in [method Node._physics_process] or [method Node._process], [param motion] should be computed using [code]delta[/code]. The body will stop if it collides. Returns a [KinematicCollision3D], which contains information about the collision when stopped, or when touching another body along the motion. If [param test_only] is [code]true[/code], the body does not move but the would-be collision information is given. [param safe_margin] is the extra margin used for collision recovery (see [member CharacterBody3D.safe_margin] for more details). If [param recovery_as_collision] is [code]true[/code], any depenetration from the recovery phase is also reported as a collision; this is used e.g. by [CharacterBody3D] for improving floor detection during floor snapping. [param max_collisions] allows to retrieve more than one collision result.",
+      "godotName": "move_and_collide",
+      "xmlDocId": "M:Godot.PhysicsBody3D.MoveAndCollide(Vector3,bool,float,bool,int)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "RemoveCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void RemoveCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Removes a body from the list of bodies that this body can\u0027t collide with.",
+      "godotName": "remove_collision_exception_with",
+      "xmlDocId": "M:Godot.PhysicsBody3D.RemoveCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "SetAxisLock",
+      "kind": "Method",
+      "signature": "public void SetAxisLock(int axis, bool @lock)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "int"
+        },
+        {
+          "name": "lock",
+          "type": "bool"
+        }
+      ],
+      "summary": "Locks or unlocks the specified linear or rotational [param axis] depending on the value of [param lock].",
+      "godotName": "set_axis_lock",
+      "xmlDocId": "M:Godot.PhysicsBody3D.SetAxisLock(int,bool)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "TestMove",
+      "kind": "Method",
+      "signature": "public bool TestMove(Transform3D from, Vector3 motion, KinematicCollision3D collision, float safeMargin, bool recoveryAsCollision, int maxCollisions)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Transform3D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector3"
+        },
+        {
+          "name": "collision",
+          "type": "KinematicCollision3D",
+          "defaultValue": "null"
+        },
+        {
+          "name": "safe_margin",
+          "type": "float",
+          "defaultValue": "0.001"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "max_collisions",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Checks for collisions without moving the body. In order to be frame rate independent in [method Node._physics_process] or [method Node._process], [param motion] should be computed using [code]delta[/code]. Virtually sets the node\u0027s position, scale and rotation to that of the given [Transform3D], then tries to move the body along the vector [param motion]. Returns [code]true[/code] if a collision would stop the body from moving along the whole path. [param collision] is an optional object of type [KinematicCollision3D], which contains additional information about the collision when stopped, or when touching another body along the motion. [param safe_margin] is the extra margin used for collision recovery (see [member CharacterBody3D.safe_margin] for more details). If [param recovery_as_collision] is [code]true[/code], any depenetration from the recovery phase is also reported as a collision; this is useful for checking whether the body would [i]touch[/i] any other bodies. [param max_collisions] allows to retrieve more than one collision result.",
+      "godotName": "test_move",
+      "xmlDocId": "M:Godot.PhysicsBody3D.TestMove(Transform3D,Vector3,KinematicCollision3D,float,bool,int)",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockAngularX",
+      "kind": "Property",
+      "signature": "public bool AxisLockAngularX { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s rotation in the X axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_angular_x",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockAngularX",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockAngularY",
+      "kind": "Property",
+      "signature": "public bool AxisLockAngularY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s rotation in the Y axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_angular_y",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockAngularY",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockAngularZ",
+      "kind": "Property",
+      "signature": "public bool AxisLockAngularZ { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s rotation in the Z axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_angular_z",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockAngularZ",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockLinearX",
+      "kind": "Property",
+      "signature": "public bool AxisLockLinearX { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s linear movement in the X axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_linear_x",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockLinearX",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockLinearY",
+      "kind": "Property",
+      "signature": "public bool AxisLockLinearY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s linear movement in the Y axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_linear_y",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockLinearY",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    },
+    {
+      "name": "AxisLockLinearZ",
+      "kind": "Property",
+      "signature": "public bool AxisLockLinearZ { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Lock the body\u0027s linear movement in the Z axis.",
+      "defaultValue": "false",
+      "godotName": "axis_lock_linear_z",
+      "xmlDocId": "P:Godot.PhysicsBody3D.AxisLockLinearZ",
+      "sourcePath": "doc/classes/PhysicsBody3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsBody3D.xml",
+      "sha256": "cb9fdff2e1fbebfe2356ec014d977f1ce8b721c476ad53b756131d0b4df6dc84"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

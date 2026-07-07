@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectLimiter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectLimiter",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectLimiter",
+    "documentationPath": "doc/classes/AudioEffectLimiter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectlimiter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CeilingDb",
+      "kind": "Property",
+      "signature": "public float CeilingDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The waveform\u0027s maximum allowed value, in dB. Value can range from -20 to -0.1.",
+      "defaultValue": "-0.1",
+      "godotName": "ceiling_db",
+      "xmlDocId": "P:Godot.AudioEffectLimiter.CeilingDb",
+      "sourcePath": "doc/classes/AudioEffectLimiter.xml"
+    },
+    {
+      "name": "SoftClipDb",
+      "kind": "Property",
+      "signature": "public float SoftClipDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Modifies the volume of the limited waves, in dB. Value can range from 0 to 6.",
+      "defaultValue": "2.0",
+      "godotName": "soft_clip_db",
+      "xmlDocId": "P:Godot.AudioEffectLimiter.SoftClipDb",
+      "sourcePath": "doc/classes/AudioEffectLimiter.xml"
+    },
+    {
+      "name": "SoftClipRatio",
+      "kind": "Property",
+      "signature": "public float SoftClipRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This property has no effect on the audio. Use [AudioEffectHardLimiter] instead, as this Limiter effect is deprecated.",
+      "defaultValue": "10.0",
+      "godotName": "soft_clip_ratio",
+      "xmlDocId": "P:Godot.AudioEffectLimiter.SoftClipRatio",
+      "sourcePath": "doc/classes/AudioEffectLimiter.xml"
+    },
+    {
+      "name": "ThresholdDb",
+      "kind": "Property",
+      "signature": "public float ThresholdDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume threshold level from which the limiter begins to be active, in dB. Value can range from -30 to 0.",
+      "defaultValue": "0.0",
+      "godotName": "threshold_db",
+      "xmlDocId": "P:Godot.AudioEffectLimiter.ThresholdDb",
+      "sourcePath": "doc/classes/AudioEffectLimiter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectLimiter.xml",
+      "sha256": "825180d4dbcc312860914d12bbc2f6c426056ce95ace4566da4487575fa77cec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

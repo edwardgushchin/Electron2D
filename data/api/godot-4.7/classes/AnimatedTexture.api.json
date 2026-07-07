@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimatedTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimatedTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "AnimatedTexture",
+    "documentationPath": "doc/classes/AnimatedTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animatedtexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFrameDuration",
+      "kind": "Method",
+      "signature": "public float GetFrameDuration(int frame)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given [param frame]\u0027s duration, in seconds.",
+      "godotName": "get_frame_duration",
+      "xmlDocId": "M:Godot.AnimatedTexture.GetFrameDuration(int)",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "GetFrameTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetFrameTexture(int frame)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given frame\u0027s [Texture2D].",
+      "godotName": "get_frame_texture",
+      "xmlDocId": "M:Godot.AnimatedTexture.GetFrameTexture(int)",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "SetFrameDuration",
+      "kind": "Method",
+      "signature": "public void SetFrameDuration(int frame, float duration)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "int"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the duration of any given [param frame]. The final duration is affected by the [member speed_scale]. If set to [code]0[/code], the frame is skipped during playback.",
+      "godotName": "set_frame_duration",
+      "xmlDocId": "M:Godot.AnimatedTexture.SetFrameDuration(int,float)",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "SetFrameTexture",
+      "kind": "Method",
+      "signature": "public void SetFrameTexture(int frame, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Assigns a [Texture2D] to the given frame. Frame IDs start at 0, so the first frame has ID 0, and the last frame of the animation has ID [member frames] - 1. You can define any number of textures up to [constant MAX_FRAMES], but keep in mind that only frames from 0 to [member frames] - 1 will be part of the animation.",
+      "godotName": "set_frame_texture",
+      "xmlDocId": "M:Godot.AnimatedTexture.SetFrameTexture(int,Texture2D)",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "CurrentFrame",
+      "kind": "Property",
+      "signature": "public int CurrentFrame { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the currently visible frame of the texture. Setting this frame while playing resets the current frame time, so the newly selected frame plays for its whole configured frame duration.",
+      "godotName": "current_frame",
+      "xmlDocId": "P:Godot.AnimatedTexture.CurrentFrame",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "Frames",
+      "kind": "Property",
+      "signature": "public int Frames { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of frames to use in the animation. While you can create the frames independently with [method set_frame_texture], you need to set this value for the animation to take new frames into account. The maximum number of frames is [constant MAX_FRAMES].",
+      "defaultValue": "1",
+      "godotName": "frames",
+      "xmlDocId": "P:Godot.AnimatedTexture.Frames",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "OneShot",
+      "kind": "Property",
+      "signature": "public bool OneShot { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the animation will only play once and will not loop back to the first frame after reaching the end. Note that reaching the end will not set [member pause] to [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "one_shot",
+      "xmlDocId": "P:Godot.AnimatedTexture.OneShot",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "Pause",
+      "kind": "Property",
+      "signature": "public bool Pause { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the animation will pause where it currently is (i.e. at [member current_frame]). The animation will continue from where it was paused when changing this property to [code]false[/code].",
+      "defaultValue": "false",
+      "godotName": "pause",
+      "xmlDocId": "P:Godot.AnimatedTexture.Pause",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.AnimatedTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The animation speed is multiplied by this value. If set to a negative value, the animation is played in reverse.",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.AnimatedTexture.SpeedScale",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "MAX_FRAMES",
+      "value": "256",
+      "kind": "Constant",
+      "summary": "The maximum number of frames supported by [AnimatedTexture]. If you need more frames in your animation, use [AnimationPlayer] or [AnimatedSprite2D].",
+      "sourcePath": "doc/classes/AnimatedTexture.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimatedTexture.xml",
+      "sha256": "be9ecd8a1dca24d1293ef54766626a2ecf5e62e08663f1b16ab1ad19b9d7ce99"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

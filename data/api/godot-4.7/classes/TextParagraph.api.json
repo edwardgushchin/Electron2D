@@ -1,0 +1,898 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextParagraph",
+    "namespace": "Godot",
+    "fullName": "Godot.TextParagraph",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "TextParagraph",
+    "documentationPath": "doc/classes/TextParagraph.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textparagraph.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddObject",
+      "kind": "Method",
+      "signature": "public bool AddObject(Variant key, Vector2 size, int inlineAlign, int length, float baseline)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "size",
+          "type": "Vector2"
+        },
+        {
+          "name": "inline_align",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "length",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "baseline",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Adds inline object to the text buffer, [param key] must be unique. In the text, object is represented as [param length] object replacement characters.",
+      "godotName": "add_object",
+      "xmlDocId": "M:Godot.TextParagraph.AddObject(Variant,Vector2,int,int,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "AddString",
+      "kind": "Method",
+      "signature": "public bool AddString(String text, Font font, int fontSize, String language, Variant meta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        },
+        {
+          "name": "language",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "meta",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Adds text span and font to draw it.",
+      "godotName": "add_string",
+      "xmlDocId": "M:Godot.TextParagraph.AddString(String,Font,int,String,Variant)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears text paragraph (removes text and inline objects).",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TextParagraph.Clear",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "ClearDropcap",
+      "kind": "Method",
+      "signature": "public void ClearDropcap()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes dropcap.",
+      "godotName": "clear_dropcap",
+      "xmlDocId": "M:Godot.TextParagraph.ClearDropcap",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public void Draw(RID canvas, Vector2 pos, Color color, Color dcColor, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "dc_color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw all lines of the text and drop cap into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw",
+      "xmlDocId": "M:Godot.TextParagraph.Draw(RID,Vector2,Color,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "DrawDropcap",
+      "kind": "Method",
+      "signature": "public void DrawDropcap(RID canvas, Vector2 pos, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw drop cap into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_dropcap",
+      "xmlDocId": "M:Godot.TextParagraph.DrawDropcap(RID,Vector2,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "DrawDropcapOutline",
+      "kind": "Method",
+      "signature": "public void DrawDropcapOutline(RID canvas, Vector2 pos, int outlineSize, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "outline_size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw drop cap outline into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_dropcap_outline",
+      "xmlDocId": "M:Godot.TextParagraph.DrawDropcapOutline(RID,Vector2,int,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "DrawLine",
+      "kind": "Method",
+      "signature": "public void DrawLine(RID canvas, Vector2 pos, int line, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw single line of text into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_line",
+      "xmlDocId": "M:Godot.TextParagraph.DrawLine(RID,Vector2,int,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "DrawLineOutline",
+      "kind": "Method",
+      "signature": "public void DrawLineOutline(RID canvas, Vector2 pos, int line, int outlineSize, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "outline_size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw outline of the single line of text into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_line_outline",
+      "xmlDocId": "M:Godot.TextParagraph.DrawLineOutline(RID,Vector2,int,int,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "DrawOutline",
+      "kind": "Method",
+      "signature": "public void DrawOutline(RID canvas, Vector2 pos, int outlineSize, Color color, Color dcColor, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "outline_size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "dc_color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw outlines of all lines of the text and drop cap into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_outline",
+      "xmlDocId": "M:Godot.TextParagraph.DrawOutline(RID,Vector2,int,Color,Color,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public TextParagraph Duplicate()",
+      "returnType": "TextParagraph",
+      "parameters": [],
+      "summary": "Duplicates this [TextParagraph].",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.TextParagraph.Duplicate",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetDropcapLines",
+      "kind": "Method",
+      "signature": "public int GetDropcapLines()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns number of lines used by dropcap.",
+      "godotName": "get_dropcap_lines",
+      "xmlDocId": "M:Godot.TextParagraph.GetDropcapLines",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetDropcapRid",
+      "kind": "Method",
+      "signature": "public RID GetDropcapRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns drop cap text buffer RID.",
+      "godotName": "get_dropcap_rid",
+      "xmlDocId": "M:Godot.TextParagraph.GetDropcapRid",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetDropcapSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetDropcapSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns drop cap bounding box size.",
+      "godotName": "get_dropcap_size",
+      "xmlDocId": "M:Godot.TextParagraph.GetDropcapSize",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetInferredDirection",
+      "kind": "Method",
+      "signature": "public int GetInferredDirection()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the text writing direction inferred by the BiDi algorithm.",
+      "godotName": "get_inferred_direction",
+      "xmlDocId": "M:Godot.TextParagraph.GetInferredDirection",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineAscent",
+      "kind": "Method",
+      "signature": "public float GetLineAscent(int line)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text line ascent (number of pixels above the baseline for horizontal layout or to the left of baseline for vertical).",
+      "godotName": "get_line_ascent",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineAscent(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineCount",
+      "kind": "Method",
+      "signature": "public int GetLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns number of lines in the paragraph.",
+      "godotName": "get_line_count",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineCount",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineDescent",
+      "kind": "Method",
+      "signature": "public float GetLineDescent(int line)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text line descent (number of pixels below the baseline for horizontal layout or to the right of baseline for vertical).",
+      "godotName": "get_line_descent",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineDescent(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineObjectRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetLineObjectRect(int line, Variant key)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns bounding rectangle of the inline object.",
+      "godotName": "get_line_object_rect",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineObjectRect(int,Variant)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineObjects",
+      "kind": "Method",
+      "signature": "public Array GetLineObjects(int line)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns array of inline objects in the line.",
+      "godotName": "get_line_objects",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineObjects(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineRange",
+      "kind": "Method",
+      "signature": "public Vector2i GetLineRange(int line)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns character range of the line.",
+      "godotName": "get_line_range",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineRange(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineRid",
+      "kind": "Method",
+      "signature": "public RID GetLineRid(int line)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns TextServer line buffer RID.",
+      "godotName": "get_line_rid",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineRid(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetLineSize(int line)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns size of the bounding box of the line of text. Returned size is rounded up.",
+      "godotName": "get_line_size",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineSize(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineUnderlinePosition",
+      "kind": "Method",
+      "signature": "public float GetLineUnderlinePosition(int line)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns pixel offset of the underline below the baseline.",
+      "godotName": "get_line_underline_position",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineUnderlinePosition(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineUnderlineThickness",
+      "kind": "Method",
+      "signature": "public float GetLineUnderlineThickness(int line)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns thickness of the underline.",
+      "godotName": "get_line_underline_thickness",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineUnderlineThickness(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetLineWidth",
+      "kind": "Method",
+      "signature": "public float GetLineWidth(int line)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns width (for horizontal layout) or height (for vertical) of the line of text.",
+      "godotName": "get_line_width",
+      "xmlDocId": "M:Godot.TextParagraph.GetLineWidth(int)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetNonWrappedSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetNonWrappedSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the size of the bounding box of the paragraph, without line breaks.",
+      "godotName": "get_non_wrapped_size",
+      "xmlDocId": "M:Godot.TextParagraph.GetNonWrappedSize",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetRange",
+      "kind": "Method",
+      "signature": "public Vector2i GetRange()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the character range of the paragraph.",
+      "godotName": "get_range",
+      "xmlDocId": "M:Godot.TextParagraph.GetRange",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns TextServer full string buffer RID.",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.TextParagraph.GetRid",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the size of the bounding box of the paragraph.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.TextParagraph.GetSize",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "HasObject",
+      "kind": "Method",
+      "signature": "public bool HasObject(Variant key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if an object with [param key] is embedded in this shaped text buffer.",
+      "godotName": "has_object",
+      "xmlDocId": "M:Godot.TextParagraph.HasObject(Variant)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "HitTest",
+      "kind": "Method",
+      "signature": "public int HitTest(Vector2 coords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns caret character offset at the specified coordinates. This function always returns a valid position.",
+      "godotName": "hit_test",
+      "xmlDocId": "M:Godot.TextParagraph.HitTest(Vector2)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "ResizeObject",
+      "kind": "Method",
+      "signature": "public bool ResizeObject(Variant key, Vector2 size, int inlineAlign, float baseline)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "size",
+          "type": "Vector2"
+        },
+        {
+          "name": "inline_align",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "baseline",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Sets new size and alignment of embedded object.",
+      "godotName": "resize_object",
+      "xmlDocId": "M:Godot.TextParagraph.ResizeObject(Variant,Vector2,int,float)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "SetBidiOverride",
+      "kind": "Method",
+      "signature": "public void SetBidiOverride(Array @override)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "override",
+          "type": "Array"
+        }
+      ],
+      "summary": "Overrides BiDi for the structured text. Override ranges should cover full source text without overlaps. BiDi algorithm will be used on each range separately.",
+      "godotName": "set_bidi_override",
+      "xmlDocId": "M:Godot.TextParagraph.SetBidiOverride(Array)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "SetDropcap",
+      "kind": "Method",
+      "signature": "public bool SetDropcap(String text, Font font, int fontSize, Rect2 dropcapMargins, String language)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        },
+        {
+          "name": "dropcap_margins",
+          "type": "Rect2",
+          "defaultValue": "Rect2(0, 0, 0, 0)"
+        },
+        {
+          "name": "language",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Sets drop cap, overrides previously set drop cap. Drop cap (dropped capital) is a decorative element at the beginning of a paragraph that is larger than the rest of the text.",
+      "godotName": "set_dropcap",
+      "xmlDocId": "M:Godot.TextParagraph.SetDropcap(String,Font,int,Rect2,String)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "TabAlign",
+      "kind": "Method",
+      "signature": "public void TabAlign(PackedFloat32Array tabStops)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_stops",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Aligns paragraph to the given tab-stops.",
+      "godotName": "tab_align",
+      "xmlDocId": "M:Godot.TextParagraph.TabAlign(PackedFloat32Array)",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Paragraph horizontal alignment.",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.TextParagraph.Alignment",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "BreakFlags",
+      "kind": "Property",
+      "signature": "public int BreakFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line breaking rules. For more info see [TextServer].",
+      "defaultValue": "3",
+      "godotName": "break_flags",
+      "xmlDocId": "P:Godot.TextParagraph.BreakFlags",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "CustomPunctuation",
+      "kind": "Property",
+      "signature": "public String CustomPunctuation { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Custom punctuation character list, used for word breaking. If set to empty string, server defaults are used.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "custom_punctuation",
+      "xmlDocId": "P:Godot.TextParagraph.CustomPunctuation",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Direction",
+      "kind": "Property",
+      "signature": "public int Direction { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text writing direction.",
+      "defaultValue": "0",
+      "godotName": "direction",
+      "xmlDocId": "P:Godot.TextParagraph.Direction",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "EllipsisChar",
+      "kind": "Property",
+      "signature": "public String EllipsisChar { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Ellipsis character used for text clipping.",
+      "defaultValue": "\u0022\u2026\u0022",
+      "godotName": "ellipsis_char",
+      "xmlDocId": "P:Godot.TextParagraph.EllipsisChar",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "JustificationFlags",
+      "kind": "Property",
+      "signature": "public int JustificationFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line fill alignment rules.",
+      "defaultValue": "163",
+      "godotName": "justification_flags",
+      "xmlDocId": "P:Godot.TextParagraph.JustificationFlags",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "LineSpacing",
+      "kind": "Property",
+      "signature": "public float LineSpacing { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Additional vertical spacing between lines (in pixels), spacing is added to line descent. This value can be negative.",
+      "defaultValue": "0.0",
+      "godotName": "line_spacing",
+      "xmlDocId": "P:Godot.TextParagraph.LineSpacing",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "MaxLinesVisible",
+      "kind": "Property",
+      "signature": "public int MaxLinesVisible { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Limits the lines of text shown.",
+      "defaultValue": "-1",
+      "godotName": "max_lines_visible",
+      "xmlDocId": "P:Godot.TextParagraph.MaxLinesVisible",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Orientation",
+      "kind": "Property",
+      "signature": "public int Orientation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text orientation.",
+      "defaultValue": "0",
+      "godotName": "orientation",
+      "xmlDocId": "P:Godot.TextParagraph.Orientation",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "PreserveControl",
+      "kind": "Property",
+      "signature": "public bool PreserveControl { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code] text will display control characters.",
+      "defaultValue": "false",
+      "godotName": "preserve_control",
+      "xmlDocId": "P:Godot.TextParagraph.PreserveControl",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "PreserveInvalid",
+      "kind": "Property",
+      "signature": "public bool PreserveInvalid { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code] text will display invalid characters.",
+      "defaultValue": "true",
+      "godotName": "preserve_invalid",
+      "xmlDocId": "P:Godot.TextParagraph.PreserveInvalid",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clipping behavior when the text exceeds the paragraph\u0027s set width.",
+      "defaultValue": "0",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.TextParagraph.TextOverrunBehavior",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public float Width { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Paragraph width.",
+      "defaultValue": "-1.0",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.TextParagraph.Width",
+      "sourcePath": "doc/classes/TextParagraph.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextParagraph.xml",
+      "sha256": "02c420683c2e4fb81055a3d60ca7a14527d4697ba02d8055266adeb562bf3d81"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

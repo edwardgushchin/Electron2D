@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VideoStream",
+    "namespace": "Godot",
+    "fullName": "Godot.VideoStream",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "VideoStream",
+    "documentationPath": "doc/classes/VideoStream.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_videostream.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_InstantiatePlayback",
+      "kind": "Method",
+      "signature": "public VideoStreamPlayback _InstantiatePlayback()",
+      "returnType": "VideoStreamPlayback",
+      "parameters": [],
+      "summary": "Called when the video starts playing, to initialize and return a subclass of [VideoStreamPlayback].",
+      "godotName": "_instantiate_playback",
+      "xmlDocId": "M:Godot.VideoStream._InstantiatePlayback",
+      "sourcePath": "doc/classes/VideoStream.xml"
+    },
+    {
+      "name": "File",
+      "kind": "Property",
+      "signature": "public String File { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The video file path or URI that this [VideoStream] resource handles. For [VideoStreamTheora], this filename should be an Ogg Theora video file with the [code].ogv[/code] extension.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "file",
+      "xmlDocId": "P:Godot.VideoStream.File",
+      "sourcePath": "doc/classes/VideoStream.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_InstantiatePlayback",
+      "kind": "Method",
+      "signature": "public VideoStreamPlayback _InstantiatePlayback()",
+      "returnType": "VideoStreamPlayback",
+      "parameters": [],
+      "summary": "Called when the video starts playing, to initialize and return a subclass of [VideoStreamPlayback].",
+      "godotName": "_instantiate_playback",
+      "xmlDocId": "M:Godot.VideoStream._InstantiatePlayback",
+      "sourcePath": "doc/classes/VideoStream.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VideoStream.xml",
+      "sha256": "f72e0de309b258e4f10f45c8972a84a2a3758b6d06552efc7a7f8b3f46ce5daa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

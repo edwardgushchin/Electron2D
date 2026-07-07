@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRVRS",
+    "namespace": "Godot",
+    "fullName": "Godot.XRVRS",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "XRVRS",
+    "documentationPath": "doc/classes/XRVRS.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrvrs.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MakeVrsTexture",
+      "kind": "Method",
+      "signature": "public RID MakeVrsTexture(Vector2 targetSize, PackedVector2Array eyeFoci)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "target_size",
+          "type": "Vector2"
+        },
+        {
+          "name": "eye_foci",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Generates the VRS texture based on a render [param target_size] adjusted by our VRS tile size. For each eyes focal point passed in [param eye_foci] a layer is created. Focal point should be in NDC. The result will be cached, requesting a VRS texture with unchanged parameters and settings will return the cached RID.",
+      "godotName": "make_vrs_texture",
+      "xmlDocId": "M:Godot.XRVRS.MakeVrsTexture(Vector2,PackedVector2Array)",
+      "sourcePath": "doc/classes/XRVRS.xml"
+    },
+    {
+      "name": "VrsMinRadius",
+      "kind": "Property",
+      "signature": "public float VrsMinRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum radius around the focal point where full quality is guaranteed if VRS is used as a percentage of screen size.",
+      "defaultValue": "20.0",
+      "godotName": "vrs_min_radius",
+      "xmlDocId": "P:Godot.XRVRS.VrsMinRadius",
+      "sourcePath": "doc/classes/XRVRS.xml"
+    },
+    {
+      "name": "VrsRenderRegion",
+      "kind": "Property",
+      "signature": "public Rect2i VrsRenderRegion { get; set; }",
+      "returnType": "Rect2i",
+      "parameters": [],
+      "summary": "The render region that the VRS texture will be scaled to when generated.",
+      "defaultValue": "Rect2i(0, 0, 0, 0)",
+      "godotName": "vrs_render_region",
+      "xmlDocId": "P:Godot.XRVRS.VrsRenderRegion",
+      "sourcePath": "doc/classes/XRVRS.xml"
+    },
+    {
+      "name": "VrsStrength",
+      "kind": "Property",
+      "signature": "public float VrsStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength used to calculate the VRS density map. The greater this value, the more noticeable VRS is.",
+      "defaultValue": "1.0",
+      "godotName": "vrs_strength",
+      "xmlDocId": "P:Godot.XRVRS.VrsStrength",
+      "sourcePath": "doc/classes/XRVRS.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRVRS.xml",
+      "sha256": "40ec1eb7e23c9fa10ae06f7f4588ffb801033a232d55ba799c829b8cef077548"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoneConstraint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.BoneConstraint3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "BoneConstraint3D",
+    "documentationPath": "doc/classes/BoneConstraint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_boneconstraint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearSetting",
+      "kind": "Method",
+      "signature": "public void ClearSetting()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all settings.",
+      "godotName": "clear_setting",
+      "xmlDocId": "M:Godot.BoneConstraint3D.ClearSetting",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetAmount",
+      "kind": "Method",
+      "signature": "public float GetAmount(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the apply amount of the setting at [param index].",
+      "godotName": "get_amount",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetAmount(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetApplyBone",
+      "kind": "Method",
+      "signature": "public int GetApplyBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the apply bone of the setting at [param index]. This bone will be modified.",
+      "godotName": "get_apply_bone",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetApplyBone(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetApplyBoneName",
+      "kind": "Method",
+      "signature": "public String GetApplyBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the apply bone name of the setting at [param index]. This bone will be modified.",
+      "godotName": "get_apply_bone_name",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetApplyBoneName(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetReferenceBone",
+      "kind": "Method",
+      "signature": "public int GetReferenceBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference bone of the setting at [param index]. This bone will be only referenced and not modified by this modifier.",
+      "godotName": "get_reference_bone",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetReferenceBone(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetReferenceBoneName",
+      "kind": "Method",
+      "signature": "public String GetReferenceBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference bone name of the setting at [param index]. This bone will be only referenced and not modified by this modifier.",
+      "godotName": "get_reference_bone_name",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetReferenceBoneName(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetReferenceNode",
+      "kind": "Method",
+      "signature": "public NodePath GetReferenceNode(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference node path of the setting at [param index]. This node will be only referenced and not modified by this modifier.",
+      "godotName": "get_reference_node",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetReferenceNode(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetReferenceType",
+      "kind": "Method",
+      "signature": "public int GetReferenceType(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference target type of the setting at [param index]. See also [enum ReferenceType].",
+      "godotName": "get_reference_type",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetReferenceType(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "GetSettingCount",
+      "kind": "Method",
+      "signature": "public int GetSettingCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of settings in the modifier.",
+      "godotName": "get_setting_count",
+      "xmlDocId": "M:Godot.BoneConstraint3D.GetSettingCount",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetAmount",
+      "kind": "Method",
+      "signature": "public void SetAmount(int index, float amount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the apply amount of the setting at [param index] to [param amount].",
+      "godotName": "set_amount",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetAmount(int,float)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetApplyBone",
+      "kind": "Method",
+      "signature": "public void SetApplyBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the apply bone of the setting at [param index] to [param bone]. This bone will be modified.",
+      "godotName": "set_apply_bone",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetApplyBone(int,int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetApplyBoneName",
+      "kind": "Method",
+      "signature": "public void SetApplyBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the apply bone of the setting at [param index] to [param bone_name]. This bone will be modified.",
+      "godotName": "set_apply_bone_name",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetApplyBoneName(int,String)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetReferenceBone",
+      "kind": "Method",
+      "signature": "public void SetReferenceBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the reference bone of the setting at [param index] to [param bone]. This bone will be only referenced and not modified by this modifier.",
+      "godotName": "set_reference_bone",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetReferenceBone(int,int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetReferenceBoneName",
+      "kind": "Method",
+      "signature": "public void SetReferenceBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the reference bone of the setting at [param index] to [param bone_name]. This bone will be only referenced and not modified by this modifier.",
+      "godotName": "set_reference_bone_name",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetReferenceBoneName(int,String)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetReferenceNode",
+      "kind": "Method",
+      "signature": "public void SetReferenceNode(int index, NodePath node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the reference node path of the setting at [param index] to [param node]. This node will be only referenced and not modified by this modifier.",
+      "godotName": "set_reference_node",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetReferenceNode(int,NodePath)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetReferenceType",
+      "kind": "Method",
+      "signature": "public void SetReferenceType(int index, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the reference target type of the setting at [param index] to [param type]. See also [enum ReferenceType].",
+      "godotName": "set_reference_type",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetReferenceType(int,int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "SetSettingCount",
+      "kind": "Method",
+      "signature": "public void SetSettingCount(int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the number of settings in the modifier.",
+      "godotName": "set_setting_count",
+      "xmlDocId": "M:Godot.BoneConstraint3D.SetSettingCount(int)",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ReferenceType",
+      "values": [
+        {
+          "name": "REFERENCE_TYPE_BONE",
+          "value": "0",
+          "enum": "ReferenceType",
+          "kind": "EnumValue",
+          "summary": "The reference target is a bone. In this case, the reference target spaces is local space.",
+          "sourcePath": "doc/classes/BoneConstraint3D.xml"
+        },
+        {
+          "name": "REFERENCE_TYPE_NODE",
+          "value": "1",
+          "enum": "ReferenceType",
+          "kind": "EnumValue",
+          "summary": "The reference target is a [Node3D]. In this case, the reference target spaces is model space. In other words, the reference target\u0027s coordinates are treated as if it were placed directly under [Skeleton3D] which parent of the [BoneConstraint3D].",
+          "sourcePath": "doc/classes/BoneConstraint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "REFERENCE_TYPE_BONE",
+      "value": "0",
+      "enum": "ReferenceType",
+      "kind": "EnumValue",
+      "summary": "The reference target is a bone. In this case, the reference target spaces is local space.",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    },
+    {
+      "name": "REFERENCE_TYPE_NODE",
+      "value": "1",
+      "enum": "ReferenceType",
+      "kind": "EnumValue",
+      "summary": "The reference target is a [Node3D]. In this case, the reference target spaces is model space. In other words, the reference target\u0027s coordinates are treated as if it were placed directly under [Skeleton3D] which parent of the [BoneConstraint3D].",
+      "sourcePath": "doc/classes/BoneConstraint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoneConstraint3D.xml",
+      "sha256": "8b14d6acfa42946613312072759fe5fdce79156de19e2334689370ee304a495e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

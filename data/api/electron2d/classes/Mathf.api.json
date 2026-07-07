@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Mathf",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Mathf",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Mathf",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "E",
+      "kind": "Constant",
+      "signature": "public const System.Single E",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Represents the e value.",
+      "value": "2.7182817",
+      "xmlDocId": "F:Electron2D.Mathf.E",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Epsilon",
+      "kind": "Constant",
+      "signature": "public const System.Single Epsilon",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Represents the epsilon value.",
+      "value": "1E-05",
+      "xmlDocId": "F:Electron2D.Mathf.Epsilon",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pi",
+      "kind": "Constant",
+      "signature": "public const System.Single Pi",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Represents the pi value.",
+      "value": "3.1415927",
+      "xmlDocId": "F:Electron2D.Mathf.Pi",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tau",
+      "kind": "Constant",
+      "signature": "public const System.Single Tau",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Represents the tau value.",
+      "value": "6.2831855",
+      "xmlDocId": "F:Electron2D.Mathf.Tau",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CeilToInt",
+      "kind": "Method",
+      "signature": "public static System.Int32 CeilToInt(System.Single value)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the ceil to int operation.",
+      "xmlDocId": "M:Electron2D.Mathf.CeilToInt(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public static System.Int32 Clamp(System.Int32 value, System.Int32 min, System.Int32 max)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int32"
+        },
+        {
+          "name": "min",
+          "type": "System.Int32"
+        },
+        {
+          "name": "max",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Executes the clamp operation.",
+      "xmlDocId": "M:Electron2D.Mathf.Clamp(System.Int32,System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public static System.Single Clamp(System.Single value, System.Single min, System.Single max)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        },
+        {
+          "name": "min",
+          "type": "System.Single"
+        },
+        {
+          "name": "max",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the clamp operation.",
+      "xmlDocId": "M:Electron2D.Mathf.Clamp(System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DegToRad",
+      "kind": "Method",
+      "signature": "public static System.Single DegToRad(System.Single degrees)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "degrees",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the deg to rad operation.",
+      "xmlDocId": "M:Electron2D.Mathf.DegToRad(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FloorToInt",
+      "kind": "Method",
+      "signature": "public static System.Int32 FloorToInt(System.Single value)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the floor to int operation.",
+      "xmlDocId": "M:Electron2D.Mathf.FloorToInt(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InverseLerp",
+      "kind": "Method",
+      "signature": "public static System.Single InverseLerp(System.Single from, System.Single to, System.Single weight)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "System.Single"
+        },
+        {
+          "name": "to",
+          "type": "System.Single"
+        },
+        {
+          "name": "weight",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the inverse lerp operation.",
+      "xmlDocId": "M:Electron2D.Mathf.InverseLerp(System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsEqualApprox(System.Single a, System.Single b)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "a",
+          "type": "System.Single"
+        },
+        {
+          "name": "b",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Checks whether equal approx is true.",
+      "xmlDocId": "M:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsFinite(System.Single value)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Checks whether finite is true.",
+      "xmlDocId": "M:Electron2D.Mathf.IsFinite(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsZeroApprox",
+      "kind": "Method",
+      "signature": "public static System.Boolean IsZeroApprox(System.Single value)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Checks whether zero approx is true.",
+      "xmlDocId": "M:Electron2D.Mathf.IsZeroApprox(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Lerp",
+      "kind": "Method",
+      "signature": "public static System.Single Lerp(System.Single from, System.Single to, System.Single weight)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "System.Single"
+        },
+        {
+          "name": "to",
+          "type": "System.Single"
+        },
+        {
+          "name": "weight",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the lerp operation.",
+      "xmlDocId": "M:Electron2D.Mathf.Lerp(System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MoveToward",
+      "kind": "Method",
+      "signature": "public static System.Single MoveToward(System.Single from, System.Single to, System.Single delta)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "System.Single"
+        },
+        {
+          "name": "to",
+          "type": "System.Single"
+        },
+        {
+          "name": "delta",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the move toward operation.",
+      "xmlDocId": "M:Electron2D.Mathf.MoveToward(System.Single,System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PosMod",
+      "kind": "Method",
+      "signature": "public static System.Int32 PosMod(System.Int32 value, System.Int32 modulo)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Int32"
+        },
+        {
+          "name": "modulo",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Executes the pos mod operation.",
+      "xmlDocId": "M:Electron2D.Mathf.PosMod(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PosMod",
+      "kind": "Method",
+      "signature": "public static System.Single PosMod(System.Single value, System.Single modulo)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        },
+        {
+          "name": "modulo",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the pos mod operation.",
+      "xmlDocId": "M:Electron2D.Mathf.PosMod(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RadToDeg",
+      "kind": "Method",
+      "signature": "public static System.Single RadToDeg(System.Single radians)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "radians",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the rad to deg operation.",
+      "xmlDocId": "M:Electron2D.Mathf.RadToDeg(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RoundToInt",
+      "kind": "Method",
+      "signature": "public static System.Int32 RoundToInt(System.Single value)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the round to int operation.",
+      "xmlDocId": "M:Electron2D.Mathf.RoundToInt(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Snapped",
+      "kind": "Method",
+      "signature": "public static System.Single Snapped(System.Single value, System.Single step)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Single"
+        },
+        {
+          "name": "step",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the snapped operation.",
+      "xmlDocId": "M:Electron2D.Mathf.Snapped(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "E",
+      "value": "2.7182817",
+      "kind": "Constant",
+      "summary": "Represents the e value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Epsilon",
+      "value": "1E-05",
+      "kind": "Constant",
+      "summary": "Represents the epsilon value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pi",
+      "value": "3.1415927",
+      "kind": "Constant",
+      "summary": "Represents the pi value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Tau",
+      "value": "6.2831855",
+      "kind": "Constant",
+      "summary": "Represents the tau value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamRandomizer",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamRandomizer",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamRandomizer",
+    "documentationPath": "doc/classes/AudioStreamRandomizer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamrandomizer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddStream",
+      "kind": "Method",
+      "signature": "public void AddStream(int index, AudioStream stream, float weight)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "stream",
+          "type": "AudioStream"
+        },
+        {
+          "name": "weight",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Insert a stream at the specified index. If the index is less than zero, the insertion occurs at the end of the underlying pool.",
+      "godotName": "add_stream",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.AddStream(int,AudioStream,float)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "GetStream",
+      "kind": "Method",
+      "signature": "public AudioStream GetStream(int index)",
+      "returnType": "AudioStream",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stream at the specified index.",
+      "godotName": "get_stream",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.GetStream(int)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "GetStreamProbabilityWeight",
+      "kind": "Method",
+      "signature": "public float GetStreamProbabilityWeight(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the probability weight associated with the stream at the given index.",
+      "godotName": "get_stream_probability_weight",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.GetStreamProbabilityWeight(int)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "MoveStream",
+      "kind": "Method",
+      "signature": "public void MoveStream(int indexFrom, int indexTo)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index_from",
+          "type": "int"
+        },
+        {
+          "name": "index_to",
+          "type": "int"
+        }
+      ],
+      "summary": "Move a stream from one index to another.",
+      "godotName": "move_stream",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.MoveStream(int,int)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "RemoveStream",
+      "kind": "Method",
+      "signature": "public void RemoveStream(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Remove the stream at the specified index.",
+      "godotName": "remove_stream",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.RemoveStream(int)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "SetStream",
+      "kind": "Method",
+      "signature": "public void SetStream(int index, AudioStream stream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "stream",
+          "type": "AudioStream"
+        }
+      ],
+      "summary": "Set the AudioStream at the specified index.",
+      "godotName": "set_stream",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.SetStream(int,AudioStream)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "SetStreamProbabilityWeight",
+      "kind": "Method",
+      "signature": "public void SetStreamProbabilityWeight(int index, float weight)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the probability weight of the stream at the specified index. The higher this value, the more likely that the randomizer will choose this stream during random playback modes.",
+      "godotName": "set_stream_probability_weight",
+      "xmlDocId": "M:Godot.AudioStreamRandomizer.SetStreamProbabilityWeight(int,float)",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "PlaybackMode",
+      "kind": "Property",
+      "signature": "public int PlaybackMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how this AudioStreamRandomizer picks which AudioStream to play next.",
+      "defaultValue": "0",
+      "godotName": "playback_mode",
+      "xmlDocId": "P:Godot.AudioStreamRandomizer.PlaybackMode",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "RandomPitch",
+      "kind": "Property",
+      "signature": "public float RandomPitch { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The largest possible frequency multiplier of the random pitch variation. Pitch will be randomly chosen within a range of [code skip-lint]1.0 / random_pitch[/code] and [code skip-lint]random_pitch[/code]. A value of [code]1.0[/code] means no variation. A value of [code]2.0[/code] means pitch will be randomized between double and half. [b]Note:[/b] Setting this property also sets [member random_pitch_semitones].",
+      "defaultValue": "1.0",
+      "godotName": "random_pitch",
+      "xmlDocId": "P:Godot.AudioStreamRandomizer.RandomPitch",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "RandomPitchSemitones",
+      "kind": "Property",
+      "signature": "public float RandomPitchSemitones { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The largest possible distance, in semitones, of the random pitch variation. A value of [code]0.0[/code] means no variation. [b]Note:[/b] Setting this property also sets [member random_pitch].",
+      "defaultValue": "0.0",
+      "godotName": "random_pitch_semitones",
+      "xmlDocId": "P:Godot.AudioStreamRandomizer.RandomPitchSemitones",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "RandomVolumeOffsetDb",
+      "kind": "Property",
+      "signature": "public float RandomVolumeOffsetDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of random volume variation. Volume will be increased or decreased by a random value up to [code skip-lint]random_volume_offset_db[/code]. A value of [code]0.0[/code] means no variation. A value of [code]3.0[/code] means volume will be randomized between [code]-3.0 dB[/code] and [code]\u002B3.0 dB[/code].",
+      "defaultValue": "0.0",
+      "godotName": "random_volume_offset_db",
+      "xmlDocId": "P:Godot.AudioStreamRandomizer.RandomVolumeOffsetDb",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "StreamsCount",
+      "kind": "Property",
+      "signature": "public int StreamsCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of streams in the stream pool.",
+      "defaultValue": "0",
+      "godotName": "streams_count",
+      "xmlDocId": "P:Godot.AudioStreamRandomizer.StreamsCount",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "stream_{index}/stream",
+      "kind": "RawProperty",
+      "returnType": "AudioStream",
+      "parameters": [],
+      "summary": "The [AudioStream] at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. streams_count - 1[/code] range.",
+      "godotName": "stream_{index}/stream",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "stream_{index}/weight",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The probability weight of the [AudioStream] at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. streams_count - 1[/code] range.",
+      "defaultValue": "1.0",
+      "godotName": "stream_{index}/weight",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PlaybackMode",
+      "values": [
+        {
+          "name": "PLAYBACK_RANDOM",
+          "value": "1",
+          "enum": "PlaybackMode",
+          "kind": "EnumValue",
+          "summary": "Pick a stream at random according to the probability weights chosen for each stream. If only 1 sound is present in the pool, the same sound will always play.",
+          "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+        },
+        {
+          "name": "PLAYBACK_RANDOM_NO_REPEATS",
+          "value": "0",
+          "enum": "PlaybackMode",
+          "kind": "EnumValue",
+          "summary": "Pick a stream at random according to the probability weights chosen for each stream, but avoid playing the same stream twice in a row whenever possible. If only 1 sound is present in the pool, the same sound will always play, effectively allowing repeats to occur.",
+          "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+        },
+        {
+          "name": "PLAYBACK_SEQUENTIAL",
+          "value": "2",
+          "enum": "PlaybackMode",
+          "kind": "EnumValue",
+          "summary": "Play streams in the order they appear in the stream pool. If only 1 sound is present in the pool, the same sound will always play.",
+          "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PLAYBACK_RANDOM_NO_REPEATS",
+      "value": "0",
+      "enum": "PlaybackMode",
+      "kind": "EnumValue",
+      "summary": "Pick a stream at random according to the probability weights chosen for each stream, but avoid playing the same stream twice in a row whenever possible. If only 1 sound is present in the pool, the same sound will always play, effectively allowing repeats to occur.",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "PLAYBACK_RANDOM",
+      "value": "1",
+      "enum": "PlaybackMode",
+      "kind": "EnumValue",
+      "summary": "Pick a stream at random according to the probability weights chosen for each stream. If only 1 sound is present in the pool, the same sound will always play.",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    },
+    {
+      "name": "PLAYBACK_SEQUENTIAL",
+      "value": "2",
+      "enum": "PlaybackMode",
+      "kind": "EnumValue",
+      "summary": "Play streams in the order they appear in the stream pool. If only 1 sound is present in the pool, the same sound will always play.",
+      "sourcePath": "doc/classes/AudioStreamRandomizer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamRandomizer.xml",
+      "sha256": "436325b7aafc22dac4c54e507a193c7043d5c620729e33b84694e02487105c02"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

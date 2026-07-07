@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AtlasTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.AtlasTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "AtlasTexture",
+    "documentationPath": "doc/classes/AtlasTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Atlas",
+      "kind": "Property",
+      "signature": "public Texture2D Atlas { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The texture that contains the atlas. Can be any type inheriting from [Texture2D], including another [AtlasTexture].",
+      "godotName": "atlas",
+      "xmlDocId": "P:Godot.AtlasTexture.Atlas",
+      "sourcePath": "doc/classes/AtlasTexture.xml"
+    },
+    {
+      "name": "FilterClip",
+      "kind": "Property",
+      "signature": "public bool FilterClip { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the area outside of the [member region] is clipped to avoid bleeding of the surrounding texture pixels.",
+      "defaultValue": "false",
+      "godotName": "filter_clip",
+      "xmlDocId": "P:Godot.AtlasTexture.FilterClip",
+      "sourcePath": "doc/classes/AtlasTexture.xml"
+    },
+    {
+      "name": "Margin",
+      "kind": "Property",
+      "signature": "public Rect2 Margin { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The margin around the [member region]. Useful for small adjustments. If the [member Rect2.size] of this property (\u0022w\u0022 and \u0022h\u0022 in the editor) is set, the drawn texture is resized to fit within the margin.",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "margin",
+      "xmlDocId": "P:Godot.AtlasTexture.Margin",
+      "sourcePath": "doc/classes/AtlasTexture.xml"
+    },
+    {
+      "name": "Region",
+      "kind": "Property",
+      "signature": "public Rect2 Region { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The region used to draw the [member atlas]. If either dimension of the region\u0027s size is [code]0[/code], the value from [member atlas] size will be used for that axis instead. [b]Note:[/b] The image size is always an integer, so the actual region size is rounded down.",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "region",
+      "xmlDocId": "P:Godot.AtlasTexture.Region",
+      "sourcePath": "doc/classes/AtlasTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.AtlasTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/AtlasTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AtlasTexture.xml",
+      "sha256": "c209ccf25716010c159a95c7527a79c693dbdee1075a2090b1180a70a77a805c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

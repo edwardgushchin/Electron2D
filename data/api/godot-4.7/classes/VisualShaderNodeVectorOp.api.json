@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVectorOp",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVectorOp",
+    "kind": "class",
+    "baseType": "VisualShaderNodeVectorBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVectorOp",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevectorop.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Operator",
+      "kind": "Property",
+      "signature": "public int Operator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The operator to be used.",
+      "defaultValue": "0",
+      "godotName": "operator",
+      "xmlDocId": "P:Godot.VisualShaderNodeVectorOp.Operator",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operator",
+      "values": [
+        {
+          "name": "OP_ADD",
+          "value": "0",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Adds two vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_ATAN2",
+          "value": "9",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the arc-tangent of the parameters.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_CROSS",
+          "value": "8",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Calculates the cross product of two vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_DIV",
+          "value": "3",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Divides vector by vector.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_ENUM_SIZE",
+          "value": "12",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Operator] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_MAX",
+          "value": "6",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the greater of two values, for each component of the vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_MIN",
+          "value": "7",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the lesser of two values, for each component of the vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_MOD",
+          "value": "4",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the remainder of the two vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_MUL",
+          "value": "2",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies two vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_POW",
+          "value": "5",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the value of the first parameter raised to the power of the second, for each component of the vectors.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_REFLECT",
+          "value": "10",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the vector that points in the direction of reflection. [code]a[/code] is incident vector and [code]b[/code] is the normal vector.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_STEP",
+          "value": "11",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Vector step operator. Returns [code]0.0[/code] if [code]a[/code] is smaller than [code]b[/code] and [code]1.0[/code] otherwise.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        },
+        {
+          "name": "OP_SUB",
+          "value": "1",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Subtracts a vector from a vector.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_ADD",
+      "value": "0",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Adds two vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_SUB",
+      "value": "1",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Subtracts a vector from a vector.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_MUL",
+      "value": "2",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies two vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_DIV",
+      "value": "3",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Divides vector by vector.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_MOD",
+      "value": "4",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the remainder of the two vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_POW",
+      "value": "5",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the value of the first parameter raised to the power of the second, for each component of the vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_MAX",
+      "value": "6",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the greater of two values, for each component of the vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_MIN",
+      "value": "7",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the lesser of two values, for each component of the vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_CROSS",
+      "value": "8",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Calculates the cross product of two vectors.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_ATAN2",
+      "value": "9",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the arc-tangent of the parameters.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_REFLECT",
+      "value": "10",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the vector that points in the direction of reflection. [code]a[/code] is incident vector and [code]b[/code] is the normal vector.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_STEP",
+      "value": "11",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Vector step operator. Returns [code]0.0[/code] if [code]a[/code] is smaller than [code]b[/code] and [code]1.0[/code] otherwise.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    },
+    {
+      "name": "OP_ENUM_SIZE",
+      "value": "12",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Operator] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVectorOp.xml",
+      "sha256": "3a6511ea67b786af0973f6d3181bb00b4936d58d20ec94609ecd5f4f66dcabdd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

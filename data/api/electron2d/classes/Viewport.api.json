@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Viewport",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Viewport",
+    "kind": "class",
+    "baseType": "Electron2D.Node",
+    "interfaces": [],
+    "godotReference": "Viewport",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Viewport",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Viewport()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Viewport type.",
+      "xmlDocId": "M:Electron2D.Viewport.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Viewport",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Viewport()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Viewport type.",
+      "xmlDocId": "M:Electron2D.Viewport.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCamera2D",
+      "kind": "Method",
+      "signature": "public Electron2D.Camera2D GetCamera2D()",
+      "returnType": "Electron2D.Camera2D",
+      "parameters": [],
+      "summary": "Gets the current active 2D camera.",
+      "xmlDocId": "M:Electron2D.Viewport.GetCamera2D",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTexture",
+      "kind": "Method",
+      "signature": "public Electron2D.ViewportTexture GetTexture()",
+      "returnType": "Electron2D.ViewportTexture",
+      "parameters": [],
+      "summary": "Gets the dynamic texture that represents this viewport.",
+      "xmlDocId": "M:Electron2D.Viewport.GetTexture",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetVisibleRect",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2 GetVisibleRect()",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets the visible viewport rectangle.",
+      "xmlDocId": "M:Electron2D.Viewport.GetVisibleRect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiGetHoveredControl",
+      "kind": "Method",
+      "signature": "public Electron2D.Control GuiGetHoveredControl()",
+      "returnType": "Electron2D.Control",
+      "parameters": [],
+      "summary": "Gets the control currently under the GUI pointer.",
+      "xmlDocId": "M:Electron2D.Viewport.GuiGetHoveredControl",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetInputAsHandled",
+      "kind": "Method",
+      "signature": "public System.Void SetInputAsHandled()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Marks the input event currently being dispatched by this viewport as handled.",
+      "xmlDocId": "M:Electron2D.Viewport.SetInputAsHandled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CanvasTransform",
+      "kind": "Property",
+      "signature": "public Electron2D.Transform2D CanvasTransform { get; set; }",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets or sets the base transform applied to 2D canvas submission.",
+      "xmlDocId": "P:Electron2D.Viewport.CanvasTransform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I Size { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the viewport size in pixels.",
+      "xmlDocId": "P:Electron2D.Viewport.Size",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Snap2DTransformsToPixel",
+      "kind": "Property",
+      "signature": "public System.Boolean Snap2DTransformsToPixel { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether submitted 2D transforms snap to full pixels.",
+      "xmlDocId": "P:Electron2D.Viewport.Snap2DTransformsToPixel",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Snap2DVerticesToPixel",
+      "kind": "Property",
+      "signature": "public System.Boolean Snap2DVerticesToPixel { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether submitted 2D destination rectangles snap to full pixels.",
+      "xmlDocId": "P:Electron2D.Viewport.Snap2DVerticesToPixel",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

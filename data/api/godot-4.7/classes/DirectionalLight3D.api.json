@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DirectionalLight3D",
+    "namespace": "Godot",
+    "fullName": "Godot.DirectionalLight3D",
+    "kind": "class",
+    "baseType": "Light3D",
+    "interfaces": [],
+    "godotReference": "DirectionalLight3D",
+    "documentationPath": "doc/classes/DirectionalLight3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_directionallight3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DirectionalShadowBlendSplits",
+      "kind": "Property",
+      "signature": "public bool DirectionalShadowBlendSplits { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when [member directional_shadow_mode] is [constant SHADOW_ORTHOGONAL].",
+      "defaultValue": "false",
+      "godotName": "directional_shadow_blend_splits",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowBlendSplits",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowFadeStart",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowFadeStart { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Proportion of [member directional_shadow_max_distance] at which point the shadow starts to fade. At [member directional_shadow_max_distance], the shadow will disappear. The default value is a balance between smooth fading and distant shadow visibility. If the camera moves fast and the [member directional_shadow_max_distance] is low, consider lowering [member directional_shadow_fade_start] below [code]0.8[/code] to make shadow transitions less noticeable. On the other hand, if you tuned [member directional_shadow_max_distance] to cover the entire scene, you can set [member directional_shadow_fade_start] to [code]1.0[/code] to prevent the shadow from fading in the distance (it will suddenly cut off instead).",
+      "defaultValue": "0.8",
+      "godotName": "directional_shadow_fade_start",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowFadeStart",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowMaxDistance",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowMaxDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance for shadow splits. Increasing this value will make directional shadows visible from further away, at the cost of lower overall shadow detail and performance (since more objects need to be included in the directional shadow rendering).",
+      "defaultValue": "100.0",
+      "godotName": "directional_shadow_max_distance",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowMaxDistance",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowMode",
+      "kind": "Property",
+      "signature": "public int DirectionalShadowMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The light\u0027s shadow rendering algorithm.",
+      "defaultValue": "2",
+      "godotName": "directional_shadow_mode",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowMode",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowPancakeSize",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowPancakeSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the size of the directional shadow pancake. The pancake offsets the start of the shadow\u0027s camera frustum to provide a higher effective depth resolution for the shadow. However, a high pancake size can cause artifacts in the shadows of large objects that are close to the edge of the frustum. Reducing the pancake size can help. Setting the size to [code]0[/code] turns off the pancaking effect.",
+      "defaultValue": "20.0",
+      "godotName": "directional_shadow_pancake_size",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowPancakeSize",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowSplit1",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowSplit1 { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from camera to shadow split 1. Relative to [member directional_shadow_max_distance]. Only used when [member directional_shadow_mode] is [constant SHADOW_PARALLEL_2_SPLITS] or [constant SHADOW_PARALLEL_4_SPLITS].",
+      "defaultValue": "0.1",
+      "godotName": "directional_shadow_split_1",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowSplit1",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowSplit2",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowSplit2 { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from shadow split 1 to split 2. Relative to [member directional_shadow_max_distance]. Only used when [member directional_shadow_mode] is [constant SHADOW_PARALLEL_4_SPLITS].",
+      "defaultValue": "0.2",
+      "godotName": "directional_shadow_split_2",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowSplit2",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "DirectionalShadowSplit3",
+      "kind": "Property",
+      "signature": "public float DirectionalShadowSplit3 { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from shadow split 2 to split 3. Relative to [member directional_shadow_max_distance]. Only used when [member directional_shadow_mode] is [constant SHADOW_PARALLEL_4_SPLITS].",
+      "defaultValue": "0.5",
+      "godotName": "directional_shadow_split_3",
+      "xmlDocId": "P:Godot.DirectionalLight3D.DirectionalShadowSplit3",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SkyMode",
+      "kind": "Property",
+      "signature": "public int SkyMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Whether this [DirectionalLight3D] is visible in the sky, in the scene, or both in the sky and in the scene.",
+      "defaultValue": "0",
+      "godotName": "sky_mode",
+      "xmlDocId": "P:Godot.DirectionalLight3D.SkyMode",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ShadowMode",
+      "values": [
+        {
+          "name": "SHADOW_ORTHOGONAL",
+          "value": "0",
+          "enum": "ShadowMode",
+          "kind": "EnumValue",
+          "summary": "Renders the entire scene\u0027s shadow map from an orthogonal point of view. This is the fastest directional shadow mode. May result in blurrier shadows on close objects.",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        },
+        {
+          "name": "SHADOW_PARALLEL_2_SPLITS",
+          "value": "1",
+          "enum": "ShadowMode",
+          "kind": "EnumValue",
+          "summary": "Splits the view frustum in 2 areas, each with its own shadow map. This shadow mode is a compromise between [constant SHADOW_ORTHOGONAL] and [constant SHADOW_PARALLEL_4_SPLITS] in terms of performance.",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        },
+        {
+          "name": "SHADOW_PARALLEL_4_SPLITS",
+          "value": "2",
+          "enum": "ShadowMode",
+          "kind": "EnumValue",
+          "summary": "Splits the view frustum in 4 areas, each with its own shadow map. This is the slowest directional shadow mode.",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "SkyMode",
+      "values": [
+        {
+          "name": "SKY_MODE_LIGHT_AND_SKY",
+          "value": "0",
+          "enum": "SkyMode",
+          "kind": "EnumValue",
+          "summary": "Makes the light visible in both scene lighting and sky rendering.",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        },
+        {
+          "name": "SKY_MODE_LIGHT_ONLY",
+          "value": "1",
+          "enum": "SkyMode",
+          "kind": "EnumValue",
+          "summary": "Makes the light visible in scene lighting only (including direct lighting and global illumination). When using this mode, the light will not be visible from sky shaders.",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        },
+        {
+          "name": "SKY_MODE_SKY_ONLY",
+          "value": "2",
+          "enum": "SkyMode",
+          "kind": "EnumValue",
+          "summary": "Makes the light visible to sky shaders only. When using this mode the light will not cast light into the scene (either through direct lighting or through global illumination), but can be accessed through sky shaders. This can be useful, for example, when you want to control sky effects without illuminating the scene (during a night cycle, for example).",
+          "sourcePath": "doc/classes/DirectionalLight3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SHADOW_ORTHOGONAL",
+      "value": "0",
+      "enum": "ShadowMode",
+      "kind": "EnumValue",
+      "summary": "Renders the entire scene\u0027s shadow map from an orthogonal point of view. This is the fastest directional shadow mode. May result in blurrier shadows on close objects.",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SHADOW_PARALLEL_2_SPLITS",
+      "value": "1",
+      "enum": "ShadowMode",
+      "kind": "EnumValue",
+      "summary": "Splits the view frustum in 2 areas, each with its own shadow map. This shadow mode is a compromise between [constant SHADOW_ORTHOGONAL] and [constant SHADOW_PARALLEL_4_SPLITS] in terms of performance.",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SHADOW_PARALLEL_4_SPLITS",
+      "value": "2",
+      "enum": "ShadowMode",
+      "kind": "EnumValue",
+      "summary": "Splits the view frustum in 4 areas, each with its own shadow map. This is the slowest directional shadow mode.",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SKY_MODE_LIGHT_AND_SKY",
+      "value": "0",
+      "enum": "SkyMode",
+      "kind": "EnumValue",
+      "summary": "Makes the light visible in both scene lighting and sky rendering.",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SKY_MODE_LIGHT_ONLY",
+      "value": "1",
+      "enum": "SkyMode",
+      "kind": "EnumValue",
+      "summary": "Makes the light visible in scene lighting only (including direct lighting and global illumination). When using this mode, the light will not be visible from sky shaders.",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    },
+    {
+      "name": "SKY_MODE_SKY_ONLY",
+      "value": "2",
+      "enum": "SkyMode",
+      "kind": "EnumValue",
+      "summary": "Makes the light visible to sky shaders only. When using this mode the light will not cast light into the scene (either through direct lighting or through global illumination), but can be accessed through sky shaders. This can be useful, for example, when you want to control sky effects without illuminating the scene (during a night cycle, for example).",
+      "sourcePath": "doc/classes/DirectionalLight3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/DirectionalLight3D.xml",
+      "sha256": "30bcc3754c9e72372a9c77f5dd4a7abb512f1f743b9d56cef0e42c7e461e1e1a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

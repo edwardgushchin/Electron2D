@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CharFXTransform",
+    "namespace": "Godot",
+    "fullName": "Godot.CharFXTransform",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "CharFXTransform",
+    "documentationPath": "doc/classes/CharFXTransform.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_charfxtransform.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color the character will be drawn with.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.CharFXTransform.Color",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "ElapsedTime",
+      "kind": "Property",
+      "signature": "public float ElapsedTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The time elapsed since the [RichTextLabel] was added to the scene tree (in seconds). Time stops when the [RichTextLabel] is paused (see [member Node.process_mode]). Resets when the text in the [RichTextLabel] is changed. [b]Note:[/b] Time still passes while the [RichTextLabel] is hidden.",
+      "defaultValue": "0.0",
+      "godotName": "elapsed_time",
+      "xmlDocId": "P:Godot.CharFXTransform.ElapsedTime",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Env",
+      "kind": "Property",
+      "signature": "public Dictionary Env { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Contains the arguments passed in the opening BBCode tag. By default, arguments are strings; if their contents match a type such as [bool], [int] or [float], they will be converted automatically. Color codes in the form [code]#rrggbb[/code] or [code]#rgb[/code] will be converted to an opaque [Color]. String arguments may not contain spaces, even if they\u0027re quoted. If present, quotes will also be present in the final string. For example, the opening BBCode tag [code][example foo=hello bar=true baz=42 color=#ffffff][/code] will map to the following [Dictionary]: [codeblock] {\u0022foo\u0022: \u0022hello\u0022, \u0022bar\u0022: true, \u0022baz\u0022: 42, \u0022color\u0022: Color(1, 1, 1, 1)} [/codeblock]",
+      "defaultValue": "{}",
+      "godotName": "env",
+      "xmlDocId": "P:Godot.CharFXTransform.Env",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Font",
+      "kind": "Property",
+      "signature": "public RID Font { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "[TextServer] RID of the font used to render glyph, this value can be used with [code]TextServer.font_*[/code] methods to retrieve font information. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "RID()",
+      "godotName": "font",
+      "xmlDocId": "P:Godot.CharFXTransform.Font",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "GlyphCount",
+      "kind": "Property",
+      "signature": "public int GlyphCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of glyphs in the grapheme cluster. This value is set in the first glyph of a cluster. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "0",
+      "godotName": "glyph_count",
+      "xmlDocId": "P:Godot.CharFXTransform.GlyphCount",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "GlyphFlags",
+      "kind": "Property",
+      "signature": "public int GlyphFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Glyph flags. See [enum TextServer.GraphemeFlag] for more info. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "0",
+      "godotName": "glyph_flags",
+      "xmlDocId": "P:Godot.CharFXTransform.GlyphFlags",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "GlyphIndex",
+      "kind": "Property",
+      "signature": "public int GlyphIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Glyph index specific to the [member font]. If you want to replace this glyph, use [method TextServer.font_get_glyph_index] with [member font] to get a new glyph index for a single character.",
+      "defaultValue": "0",
+      "godotName": "glyph_index",
+      "xmlDocId": "P:Godot.CharFXTransform.GlyphIndex",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position offset the character will be drawn with (in pixels).",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.CharFXTransform.Offset",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Outline",
+      "kind": "Property",
+      "signature": "public bool Outline { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], FX transform is called for outline drawing. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "false",
+      "godotName": "outline",
+      "xmlDocId": "P:Godot.CharFXTransform.Outline",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Range",
+      "kind": "Property",
+      "signature": "public Vector2i Range { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Absolute character range in the string, corresponding to the glyph. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "range",
+      "xmlDocId": "P:Godot.CharFXTransform.Range",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "RelativeIndex",
+      "kind": "Property",
+      "signature": "public int RelativeIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The character offset of the glyph, relative to the current [RichTextEffect] custom block. [b]Note:[/b] Read-only. Setting this property won\u0027t affect drawing.",
+      "defaultValue": "0",
+      "godotName": "relative_index",
+      "xmlDocId": "P:Godot.CharFXTransform.RelativeIndex",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform2D Transform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "The current transform of the current glyph. It can be overridden (for example, by driving the position and rotation from a curve). You can also alter the existing value to apply transforms on top of other effects.",
+      "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.CharFXTransform.Transform",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the character will be drawn. If [code]false[/code], the character will be hidden. Characters around hidden characters will reflow to take the space of hidden characters. If this is not desired, set their [member color] to [code]Color(1, 1, 1, 0)[/code] instead.",
+      "defaultValue": "true",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.CharFXTransform.Visible",
+      "sourcePath": "doc/classes/CharFXTransform.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CharFXTransform.xml",
+      "sha256": "4e9d9c01aa1d7b0449c129bc5623ec1484f1642ad0af3638546e3bd9f75abbba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

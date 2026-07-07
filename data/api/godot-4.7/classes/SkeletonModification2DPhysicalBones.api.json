@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DPhysicalBones",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DPhysicalBones",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DPhysicalBones",
+    "documentationPath": "doc/classes/SkeletonModification2DPhysicalBones.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dphysicalbones.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FetchPhysicalBones",
+      "kind": "Method",
+      "signature": "public void FetchPhysicalBones()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Empties the list of [PhysicalBone2D] nodes and populates it with all [PhysicalBone2D] nodes that are children of the [Skeleton2D].",
+      "godotName": "fetch_physical_bones",
+      "xmlDocId": "M:Godot.SkeletonModification2DPhysicalBones.FetchPhysicalBones",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    },
+    {
+      "name": "GetPhysicalBoneNode",
+      "kind": "Method",
+      "signature": "public NodePath GetPhysicalBoneNode(int jointIdx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [PhysicalBone2D] node at [param joint_idx].",
+      "godotName": "get_physical_bone_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DPhysicalBones.GetPhysicalBoneNode(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    },
+    {
+      "name": "SetPhysicalBoneNode",
+      "kind": "Method",
+      "signature": "public void SetPhysicalBoneNode(int jointIdx, NodePath physicalbone2dNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "physicalbone2d_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [PhysicalBone2D] node at [param joint_idx]. [b]Note:[/b] This is just the index used for this modification, not the bone index used in the [Skeleton2D].",
+      "godotName": "set_physical_bone_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DPhysicalBones.SetPhysicalBoneNode(int,NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    },
+    {
+      "name": "StartSimulation",
+      "kind": "Method",
+      "signature": "public void StartSimulation(StringName[] bones)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bones",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Tell the [PhysicalBone2D] nodes to start simulating and interacting with the physics world. Optionally, an array of bone names can be passed to this function, and that will cause only [PhysicalBone2D] nodes with those names to start simulating.",
+      "godotName": "start_simulation",
+      "xmlDocId": "M:Godot.SkeletonModification2DPhysicalBones.StartSimulation(StringName[])",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    },
+    {
+      "name": "StopSimulation",
+      "kind": "Method",
+      "signature": "public void StopSimulation(StringName[] bones)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bones",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Tell the [PhysicalBone2D] nodes to stop simulating and interacting with the physics world. Optionally, an array of bone names can be passed to this function, and that will cause only [PhysicalBone2D] nodes with those names to stop simulating.",
+      "godotName": "stop_simulation",
+      "xmlDocId": "M:Godot.SkeletonModification2DPhysicalBones.StopSimulation(StringName[])",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    },
+    {
+      "name": "PhysicalBoneChainLength",
+      "kind": "Property",
+      "signature": "public int PhysicalBoneChainLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of [PhysicalBone2D] nodes linked in this modification.",
+      "defaultValue": "0",
+      "godotName": "physical_bone_chain_length",
+      "xmlDocId": "P:Godot.SkeletonModification2DPhysicalBones.PhysicalBoneChainLength",
+      "sourcePath": "doc/classes/SkeletonModification2DPhysicalBones.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DPhysicalBones.xml",
+      "sha256": "aca351b81e477b583836715ce807e5c66592c5217b5576a6fb6a81e456f4043e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

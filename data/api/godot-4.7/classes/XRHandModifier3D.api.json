@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRHandModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRHandModifier3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "XRHandModifier3D",
+    "documentationPath": "doc/classes/XRHandModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrhandmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BoneUpdate",
+      "kind": "Property",
+      "signature": "public int BoneUpdate { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the type of updates to perform on the bones.",
+      "defaultValue": "0",
+      "godotName": "bone_update",
+      "xmlDocId": "P:Godot.XRHandModifier3D.BoneUpdate",
+      "sourcePath": "doc/classes/XRHandModifier3D.xml"
+    },
+    {
+      "name": "HandTracker",
+      "kind": "Property",
+      "signature": "public StringName HandTracker { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the [XRHandTracker] registered with [XRServer] to obtain the hand tracking data from.",
+      "defaultValue": "\u0026\u0022/user/hand_tracker/left\u0022",
+      "godotName": "hand_tracker",
+      "xmlDocId": "P:Godot.XRHandModifier3D.HandTracker",
+      "sourcePath": "doc/classes/XRHandModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BoneUpdate",
+      "values": [
+        {
+          "name": "BONE_UPDATE_FULL",
+          "value": "0",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s bones are fully updated (both position and rotation) to match the tracked bones.",
+          "sourcePath": "doc/classes/XRHandModifier3D.xml"
+        },
+        {
+          "name": "BONE_UPDATE_MAX",
+          "value": "2",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BoneUpdate] enum.",
+          "sourcePath": "doc/classes/XRHandModifier3D.xml"
+        },
+        {
+          "name": "BONE_UPDATE_ROTATION_ONLY",
+          "value": "1",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s bones are only rotated to align with the tracked bones, preserving bone length.",
+          "sourcePath": "doc/classes/XRHandModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BONE_UPDATE_FULL",
+      "value": "0",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s bones are fully updated (both position and rotation) to match the tracked bones.",
+      "sourcePath": "doc/classes/XRHandModifier3D.xml"
+    },
+    {
+      "name": "BONE_UPDATE_ROTATION_ONLY",
+      "value": "1",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s bones are only rotated to align with the tracked bones, preserving bone length.",
+      "sourcePath": "doc/classes/XRHandModifier3D.xml"
+    },
+    {
+      "name": "BONE_UPDATE_MAX",
+      "value": "2",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BoneUpdate] enum.",
+      "sourcePath": "doc/classes/XRHandModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRHandModifier3D.xml",
+      "sha256": "69fff4b9113f04c23f76aa8329d5f56c5922fb68c70b50cf85fd03dd6d22e56e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

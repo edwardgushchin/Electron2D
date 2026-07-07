@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GradientTexture1D",
+    "namespace": "Godot",
+    "fullName": "Godot.GradientTexture1D",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "GradientTexture1D",
+    "documentationPath": "doc/classes/GradientTexture1D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gradienttexture1d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Gradient",
+      "kind": "Property",
+      "signature": "public Gradient Gradient { get; set; }",
+      "returnType": "Gradient",
+      "parameters": [],
+      "summary": "The [Gradient] used to fill the texture.",
+      "godotName": "gradient",
+      "xmlDocId": "P:Godot.GradientTexture1D.Gradient",
+      "sourcePath": "doc/classes/GradientTexture1D.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.GradientTexture1D.ResourceLocalToScene",
+      "sourcePath": "doc/classes/GradientTexture1D.xml"
+    },
+    {
+      "name": "UseHdr",
+      "kind": "Property",
+      "signature": "public bool UseHdr { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the generated texture will support high dynamic range ([constant Image.FORMAT_RGBAF] format). This allows for glow effects to work if [member Environment.glow_enabled] is [code]true[/code]. If [code]false[/code], the generated texture will use low dynamic range; overbright colors will be clamped ([constant Image.FORMAT_RGBA8] format).",
+      "defaultValue": "false",
+      "godotName": "use_hdr",
+      "xmlDocId": "P:Godot.GradientTexture1D.UseHdr",
+      "sourcePath": "doc/classes/GradientTexture1D.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of color samples that will be obtained from the [Gradient].",
+      "defaultValue": "256",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.GradientTexture1D.Width",
+      "sourcePath": "doc/classes/GradientTexture1D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GradientTexture1D.xml",
+      "sha256": "77771bc78dd5b481017d2dcde6128d540eb5ccbda4045adcef63e081faaf871e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

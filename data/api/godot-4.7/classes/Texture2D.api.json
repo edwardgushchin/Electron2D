@@ -1,0 +1,625 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Texture2D",
+    "kind": "class",
+    "baseType": "Texture",
+    "interfaces": [],
+    "godotReference": "Texture2D",
+    "documentationPath": "doc/classes/Texture2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texture2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw(RID toCanvasItem, Vector2 pos, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the entire [Texture2D] is requested to be drawn over a [CanvasItem], with the top-left offset specified in [param pos]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.Texture2D._Draw(RID,Vector2,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_DrawRect",
+      "kind": "Method",
+      "signature": "public void _DrawRect(RID toCanvasItem, Rect2 rect, bool tile, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "tile",
+          "type": "bool"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the [Texture2D] is requested to be drawn onto [CanvasItem]\u0027s specified [param rect]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw_rect",
+      "xmlDocId": "M:Godot.Texture2D._DrawRect(RID,Rect2,bool,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_DrawRectRegion",
+      "kind": "Method",
+      "signature": "public void _DrawRectRegion(RID toCanvasItem, Rect2 rect, Rect2 srcRect, Color modulate, bool transpose, bool clipUv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        },
+        {
+          "name": "clip_uv",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when a part of the [Texture2D] specified by [param src_rect]\u0027s coordinates is requested to be drawn onto [CanvasItem]\u0027s specified [param rect]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw_rect_region",
+      "xmlDocId": "M:Godot.Texture2D._DrawRectRegion(RID,Rect2,Rect2,Color,bool,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when [method get_format] is called.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.Texture2D._GetFormat",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture2D]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.Texture2D._GetHeight",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetImage",
+      "kind": "Method",
+      "signature": "public Image _GetImage()",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "Called when [method get_image] is called.",
+      "godotName": "_get_image",
+      "xmlDocId": "M:Godot.Texture2D._GetImage",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetMipmapCount",
+      "kind": "Method",
+      "signature": "public int _GetMipmapCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when [method get_mipmap_count] is called.",
+      "godotName": "_get_mipmap_count",
+      "xmlDocId": "M:Godot.Texture2D._GetMipmapCount",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture2D]\u0027s width is queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.Texture2D._GetWidth",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_HasAlpha",
+      "kind": "Method",
+      "signature": "public bool _HasAlpha()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of an alpha channel in the [Texture2D] is queried.",
+      "godotName": "_has_alpha",
+      "xmlDocId": "M:Godot.Texture2D._HasAlpha",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when [method has_mipmaps] is called.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.Texture2D._HasMipmaps",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public bool _IsPixelOpaque(int x, int y)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when a pixel\u0027s opaque state in the [Texture2D] is queried at the specified [code](x, y)[/code] position.",
+      "godotName": "_is_pixel_opaque",
+      "xmlDocId": "M:Godot.Texture2D._IsPixelOpaque(int,int)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "CreatePlaceholder",
+      "kind": "Method",
+      "signature": "public Resource CreatePlaceholder()",
+      "returnType": "Resource",
+      "parameters": [],
+      "summary": "Creates a placeholder version of this resource ([PlaceholderTexture2D]).",
+      "godotName": "create_placeholder",
+      "xmlDocId": "M:Godot.Texture2D.CreatePlaceholder",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public void Draw(RID canvasItem, Vector2 position, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws the texture using a [CanvasItem] with the [RenderingServer] API at the specified [param position].",
+      "godotName": "draw",
+      "xmlDocId": "M:Godot.Texture2D.Draw(RID,Vector2,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "DrawRect",
+      "kind": "Method",
+      "signature": "public void DrawRect(RID canvasItem, Rect2 rect, bool tile, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "tile",
+          "type": "bool"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws the texture using a [CanvasItem] with the [RenderingServer] API.",
+      "godotName": "draw_rect",
+      "xmlDocId": "M:Godot.Texture2D.DrawRect(RID,Rect2,bool,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "DrawRectRegion",
+      "kind": "Method",
+      "signature": "public void DrawRectRegion(RID canvasItem, Rect2 rect, Rect2 srcRect, Color modulate, bool transpose, bool clipUv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "clip_uv",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Draws a part of the texture using a [CanvasItem] with the [RenderingServer] API.",
+      "godotName": "draw_rect_region",
+      "xmlDocId": "M:Godot.Texture2D.DrawRectRegion(RID,Rect2,Rect2,Color,bool,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetFormat",
+      "kind": "Method",
+      "signature": "public int GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the image format of the texture.",
+      "godotName": "get_format",
+      "xmlDocId": "M:Godot.Texture2D.GetFormat",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public int GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the texture height in pixels.",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.Texture2D.GetHeight",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetImage",
+      "kind": "Method",
+      "signature": "public Image GetImage()",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "Returns an [Image] that is a copy of data from this [Texture2D] (a new [Image] is created each time). [Image]s can be accessed and manipulated directly. [b]Note:[/b] This will return [code]null[/code] if this [Texture2D] is invalid. [b]Note:[/b] This will fetch the texture data from the GPU, which might cause performance problems when overused. Avoid calling [method get_image] every frame, especially on large textures.",
+      "godotName": "get_image",
+      "xmlDocId": "M:Godot.Texture2D.GetImage",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetMipmapCount",
+      "kind": "Method",
+      "signature": "public int GetMipmapCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of mipmaps of the texture.",
+      "godotName": "get_mipmap_count",
+      "xmlDocId": "M:Godot.Texture2D.GetMipmapCount",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the texture size in pixels.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.Texture2D.GetSize",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public int GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the texture width in pixels.",
+      "godotName": "get_width",
+      "xmlDocId": "M:Godot.Texture2D.GetWidth",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "HasAlpha",
+      "kind": "Method",
+      "signature": "public bool HasAlpha()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this [Texture2D] has an alpha channel.",
+      "godotName": "has_alpha",
+      "xmlDocId": "M:Godot.Texture2D.HasAlpha",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the texture has mipmaps.",
+      "godotName": "has_mipmaps",
+      "xmlDocId": "M:Godot.Texture2D.HasMipmaps",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw(RID toCanvasItem, Vector2 pos, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the entire [Texture2D] is requested to be drawn over a [CanvasItem], with the top-left offset specified in [param pos]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.Texture2D._Draw(RID,Vector2,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_DrawRect",
+      "kind": "Method",
+      "signature": "public void _DrawRect(RID toCanvasItem, Rect2 rect, bool tile, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "tile",
+          "type": "bool"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the [Texture2D] is requested to be drawn onto [CanvasItem]\u0027s specified [param rect]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw_rect",
+      "xmlDocId": "M:Godot.Texture2D._DrawRect(RID,Rect2,bool,Color,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_DrawRectRegion",
+      "kind": "Method",
+      "signature": "public void _DrawRectRegion(RID toCanvasItem, Rect2 rect, Rect2 srcRect, Color modulate, bool transpose, bool clipUv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color"
+        },
+        {
+          "name": "transpose",
+          "type": "bool"
+        },
+        {
+          "name": "clip_uv",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when a part of the [Texture2D] specified by [param src_rect]\u0027s coordinates is requested to be drawn onto [CanvasItem]\u0027s specified [param rect]. [param modulate] specifies a multiplier for the colors being drawn, while [param transpose] specifies whether drawing should be performed in column-major order instead of row-major order (resulting in 90-degree clockwise rotation). [b]Note:[/b] This is only used in 2D rendering, not 3D.",
+      "godotName": "_draw_rect_region",
+      "xmlDocId": "M:Godot.Texture2D._DrawRectRegion(RID,Rect2,Rect2,Color,bool,bool)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when [method get_format] is called.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.Texture2D._GetFormat",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture2D]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.Texture2D._GetHeight",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetImage",
+      "kind": "Method",
+      "signature": "public Image _GetImage()",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "Called when [method get_image] is called.",
+      "godotName": "_get_image",
+      "xmlDocId": "M:Godot.Texture2D._GetImage",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetMipmapCount",
+      "kind": "Method",
+      "signature": "public int _GetMipmapCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when [method get_mipmap_count] is called.",
+      "godotName": "_get_mipmap_count",
+      "xmlDocId": "M:Godot.Texture2D._GetMipmapCount",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture2D]\u0027s width is queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.Texture2D._GetWidth",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_HasAlpha",
+      "kind": "Method",
+      "signature": "public bool _HasAlpha()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of an alpha channel in the [Texture2D] is queried.",
+      "godotName": "_has_alpha",
+      "xmlDocId": "M:Godot.Texture2D._HasAlpha",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when [method has_mipmaps] is called.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.Texture2D._HasMipmaps",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    },
+    {
+      "name": "_IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public bool _IsPixelOpaque(int x, int y)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when a pixel\u0027s opaque state in the [Texture2D] is queried at the specified [code](x, y)[/code] position.",
+      "godotName": "_is_pixel_opaque",
+      "xmlDocId": "M:Godot.Texture2D._IsPixelOpaque(int,int)",
+      "sourcePath": "doc/classes/Texture2D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Texture2D.xml",
+      "sha256": "69c7095fc40dd2b834c2420241a9e28494c114f43e72671b60bd5e34fa08dc38"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

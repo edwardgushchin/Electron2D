@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WebRTCDataChannelExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.WebRTCDataChannelExtension",
+    "kind": "class",
+    "baseType": "WebRTCDataChannel",
+    "interfaces": [],
+    "godotReference": "WebRTCDataChannelExtension",
+    "documentationPath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_webrtcdatachannelextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._Close",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetAvailablePacketCount",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetBufferedAmount",
+      "kind": "Method",
+      "signature": "public int _GetBufferedAmount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_buffered_amount",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetBufferedAmount",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetId",
+      "kind": "Method",
+      "signature": "public int _GetId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_id",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetId",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetLabel",
+      "kind": "Method",
+      "signature": "public String _GetLabel()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_label",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetLabel",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketLifeTime",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketLifeTime()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_life_time",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxPacketLifeTime",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxPacketSize",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxRetransmits",
+      "kind": "Method",
+      "signature": "public int _GetMaxRetransmits()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_retransmits",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxRetransmits",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetProtocol",
+      "kind": "Method",
+      "signature": "public String _GetProtocol()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_protocol",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetProtocol",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetReadyState",
+      "kind": "Method",
+      "signature": "public int _GetReadyState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_ready_state",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetReadyState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetWriteMode",
+      "kind": "Method",
+      "signature": "public int _GetWriteMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_write_mode",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetWriteMode",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_IsNegotiated",
+      "kind": "Method",
+      "signature": "public bool _IsNegotiated()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_negotiated",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._IsNegotiated",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_IsOrdered",
+      "kind": "Method",
+      "signature": "public bool _IsOrdered()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_ordered",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._IsOrdered",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._Poll",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_SetWriteMode",
+      "kind": "Method",
+      "signature": "public void _SetWriteMode(int writeMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "write_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_write_mode",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._SetWriteMode(int)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_WasStringPacket",
+      "kind": "Method",
+      "signature": "public bool _WasStringPacket()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_was_string_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._WasStringPacket",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Close",
+      "kind": "Method",
+      "signature": "public void _Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_close",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._Close",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetAvailablePacketCount",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetBufferedAmount",
+      "kind": "Method",
+      "signature": "public int _GetBufferedAmount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_buffered_amount",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetBufferedAmount",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetId",
+      "kind": "Method",
+      "signature": "public int _GetId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_id",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetId",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetLabel",
+      "kind": "Method",
+      "signature": "public String _GetLabel()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_label",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetLabel",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketLifeTime",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketLifeTime()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_life_time",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxPacketLifeTime",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxPacketSize",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetMaxRetransmits",
+      "kind": "Method",
+      "signature": "public int _GetMaxRetransmits()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_retransmits",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetMaxRetransmits",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetProtocol",
+      "kind": "Method",
+      "signature": "public String _GetProtocol()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_protocol",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetProtocol",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetReadyState",
+      "kind": "Method",
+      "signature": "public int _GetReadyState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_ready_state",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetReadyState",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_GetWriteMode",
+      "kind": "Method",
+      "signature": "public int _GetWriteMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_write_mode",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._GetWriteMode",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_IsNegotiated",
+      "kind": "Method",
+      "signature": "public bool _IsNegotiated()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_negotiated",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._IsNegotiated",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_IsOrdered",
+      "kind": "Method",
+      "signature": "public bool _IsOrdered()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_ordered",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._IsOrdered",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._Poll",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_SetWriteMode",
+      "kind": "Method",
+      "signature": "public void _SetWriteMode(int writeMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "write_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_write_mode",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._SetWriteMode(int)",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    },
+    {
+      "name": "_WasStringPacket",
+      "kind": "Method",
+      "signature": "public bool _WasStringPacket()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_was_string_packet",
+      "xmlDocId": "M:Godot.WebRTCDataChannelExtension._WasStringPacket",
+      "sourcePath": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/webrtc/doc_classes/WebRTCDataChannelExtension.xml",
+      "sha256": "28353492bfa1d0eab667ea5bf9c43dbfce7aced3082926b96b2316fd52e165ba"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,685 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeCustom",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeCustom",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeCustom",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecustom.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetCategory",
+      "kind": "Method",
+      "signature": "public String _GetCategory()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the path to the associated custom node in the Visual Shader Editor\u0027s members dialog. The path may look like [code]\u0022MyGame/MyFunctions/Noise\u0022[/code]. Defining this method is [b]optional[/b]. If not overridden, the node will be filed under the \u0022Addons\u0022 category.",
+      "godotName": "_get_category",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetCategory",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetCode",
+      "kind": "Method",
+      "signature": "public String _GetCode(String[] inputVars, String[] outputVars, int mode, int type)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "input_vars",
+          "type": "String[]"
+        },
+        {
+          "name": "output_vars",
+          "type": "String[]"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the actual shader code of the associated custom node. The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). The [param input_vars] and [param output_vars] arrays contain the string names of the various input and output variables, as defined by [code]_get_input_*[/code] and [code]_get_output_*[/code] virtual methods in this class. The output ports can be assigned values in the shader code. For example, [code]return output_vars[0] \u002B \u0022 = \u0022 \u002B input_vars[0] \u002B \u0022;\u0022[/code]. You can customize the generated code based on the shader [param mode] and/or [param type]. Defining this method is [b]required[/b].",
+      "godotName": "_get_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetCode(String[],String[],int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetDefaultInputPort",
+      "kind": "Method",
+      "signature": "public int _GetDefaultInputPort(int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the input port which should be connected by default when this node is created as a result of dragging a connection from an existing node to the empty space on the graph. Defining this method is [b]optional[/b]. If not overridden, the connection will be created to the first valid port.",
+      "godotName": "_get_default_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetDefaultInputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetDescription",
+      "kind": "Method",
+      "signature": "public String _GetDescription()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the description of the associated custom node in the Visual Shader Editor\u0027s members dialog. Defining this method is [b]optional[/b].",
+      "godotName": "_get_description",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetDescription",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetFuncCode",
+      "kind": "Method",
+      "signature": "public String _GetFuncCode(int mode, int type)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to add a shader code to the beginning of each shader function (once). The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). If there are multiple custom nodes of different types which use this feature the order of each insertion is undefined. You can customize the generated code based on the shader [param mode] and/or [param type]. Defining this method is [b]optional[/b].",
+      "godotName": "_get_func_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetFuncCode(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetGlobalCode",
+      "kind": "Method",
+      "signature": "public String _GetGlobalCode(int mode)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to add shader code on top of the global shader, to define your own standard library of reusable methods, varyings, constants, uniforms, etc. The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). Be careful with this functionality as it can cause name conflicts with other custom nodes, so be sure to give the defined entities unique names. You can customize the generated code based on the shader [param mode]. Defining this method is [b]optional[/b].",
+      "godotName": "_get_global_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetGlobalCode(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortCount",
+      "kind": "Method",
+      "signature": "public int _GetInputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of input ports of the associated custom node. Defining this method is [b]required[/b]. If not overridden, the node has no input ports.",
+      "godotName": "_get_input_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetInputPortDefaultValue(int port)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the default value for the specified input port. Prefer use this over [method VisualShaderNode.set_input_port_default_value]. Defining this method is [b]required[/b]. If not overridden, the node has no default values for their input ports.",
+      "godotName": "_get_input_port_default_value",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortDefaultValue(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortName",
+      "kind": "Method",
+      "signature": "public String _GetInputPortName(int port)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of input ports of the associated custom node. The names are used both for the input slots in the editor and as identifiers in the shader code, and are passed in the [code]input_vars[/code] array in [method _get_code]. Defining this method is [b]optional[/b], but recommended. If not overridden, input ports are named as [code]\u0022in\u0022 \u002B str(port)[/code].",
+      "godotName": "_get_input_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortType",
+      "kind": "Method",
+      "signature": "public int _GetInputPortType(int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the returned type of each input port of the associated custom node. Defining this method is [b]optional[/b], but recommended. If not overridden, input ports will return the [constant VisualShaderNode.PORT_TYPE_SCALAR] type.",
+      "godotName": "_get_input_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortType(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the name of the associated custom node in the Visual Shader Editor\u0027s members dialog and graph. Defining this method is [b]optional[/b], but recommended. If not overridden, the node will be named as \u0022Unnamed\u0022.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortCount",
+      "kind": "Method",
+      "signature": "public int _GetOutputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of output ports of the associated custom node. Defining this method is [b]required[/b]. If not overridden, the node has no output ports.",
+      "godotName": "_get_output_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortName",
+      "kind": "Method",
+      "signature": "public String _GetOutputPortName(int port)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of output ports of the associated custom node. The names are used both for the output slots in the editor and as identifiers in the shader code, and are passed in the [code]output_vars[/code] array in [method _get_code]. Defining this method is [b]optional[/b], but recommended. If not overridden, output ports are named as [code]\u0022out\u0022 \u002B str(port)[/code].",
+      "godotName": "_get_output_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortType",
+      "kind": "Method",
+      "signature": "public int _GetOutputPortType(int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the returned type of each output port of the associated custom node. Defining this method is [b]optional[/b], but recommended. If not overridden, output ports will return the [constant VisualShaderNode.PORT_TYPE_SCALAR] type.",
+      "godotName": "_get_output_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortType(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyCount",
+      "kind": "Method",
+      "signature": "public int _GetPropertyCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of the properties. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyDefaultIndex",
+      "kind": "Method",
+      "signature": "public int _GetPropertyDefaultIndex(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the default index of the property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_default_index",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyDefaultIndex(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyName",
+      "kind": "Method",
+      "signature": "public String _GetPropertyName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of the property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyOptions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPropertyOptions(int index)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the options inside the drop-down list property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_options",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyOptions(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetReturnIconType",
+      "kind": "Method",
+      "signature": "public int _GetReturnIconType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the return icon of the associated custom node in the Visual Shader Editor\u0027s members dialog. Defining this method is [b]optional[/b]. If not overridden, no return icon is shown.",
+      "godotName": "_get_return_icon_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetReturnIconType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_IsAvailable",
+      "kind": "Method",
+      "signature": "public bool _IsAvailable(int mode, int type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to prevent the node to be visible in the member dialog for the certain [param mode] and/or [param type]. Defining this method is [b]optional[/b]. If not overridden, it\u0027s [code]true[/code].",
+      "godotName": "_is_available",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._IsAvailable(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_IsHighend",
+      "kind": "Method",
+      "signature": "public bool _IsHighend()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Override this method to enable the high-end mark in the Visual Shader Editor\u0027s members dialog. This should return [code]true[/code] for nodes that only work when using the Forward\u002B and Mobile renderers. Defining this method is [b]optional[/b]. If not overridden, it\u0027s [code]false[/code], which indicates this node works with all renderers (including Compatibility).",
+      "godotName": "_is_highend",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._IsHighend",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "GetOptionIndex",
+      "kind": "Method",
+      "signature": "public int GetOptionIndex(int option)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the selected index of the drop-down list option within a graph. You may use this function to define the specific behavior in the [method _get_code] or [method _get_global_code].",
+      "godotName": "get_option_index",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom.GetOptionIndex(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetCategory",
+      "kind": "Method",
+      "signature": "public String _GetCategory()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the path to the associated custom node in the Visual Shader Editor\u0027s members dialog. The path may look like [code]\u0022MyGame/MyFunctions/Noise\u0022[/code]. Defining this method is [b]optional[/b]. If not overridden, the node will be filed under the \u0022Addons\u0022 category.",
+      "godotName": "_get_category",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetCategory",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetCode",
+      "kind": "Method",
+      "signature": "public String _GetCode(String[] inputVars, String[] outputVars, int mode, int type)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "input_vars",
+          "type": "String[]"
+        },
+        {
+          "name": "output_vars",
+          "type": "String[]"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the actual shader code of the associated custom node. The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). The [param input_vars] and [param output_vars] arrays contain the string names of the various input and output variables, as defined by [code]_get_input_*[/code] and [code]_get_output_*[/code] virtual methods in this class. The output ports can be assigned values in the shader code. For example, [code]return output_vars[0] \u002B \u0022 = \u0022 \u002B input_vars[0] \u002B \u0022;\u0022[/code]. You can customize the generated code based on the shader [param mode] and/or [param type]. Defining this method is [b]required[/b].",
+      "godotName": "_get_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetCode(String[],String[],int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetDefaultInputPort",
+      "kind": "Method",
+      "signature": "public int _GetDefaultInputPort(int type)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the input port which should be connected by default when this node is created as a result of dragging a connection from an existing node to the empty space on the graph. Defining this method is [b]optional[/b]. If not overridden, the connection will be created to the first valid port.",
+      "godotName": "_get_default_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetDefaultInputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetDescription",
+      "kind": "Method",
+      "signature": "public String _GetDescription()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the description of the associated custom node in the Visual Shader Editor\u0027s members dialog. Defining this method is [b]optional[/b].",
+      "godotName": "_get_description",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetDescription",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetFuncCode",
+      "kind": "Method",
+      "signature": "public String _GetFuncCode(int mode, int type)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to add a shader code to the beginning of each shader function (once). The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). If there are multiple custom nodes of different types which use this feature the order of each insertion is undefined. You can customize the generated code based on the shader [param mode] and/or [param type]. Defining this method is [b]optional[/b].",
+      "godotName": "_get_func_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetFuncCode(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetGlobalCode",
+      "kind": "Method",
+      "signature": "public String _GetGlobalCode(int mode)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to add shader code on top of the global shader, to define your own standard library of reusable methods, varyings, constants, uniforms, etc. The shader code should be returned as a string, which can have multiple lines (the [code]\u0022\u0022\u0022[/code] multiline string construct can be used for convenience). Be careful with this functionality as it can cause name conflicts with other custom nodes, so be sure to give the defined entities unique names. You can customize the generated code based on the shader [param mode]. Defining this method is [b]optional[/b].",
+      "godotName": "_get_global_code",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetGlobalCode(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortCount",
+      "kind": "Method",
+      "signature": "public int _GetInputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of input ports of the associated custom node. Defining this method is [b]required[/b]. If not overridden, the node has no input ports.",
+      "godotName": "_get_input_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetInputPortDefaultValue(int port)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the default value for the specified input port. Prefer use this over [method VisualShaderNode.set_input_port_default_value]. Defining this method is [b]required[/b]. If not overridden, the node has no default values for their input ports.",
+      "godotName": "_get_input_port_default_value",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortDefaultValue(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortName",
+      "kind": "Method",
+      "signature": "public String _GetInputPortName(int port)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of input ports of the associated custom node. The names are used both for the input slots in the editor and as identifiers in the shader code, and are passed in the [code]input_vars[/code] array in [method _get_code]. Defining this method is [b]optional[/b], but recommended. If not overridden, input ports are named as [code]\u0022in\u0022 \u002B str(port)[/code].",
+      "godotName": "_get_input_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetInputPortType",
+      "kind": "Method",
+      "signature": "public int _GetInputPortType(int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the returned type of each input port of the associated custom node. Defining this method is [b]optional[/b], but recommended. If not overridden, input ports will return the [constant VisualShaderNode.PORT_TYPE_SCALAR] type.",
+      "godotName": "_get_input_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetInputPortType(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Override this method to define the name of the associated custom node in the Visual Shader Editor\u0027s members dialog and graph. Defining this method is [b]optional[/b], but recommended. If not overridden, the node will be named as \u0022Unnamed\u0022.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortCount",
+      "kind": "Method",
+      "signature": "public int _GetOutputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of output ports of the associated custom node. Defining this method is [b]required[/b]. If not overridden, the node has no output ports.",
+      "godotName": "_get_output_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortName",
+      "kind": "Method",
+      "signature": "public String _GetOutputPortName(int port)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of output ports of the associated custom node. The names are used both for the output slots in the editor and as identifiers in the shader code, and are passed in the [code]output_vars[/code] array in [method _get_code]. Defining this method is [b]optional[/b], but recommended. If not overridden, output ports are named as [code]\u0022out\u0022 \u002B str(port)[/code].",
+      "godotName": "_get_output_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetOutputPortType",
+      "kind": "Method",
+      "signature": "public int _GetOutputPortType(int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the returned type of each output port of the associated custom node. Defining this method is [b]optional[/b], but recommended. If not overridden, output ports will return the [constant VisualShaderNode.PORT_TYPE_SCALAR] type.",
+      "godotName": "_get_output_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetOutputPortType(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyCount",
+      "kind": "Method",
+      "signature": "public int _GetPropertyCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the number of the properties. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyDefaultIndex",
+      "kind": "Method",
+      "signature": "public int _GetPropertyDefaultIndex(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the default index of the property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_default_index",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyDefaultIndex(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyName",
+      "kind": "Method",
+      "signature": "public String _GetPropertyName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the names of the property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyName(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetPropertyOptions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPropertyOptions(int index)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define the options inside the drop-down list property of the associated custom node. Defining this method is [b]optional[/b].",
+      "godotName": "_get_property_options",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetPropertyOptions(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_GetReturnIconType",
+      "kind": "Method",
+      "signature": "public int _GetReturnIconType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override this method to define the return icon of the associated custom node in the Visual Shader Editor\u0027s members dialog. Defining this method is [b]optional[/b]. If not overridden, no return icon is shown.",
+      "godotName": "_get_return_icon_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._GetReturnIconType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_IsAvailable",
+      "kind": "Method",
+      "signature": "public bool _IsAvailable(int mode, int type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to prevent the node to be visible in the member dialog for the certain [param mode] and/or [param type]. Defining this method is [b]optional[/b]. If not overridden, it\u0027s [code]true[/code].",
+      "godotName": "_is_available",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._IsAvailable(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    },
+    {
+      "name": "_IsHighend",
+      "kind": "Method",
+      "signature": "public bool _IsHighend()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Override this method to enable the high-end mark in the Visual Shader Editor\u0027s members dialog. This should return [code]true[/code] for nodes that only work when using the Forward\u002B and Mobile renderers. Defining this method is [b]optional[/b]. If not overridden, it\u0027s [code]false[/code], which indicates this node works with all renderers (including Compatibility).",
+      "godotName": "_is_highend",
+      "xmlDocId": "M:Godot.VisualShaderNodeCustom._IsHighend",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeCustom.xml",
+      "sha256": "54da598f200d725a3f33267bf973491e30a6d5f6ee44477ffc60a750944c03d6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

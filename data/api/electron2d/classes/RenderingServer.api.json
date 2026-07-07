@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderingServer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RenderingServer",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "RenderingServer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "HasFeature",
+      "kind": "Method",
+      "signature": "public static System.Boolean HasFeature(Electron2D.RenderingServer.RenderingFeature feature)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "Electron2D.RenderingServer.RenderingFeature"
+        }
+      ],
+      "summary": "Checks whether the active renderer backend supports a feature.",
+      "xmlDocId": "M:Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentProfile",
+      "kind": "Property",
+      "signature": "public static Electron2D.RenderingServer.RenderingProfile CurrentProfile { get; }",
+      "returnType": "Electron2D.RenderingServer.RenderingProfile",
+      "parameters": [],
+      "summary": "Gets the renderer profile currently selected by the runtime.",
+      "xmlDocId": "P:Electron2D.RenderingServer.CurrentProfile",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

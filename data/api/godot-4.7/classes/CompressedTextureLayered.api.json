@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CompressedTextureLayered",
+    "namespace": "Godot",
+    "fullName": "Godot.CompressedTextureLayered",
+    "kind": "class",
+    "baseType": "TextureLayered",
+    "interfaces": [],
+    "godotReference": "CompressedTextureLayered",
+    "documentationPath": "doc/classes/CompressedTextureLayered.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_compressedtexturelayered.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public int Load(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads the texture at [param path].",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.CompressedTextureLayered.Load(String)",
+      "sourcePath": "doc/classes/CompressedTextureLayered.xml"
+    },
+    {
+      "name": "LoadPath",
+      "kind": "Property",
+      "signature": "public String LoadPath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The path the texture should be loaded from.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "load_path",
+      "xmlDocId": "P:Godot.CompressedTextureLayered.LoadPath",
+      "sourcePath": "doc/classes/CompressedTextureLayered.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CompressedTextureLayered.xml",
+      "sha256": "a8995d4b49ae254bdaba538c2f5263a03dd90df8ca15fc767a55cbd366460c8f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

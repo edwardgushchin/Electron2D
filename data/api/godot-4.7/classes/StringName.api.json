@@ -1,0 +1,1875 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StringName",
+    "namespace": "Godot",
+    "fullName": "Godot.StringName",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "StringName",
+    "documentationPath": "doc/classes/StringName.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_stringname.html"
+  },
+  "constructors": [
+    {
+      "name": "StringName",
+      "kind": "Constructor",
+      "signature": "public StringName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Constructs an empty [StringName].",
+      "godotName": "StringName",
+      "xmlDocId": "M:Godot.StringName.#ctor",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "StringName",
+      "kind": "Constructor",
+      "signature": "public StringName(StringName from)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Constructs a [StringName] as a copy of the given [StringName].",
+      "godotName": "StringName",
+      "xmlDocId": "M:Godot.StringName.#ctor(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "StringName",
+      "kind": "Constructor",
+      "signature": "public StringName(String from)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new [StringName] from the given [String]. In GDScript, [code]StringName(\u0022example\u0022)[/code] is equivalent to [code]\u0026\u0022example\u0022[/code].",
+      "godotName": "StringName",
+      "xmlDocId": "M:Godot.StringName.#ctor(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "BeginsWith",
+      "kind": "Method",
+      "signature": "public bool BeginsWith(String text)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the string begins with the given [param text]. See also [method ends_with].",
+      "godotName": "begins_with",
+      "xmlDocId": "M:Godot.StringName.BeginsWith(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Bigrams",
+      "kind": "Method",
+      "signature": "public PackedStringArray Bigrams()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array containing the bigrams (pairs of consecutive characters) of this string. [codeblock] print(\u0022Get up!\u0022.bigrams()) # Prints [\u0022Ge\u0022, \u0022et\u0022, \u0022t \u0022, \u0022 u\u0022, \u0022up\u0022, \u0022p!\u0022] [/codeblock]",
+      "godotName": "bigrams",
+      "xmlDocId": "M:Godot.StringName.Bigrams",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "BinToInt",
+      "kind": "Method",
+      "signature": "public int BinToInt()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Converts the string representing a binary number into an [int]. The string may optionally be prefixed with [code]\u00220b\u0022[/code], and an additional [code]-[/code] prefix for negative numbers. [codeblocks] [gdscript] print(\u0022101\u0022.bin_to_int()) # Prints 5 print(\u00220b101\u0022.bin_to_int()) # Prints 5 print(\u0022-0b10\u0022.bin_to_int()) # Prints -2 [/gdscript] [csharp] GD.Print(\u0022101\u0022.BinToInt()); // Prints 5 GD.Print(\u00220b101\u0022.BinToInt()); // Prints 5 GD.Print(\u0022-0b10\u0022.BinToInt()); // Prints -2 [/csharp] [/codeblocks]",
+      "godotName": "bin_to_int",
+      "xmlDocId": "M:Godot.StringName.BinToInt",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "CEscape",
+      "kind": "Method",
+      "signature": "public String CEscape()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with special characters escaped using the C language standard.",
+      "godotName": "c_escape",
+      "xmlDocId": "M:Godot.StringName.CEscape",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "CUnescape",
+      "kind": "Method",
+      "signature": "public String CUnescape()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with escaped characters replaced by their meanings. Supported escape sequences are [code]\\\u0027[/code], [code]\\\u0022[/code], [code]\\\\[/code], [code]\\a[/code], [code]\\b[/code], [code]\\f[/code], [code]\\n[/code], [code]\\r[/code], [code]\\t[/code], [code]\\v[/code]. [b]Note:[/b] Unlike the GDScript parser, this method doesn\u0027t support the [code]\\uXXXX[/code] escape sequence.",
+      "godotName": "c_unescape",
+      "xmlDocId": "M:Godot.StringName.CUnescape",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Capitalize",
+      "kind": "Method",
+      "signature": "public String Capitalize()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Changes the appearance of the string: replaces underscores ([code]_[/code]) with spaces, adds spaces before uppercase letters in the middle of a word, converts all letters to lowercase, then converts the first one and each one following a space to uppercase. [codeblocks] [gdscript] \u0022move_local_x\u0022.capitalize() # Returns \u0022Move Local X\u0022 \u0022sceneFile_path\u0022.capitalize() # Returns \u0022Scene File Path\u0022 \u00222D, FPS, PNG\u0022.capitalize() # Returns \u00222d, Fps, Png\u0022 [/gdscript] [csharp] \u0022move_local_x\u0022.Capitalize(); // Returns \u0022Move Local X\u0022 \u0022sceneFile_path\u0022.Capitalize(); // Returns \u0022Scene File Path\u0022 \u00222D, FPS, PNG\u0022.Capitalize(); // Returns \u00222d, Fps, Png\u0022 [/csharp] [/codeblocks]",
+      "godotName": "capitalize",
+      "xmlDocId": "M:Godot.StringName.Capitalize",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "CasecmpTo",
+      "kind": "Method",
+      "signature": "public int CasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Performs a case-sensitive comparison to another string. Returns [code]-1[/code] if less than, [code]1[/code] if greater than, or [code]0[/code] if equal. \u0022Less than\u0022 and \u0022greater than\u0022 are determined by the [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode code points[/url] of each string, which roughly matches the alphabetical order. With different string lengths, returns [code]1[/code] if this string is longer than the [param to] string, or [code]-1[/code] if shorter. Note that the length of empty strings is [i]always[/i] [code]0[/code]. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method nocasecmp_to], [method filecasecmp_to], and [method naturalcasecmp_to].",
+      "godotName": "casecmp_to",
+      "xmlDocId": "M:Godot.StringName.CasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Contains",
+      "kind": "Method",
+      "signature": "public bool Contains(String what)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the string contains [param what]. In GDScript, this corresponds to the [code]in[/code] operator. [codeblocks] [gdscript] print(\u0022Node\u0022.contains(\u0022de\u0022)) # Prints true print(\u0022team\u0022.contains(\u0022I\u0022)) # Prints false print(\u0022I\u0022 in \u0022team\u0022) # Prints false [/gdscript] [csharp] GD.Print(\u0022Node\u0022.Contains(\u0022de\u0022)); // Prints True GD.Print(\u0022team\u0022.Contains(\u0022I\u0022)); // Prints False [/csharp] [/codeblocks] If you need to know where [param what] is within the string, use [method find]. See also [method containsn].",
+      "godotName": "contains",
+      "xmlDocId": "M:Godot.StringName.Contains(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Containsn",
+      "kind": "Method",
+      "signature": "public bool Containsn(String what)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the string contains [param what], [b]ignoring case[/b]. If you need to know where [param what] is within the string, use [method findn]. See also [method contains].",
+      "godotName": "containsn",
+      "xmlDocId": "M:Godot.StringName.Containsn(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(String what, int from, int to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "to",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the number of occurrences of the substring [param what] between [param from] and [param to] positions. If [param to] is 0, the search continues until the end of the string.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.StringName.Count(String,int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Countn",
+      "kind": "Method",
+      "signature": "public int Countn(String what, int from, int to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "to",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the number of occurrences of the substring [param what] between [param from] and [param to] positions, [b]ignoring case[/b]. If [param to] is 0, the search continues until the end of the string.",
+      "godotName": "countn",
+      "xmlDocId": "M:Godot.StringName.Countn(String,int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Dedent",
+      "kind": "Method",
+      "signature": "public String Dedent()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with indentation (leading tabs and spaces) removed. See also [method indent] to add indentation.",
+      "godotName": "dedent",
+      "xmlDocId": "M:Godot.StringName.Dedent",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "EndsWith",
+      "kind": "Method",
+      "signature": "public bool EndsWith(String text)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the string ends with the given [param text]. See also [method begins_with].",
+      "godotName": "ends_with",
+      "xmlDocId": "M:Godot.StringName.EndsWith(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public String Erase(int position, int chars)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        },
+        {
+          "name": "chars",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Returns a string with [param chars] characters erased starting from [param position]. If [param chars] goes beyond the string\u0027s length given the specified [param position], fewer characters will be erased from the returned string. Returns an empty string if either [param position] or [param chars] is negative. Returns the original string unmodified if [param chars] is [code]0[/code].",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.StringName.Erase(int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "FilecasecmpTo",
+      "kind": "Method",
+      "signature": "public int FilecasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Like [method naturalcasecmp_to] but prioritizes strings that begin with periods ([code].[/code]) and underscores ([code]_[/code]) before any other character. Useful when sorting folders or file names. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method filenocasecmp_to], [method naturalcasecmp_to], and [method casecmp_to].",
+      "godotName": "filecasecmp_to",
+      "xmlDocId": "M:Godot.StringName.FilecasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "FilenocasecmpTo",
+      "kind": "Method",
+      "signature": "public int FilenocasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Like [method naturalnocasecmp_to] but prioritizes strings that begin with periods ([code].[/code]) and underscores ([code]_[/code]) before any other character. Useful when sorting folders or file names. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method filecasecmp_to], [method naturalnocasecmp_to], and [method nocasecmp_to].",
+      "godotName": "filenocasecmp_to",
+      "xmlDocId": "M:Godot.StringName.FilenocasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(String what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the index of the [b]first[/b] occurrence of [param what] in this string, or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the end of the string. [codeblocks] [gdscript] print(\u0022Team\u0022.find(\u0022I\u0022)) # Prints -1 print(\u0022Potato\u0022.find(\u0022t\u0022)) # Prints 2 print(\u0022Potato\u0022.find(\u0022t\u0022, 3)) # Prints 4 print(\u0022Potato\u0022.find(\u0022t\u0022, 5)) # Prints -1 [/gdscript] [csharp] GD.Print(\u0022Team\u0022.Find(\u0022I\u0022)); // Prints -1 GD.Print(\u0022Potato\u0022.Find(\u0022t\u0022)); // Prints 2 GD.Print(\u0022Potato\u0022.Find(\u0022t\u0022, 3)); // Prints 4 GD.Print(\u0022Potato\u0022.Find(\u0022t\u0022, 5)); // Prints -1 [/csharp] [/codeblocks] [b]Note:[/b] If you just want to know whether the string contains [param what], use [method contains]. In GDScript, you may also use the [code]in[/code] operator. [b]Note:[/b] A negative value of [param from] is converted to a starting index by counting back from the last possible index with enough space to find [param what].",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.StringName.Find(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Findn",
+      "kind": "Method",
+      "signature": "public int Findn(String what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the index of the [b]first[/b] [b]case-insensitive[/b] occurrence of [param what] in this string, or [code]-1[/code] if there are none. The starting search index can be specified with [param from], continuing to the end of the string.",
+      "godotName": "findn",
+      "xmlDocId": "M:Godot.StringName.Findn(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Format",
+      "kind": "Method",
+      "signature": "public String Format(Variant values, String placeholder)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "values",
+          "type": "Variant"
+        },
+        {
+          "name": "placeholder",
+          "type": "String",
+          "defaultValue": "\u0022{_}\u0022"
+        }
+      ],
+      "summary": "Formats the string by replacing all occurrences of [param placeholder] with the elements of [param values]. [param values] can be a [Dictionary], an [Array], or an [Object]. Any underscores in [param placeholder] will be replaced with the corresponding keys in advance. Array elements use their index as keys. [codeblock] # Prints \u0022Waiting for Godot is a play by Samuel Beckett, and Godot Engine is named after it.\u0022 var use_array_values = \u0022Waiting for {0} is a play by {1}, and {0} Engine is named after it.\u0022 print(use_array_values.format([\u0022Godot\u0022, \u0022Samuel Beckett\u0022])) # Prints \u0022User 42 is Godot.\u0022 print(\u0022User {id} is {name}.\u0022.format({\u0022id\u0022: 42, \u0022name\u0022: \u0022Godot\u0022})) [/codeblock] Some additional handling is performed when [param values] is an [Array]. If [param placeholder] does not contain an underscore, the elements of the [param values] array will be used to replace one occurrence of the placeholder in order; If an element of [param values] is another 2-element array, it\u0027ll be interpreted as a key-value pair. [codeblock] # Prints \u0022User 42 is Godot.\u0022 print(\u0022User {} is {}.\u0022.format([42, \u0022Godot\u0022], \u0022{}\u0022)) print(\u0022User {id} is {name}.\u0022.format([[\u0022id\u0022, 42], [\u0022name\u0022, \u0022Godot\u0022]])) [/codeblock] When passing an [Object], the property names from [method Object.get_property_list] are used as keys. [codeblock] # Prints \u0022Visible true, position (0, 0)\u0022 var node = Node2D.new() print(\u0022Visible {visible}, position {position}\u0022.format(node)) [/codeblock] See also the [url=$DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html]GDScript format string[/url] tutorial. [b]Note:[/b] Each replacement is done sequentially for each element of [param values], [b]not[/b] all at once. This means that if any element is inserted and it contains another placeholder, it may be changed by the next replacement. While this can be very useful, it often causes unexpected results. If not necessary, make sure [param values]\u0027s elements do not contain placeholders. [codeblock] print(\u0022{0} {1}\u0022.format([\u0022{1}\u0022, \u0022x\u0022])) # Prints \u0022x x\u0022 print(\u0022{0} {1}\u0022.format([\u0022x\u0022, \u0022{0}\u0022])) # Prints \u0022x {0}\u0022 print(\u0022{a} {b}\u0022.format({\u0022a\u0022: \u0022{b}\u0022, \u0022b\u0022: \u0022c\u0022})) # Prints \u0022c c\u0022 print(\u0022{a} {b}\u0022.format({\u0022b\u0022: \u0022c\u0022, \u0022a\u0022: \u0022{b}\u0022})) # Prints \u0022{b} c\u0022 [/codeblock] [b]Note:[/b] In C#, it\u0027s recommended to [url=https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated]interpolate strings with \u0022$\u0022[/url], instead.",
+      "godotName": "format",
+      "xmlDocId": "M:Godot.StringName.Format(Variant,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetBaseDir",
+      "kind": "Method",
+      "signature": "public String GetBaseDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If the string is a valid file path, returns the base directory name. [codeblock] var dir_path = \u0022/path/to/file.txt\u0022.get_base_dir() # dir_path is \u0022/path/to\u0022 [/codeblock]",
+      "godotName": "get_base_dir",
+      "xmlDocId": "M:Godot.StringName.GetBaseDir",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetBasename",
+      "kind": "Method",
+      "signature": "public String GetBasename()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If the string is a valid file path, returns the full file path, without the extension. [codeblock] var base = \u0022/path/to/file.txt\u0022.get_basename() # base is \u0022/path/to/file\u0022 [/codeblock]",
+      "godotName": "get_basename",
+      "xmlDocId": "M:Godot.StringName.GetBasename",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetExtension",
+      "kind": "Method",
+      "signature": "public String GetExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If the string is a valid file name or path, returns the file extension without the leading period ([code].[/code]). Otherwise, returns an empty string. [codeblock] var a = \u0022/path/to/file.txt\u0022.get_extension() # a is \u0022txt\u0022 var b = \u0022cool.txt\u0022.get_extension() # b is \u0022txt\u0022 var c = \u0022cool.font.tres\u0022.get_extension() # c is \u0022tres\u0022 var d = \u0022.pack1\u0022.get_extension() # d is \u0022pack1\u0022 var e = \u0022file.txt.\u0022.get_extension() # e is \u0022\u0022 var f = \u0022file.txt..\u0022.get_extension() # f is \u0022\u0022 var g = \u0022txt\u0022.get_extension() # g is \u0022\u0022 var h = \u0022\u0022.get_extension() # h is \u0022\u0022 [/codeblock]",
+      "godotName": "get_extension",
+      "xmlDocId": "M:Godot.StringName.GetExtension",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetFile",
+      "kind": "Method",
+      "signature": "public String GetFile()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If the string is a valid file path, returns the file name, including the extension. [codeblock] var file = \u0022/path/to/icon.png\u0022.get_file() # file is \u0022icon.png\u0022 [/codeblock]",
+      "godotName": "get_file",
+      "xmlDocId": "M:Godot.StringName.GetFile",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetSlice",
+      "kind": "Method",
+      "signature": "public String GetSlice(String delimiter, int slice)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "String"
+        },
+        {
+          "name": "slice",
+          "type": "int"
+        }
+      ],
+      "summary": "Splits the string using a [param delimiter] and returns the substring at index [param slice]. Returns the original string if [param delimiter] does not occur in the string. Returns an empty string if the [param slice] does not exist. This is faster than [method split], if you only need one substring. [codeblock] print(\u0022i/am/example/hi\u0022.get_slice(\u0022/\u0022, 2)) # Prints \u0022example\u0022 [/codeblock]",
+      "godotName": "get_slice",
+      "xmlDocId": "M:Godot.StringName.GetSlice(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetSliceCount",
+      "kind": "Method",
+      "signature": "public int GetSliceCount(String delimiter)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the total number of slices when the string is split with the given [param delimiter] (see [method split]).",
+      "godotName": "get_slice_count",
+      "xmlDocId": "M:Godot.StringName.GetSliceCount(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "GetSlicec",
+      "kind": "Method",
+      "signature": "public String GetSlicec(int delimiter, int slice)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "int"
+        },
+        {
+          "name": "slice",
+          "type": "int"
+        }
+      ],
+      "summary": "Splits the string using a Unicode character with code [param delimiter] and returns the substring at index [param slice]. Returns an empty string if the [param slice] does not exist. This is faster than [method split], if you only need one substring.",
+      "godotName": "get_slicec",
+      "xmlDocId": "M:Godot.StringName.GetSlicec(int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Hash",
+      "kind": "Method",
+      "signature": "public int Hash()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the 32-bit hash value representing the string\u0027s contents. [b]Note:[/b] Strings with equal hash values are [i]not[/i] guaranteed to be the same, as a result of hash collisions. On the contrary, strings with different hash values are guaranteed to be different.",
+      "godotName": "hash",
+      "xmlDocId": "M:Godot.StringName.Hash",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "HexDecode",
+      "kind": "Method",
+      "signature": "public PackedByteArray HexDecode()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Decodes a hexadecimal string as a [PackedByteArray]. [codeblocks] [gdscript] var text = \u0022hello world\u0022 var encoded = text.to_utf8_buffer().hex_encode() # outputs \u002268656c6c6f20776f726c64\u0022 print(encoded.hex_decode().get_string_from_utf8()) [/gdscript] [csharp] var text = \u0022hello world\u0022; var encoded = text.ToUtf8Buffer().HexEncode(); // outputs \u002268656c6c6f20776f726c64\u0022 GD.Print(encoded.HexDecode().GetStringFromUtf8()); [/csharp] [/codeblocks]",
+      "godotName": "hex_decode",
+      "xmlDocId": "M:Godot.StringName.HexDecode",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "HexToInt",
+      "kind": "Method",
+      "signature": "public int HexToInt()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Converts the string representing a hexadecimal number into an [int]. The string may be optionally prefixed with [code]\u00220x\u0022[/code], and an additional [code]-[/code] prefix for negative numbers. [codeblocks] [gdscript] print(\u00220xff\u0022.hex_to_int()) # Prints 255 print(\u0022ab\u0022.hex_to_int()) # Prints 171 [/gdscript] [csharp] GD.Print(\u00220xff\u0022.HexToInt()); // Prints 255 GD.Print(\u0022ab\u0022.HexToInt()); // Prints 171 [/csharp] [/codeblocks]",
+      "godotName": "hex_to_int",
+      "xmlDocId": "M:Godot.StringName.HexToInt",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Indent",
+      "kind": "Method",
+      "signature": "public String Indent(String prefix)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "prefix",
+          "type": "String"
+        }
+      ],
+      "summary": "Indents every line of the string with the given [param prefix]. Empty lines are not indented. See also [method dedent] to remove indentation. For example, the string can be indented with two tabulations using [code]\u0022\\t\\t\u0022[/code], or four spaces using [code]\u0022 \u0022[/code].",
+      "godotName": "indent",
+      "xmlDocId": "M:Godot.StringName.Indent(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public String Insert(int position, String what)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        },
+        {
+          "name": "what",
+          "type": "String"
+        }
+      ],
+      "summary": "Inserts [param what] at the given [param position] in the string.",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.StringName.Insert(int,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsAbsolutePath",
+      "kind": "Method",
+      "signature": "public bool IsAbsolutePath()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the string is a path to a file or directory, and its starting point is explicitly defined. This method is the opposite of [method is_relative_path]. This includes all paths starting with [code]\u0022res://\u0022[/code], [code]\u0022user://\u0022[/code], [code]\u0022\u003Cwindows-absolute-path\u003E\u0022[/code], [code]\u0022/\u0022[/code], etc.",
+      "godotName": "is_absolute_path",
+      "xmlDocId": "M:Godot.StringName.IsAbsolutePath",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the string\u0027s length is [code]0[/code] ([code]\u0022\u0022[/code]). See also [method length].",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.StringName.IsEmpty",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsRelativePath",
+      "kind": "Method",
+      "signature": "public bool IsRelativePath()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the string is a path, and its starting point is dependent on context. The path could begin from the current directory, or the current [Node] (if the string is derived from a [NodePath]), and may sometimes be prefixed with [code]\u0022./\u0022[/code]. This method is the opposite of [method is_absolute_path].",
+      "godotName": "is_relative_path",
+      "xmlDocId": "M:Godot.StringName.IsRelativePath",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsSubsequenceOf",
+      "kind": "Method",
+      "signature": "public bool IsSubsequenceOf(String text)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if all characters of this string can be found in [param text] in their original order. This is not the same as [method contains]. [codeblock] var text = \u0022Wow, incredible!\u0022 print(\u0022inedible\u0022.is_subsequence_of(text)) # Prints true print(\u0022Word!\u0022.is_subsequence_of(text)) # Prints true print(\u0022Window\u0022.is_subsequence_of(text)) # Prints false print(\u0022\u0022.is_subsequence_of(text)) # Prints true [/codeblock]",
+      "godotName": "is_subsequence_of",
+      "xmlDocId": "M:Godot.StringName.IsSubsequenceOf(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsSubsequenceOfn",
+      "kind": "Method",
+      "signature": "public bool IsSubsequenceOfn(String text)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if all characters of this string can be found in [param text] in their original order, [b]ignoring case[/b]. This is not the same as [method containsn].",
+      "godotName": "is_subsequence_ofn",
+      "xmlDocId": "M:Godot.StringName.IsSubsequenceOfn(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidAsciiIdentifier",
+      "kind": "Method",
+      "signature": "public bool IsValidAsciiIdentifier()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string is a valid ASCII identifier. A valid ASCII identifier may contain only letters, digits, and underscores ([code]_[/code]), and the first character may not be a digit. [codeblock] print(\u0022node_2d\u0022.is_valid_ascii_identifier()) # Prints true print(\u0022TYPE_FLOAT\u0022.is_valid_ascii_identifier()) # Prints true print(\u00221st_method\u0022.is_valid_ascii_identifier()) # Prints false print(\u0022MyMethod#2\u0022.is_valid_ascii_identifier()) # Prints false [/codeblock] See also [method is_valid_unicode_identifier].",
+      "godotName": "is_valid_ascii_identifier",
+      "xmlDocId": "M:Godot.StringName.IsValidAsciiIdentifier",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidFilename",
+      "kind": "Method",
+      "signature": "public bool IsValidFilename()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string is a valid file name. A valid file name cannot be empty, begin or end with space characters, or contain characters that are not allowed ([code]:[/code] [code]/[/code] [code]\\[/code] [code]?[/code] [code]*[/code] [code]\u0022[/code] [code]|[/code] [code]%[/code] [code]\u003C[/code] [code]\u003E[/code]).",
+      "godotName": "is_valid_filename",
+      "xmlDocId": "M:Godot.StringName.IsValidFilename",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidFloat",
+      "kind": "Method",
+      "signature": "public bool IsValidFloat()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string represents a valid floating-point number. A valid float may contain only digits, one decimal point ([code].[/code]), and the exponent letter ([code]e[/code]). It may also be prefixed with a positive ([code]\u002B[/code]) or negative ([code]-[/code]) sign. Any valid integer is also a valid float (see [method is_valid_int]). See also [method to_float]. [codeblock] print(\u00221.7\u0022.is_valid_float()) # Prints true print(\u002224\u0022.is_valid_float()) # Prints true print(\u00227e3\u0022.is_valid_float()) # Prints true print(\u0022Hello\u0022.is_valid_float()) # Prints false [/codeblock]",
+      "godotName": "is_valid_float",
+      "xmlDocId": "M:Godot.StringName.IsValidFloat",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidHexNumber",
+      "kind": "Method",
+      "signature": "public bool IsValidHexNumber(bool withPrefix)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "with_prefix",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this string is a valid hexadecimal number. A valid hexadecimal number only contains digits or letters [code]A[/code] to [code]F[/code] (either uppercase or lowercase), and may be prefixed with a positive ([code]\u002B[/code]) or negative ([code]-[/code]) sign. If [param with_prefix] is [code]true[/code], the hexadecimal number needs to prefixed by [code]\u00220x\u0022[/code] to be considered valid. [codeblock] print(\u0022A08E\u0022.is_valid_hex_number()) # Prints true print(\u0022-AbCdEf\u0022.is_valid_hex_number()) # Prints true print(\u00222.5\u0022.is_valid_hex_number()) # Prints false print(\u00220xDEADC0DE\u0022.is_valid_hex_number(true)) # Prints true [/codeblock]",
+      "godotName": "is_valid_hex_number",
+      "xmlDocId": "M:Godot.StringName.IsValidHexNumber(bool)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidHtmlColor",
+      "kind": "Method",
+      "signature": "public bool IsValidHtmlColor()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string is a valid color in hexadecimal HTML notation. The string must be a hexadecimal value (see [method is_valid_hex_number]) of either 3, 4, 6 or 8 digits, and may be prefixed by a hash sign ([code]#[/code]). Other HTML notations for colors, such as names or [code]hsl()[/code], are not considered valid. See also [method Color.html].",
+      "godotName": "is_valid_html_color",
+      "xmlDocId": "M:Godot.StringName.IsValidHtmlColor",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidIdentifier",
+      "kind": "Method",
+      "signature": "public bool IsValidIdentifier()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string is a valid identifier. A valid identifier may contain only letters, digits and underscores ([code]_[/code]), and the first character may not be a digit. [codeblock] print(\u0022node_2d\u0022.is_valid_identifier()) # Prints true print(\u0022TYPE_FLOAT\u0022.is_valid_identifier()) # Prints true print(\u00221st_method\u0022.is_valid_identifier()) # Prints false print(\u0022MyMethod#2\u0022.is_valid_identifier()) # Prints false [/codeblock]",
+      "godotName": "is_valid_identifier",
+      "xmlDocId": "M:Godot.StringName.IsValidIdentifier",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidInt",
+      "kind": "Method",
+      "signature": "public bool IsValidInt()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string represents a valid integer. A valid integer only contains digits, and may be prefixed with a positive ([code]\u002B[/code]) or negative ([code]-[/code]) sign. See also [method to_int]. [codeblock] print(\u00227\u0022.is_valid_int()) # Prints true print(\u00221.65\u0022.is_valid_int()) # Prints false print(\u0022Hi\u0022.is_valid_int()) # Prints false print(\u0022\u002B3\u0022.is_valid_int()) # Prints true print(\u0022-12\u0022.is_valid_int()) # Prints true [/codeblock]",
+      "godotName": "is_valid_int",
+      "xmlDocId": "M:Godot.StringName.IsValidInt",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidIpAddress",
+      "kind": "Method",
+      "signature": "public bool IsValidIpAddress()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string represents a well-formatted IPv4 or IPv6 address. This method considers [url=https://en.wikipedia.org/wiki/Reserved_IP_addresses]reserved IP addresses[/url] such as [code]\u00220.0.0.0\u0022[/code] and [code]\u0022ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff\u0022[/code] as valid.",
+      "godotName": "is_valid_ip_address",
+      "xmlDocId": "M:Godot.StringName.IsValidIpAddress",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "IsValidUnicodeIdentifier",
+      "kind": "Method",
+      "signature": "public bool IsValidUnicodeIdentifier()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this string is a valid Unicode identifier. A valid Unicode identifier must begin with a Unicode character of class [code]XID_Start[/code] or [code]\u0022_\u0022[/code], and may contain Unicode characters of class [code]XID_Continue[/code] in the other positions. [codeblock] print(\u0022node_2d\u0022.is_valid_unicode_identifier()) # Prints true print(\u00221st_method\u0022.is_valid_unicode_identifier()) # Prints false print(\u0022MyMethod#2\u0022.is_valid_unicode_identifier()) # Prints false print(\u0022\u00E1ll\u00F3k\u00E9pess\u00E9g\u0022.is_valid_unicode_identifier()) # Prints true print(\u0022\u0432\u044B\u043D\u043E\u0441\u043B\u0438\u0432\u043E\u0441\u0442\u044C\u0022.is_valid_unicode_identifier()) # Prints true print(\u0022\u4F53\u529B\u0022.is_valid_unicode_identifier()) # Prints true [/codeblock] See also [method is_valid_ascii_identifier]. [b]Note:[/b] This method checks identifiers the same way as GDScript. See [method TextServer.is_valid_identifier] for more advanced checks.",
+      "godotName": "is_valid_unicode_identifier",
+      "xmlDocId": "M:Godot.StringName.IsValidUnicodeIdentifier",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Join",
+      "kind": "Method",
+      "signature": "public String Join(PackedStringArray parts)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "parts",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Returns the concatenation of [param parts]\u0027 elements, with each element separated by the string calling this method. This method is the opposite of [method split]. [codeblocks] [gdscript] var fruits = [\u0022Apple\u0022, \u0022Orange\u0022, \u0022Pear\u0022, \u0022Kiwi\u0022] print(\u0022, \u0022.join(fruits)) # Prints \u0022Apple, Orange, Pear, Kiwi\u0022 print(\u0022---\u0022.join(fruits)) # Prints \u0022Apple---Orange---Pear---Kiwi\u0022 [/gdscript] [csharp] string[] fruits = [\u0022Apple\u0022, \u0022Orange\u0022, \u0022Pear\u0022, \u0022Kiwi\u0022]; // In C#, this method is static. GD.Print(string.Join(\u0022, \u0022, fruits)); // Prints \u0022Apple, Orange, Pear, Kiwi\u0022 GD.Print(string.Join(\u0022---\u0022, fruits)); // Prints \u0022Apple---Orange---Pear---Kiwi\u0022 [/csharp] [/codeblocks]",
+      "godotName": "join",
+      "xmlDocId": "M:Godot.StringName.Join(PackedStringArray)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "JsonEscape",
+      "kind": "Method",
+      "signature": "public String JsonEscape()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with special characters escaped using the JSON standard. Because it closely matches the C standard, it is possible to use [method c_unescape] to unescape the string, if necessary.",
+      "godotName": "json_escape",
+      "xmlDocId": "M:Godot.StringName.JsonEscape",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Left",
+      "kind": "Method",
+      "signature": "public String Left(int length)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the first [param length] characters from the beginning of the string. If [param length] is negative, strips the last [param length] characters from the string\u0027s end. [codeblock] print(\u0022Hello World!\u0022.left(3)) # Prints \u0022Hel\u0022 print(\u0022Hello World!\u0022.left(-4)) # Prints \u0022Hello Wo\u0022 [/codeblock]",
+      "godotName": "left",
+      "xmlDocId": "M:Godot.StringName.Left(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Length",
+      "kind": "Method",
+      "signature": "public int Length()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of characters in the string. Empty strings ([code]\u0022\u0022[/code]) always return [code]0[/code]. See also [method is_empty].",
+      "godotName": "length",
+      "xmlDocId": "M:Godot.StringName.Length",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Lpad",
+      "kind": "Method",
+      "signature": "public String Lpad(int minLength, String character)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "min_length",
+          "type": "int"
+        },
+        {
+          "name": "character",
+          "type": "String",
+          "defaultValue": "\u0022 \u0022"
+        }
+      ],
+      "summary": "Formats the string to be at least [param min_length] long by adding [param character]s to the left of the string, if necessary. See also [method rpad].",
+      "godotName": "lpad",
+      "xmlDocId": "M:Godot.StringName.Lpad(int,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Lstrip",
+      "kind": "Method",
+      "signature": "public String Lstrip(String chars)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "chars",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes a set of characters defined in [param chars] from the string\u0027s beginning. See also [method rstrip]. [b]Note:[/b] [param chars] is not a prefix. Use [method trim_prefix] to remove a single prefix, rather than a set of characters.",
+      "godotName": "lstrip",
+      "xmlDocId": "M:Godot.StringName.Lstrip(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Match",
+      "kind": "Method",
+      "signature": "public bool Match(String expr)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "expr",
+          "type": "String"
+        }
+      ],
+      "summary": "Does a simple expression match (also called \u0022glob\u0022 or \u0022globbing\u0022), where [code]*[/code] matches zero or more arbitrary characters and [code]?[/code] matches any single character except a period ([code].[/code]). An empty string or empty expression always evaluates to [code]false[/code].",
+      "godotName": "match",
+      "xmlDocId": "M:Godot.StringName.Match(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Matchn",
+      "kind": "Method",
+      "signature": "public bool Matchn(String expr)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "expr",
+          "type": "String"
+        }
+      ],
+      "summary": "Does a simple [b]case-insensitive[/b] expression match, where [code]*[/code] matches zero or more arbitrary characters and [code]?[/code] matches any single character except a period ([code].[/code]). An empty string or empty expression always evaluates to [code]false[/code].",
+      "godotName": "matchn",
+      "xmlDocId": "M:Godot.StringName.Matchn(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Md5Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray Md5Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/MD5]MD5 hash[/url] of the string as a [PackedByteArray].",
+      "godotName": "md5_buffer",
+      "xmlDocId": "M:Godot.StringName.Md5Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Md5Text",
+      "kind": "Method",
+      "signature": "public String Md5Text()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/MD5]MD5 hash[/url] of the string as another [String].",
+      "godotName": "md5_text",
+      "xmlDocId": "M:Godot.StringName.Md5Text",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "NaturalcasecmpTo",
+      "kind": "Method",
+      "signature": "public int NaturalcasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Performs a [b]case-sensitive[/b], [i]natural order[/i] comparison to another string. Returns [code]-1[/code] if less than, [code]1[/code] if greater than, or [code]0[/code] if equal. \u0022Less than\u0022 or \u0022greater than\u0022 are determined by the [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode code points[/url] of each string, which roughly matches the alphabetical order. When used for sorting, natural order comparison orders sequences of numbers by the combined value of each digit as is often expected, instead of the single digit\u0027s value. A sorted sequence of numbered strings will be [code][\u00221\u0022, \u00222\u0022, \u00223\u0022, ...][/code], not [code][\u00221\u0022, \u002210\u0022, \u00222\u0022, \u00223\u0022, ...][/code]. With different string lengths, returns [code]1[/code] if this string is longer than the [param to] string, or [code]-1[/code] if shorter. Note that the length of empty strings is [i]always[/i] [code]0[/code]. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method naturalnocasecmp_to], [method filecasecmp_to], and [method nocasecmp_to].",
+      "godotName": "naturalcasecmp_to",
+      "xmlDocId": "M:Godot.StringName.NaturalcasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "NaturalnocasecmpTo",
+      "kind": "Method",
+      "signature": "public int NaturalnocasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Performs a [b]case-insensitive[/b], [i]natural order[/i] comparison to another string. Returns [code]-1[/code] if less than, [code]1[/code] if greater than, or [code]0[/code] if equal. \u0022Less than\u0022 or \u0022greater than\u0022 are determined by the [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode code points[/url] of each string, which roughly matches the alphabetical order. Internally, lowercase characters are converted to uppercase for the comparison. When used for sorting, natural order comparison orders sequences of numbers by the combined value of each digit as is often expected, instead of the single digit\u0027s value. A sorted sequence of numbered strings will be [code][\u00221\u0022, \u00222\u0022, \u00223\u0022, ...][/code], not [code][\u00221\u0022, \u002210\u0022, \u00222\u0022, \u00223\u0022, ...][/code]. With different string lengths, returns [code]1[/code] if this string is longer than the [param to] string, or [code]-1[/code] if shorter. Note that the length of empty strings is [i]always[/i] [code]0[/code]. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method naturalcasecmp_to], [method filenocasecmp_to], and [method casecmp_to].",
+      "godotName": "naturalnocasecmp_to",
+      "xmlDocId": "M:Godot.StringName.NaturalnocasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "NocasecmpTo",
+      "kind": "Method",
+      "signature": "public int NocasecmpTo(String to)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "String"
+        }
+      ],
+      "summary": "Performs a [b]case-insensitive[/b] comparison to another string. Returns [code]-1[/code] if less than, [code]1[/code] if greater than, or [code]0[/code] if equal. \u0022Less than\u0022 or \u0022greater than\u0022 are determined by the [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode code points[/url] of each string, which roughly matches the alphabetical order. Internally, lowercase characters are converted to uppercase for the comparison. With different string lengths, returns [code]1[/code] if this string is longer than the [param to] string, or [code]-1[/code] if shorter. Note that the length of empty strings is [i]always[/i] [code]0[/code]. To get a [bool] result from a string comparison, use the [code]==[/code] operator instead. See also [method casecmp_to], [method filenocasecmp_to], and [method naturalnocasecmp_to].",
+      "godotName": "nocasecmp_to",
+      "xmlDocId": "M:Godot.StringName.NocasecmpTo(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "PadDecimals",
+      "kind": "Method",
+      "signature": "public String PadDecimals(int digits)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "digits",
+          "type": "int"
+        }
+      ],
+      "summary": "Formats the string representing a number to have an exact number of [param digits] [i]after[/i] the decimal point.",
+      "godotName": "pad_decimals",
+      "xmlDocId": "M:Godot.StringName.PadDecimals(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "PadZeros",
+      "kind": "Method",
+      "signature": "public String PadZeros(int digits)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "digits",
+          "type": "int"
+        }
+      ],
+      "summary": "Formats the string representing a number to have an exact number of [param digits] [i]before[/i] the decimal point.",
+      "godotName": "pad_zeros",
+      "xmlDocId": "M:Godot.StringName.PadZeros(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "PathJoin",
+      "kind": "Method",
+      "signature": "public String PathJoin(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Concatenates [param path] at the end of the string as a subpath, adding [code]/[/code] if necessary. [b]Example:[/b] [code]\u0022this/is\u0022.path_join(\u0022path\u0022) == \u0022this/is/path\u0022[/code].",
+      "godotName": "path_join",
+      "xmlDocId": "M:Godot.StringName.PathJoin(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "RemoveChar",
+      "kind": "Method",
+      "signature": "public String RemoveChar(int what)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes all occurrences of the Unicode character with code [param what]. Faster version of [method replace] when the key is only one character long and the replacement is [code]\u0022\u0022[/code].",
+      "godotName": "remove_char",
+      "xmlDocId": "M:Godot.StringName.RemoveChar(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "RemoveChars",
+      "kind": "Method",
+      "signature": "public String RemoveChars(String chars)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "chars",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes all occurrences of the characters in [param chars]. See also [method remove_char].",
+      "godotName": "remove_chars",
+      "xmlDocId": "M:Godot.StringName.RemoveChars(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Repeat",
+      "kind": "Method",
+      "signature": "public String Repeat(int count)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Repeats this string a number of times. [param count] needs to be greater than [code]0[/code]. Otherwise, returns an empty string.",
+      "godotName": "repeat",
+      "xmlDocId": "M:Godot.StringName.Repeat(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Replace",
+      "kind": "Method",
+      "signature": "public String Replace(String what, String forwhat)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "forwhat",
+          "type": "String"
+        }
+      ],
+      "summary": "Replaces all occurrences of [param what] inside the string with the given [param forwhat].",
+      "godotName": "replace",
+      "xmlDocId": "M:Godot.StringName.Replace(String,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ReplaceChar",
+      "kind": "Method",
+      "signature": "public String ReplaceChar(int key, int with)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "int"
+        },
+        {
+          "name": "with",
+          "type": "int"
+        }
+      ],
+      "summary": "Replaces all occurrences of the Unicode character with code [param key] with the Unicode character with code [param with]. Faster version of [method replace] when the key is only one character long. To get a single character use [code]\u0022X\u0022.unicode_at(0)[/code] (note that some strings, like compound letters and emoji, can be composed of multiple unicode codepoints, and will not work with this method, use [method length] to make sure).",
+      "godotName": "replace_char",
+      "xmlDocId": "M:Godot.StringName.ReplaceChar(int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ReplaceChars",
+      "kind": "Method",
+      "signature": "public String ReplaceChars(String keys, int with)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "keys",
+          "type": "String"
+        },
+        {
+          "name": "with",
+          "type": "int"
+        }
+      ],
+      "summary": "Replaces any occurrence of the characters in [param keys] with the Unicode character with code [param with]. See also [method replace_char].",
+      "godotName": "replace_chars",
+      "xmlDocId": "M:Godot.StringName.ReplaceChars(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Replacen",
+      "kind": "Method",
+      "signature": "public String Replacen(String what, String forwhat)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "forwhat",
+          "type": "String"
+        }
+      ],
+      "summary": "Replaces all [b]case-insensitive[/b] occurrences of [param what] inside the string with the given [param forwhat].",
+      "godotName": "replacen",
+      "xmlDocId": "M:Godot.StringName.Replacen(String,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public String Reverse()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the copy of this string in reverse order. This operation works on unicode codepoints, rather than sequences of codepoints, and may break things like compound letters or emojis.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.StringName.Reverse",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(String what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the index of the [b]last[/b] occurrence of [param what] in this string, or [code]-1[/code] if there are none. The search\u0027s start can be specified with [param from], continuing to the beginning of the string. This method is the reverse of [method find]. [b]Note:[/b] A negative value of [param from] is converted to a starting index by counting back from the last possible index with enough space to find [param what]. [b]Note:[/b] A value of [param from] that is greater than the last possible index with enough space to find [param what] is considered out-of-bounds, and returns [code]-1[/code].",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.StringName.Rfind(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Rfindn",
+      "kind": "Method",
+      "signature": "public int Rfindn(String what, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "what",
+          "type": "String"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the index of the [b]last[/b] [b]case-insensitive[/b] occurrence of [param what] in this string, or [code]-1[/code] if there are none. The starting search index can be specified with [param from], continuing to the beginning of the string. This method is the reverse of [method findn].",
+      "godotName": "rfindn",
+      "xmlDocId": "M:Godot.StringName.Rfindn(String,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Right",
+      "kind": "Method",
+      "signature": "public String Right(int length)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the last [param length] characters from the end of the string. If [param length] is negative, strips the first [param length] characters from the string\u0027s beginning. [codeblock] print(\u0022Hello World!\u0022.right(3)) # Prints \u0022ld!\u0022 print(\u0022Hello World!\u0022.right(-4)) # Prints \u0022o World!\u0022 [/codeblock]",
+      "godotName": "right",
+      "xmlDocId": "M:Godot.StringName.Right(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Rpad",
+      "kind": "Method",
+      "signature": "public String Rpad(int minLength, String character)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "min_length",
+          "type": "int"
+        },
+        {
+          "name": "character",
+          "type": "String",
+          "defaultValue": "\u0022 \u0022"
+        }
+      ],
+      "summary": "Formats the string to be at least [param min_length] long, by adding [param character]s to the right of the string, if necessary. See also [method lpad].",
+      "godotName": "rpad",
+      "xmlDocId": "M:Godot.StringName.Rpad(int,String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Rsplit",
+      "kind": "Method",
+      "signature": "public PackedStringArray Rsplit(String delimiter, bool allowEmpty, int maxsplit)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "allow_empty",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "maxsplit",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Splits the string using a [param delimiter] and returns an array of the substrings, starting from the end of the string. The splits in the returned array appear in the same order as the original string. If [param delimiter] is an empty string, each substring will be a single character. If [param allow_empty] is [code]false[/code], empty strings between adjacent delimiters are excluded from the array. If [param maxsplit] is greater than [code]0[/code], the number of splits may not exceed [param maxsplit]. By default, the entire string is split, which is mostly identical to [method split]. [codeblocks] [gdscript] var some_string = \u0022One,Two,Three,Four\u0022 var some_array = some_string.rsplit(\u0022,\u0022, true, 1) print(some_array.size()) # Prints 2 print(some_array[0]) # Prints \u0022One,Two,Three\u0022 print(some_array[1]) # Prints \u0022Four\u0022 [/gdscript] [csharp] // In C#, there is no String.RSplit() method. [/csharp] [/codeblocks]",
+      "godotName": "rsplit",
+      "xmlDocId": "M:Godot.StringName.Rsplit(String,bool,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Rstrip",
+      "kind": "Method",
+      "signature": "public String Rstrip(String chars)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "chars",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes a set of characters defined in [param chars] from the string\u0027s end. See also [method lstrip]. [b]Note:[/b] [param chars] is not a suffix. Use [method trim_suffix] to remove a single suffix, rather than a set of characters.",
+      "godotName": "rstrip",
+      "xmlDocId": "M:Godot.StringName.Rstrip(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Sha1Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray Sha1Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/SHA-1]SHA-1[/url] hash of the string as a [PackedByteArray].",
+      "godotName": "sha1_buffer",
+      "xmlDocId": "M:Godot.StringName.Sha1Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Sha1Text",
+      "kind": "Method",
+      "signature": "public String Sha1Text()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/SHA-1]SHA-1[/url] hash of the string as another [String].",
+      "godotName": "sha1_text",
+      "xmlDocId": "M:Godot.StringName.Sha1Text",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Sha256Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray Sha256Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/SHA-2]SHA-256[/url] hash of the string as a [PackedByteArray].",
+      "godotName": "sha256_buffer",
+      "xmlDocId": "M:Godot.StringName.Sha256Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Sha256Text",
+      "kind": "Method",
+      "signature": "public String Sha256Text()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/SHA-2]SHA-256[/url] hash of the string as another [String].",
+      "godotName": "sha256_text",
+      "xmlDocId": "M:Godot.StringName.Sha256Text",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Similarity",
+      "kind": "Method",
+      "signature": "public float Similarity(String text)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the similarity index ([url=https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient]S\u00F8rensen-Dice coefficient[/url]) of this string compared to another. A result of [code]1.0[/code] means totally similar, while [code]0.0[/code] means totally dissimilar. [codeblock] print(\u0022ABC123\u0022.similarity(\u0022ABC123\u0022)) # Prints 1.0 print(\u0022ABC123\u0022.similarity(\u0022XYZ456\u0022)) # Prints 0.0 print(\u0022ABC123\u0022.similarity(\u0022123ABC\u0022)) # Prints 0.8 print(\u0022ABC123\u0022.similarity(\u0022abc123\u0022)) # Prints 0.4 [/codeblock]",
+      "godotName": "similarity",
+      "xmlDocId": "M:Godot.StringName.Similarity(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "SimplifyPath",
+      "kind": "Method",
+      "signature": "public String SimplifyPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If the string is a valid file path, converts the string into a canonical path. This is the shortest possible path, without [code]\u0022./\u0022[/code], and all the unnecessary [code]\u0022..\u0022[/code] and [code]\u0022/\u0022[/code]. [codeblock] var simple_path = \u0022./path/to///../file\u0022.simplify_path() print(simple_path) # Prints \u0022path/file\u0022 [/codeblock]",
+      "godotName": "simplify_path",
+      "xmlDocId": "M:Godot.StringName.SimplifyPath",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Split",
+      "kind": "Method",
+      "signature": "public PackedStringArray Split(String delimiter, bool allowEmpty, int maxsplit)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "allow_empty",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "maxsplit",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Splits the string using a [param delimiter] and returns an array of the substrings. If [param delimiter] is an empty string, each substring will be a single character. This method is the opposite of [method join]. If [param allow_empty] is [code]false[/code], empty strings between adjacent delimiters are excluded from the array. If [param maxsplit] is greater than [code]0[/code], the number of splits may not exceed [param maxsplit]. By default, the entire string is split. [codeblocks] [gdscript] var some_array = \u0022One,Two,Three,Four\u0022.split(\u0022,\u0022, true, 2) print(some_array.size()) # Prints 3 print(some_array[0]) # Prints \u0022One\u0022 print(some_array[1]) # Prints \u0022Two\u0022 print(some_array[2]) # Prints \u0022Three,Four\u0022 [/gdscript] [csharp] // C#\u0027s \u0060Split()\u0060 does not support the \u0060maxsplit\u0060 parameter. var someArray = \u0022One,Two,Three\u0022.Split(\u0022,\u0022); GD.Print(someArray[0]); // Prints \u0022One\u0022 GD.Print(someArray[1]); // Prints \u0022Two\u0022 GD.Print(someArray[2]); // Prints \u0022Three\u0022 [/csharp] [/codeblocks] [b]Note:[/b] If you only need one substring from the array, consider using [method get_slice] which is faster. If you need to split strings with more complex rules, use the [RegEx] class instead.",
+      "godotName": "split",
+      "xmlDocId": "M:Godot.StringName.Split(String,bool,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "SplitFloats",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array SplitFloats(String delimiter, bool allowEmpty)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "delimiter",
+          "type": "String"
+        },
+        {
+          "name": "allow_empty",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Splits the string into floats by using a [param delimiter] and returns a [PackedFloat64Array]. If [param allow_empty] is [code]false[/code], empty or invalid [float] conversions between adjacent delimiters are excluded. [codeblock] var a = \u00221,2,4.5\u0022.split_floats(\u0022,\u0022) # a is [1.0, 2.0, 4.5] var c = \u00221| ||4.5\u0022.split_floats(\u0022|\u0022) # c is [1.0, 0.0, 0.0, 4.5] var b = \u00221| ||4.5\u0022.split_floats(\u0022|\u0022, false) # b is [1.0, 4.5] [/codeblock]",
+      "godotName": "split_floats",
+      "xmlDocId": "M:Godot.StringName.SplitFloats(String,bool)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "StripEdges",
+      "kind": "Method",
+      "signature": "public String StripEdges(bool left, bool right)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "right",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Strips all non-printable characters from the beginning and the end of the string. These include spaces, tabulations ([code]\\t[/code]), and newlines ([code]\\n[/code] [code]\\r[/code]). If [param left] is [code]false[/code], ignores the string\u0027s beginning. Likewise, if [param right] is [code]false[/code], ignores the string\u0027s end.",
+      "godotName": "strip_edges",
+      "xmlDocId": "M:Godot.StringName.StripEdges(bool,bool)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "StripEscapes",
+      "kind": "Method",
+      "signature": "public String StripEscapes()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Strips all escape characters from the string. These include all non-printable control characters of the first page of the ASCII table (values from 0 to 31), such as tabulation ([code]\\t[/code]) and newline ([code]\\n[/code], [code]\\r[/code]) characters, but [i]not[/i] spaces.",
+      "godotName": "strip_escapes",
+      "xmlDocId": "M:Godot.StringName.StripEscapes",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "Substr",
+      "kind": "Method",
+      "signature": "public String Substr(int from, int len)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "int"
+        },
+        {
+          "name": "len",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns part of the string from the position [param from] with length [param len]. If [param len] is [code]-1[/code] (as by default), returns the rest of the string starting from the given position.",
+      "godotName": "substr",
+      "xmlDocId": "M:Godot.StringName.Substr(int,int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToAsciiBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToAsciiBuffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Converts the string to an [url=https://en.wikipedia.org/wiki/ASCII]ASCII[/url]/Latin-1 encoded [PackedByteArray]. This method is slightly faster than [method to_utf8_buffer], but replaces all unsupported characters with spaces. This is the inverse of [method PackedByteArray.get_string_from_ascii].",
+      "godotName": "to_ascii_buffer",
+      "xmlDocId": "M:Godot.StringName.ToAsciiBuffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToCamelCase",
+      "kind": "Method",
+      "signature": "public String ToCamelCase()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]camelCase[/code].",
+      "godotName": "to_camel_case",
+      "xmlDocId": "M:Godot.StringName.ToCamelCase",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToFloat",
+      "kind": "Method",
+      "signature": "public float ToFloat()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Converts the string representing a decimal number into a [float]. This method stops on the first non-number character, except the first decimal point ([code].[/code]) and the exponent letter ([code]e[/code]). See also [method is_valid_float]. [codeblock] var a = \u002212.35\u0022.to_float() # a is 12.35 var b = \u00221.2.3\u0022.to_float() # b is 1.2 var c = \u002212xy3\u0022.to_float() # c is 12.0 var d = \u00221e3\u0022.to_float() # d is 1000.0 var e = \u0022Hello!\u0022.to_float() # e is 0.0 [/codeblock]",
+      "godotName": "to_float",
+      "xmlDocId": "M:Godot.StringName.ToFloat",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToInt",
+      "kind": "Method",
+      "signature": "public int ToInt()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Converts the string representing an integer number into an [int]. This method removes any non-number character and stops at the first decimal point ([code].[/code]). See also [method is_valid_int]. [codeblock] var a = \u0022123\u0022.to_int() # a is 123 var b = \u0022x1y2z3\u0022.to_int() # b is 123 var c = \u0022-1.2.3\u0022.to_int() # c is -1 var d = \u0022Hello!\u0022.to_int() # d is 0 [/codeblock]",
+      "godotName": "to_int",
+      "xmlDocId": "M:Godot.StringName.ToInt",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToKebabCase",
+      "kind": "Method",
+      "signature": "public String ToKebabCase()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]kebab-case[/code]. [b]Note:[/b] Numbers followed by a [i]single[/i] letter are not separated in the conversion to keep some words (such as \u00222D\u0022) together. [codeblocks] [gdscript] \u0022Node2D\u0022.to_kebab_case() # Returns \u0022node-2d\u0022 \u00222nd place\u0022.to_kebab_case() # Returns \u00222-nd-place\u0022 \u0022Texture3DAssetFolder\u0022.to_kebab_case() # Returns \u0022texture-3d-asset-folder\u0022 [/gdscript] [csharp] \u0022Node2D\u0022.ToKebabCase(); // Returns \u0022node-2d\u0022 \u00222nd place\u0022.ToKebabCase(); // Returns \u00222-nd-place\u0022 \u0022Texture3DAssetFolder\u0022.ToKebabCase(); // Returns \u0022texture-3d-asset-folder\u0022 [/csharp] [/codeblocks]",
+      "godotName": "to_kebab_case",
+      "xmlDocId": "M:Godot.StringName.ToKebabCase",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToLower",
+      "kind": "Method",
+      "signature": "public String ToLower()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]lowercase[/code].",
+      "godotName": "to_lower",
+      "xmlDocId": "M:Godot.StringName.ToLower",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToMultibyteCharBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToMultibyteCharBuffer(String encoding)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "encoding",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Converts the string to system multibyte code page encoded [PackedByteArray]. If conversion fails, empty array is returned. The values permitted for [param encoding] are system dependent. If [param encoding] is empty string, system default encoding is used. - For Windows, see [url=https://learn.microsoft.com/en-us/windows/win32/Intl/code-page-identifiers]Code Page Identifiers[/url] .NET names. - For macOS and Linux/BSD, see [code]libiconv[/code] library documentation and [code]iconv --list[/code] for a list of supported encodings.",
+      "godotName": "to_multibyte_char_buffer",
+      "xmlDocId": "M:Godot.StringName.ToMultibyteCharBuffer(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToPascalCase",
+      "kind": "Method",
+      "signature": "public String ToPascalCase()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]PascalCase[/code].",
+      "godotName": "to_pascal_case",
+      "xmlDocId": "M:Godot.StringName.ToPascalCase",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToSnakeCase",
+      "kind": "Method",
+      "signature": "public String ToSnakeCase()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]snake_case[/code]. [b]Note:[/b] Numbers followed by a [i]single[/i] letter are not separated in the conversion to keep some words (such as \u00222D\u0022) together. [codeblocks] [gdscript] \u0022Node2D\u0022.to_snake_case() # Returns \u0022node_2d\u0022 \u00222nd place\u0022.to_snake_case() # Returns \u00222_nd_place\u0022 \u0022Texture3DAssetFolder\u0022.to_snake_case() # Returns \u0022texture_3d_asset_folder\u0022 [/gdscript] [csharp] \u0022Node2D\u0022.ToSnakeCase(); // Returns \u0022node_2d\u0022 \u00222nd place\u0022.ToSnakeCase(); // Returns \u00222_nd_place\u0022 \u0022Texture3DAssetFolder\u0022.ToSnakeCase(); // Returns \u0022texture_3d_asset_folder\u0022 [/csharp] [/codeblocks]",
+      "godotName": "to_snake_case",
+      "xmlDocId": "M:Godot.StringName.ToSnakeCase",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToUpper",
+      "kind": "Method",
+      "signature": "public String ToUpper()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the string converted to [code]UPPERCASE[/code].",
+      "godotName": "to_upper",
+      "xmlDocId": "M:Godot.StringName.ToUpper",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToUtf8Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToUtf8Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Converts the string to a [url=https://en.wikipedia.org/wiki/UTF-8]UTF-8[/url] encoded [PackedByteArray]. This method is slightly slower than [method to_ascii_buffer], but supports all UTF-8 characters. For most cases, prefer using this method. This is the inverse of [method PackedByteArray.get_string_from_utf8].",
+      "godotName": "to_utf8_buffer",
+      "xmlDocId": "M:Godot.StringName.ToUtf8Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToUtf16Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToUtf16Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Converts the string to a [url=https://en.wikipedia.org/wiki/UTF-16]UTF-16[/url] encoded [PackedByteArray]. This is the inverse of [method PackedByteArray.get_string_from_utf16].",
+      "godotName": "to_utf16_buffer",
+      "xmlDocId": "M:Godot.StringName.ToUtf16Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToUtf32Buffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToUtf32Buffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Converts the string to a [url=https://en.wikipedia.org/wiki/UTF-32]UTF-32[/url] encoded [PackedByteArray]. This is the inverse of [method PackedByteArray.get_string_from_utf32].",
+      "godotName": "to_utf32_buffer",
+      "xmlDocId": "M:Godot.StringName.ToUtf32Buffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ToWcharBuffer",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToWcharBuffer()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Converts the string to a [url=https://en.wikipedia.org/wiki/Wide_character]wide character[/url] ([code]wchar_t[/code], UTF-16 on Windows, UTF-32 on other platforms) encoded [PackedByteArray]. This is the inverse of [method PackedByteArray.get_string_from_wchar].",
+      "godotName": "to_wchar_buffer",
+      "xmlDocId": "M:Godot.StringName.ToWcharBuffer",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "TrimPrefix",
+      "kind": "Method",
+      "signature": "public String TrimPrefix(String prefix)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "prefix",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the given [param prefix] from the start of the string, or returns the string unchanged.",
+      "godotName": "trim_prefix",
+      "xmlDocId": "M:Godot.StringName.TrimPrefix(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "TrimSuffix",
+      "kind": "Method",
+      "signature": "public String TrimSuffix(String suffix)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "suffix",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the given [param suffix] from the end of the string, or returns the string unchanged.",
+      "godotName": "trim_suffix",
+      "xmlDocId": "M:Godot.StringName.TrimSuffix(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "UnicodeAt",
+      "kind": "Method",
+      "signature": "public int UnicodeAt(int at)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the character code at position [param at]. See also [method String.chr], [method @GDScript.char], and [method @GDScript.ord].",
+      "godotName": "unicode_at",
+      "xmlDocId": "M:Godot.StringName.UnicodeAt(int)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "UriDecode",
+      "kind": "Method",
+      "signature": "public String UriDecode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Decodes the string from its URL-encoded format. This method is meant to properly decode the parameters in a URL when receiving an HTTP request. See also [method uri_encode]. [codeblocks] [gdscript] var url = \u0022$DOCS_URL/?highlight=Godot%20Engine%3%docs\u0022 print(url.uri_decode()) # Prints \u0022$DOCS_URL/?highlight=Godot Engine:docs\u0022 [/gdscript] [csharp] var url = \u0022$DOCS_URL/?highlight=Godot%20Engine%3%docs\u0022 GD.Print(url.URIDecode()) // Prints \u0022$DOCS_URL/?highlight=Godot Engine:docs\u0022 [/csharp] [/codeblocks] [b]Note:[/b] This method decodes [code]\u002B[/code] as space.",
+      "godotName": "uri_decode",
+      "xmlDocId": "M:Godot.StringName.UriDecode",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "UriEncode",
+      "kind": "Method",
+      "signature": "public String UriEncode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Encodes the string to URL-friendly format. This method is meant to properly encode the parameters in a URL when sending an HTTP request. See also [method uri_decode]. [codeblocks] [gdscript] var prefix = \u0022$DOCS_URL/?highlight=\u0022 var url = prefix \u002B \u0022Godot Engine:docs\u0022.uri_encode() print(url) # Prints \u0022$DOCS_URL/?highlight=Godot%20Engine%3%docs\u0022 [/gdscript] [csharp] var prefix = \u0022$DOCS_URL/?highlight=\u0022; var url = prefix \u002B \u0022Godot Engine:docs\u0022.URIEncode(); GD.Print(url); // Prints \u0022$DOCS_URL/?highlight=Godot%20Engine%3%docs\u0022 [/csharp] [/codeblocks]",
+      "godotName": "uri_encode",
+      "xmlDocId": "M:Godot.StringName.UriEncode",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "UriFileDecode",
+      "kind": "Method",
+      "signature": "public String UriFileDecode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Decodes the file path from its URL-encoded format. Unlike [method uri_decode] this method leaves [code]\u002B[/code] as is.",
+      "godotName": "uri_file_decode",
+      "xmlDocId": "M:Godot.StringName.UriFileDecode",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ValidateFilename",
+      "kind": "Method",
+      "signature": "public String ValidateFilename()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with all characters that are not allowed in [method is_valid_filename] replaced with underscores.",
+      "godotName": "validate_filename",
+      "xmlDocId": "M:Godot.StringName.ValidateFilename",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "ValidateNodeName",
+      "kind": "Method",
+      "signature": "public String ValidateNodeName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with all characters that are not allowed in [member Node.name] ([code].[/code] [code]:[/code] [code]@[/code] [code]/[/code] [code]\u0022[/code] [code]%[/code]) replaced with underscores.",
+      "godotName": "validate_node_name",
+      "xmlDocId": "M:Godot.StringName.ValidateNodeName",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "XmlEscape",
+      "kind": "Method",
+      "signature": "public String XmlEscape(bool escapeQuotes)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "escape_quotes",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a copy of the string with special characters escaped using the XML standard. If [param escape_quotes] is [code]true[/code], the single quote ([code]\u0027[/code]) and double quote ([code]\u0022[/code]) characters are also escaped.",
+      "godotName": "xml_escape",
+      "xmlDocId": "M:Godot.StringName.XmlEscape(bool)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "XmlUnescape",
+      "kind": "Method",
+      "signature": "public String XmlUnescape()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a copy of the string with escaped characters replaced by their meanings according to the XML standard.",
+      "godotName": "xml_unescape",
+      "xmlDocId": "M:Godot.StringName.XmlUnescape",
+      "sourcePath": "doc/classes/StringName.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(String right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [StringName] is not equivalent to the given [String].",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.StringName.operator !=(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [StringName] and [param right] do not refer to the same name. Comparisons between [StringName]s are much faster than regular [String] comparisons.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.StringName.operator !=(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator %",
+      "kind": "Operator",
+      "signature": "public String operator %(Variant right)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Formats the [StringName], replacing the placeholders with one or more parameters, returning a [String]. To pass multiple parameters, [param right] needs to be an [Array]. For more information, see the [url=$DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html]GDScript format strings[/url] tutorial. [b]Note:[/b] In C#, this operator is not available. Instead, see [url=https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated]how to interpolate strings with \u0022$\u0022[/url].",
+      "godotName": "operator %",
+      "xmlDocId": "M:Godot.StringName.operator %(Variant)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public String operator \u002B(String right)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "String"
+        }
+      ],
+      "summary": "Appends [param right] at the end of this [StringName], returning a [String]. This is also known as a string concatenation.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.StringName.operator \u002B(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public String operator \u002B(StringName right)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Appends [param right] at the end of this [StringName], returning a [String]. This is also known as a string concatenation.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.StringName.operator \u002B(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [StringName]\u0027s pointer comes before [param right]. Note that this will not match their [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode order[/url].",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.StringName.operator \u003C(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [StringName]\u0027s pointer comes before [param right] or if they are the same. Note that this will not match their [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode order[/url].",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.StringName.operator \u003C=(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(String right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this [StringName] is equivalent to the given [String].",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.StringName.operator ==(String)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [StringName] and [param right] refer to the same name. Comparisons between [StringName]s are much faster than regular [String] comparisons.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.StringName.operator ==(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [StringName]\u0027s pointer comes after [param right]. Note that this will not match their [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode order[/url].",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.StringName.operator \u003E(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(StringName right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the left [StringName]\u0027s pointer comes after [param right] or if they are the same. Note that this will not match their [url=https://en.wikipedia.org/wiki/List_of_Unicode_characters]Unicode order[/url].",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.StringName.operator \u003E=(StringName)",
+      "sourcePath": "doc/classes/StringName.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StringName.xml",
+      "sha256": "b7584a5ccff1513d0a35d7a9777170e1f74fbb86f3b0aad1ea8a4dbadda2bd17"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

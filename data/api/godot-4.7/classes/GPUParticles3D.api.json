@@ -1,0 +1,804 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GPUParticles3D",
+    "namespace": "Godot",
+    "fullName": "Godot.GPUParticles3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "GPUParticles3D",
+    "documentationPath": "doc/classes/GPUParticles3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gpuparticles3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CaptureAabb",
+      "kind": "Method",
+      "signature": "public AABB CaptureAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the axis-aligned bounding box that contains all the particles that are active in the current frame.",
+      "godotName": "capture_aabb",
+      "xmlDocId": "M:Godot.GPUParticles3D.CaptureAabb",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "ConvertFromParticles",
+      "kind": "Method",
+      "signature": "public void ConvertFromParticles(Node particles)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "particles",
+          "type": "Node"
+        }
+      ],
+      "summary": "Sets this node\u0027s properties to match a given [CPUParticles3D] node.",
+      "godotName": "convert_from_particles",
+      "xmlDocId": "M:Godot.GPUParticles3D.ConvertFromParticles(Node)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EmitParticle",
+      "kind": "Method",
+      "signature": "public void EmitParticle(Transform3D xform, Vector3 velocity, Color color, Color custom, int flags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        },
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "custom",
+          "type": "Color"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Emits a single particle. Whether [param xform], [param velocity], [param color] and [param custom] are applied depends on the value of [param flags]. See [enum EmitFlags]. The default ParticleProcessMaterial will overwrite [param color] and use the contents of [param custom] as [code](rotation, age, animation, lifetime)[/code]. [b]Note:[/b] [method emit_particle] is only supported on the Forward\u002B and Mobile rendering methods, not Compatibility.",
+      "godotName": "emit_particle",
+      "xmlDocId": "M:Godot.GPUParticles3D.EmitParticle(Transform3D,Vector3,Color,Color,int)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "GetDrawPassMesh",
+      "kind": "Method",
+      "signature": "public Mesh GetDrawPassMesh(int pass)",
+      "returnType": "Mesh",
+      "parameters": [
+        {
+          "name": "pass",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Mesh] that is drawn at index [param pass].",
+      "godotName": "get_draw_pass_mesh",
+      "xmlDocId": "M:Godot.GPUParticles3D.GetDrawPassMesh(int)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "RequestParticlesProcess",
+      "kind": "Method",
+      "signature": "public void RequestParticlesProcess(float processTime, float processTimeResidual)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "process_time",
+          "type": "float"
+        },
+        {
+          "name": "process_time_residual",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Requests the particles to process for extra process time during a single frame. [param process_time] defines the time that the particles will process while emitting is on. [param process_time_residual] defines the time that particles will process with emitting turned off for the simulation. When combined with [member speed_scale] set to [code]0.0[/code], this is useful to be able to seek a particle system timeline.",
+      "godotName": "request_particles_process",
+      "xmlDocId": "M:Godot.GPUParticles3D.RequestParticlesProcess(float,float)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Restart",
+      "kind": "Method",
+      "signature": "public void Restart(bool keepSeed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keep_seed",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Restarts the particle emission cycle, clearing existing particles. To avoid particles vanishing from the viewport, wait for the [signal finished] signal before calling. [b]Note:[/b] The [signal finished] signal is only emitted by [member one_shot] emitters. If [param keep_seed] is [code]true[/code], the current random seed will be preserved. Useful for seeking and playback.",
+      "godotName": "restart",
+      "xmlDocId": "M:Godot.GPUParticles3D.Restart(bool)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "SetDrawPassMesh",
+      "kind": "Method",
+      "signature": "public void SetDrawPassMesh(int pass, Mesh mesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "pass",
+          "type": "int"
+        },
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        }
+      ],
+      "summary": "Sets the [Mesh] that is drawn at index [param pass].",
+      "godotName": "set_draw_pass_mesh",
+      "xmlDocId": "M:Godot.GPUParticles3D.SetDrawPassMesh(int,Mesh)",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Amount",
+      "kind": "Property",
+      "signature": "public int Amount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of particles to emit in one emission cycle. The effective emission rate is [code](amount * amount_ratio) / lifetime[/code] particles per second. Higher values will increase GPU requirements, even if not all particles are visible at a given time or if [member amount_ratio] is decreased. [b]Note:[/b] Changing this value will cause the particle system to restart. To avoid this, change [member amount_ratio] instead.",
+      "defaultValue": "8",
+      "godotName": "amount",
+      "xmlDocId": "P:Godot.GPUParticles3D.Amount",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "AmountRatio",
+      "kind": "Property",
+      "signature": "public float AmountRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The ratio of particles that should actually be emitted. If set to a value lower than [code]1.0[/code], this will set the amount of emitted particles throughout the lifetime to [code]amount * amount_ratio[/code]. Unlike changing [member amount], changing [member amount_ratio] while emitting does not affect already-emitted particles and doesn\u0027t cause the particle system to restart. [member amount_ratio] can be used to create effects that make the number of emitted particles vary over time. [b]Note:[/b] Reducing the [member amount_ratio] has no performance benefit, since resources need to be allocated and processed for the total [member amount] of particles regardless of the [member amount_ratio]. If you don\u0027t intend to change the number of particles emitted while the particles are emitting, make sure [member amount_ratio] is set to [code]1[/code] and change [member amount] to your liking instead.",
+      "defaultValue": "1.0",
+      "godotName": "amount_ratio",
+      "xmlDocId": "P:Godot.GPUParticles3D.AmountRatio",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "CollisionBaseSize",
+      "kind": "Property",
+      "signature": "public float CollisionBaseSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The base diameter for particle collision in meters. If particles appear to sink into the ground when colliding, increase this value. If particles appear to float when colliding, decrease this value. Only effective if [member ParticleProcessMaterial.collision_mode] is [constant ParticleProcessMaterial.COLLISION_RIGID] or [constant ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT]. [b]Note:[/b] Particles always have a spherical collision shape.",
+      "defaultValue": "0.01",
+      "godotName": "collision_base_size",
+      "xmlDocId": "P:Godot.GPUParticles3D.CollisionBaseSize",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawOrder",
+      "kind": "Property",
+      "signature": "public int DrawOrder { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Particle draw order. [b]Note:[/b] [constant DRAW_ORDER_INDEX] is the only option that supports motion vectors for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix ghosting artifacts.",
+      "defaultValue": "0",
+      "godotName": "draw_order",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawOrder",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawPass1",
+      "kind": "Property",
+      "signature": "public Mesh DrawPass1 { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "[Mesh] that is drawn for the first draw pass.",
+      "godotName": "draw_pass_1",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawPass1",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawPass2",
+      "kind": "Property",
+      "signature": "public Mesh DrawPass2 { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "[Mesh] that is drawn for the second draw pass.",
+      "godotName": "draw_pass_2",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawPass2",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawPass3",
+      "kind": "Property",
+      "signature": "public Mesh DrawPass3 { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "[Mesh] that is drawn for the third draw pass.",
+      "godotName": "draw_pass_3",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawPass3",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawPass4",
+      "kind": "Property",
+      "signature": "public Mesh DrawPass4 { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "[Mesh] that is drawn for the fourth draw pass.",
+      "godotName": "draw_pass_4",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawPass4",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawPasses",
+      "kind": "Property",
+      "signature": "public int DrawPasses { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of draw passes when rendering particles.",
+      "defaultValue": "1",
+      "godotName": "draw_passes",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawPasses",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DrawSkin",
+      "kind": "Property",
+      "signature": "public Skin DrawSkin { get; set; }",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "",
+      "godotName": "draw_skin",
+      "xmlDocId": "P:Godot.GPUParticles3D.DrawSkin",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Emitting",
+      "kind": "Property",
+      "signature": "public bool Emitting { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles are being emitted. [member emitting] can be used to start and stop particles from emitting. However, if [member one_shot] is [code]true[/code] setting [member emitting] to [code]true[/code] will not restart the emission cycle unless all active particles have finished processing. Use the [signal finished] signal to be notified once all active particles finish processing. [b]Note:[/b] For [member one_shot] emitters, due to the particles being computed on the GPU, there may be a short period after receiving the [signal finished] signal during which setting this to [code]true[/code] will not restart the emission cycle. [b]Tip:[/b] If your [member one_shot] emitter needs to immediately restart emitting particles once [signal finished] signal is received, consider calling [method restart] instead of setting [member emitting].",
+      "defaultValue": "true",
+      "godotName": "emitting",
+      "xmlDocId": "P:Godot.GPUParticles3D.Emitting",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Explosiveness",
+      "kind": "Property",
+      "signature": "public float Explosiveness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time ratio between each emission. If [code]0[/code], particles are emitted continuously. If [code]1[/code], all particles are emitted simultaneously.",
+      "defaultValue": "0.0",
+      "godotName": "explosiveness",
+      "xmlDocId": "P:Godot.GPUParticles3D.Explosiveness",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "FixedFps",
+      "kind": "Property",
+      "signature": "public int FixedFps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particle system\u0027s frame rate is fixed to a value. For example, changing the value to 2 will make the particles render at 2 frames per second. Note this does not slow down the simulation of the particle system itself.",
+      "defaultValue": "30",
+      "godotName": "fixed_fps",
+      "xmlDocId": "P:Godot.GPUParticles3D.FixedFps",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "FractDelta",
+      "kind": "Property",
+      "signature": "public bool FractDelta { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], results in fractional delta calculation which has a smoother particles display effect.",
+      "defaultValue": "true",
+      "godotName": "fract_delta",
+      "xmlDocId": "P:Godot.GPUParticles3D.FractDelta",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "InterpToEnd",
+      "kind": "Property",
+      "signature": "public float InterpToEnd { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Causes all the particles in this node to interpolate towards the end of their lifetime. [b]Note:[/b] This only works when used with a [ParticleProcessMaterial]. It needs to be manually implemented for custom process shaders.",
+      "defaultValue": "0.0",
+      "godotName": "interp_to_end",
+      "xmlDocId": "P:Godot.GPUParticles3D.InterpToEnd",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Interpolate",
+      "kind": "Property",
+      "signature": "public bool Interpolate { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables particle interpolation, which makes the particle movement smoother when their [member fixed_fps] is lower than the screen refresh rate.",
+      "defaultValue": "true",
+      "godotName": "interpolate",
+      "xmlDocId": "P:Godot.GPUParticles3D.Interpolate",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Lifetime",
+      "kind": "Property",
+      "signature": "public float Lifetime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of time each particle will exist (in seconds). The effective emission rate is [code](amount * amount_ratio) / lifetime[/code] particles per second.",
+      "defaultValue": "1.0",
+      "godotName": "lifetime",
+      "xmlDocId": "P:Godot.GPUParticles3D.Lifetime",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "LocalCoords",
+      "kind": "Property",
+      "signature": "public bool LocalCoords { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles use the parent node\u0027s coordinate space (known as local coordinates). This will cause particles to move and rotate along the [GPUParticles3D] node (and its parents) when it is moved or rotated. If [code]false[/code], particles use global coordinates; they will not move or rotate along the [GPUParticles3D] node (and its parents) when it is moved or rotated.",
+      "defaultValue": "false",
+      "godotName": "local_coords",
+      "xmlDocId": "P:Godot.GPUParticles3D.LocalCoords",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "OneShot",
+      "kind": "Property",
+      "signature": "public bool OneShot { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], only the number of particles equal to [member amount] will be emitted.",
+      "defaultValue": "false",
+      "godotName": "one_shot",
+      "xmlDocId": "P:Godot.GPUParticles3D.OneShot",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Preprocess",
+      "kind": "Property",
+      "signature": "public float Preprocess { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of time to preprocess the particles before animation starts. Lets you start the animation some time after particles have started emitting. [b]Note:[/b] This can be very expensive if set to a high number as it requires running the particle shader a number of times equal to the [member fixed_fps] (or 30, if [member fixed_fps] is 0) for every second. In extreme cases it can even lead to a GPU crash due to the volume of work done in a single frame.",
+      "defaultValue": "0.0",
+      "godotName": "preprocess",
+      "xmlDocId": "P:Godot.GPUParticles3D.Preprocess",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "ProcessMaterial",
+      "kind": "Property",
+      "signature": "public Material ProcessMaterial { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "[Material] for processing particles. Can be a [ParticleProcessMaterial] or a [ShaderMaterial].",
+      "godotName": "process_material",
+      "xmlDocId": "P:Godot.GPUParticles3D.ProcessMaterial",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Randomness",
+      "kind": "Property",
+      "signature": "public float Randomness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Emission randomness ratio.",
+      "defaultValue": "0.0",
+      "godotName": "randomness",
+      "xmlDocId": "P:Godot.GPUParticles3D.Randomness",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "Seed",
+      "kind": "Property",
+      "signature": "public int Seed { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the random seed used by the particle system. Only effective if [member use_fixed_seed] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "seed",
+      "xmlDocId": "P:Godot.GPUParticles3D.Seed",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "SpeedScale",
+      "kind": "Property",
+      "signature": "public float SpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Speed scaling ratio. A value of [code]0[/code] can be used to pause the particles.",
+      "defaultValue": "1.0",
+      "godotName": "speed_scale",
+      "xmlDocId": "P:Godot.GPUParticles3D.SpeedScale",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "SubEmitter",
+      "kind": "Property",
+      "signature": "public NodePath SubEmitter { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to another [GPUParticles3D] node that will be used as a subemitter (see [member ParticleProcessMaterial.sub_emitter_mode]). Subemitters can be used to achieve effects such as fireworks, sparks on collision, bubbles popping into water drops, and more. [b]Note:[/b] When [member sub_emitter] is set, the target [GPUParticles3D] node will no longer emit particles on its own.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "sub_emitter",
+      "xmlDocId": "P:Godot.GPUParticles3D.SubEmitter",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TrailEnabled",
+      "kind": "Property",
+      "signature": "public bool TrailEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables particle trails using a mesh skinning system. Designed to work with [RibbonTrailMesh] and [TubeTrailMesh]. [b]Note:[/b] [member BaseMaterial3D.use_particle_trails] must also be enabled on the particle mesh\u0027s material. Otherwise, setting [member trail_enabled] to [code]true[/code] will have no effect. [b]Note:[/b] Unlike [GPUParticles2D], the number of trail sections and subdivisions is set in the [RibbonTrailMesh] or the [TubeTrailMesh]\u0027s properties.",
+      "defaultValue": "false",
+      "godotName": "trail_enabled",
+      "xmlDocId": "P:Godot.GPUParticles3D.TrailEnabled",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TrailLifetime",
+      "kind": "Property",
+      "signature": "public float TrailLifetime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of time the particle\u0027s trail should represent (in seconds). Only effective if [member trail_enabled] is [code]true[/code].",
+      "defaultValue": "0.3",
+      "godotName": "trail_lifetime",
+      "xmlDocId": "P:Godot.GPUParticles3D.TrailLifetime",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TransformAlign",
+      "kind": "Property",
+      "signature": "public int TransformAlign { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The alignment of particles. Use this for billboarding and aligning to velocity.",
+      "defaultValue": "0",
+      "godotName": "transform_align",
+      "xmlDocId": "P:Godot.GPUParticles3D.TransformAlign",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TransformAlignAxis",
+      "kind": "Property",
+      "signature": "public int TransformAlignAxis { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "When using transform align local billboard, which axis to use for the billboarding. Supports only X or Y.",
+      "godotName": "transform_align_axis",
+      "xmlDocId": "P:Godot.GPUParticles3D.TransformAlignAxis",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TransformAlignChannelFilter",
+      "kind": "Property",
+      "signature": "public int TransformAlignChannelFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "In the case of billboarded particles, which custom channel to read from to calculate their angle.",
+      "godotName": "transform_align_channel_filter",
+      "xmlDocId": "P:Godot.GPUParticles3D.TransformAlignChannelFilter",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "UseFixedSeed",
+      "kind": "Property",
+      "signature": "public bool UseFixedSeed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particles will use the same seed for every simulation using the seed defined in [member seed]. This is useful for situations where the visual outcome should be consistent across replays, for example when using Movie Maker mode.",
+      "defaultValue": "false",
+      "godotName": "use_fixed_seed",
+      "xmlDocId": "P:Godot.GPUParticles3D.UseFixedSeed",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "VisibilityAabb",
+      "kind": "Property",
+      "signature": "public AABB VisibilityAabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "The [AABB] that determines the node\u0027s region which needs to be visible on screen for the particle system to be active. [member GeometryInstance3D.extra_cull_margin] is added on each of the AABB\u0027s axes. Particle collisions and attraction will only occur within this area. Grow the box if particles suddenly appear/disappear when the node enters/exits the screen. The [AABB] can be grown via code or with the [b]Particles \u2192 Generate AABB[/b] editor tool. [b]Note:[/b] [member visibility_aabb] is overridden by [member GeometryInstance3D.custom_aabb] if that property is set to a non-default value.",
+      "defaultValue": "AABB(-4, -4, -4, 8, 8, 8)",
+      "godotName": "visibility_aabb",
+      "xmlDocId": "P:Godot.GPUParticles3D.VisibilityAabb",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when all active particles have finished processing. To immediately restart the emission cycle, call [method restart]. This signal is never emitted when [member one_shot] is disabled, as particles will be emitted and processed continuously. [b]Note:[/b] For [member one_shot] emitters, due to the particles being computed on the GPU, there may be a short period after receiving the signal during which setting [member emitting] to [code]true[/code] will not restart the emission cycle. This delay is avoided by instead calling [method restart].",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.GPUParticles3D.Finished",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DrawOrder",
+      "values": [
+        {
+          "name": "DRAW_ORDER_INDEX",
+          "value": "0",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in the order emitted.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "DRAW_ORDER_LIFETIME",
+          "value": "1",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in order of remaining lifetime. In other words, the particle with the highest lifetime is drawn at the front.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "DRAW_ORDER_REVERSE_LIFETIME",
+          "value": "2",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in reverse order of remaining lifetime. In other words, the particle with the lowest lifetime is drawn at the front.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "DRAW_ORDER_VIEW_DEPTH",
+          "value": "3",
+          "enum": "DrawOrder",
+          "kind": "EnumValue",
+          "summary": "Particles are drawn in order of depth.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "EmitFlags",
+      "values": [
+        {
+          "name": "EMIT_FLAG_COLOR",
+          "value": "8",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "Particle starts with specified color.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "EMIT_FLAG_CUSTOM",
+          "value": "16",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "Particle starts with specified [code]CUSTOM[/code] data.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "EMIT_FLAG_POSITION",
+          "value": "1",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "Particle starts at the specified position.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "EMIT_FLAG_ROTATION_SCALE",
+          "value": "2",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "Particle starts with specified rotation and scale.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "EMIT_FLAG_VELOCITY",
+          "value": "4",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "Particle starts with the specified velocity vector, which defines the emission direction and speed.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "TransformAlign",
+      "values": [
+        {
+          "name": "TRANSFORM_ALIGN_DISABLED",
+          "value": "0",
+          "enum": "TransformAlign",
+          "kind": "EnumValue",
+          "summary": "Do not align particle transforms relative to the camera or velocity.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "TRANSFORM_ALIGN_LOCAL_BILLBOARD",
+          "value": "4",
+          "enum": "TransformAlign",
+          "kind": "EnumValue",
+          "summary": "Align each particle\u0027s Z axis to face the camera, while preserving a given axis (X or Y).",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "TRANSFORM_ALIGN_Y_TO_VELOCITY",
+          "value": "2",
+          "enum": "TransformAlign",
+          "kind": "EnumValue",
+          "summary": "Align each particle\u0027s Y axis to the velocity vector.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "TRANSFORM_ALIGN_Z_BILLBOARD",
+          "value": "1",
+          "enum": "TransformAlign",
+          "kind": "EnumValue",
+          "summary": "Align each particle\u0027s Z axis to face the camera.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        },
+        {
+          "name": "TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY",
+          "value": "3",
+          "enum": "TransformAlign",
+          "kind": "EnumValue",
+          "summary": "Align each particle\u0027s Z axis to face the camera and Y axis to the velocity vector.",
+          "sourcePath": "doc/classes/GPUParticles3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DRAW_ORDER_INDEX",
+      "value": "0",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in the order emitted.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DRAW_ORDER_LIFETIME",
+      "value": "1",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in order of remaining lifetime. In other words, the particle with the highest lifetime is drawn at the front.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DRAW_ORDER_REVERSE_LIFETIME",
+      "value": "2",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in reverse order of remaining lifetime. In other words, the particle with the lowest lifetime is drawn at the front.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "DRAW_ORDER_VIEW_DEPTH",
+      "value": "3",
+      "enum": "DrawOrder",
+      "kind": "EnumValue",
+      "summary": "Particles are drawn in order of depth.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EMIT_FLAG_POSITION",
+      "value": "1",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "Particle starts at the specified position.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EMIT_FLAG_ROTATION_SCALE",
+      "value": "2",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "Particle starts with specified rotation and scale.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EMIT_FLAG_VELOCITY",
+      "value": "4",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "Particle starts with the specified velocity vector, which defines the emission direction and speed.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EMIT_FLAG_COLOR",
+      "value": "8",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "Particle starts with specified color.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "EMIT_FLAG_CUSTOM",
+      "value": "16",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "Particle starts with specified [code]CUSTOM[/code] data.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "MAX_DRAW_PASSES",
+      "value": "4",
+      "kind": "Constant",
+      "summary": "Maximum number of draw passes supported.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TRANSFORM_ALIGN_DISABLED",
+      "value": "0",
+      "enum": "TransformAlign",
+      "kind": "EnumValue",
+      "summary": "Do not align particle transforms relative to the camera or velocity.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TRANSFORM_ALIGN_Z_BILLBOARD",
+      "value": "1",
+      "enum": "TransformAlign",
+      "kind": "EnumValue",
+      "summary": "Align each particle\u0027s Z axis to face the camera.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TRANSFORM_ALIGN_Y_TO_VELOCITY",
+      "value": "2",
+      "enum": "TransformAlign",
+      "kind": "EnumValue",
+      "summary": "Align each particle\u0027s Y axis to the velocity vector.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY",
+      "value": "3",
+      "enum": "TransformAlign",
+      "kind": "EnumValue",
+      "summary": "Align each particle\u0027s Z axis to face the camera and Y axis to the velocity vector.",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    },
+    {
+      "name": "TRANSFORM_ALIGN_LOCAL_BILLBOARD",
+      "value": "4",
+      "enum": "TransformAlign",
+      "kind": "EnumValue",
+      "summary": "Align each particle\u0027s Z axis to face the camera, while preserving a given axis (X or Y).",
+      "sourcePath": "doc/classes/GPUParticles3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GPUParticles3D.xml",
+      "sha256": "14d94970222e0f24054e91b54f1485bcdbb534be2de0aa0d4e068f56120e7644"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationMeshSourceGeometryData3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationMeshSourceGeometryData3D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "NavigationMeshSourceGeometryData3D",
+    "documentationPath": "doc/classes/NavigationMeshSourceGeometryData3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationmeshsourcegeometrydata3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddFaces",
+      "kind": "Method",
+      "signature": "public void AddFaces(PackedVector3Array faces, Transform3D xform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "faces",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Adds an array of vertex positions to the geometry data for navigation mesh baking to form triangulated faces. For each face the array must have three vertex positions in clockwise winding order. Since [NavigationMesh] resources have no transform, all vertex positions need to be offset by the node\u0027s transform using [param xform].",
+      "godotName": "add_faces",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.AddFaces(PackedVector3Array,Transform3D)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "AddMesh",
+      "kind": "Method",
+      "signature": "public void AddMesh(Mesh mesh, Transform3D xform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        },
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Adds the geometry data of a [Mesh] resource to the navigation mesh baking data. The mesh must have valid triangulated mesh data to be considered. Since [NavigationMesh] resources have no transform, all vertex positions need to be offset by the node\u0027s transform using [param xform].",
+      "godotName": "add_mesh",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.AddMesh(Mesh,Transform3D)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "AddMeshArray",
+      "kind": "Method",
+      "signature": "public void AddMeshArray(Array meshArray, Transform3D xform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mesh_array",
+          "type": "Array"
+        },
+        {
+          "name": "xform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Adds an [Array] the size of [constant Mesh.ARRAY_MAX] and with vertices at index [constant Mesh.ARRAY_VERTEX] and indices at index [constant Mesh.ARRAY_INDEX] to the navigation mesh baking data. The array must have valid triangulated mesh data to be considered. Since [NavigationMesh] resources have no transform, all vertex positions need to be offset by the node\u0027s transform using [param xform].",
+      "godotName": "add_mesh_array",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.AddMeshArray(Array,Transform3D)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "AddProjectedObstruction",
+      "kind": "Method",
+      "signature": "public void AddProjectedObstruction(PackedVector3Array vertices, float elevation, float height, bool carve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "elevation",
+          "type": "float"
+        },
+        {
+          "name": "height",
+          "type": "float"
+        },
+        {
+          "name": "carve",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds a projected obstruction shape to the source geometry. The [param vertices] are considered projected on an xz-axes plane, placed at the global y-axis [param elevation] and extruded by [param height]. If [param carve] is [code]true[/code] the carved shape will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking process.",
+      "godotName": "add_projected_obstruction",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.AddProjectedObstruction(PackedVector3Array,float,float,bool)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "AppendArrays",
+      "kind": "Method",
+      "signature": "public void AppendArrays(PackedFloat32Array vertices, PackedInt32Array indices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedFloat32Array"
+        },
+        {
+          "name": "indices",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Appends arrays of [param vertices] and [param indices] at the end of the existing arrays. Adds the existing index as an offset to the appended indices.",
+      "godotName": "append_arrays",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.AppendArrays(PackedFloat32Array,PackedInt32Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the internal data.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.Clear",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "ClearProjectedObstructions",
+      "kind": "Method",
+      "signature": "public void ClearProjectedObstructions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all projected obstructions.",
+      "godotName": "clear_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.ClearProjectedObstructions",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "GetBounds",
+      "kind": "Method",
+      "signature": "public AABB GetBounds()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns an axis-aligned bounding box that covers all the stored geometry data. The bounds are calculated when calling this function with the result cached until further geometry changes are made.",
+      "godotName": "get_bounds",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.GetBounds",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "GetIndices",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetIndices()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the parsed source geometry data indices array.",
+      "godotName": "get_indices",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.GetIndices",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "GetProjectedObstructions",
+      "kind": "Method",
+      "signature": "public Array GetProjectedObstructions()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns the projected obstructions as an [Array] of dictionaries. Each [Dictionary] contains the following entries: - [code]vertices[/code] - A [PackedFloat32Array] that defines the outline points of the projected shape. - [code]elevation[/code] - A [float] that defines the projected shape placement on the y-axis. - [code]height[/code] - A [float] that defines how much the projected shape is extruded along the y-axis. - [code]carve[/code] - A [bool] that defines how the obstacle affects the navigation mesh baking. If [code]true[/code] the projected shape will not be affected by addition offsets, e.g. agent radius.",
+      "godotName": "get_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.GetProjectedObstructions",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array GetVertices()",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Returns the parsed source geometry data vertices array.",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.GetVertices",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "HasData",
+      "kind": "Method",
+      "signature": "public bool HasData()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when parsed source geometry data exists.",
+      "godotName": "has_data",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.HasData",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public void Merge(NavigationMeshSourceGeometryData3D otherGeometry)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "other_geometry",
+          "type": "NavigationMeshSourceGeometryData3D"
+        }
+      ],
+      "summary": "Adds the geometry data of another [NavigationMeshSourceGeometryData3D] to the navigation mesh baking data.",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.Merge(NavigationMeshSourceGeometryData3D)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "SetIndices",
+      "kind": "Method",
+      "signature": "public void SetIndices(PackedInt32Array indices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "indices",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Sets the parsed source geometry data indices. The indices need to be matched with appropriated vertices. [b]Warning:[/b] Inappropriate data can crash the baking process of the involved third-party libraries.",
+      "godotName": "set_indices",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.SetIndices(PackedInt32Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "SetProjectedObstructions",
+      "kind": "Method",
+      "signature": "public void SetProjectedObstructions(Array projectedObstructions)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "projected_obstructions",
+          "type": "Array"
+        }
+      ],
+      "summary": "Sets the projected obstructions with an Array of Dictionaries with the following key value pairs: [codeblocks] [gdscript] \u0022vertices\u0022 : PackedFloat32Array \u0022elevation\u0022 : float \u0022height\u0022 : float \u0022carve\u0022 : bool [/gdscript] [/codeblocks]",
+      "godotName": "set_projected_obstructions",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.SetProjectedObstructions(Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    },
+    {
+      "name": "SetVertices",
+      "kind": "Method",
+      "signature": "public void SetVertices(PackedFloat32Array vertices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Sets the parsed source geometry data vertices. The vertices need to be matched with appropriated indices. [b]Warning:[/b] Inappropriate data can crash the baking process of the involved third-party libraries.",
+      "godotName": "set_vertices",
+      "xmlDocId": "M:Godot.NavigationMeshSourceGeometryData3D.SetVertices(PackedFloat32Array)",
+      "sourcePath": "doc/classes/NavigationMeshSourceGeometryData3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationMeshSourceGeometryData3D.xml",
+      "sha256": "c66dd294ef5922ee008ac384ad31c79f7848040ec3024cc3998936937f9e210e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

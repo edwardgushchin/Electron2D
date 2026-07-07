@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDShaderSource",
+    "namespace": "Godot",
+    "fullName": "Godot.RDShaderSource",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDShaderSource",
+    "documentationPath": "doc/classes/RDShaderSource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdshadersource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetStageSource",
+      "kind": "Method",
+      "signature": "public String GetStageSource(int stage)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns source code for the specified shader [param stage]. Equivalent to getting one of [member source_compute], [member source_fragment], [member source_tesselation_control], [member source_tesselation_evaluation] or [member source_vertex].",
+      "godotName": "get_stage_source",
+      "xmlDocId": "M:Godot.RDShaderSource.GetStageSource(int)",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SetStageSource",
+      "kind": "Method",
+      "signature": "public void SetStageSource(int stage, String source)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        },
+        {
+          "name": "source",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets [param source] code for the specified shader [param stage]. Equivalent to setting one of [member source_compute], [member source_fragment], [member source_tesselation_control], [member source_tesselation_evaluation] or [member source_vertex]. [b]Note:[/b] If you set the compute shader source code using this method directly, remember to remove the Godot-specific hint [code]#[compute][/code].",
+      "godotName": "set_stage_source",
+      "xmlDocId": "M:Godot.RDShaderSource.SetStageSource(int,String)",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public int Language { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The language the shader is written in.",
+      "defaultValue": "0",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.RDShaderSource.Language",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceAnyHit",
+      "kind": "Property",
+      "signature": "public String SourceAnyHit { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s any hit stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_any_hit",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceAnyHit",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceClosestHit",
+      "kind": "Property",
+      "signature": "public String SourceClosestHit { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s closest hit stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_closest_hit",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceClosestHit",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceCompute",
+      "kind": "Property",
+      "signature": "public String SourceCompute { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s compute stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_compute",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceCompute",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceFragment",
+      "kind": "Property",
+      "signature": "public String SourceFragment { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s fragment stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_fragment",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceFragment",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceIntersection",
+      "kind": "Property",
+      "signature": "public String SourceIntersection { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s intersection stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_intersection",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceIntersection",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceMiss",
+      "kind": "Property",
+      "signature": "public String SourceMiss { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s miss stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_miss",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceMiss",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceRaygen",
+      "kind": "Property",
+      "signature": "public String SourceRaygen { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s ray generation stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_raygen",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceRaygen",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceTesselationControl",
+      "kind": "Property",
+      "signature": "public String SourceTesselationControl { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s tessellation control stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_tesselation_control",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceTesselationControl",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceTesselationEvaluation",
+      "kind": "Property",
+      "signature": "public String SourceTesselationEvaluation { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s tessellation evaluation stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_tesselation_evaluation",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceTesselationEvaluation",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    },
+    {
+      "name": "SourceVertex",
+      "kind": "Property",
+      "signature": "public String SourceVertex { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Source code for the shader\u0027s vertex stage.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "source_vertex",
+      "xmlDocId": "P:Godot.RDShaderSource.SourceVertex",
+      "sourcePath": "doc/classes/RDShaderSource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDShaderSource.xml",
+      "sha256": "5fd666f7ae3ae32edb02133794d980b14780cb4c3f75a086be03051c5b9d0430"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

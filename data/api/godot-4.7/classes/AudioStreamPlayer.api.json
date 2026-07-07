@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlayer",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlayer",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlayer",
+    "documentationPath": "doc/classes/AudioStreamPlayer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplayer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the position in the [AudioStream] of the latest sound, in seconds. Returns [code]0.0[/code] if no sounds are playing. [b]Note:[/b] The position is not always accurate, as the [AudioServer] does not mix audio every processed frame. To get more accurate results, add [method AudioServer.get_time_since_last_mix] to the returned position. [b]Note:[/b] This method always returns [code]0.0[/code] if the [member stream] is an [AudioStreamInteractive], since it can have multiple clips playing at once.",
+      "godotName": "get_playback_position",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.GetPlaybackPosition",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "GetStreamPlayback",
+      "kind": "Method",
+      "signature": "public AudioStreamPlayback GetStreamPlayback()",
+      "returnType": "AudioStreamPlayback",
+      "parameters": [],
+      "summary": "Returns the latest [AudioStreamPlayback] of this node, usually the most recently created by [method play]. If no sounds are playing, this method fails and returns an empty playback.",
+      "godotName": "get_stream_playback",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.GetStreamPlayback",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "HasStreamPlayback",
+      "kind": "Method",
+      "signature": "public bool HasStreamPlayback()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if any sound is active, even if [member stream_paused] is set to [code]true[/code]. See also [member playing] and [method get_stream_playback].",
+      "godotName": "has_stream_playback",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.HasStreamPlayback",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public void Play(float fromPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_position",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Plays a sound from the beginning, or the given [param from_position] in seconds.",
+      "godotName": "play",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.Play(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public void Seek(float toPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_position",
+          "type": "float"
+        }
+      ],
+      "summary": "Restarts all sounds to be played from the given [param to_position], in seconds. Does nothing if no sounds are playing.",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.Seek(float)",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops all sounds from this node.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.AudioStreamPlayer.Stop",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Autoplay",
+      "kind": "Property",
+      "signature": "public bool Autoplay { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this node calls [method play] when entering the tree.",
+      "defaultValue": "false",
+      "godotName": "autoplay",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.Autoplay",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Bus",
+      "kind": "Property",
+      "signature": "public StringName Bus { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The target bus name. All sounds from this node will be playing on this bus. [b]Note:[/b] At runtime, if no bus with the given name exists, all sounds will fall back on [code]\u0022Master\u0022[/code]. See also [method AudioServer.get_bus_name].",
+      "defaultValue": "\u0026\u0022Master\u0022",
+      "godotName": "bus",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.Bus",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "MaxPolyphony",
+      "kind": "Property",
+      "signature": "public int MaxPolyphony { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of sounds this node can play at the same time. Calling [method play] after this value is reached will cut off the oldest sounds.",
+      "defaultValue": "1",
+      "godotName": "max_polyphony",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.MaxPolyphony",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "MixTarget",
+      "kind": "Property",
+      "signature": "public int MixTarget { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The mix target channels. Has no effect when two speakers or less are detected (see [enum AudioServer.SpeakerMode]).",
+      "defaultValue": "0",
+      "godotName": "mix_target",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.MixTarget",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "PitchScale",
+      "kind": "Property",
+      "signature": "public float PitchScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The audio\u0027s pitch and tempo, as a multiplier of the [member stream]\u0027s sample rate. A value of [code]2.0[/code] doubles the audio\u0027s pitch, while a value of [code]0.5[/code] halves the pitch.",
+      "defaultValue": "1.0",
+      "godotName": "pitch_scale",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.PitchScale",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "PlaybackType",
+      "kind": "Property",
+      "signature": "public int PlaybackType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The playback type of the stream player. If set other than to the default value, it will force that playback type.",
+      "defaultValue": "0",
+      "godotName": "playback_type",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.PlaybackType",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Playing",
+      "kind": "Property",
+      "signature": "public bool Playing { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this node is playing sounds. Setting this property has the same effect as [method play] and [method stop].",
+      "defaultValue": "false",
+      "godotName": "playing",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.Playing",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "Stream",
+      "kind": "Property",
+      "signature": "public AudioStream Stream { get; set; }",
+      "returnType": "AudioStream",
+      "parameters": [],
+      "summary": "The [AudioStream] resource to be played. Setting this property stops all currently playing sounds. If left empty, the [AudioStreamPlayer] does not work.",
+      "godotName": "stream",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.Stream",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "StreamPaused",
+      "kind": "Property",
+      "signature": "public bool StreamPaused { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the sounds are paused. Setting [member stream_paused] to [code]false[/code] resumes all sounds. [b]Note:[/b] This property is automatically changed when exiting or entering the tree, or this node is paused (see [member Node.process_mode]).",
+      "defaultValue": "false",
+      "godotName": "stream_paused",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.StreamPaused",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "VolumeDb",
+      "kind": "Property",
+      "signature": "public float VolumeDb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Volume of sound, in decibels. This is an offset of the [member stream]\u0027s volume. [b]Note:[/b] To convert between decibel and linear energy (like most volume sliders do), use [member volume_linear], or [method @GlobalScope.db_to_linear] and [method @GlobalScope.linear_to_db].",
+      "defaultValue": "0.0",
+      "godotName": "volume_db",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.VolumeDb",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "VolumeLinear",
+      "kind": "Property",
+      "signature": "public float VolumeLinear { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Volume of sound, as a linear value. [b]Note:[/b] This member modifies [member volume_db] for convenience. The returned value is equivalent to the result of [method @GlobalScope.db_to_linear] on [member volume_db]. Setting this member is equivalent to setting [member volume_db] to the result of [method @GlobalScope.linear_to_db] on a value.",
+      "godotName": "volume_linear",
+      "xmlDocId": "P:Godot.AudioStreamPlayer.VolumeLinear",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when a sound finishes playing without interruptions. This signal is [i]not[/i] emitted when calling [method stop], or when exiting the tree while sounds are playing.",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.AudioStreamPlayer.Finished",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "MixTarget",
+      "values": [
+        {
+          "name": "MIX_TARGET_CENTER",
+          "value": "2",
+          "enum": "MixTarget",
+          "kind": "EnumValue",
+          "summary": "The audio will be played on the second channel, which is usually the center.",
+          "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+        },
+        {
+          "name": "MIX_TARGET_STEREO",
+          "value": "0",
+          "enum": "MixTarget",
+          "kind": "EnumValue",
+          "summary": "The audio will be played only on the first channel. This is the default.",
+          "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+        },
+        {
+          "name": "MIX_TARGET_SURROUND",
+          "value": "1",
+          "enum": "MixTarget",
+          "kind": "EnumValue",
+          "summary": "The audio will be played on all surround channels.",
+          "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MIX_TARGET_STEREO",
+      "value": "0",
+      "enum": "MixTarget",
+      "kind": "EnumValue",
+      "summary": "The audio will be played only on the first channel. This is the default.",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "MIX_TARGET_SURROUND",
+      "value": "1",
+      "enum": "MixTarget",
+      "kind": "EnumValue",
+      "summary": "The audio will be played on all surround channels.",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    },
+    {
+      "name": "MIX_TARGET_CENTER",
+      "value": "2",
+      "enum": "MixTarget",
+      "kind": "EnumValue",
+      "summary": "The audio will be played on the second channel, which is usually the center.",
+      "sourcePath": "doc/classes/AudioStreamPlayer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamPlayer.xml",
+      "sha256": "ba12440af8ea8e66358f53b1359cd635e7d15b6eea0070897012b1ed2ca06c0e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventFromWindow",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventFromWindow",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventFromWindow",
+    "documentationPath": "doc/classes/InputEventFromWindow.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventfromwindow.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "WindowId",
+      "kind": "Property",
+      "signature": "public int WindowId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of a [Window] that received this event.",
+      "defaultValue": "0",
+      "godotName": "window_id",
+      "xmlDocId": "P:Godot.InputEventFromWindow.WindowId",
+      "sourcePath": "doc/classes/InputEventFromWindow.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventFromWindow.xml",
+      "sha256": "9b4fca88d08b42d7641ebc36761c04f5e5c4306d11d1e3fab7706b043218ac1d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

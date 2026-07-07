@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptEditor",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptEditor",
+    "kind": "class",
+    "baseType": "PanelContainer",
+    "interfaces": [],
+    "godotReference": "ScriptEditor",
+    "documentationPath": "doc/classes/ScriptEditor.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scripteditor.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearDocsFromScript",
+      "kind": "Method",
+      "signature": "public void ClearDocsFromScript(Script script)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "Removes the documentation for the given [param script]. [b]Note:[/b] This should be called whenever the script is changed to keep the open documentation state up to date.",
+      "godotName": "clear_docs_from_script",
+      "xmlDocId": "M:Godot.ScriptEditor.ClearDocsFromScript(Script)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "CloseFile",
+      "kind": "Method",
+      "signature": "public int CloseFile(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Closes the file at the given [param path], discarding any unsaved changes. Returns [constant OK] on success or [constant ERR_FILE_NOT_FOUND] if the file is not found.",
+      "godotName": "close_file",
+      "xmlDocId": "M:Godot.ScriptEditor.CloseFile(String)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetBreakpoints",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetBreakpoints()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns array of breakpoints.",
+      "godotName": "get_breakpoints",
+      "xmlDocId": "M:Godot.ScriptEditor.GetBreakpoints",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetCurrentEditor",
+      "kind": "Method",
+      "signature": "public ScriptEditorBase GetCurrentEditor()",
+      "returnType": "ScriptEditorBase",
+      "parameters": [],
+      "summary": "Returns the [ScriptEditorBase] object that the user is currently editing.",
+      "godotName": "get_current_editor",
+      "xmlDocId": "M:Godot.ScriptEditor.GetCurrentEditor",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetCurrentScript",
+      "kind": "Method",
+      "signature": "public Script GetCurrentScript()",
+      "returnType": "Script",
+      "parameters": [],
+      "summary": "Returns a [Script] that is currently active in editor.",
+      "godotName": "get_current_script",
+      "xmlDocId": "M:Godot.ScriptEditor.GetCurrentScript",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetOpenScriptEditors",
+      "kind": "Method",
+      "signature": "public ScriptEditorBase[] GetOpenScriptEditors()",
+      "returnType": "ScriptEditorBase[]",
+      "parameters": [],
+      "summary": "Returns an array with all [ScriptEditorBase] objects which are currently open in editor.",
+      "godotName": "get_open_script_editors",
+      "xmlDocId": "M:Godot.ScriptEditor.GetOpenScriptEditors",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetOpenScripts",
+      "kind": "Method",
+      "signature": "public Script[] GetOpenScripts()",
+      "returnType": "Script[]",
+      "parameters": [],
+      "summary": "Returns an array with all [Script] objects which are currently open in editor.",
+      "godotName": "get_open_scripts",
+      "xmlDocId": "M:Godot.ScriptEditor.GetOpenScripts",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GetUnsavedFiles",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetUnsavedFiles()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of file paths of scripts with unsaved changes open in the editor.",
+      "godotName": "get_unsaved_files",
+      "xmlDocId": "M:Godot.ScriptEditor.GetUnsavedFiles",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GotoHelp",
+      "kind": "Method",
+      "signature": "public void GotoHelp(String topic)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "String"
+        }
+      ],
+      "summary": "Opens help for the given topic. The [param topic] is an encoded string that controls which class, method, constant, signal, annotation, property, or theme item should be focused. The supported [param topic] formats include [code]class_name:class[/code], [code]class_method:class:method[/code], [code]class_constant:class:constant[/code], [code]class_signal:class:signal[/code], [code]class_annotation:class:@annotation[/code], [code]class_property:class:property[/code], and [code]class_theme_item:class:item[/code], where [code]class[/code] is the class name, [code]method[/code] is the method name, [code]constant[/code] is the constant name, [code]signal[/code] is the signal name, [code]annotation[/code] is the annotation name, [code]property[/code] is the property name, and [code]item[/code] is the theme item. [codeblock] # Shows help for the Node class. class_name:Node # Shows help for the global min function. # Global objects are accessible in the \u0060@GlobalScope\u0060 namespace, shown here. class_method:@GlobalScope:min # Shows help for get_viewport in the Node class. class_method:Node:get_viewport # Shows help for the Input constant MOUSE_BUTTON_MIDDLE. class_constant:Input:MOUSE_BUTTON_MIDDLE # Shows help for the BaseButton signal pressed. class_signal:BaseButton:pressed # Shows help for the CanvasItem property visible. class_property:CanvasItem:visible # Shows help for the GDScript annotation export. # Annotations should be prefixed with the \u0060@\u0060 symbol in the descriptor, as shown here. class_annotation:@GDScript:@export # Shows help for the GraphNode theme item named panel_selected. class_theme_item:GraphNode:panel_selected [/codeblock]",
+      "godotName": "goto_help",
+      "xmlDocId": "M:Godot.ScriptEditor.GotoHelp(String)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "GotoLine",
+      "kind": "Method",
+      "signature": "public void GotoLine(int lineNumber)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Goes to the specified line in the current script.",
+      "godotName": "goto_line",
+      "xmlDocId": "M:Godot.ScriptEditor.GotoLine(int)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "OpenScriptCreateDialog",
+      "kind": "Method",
+      "signature": "public void OpenScriptCreateDialog(String baseName, String basePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "base_name",
+          "type": "String"
+        },
+        {
+          "name": "base_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Opens the script create dialog. The script will extend [param base_name]. The file extension can be omitted from [param base_path]. It will be added based on the selected scripting language.",
+      "godotName": "open_script_create_dialog",
+      "xmlDocId": "M:Godot.ScriptEditor.OpenScriptCreateDialog(String,String)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "RegisterSyntaxHighlighter",
+      "kind": "Method",
+      "signature": "public void RegisterSyntaxHighlighter(EditorSyntaxHighlighter syntaxHighlighter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "syntax_highlighter",
+          "type": "EditorSyntaxHighlighter"
+        }
+      ],
+      "summary": "Registers the [EditorSyntaxHighlighter] to the editor, the [EditorSyntaxHighlighter] will be available on all open scripts. [b]Note:[/b] Does not apply to scripts that are already opened.",
+      "godotName": "register_syntax_highlighter",
+      "xmlDocId": "M:Godot.ScriptEditor.RegisterSyntaxHighlighter(EditorSyntaxHighlighter)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "ReloadOpenFiles",
+      "kind": "Method",
+      "signature": "public void ReloadOpenFiles()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reloads all currently opened files. This should be used when opened files are changed outside of the script editor. The user may be prompted to resolve file conflicts, see [member EditorSettings.text_editor/behavior/files/auto_reload_scripts_on_external_change].",
+      "godotName": "reload_open_files",
+      "xmlDocId": "M:Godot.ScriptEditor.ReloadOpenFiles",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "SaveAllScripts",
+      "kind": "Method",
+      "signature": "public void SaveAllScripts()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Saves all open scripts.",
+      "godotName": "save_all_scripts",
+      "xmlDocId": "M:Godot.ScriptEditor.SaveAllScripts",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "UnregisterSyntaxHighlighter",
+      "kind": "Method",
+      "signature": "public void UnregisterSyntaxHighlighter(EditorSyntaxHighlighter syntaxHighlighter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "syntax_highlighter",
+          "type": "EditorSyntaxHighlighter"
+        }
+      ],
+      "summary": "Unregisters the [EditorSyntaxHighlighter] from the editor. [b]Note:[/b] The [EditorSyntaxHighlighter] will still be applied to scripts that are already opened.",
+      "godotName": "unregister_syntax_highlighter",
+      "xmlDocId": "M:Godot.ScriptEditor.UnregisterSyntaxHighlighter(EditorSyntaxHighlighter)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "UpdateDocsFromScript",
+      "kind": "Method",
+      "signature": "public void UpdateDocsFromScript(Script script)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "Updates the documentation for the given [param script]. [b]Note:[/b] This should be called whenever the script is changed to keep the open documentation state up to date.",
+      "godotName": "update_docs_from_script",
+      "xmlDocId": "M:Godot.ScriptEditor.UpdateDocsFromScript(Script)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "EditorScriptChanged",
+      "kind": "Signal",
+      "signature": "public event EditorScriptChangedHandler EditorScriptChanged",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "Emitted when user changed active script. Argument is a freshly activated [Script].",
+      "godotName": "editor_script_changed",
+      "xmlDocId": "E:Godot.ScriptEditor.EditorScriptChanged(Script)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    },
+    {
+      "name": "ScriptClose",
+      "kind": "Signal",
+      "signature": "public event ScriptCloseHandler ScriptClose",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "Emitted when editor is about to close the active script. Argument is a [Script] that is going to be closed.",
+      "godotName": "script_close",
+      "xmlDocId": "E:Godot.ScriptEditor.ScriptClose(Script)",
+      "sourcePath": "doc/classes/ScriptEditor.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptEditor.xml",
+      "sha256": "b1089dd2b6bd64f7bb54adb2cc08f68f2952ad2b5f95b255e7dc4e8da5feca1a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

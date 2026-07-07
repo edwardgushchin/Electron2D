@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeGroupBase",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeGroupBase",
+    "kind": "class",
+    "baseType": "VisualShaderNodeResizableBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeGroupBase",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodegroupbase.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddInputPort",
+      "kind": "Method",
+      "signature": "public void AddInputPort(int id, int type, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds an input port with the specified [param type] (see [enum VisualShaderNode.PortType]) and [param name].",
+      "godotName": "add_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.AddInputPort(int,int,String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "AddOutputPort",
+      "kind": "Method",
+      "signature": "public void AddOutputPort(int id, int type, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds an output port with the specified [param type] (see [enum VisualShaderNode.PortType]) and [param name].",
+      "godotName": "add_output_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.AddOutputPort(int,int,String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "ClearInputPorts",
+      "kind": "Method",
+      "signature": "public void ClearInputPorts()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all previously specified input ports.",
+      "godotName": "clear_input_ports",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.ClearInputPorts",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "ClearOutputPorts",
+      "kind": "Method",
+      "signature": "public void ClearOutputPorts()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all previously specified output ports.",
+      "godotName": "clear_output_ports",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.ClearOutputPorts",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetFreeInputPortId",
+      "kind": "Method",
+      "signature": "public int GetFreeInputPortId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a free input port ID which can be used in [method add_input_port].",
+      "godotName": "get_free_input_port_id",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetFreeInputPortId",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetFreeOutputPortId",
+      "kind": "Method",
+      "signature": "public int GetFreeOutputPortId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a free output port ID which can be used in [method add_output_port].",
+      "godotName": "get_free_output_port_id",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetFreeOutputPortId",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetInputPortCount",
+      "kind": "Method",
+      "signature": "public int GetInputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of input ports in use. Alternative for [method get_free_input_port_id].",
+      "godotName": "get_input_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetInputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetInputs",
+      "kind": "Method",
+      "signature": "public String GetInputs()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] description of the input ports as a colon-separated list using the format [code]id,type,name;[/code] (see [method add_input_port]).",
+      "godotName": "get_inputs",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetInputs",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetOutputPortCount",
+      "kind": "Method",
+      "signature": "public int GetOutputPortCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of output ports in use. Alternative for [method get_free_output_port_id].",
+      "godotName": "get_output_port_count",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetOutputPortCount",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "GetOutputs",
+      "kind": "Method",
+      "signature": "public String GetOutputs()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] description of the output ports as a colon-separated list using the format [code]id,type,name;[/code] (see [method add_output_port]).",
+      "godotName": "get_outputs",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.GetOutputs",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "HasInputPort",
+      "kind": "Method",
+      "signature": "public bool HasInputPort(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified input port exists.",
+      "godotName": "has_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.HasInputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "HasOutputPort",
+      "kind": "Method",
+      "signature": "public bool HasOutputPort(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified output port exists.",
+      "godotName": "has_output_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.HasOutputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "IsValidPortName",
+      "kind": "Method",
+      "signature": "public bool IsValidPortName(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified port name does not override an existed port name and is valid within the shader.",
+      "godotName": "is_valid_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.IsValidPortName(String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "RemoveInputPort",
+      "kind": "Method",
+      "signature": "public void RemoveInputPort(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the specified input port.",
+      "godotName": "remove_input_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.RemoveInputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "RemoveOutputPort",
+      "kind": "Method",
+      "signature": "public void RemoveOutputPort(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the specified output port.",
+      "godotName": "remove_output_port",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.RemoveOutputPort(int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetInputPortName",
+      "kind": "Method",
+      "signature": "public void SetInputPortName(int id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Renames the specified input port.",
+      "godotName": "set_input_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetInputPortName(int,String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetInputPortType",
+      "kind": "Method",
+      "signature": "public void SetInputPortType(int id, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the specified input port\u0027s type (see [enum VisualShaderNode.PortType]).",
+      "godotName": "set_input_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetInputPortType(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetInputs",
+      "kind": "Method",
+      "signature": "public void SetInputs(String inputs)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "inputs",
+          "type": "String"
+        }
+      ],
+      "summary": "Defines all input ports using a [String] formatted as a colon-separated list: [code]id,type,name;[/code] (see [method add_input_port]).",
+      "godotName": "set_inputs",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetInputs(String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetOutputPortName",
+      "kind": "Method",
+      "signature": "public void SetOutputPortName(int id, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Renames the specified output port.",
+      "godotName": "set_output_port_name",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetOutputPortName(int,String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetOutputPortType",
+      "kind": "Method",
+      "signature": "public void SetOutputPortType(int id, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the specified output port\u0027s type (see [enum VisualShaderNode.PortType]).",
+      "godotName": "set_output_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetOutputPortType(int,int)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    },
+    {
+      "name": "SetOutputs",
+      "kind": "Method",
+      "signature": "public void SetOutputs(String outputs)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "outputs",
+          "type": "String"
+        }
+      ],
+      "summary": "Defines all output ports using a [String] formatted as a colon-separated list: [code]id,type,name;[/code] (see [method add_output_port]).",
+      "godotName": "set_outputs",
+      "xmlDocId": "M:Godot.VisualShaderNodeGroupBase.SetOutputs(String)",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeGroupBase.xml",
+      "sha256": "d70debbdafa670aa35e6120b94511ae83921cbcad0e5299f1055329315911a09"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

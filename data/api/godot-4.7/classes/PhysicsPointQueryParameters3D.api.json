@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsPointQueryParameters3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsPointQueryParameters3D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "PhysicsPointQueryParameters3D",
+    "documentationPath": "doc/classes/PhysicsPointQueryParameters3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicspointqueryparameters3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public bool CollideWithAreas { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will take [Area3D]s into account.",
+      "defaultValue": "false",
+      "godotName": "collide_with_areas",
+      "xmlDocId": "P:Godot.PhysicsPointQueryParameters3D.CollideWithAreas",
+      "sourcePath": "doc/classes/PhysicsPointQueryParameters3D.xml"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public bool CollideWithBodies { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the query will take [PhysicsBody3D]s into account.",
+      "defaultValue": "true",
+      "godotName": "collide_with_bodies",
+      "xmlDocId": "P:Godot.PhysicsPointQueryParameters3D.CollideWithBodies",
+      "sourcePath": "doc/classes/PhysicsPointQueryParameters3D.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers the query will detect (as a bitmask). By default, all collision layers are detected. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "4294967295",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.PhysicsPointQueryParameters3D.CollisionMask",
+      "sourcePath": "doc/classes/PhysicsPointQueryParameters3D.xml"
+    },
+    {
+      "name": "Exclude",
+      "kind": "Property",
+      "signature": "public RID[] Exclude { get; set; }",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "The list of object [RID]s that will be excluded from collisions. Use [method CollisionObject3D.get_rid] to get the [RID] associated with a [CollisionObject3D]-derived node. [b]Note:[/b] The returned array is copied and any changes to it will not update the original property value. To update the value you need to modify the returned array, and then assign it to the property again.",
+      "defaultValue": "[]",
+      "godotName": "exclude",
+      "xmlDocId": "P:Godot.PhysicsPointQueryParameters3D.Exclude",
+      "sourcePath": "doc/classes/PhysicsPointQueryParameters3D.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector3 Position { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position being queried for, in global coordinates.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.PhysicsPointQueryParameters3D.Position",
+      "sourcePath": "doc/classes/PhysicsPointQueryParameters3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsPointQueryParameters3D.xml",
+      "sha256": "f2ca7091716bd0c12cd6441a174362026717c2949ccdde82f7d0eca153b24e0d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

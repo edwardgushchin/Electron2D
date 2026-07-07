@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PortableCompressedTexture2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PortableCompressedTexture2D",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "PortableCompressedTexture2D",
+    "documentationPath": "doc/classes/PortableCompressedTexture2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_portablecompressedtexture2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateFromImage",
+      "kind": "Method",
+      "signature": "public void CreateFromImage(Image image, int compressionMode, bool normalMap, float lossyQuality)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "compression_mode",
+          "type": "int"
+        },
+        {
+          "name": "normal_map",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "lossy_quality",
+          "type": "float",
+          "defaultValue": "0.8"
+        }
+      ],
+      "summary": "Initializes the compressed texture from a base image. The compression mode must be provided. [param normal_map] is recommended to ensure optimum quality if this image will be used as a normal map. If lossy compression is requested, the quality setting can optionally be provided. This maps to Lossy WebP compression quality.",
+      "godotName": "create_from_image",
+      "xmlDocId": "M:Godot.PortableCompressedTexture2D.CreateFromImage(Image,int,bool,float)",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "GetCompressionMode",
+      "kind": "Method",
+      "signature": "public int GetCompressionMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Return the compression mode used (valid after initialized).",
+      "godotName": "get_compression_mode",
+      "xmlDocId": "M:Godot.PortableCompressedTexture2D.GetCompressionMode",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "IsKeepingAllCompressedBuffers",
+      "kind": "Method",
+      "signature": "public bool IsKeepingAllCompressedBuffers()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the flag is overridden for all textures of this type.",
+      "godotName": "is_keeping_all_compressed_buffers",
+      "xmlDocId": "M:Godot.PortableCompressedTexture2D.IsKeepingAllCompressedBuffers",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "SetBasisuCompressorParams",
+      "kind": "Method",
+      "signature": "public void SetBasisuCompressorParams(int uastcLevel, float rdoQualityLoss)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "uastc_level",
+          "type": "int"
+        },
+        {
+          "name": "rdo_quality_loss",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the compressor parameters for Basis Universal compression. See also the settings in [ResourceImporterTexture]. [b]Note:[/b] This method must be called before [method create_from_image] for this to work.",
+      "godotName": "set_basisu_compressor_params",
+      "xmlDocId": "M:Godot.PortableCompressedTexture2D.SetBasisuCompressorParams(int,float)",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "SetKeepAllCompressedBuffers",
+      "kind": "Method",
+      "signature": "public void SetKeepAllCompressedBuffers(bool keep)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "keep",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param keep] is [code]true[/code], overrides the flag globally for all textures of this type. This is used primarily by the editor.",
+      "godotName": "set_keep_all_compressed_buffers",
+      "xmlDocId": "M:Godot.PortableCompressedTexture2D.SetKeepAllCompressedBuffers(bool)",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "KeepCompressedBuffer",
+      "kind": "Property",
+      "signature": "public bool KeepCompressedBuffer { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], when running in the editor, this texture will keep the source-compressed data in memory, allowing the data to persist after loading. Otherwise, the source-compressed data is lost after loading and the texture can\u0027t be re-saved. [b]Note:[/b] This property must be set before [method create_from_image] for this to work.",
+      "defaultValue": "false",
+      "godotName": "keep_compressed_buffer",
+      "xmlDocId": "P:Godot.PortableCompressedTexture2D.KeepCompressedBuffer",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.PortableCompressedTexture2D.ResourceLocalToScene",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "SizeOverride",
+      "kind": "Property",
+      "signature": "public Vector2 SizeOverride { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Allows overriding the texture\u0027s size (for 2D only).",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "size_override",
+      "xmlDocId": "P:Godot.PortableCompressedTexture2D.SizeOverride",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CompressionMode",
+      "values": [
+        {
+          "name": "COMPRESSION_MODE_ASTC",
+          "value": "6",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_BASIS_UNIVERSAL",
+          "value": "2",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_BPTC",
+          "value": "5",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_ETC2",
+          "value": "4",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_LOSSLESS",
+          "value": "0",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_LOSSY",
+          "value": "1",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        },
+        {
+          "name": "COMPRESSION_MODE_S3TC",
+          "value": "3",
+          "enum": "CompressionMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "COMPRESSION_MODE_LOSSLESS",
+      "value": "0",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_LOSSY",
+      "value": "1",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_BASIS_UNIVERSAL",
+      "value": "2",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_S3TC",
+      "value": "3",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_ETC2",
+      "value": "4",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_BPTC",
+      "value": "5",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    },
+    {
+      "name": "COMPRESSION_MODE_ASTC",
+      "value": "6",
+      "enum": "CompressionMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/PortableCompressedTexture2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PortableCompressedTexture2D.xml",
+      "sha256": "5a19bb3c72be9d8169302a51b0056b60746b654dd43c33661eb6e549c9e802ca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

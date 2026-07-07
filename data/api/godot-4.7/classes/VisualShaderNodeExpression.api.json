@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeExpression",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeExpression",
+    "kind": "class",
+    "baseType": "VisualShaderNodeGroupBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeExpression",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeExpression.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeexpression.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Expression",
+      "kind": "Property",
+      "signature": "public String Expression { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "An expression in Godot Shading Language, which will be injected at the start of the graph\u0027s matching shader function ([code]vertex[/code], [code]fragment[/code], or [code]light[/code]), and thus cannot be used to declare functions, varyings, uniforms, or global constants.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "expression",
+      "xmlDocId": "P:Godot.VisualShaderNodeExpression.Expression",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeExpression.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeExpression.xml",
+      "sha256": "cf5a88a12423e1eca22c44612813adeddbc93341d2573ed8341aa5cfa047e4a2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

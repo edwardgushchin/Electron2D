@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterTextureAtlas",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterTextureAtlas",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterTextureAtlas",
+    "documentationPath": "doc/classes/ResourceImporterTextureAtlas.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimportertextureatlas.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AtlasFile",
+      "kind": "Property",
+      "signature": "public String AtlasFile { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Path to the atlas spritesheet. This [i]must[/i] be set to valid path to a PNG image. Otherwise, the atlas will fail to import.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "atlas_file",
+      "xmlDocId": "P:Godot.ResourceImporterTextureAtlas.AtlasFile",
+      "sourcePath": "doc/classes/ResourceImporterTextureAtlas.xml"
+    },
+    {
+      "name": "CropToRegion",
+      "kind": "Property",
+      "signature": "public bool CropToRegion { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], discards empty areas from the atlas. This only affects final sprite positioning, not storage. See also [member trim_alpha_border_from_region]. [b]Note:[/b] Only effective if [member import_mode] is [b]Region[/b].",
+      "defaultValue": "false",
+      "godotName": "crop_to_region",
+      "xmlDocId": "P:Godot.ResourceImporterTextureAtlas.CropToRegion",
+      "sourcePath": "doc/classes/ResourceImporterTextureAtlas.xml"
+    },
+    {
+      "name": "ImportMode",
+      "kind": "Property",
+      "signature": "public int ImportMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "[b]Region:[/b] Imports the atlas in an [AtlasTexture] resource, which is rendered as a rectangle. This is fast to render, but transparent areas still have to be rendered if they can\u0027t be trimmed effectively by [member trim_alpha_border_from_region]. This can reduce performance when rendering large sprites on screen. [b]Mesh:[/b] Imports the atlas as an [ArrayMesh] resource, keeping the original bitmap visible (but rendered as a polygon). This can be used to reduce fill rate when rendering large transparent sprites, at the cost of slower rendering if there are little to no transparent areas in the sprite.",
+      "defaultValue": "0",
+      "godotName": "import_mode",
+      "xmlDocId": "P:Godot.ResourceImporterTextureAtlas.ImportMode",
+      "sourcePath": "doc/classes/ResourceImporterTextureAtlas.xml"
+    },
+    {
+      "name": "TrimAlphaBorderFromRegion",
+      "kind": "Property",
+      "signature": "public bool TrimAlphaBorderFromRegion { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], trims the region to exclude fully transparent pixels using a clipping rectangle (which is never rotated). This can be used to save memory. See also [member crop_to_region]. [b]Note:[/b] Only effective if [member import_mode] is [b]Region[/b].",
+      "defaultValue": "true",
+      "godotName": "trim_alpha_border_from_region",
+      "xmlDocId": "P:Godot.ResourceImporterTextureAtlas.TrimAlphaBorderFromRegion",
+      "sourcePath": "doc/classes/ResourceImporterTextureAtlas.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterTextureAtlas.xml",
+      "sha256": "92ffd13f2ff6cadebbaff8e0c123f81b33a5d550d98936332e7af230380630c8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

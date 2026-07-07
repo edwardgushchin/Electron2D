@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterOBJ",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterOBJ",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterOBJ",
+    "documentationPath": "doc/classes/ResourceImporterOBJ.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterobj.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ForceDisableMeshCompression",
+      "kind": "Property",
+      "signature": "public bool ForceDisableMeshCompression { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+      "defaultValue": "false",
+      "godotName": "force_disable_mesh_compression",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.ForceDisableMeshCompression",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "GenerateLightmapUv2",
+      "kind": "Property",
+      "signature": "public bool GenerateLightmapUv2 { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates UV2 on import for [LightmapGI] baking.",
+      "defaultValue": "false",
+      "godotName": "generate_lightmap_uv2",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.GenerateLightmapUv2",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "GenerateLightmapUv2TexelSize",
+      "kind": "Property",
+      "signature": "public float GenerateLightmapUv2TexelSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the size of each texel on the baked lightmap. A smaller value results in more precise lightmaps, at the cost of larger lightmap sizes and longer bake times. [b]Note:[/b] Only effective if [member generate_lightmap_uv2] is [code]true[/code].",
+      "defaultValue": "0.2",
+      "godotName": "generate_lightmap_uv2_texel_size",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.GenerateLightmapUv2TexelSize",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "GenerateLods",
+      "kind": "Property",
+      "signature": "public bool GenerateLods { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generates lower detail variants of the mesh which will be displayed in the distance to improve rendering performance. Not all meshes benefit from LOD, especially if they are never rendered from far away. Disabling this can reduce output file size and speed up importing. See [url=$DOCS_URL/tutorials/3d/mesh_lod.html#doc-mesh-lod]Mesh level of detail (LOD)[/url] for more information.",
+      "defaultValue": "true",
+      "godotName": "generate_lods",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.GenerateLods",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "GenerateShadowMesh",
+      "kind": "Property",
+      "signature": "public bool GenerateShadowMesh { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the generation of shadow meshes on import. This optimizes shadow rendering without reducing quality by welding vertices together when possible. This in turn reduces the memory bandwidth required to render shadows. Shadow mesh generation currently doesn\u0027t support using a lower detail level than the source mesh (but shadow rendering will make use of LODs when relevant).",
+      "defaultValue": "true",
+      "godotName": "generate_shadow_mesh",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.GenerateShadowMesh",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "GenerateTangents",
+      "kind": "Property",
+      "signature": "public bool GenerateTangents { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the source mesh doesn\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+      "defaultValue": "true",
+      "godotName": "generate_tangents",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.GenerateTangents",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "OffsetMesh",
+      "kind": "Property",
+      "signature": "public Vector3 OffsetMesh { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Offsets the mesh\u0027s data by the specified value. This can be used to work around misaligned meshes without having to modify the source file.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "offset_mesh",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.OffsetMesh",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    },
+    {
+      "name": "ScaleMesh",
+      "kind": "Property",
+      "signature": "public Vector3 ScaleMesh { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Scales the mesh\u0027s data by the specified value. This can be used to work around misscaled meshes without having to modify the source file.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "scale_mesh",
+      "xmlDocId": "P:Godot.ResourceImporterOBJ.ScaleMesh",
+      "sourcePath": "doc/classes/ResourceImporterOBJ.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterOBJ.xml",
+      "sha256": "29ee6086686c2bd70f0cd8a8eae362e3f64d040fb269be9c6a227febfb5dec5e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

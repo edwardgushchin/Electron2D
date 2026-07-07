@@ -1,0 +1,669 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Camera3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Camera3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "Camera3D",
+    "documentationPath": "doc/classes/Camera3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_camera3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearCurrent",
+      "kind": "Method",
+      "signature": "public void ClearCurrent(bool enableNext)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable_next",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "If this is the current camera, remove it from being current. If [param enable_next] is [code]true[/code], request to make the next camera current, if any.",
+      "godotName": "clear_current",
+      "xmlDocId": "M:Godot.Camera3D.ClearCurrent(bool)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetCameraProjection",
+      "kind": "Method",
+      "signature": "public Projection GetCameraProjection()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Returns the projection matrix that this camera uses to render to its associated viewport. The camera must be part of the scene tree to function.",
+      "godotName": "get_camera_projection",
+      "xmlDocId": "M:Godot.Camera3D.GetCameraProjection",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetCameraRid",
+      "kind": "Method",
+      "signature": "public RID GetCameraRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the camera\u0027s RID from the [RenderingServer].",
+      "godotName": "get_camera_rid",
+      "xmlDocId": "M:Godot.Camera3D.GetCameraRid",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetCameraTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetCameraTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Returns the transform of the camera plus the vertical ([member v_offset]) and horizontal ([member h_offset]) offsets; and any other adjustments made to the position and orientation of the camera by subclassed cameras such as [XRCamera3D].",
+      "godotName": "get_camera_transform",
+      "xmlDocId": "M:Godot.Camera3D.GetCameraTransform",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetCullMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCullMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member cull_mask] is enabled, given a [param layer_number] between 1 and 20.",
+      "godotName": "get_cull_mask_value",
+      "xmlDocId": "M:Godot.Camera3D.GetCullMaskValue(int)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetFrustum",
+      "kind": "Method",
+      "signature": "public Plane[] GetFrustum()",
+      "returnType": "Plane[]",
+      "parameters": [],
+      "summary": "Returns the camera\u0027s frustum planes in world space units as an array of [Plane]s in the following order: near, far, left, top, right, bottom. Not to be confused with [member frustum_offset].",
+      "godotName": "get_frustum",
+      "xmlDocId": "M:Godot.Camera3D.GetFrustum",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "GetPyramidShapeRid",
+      "kind": "Method",
+      "signature": "public RID GetPyramidShapeRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the RID of a pyramid shape encompassing the camera\u0027s view frustum, ignoring the camera\u0027s near plane. The tip of the pyramid represents the position of the camera.",
+      "godotName": "get_pyramid_shape_rid",
+      "xmlDocId": "M:Godot.Camera3D.GetPyramidShapeRid",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "IsPositionBehind",
+      "kind": "Method",
+      "signature": "public bool IsPositionBehind(Vector3 worldPoint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "world_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given position is behind the camera (the blue part of the linked diagram). [url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/camera3d_position_frustum.png]See this diagram[/url] for an overview of position query methods. [b]Note:[/b] A position which returns [code]false[/code] may still be outside the camera\u0027s field of view.",
+      "godotName": "is_position_behind",
+      "xmlDocId": "M:Godot.Camera3D.IsPositionBehind(Vector3)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "IsPositionInFrustum",
+      "kind": "Method",
+      "signature": "public bool IsPositionInFrustum(Vector3 worldPoint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "world_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given position is inside the camera\u0027s frustum (the green part of the linked diagram). [url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/camera3d_position_frustum.png]See this diagram[/url] for an overview of position query methods.",
+      "godotName": "is_position_in_frustum",
+      "xmlDocId": "M:Godot.Camera3D.IsPositionInFrustum(Vector3)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "MakeCurrent",
+      "kind": "Method",
+      "signature": "public void MakeCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes this camera the current camera for the [Viewport] (see class description). If the camera node is outside the scene tree, it will attempt to become current once it\u0027s added.",
+      "godotName": "make_current",
+      "xmlDocId": "M:Godot.Camera3D.MakeCurrent",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "ProjectLocalRayNormal",
+      "kind": "Method",
+      "signature": "public Vector3 ProjectLocalRayNormal(Vector2 screenPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "screen_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a normal vector from the screen point location directed along the camera. Orthogonal cameras are normalized. Perspective cameras account for perspective, screen width/height, etc.",
+      "godotName": "project_local_ray_normal",
+      "xmlDocId": "M:Godot.Camera3D.ProjectLocalRayNormal(Vector2)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "ProjectPosition",
+      "kind": "Method",
+      "signature": "public Vector3 ProjectPosition(Vector2 screenPoint, float zDepth)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "screen_point",
+          "type": "Vector2"
+        },
+        {
+          "name": "z_depth",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the 3D point in world space that maps to the given 2D coordinate in the [Viewport] rectangle on a plane that is the given [param z_depth] distance into the scene away from the camera.",
+      "godotName": "project_position",
+      "xmlDocId": "M:Godot.Camera3D.ProjectPosition(Vector2,float)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "ProjectRayNormal",
+      "kind": "Method",
+      "signature": "public Vector3 ProjectRayNormal(Vector2 screenPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "screen_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a normal vector in world space, that is the result of projecting a point on the [Viewport] rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.",
+      "godotName": "project_ray_normal",
+      "xmlDocId": "M:Godot.Camera3D.ProjectRayNormal(Vector2)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "ProjectRayOrigin",
+      "kind": "Method",
+      "signature": "public Vector3 ProjectRayOrigin(Vector2 screenPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "screen_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a 3D position in world space, that is the result of projecting a point on the [Viewport] rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.",
+      "godotName": "project_ray_origin",
+      "xmlDocId": "M:Godot.Camera3D.ProjectRayOrigin(Vector2)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "SetCullMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCullMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member cull_mask], given a [param layer_number] between 1 and 20.",
+      "godotName": "set_cull_mask_value",
+      "xmlDocId": "M:Godot.Camera3D.SetCullMaskValue(int,bool)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "SetFrustum",
+      "kind": "Method",
+      "signature": "public void SetFrustum(float size, Vector2 offset, float zNear, float zFar)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        },
+        {
+          "name": "offset",
+          "type": "Vector2"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the camera projection to frustum mode (see [constant PROJECTION_FRUSTUM]), by specifying a [param size], an [param offset], and the [param z_near] and [param z_far] clip planes in world space units. The [param size] parameter represents the size of the near plane, either its width or height depending on the value of [member keep_aspect]. See also [member frustum_offset].",
+      "godotName": "set_frustum",
+      "xmlDocId": "M:Godot.Camera3D.SetFrustum(float,Vector2,float,float)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "SetOrthogonal",
+      "kind": "Method",
+      "signature": "public void SetOrthogonal(float size, float zNear, float zFar)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the camera projection to orthogonal mode (see [constant PROJECTION_ORTHOGONAL]), by specifying a [param size], and the [param z_near] and [param z_far] clip planes in world space units. As a hint, 3D games that look 2D often use this projection, with [param size] specified in pixels.",
+      "godotName": "set_orthogonal",
+      "xmlDocId": "M:Godot.Camera3D.SetOrthogonal(float,float,float)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "SetPerspective",
+      "kind": "Method",
+      "signature": "public void SetPerspective(float fov, float zNear, float zFar)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "fov",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the camera projection to perspective mode (see [constant PROJECTION_PERSPECTIVE]), by specifying a [param fov] (field of view) angle in degrees, and the [param z_near] and [param z_far] clip planes in world space units.",
+      "godotName": "set_perspective",
+      "xmlDocId": "M:Godot.Camera3D.SetPerspective(float,float,float)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "UnprojectPosition",
+      "kind": "Method",
+      "signature": "public Vector2 UnprojectPosition(Vector3 worldPoint)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "world_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the 2D coordinate in the [Viewport] rectangle that maps to the given 3D point in world space. [b]Note:[/b] When using this to position GUI elements over a 3D viewport, use [method is_position_behind] to prevent them from appearing if the 3D point is behind the camera: [codeblock] # This code block is part of a script that inherits from Node3D. # \u0060control\u0060 is a reference to a node inheriting from Control. control.visible = not get_viewport().get_camera_3d().is_position_behind(global_transform.origin) control.position = get_viewport().get_camera_3d().unproject_position(global_transform.origin) [/codeblock]",
+      "godotName": "unproject_position",
+      "xmlDocId": "M:Godot.Camera3D.UnprojectPosition(Vector3)",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Attributes",
+      "kind": "Property",
+      "signature": "public CameraAttributes Attributes { get; set; }",
+      "returnType": "CameraAttributes",
+      "parameters": [],
+      "summary": "The [CameraAttributes] to use for this camera.",
+      "godotName": "attributes",
+      "xmlDocId": "P:Godot.Camera3D.Attributes",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Compositor",
+      "kind": "Property",
+      "signature": "public Compositor Compositor { get; set; }",
+      "returnType": "Compositor",
+      "parameters": [],
+      "summary": "The [Compositor] to use for this camera.",
+      "godotName": "compositor",
+      "xmlDocId": "P:Godot.Camera3D.Compositor",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "CullMask",
+      "kind": "Property",
+      "signature": "public int CullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The culling mask that describes which [member VisualInstance3D.layers] are rendered by this camera. By default, all 20 user-visible layers are rendered. [b]Note:[/b] Since the [member cull_mask] allows for 32 layers to be stored in total, there are an additional 12 layers that are only used internally by the engine and aren\u0027t exposed in the editor. Setting [member cull_mask] using a script allows you to toggle those reserved layers, which can be useful for editor plugins. To adjust [member cull_mask] more easily using a script, use [method get_cull_mask_value] and [method set_cull_mask_value]. [b]Note:[/b] [VoxelGI], SDFGI and [LightmapGI] will always take all layers into account to determine what contributes to global illumination. If this is an issue, set [member GeometryInstance3D.gi_mode] to [constant GeometryInstance3D.GI_MODE_DISABLED] for meshes and [member Light3D.light_bake_mode] to [constant Light3D.BAKE_DISABLED] for lights to exclude them from global illumination.",
+      "defaultValue": "1048575",
+      "godotName": "cull_mask",
+      "xmlDocId": "P:Godot.Camera3D.CullMask",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Current",
+      "kind": "Property",
+      "signature": "public bool Current { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the ancestor [Viewport] is currently using this camera. If multiple cameras are in the scene, one will always be made current. For example, if two [Camera3D] nodes are present in the scene and only one is current, setting one camera\u0027s [member current] to [code]false[/code] will cause the other camera to be made current.",
+      "defaultValue": "false",
+      "godotName": "current",
+      "xmlDocId": "P:Godot.Camera3D.Current",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "DopplerTracking",
+      "kind": "Property",
+      "signature": "public int DopplerTracking { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If not [constant DOPPLER_TRACKING_DISABLED], this camera will simulate the [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] for objects changed in particular [code]_process[/code] methods. [b]Note:[/b] The Doppler effect will only be heard on [AudioStreamPlayer3D]s if [member AudioStreamPlayer3D.doppler_tracking] is not set to [constant AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "doppler_tracking",
+      "xmlDocId": "P:Godot.Camera3D.DopplerTracking",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Environment",
+      "kind": "Property",
+      "signature": "public Environment Environment { get; set; }",
+      "returnType": "Environment",
+      "parameters": [],
+      "summary": "The [Environment] to use for this camera.",
+      "godotName": "environment",
+      "xmlDocId": "P:Godot.Camera3D.Environment",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Far",
+      "kind": "Property",
+      "signature": "public float Far { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to the far culling boundary for this camera relative to its local Z axis. Higher values allow the camera to see further away, while decreasing [member far] can improve performance if it results in objects being partially or fully culled.",
+      "defaultValue": "4000.0",
+      "godotName": "far",
+      "xmlDocId": "P:Godot.Camera3D.Far",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Fov",
+      "kind": "Property",
+      "signature": "public float Fov { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The camera\u0027s field of view angle (in degrees). Only applicable in perspective mode. Since [member keep_aspect] locks one axis, [member fov] sets the other axis\u0027 field of view angle. For reference, the default vertical field of view value ([code]75.0[/code]) is equivalent to a horizontal FOV of: - ~91.31 degrees in a 4:3 viewport - ~101.67 degrees in a 16:10 viewport - ~107.51 degrees in a 16:9 viewport - ~121.63 degrees in a 21:9 viewport",
+      "defaultValue": "75.0",
+      "godotName": "fov",
+      "xmlDocId": "P:Godot.Camera3D.Fov",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "FrustumOffset",
+      "kind": "Property",
+      "signature": "public Vector2 FrustumOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The camera\u0027s frustum offset. This can be changed from the default to create \u0022tilted frustum\u0022 effects such as [url=https://zdoom.org/wiki/Y-shearing]Y-shearing[/url]. [b]Note:[/b] Only effective if [member projection] is [constant PROJECTION_FRUSTUM].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "frustum_offset",
+      "xmlDocId": "P:Godot.Camera3D.FrustumOffset",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "HOffset",
+      "kind": "Property",
+      "signature": "public float HOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The horizontal (X) offset of the camera viewport.",
+      "defaultValue": "0.0",
+      "godotName": "h_offset",
+      "xmlDocId": "P:Godot.Camera3D.HOffset",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "KeepAspect",
+      "kind": "Property",
+      "signature": "public int KeepAspect { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The axis to lock during [member fov]/[member size] adjustments. Can be either [constant KEEP_WIDTH] or [constant KEEP_HEIGHT].",
+      "defaultValue": "1",
+      "godotName": "keep_aspect",
+      "xmlDocId": "P:Godot.Camera3D.KeepAspect",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Near",
+      "kind": "Property",
+      "signature": "public float Near { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to the near culling boundary for this camera relative to its local Z axis. Lower values allow the camera to see objects more up close to its origin, at the cost of lower precision across the [i]entire[/i] range. Values lower than the default can lead to increased Z-fighting.",
+      "defaultValue": "0.05",
+      "godotName": "near",
+      "xmlDocId": "P:Godot.Camera3D.Near",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Projection",
+      "kind": "Property",
+      "signature": "public int Projection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The camera\u0027s projection mode. In [constant PROJECTION_PERSPECTIVE] mode, objects\u0027 Z distance from the camera\u0027s local space scales their perceived size.",
+      "defaultValue": "0",
+      "godotName": "projection",
+      "xmlDocId": "P:Godot.Camera3D.Projection",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public float Size { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The camera\u0027s size in meters measured as the diameter of the width or height, depending on [member keep_aspect]. Only applicable in orthogonal and frustum modes.",
+      "defaultValue": "1.0",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.Camera3D.Size",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "VOffset",
+      "kind": "Property",
+      "signature": "public float VOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The vertical (Y) offset of the camera viewport.",
+      "defaultValue": "0.0",
+      "godotName": "v_offset",
+      "xmlDocId": "P:Godot.Camera3D.VOffset",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DopplerTracking",
+      "values": [
+        {
+          "name": "DOPPLER_TRACKING_DISABLED",
+          "value": "0",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Disables [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] simulation (default).",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        },
+        {
+          "name": "DOPPLER_TRACKING_IDLE_STEP",
+          "value": "1",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_process[/code]. Changes in the relative velocity of this camera compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        },
+        {
+          "name": "DOPPLER_TRACKING_PHYSICS_STEP",
+          "value": "2",
+          "enum": "DopplerTracking",
+          "kind": "EnumValue",
+          "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_physics_process[/code]. Changes in the relative velocity of this camera compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "KeepAspect",
+      "values": [
+        {
+          "name": "KEEP_HEIGHT",
+          "value": "1",
+          "enum": "KeepAspect",
+          "kind": "EnumValue",
+          "summary": "Preserves the vertical aspect ratio; also known as Hor\u002B scaling. This is usually the best option for projects running in landscape mode, as wider aspect ratios will automatically benefit from a wider horizontal FOV.",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        },
+        {
+          "name": "KEEP_WIDTH",
+          "value": "0",
+          "enum": "KeepAspect",
+          "kind": "EnumValue",
+          "summary": "Preserves the horizontal aspect ratio; also known as Vert- scaling. This is usually the best option for projects running in portrait mode, as taller aspect ratios will benefit from a wider vertical FOV.",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ProjectionType",
+      "values": [
+        {
+          "name": "PROJECTION_FRUSTUM",
+          "value": "2",
+          "enum": "ProjectionType",
+          "kind": "EnumValue",
+          "summary": "Frustum projection. This mode allows adjusting [member frustum_offset] to create \u0022tilted frustum\u0022 effects.",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        },
+        {
+          "name": "PROJECTION_ORTHOGONAL",
+          "value": "1",
+          "enum": "ProjectionType",
+          "kind": "EnumValue",
+          "summary": "Orthogonal projection, also known as orthographic projection. Objects remain the same size on the screen no matter how far away they are.",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        },
+        {
+          "name": "PROJECTION_PERSPECTIVE",
+          "value": "0",
+          "enum": "ProjectionType",
+          "kind": "EnumValue",
+          "summary": "Perspective projection. Objects on the screen becomes smaller when they are far away.",
+          "sourcePath": "doc/classes/Camera3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PROJECTION_PERSPECTIVE",
+      "value": "0",
+      "enum": "ProjectionType",
+      "kind": "EnumValue",
+      "summary": "Perspective projection. Objects on the screen becomes smaller when they are far away.",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "PROJECTION_ORTHOGONAL",
+      "value": "1",
+      "enum": "ProjectionType",
+      "kind": "EnumValue",
+      "summary": "Orthogonal projection, also known as orthographic projection. Objects remain the same size on the screen no matter how far away they are.",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "PROJECTION_FRUSTUM",
+      "value": "2",
+      "enum": "ProjectionType",
+      "kind": "EnumValue",
+      "summary": "Frustum projection. This mode allows adjusting [member frustum_offset] to create \u0022tilted frustum\u0022 effects.",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "KEEP_WIDTH",
+      "value": "0",
+      "enum": "KeepAspect",
+      "kind": "EnumValue",
+      "summary": "Preserves the horizontal aspect ratio; also known as Vert- scaling. This is usually the best option for projects running in portrait mode, as taller aspect ratios will benefit from a wider vertical FOV.",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "KEEP_HEIGHT",
+      "value": "1",
+      "enum": "KeepAspect",
+      "kind": "EnumValue",
+      "summary": "Preserves the vertical aspect ratio; also known as Hor\u002B scaling. This is usually the best option for projects running in landscape mode, as wider aspect ratios will automatically benefit from a wider horizontal FOV.",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "DOPPLER_TRACKING_DISABLED",
+      "value": "0",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Disables [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] simulation (default).",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "DOPPLER_TRACKING_IDLE_STEP",
+      "value": "1",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_process[/code]. Changes in the relative velocity of this camera compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    },
+    {
+      "name": "DOPPLER_TRACKING_PHYSICS_STEP",
+      "value": "2",
+      "enum": "DopplerTracking",
+      "kind": "EnumValue",
+      "summary": "Simulate [url=https://en.wikipedia.org/wiki/Doppler_effect]Doppler effect[/url] by tracking positions of objects that are changed in [code]_physics_process[/code]. Changes in the relative velocity of this camera compared to those objects affect how audio is perceived (changing the audio\u0027s [member AudioStreamPlayer3D.pitch_scale]).",
+      "sourcePath": "doc/classes/Camera3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Camera3D.xml",
+      "sha256": "87681cc208903f1068669603b7e041622343e70d28a058ef802248e644ee7f62"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

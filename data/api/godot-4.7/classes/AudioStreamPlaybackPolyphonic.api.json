@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlaybackPolyphonic",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlaybackPolyphonic",
+    "kind": "class",
+    "baseType": "AudioStreamPlayback",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlaybackPolyphonic",
+    "documentationPath": "doc/classes/AudioStreamPlaybackPolyphonic.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplaybackpolyphonic.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsStreamPlaying",
+      "kind": "Method",
+      "signature": "public bool IsStreamPlaying(int stream)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the stream associated with the given integer ID is still playing. Check [method play_stream] for information on when this ID becomes invalid.",
+      "godotName": "is_stream_playing",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackPolyphonic.IsStreamPlaying(int)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    },
+    {
+      "name": "PlayStream",
+      "kind": "Method",
+      "signature": "public int PlayStream(AudioStream stream, float fromOffset, float volumeDb, float pitchScale, int playbackType, StringName bus)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "AudioStream"
+        },
+        {
+          "name": "from_offset",
+          "type": "float",
+          "defaultValue": "0"
+        },
+        {
+          "name": "volume_db",
+          "type": "float",
+          "defaultValue": "0"
+        },
+        {
+          "name": "pitch_scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "playback_type",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "bus",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022Master\u0022"
+        }
+      ],
+      "summary": "Play an [AudioStream] at a given offset, volume, pitch scale, playback type, and bus. Playback starts immediately. The return value is a unique integer ID that is associated to this playback stream and which can be used to control it. This ID becomes invalid when the stream ends (if it does not loop), when the [AudioStreamPlaybackPolyphonic] is stopped, or when [method stop_stream] is called. This function returns [constant INVALID_ID] if the amount of streams currently playing equals [member AudioStreamPolyphonic.polyphony]. If you need a higher amount of maximum polyphony, raise this value.",
+      "godotName": "play_stream",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackPolyphonic.PlayStream(AudioStream,float,float,float,int,StringName)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    },
+    {
+      "name": "SetStreamPitchScale",
+      "kind": "Method",
+      "signature": "public void SetStreamPitchScale(int stream, float pitchScale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "int"
+        },
+        {
+          "name": "pitch_scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Change the stream pitch scale. The [param stream] argument is an integer ID returned by [method play_stream].",
+      "godotName": "set_stream_pitch_scale",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackPolyphonic.SetStreamPitchScale(int,float)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    },
+    {
+      "name": "SetStreamVolume",
+      "kind": "Method",
+      "signature": "public void SetStreamVolume(int stream, float volumeDb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "int"
+        },
+        {
+          "name": "volume_db",
+          "type": "float"
+        }
+      ],
+      "summary": "Change the stream volume (in db). The [param stream] argument is an integer ID returned by [method play_stream].",
+      "godotName": "set_stream_volume",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackPolyphonic.SetStreamVolume(int,float)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    },
+    {
+      "name": "StopStream",
+      "kind": "Method",
+      "signature": "public void StopStream(int stream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "int"
+        }
+      ],
+      "summary": "Stop a stream. The [param stream] argument is an integer ID returned by [method play_stream], which becomes invalid after calling this function.",
+      "godotName": "stop_stream",
+      "xmlDocId": "M:Godot.AudioStreamPlaybackPolyphonic.StopStream(int)",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "INVALID_ID",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Returned by [method play_stream] in case it could not allocate a stream for playback.",
+      "sourcePath": "doc/classes/AudioStreamPlaybackPolyphonic.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamPlaybackPolyphonic.xml",
+      "sha256": "788887afa96c503c93acb3028132fca989bc7ed55f8eed399d5ba1da1e0e4748"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

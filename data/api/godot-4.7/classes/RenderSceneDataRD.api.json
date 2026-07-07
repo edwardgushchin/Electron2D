@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneDataRD",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneDataRD",
+    "kind": "class",
+    "baseType": "RenderSceneData",
+    "interfaces": [],
+    "godotReference": "RenderSceneDataRD",
+    "documentationPath": "doc/classes/RenderSceneDataRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenedatard.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneDataRD.xml",
+      "sha256": "43443e3c65d46a9a9a95b8ea139e69ca8a65e2aee60864b62cc98d71f67f2feb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

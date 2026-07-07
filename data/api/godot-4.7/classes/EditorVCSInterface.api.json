@@ -1,0 +1,1151 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorVCSInterface",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorVCSInterface",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorVCSInterface",
+    "documentationPath": "doc/classes/EditorVCSInterface.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorvcsinterface.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AllowAmends",
+      "kind": "Method",
+      "signature": "public bool _AllowAmends()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether or not the plugin allows commit amends.",
+      "godotName": "_allow_amends",
+      "xmlDocId": "M:Godot.EditorVCSInterface._AllowAmends",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CheckoutBranch",
+      "kind": "Method",
+      "signature": "public bool _CheckoutBranch(String branchName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Checks out a [param branch_name] in the VCS.",
+      "godotName": "_checkout_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CheckoutBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Commit",
+      "kind": "Method",
+      "signature": "public void _Commit(String msg, bool amend)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "msg",
+          "type": "String"
+        },
+        {
+          "name": "amend",
+          "type": "bool"
+        }
+      ],
+      "summary": "Commits the currently staged changes and applies the commit [param msg] to the resulting commit. If [param amend] is [code]true[/code] the commit will modify the most recent commit instead.",
+      "godotName": "_commit",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Commit(String,bool)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CreateBranch",
+      "kind": "Method",
+      "signature": "public void _CreateBranch(String branchName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new branch named [param branch_name] in the VCS.",
+      "godotName": "_create_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CreateBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CreateRemote",
+      "kind": "Method",
+      "signature": "public void _CreateRemote(String remoteName, String remoteUrl)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote_name",
+          "type": "String"
+        },
+        {
+          "name": "remote_url",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new remote destination with name [param remote_name] and points it to [param remote_url]. This can be an HTTPS remote or an SSH remote.",
+      "godotName": "_create_remote",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CreateRemote(String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_DiscardFile",
+      "kind": "Method",
+      "signature": "public void _DiscardFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Discards the changes made in a file present at [param file_path].",
+      "godotName": "_discard_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._DiscardFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Fetch",
+      "kind": "Method",
+      "signature": "public void _Fetch(String remote)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        }
+      ],
+      "summary": "Fetches new changes from the [param remote], but doesn\u0027t write changes to the current working directory. Equivalent to [code]git fetch[/code].",
+      "godotName": "_fetch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Fetch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetBranchList",
+      "kind": "Method",
+      "signature": "public String[] _GetBranchList()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Gets an instance of an [Array] of [String]s containing available branch names in the VCS.",
+      "godotName": "_get_branch_list",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetBranchList",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetCurrentBranchName",
+      "kind": "Method",
+      "signature": "public String _GetCurrentBranchName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the current branch name defined in the VCS.",
+      "godotName": "_get_current_branch_name",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetCurrentBranchName",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetDiff",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetDiff(String identifier, int area)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "identifier",
+          "type": "String"
+        },
+        {
+          "name": "area",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of [Dictionary] items (see [method create_diff_file], [method create_diff_hunk], [method create_diff_line], [method add_line_diffs_into_diff_hunk] and [method add_diff_hunks_into_diff_file]), each containing information about a diff. If [param identifier] is a file path, returns a file diff, and if it is a commit identifier, then returns a commit diff.",
+      "godotName": "_get_diff",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetDiff(String,int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetLineDiff",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetLineDiff(String filePath, String text)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_diff_hunk]), each containing a line diff between a file at [param file_path] and the [param text] which is passed in.",
+      "godotName": "_get_line_diff",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetLineDiff(String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetModifiedFilesData",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetModifiedFilesData()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_status_file]), each containing the status data of every modified file in the project folder.",
+      "godotName": "_get_modified_files_data",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetModifiedFilesData",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetPreviousCommits",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPreviousCommits(int maxCommits)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "max_commits",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_commit]), each containing the data for a past commit.",
+      "godotName": "_get_previous_commits",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetPreviousCommits(int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetRemotes",
+      "kind": "Method",
+      "signature": "public String[] _GetRemotes()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of [String]s, each containing the name of a remote configured in the VCS.",
+      "godotName": "_get_remotes",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetRemotes",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetVcsName",
+      "kind": "Method",
+      "signature": "public String _GetVcsName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the underlying VCS provider.",
+      "godotName": "_get_vcs_name",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetVcsName",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public bool _Initialize(String projectPath)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "project_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Initializes the VCS plugin when called from the editor. Returns whether or not the plugin was successfully initialized. A VCS project is initialized at [param project_path].",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Initialize(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Pull",
+      "kind": "Method",
+      "signature": "public void _Pull(String remote)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        }
+      ],
+      "summary": "Pulls changes from the remote. This can give rise to merge conflicts.",
+      "godotName": "_pull",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Pull(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Push",
+      "kind": "Method",
+      "signature": "public void _Push(String remote, bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        },
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Pushes changes to the [param remote]. If [param force] is [code]true[/code], a force push will override the change history already present on the remote.",
+      "godotName": "_push",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Push(String,bool)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_RemoveBranch",
+      "kind": "Method",
+      "signature": "public void _RemoveBranch(String branchName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Remove a branch from the local VCS.",
+      "godotName": "_remove_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._RemoveBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_RemoveRemote",
+      "kind": "Method",
+      "signature": "public void _RemoveRemote(String remoteName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Remove a remote from the local VCS.",
+      "godotName": "_remove_remote",
+      "xmlDocId": "M:Godot.EditorVCSInterface._RemoveRemote(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_SetCredentials",
+      "kind": "Method",
+      "signature": "public void _SetCredentials(String username, String password, String sshPublicKeyPath, String sshPrivateKeyPath, String sshPassphrase)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "username",
+          "type": "String"
+        },
+        {
+          "name": "password",
+          "type": "String"
+        },
+        {
+          "name": "ssh_public_key_path",
+          "type": "String"
+        },
+        {
+          "name": "ssh_private_key_path",
+          "type": "String"
+        },
+        {
+          "name": "ssh_passphrase",
+          "type": "String"
+        }
+      ],
+      "summary": "Set user credentials in the underlying VCS. [param username] and [param password] are used only during HTTPS authentication unless not already mentioned in the remote URL. [param ssh_public_key_path], [param ssh_private_key_path], and [param ssh_passphrase] are only used during SSH authentication.",
+      "godotName": "_set_credentials",
+      "xmlDocId": "M:Godot.EditorVCSInterface._SetCredentials(String,String,String,String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_ShutDown",
+      "kind": "Method",
+      "signature": "public bool _ShutDown()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Shuts down VCS plugin instance. Called when the user either closes the editor or shuts down the VCS plugin through the editor UI.",
+      "godotName": "_shut_down",
+      "xmlDocId": "M:Godot.EditorVCSInterface._ShutDown",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_StageFile",
+      "kind": "Method",
+      "signature": "public void _StageFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Stages the file present at [param file_path] to the staged area.",
+      "godotName": "_stage_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._StageFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_UnstageFile",
+      "kind": "Method",
+      "signature": "public void _UnstageFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Unstages the file present at [param file_path] from the staged area to the unstaged area.",
+      "godotName": "_unstage_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._UnstageFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "AddDiffHunksIntoDiffFile",
+      "kind": "Method",
+      "signature": "public Dictionary AddDiffHunksIntoDiffFile(Dictionary diffFile, Dictionary[] diffHunks)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "diff_file",
+          "type": "Dictionary"
+        },
+        {
+          "name": "diff_hunks",
+          "type": "Dictionary[]"
+        }
+      ],
+      "summary": "Helper function to add an array of [param diff_hunks] into a [param diff_file].",
+      "godotName": "add_diff_hunks_into_diff_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface.AddDiffHunksIntoDiffFile(Dictionary,Dictionary[])",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "AddLineDiffsIntoDiffHunk",
+      "kind": "Method",
+      "signature": "public Dictionary AddLineDiffsIntoDiffHunk(Dictionary diffHunk, Dictionary[] lineDiffs)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "diff_hunk",
+          "type": "Dictionary"
+        },
+        {
+          "name": "line_diffs",
+          "type": "Dictionary[]"
+        }
+      ],
+      "summary": "Helper function to add an array of [param line_diffs] into a [param diff_hunk].",
+      "godotName": "add_line_diffs_into_diff_hunk",
+      "xmlDocId": "M:Godot.EditorVCSInterface.AddLineDiffsIntoDiffHunk(Dictionary,Dictionary[])",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CreateCommit",
+      "kind": "Method",
+      "signature": "public Dictionary CreateCommit(String msg, String author, String id, int unixTimestamp, int offsetMinutes)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "msg",
+          "type": "String"
+        },
+        {
+          "name": "author",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "String"
+        },
+        {
+          "name": "unix_timestamp",
+          "type": "int"
+        },
+        {
+          "name": "offset_minutes",
+          "type": "int"
+        }
+      ],
+      "summary": "Helper function to create a commit [Dictionary] item. [param msg] is the commit message of the commit. [param author] is a single human-readable string containing all the author\u0027s details, e.g. the email and name configured in the VCS. [param id] is the identifier of the commit, in whichever format your VCS may provide an identifier to commits. [param unix_timestamp] is the UTC Unix timestamp of when the commit was created. [param offset_minutes] is the timezone offset in minutes, recorded from the system timezone where the commit was created.",
+      "godotName": "create_commit",
+      "xmlDocId": "M:Godot.EditorVCSInterface.CreateCommit(String,String,String,int,int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CreateDiffFile",
+      "kind": "Method",
+      "signature": "public Dictionary CreateDiffFile(String newFile, String oldFile)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "new_file",
+          "type": "String"
+        },
+        {
+          "name": "old_file",
+          "type": "String"
+        }
+      ],
+      "summary": "Helper function to create a [Dictionary] for storing old and new diff file paths.",
+      "godotName": "create_diff_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface.CreateDiffFile(String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CreateDiffHunk",
+      "kind": "Method",
+      "signature": "public Dictionary CreateDiffHunk(int oldStart, int newStart, int oldLines, int newLines)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "old_start",
+          "type": "int"
+        },
+        {
+          "name": "new_start",
+          "type": "int"
+        },
+        {
+          "name": "old_lines",
+          "type": "int"
+        },
+        {
+          "name": "new_lines",
+          "type": "int"
+        }
+      ],
+      "summary": "Helper function to create a [Dictionary] for storing diff hunk data. [param old_start] is the starting line number in old file. [param new_start] is the starting line number in new file. [param old_lines] is the number of lines in the old file. [param new_lines] is the number of lines in the new file.",
+      "godotName": "create_diff_hunk",
+      "xmlDocId": "M:Godot.EditorVCSInterface.CreateDiffHunk(int,int,int,int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CreateDiffLine",
+      "kind": "Method",
+      "signature": "public Dictionary CreateDiffLine(int newLineNo, int oldLineNo, String content, String status)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "new_line_no",
+          "type": "int"
+        },
+        {
+          "name": "old_line_no",
+          "type": "int"
+        },
+        {
+          "name": "content",
+          "type": "String"
+        },
+        {
+          "name": "status",
+          "type": "String"
+        }
+      ],
+      "summary": "Helper function to create a [Dictionary] for storing a line diff. [param new_line_no] is the line number in the new file (can be [code]-1[/code] if the line is deleted). [param old_line_no] is the line number in the old file (can be [code]-1[/code] if the line is added). [param content] is the diff text. [param status] is a single character string which stores the line origin.",
+      "godotName": "create_diff_line",
+      "xmlDocId": "M:Godot.EditorVCSInterface.CreateDiffLine(int,int,String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CreateStatusFile",
+      "kind": "Method",
+      "signature": "public Dictionary CreateStatusFile(String filePath, int changeType, int area)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        },
+        {
+          "name": "change_type",
+          "type": "int"
+        },
+        {
+          "name": "area",
+          "type": "int"
+        }
+      ],
+      "summary": "Helper function to create a [Dictionary] used by editor to read the status of a file.",
+      "godotName": "create_status_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface.CreateStatusFile(String,int,int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "PopupError",
+      "kind": "Method",
+      "signature": "public void PopupError(String msg)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "msg",
+          "type": "String"
+        }
+      ],
+      "summary": "Pops up an error message in the editor which is shown as coming from the underlying VCS. Use this to show VCS specific error messages.",
+      "godotName": "popup_error",
+      "xmlDocId": "M:Godot.EditorVCSInterface.PopupError(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ChangeType",
+      "values": [
+        {
+          "name": "CHANGE_TYPE_DELETED",
+          "value": "3",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "An earlier added file has been deleted.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "CHANGE_TYPE_MODIFIED",
+          "value": "1",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "An earlier added file has been modified.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "CHANGE_TYPE_NEW",
+          "value": "0",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "A new file has been added.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "CHANGE_TYPE_RENAMED",
+          "value": "2",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "An earlier added file has been renamed.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "CHANGE_TYPE_TYPECHANGE",
+          "value": "4",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "An earlier added file has been typechanged.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "CHANGE_TYPE_UNMERGED",
+          "value": "5",
+          "enum": "ChangeType",
+          "kind": "EnumValue",
+          "summary": "A file is left unmerged.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "TreeArea",
+      "values": [
+        {
+          "name": "TREE_AREA_COMMIT",
+          "value": "0",
+          "enum": "TreeArea",
+          "kind": "EnumValue",
+          "summary": "A commit is encountered from the commit area.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "TREE_AREA_STAGED",
+          "value": "1",
+          "enum": "TreeArea",
+          "kind": "EnumValue",
+          "summary": "A file is encountered from the staged area.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        },
+        {
+          "name": "TREE_AREA_UNSTAGED",
+          "value": "2",
+          "enum": "TreeArea",
+          "kind": "EnumValue",
+          "summary": "A file is encountered from the unstaged area.",
+          "sourcePath": "doc/classes/EditorVCSInterface.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CHANGE_TYPE_NEW",
+      "value": "0",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "A new file has been added.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CHANGE_TYPE_MODIFIED",
+      "value": "1",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "An earlier added file has been modified.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CHANGE_TYPE_RENAMED",
+      "value": "2",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "An earlier added file has been renamed.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CHANGE_TYPE_DELETED",
+      "value": "3",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "An earlier added file has been deleted.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CHANGE_TYPE_TYPECHANGE",
+      "value": "4",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "An earlier added file has been typechanged.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "CHANGE_TYPE_UNMERGED",
+      "value": "5",
+      "enum": "ChangeType",
+      "kind": "EnumValue",
+      "summary": "A file is left unmerged.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "TREE_AREA_COMMIT",
+      "value": "0",
+      "enum": "TreeArea",
+      "kind": "EnumValue",
+      "summary": "A commit is encountered from the commit area.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "TREE_AREA_STAGED",
+      "value": "1",
+      "enum": "TreeArea",
+      "kind": "EnumValue",
+      "summary": "A file is encountered from the staged area.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "TREE_AREA_UNSTAGED",
+      "value": "2",
+      "enum": "TreeArea",
+      "kind": "EnumValue",
+      "summary": "A file is encountered from the unstaged area.",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AllowAmends",
+      "kind": "Method",
+      "signature": "public bool _AllowAmends()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether or not the plugin allows commit amends.",
+      "godotName": "_allow_amends",
+      "xmlDocId": "M:Godot.EditorVCSInterface._AllowAmends",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CheckoutBranch",
+      "kind": "Method",
+      "signature": "public bool _CheckoutBranch(String branchName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Checks out a [param branch_name] in the VCS.",
+      "godotName": "_checkout_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CheckoutBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Commit",
+      "kind": "Method",
+      "signature": "public void _Commit(String msg, bool amend)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "msg",
+          "type": "String"
+        },
+        {
+          "name": "amend",
+          "type": "bool"
+        }
+      ],
+      "summary": "Commits the currently staged changes and applies the commit [param msg] to the resulting commit. If [param amend] is [code]true[/code] the commit will modify the most recent commit instead.",
+      "godotName": "_commit",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Commit(String,bool)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CreateBranch",
+      "kind": "Method",
+      "signature": "public void _CreateBranch(String branchName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new branch named [param branch_name] in the VCS.",
+      "godotName": "_create_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CreateBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_CreateRemote",
+      "kind": "Method",
+      "signature": "public void _CreateRemote(String remoteName, String remoteUrl)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote_name",
+          "type": "String"
+        },
+        {
+          "name": "remote_url",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new remote destination with name [param remote_name] and points it to [param remote_url]. This can be an HTTPS remote or an SSH remote.",
+      "godotName": "_create_remote",
+      "xmlDocId": "M:Godot.EditorVCSInterface._CreateRemote(String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_DiscardFile",
+      "kind": "Method",
+      "signature": "public void _DiscardFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Discards the changes made in a file present at [param file_path].",
+      "godotName": "_discard_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._DiscardFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Fetch",
+      "kind": "Method",
+      "signature": "public void _Fetch(String remote)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        }
+      ],
+      "summary": "Fetches new changes from the [param remote], but doesn\u0027t write changes to the current working directory. Equivalent to [code]git fetch[/code].",
+      "godotName": "_fetch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Fetch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetBranchList",
+      "kind": "Method",
+      "signature": "public String[] _GetBranchList()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Gets an instance of an [Array] of [String]s containing available branch names in the VCS.",
+      "godotName": "_get_branch_list",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetBranchList",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetCurrentBranchName",
+      "kind": "Method",
+      "signature": "public String _GetCurrentBranchName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Gets the current branch name defined in the VCS.",
+      "godotName": "_get_current_branch_name",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetCurrentBranchName",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetDiff",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetDiff(String identifier, int area)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "identifier",
+          "type": "String"
+        },
+        {
+          "name": "area",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of [Dictionary] items (see [method create_diff_file], [method create_diff_hunk], [method create_diff_line], [method add_line_diffs_into_diff_hunk] and [method add_diff_hunks_into_diff_file]), each containing information about a diff. If [param identifier] is a file path, returns a file diff, and if it is a commit identifier, then returns a commit diff.",
+      "godotName": "_get_diff",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetDiff(String,int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetLineDiff",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetLineDiff(String filePath, String text)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_diff_hunk]), each containing a line diff between a file at [param file_path] and the [param text] which is passed in.",
+      "godotName": "_get_line_diff",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetLineDiff(String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetModifiedFilesData",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetModifiedFilesData()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_status_file]), each containing the status data of every modified file in the project folder.",
+      "godotName": "_get_modified_files_data",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetModifiedFilesData",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetPreviousCommits",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPreviousCommits(int maxCommits)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "max_commits",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an [Array] of [Dictionary] items (see [method create_commit]), each containing the data for a past commit.",
+      "godotName": "_get_previous_commits",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetPreviousCommits(int)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetRemotes",
+      "kind": "Method",
+      "signature": "public String[] _GetRemotes()",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of [String]s, each containing the name of a remote configured in the VCS.",
+      "godotName": "_get_remotes",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetRemotes",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_GetVcsName",
+      "kind": "Method",
+      "signature": "public String _GetVcsName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the underlying VCS provider.",
+      "godotName": "_get_vcs_name",
+      "xmlDocId": "M:Godot.EditorVCSInterface._GetVcsName",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public bool _Initialize(String projectPath)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "project_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Initializes the VCS plugin when called from the editor. Returns whether or not the plugin was successfully initialized. A VCS project is initialized at [param project_path].",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Initialize(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Pull",
+      "kind": "Method",
+      "signature": "public void _Pull(String remote)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        }
+      ],
+      "summary": "Pulls changes from the remote. This can give rise to merge conflicts.",
+      "godotName": "_pull",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Pull(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_Push",
+      "kind": "Method",
+      "signature": "public void _Push(String remote, bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "String"
+        },
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Pushes changes to the [param remote]. If [param force] is [code]true[/code], a force push will override the change history already present on the remote.",
+      "godotName": "_push",
+      "xmlDocId": "M:Godot.EditorVCSInterface._Push(String,bool)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_RemoveBranch",
+      "kind": "Method",
+      "signature": "public void _RemoveBranch(String branchName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "branch_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Remove a branch from the local VCS.",
+      "godotName": "_remove_branch",
+      "xmlDocId": "M:Godot.EditorVCSInterface._RemoveBranch(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_RemoveRemote",
+      "kind": "Method",
+      "signature": "public void _RemoveRemote(String remoteName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "remote_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Remove a remote from the local VCS.",
+      "godotName": "_remove_remote",
+      "xmlDocId": "M:Godot.EditorVCSInterface._RemoveRemote(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_SetCredentials",
+      "kind": "Method",
+      "signature": "public void _SetCredentials(String username, String password, String sshPublicKeyPath, String sshPrivateKeyPath, String sshPassphrase)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "username",
+          "type": "String"
+        },
+        {
+          "name": "password",
+          "type": "String"
+        },
+        {
+          "name": "ssh_public_key_path",
+          "type": "String"
+        },
+        {
+          "name": "ssh_private_key_path",
+          "type": "String"
+        },
+        {
+          "name": "ssh_passphrase",
+          "type": "String"
+        }
+      ],
+      "summary": "Set user credentials in the underlying VCS. [param username] and [param password] are used only during HTTPS authentication unless not already mentioned in the remote URL. [param ssh_public_key_path], [param ssh_private_key_path], and [param ssh_passphrase] are only used during SSH authentication.",
+      "godotName": "_set_credentials",
+      "xmlDocId": "M:Godot.EditorVCSInterface._SetCredentials(String,String,String,String,String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_ShutDown",
+      "kind": "Method",
+      "signature": "public bool _ShutDown()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Shuts down VCS plugin instance. Called when the user either closes the editor or shuts down the VCS plugin through the editor UI.",
+      "godotName": "_shut_down",
+      "xmlDocId": "M:Godot.EditorVCSInterface._ShutDown",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_StageFile",
+      "kind": "Method",
+      "signature": "public void _StageFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Stages the file present at [param file_path] to the staged area.",
+      "godotName": "_stage_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._StageFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    },
+    {
+      "name": "_UnstageFile",
+      "kind": "Method",
+      "signature": "public void _UnstageFile(String filePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "file_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Unstages the file present at [param file_path] from the staged area to the unstaged area.",
+      "godotName": "_unstage_file",
+      "xmlDocId": "M:Godot.EditorVCSInterface._UnstageFile(String)",
+      "sourcePath": "doc/classes/EditorVCSInterface.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorVCSInterface.xml",
+      "sha256": "9760f9d865630c2e6aefb141d44ffae871b970ad263fe9670406e6c784683bec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

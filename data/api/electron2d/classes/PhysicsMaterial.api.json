@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsMaterial",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsMaterial",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "PhysicsMaterial",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "PhysicsMaterial",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsMaterial()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsMaterial type.",
+      "xmlDocId": "M:Electron2D.PhysicsMaterial.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "PhysicsMaterial",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsMaterial()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsMaterial type.",
+      "xmlDocId": "M:Electron2D.PhysicsMaterial.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Absorbent",
+      "kind": "Property",
+      "signature": "public System.Boolean Absorbent { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this material should absorb bounce in future contact solving.",
+      "xmlDocId": "P:Electron2D.PhysicsMaterial.Absorbent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Bounce",
+      "kind": "Property",
+      "signature": "public System.Single Bounce { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the bounce coefficient used by this material.",
+      "xmlDocId": "P:Electron2D.PhysicsMaterial.Bounce",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Friction",
+      "kind": "Property",
+      "signature": "public System.Single Friction { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the friction coefficient used by this material.",
+      "xmlDocId": "P:Electron2D.PhysicsMaterial.Friction",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rough",
+      "kind": "Property",
+      "signature": "public System.Boolean Rough { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this material should prefer its friction in future contact solving.",
+      "xmlDocId": "P:Electron2D.PhysicsMaterial.Rough",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextServerManager",
+    "namespace": "Godot",
+    "fullName": "Godot.TextServerManager",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "TextServerManager",
+    "documentationPath": "doc/classes/TextServerManager.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textservermanager.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddInterface",
+      "kind": "Method",
+      "signature": "public void AddInterface(TextServer @interface)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interface",
+          "type": "TextServer"
+        }
+      ],
+      "summary": "Registers a [TextServer] interface.",
+      "godotName": "add_interface",
+      "xmlDocId": "M:Godot.TextServerManager.AddInterface(TextServer)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "FindInterface",
+      "kind": "Method",
+      "signature": "public TextServer FindInterface(String name)",
+      "returnType": "TextServer",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Finds an interface by its [param name].",
+      "godotName": "find_interface",
+      "xmlDocId": "M:Godot.TextServerManager.FindInterface(String)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "GetInterface",
+      "kind": "Method",
+      "signature": "public TextServer GetInterface(int idx)",
+      "returnType": "TextServer",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the interface registered at a given index.",
+      "godotName": "get_interface",
+      "xmlDocId": "M:Godot.TextServerManager.GetInterface(int)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "GetInterfaceCount",
+      "kind": "Method",
+      "signature": "public int GetInterfaceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of interfaces currently registered.",
+      "godotName": "get_interface_count",
+      "xmlDocId": "M:Godot.TextServerManager.GetInterfaceCount",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "GetInterfaces",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetInterfaces()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns a list of available interfaces, with the index and name of each interface.",
+      "godotName": "get_interfaces",
+      "xmlDocId": "M:Godot.TextServerManager.GetInterfaces",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "GetPrimaryInterface",
+      "kind": "Method",
+      "signature": "public TextServer GetPrimaryInterface()",
+      "returnType": "TextServer",
+      "parameters": [],
+      "summary": "Returns the primary [TextServer] interface currently in use.",
+      "godotName": "get_primary_interface",
+      "xmlDocId": "M:Godot.TextServerManager.GetPrimaryInterface",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "RemoveInterface",
+      "kind": "Method",
+      "signature": "public void RemoveInterface(TextServer @interface)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interface",
+          "type": "TextServer"
+        }
+      ],
+      "summary": "Removes an interface. All fonts and shaped text caches should be freed before removing an interface.",
+      "godotName": "remove_interface",
+      "xmlDocId": "M:Godot.TextServerManager.RemoveInterface(TextServer)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "SetPrimaryInterface",
+      "kind": "Method",
+      "signature": "public void SetPrimaryInterface(TextServer index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "TextServer"
+        }
+      ],
+      "summary": "Sets the primary [TextServer] interface.",
+      "godotName": "set_primary_interface",
+      "xmlDocId": "M:Godot.TextServerManager.SetPrimaryInterface(TextServer)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "InterfaceAdded",
+      "kind": "Signal",
+      "signature": "public event InterfaceAddedHandler InterfaceAdded",
+      "parameters": [
+        {
+          "name": "interface_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when a new interface has been added.",
+      "godotName": "interface_added",
+      "xmlDocId": "E:Godot.TextServerManager.InterfaceAdded(StringName)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    },
+    {
+      "name": "InterfaceRemoved",
+      "kind": "Signal",
+      "signature": "public event InterfaceRemovedHandler InterfaceRemoved",
+      "parameters": [
+        {
+          "name": "interface_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when an interface is removed.",
+      "godotName": "interface_removed",
+      "xmlDocId": "E:Godot.TextServerManager.InterfaceRemoved(StringName)",
+      "sourcePath": "doc/classes/TextServerManager.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextServerManager.xml",
+      "sha256": "a50cef58164730c8645f27a24776c6f6e0a3ad9f455040be2dd0bb966d02e67b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

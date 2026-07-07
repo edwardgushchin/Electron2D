@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DPITexture",
+    "namespace": "Godot",
+    "fullName": "Godot.DPITexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "DPITexture",
+    "documentationPath": "doc/classes/DPITexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_dpitexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateFromString",
+      "kind": "Method",
+      "signature": "public DPITexture CreateFromString(String source, float scale, float saturation, Dictionary colorMap)",
+      "returnType": "DPITexture",
+      "parameters": [
+        {
+          "name": "source",
+          "type": "String"
+        },
+        {
+          "name": "scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "saturation",
+          "type": "float",
+          "defaultValue": "1.0"
+        },
+        {
+          "name": "color_map",
+          "type": "Dictionary",
+          "defaultValue": "{}"
+        }
+      ],
+      "summary": "Creates a new [DPITexture] and initializes it by allocating and setting the SVG data to [param source].",
+      "godotName": "create_from_string",
+      "xmlDocId": "M:Godot.DPITexture.CreateFromString(String,float,float,Dictionary)",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "GetScaledRid",
+      "kind": "Method",
+      "signature": "public RID GetScaledRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the texture rasterized to match the oversampling of the currently drawn canvas item.",
+      "godotName": "get_scaled_rid",
+      "xmlDocId": "M:Godot.DPITexture.GetScaledRid",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "GetSource",
+      "kind": "Method",
+      "signature": "public String GetSource()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns this SVG texture\u0027s source code.",
+      "godotName": "get_source",
+      "xmlDocId": "M:Godot.DPITexture.GetSource",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "SetSizeOverride",
+      "kind": "Method",
+      "signature": "public void SetSizeOverride(Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Resizes the texture to the specified dimensions.",
+      "godotName": "set_size_override",
+      "xmlDocId": "M:Godot.DPITexture.SetSizeOverride(Vector2i)",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "SetSource",
+      "kind": "Method",
+      "signature": "public void SetSource(String source)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "source",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets this SVG texture\u0027s source code.",
+      "godotName": "set_source",
+      "xmlDocId": "M:Godot.DPITexture.SetSource(String)",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "BaseScale",
+      "kind": "Property",
+      "signature": "public float BaseScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Texture scale. [code]1.0[/code] is the original SVG size. Higher values result in a larger image.",
+      "defaultValue": "1.0",
+      "godotName": "base_scale",
+      "xmlDocId": "P:Godot.DPITexture.BaseScale",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "ColorMap",
+      "kind": "Property",
+      "signature": "public Dictionary ColorMap { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "If set, remaps texture colors according to [Color]-[Color] map.",
+      "defaultValue": "{}",
+      "godotName": "color_map",
+      "xmlDocId": "P:Godot.DPITexture.ColorMap",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "FixAlphaBorder",
+      "kind": "Property",
+      "signature": "public bool FixAlphaBorder { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], puts pixels of the same surrounding color in transition from transparent to opaque areas. For textures displayed with bilinear filtering, this helps to reduce the outline effect when exporting images from an image editor.",
+      "defaultValue": "false",
+      "godotName": "fix_alpha_border",
+      "xmlDocId": "P:Godot.DPITexture.FixAlphaBorder",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "PremultAlpha",
+      "kind": "Property",
+      "signature": "public bool PremultAlpha { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "An alternative to fixing darkened borders with [member fix_alpha_border] is to use premultiplied alpha. By enabling this option, the texture will be converted to this format. A premultiplied alpha texture requires specific materials to be displayed correctly: - In 2D, a [CanvasItemMaterial] will need to be created and configured to use the [constant CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA] blend mode on [CanvasItem]s that use this texture. In custom [code]canvas_item[/code] shaders, [code]render_mode blend_premul_alpha;[/code] should be used. - In 3D, a [BaseMaterial3D] will need to be created and configured to use the [constant BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA] blend mode on materials that use this texture. In custom [code]spatial[/code] shaders, [code]render_mode blend_premul_alpha;[/code] should be used.",
+      "defaultValue": "false",
+      "godotName": "premult_alpha",
+      "xmlDocId": "P:Godot.DPITexture.PremultAlpha",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.DPITexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    },
+    {
+      "name": "Saturation",
+      "kind": "Property",
+      "signature": "public float Saturation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides texture saturation.",
+      "defaultValue": "1.0",
+      "godotName": "saturation",
+      "xmlDocId": "P:Godot.DPITexture.Saturation",
+      "sourcePath": "doc/classes/DPITexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/DPITexture.xml",
+      "sha256": "bbcf111ef67fb012502cf2cfa6dd30c03a3427665d71af00d7458e3c1de62c55"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

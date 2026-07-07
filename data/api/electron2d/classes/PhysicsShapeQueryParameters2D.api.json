@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsShapeQueryParameters2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsShapeQueryParameters2D",
+    "kind": "class",
+    "baseType": "Electron2D.RefCounted",
+    "interfaces": [],
+    "godotReference": "PhysicsShapeQueryParameters2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "PhysicsShapeQueryParameters2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsShapeQueryParameters2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsShapeQueryParameters2D type.",
+      "xmlDocId": "M:Electron2D.PhysicsShapeQueryParameters2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "PhysicsShapeQueryParameters2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsShapeQueryParameters2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsShapeQueryParameters2D type.",
+      "xmlDocId": "M:Electron2D.PhysicsShapeQueryParameters2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollideWithAreas",
+      "kind": "Property",
+      "signature": "public System.Boolean CollideWithAreas { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether area objects are included.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.CollideWithAreas",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollideWithBodies",
+      "kind": "Property",
+      "signature": "public System.Boolean CollideWithBodies { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether body objects are included.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.CollideWithBodies",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public System.UInt32 CollisionMask { get; set; }",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Gets or sets the collision layers scanned by this query.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.CollisionMask",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Exclude",
+      "kind": "Property",
+      "signature": "public Electron2D.Rid[] Exclude { get; set; }",
+      "returnType": "Electron2D.Rid[]",
+      "parameters": [],
+      "summary": "Gets or sets RIDs excluded from the query.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.Exclude",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Margin",
+      "kind": "Property",
+      "signature": "public System.Single Margin { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets an extra margin added around the query bounds.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.Margin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Motion",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Motion { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets extra motion swept into the query bounds.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.Motion",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Electron2D.Shape2D Shape { get; set; }",
+      "returnType": "Electron2D.Shape2D",
+      "parameters": [],
+      "summary": "Gets or sets the shape resource used by the query.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.Shape",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShapeRid",
+      "kind": "Property",
+      "signature": "public Electron2D.Rid ShapeRid { get; set; }",
+      "returnType": "Electron2D.Rid",
+      "parameters": [],
+      "summary": "Gets or sets the shape RID used by future production backends.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.ShapeRid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Electron2D.Transform2D Transform { get; set; }",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets or sets the query shape transform in world coordinates.",
+      "xmlDocId": "P:Electron2D.PhysicsShapeQueryParameters2D.Transform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

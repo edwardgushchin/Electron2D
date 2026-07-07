@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVec4Constant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVec4Constant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVec4Constant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Constant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevec4constant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public Quaternion Constant { get; set; }",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "A 4D vector (represented as a [Quaternion]) constant which represents the state of this node.",
+      "defaultValue": "Quaternion(0, 0, 0, 1)",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeVec4Constant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Constant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Constant.xml",
+      "sha256": "cf74ae6475e8512f915250490748f215f194d4aed746105e5ea6bdf341c0d014"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

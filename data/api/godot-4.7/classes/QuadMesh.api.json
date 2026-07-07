@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "QuadMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.QuadMesh",
+    "kind": "class",
+    "baseType": "PlaneMesh",
+    "interfaces": [],
+    "godotReference": "QuadMesh",
+    "documentationPath": "doc/classes/QuadMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_quadmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Orientation",
+      "kind": "Property",
+      "signature": "public int Orientation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "orientation",
+      "xmlDocId": "P:Godot.QuadMesh.Orientation",
+      "sourcePath": "doc/classes/QuadMesh.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.QuadMesh.Size",
+      "sourcePath": "doc/classes/QuadMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/QuadMesh.xml",
+      "sha256": "82901ff72fa61c7127ce1d82008fb705adaff8b3e578b6e5d16ac2e91b4be595"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

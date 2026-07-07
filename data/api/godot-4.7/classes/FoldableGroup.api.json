@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FoldableGroup",
+    "namespace": "Godot",
+    "fullName": "Godot.FoldableGroup",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "FoldableGroup",
+    "documentationPath": "doc/classes/FoldableGroup.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_foldablegroup.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetContainers",
+      "kind": "Method",
+      "signature": "public FoldableContainer[] GetContainers()",
+      "returnType": "FoldableContainer[]",
+      "parameters": [],
+      "summary": "Returns an [Array] of [FoldableContainer]s that have this as their FoldableGroup (see [member FoldableContainer.foldable_group]). This is equivalent to [ButtonGroup] but for FoldableContainers.",
+      "godotName": "get_containers",
+      "xmlDocId": "M:Godot.FoldableGroup.GetContainers",
+      "sourcePath": "doc/classes/FoldableGroup.xml"
+    },
+    {
+      "name": "GetExpandedContainer",
+      "kind": "Method",
+      "signature": "public FoldableContainer GetExpandedContainer()",
+      "returnType": "FoldableContainer",
+      "parameters": [],
+      "summary": "Returns the current expanded container.",
+      "godotName": "get_expanded_container",
+      "xmlDocId": "M:Godot.FoldableGroup.GetExpandedContainer",
+      "sourcePath": "doc/classes/FoldableGroup.xml"
+    },
+    {
+      "name": "AllowFoldingAll",
+      "kind": "Property",
+      "signature": "public bool AllowFoldingAll { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], it is possible to fold all containers in this FoldableGroup.",
+      "defaultValue": "false",
+      "godotName": "allow_folding_all",
+      "xmlDocId": "P:Godot.FoldableGroup.AllowFoldingAll",
+      "sourcePath": "doc/classes/FoldableGroup.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.FoldableGroup.ResourceLocalToScene",
+      "sourcePath": "doc/classes/FoldableGroup.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Expanded",
+      "kind": "Signal",
+      "signature": "public event ExpandedHandler Expanded",
+      "parameters": [
+        {
+          "name": "container",
+          "type": "FoldableContainer"
+        }
+      ],
+      "summary": "Emitted when one of the containers of the group is expanded.",
+      "godotName": "expanded",
+      "xmlDocId": "E:Godot.FoldableGroup.Expanded(FoldableContainer)",
+      "sourcePath": "doc/classes/FoldableGroup.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FoldableGroup.xml",
+      "sha256": "80bef7fc3eee987ebf4f31afb785c672120ef898eaf938f0784becf2ea067841"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

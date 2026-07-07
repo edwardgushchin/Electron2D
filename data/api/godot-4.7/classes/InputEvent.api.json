@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEvent",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEvent",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "InputEvent",
+    "documentationPath": "doc/classes/InputEvent.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputevent.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Accumulate",
+      "kind": "Method",
+      "signature": "public bool Accumulate(InputEvent withEvent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "with_event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given input event and this input event can be added together (only for events of type [InputEventMouseMotion]). The given input event\u0027s position, global position and speed will be copied. The resulting [code]relative[/code] is a sum of both events. Both events\u0027 modifiers have to be identical.",
+      "godotName": "accumulate",
+      "xmlDocId": "M:Godot.InputEvent.Accumulate(InputEvent)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "AsText",
+      "kind": "Method",
+      "signature": "public String AsText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representation of the event.",
+      "godotName": "as_text",
+      "xmlDocId": "M:Godot.InputEvent.AsText",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "GetActionStrength",
+      "kind": "Method",
+      "signature": "public float GetActionStrength(StringName action, bool exactMatch)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a value between 0.0 and 1.0 depending on the given actions\u0027 state. Useful for getting the value of events of type [InputEventJoypadMotion]. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "get_action_strength",
+      "xmlDocId": "M:Godot.InputEvent.GetActionStrength(StringName,bool)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsAction",
+      "kind": "Method",
+      "signature": "public bool IsAction(StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this input event matches a pre-defined action of any type. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "is_action",
+      "xmlDocId": "M:Godot.InputEvent.IsAction(StringName,bool)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsActionPressed",
+      "kind": "Method",
+      "signature": "public bool IsActionPressed(StringName action, bool allowEcho, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "allow_echo",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given action matches this event and is being pressed (and is not an echo event for [InputEventKey] events, unless [param allow_echo] is [code]true[/code]). Not relevant for events of type [InputEventMouseMotion] or [InputEventScreenDrag]. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] Due to keyboard ghosting, [method is_action_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information.",
+      "godotName": "is_action_pressed",
+      "xmlDocId": "M:Godot.InputEvent.IsActionPressed(StringName,bool,bool)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsActionReleased",
+      "kind": "Method",
+      "signature": "public bool IsActionReleased(StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given action matches this event and is released (i.e. not pressed). Not relevant for events of type [InputEventMouseMotion] or [InputEventScreenDrag]. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "is_action_released",
+      "xmlDocId": "M:Godot.InputEvent.IsActionReleased(StringName,bool)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsActionType",
+      "kind": "Method",
+      "signature": "public bool IsActionType()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this input event\u0027s type is one that can be assigned to an input action: [InputEventKey], [InputEventMouseButton], [InputEventJoypadButton], [InputEventJoypadMotion], [InputEventAction]. Returns [code]false[/code] for all other input event types.",
+      "godotName": "is_action_type",
+      "xmlDocId": "M:Godot.InputEvent.IsActionType",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsCanceled",
+      "kind": "Method",
+      "signature": "public bool IsCanceled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this input event has been canceled.",
+      "godotName": "is_canceled",
+      "xmlDocId": "M:Godot.InputEvent.IsCanceled",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsEcho",
+      "kind": "Method",
+      "signature": "public bool IsEcho()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this input event is an echo event (only for events of type [InputEventKey]). An echo event is a repeated key event sent when the user is holding down the key. Any other event type returns [code]false[/code]. [b]Note:[/b] The rate at which echo events are sent is typically around 20 events per second (after holding down the key for roughly half a second). However, the key repeat delay/speed can be changed by the user or disabled entirely in the operating system settings. To ensure your project works correctly on all configurations, do not assume the user has a specific key repeat configuration in your project\u0027s behavior.",
+      "godotName": "is_echo",
+      "xmlDocId": "M:Godot.InputEvent.IsEcho",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsMatch",
+      "kind": "Method",
+      "signature": "public bool IsMatch(InputEvent @event, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param event] matches this event. Only valid for action events, which include key ([InputEventKey]), button ([InputEventMouseButton] or [InputEventJoypadButton]), axis [InputEventJoypadMotion], and action ([InputEventAction]) events. If [param exact_match] is [code]false[/code], the check ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events. [b]Note:[/b] This method only considers the event configuration (such as the keyboard key or the joypad axis), not state information like [method is_pressed], [method is_released], [method is_echo], or [method is_canceled].",
+      "godotName": "is_match",
+      "xmlDocId": "M:Godot.InputEvent.IsMatch(InputEvent,bool)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsPressed",
+      "kind": "Method",
+      "signature": "public bool IsPressed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this input event is pressed. Not relevant for events of type [InputEventMouseMotion] or [InputEventScreenDrag]. [b]Note:[/b] Due to keyboard ghosting, [method is_pressed] may return [code]false[/code] even if one of the action\u0027s keys is pressed. See [url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events]Input examples[/url] in the documentation for more information.",
+      "godotName": "is_pressed",
+      "xmlDocId": "M:Godot.InputEvent.IsPressed",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "IsReleased",
+      "kind": "Method",
+      "signature": "public bool IsReleased()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this input event is released. Not relevant for events of type [InputEventMouseMotion] or [InputEventScreenDrag].",
+      "godotName": "is_released",
+      "xmlDocId": "M:Godot.InputEvent.IsReleased",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "XformedBy",
+      "kind": "Method",
+      "signature": "public InputEvent XformedBy(Transform2D xform, Vector2 localOfs)",
+      "returnType": "InputEvent",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform2D"
+        },
+        {
+          "name": "local_ofs",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Returns a copy of the given input event which has been offset by [param local_ofs] and transformed by [param xform]. Relevant for events of type [InputEventMouseButton], [InputEventMouseMotion], [InputEventScreenTouch], [InputEventScreenDrag], [InputEventMagnifyGesture] and [InputEventPanGesture].",
+      "godotName": "xformed_by",
+      "xmlDocId": "M:Godot.InputEvent.XformedBy(Transform2D,Vector2)",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "Device",
+      "kind": "Property",
+      "signature": "public int Device { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The event\u0027s device ID. [b]Note:[/b] [member device] can be negative for special use cases that don\u0027t refer to devices physically present on the system. See [constant DEVICE_ID_EMULATION].",
+      "defaultValue": "0",
+      "godotName": "device",
+      "xmlDocId": "P:Godot.InputEvent.Device",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "DEVICE_ID_EMULATION",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Device ID used for emulated mouse input from a touchscreen, or for emulated touch input from a mouse. This can be used to distinguish emulated mouse input from physical mouse input, or emulated touch input from physical touch input.",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "DEVICE_ID_KEYBOARD",
+      "value": "16",
+      "kind": "Constant",
+      "summary": "Device ID used for input from a keyboard. This can be used to distinguish keyboard input events from joypad input events.",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    },
+    {
+      "name": "DEVICE_ID_MOUSE",
+      "value": "32",
+      "kind": "Constant",
+      "summary": "Device ID used for input from a mouse. This can be used to distinguish mouse input events from joypad input events.",
+      "sourcePath": "doc/classes/InputEvent.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEvent.xml",
+      "sha256": "c52b6f008037ab767fba95f6bba5ef67fd886c679087aaa80db2cdeb4c2149c5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

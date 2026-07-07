@@ -1,0 +1,1757 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Environment",
+    "namespace": "Godot",
+    "fullName": "Godot.Environment",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Environment",
+    "documentationPath": "doc/classes/Environment.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_environment.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetGlowLevel",
+      "kind": "Method",
+      "signature": "public float GetGlowLevel(int idx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the intensity of the glow level [param idx].",
+      "godotName": "get_glow_level",
+      "xmlDocId": "M:Godot.Environment.GetGlowLevel(int)",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SetGlowLevel",
+      "kind": "Method",
+      "signature": "public void SetGlowLevel(int idx, float intensity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "intensity",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the intensity of the glow level [param idx]. A value above [code]0.0[/code] enables the level. Each level relies on the previous level. This means that enabling higher glow levels will slow down the glow effect rendering, even if previous levels aren\u0027t enabled.",
+      "godotName": "set_glow_level",
+      "xmlDocId": "M:Godot.Environment.SetGlowLevel(int,float)",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AdjustmentBrightness",
+      "kind": "Property",
+      "signature": "public float AdjustmentBrightness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Applies a simple brightness adjustment to the rendered image after tonemaping. To adjust scene brightness use [member tonemap_exposure] instead, which is applied before tonemapping and thus less prone to issues with bright colors. Effective only if [member adjustment_enabled] is [code]true[/code].",
+      "defaultValue": "1.0",
+      "godotName": "adjustment_brightness",
+      "xmlDocId": "P:Godot.Environment.AdjustmentBrightness",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AdjustmentColorCorrection",
+      "kind": "Property",
+      "signature": "public Texture AdjustmentColorCorrection { get; set; }",
+      "returnType": "Texture",
+      "parameters": [],
+      "summary": "The [Texture2D] or [Texture3D] lookup table (LUT) to use for the built-in post-process color grading. Can use a [GradientTexture1D] for a 1-dimensional LUT, or a [Texture3D] for a more complex LUT. Effective only if [member adjustment_enabled] is [code]true[/code]. [b]Note:[/b] Color correction does not currently support HDR output due to only supporting values in the SDR (0.0 to 1.0) range.",
+      "godotName": "adjustment_color_correction",
+      "xmlDocId": "P:Godot.Environment.AdjustmentColorCorrection",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AdjustmentContrast",
+      "kind": "Property",
+      "signature": "public float AdjustmentContrast { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increasing [member adjustment_contrast] will make dark values darker and bright values brighter. This simple adjustment is applied to the rendered image after tonemaping. When set to a value greater than [code]1.0[/code], [member adjustment_contrast] is prone to clipping colors that become too bright or too dark. Effective only if [member adjustment_enabled] is [code]true[/code].",
+      "defaultValue": "1.0",
+      "godotName": "adjustment_contrast",
+      "xmlDocId": "P:Godot.Environment.AdjustmentContrast",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AdjustmentEnabled",
+      "kind": "Property",
+      "signature": "public bool AdjustmentEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the [code]adjustment_*[/code] properties provided by this resource. If [code]false[/code], modifications to the [code]adjustment_*[/code] properties will have no effect on the rendered scene.",
+      "defaultValue": "false",
+      "godotName": "adjustment_enabled",
+      "xmlDocId": "P:Godot.Environment.AdjustmentEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AdjustmentSaturation",
+      "kind": "Property",
+      "signature": "public float AdjustmentSaturation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Applies a simple saturation adjustment to the rendered image after tonemaping. When [member adjustment_saturation] is set to [code]0.0[/code], the rendered image will be fully converted to a grayscale image. Effective only if [member adjustment_enabled] is [code]true[/code].",
+      "defaultValue": "1.0",
+      "godotName": "adjustment_saturation",
+      "xmlDocId": "P:Godot.Environment.AdjustmentSaturation",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AmbientLightColor",
+      "kind": "Property",
+      "signature": "public Color AmbientLightColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The ambient light\u0027s [Color]. Only effective if [member ambient_light_sky_contribution] is lower than [code]1.0[/code] (exclusive).",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "ambient_light_color",
+      "xmlDocId": "P:Godot.Environment.AmbientLightColor",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AmbientLightEnergy",
+      "kind": "Property",
+      "signature": "public float AmbientLightEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The ambient light\u0027s energy. The higher the value, the stronger the light. Only effective if [member ambient_light_sky_contribution] is lower than [code]1.0[/code] (exclusive).",
+      "defaultValue": "1.0",
+      "godotName": "ambient_light_energy",
+      "xmlDocId": "P:Godot.Environment.AmbientLightEnergy",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AmbientLightSkyContribution",
+      "kind": "Property",
+      "signature": "public float AmbientLightSkyContribution { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Defines the amount of light that the sky brings on the scene. A value of [code]0.0[/code] means that the sky\u0027s light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of [code]1.0[/code] means that [i]all[/i] the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene. [b]Note:[/b] [member ambient_light_sky_contribution] is internally clamped between [code]0.0[/code] and [code]1.0[/code] (inclusive).",
+      "defaultValue": "1.0",
+      "godotName": "ambient_light_sky_contribution",
+      "xmlDocId": "P:Godot.Environment.AmbientLightSkyContribution",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AmbientLightSource",
+      "kind": "Property",
+      "signature": "public int AmbientLightSource { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ambient light source to use for rendering materials and global illumination.",
+      "defaultValue": "0",
+      "godotName": "ambient_light_source",
+      "xmlDocId": "P:Godot.Environment.AmbientLightSource",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundCameraFeedId",
+      "kind": "Property",
+      "signature": "public int BackgroundCameraFeedId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ID of the camera feed to show in the background.",
+      "defaultValue": "1",
+      "godotName": "background_camera_feed_id",
+      "xmlDocId": "P:Godot.Environment.BackgroundCameraFeedId",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundCanvasMaxLayer",
+      "kind": "Property",
+      "signature": "public int BackgroundCanvasMaxLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum layer ID to display. Only effective when using the [constant BG_CANVAS] background mode.",
+      "defaultValue": "0",
+      "godotName": "background_canvas_max_layer",
+      "xmlDocId": "P:Godot.Environment.BackgroundCanvasMaxLayer",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundColor",
+      "kind": "Property",
+      "signature": "public Color BackgroundColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The [Color] displayed for clear areas of the scene. Only effective when using the [constant BG_COLOR] background mode.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "background_color",
+      "xmlDocId": "P:Godot.Environment.BackgroundColor",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundEnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float BackgroundEnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplier for background energy. Increase to make background brighter, decrease to make background dimmer.",
+      "defaultValue": "1.0",
+      "godotName": "background_energy_multiplier",
+      "xmlDocId": "P:Godot.Environment.BackgroundEnergyMultiplier",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundIntensity",
+      "kind": "Property",
+      "signature": "public float BackgroundIntensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Luminance of background measured in nits (candela per square meter). Only used when [member ProjectSettings.rendering/lights_and_shadows/use_physical_light_units] is enabled. The default value is roughly equivalent to the sky at midday.",
+      "defaultValue": "30000.0",
+      "godotName": "background_intensity",
+      "xmlDocId": "P:Godot.Environment.BackgroundIntensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BackgroundMode",
+      "kind": "Property",
+      "signature": "public int BackgroundMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The background mode.",
+      "defaultValue": "0",
+      "godotName": "background_mode",
+      "xmlDocId": "P:Godot.Environment.BackgroundMode",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogAerialPerspective",
+      "kind": "Property",
+      "signature": "public float FogAerialPerspective { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set above [code]0.0[/code] (exclusive), blends between the fog\u0027s color and the color of the background [Sky], as read from the radiance cubemap. This has a small performance cost when set above [code]0.0[/code]. Must have [member background_mode] set to [constant BG_SKY]. This is useful to simulate [url=https://en.wikipedia.org/wiki/Aerial_perspective]aerial perspective[/url] in large scenes with low density fog. However, it is not very useful for high-density fog, as the sky will shine through. When set to [code]1.0[/code], the fog color comes completely from the [Sky]. If set to [code]0.0[/code], aerial perspective is disabled. Notice that this does not sample the [Sky] directly, but rather the radiance cubemap. The cubemap is sampled at a mipmap level depending on the depth of the rendered pixel; the farther away, the higher the resolution of the sampled mipmap. This results in the actual color being a blurred version of the sky, with more blur closer to the camera. The highest mipmap resolution is used at a depth of [member Camera3D.far].",
+      "defaultValue": "0.0",
+      "godotName": "fog_aerial_perspective",
+      "xmlDocId": "P:Godot.Environment.FogAerialPerspective",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogDensity",
+      "kind": "Property",
+      "signature": "public float FogDensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fog density to be used. This is demonstrated in different ways depending on the [member fog_mode] mode chosen: [b]Exponential Fog Mode:[/b] Higher values result in denser fog. The fog rendering is exponential like in real life. [b]Depth Fog mode:[/b] The maximum intensity of the deep fog, effect will appear in the distance (relative to the camera). At [code]1.0[/code] the fog will fully obscure the scene, at [code]0.0[/code] the fog will not be visible.",
+      "defaultValue": "0.01",
+      "godotName": "fog_density",
+      "xmlDocId": "P:Godot.Environment.FogDensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogDepthBegin",
+      "kind": "Property",
+      "signature": "public float FogDepthBegin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fog\u0027s depth starting distance from the camera. Only available when [member fog_mode] is set to [constant FOG_MODE_DEPTH].",
+      "defaultValue": "10.0",
+      "godotName": "fog_depth_begin",
+      "xmlDocId": "P:Godot.Environment.FogDepthBegin",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogDepthCurve",
+      "kind": "Property",
+      "signature": "public float FogDepthCurve { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fog depth\u0027s intensity curve. A number of presets are available in the Inspector by right-clicking the curve. Only available when [member fog_mode] is set to [constant FOG_MODE_DEPTH].",
+      "defaultValue": "1.0",
+      "godotName": "fog_depth_curve",
+      "xmlDocId": "P:Godot.Environment.FogDepthCurve",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogDepthEnd",
+      "kind": "Property",
+      "signature": "public float FogDepthEnd { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fog\u0027s depth end distance from the camera. If this value is set to [code]0[/code], it will be equal to the current camera\u0027s [member Camera3D.far] value. Only available when [member fog_mode] is set to [constant FOG_MODE_DEPTH].",
+      "defaultValue": "100.0",
+      "godotName": "fog_depth_end",
+      "xmlDocId": "P:Godot.Environment.FogDepthEnd",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogEnabled",
+      "kind": "Property",
+      "signature": "public bool FogEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], fog effects are enabled.",
+      "defaultValue": "false",
+      "godotName": "fog_enabled",
+      "xmlDocId": "P:Godot.Environment.FogEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogHeight",
+      "kind": "Property",
+      "signature": "public float FogHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height at which the height fog effect begins.",
+      "defaultValue": "0.0",
+      "godotName": "fog_height",
+      "xmlDocId": "P:Godot.Environment.FogHeight",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogHeightDensity",
+      "kind": "Property",
+      "signature": "public float FogHeightDensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The density used to increase fog as height decreases. To make fog increase as height increases, use a negative value.",
+      "defaultValue": "0.0",
+      "godotName": "fog_height_density",
+      "xmlDocId": "P:Godot.Environment.FogHeightDensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogLightColor",
+      "kind": "Property",
+      "signature": "public Color FogLightColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The fog\u0027s color.",
+      "defaultValue": "Color(0.518, 0.553, 0.608, 1)",
+      "godotName": "fog_light_color",
+      "xmlDocId": "P:Godot.Environment.FogLightColor",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogLightEnergy",
+      "kind": "Property",
+      "signature": "public float FogLightEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fog\u0027s brightness. Higher values result in brighter fog.",
+      "defaultValue": "1.0",
+      "godotName": "fog_light_energy",
+      "xmlDocId": "P:Godot.Environment.FogLightEnergy",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogMode",
+      "kind": "Property",
+      "signature": "public int FogMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The fog mode.",
+      "defaultValue": "0",
+      "godotName": "fog_mode",
+      "xmlDocId": "P:Godot.Environment.FogMode",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogSkyAffect",
+      "kind": "Property",
+      "signature": "public float FogSkyAffect { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The factor to use when affecting the sky with non-volumetric fog. [code]1.0[/code] means that fog can fully obscure the sky. Lower values reduce the impact of fog on sky rendering, with [code]0.0[/code] not affecting sky rendering at all. [b]Note:[/b] [member fog_sky_affect] has no visual effect if [member fog_aerial_perspective] is [code]1.0[/code].",
+      "defaultValue": "1.0",
+      "godotName": "fog_sky_affect",
+      "xmlDocId": "P:Godot.Environment.FogSkyAffect",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FogSunScatter",
+      "kind": "Property",
+      "signature": "public float FogSunScatter { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set above [code]0.0[/code], renders the scene\u0027s directional light(s) in the fog color depending on the view angle. This can be used to give the impression that the sun is \u0022piercing\u0022 through the fog.",
+      "defaultValue": "0.0",
+      "godotName": "fog_sun_scatter",
+      "xmlDocId": "P:Godot.Environment.FogSunScatter",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowBlendMode",
+      "kind": "Property",
+      "signature": "public int GlowBlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The glow blending mode. [b]Note:[/b] The Compatibility renderer always uses [constant GLOW_BLEND_MODE_SCREEN] and [member glow_blend_mode] will have no effect.",
+      "defaultValue": "1",
+      "godotName": "glow_blend_mode",
+      "xmlDocId": "P:Godot.Environment.GlowBlendMode",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowBloom",
+      "kind": "Property",
+      "signature": "public float GlowBloom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The bloom\u0027s intensity. If set to a value higher than [code]0[/code], this will make glow visible in areas darker than the [member glow_hdr_threshold].",
+      "defaultValue": "0.0",
+      "godotName": "glow_bloom",
+      "xmlDocId": "P:Godot.Environment.GlowBloom",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowEnabled",
+      "kind": "Property",
+      "signature": "public bool GlowEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the glow effect is enabled. This simulates real world atmosphere and eye/camera behavior by causing bright pixels to bleed onto surrounding pixels. [b]Note:[/b] When using the Mobile rendering method, glow looks different due to the lower dynamic range available in the Mobile rendering method. [b]Note:[/b] When using the Compatibility rendering method, glow uses a different implementation with some properties being unavailable and hidden from the inspector: [code]glow_levels/*[/code], [member glow_normalized], [member glow_strength], [member glow_blend_mode], [member glow_mix], [member glow_map], and [member glow_map_strength]. This implementation is optimized to run on low-end devices and is less flexible as a result.",
+      "defaultValue": "false",
+      "godotName": "glow_enabled",
+      "xmlDocId": "P:Godot.Environment.GlowEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowHdrLuminanceCap",
+      "kind": "Property",
+      "signature": "public float GlowHdrLuminanceCap { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The higher threshold of the HDR glow. Areas brighter than this threshold will be clamped for the purposes of the glow effect.",
+      "defaultValue": "12.0",
+      "godotName": "glow_hdr_luminance_cap",
+      "xmlDocId": "P:Godot.Environment.GlowHdrLuminanceCap",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowHdrScale",
+      "kind": "Property",
+      "signature": "public float GlowHdrScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Smooths the transition between values that are below and above [member glow_hdr_threshold] by reducing the amount of glow generated by values that are close to [member glow_hdr_threshold]. Values above [code]glow_hdr_threshold \u002B glow_hdr_scale[/code] will not have glow reduced in this way.",
+      "defaultValue": "2.0",
+      "godotName": "glow_hdr_scale",
+      "xmlDocId": "P:Godot.Environment.GlowHdrScale",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowHdrThreshold",
+      "kind": "Property",
+      "signature": "public float GlowHdrThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The lower threshold of the HDR glow. When using the Mobile rendering method (which only supports a lower dynamic range up to [code]2.0[/code]), this may need to be below [code]1.0[/code] for glow to be visible. A value of [code]0.9[/code] works well in this case. This value also needs to be decreased below [code]1.0[/code] when using glow in 2D, as 2D rendering is performed in SDR.",
+      "defaultValue": "1.0",
+      "godotName": "glow_hdr_threshold",
+      "xmlDocId": "P:Godot.Environment.GlowHdrThreshold",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowIntensity",
+      "kind": "Property",
+      "signature": "public float GlowIntensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The overall brightness multiplier that is applied to the glow effect just before it is blended with the scene. When using the Mobile rendering method (which only supports a lower dynamic range up to [code]2.0[/code]), this should be increased to [code]1.5[/code] to compensate.",
+      "defaultValue": "0.3",
+      "godotName": "glow_intensity",
+      "xmlDocId": "P:Godot.Environment.GlowIntensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowMap",
+      "kind": "Property",
+      "signature": "public Texture GlowMap { get; set; }",
+      "returnType": "Texture",
+      "parameters": [],
+      "summary": "The texture that should be used as a glow map to [i]multiply[/i] the resulting glow color according to [member glow_map_strength]. This can be used to create a \u0022lens dirt\u0022 effect. The texture\u0027s RGB color channels are used for modulation, but the alpha channel is ignored. [b]Note:[/b] The texture will be stretched to fit the screen. Therefore, it\u0027s recommended to use a texture with an aspect ratio that matches your project\u0027s base aspect ratio (typically 16:9). [b]Note:[/b] [member glow_map] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "godotName": "glow_map",
+      "xmlDocId": "P:Godot.Environment.GlowMap",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowMapStrength",
+      "kind": "Property",
+      "signature": "public float GlowMapStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "How strong of an influence the [member glow_map] should have on the overall glow effect. A strength of [code]0.0[/code] means the glow map has no influence, while a strength of [code]1.0[/code] means the glow map has full influence. [b]Note:[/b] If the glow map has black areas, a value of [code]1.0[/code] can also turn off the glow effect entirely in specific areas of the screen. [b]Note:[/b] [member glow_map_strength] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.8",
+      "godotName": "glow_map_strength",
+      "xmlDocId": "P:Godot.Environment.GlowMapStrength",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowMix",
+      "kind": "Property",
+      "signature": "public float GlowMix { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When using the [constant GLOW_BLEND_MODE_MIX] [member glow_blend_mode], this controls how much the source image is blended with the glow layer. A value of [code]0.0[/code] makes the glow rendering invisible, while a value of [code]1.0[/code] is equivalent to [constant GLOW_BLEND_MODE_REPLACE]. [b]Note:[/b] [member glow_mix] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.05",
+      "godotName": "glow_mix",
+      "xmlDocId": "P:Godot.Environment.GlowMix",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowNormalized",
+      "kind": "Property",
+      "signature": "public bool GlowNormalized { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], glow levels will be normalized so that summed together their intensities equal [code]1.0[/code]. [b]Note:[/b] [member glow_normalized] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "false",
+      "godotName": "glow_normalized",
+      "xmlDocId": "P:Godot.Environment.GlowNormalized",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GlowStrength",
+      "kind": "Property",
+      "signature": "public float GlowStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength that is used when blurring across the screen to generate the glow effect. This affects the distance and intensity of the blur. When using the Mobile rendering method, this should be increased to compensate for the lower dynamic range. [b]Note:[/b] [member glow_strength] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "1.0",
+      "godotName": "glow_strength",
+      "xmlDocId": "P:Godot.Environment.GlowStrength",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "ReflectedLightSource",
+      "kind": "Property",
+      "signature": "public int ReflectedLightSource { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The reflected (specular) light source.",
+      "defaultValue": "0",
+      "godotName": "reflected_light_source",
+      "xmlDocId": "P:Godot.Environment.ReflectedLightSource",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiBounceFeedback",
+      "kind": "Property",
+      "signature": "public float SdfgiBounceFeedback { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The energy multiplier applied to light every time it bounces from a surface when using SDFGI. Values greater than [code]0.0[/code] will simulate multiple bounces, resulting in a more realistic appearance. Increasing [member sdfgi_bounce_feedback] generally has no performance impact. See also [member sdfgi_energy]. [b]Note:[/b] Values greater than [code]0.5[/code] can cause infinite feedback loops and should be avoided in scenes with bright materials. [b]Note:[/b] If [member sdfgi_bounce_feedback] is [code]0.0[/code], indirect lighting will not be represented in reflections as light will only bounce one time.",
+      "defaultValue": "0.5",
+      "godotName": "sdfgi_bounce_feedback",
+      "xmlDocId": "P:Godot.Environment.SdfgiBounceFeedback",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiCascade0Distance",
+      "kind": "Property",
+      "signature": "public float SdfgiCascade0Distance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "[b]Note:[/b] This property is linked to [member sdfgi_min_cell_size] and [member sdfgi_max_distance]. Changing its value will automatically change those properties as well.",
+      "defaultValue": "12.8",
+      "godotName": "sdfgi_cascade0_distance",
+      "xmlDocId": "P:Godot.Environment.SdfgiCascade0Distance",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiCascades",
+      "kind": "Property",
+      "signature": "public int SdfgiCascades { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of cascades to use for SDFGI (between 1 and 8). A higher number of cascades allows displaying SDFGI further away while preserving detail up close, at the cost of performance. When using SDFGI on small-scale levels, [member sdfgi_cascades] can often be decreased between [code]1[/code] and [code]4[/code] to improve performance.",
+      "defaultValue": "4",
+      "godotName": "sdfgi_cascades",
+      "xmlDocId": "P:Godot.Environment.SdfgiCascades",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiEnabled",
+      "kind": "Property",
+      "signature": "public bool SdfgiEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables signed distance field global illumination for meshes that have their [member GeometryInstance3D.gi_mode] set to [constant GeometryInstance3D.GI_MODE_STATIC]. SDFGI is a real-time global illumination technique that works well with procedurally generated and user-built levels, including in situations where geometry is created during gameplay. The signed distance field is automatically generated around the camera as it moves. Dynamic lights are supported, but dynamic occluders and emissive surfaces are not. [b]Note:[/b] SDFGI is only supported in the Forward\u002B rendering method, not Mobile or Compatibility. [b]Performance:[/b] SDFGI is relatively demanding on the GPU and is not suited to low-end hardware such as integrated graphics (consider [LightmapGI] instead). To improve SDFGI performance, enable [member ProjectSettings.rendering/global_illumination/gi/use_half_resolution] in the Project Settings. [b]Note:[/b] Meshes should have sufficiently thick walls to avoid light leaks (avoid one-sided walls). For interior levels, enclose your level geometry in a sufficiently large box and bridge the loops to close the mesh.",
+      "defaultValue": "false",
+      "godotName": "sdfgi_enabled",
+      "xmlDocId": "P:Godot.Environment.SdfgiEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiEnergy",
+      "kind": "Property",
+      "signature": "public float SdfgiEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The energy multiplier to use for SDFGI. Higher values will result in brighter indirect lighting and reflections. See also [member sdfgi_bounce_feedback].",
+      "defaultValue": "1.0",
+      "godotName": "sdfgi_energy",
+      "xmlDocId": "P:Godot.Environment.SdfgiEnergy",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiMaxDistance",
+      "kind": "Property",
+      "signature": "public float SdfgiMaxDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance at which SDFGI is visible. Beyond this distance, environment lighting or other sources of GI such as [ReflectionProbe] will be used as a fallback. [b]Note:[/b] This property is linked to [member sdfgi_min_cell_size] and [member sdfgi_cascade0_distance]. Changing its value will automatically change those properties as well.",
+      "defaultValue": "204.8",
+      "godotName": "sdfgi_max_distance",
+      "xmlDocId": "P:Godot.Environment.SdfgiMaxDistance",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiMinCellSize",
+      "kind": "Property",
+      "signature": "public float SdfgiMinCellSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The cell size to use for the closest SDFGI cascade (in 3D units). Lower values allow SDFGI to be more precise up close, at the cost of making SDFGI updates more demanding. This can cause stuttering when the camera moves fast. Higher values allow SDFGI to cover more ground, while also reducing the performance impact of SDFGI updates. [b]Note:[/b] This property is linked to [member sdfgi_max_distance] and [member sdfgi_cascade0_distance]. Changing its value will automatically change those properties as well.",
+      "defaultValue": "0.2",
+      "godotName": "sdfgi_min_cell_size",
+      "xmlDocId": "P:Godot.Environment.SdfgiMinCellSize",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiNormalBias",
+      "kind": "Property",
+      "signature": "public float SdfgiNormalBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The normal bias to use for SDFGI probes. Increasing this value can reduce visible streaking artifacts on sloped surfaces, at the cost of increased light leaking.",
+      "defaultValue": "1.1",
+      "godotName": "sdfgi_normal_bias",
+      "xmlDocId": "P:Godot.Environment.SdfgiNormalBias",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiProbeBias",
+      "kind": "Property",
+      "signature": "public float SdfgiProbeBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The constant bias to use for SDFGI probes. Increasing this value can reduce visible streaking artifacts on sloped surfaces, at the cost of increased light leaking.",
+      "defaultValue": "1.1",
+      "godotName": "sdfgi_probe_bias",
+      "xmlDocId": "P:Godot.Environment.SdfgiProbeBias",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiReadSkyLight",
+      "kind": "Property",
+      "signature": "public bool SdfgiReadSkyLight { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], SDFGI takes the environment lighting into account. This should be set to [code]false[/code] for interior scenes.",
+      "defaultValue": "true",
+      "godotName": "sdfgi_read_sky_light",
+      "xmlDocId": "P:Godot.Environment.SdfgiReadSkyLight",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiUseOcclusion",
+      "kind": "Property",
+      "signature": "public bool SdfgiUseOcclusion { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], SDFGI uses an occlusion detection approach to reduce light leaking. Occlusion may however introduce dark blotches in certain spots, which may be undesired in mostly outdoor scenes. [member sdfgi_use_occlusion] has a performance impact and should only be enabled when needed.",
+      "defaultValue": "false",
+      "godotName": "sdfgi_use_occlusion",
+      "xmlDocId": "P:Godot.Environment.SdfgiUseOcclusion",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SdfgiYScale",
+      "kind": "Property",
+      "signature": "public int SdfgiYScale { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The Y scale to use for SDFGI cells. Lower values will result in SDFGI cells being packed together more closely on the Y axis. This is used to balance between quality and covering a lot of vertical ground. [member sdfgi_y_scale] should be set depending on how vertical your scene is (and how fast your camera may move on the Y axis).",
+      "defaultValue": "1",
+      "godotName": "sdfgi_y_scale",
+      "xmlDocId": "P:Godot.Environment.SdfgiYScale",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "Sky",
+      "kind": "Property",
+      "signature": "public Sky Sky { get; set; }",
+      "returnType": "Sky",
+      "parameters": [],
+      "summary": "The [Sky] resource used for this [Environment].",
+      "godotName": "sky",
+      "xmlDocId": "P:Godot.Environment.Sky",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SkyCustomFov",
+      "kind": "Property",
+      "signature": "public float SkyCustomFov { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set to a value greater than [code]0.0[/code], overrides the field of view to use for sky rendering. If set to [code]0.0[/code], the same FOV as the current [Camera3D] is used for sky rendering.",
+      "defaultValue": "0.0",
+      "godotName": "sky_custom_fov",
+      "xmlDocId": "P:Godot.Environment.SkyCustomFov",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SkyRotation",
+      "kind": "Property",
+      "signature": "public Vector3 SkyRotation { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The rotation to use for sky rendering.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "sky_rotation",
+      "xmlDocId": "P:Godot.Environment.SkyRotation",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoAoChannelAffect",
+      "kind": "Property",
+      "signature": "public float SsaoAoChannelAffect { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The screen-space ambient occlusion intensity on materials that have an AO texture defined. Values higher than [code]0[/code] will make the SSAO effect visible in areas darkened by AO textures.",
+      "defaultValue": "0.0",
+      "godotName": "ssao_ao_channel_affect",
+      "xmlDocId": "P:Godot.Environment.SsaoAoChannelAffect",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoDetail",
+      "kind": "Property",
+      "signature": "public float SsaoDetail { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the strength of the additional level of detail for the screen-space ambient occlusion effect. A high value makes the detail pass more prominent, but it may contribute to aliasing in your final image.",
+      "defaultValue": "0.5",
+      "godotName": "ssao_detail",
+      "xmlDocId": "P:Godot.Environment.SsaoDetail",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoEnabled",
+      "kind": "Property",
+      "signature": "public bool SsaoEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the screen-space ambient occlusion effect is enabled. This darkens objects\u0027 corners and cavities to simulate ambient light not reaching the entire object as in real life. This works well for small, dynamic objects, but baked lighting or ambient occlusion textures will do a better job at displaying ambient occlusion on large static objects. Godot uses a form of SSAO called Adaptive Screen Space Ambient Occlusion which is itself a form of Horizon Based Ambient Occlusion. [b]Note:[/b] SSAO is only supported in the Forward\u002B and Compatibility rendering methods, not Mobile.",
+      "defaultValue": "false",
+      "godotName": "ssao_enabled",
+      "xmlDocId": "P:Godot.Environment.SsaoEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoHorizon",
+      "kind": "Property",
+      "signature": "public float SsaoHorizon { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold for considering whether a given point on a surface is occluded or not represented as an angle from the horizon mapped into the [code]0.0-1.0[/code] range. A value of [code]1.0[/code] results in no occlusion.",
+      "defaultValue": "0.06",
+      "godotName": "ssao_horizon",
+      "xmlDocId": "P:Godot.Environment.SsaoHorizon",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoIntensity",
+      "kind": "Property",
+      "signature": "public float SsaoIntensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The primary screen-space ambient occlusion intensity. Acts as a multiplier for the screen-space ambient occlusion effect. A higher value results in darker occlusion.",
+      "defaultValue": "2.0",
+      "godotName": "ssao_intensity",
+      "xmlDocId": "P:Godot.Environment.SsaoIntensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoLightAffect",
+      "kind": "Property",
+      "signature": "public float SsaoLightAffect { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The screen-space ambient occlusion intensity in direct light. In real life, ambient occlusion only applies to indirect light, which means its effects can\u0027t be seen in direct light. Values higher than [code]0[/code] will make the SSAO effect visible in direct light.",
+      "defaultValue": "0.0",
+      "godotName": "ssao_light_affect",
+      "xmlDocId": "P:Godot.Environment.SsaoLightAffect",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoPower",
+      "kind": "Property",
+      "signature": "public float SsaoPower { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distribution of occlusion. A higher value results in darker occlusion, similar to [member ssao_intensity], but with a sharper falloff.",
+      "defaultValue": "1.5",
+      "godotName": "ssao_power",
+      "xmlDocId": "P:Godot.Environment.SsaoPower",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoRadius",
+      "kind": "Property",
+      "signature": "public float SsaoRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance at which objects can occlude each other when calculating screen-space ambient occlusion. Higher values will result in occlusion over a greater distance at the cost of performance and quality.",
+      "defaultValue": "1.0",
+      "godotName": "ssao_radius",
+      "xmlDocId": "P:Godot.Environment.SsaoRadius",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsaoSharpness",
+      "kind": "Property",
+      "signature": "public float SsaoSharpness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount that the screen-space ambient occlusion effect is allowed to blur over the edges of objects. Setting too high will result in aliasing around the edges of objects. Setting too low will make object edges appear blurry.",
+      "defaultValue": "0.98",
+      "godotName": "ssao_sharpness",
+      "xmlDocId": "P:Godot.Environment.SsaoSharpness",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsilEnabled",
+      "kind": "Property",
+      "signature": "public bool SsilEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the screen-space indirect lighting effect is enabled. Screen space indirect lighting is a form of indirect lighting that allows diffuse light to bounce between nearby objects. Screen-space indirect lighting works very similarly to screen-space ambient occlusion, in that it only affects a limited range. It is intended to be used along with a form of proper global illumination like SDFGI or [VoxelGI]. Screen-space indirect lighting is not affected by individual light\u0027s [member Light3D.light_indirect_energy]. [b]Note:[/b] SSIL is only supported in the Forward\u002B rendering method, not Mobile or Compatibility.",
+      "defaultValue": "false",
+      "godotName": "ssil_enabled",
+      "xmlDocId": "P:Godot.Environment.SsilEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsilIntensity",
+      "kind": "Property",
+      "signature": "public float SsilIntensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The brightness multiplier for the screen-space indirect lighting effect. A higher value will result in brighter light.",
+      "defaultValue": "1.0",
+      "godotName": "ssil_intensity",
+      "xmlDocId": "P:Godot.Environment.SsilIntensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsilNormalRejection",
+      "kind": "Property",
+      "signature": "public float SsilNormalRejection { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount of normal rejection used when calculating screen-space indirect lighting. Normal rejection uses the normal of a given sample point to reject samples that are facing away from the current pixel. Normal rejection is necessary to avoid light leaking when only one side of an object is illuminated. However, normal rejection can be disabled if light leaking is desirable, such as when the scene mostly contains emissive objects that emit light from faces that cannot be seen from the camera.",
+      "defaultValue": "1.0",
+      "godotName": "ssil_normal_rejection",
+      "xmlDocId": "P:Godot.Environment.SsilNormalRejection",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsilRadius",
+      "kind": "Property",
+      "signature": "public float SsilRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance that bounced lighting can travel when using the screen space indirect lighting effect. A larger value will result in light bouncing further in a scene, but may result in under-sampling artifacts which look like long spikes surrounding light sources.",
+      "defaultValue": "5.0",
+      "godotName": "ssil_radius",
+      "xmlDocId": "P:Godot.Environment.SsilRadius",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsilSharpness",
+      "kind": "Property",
+      "signature": "public float SsilSharpness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount that the screen-space indirect lighting effect is allowed to blur over the edges of objects. Setting too high will result in aliasing around the edges of objects. Setting too low will make object edges appear blurry.",
+      "defaultValue": "0.98",
+      "godotName": "ssil_sharpness",
+      "xmlDocId": "P:Godot.Environment.SsilSharpness",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsrDepthTolerance",
+      "kind": "Property",
+      "signature": "public float SsrDepthTolerance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth tolerance for screen-space reflections.",
+      "defaultValue": "0.5",
+      "godotName": "ssr_depth_tolerance",
+      "xmlDocId": "P:Godot.Environment.SsrDepthTolerance",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsrEnabled",
+      "kind": "Property",
+      "signature": "public bool SsrEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], screen-space reflections are enabled. Screen-space reflections are more accurate than reflections from [VoxelGI]s or [ReflectionProbe]s, but are slower and can\u0027t reflect surfaces occluded by others. [b]Note:[/b] SSR is only supported in the Forward\u002B rendering method, not Mobile or Compatibility. [b]Note:[/b] SSR is not supported on viewports that have a transparent background (where [member Viewport.transparent_bg] is [code]true[/code]).",
+      "defaultValue": "false",
+      "godotName": "ssr_enabled",
+      "xmlDocId": "P:Godot.Environment.SsrEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsrFadeIn",
+      "kind": "Property",
+      "signature": "public float SsrFadeIn { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fade-in distance for screen-space reflections. Affects the area from the reflected material to the screen-space reflection. Only positive values are valid (negative values will be clamped to [code]0.0[/code]).",
+      "defaultValue": "0.15",
+      "godotName": "ssr_fade_in",
+      "xmlDocId": "P:Godot.Environment.SsrFadeIn",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsrFadeOut",
+      "kind": "Property",
+      "signature": "public float SsrFadeOut { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The fade-out distance for screen-space reflections. Affects the area from the screen-space reflection to the \u0022global\u0022 reflection. Only positive values are valid (negative values will be clamped to [code]0.0[/code]).",
+      "defaultValue": "2.0",
+      "godotName": "ssr_fade_out",
+      "xmlDocId": "P:Godot.Environment.SsrFadeOut",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SsrMaxSteps",
+      "kind": "Property",
+      "signature": "public int SsrMaxSteps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of steps for screen-space reflections. Higher values are slower.",
+      "defaultValue": "64",
+      "godotName": "ssr_max_steps",
+      "xmlDocId": "P:Godot.Environment.SsrMaxSteps",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TonemapAgxContrast",
+      "kind": "Property",
+      "signature": "public float TonemapAgxContrast { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Increasing [member tonemap_agx_contrast] will make dark values darker and bright values brighter. Produces a higher quality result than [member adjustment_contrast] without any additional performance cost, but is only available when using the [constant TONE_MAPPER_AGX] tonemapper.",
+      "defaultValue": "1.25",
+      "godotName": "tonemap_agx_contrast",
+      "xmlDocId": "P:Godot.Environment.TonemapAgxContrast",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TonemapAgxWhite",
+      "kind": "Property",
+      "signature": "public float TonemapAgxWhite { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The white reference value for tonemapping, which indicates where bright white is located in the scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to set [member tonemap_agx_white] to at least [code]6.0[/code]. Higher values result in less blown out highlights, but may make the scene appear lower contrast. [member tonemap_agx_white] is the same as [member tonemap_white], but is only effective with the [constant TONE_MAPPER_AGX] tonemapper. See also [member tonemap_exposure]. [b]Note:[/b] When using the Mobile renderer with [member Viewport.use_hdr_2d] disabled, [member tonemap_agx_white] is ignored and a white value of [code]2.0[/code] will always be used instead. Otherwise, [member tonemap_agx_white] will be dynamically adjusted at runtime by multiplying it by the parent window\u0027s [method Window.get_output_max_linear_value] when using [member Viewport.use_hdr_2d] to ensure good behavior with both SDR and HDR output.",
+      "defaultValue": "16.29",
+      "godotName": "tonemap_agx_white",
+      "xmlDocId": "P:Godot.Environment.TonemapAgxWhite",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TonemapExposure",
+      "kind": "Property",
+      "signature": "public float TonemapExposure { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Adjusts the brightness of values before they are provided to the tonemapper. Higher [member tonemap_exposure] values result in a brighter image. See also [member tonemap_white]. [b]Note:[/b] Values provided to the tonemapper will also be multiplied by [code]2.0[/code] and [code]1.8[/code] for [constant TONE_MAPPER_FILMIC] and [constant TONE_MAPPER_ACES] respectively to produce a similar apparent brightness as [constant TONE_MAPPER_LINEAR].",
+      "defaultValue": "1.0",
+      "godotName": "tonemap_exposure",
+      "xmlDocId": "P:Godot.Environment.TonemapExposure",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TonemapMode",
+      "kind": "Property",
+      "signature": "public int TonemapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The tonemapping mode to use. Tonemapping is the process that \u0022converts\u0022 HDR values to be suitable for rendering on an LDR display. (Godot doesn\u0027t support rendering on HDR displays yet.)",
+      "defaultValue": "0",
+      "godotName": "tonemap_mode",
+      "xmlDocId": "P:Godot.Environment.TonemapMode",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TonemapWhite",
+      "kind": "Property",
+      "signature": "public float TonemapWhite { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The white reference value for tonemapping, which indicates where bright white is located in the scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to set [member tonemap_white] to at least [code]6.0[/code]. Higher values result in less blown out highlights, but may make the scene appear lower contrast. [member tonemap_agx_white] will be used instead when using the [constant TONE_MAPPER_AGX] tonemapper. See also [member tonemap_exposure]. [b]Note:[/b] [member tonemap_white] must be set to [code]2.0[/code] or lower on the Mobile renderer to produce bright images. [b]Note:[/b] [member tonemap_white] is ignored when using [constant TONE_MAPPER_LINEAR] and will be dynamically adjusted at runtime to never be less than the parent window\u0027s [method Window.get_output_max_linear_value] when using [constant TONE_MAPPER_REINHARDT] with [member Viewport.use_hdr_2d].",
+      "defaultValue": "1.0",
+      "godotName": "tonemap_white",
+      "xmlDocId": "P:Godot.Environment.TonemapWhite",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogAlbedo",
+      "kind": "Property",
+      "signature": "public Color VolumetricFogAlbedo { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The [Color] of the volumetric fog when interacting with lights. Mist and fog have an albedo close to [code]Color(1, 1, 1, 1)[/code] while smoke has a darker albedo.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "volumetric_fog_albedo",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogAlbedo",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogAmbientInject",
+      "kind": "Property",
+      "signature": "public float VolumetricFogAmbientInject { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the strength of ambient light used in the volumetric fog. A value of [code]0.0[/code] means that ambient light will not impact the volumetric fog. [member volumetric_fog_ambient_inject] has a small performance cost when set above [code]0.0[/code]. [b]Note:[/b] This has no visible effect if [member volumetric_fog_density] is [code]0.0[/code] or if [member volumetric_fog_albedo] is a fully black color.",
+      "defaultValue": "0.0",
+      "godotName": "volumetric_fog_ambient_inject",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogAmbientInject",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogAnisotropy",
+      "kind": "Property",
+      "signature": "public float VolumetricFogAnisotropy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The direction of scattered light as it goes through the volumetric fog. A value close to [code]1.0[/code] means almost all light is scattered forward. A value close to [code]0.0[/code] means light is scattered equally in all directions. A value close to [code]-1.0[/code] means light is scattered mostly backward. Fog and mist scatter light slightly forward, while smoke scatters light equally in all directions.",
+      "defaultValue": "0.2",
+      "godotName": "volumetric_fog_anisotropy",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogAnisotropy",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogDensity",
+      "kind": "Property",
+      "signature": "public float VolumetricFogDensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The base [i]exponential[/i] density of the volumetric fog. Set this to the lowest density you want to have globally. [FogVolume]s can be used to add to or subtract from this density in specific areas. Fog rendering is exponential as in real life. A value of [code]0.0[/code] disables global volumetric fog while allowing [FogVolume]s to display volumetric fog in specific areas. To make volumetric fog work as a volumetric [i]lighting[/i] solution, set [member volumetric_fog_density] to the lowest non-zero value ([code]0.0001[/code]) then increase lights\u0027 [member Light3D.light_volumetric_fog_energy] to values between [code]10000[/code] and [code]100000[/code] to compensate for the very low density.",
+      "defaultValue": "0.05",
+      "godotName": "volumetric_fog_density",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogDensity",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogDetailSpread",
+      "kind": "Property",
+      "signature": "public float VolumetricFogDetailSpread { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distribution of size down the length of the froxel buffer. A higher value compresses the froxels closer to the camera and places more detail closer to the camera.",
+      "defaultValue": "2.0",
+      "godotName": "volumetric_fog_detail_spread",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogDetailSpread",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogEmission",
+      "kind": "Property",
+      "signature": "public Color VolumetricFogEmission { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The emitted light from the volumetric fog. Even with emission, volumetric fog will not cast light onto other surfaces. Emission is useful to establish an ambient color. As the volumetric fog effect uses single-scattering only, fog tends to need a little bit of emission to soften the harsh shadows.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "volumetric_fog_emission",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogEmission",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogEmissionEnergy",
+      "kind": "Property",
+      "signature": "public float VolumetricFogEmissionEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The brightness of the emitted light from the volumetric fog.",
+      "defaultValue": "1.0",
+      "godotName": "volumetric_fog_emission_energy",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogEmissionEnergy",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogEnabled",
+      "kind": "Property",
+      "signature": "public bool VolumetricFogEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables the volumetric fog effect. Volumetric fog uses a screen-aligned froxel buffer to calculate accurate volumetric scattering in the short to medium range. Volumetric fog interacts with [FogVolume]s and lights to calculate localized and global fog. Volumetric fog uses a PBR single-scattering model based on extinction, scattering, and emission which it exposes to users as density, albedo, and emission. [b]Note:[/b] Volumetric fog is only supported in the Forward\u002B rendering method, not Mobile or Compatibility.",
+      "defaultValue": "false",
+      "godotName": "volumetric_fog_enabled",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogGiInject",
+      "kind": "Property",
+      "signature": "public float VolumetricFogGiInject { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the strength of Global Illumination used in the volumetric fog\u0027s albedo color. A value of [code]0.0[/code] means that Global Illumination will not impact the volumetric fog. [member volumetric_fog_gi_inject] has a small performance cost when set above [code]0.0[/code]. [b]Note:[/b] This has no visible effect if [member volumetric_fog_density] is [code]0.0[/code] or if [member volumetric_fog_albedo] is a fully black color. [b]Note:[/b] Only [VoxelGI] and SDFGI ([member Environment.sdfgi_enabled]) are taken into account when using [member volumetric_fog_gi_inject]. Global illumination from [LightmapGI], [ReflectionProbe] and SSIL (see [member ssil_enabled]) will be ignored by volumetric fog.",
+      "defaultValue": "1.0",
+      "godotName": "volumetric_fog_gi_inject",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogGiInject",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogLength",
+      "kind": "Property",
+      "signature": "public float VolumetricFogLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance over which the volumetric fog is computed. Increase to compute fog over a greater range, decrease to add more detail when a long range is not needed. For best quality fog, keep this as low as possible. See also [member ProjectSettings.rendering/environment/volumetric_fog/volume_depth].",
+      "defaultValue": "64.0",
+      "godotName": "volumetric_fog_length",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogLength",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogSkyAffect",
+      "kind": "Property",
+      "signature": "public float VolumetricFogSkyAffect { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The factor to use when affecting the sky with volumetric fog. [code]1.0[/code] means that volumetric fog can fully obscure the sky. Lower values reduce the impact of volumetric fog on sky rendering, with [code]0.0[/code] not affecting sky rendering at all. [b]Note:[/b] [member volumetric_fog_sky_affect] also affects [FogVolume]s, even if [member volumetric_fog_density] is [code]0.0[/code]. If you notice [FogVolume]s are disappearing when looking towards the sky, set [member volumetric_fog_sky_affect] to [code]1.0[/code].",
+      "defaultValue": "1.0",
+      "godotName": "volumetric_fog_sky_affect",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogSkyAffect",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogTemporalReprojectionAmount",
+      "kind": "Property",
+      "signature": "public float VolumetricFogTemporalReprojectionAmount { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount by which to blend the last frame with the current frame. A higher number results in smoother volumetric fog, but makes \u0022ghosting\u0022 much worse. A lower value reduces ghosting but can result in the per-frame temporal jitter becoming visible.",
+      "defaultValue": "0.9",
+      "godotName": "volumetric_fog_temporal_reprojection_amount",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogTemporalReprojectionAmount",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "VolumetricFogTemporalReprojectionEnabled",
+      "kind": "Property",
+      "signature": "public bool VolumetricFogTemporalReprojectionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables temporal reprojection in the volumetric fog. Temporal reprojection blends the current frame\u0027s volumetric fog with the last frame\u0027s volumetric fog to smooth out jagged edges. The performance cost is minimal; however, it leads to moving [FogVolume]s and [Light3D]s \u0022ghosting\u0022 and leaving a trail behind them. When temporal reprojection is enabled, try to avoid moving [FogVolume]s or [Light3D]s too fast. Short-lived dynamic lighting effects should have [member Light3D.light_volumetric_fog_energy] set to [code]0.0[/code] to avoid ghosting.",
+      "defaultValue": "true",
+      "godotName": "volumetric_fog_temporal_reprojection_enabled",
+      "xmlDocId": "P:Godot.Environment.VolumetricFogTemporalReprojectionEnabled",
+      "sourcePath": "doc/classes/Environment.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "glow_levels/1",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 1st level of glow. This is the most \u0022local\u0022 level (least blurry). [b]Note:[/b] [member glow_levels/1] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.0",
+      "godotName": "glow_levels/1",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/2",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 2nd level of glow. [b]Note:[/b] [member glow_levels/2] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.8",
+      "godotName": "glow_levels/2",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/3",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 3rd level of glow. [b]Note:[/b] [member glow_levels/3] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.4",
+      "godotName": "glow_levels/3",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/4",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 4th level of glow. [b]Note:[/b] [member glow_levels/4] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.1",
+      "godotName": "glow_levels/4",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/5",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 5th level of glow. [b]Note:[/b] [member glow_levels/5] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.0",
+      "godotName": "glow_levels/5",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/6",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 6th level of glow. [b]Note:[/b] [member glow_levels/6] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.0",
+      "godotName": "glow_levels/6",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "glow_levels/7",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the 7th level of glow. This is the most \u0022global\u0022 level (blurriest). [b]Note:[/b] [member glow_levels/7] has no effect when using the Compatibility rendering method, due to this rendering method using a simpler glow implementation optimized for low-end devices.",
+      "defaultValue": "0.0",
+      "godotName": "glow_levels/7",
+      "sourcePath": "doc/classes/Environment.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AmbientSource",
+      "values": [
+        {
+          "name": "AMBIENT_SOURCE_BG",
+          "value": "0",
+          "enum": "AmbientSource",
+          "kind": "EnumValue",
+          "summary": "Gather ambient light from whichever source is specified as the background.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "AMBIENT_SOURCE_COLOR",
+          "value": "2",
+          "enum": "AmbientSource",
+          "kind": "EnumValue",
+          "summary": "Specify a specific [Color] for ambient light. This provides a slight performance boost over [constant AMBIENT_SOURCE_SKY].",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "AMBIENT_SOURCE_DISABLED",
+          "value": "1",
+          "enum": "AmbientSource",
+          "kind": "EnumValue",
+          "summary": "Disable ambient light. This provides a slight performance boost over [constant AMBIENT_SOURCE_SKY].",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "AMBIENT_SOURCE_SKY",
+          "value": "3",
+          "enum": "AmbientSource",
+          "kind": "EnumValue",
+          "summary": "Gather ambient light from the [Sky] regardless of what the background is.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "BGMode",
+      "values": [
+        {
+          "name": "BG_CAMERA_FEED",
+          "value": "5",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Displays a camera feed in the background.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_CANVAS",
+          "value": "3",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Displays a [CanvasLayer] in the background.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_CLEAR_COLOR",
+          "value": "0",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Clears the background using the clear color defined in [member ProjectSettings.rendering/environment/defaults/default_clear_color].",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_COLOR",
+          "value": "1",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Clears the background using a custom clear color.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_KEEP",
+          "value": "4",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Keeps on screen every pixel drawn in the background. This is the fastest background mode, but it can only be safely used in fully-interior scenes (no visible sky or sky reflections). If enabled in a scene where the background is visible, \u0022ghost trail\u0022 artifacts will be visible when moving the camera.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_MAX",
+          "value": "6",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BGMode] enum.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "BG_SKY",
+          "value": "2",
+          "enum": "BGMode",
+          "kind": "EnumValue",
+          "summary": "Displays a user-defined sky in the background.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "FogMode",
+      "values": [
+        {
+          "name": "FOG_MODE_DEPTH",
+          "value": "1",
+          "enum": "FogMode",
+          "kind": "EnumValue",
+          "summary": "Use a simple fog model defined by start and end positions and a custom curve. While not physically accurate, this model can be useful when you need more artistic control.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "FOG_MODE_EXPONENTIAL",
+          "value": "0",
+          "enum": "FogMode",
+          "kind": "EnumValue",
+          "summary": "Use a physically-based fog model defined primarily by fog density.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "GlowBlendMode",
+      "values": [
+        {
+          "name": "GLOW_BLEND_MODE_ADDITIVE",
+          "value": "0",
+          "enum": "GlowBlendMode",
+          "kind": "EnumValue",
+          "summary": "Adds the glow effect to the scene.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "GLOW_BLEND_MODE_MIX",
+          "value": "4",
+          "enum": "GlowBlendMode",
+          "kind": "EnumValue",
+          "summary": "Mixes the glow image with the scene image. Best used with [member glow_bloom] to avoid darkening the scene.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "GLOW_BLEND_MODE_REPLACE",
+          "value": "3",
+          "enum": "GlowBlendMode",
+          "kind": "EnumValue",
+          "summary": "Replaces all pixels\u0027 color by the glow effect. This can be used to simulate a full-screen blur effect by tweaking the glow parameters to match the original image\u0027s brightness or to preview glow configuration in the editor.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "GLOW_BLEND_MODE_SCREEN",
+          "value": "1",
+          "enum": "GlowBlendMode",
+          "kind": "EnumValue",
+          "summary": "Adds the glow effect to the scene after modifying the glow influence based on the scene value; dark values will be highly influenced by glow and bright values will not be influenced by glow. This approach avoids bright values becoming overly bright from the glow effect. [member tonemap_white] is used to determine the maximum scene value where the glow should have no influence. When [member tonemap_mode] is set to [constant TONE_MAPPER_LINEAR] and [member Viewport.use_hdr_2d] is [code]true[/code], the parent window\u0027s [method Window.get_output_max_linear_value] will be used as the maximum scene value.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "GLOW_BLEND_MODE_SOFTLIGHT",
+          "value": "2",
+          "enum": "GlowBlendMode",
+          "kind": "EnumValue",
+          "summary": "Adds the glow effect to the tonemapped image after modifying the glow influence based on the image value; dark values and bright values will not be influenced by glow and mid-range values will be highly influenced by glow. This approach avoids bright values becoming overly bright from the glow effect. The glow will have the largest influence on image values of [code]0.25[/code] and will have no influence when applied to image values greater than [code]1.0[/code]. [b]Note:[/b] This blend mode does not support HDR output because expects a maximum output value of [code]1.0[/code]. It is recommended to use a different blend mode when rendering to an HDR screen.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "ReflectionSource",
+      "values": [
+        {
+          "name": "REFLECTION_SOURCE_BG",
+          "value": "0",
+          "enum": "ReflectionSource",
+          "kind": "EnumValue",
+          "summary": "Use the background for reflections.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "REFLECTION_SOURCE_DISABLED",
+          "value": "1",
+          "enum": "ReflectionSource",
+          "kind": "EnumValue",
+          "summary": "Disable reflections. This provides a slight performance boost over other options.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "REFLECTION_SOURCE_SKY",
+          "value": "2",
+          "enum": "ReflectionSource",
+          "kind": "EnumValue",
+          "summary": "Use the [Sky] for reflections regardless of what the background is.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "SDFGIYScale",
+      "values": [
+        {
+          "name": "SDFGI_Y_SCALE_100_PERCENT",
+          "value": "2",
+          "enum": "SDFGIYScale",
+          "kind": "EnumValue",
+          "summary": "Use 100% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be as tall as they are wide. This is usually the best choice for highly vertical scenes. The downside is that light leaking may become more noticeable with thin floors and ceilings.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "SDFGI_Y_SCALE_50_PERCENT",
+          "value": "0",
+          "enum": "SDFGIYScale",
+          "kind": "EnumValue",
+          "summary": "Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are wide. This allows providing increased GI detail and reduced light leaking with thin floors and ceilings. This is usually the best choice for scenes that don\u0027t feature much verticality.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "SDFGI_Y_SCALE_75_PERCENT",
+          "value": "1",
+          "enum": "SDFGIYScale",
+          "kind": "EnumValue",
+          "summary": "Use 75% scale for SDFGI on the Y (vertical) axis. This is a balance between the 50% and 100% SDFGI Y scales.",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    },
+    {
+      "name": "ToneMapper",
+      "values": [
+        {
+          "name": "TONE_MAPPER_ACES",
+          "value": "3",
+          "enum": "ToneMapper",
+          "kind": "EnumValue",
+          "summary": "Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more realistic appearance. Slightly slower than [constant TONE_MAPPER_FILMIC]. [b]Note:[/b] This tonemapping operator is called \u0022ACES Fitted\u0022 in Godot 3.x. [b]Note:[/b] This tonemapper does not support HDR output because it produces output in the SDR range. It is recommended to use a different tonemapper when rendering to an HDR screen.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "TONE_MAPPER_AGX",
+          "value": "4",
+          "enum": "ToneMapper",
+          "kind": "EnumValue",
+          "summary": "Uses an adjustable film-like tonemapping curve and desaturates bright values for a more realistic appearance. Better than other tonemappers at maintaining the hue of colors as they become brighter. The slowest tonemapping option.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "TONE_MAPPER_FILMIC",
+          "value": "2",
+          "enum": "ToneMapper",
+          "kind": "EnumValue",
+          "summary": "Uses a film-like tonemapping curve to prevent clipping of bright values and provide better contrast than [constant TONE_MAPPER_REINHARDT]. Slightly slower than [constant TONE_MAPPER_REINHARDT]. [b]Note:[/b] This tonemapper does not support HDR output because it produces output in the SDR range. It is recommended to use a different tonemapper when rendering to an HDR screen.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "TONE_MAPPER_LINEAR",
+          "value": "0",
+          "enum": "ToneMapper",
+          "kind": "EnumValue",
+          "summary": "Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips bright values, causing bright lighting to look blown out. The simplest and fastest tonemapper.",
+          "sourcePath": "doc/classes/Environment.xml"
+        },
+        {
+          "name": "TONE_MAPPER_REINHARDT",
+          "value": "1",
+          "enum": "ToneMapper",
+          "kind": "EnumValue",
+          "summary": "A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an image that can appear dull and low contrast. Slower than [constant TONE_MAPPER_LINEAR]. [b]Note:[/b] When [member tonemap_white] is left at the default value of [code]1.0[/code], [constant TONE_MAPPER_REINHARDT] produces an identical image to [constant TONE_MAPPER_LINEAR].",
+          "sourcePath": "doc/classes/Environment.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BG_CLEAR_COLOR",
+      "value": "0",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Clears the background using the clear color defined in [member ProjectSettings.rendering/environment/defaults/default_clear_color].",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_COLOR",
+      "value": "1",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Clears the background using a custom clear color.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_SKY",
+      "value": "2",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Displays a user-defined sky in the background.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_CANVAS",
+      "value": "3",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Displays a [CanvasLayer] in the background.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_KEEP",
+      "value": "4",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Keeps on screen every pixel drawn in the background. This is the fastest background mode, but it can only be safely used in fully-interior scenes (no visible sky or sky reflections). If enabled in a scene where the background is visible, \u0022ghost trail\u0022 artifacts will be visible when moving the camera.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_CAMERA_FEED",
+      "value": "5",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Displays a camera feed in the background.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "BG_MAX",
+      "value": "6",
+      "enum": "BGMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BGMode] enum.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AMBIENT_SOURCE_BG",
+      "value": "0",
+      "enum": "AmbientSource",
+      "kind": "EnumValue",
+      "summary": "Gather ambient light from whichever source is specified as the background.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AMBIENT_SOURCE_DISABLED",
+      "value": "1",
+      "enum": "AmbientSource",
+      "kind": "EnumValue",
+      "summary": "Disable ambient light. This provides a slight performance boost over [constant AMBIENT_SOURCE_SKY].",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AMBIENT_SOURCE_COLOR",
+      "value": "2",
+      "enum": "AmbientSource",
+      "kind": "EnumValue",
+      "summary": "Specify a specific [Color] for ambient light. This provides a slight performance boost over [constant AMBIENT_SOURCE_SKY].",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "AMBIENT_SOURCE_SKY",
+      "value": "3",
+      "enum": "AmbientSource",
+      "kind": "EnumValue",
+      "summary": "Gather ambient light from the [Sky] regardless of what the background is.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "REFLECTION_SOURCE_BG",
+      "value": "0",
+      "enum": "ReflectionSource",
+      "kind": "EnumValue",
+      "summary": "Use the background for reflections.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "REFLECTION_SOURCE_DISABLED",
+      "value": "1",
+      "enum": "ReflectionSource",
+      "kind": "EnumValue",
+      "summary": "Disable reflections. This provides a slight performance boost over other options.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "REFLECTION_SOURCE_SKY",
+      "value": "2",
+      "enum": "ReflectionSource",
+      "kind": "EnumValue",
+      "summary": "Use the [Sky] for reflections regardless of what the background is.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TONE_MAPPER_LINEAR",
+      "value": "0",
+      "enum": "ToneMapper",
+      "kind": "EnumValue",
+      "summary": "Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips bright values, causing bright lighting to look blown out. The simplest and fastest tonemapper.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TONE_MAPPER_REINHARDT",
+      "value": "1",
+      "enum": "ToneMapper",
+      "kind": "EnumValue",
+      "summary": "A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an image that can appear dull and low contrast. Slower than [constant TONE_MAPPER_LINEAR]. [b]Note:[/b] When [member tonemap_white] is left at the default value of [code]1.0[/code], [constant TONE_MAPPER_REINHARDT] produces an identical image to [constant TONE_MAPPER_LINEAR].",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TONE_MAPPER_FILMIC",
+      "value": "2",
+      "enum": "ToneMapper",
+      "kind": "EnumValue",
+      "summary": "Uses a film-like tonemapping curve to prevent clipping of bright values and provide better contrast than [constant TONE_MAPPER_REINHARDT]. Slightly slower than [constant TONE_MAPPER_REINHARDT]. [b]Note:[/b] This tonemapper does not support HDR output because it produces output in the SDR range. It is recommended to use a different tonemapper when rendering to an HDR screen.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TONE_MAPPER_ACES",
+      "value": "3",
+      "enum": "ToneMapper",
+      "kind": "EnumValue",
+      "summary": "Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more realistic appearance. Slightly slower than [constant TONE_MAPPER_FILMIC]. [b]Note:[/b] This tonemapping operator is called \u0022ACES Fitted\u0022 in Godot 3.x. [b]Note:[/b] This tonemapper does not support HDR output because it produces output in the SDR range. It is recommended to use a different tonemapper when rendering to an HDR screen.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "TONE_MAPPER_AGX",
+      "value": "4",
+      "enum": "ToneMapper",
+      "kind": "EnumValue",
+      "summary": "Uses an adjustable film-like tonemapping curve and desaturates bright values for a more realistic appearance. Better than other tonemappers at maintaining the hue of colors as they become brighter. The slowest tonemapping option.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GLOW_BLEND_MODE_ADDITIVE",
+      "value": "0",
+      "enum": "GlowBlendMode",
+      "kind": "EnumValue",
+      "summary": "Adds the glow effect to the scene.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GLOW_BLEND_MODE_SCREEN",
+      "value": "1",
+      "enum": "GlowBlendMode",
+      "kind": "EnumValue",
+      "summary": "Adds the glow effect to the scene after modifying the glow influence based on the scene value; dark values will be highly influenced by glow and bright values will not be influenced by glow. This approach avoids bright values becoming overly bright from the glow effect. [member tonemap_white] is used to determine the maximum scene value where the glow should have no influence. When [member tonemap_mode] is set to [constant TONE_MAPPER_LINEAR] and [member Viewport.use_hdr_2d] is [code]true[/code], the parent window\u0027s [method Window.get_output_max_linear_value] will be used as the maximum scene value.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GLOW_BLEND_MODE_SOFTLIGHT",
+      "value": "2",
+      "enum": "GlowBlendMode",
+      "kind": "EnumValue",
+      "summary": "Adds the glow effect to the tonemapped image after modifying the glow influence based on the image value; dark values and bright values will not be influenced by glow and mid-range values will be highly influenced by glow. This approach avoids bright values becoming overly bright from the glow effect. The glow will have the largest influence on image values of [code]0.25[/code] and will have no influence when applied to image values greater than [code]1.0[/code]. [b]Note:[/b] This blend mode does not support HDR output because expects a maximum output value of [code]1.0[/code]. It is recommended to use a different blend mode when rendering to an HDR screen.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GLOW_BLEND_MODE_REPLACE",
+      "value": "3",
+      "enum": "GlowBlendMode",
+      "kind": "EnumValue",
+      "summary": "Replaces all pixels\u0027 color by the glow effect. This can be used to simulate a full-screen blur effect by tweaking the glow parameters to match the original image\u0027s brightness or to preview glow configuration in the editor.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "GLOW_BLEND_MODE_MIX",
+      "value": "4",
+      "enum": "GlowBlendMode",
+      "kind": "EnumValue",
+      "summary": "Mixes the glow image with the scene image. Best used with [member glow_bloom] to avoid darkening the scene.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FOG_MODE_EXPONENTIAL",
+      "value": "0",
+      "enum": "FogMode",
+      "kind": "EnumValue",
+      "summary": "Use a physically-based fog model defined primarily by fog density.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "FOG_MODE_DEPTH",
+      "value": "1",
+      "enum": "FogMode",
+      "kind": "EnumValue",
+      "summary": "Use a simple fog model defined by start and end positions and a custom curve. While not physically accurate, this model can be useful when you need more artistic control.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SDFGI_Y_SCALE_50_PERCENT",
+      "value": "0",
+      "enum": "SDFGIYScale",
+      "kind": "EnumValue",
+      "summary": "Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are wide. This allows providing increased GI detail and reduced light leaking with thin floors and ceilings. This is usually the best choice for scenes that don\u0027t feature much verticality.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SDFGI_Y_SCALE_75_PERCENT",
+      "value": "1",
+      "enum": "SDFGIYScale",
+      "kind": "EnumValue",
+      "summary": "Use 75% scale for SDFGI on the Y (vertical) axis. This is a balance between the 50% and 100% SDFGI Y scales.",
+      "sourcePath": "doc/classes/Environment.xml"
+    },
+    {
+      "name": "SDFGI_Y_SCALE_100_PERCENT",
+      "value": "2",
+      "enum": "SDFGIYScale",
+      "kind": "EnumValue",
+      "summary": "Use 100% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be as tall as they are wide. This is usually the best choice for highly vertical scenes. The downside is that light leaking may become more noticeable with thin floors and ceilings.",
+      "sourcePath": "doc/classes/Environment.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Environment.xml",
+      "sha256": "241f4f0f5ba3eeec08823c4db7db6c3ce3bac4686ee21ed3954dcc7e8a562964"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

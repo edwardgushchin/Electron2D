@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceUID",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceUID",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ResourceUID",
+    "documentationPath": "doc/classes/ResourceUID.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceuid.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddId",
+      "kind": "Method",
+      "signature": "public void AddId(int id, String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a new UID value which is mapped to the given resource path. Fails with an error if the UID already exists, so be sure to check [method has_id] beforehand, or use [method set_id] instead.",
+      "godotName": "add_id",
+      "xmlDocId": "M:Godot.ResourceUID.AddId(int,String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "CreateId",
+      "kind": "Method",
+      "signature": "public int CreateId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Generates a random resource UID which is guaranteed to be unique within the list of currently loaded UIDs. In order for this UID to be registered, you must call [method add_id] or [method set_id].",
+      "godotName": "create_id",
+      "xmlDocId": "M:Godot.ResourceUID.CreateId",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "CreateIdForPath",
+      "kind": "Method",
+      "signature": "public int CreateIdForPath(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Like [method create_id], but the UID is seeded with the provided [param path] and project name. UIDs generated for that path will be always the same within the current project.",
+      "godotName": "create_id_for_path",
+      "xmlDocId": "M:Godot.ResourceUID.CreateIdForPath(String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "EnsurePath",
+      "kind": "Method",
+      "signature": "public String EnsurePath(String pathOrUid)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path_or_uid",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a path, converting [param path_or_uid] if necessary. Fails and returns an empty string if an invalid UID is provided.",
+      "godotName": "ensure_path",
+      "xmlDocId": "M:Godot.ResourceUID.EnsurePath(String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "GetIdPath",
+      "kind": "Method",
+      "signature": "public String GetIdPath(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path that the given UID value refers to. Fails with an error if the UID does not exist, so be sure to check [method has_id] beforehand.",
+      "godotName": "get_id_path",
+      "xmlDocId": "M:Godot.ResourceUID.GetIdPath(int)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "HasId",
+      "kind": "Method",
+      "signature": "public bool HasId(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the given UID value is known to the cache.",
+      "godotName": "has_id",
+      "xmlDocId": "M:Godot.ResourceUID.HasId(int)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "IdToText",
+      "kind": "Method",
+      "signature": "public String IdToText(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Converts the given UID to a [code]uid://[/code] string value.",
+      "godotName": "id_to_text",
+      "xmlDocId": "M:Godot.ResourceUID.IdToText(int)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "PathToUid",
+      "kind": "Method",
+      "signature": "public String PathToUid(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts the provided resource [param path] to a UID. Returns the unchanged path if it has no associated UID.",
+      "godotName": "path_to_uid",
+      "xmlDocId": "M:Godot.ResourceUID.PathToUid(String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "RemoveId",
+      "kind": "Method",
+      "signature": "public void RemoveId(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a loaded UID value from the cache. Fails with an error if the UID does not exist, so be sure to check [method has_id] beforehand.",
+      "godotName": "remove_id",
+      "xmlDocId": "M:Godot.ResourceUID.RemoveId(int)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "SetId",
+      "kind": "Method",
+      "signature": "public void SetId(int id, String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Updates the resource path of an existing UID. Fails with an error if the UID does not exist, so be sure to check [method has_id] beforehand, or use [method add_id] instead.",
+      "godotName": "set_id",
+      "xmlDocId": "M:Godot.ResourceUID.SetId(int,String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "TextToId",
+      "kind": "Method",
+      "signature": "public int TextToId(String textId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "text_id",
+          "type": "String"
+        }
+      ],
+      "summary": "Extracts the UID value from the given [code]uid://[/code] string.",
+      "godotName": "text_to_id",
+      "xmlDocId": "M:Godot.ResourceUID.TextToId(String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    },
+    {
+      "name": "UidToPath",
+      "kind": "Method",
+      "signature": "public String UidToPath(String uid)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "uid",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts the provided [param uid] to a path. Prints an error if the UID is invalid.",
+      "godotName": "uid_to_path",
+      "xmlDocId": "M:Godot.ResourceUID.UidToPath(String)",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "INVALID_ID",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "The value to use for an invalid UID, for example if the resource could not be loaded. Its text representation is [code]uid://\u003Cinvalid\u003E[/code].",
+      "sourcePath": "doc/classes/ResourceUID.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceUID.xml",
+      "sha256": "b0825dba6ad0e89a43155c4d3de88e132f9b4bb6384b560d09f3de2d615d0bd6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

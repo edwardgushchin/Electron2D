@@ -4,7 +4,7 @@
   "generatedFrom": {
     "apiManifest": {
       "path": "data/api/electron2d-api-manifest.json",
-      "sha256": "6c854d26ca9ad6948cec4e6159fef2a6002f8d93d47e7279624afff98a00003c"
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
     },
     "documentation": [
       {
@@ -81,7 +81,7 @@
       },
       {
         "path": "docs/documentation/api-manifest.md",
-        "sha256": "6cfa4dfa05d7c9ceef8015a5ef435dfccf195cc633f345c843ce8f4e2d75080a"
+        "sha256": "6bd5a40c9c626cce222377ed7ed0b1a24301649d0000c13567fe2077eca26064"
       },
       {
         "path": "docs/documentation/canonical-goal-alignment.md",
@@ -389,11 +389,11 @@
       },
       {
         "path": "docs/release-management/api-compatibility.md",
-        "sha256": "469dd706f694c3adebc8a86915a1c2caee9edd2d74be66802d5ac06388340679"
+        "sha256": "e020fce2d318c96fb442daa2beae5c5c6dd70c58969def2ceea537518d3db4b6"
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "22af9b12fff2d228728c5defcd3764752561ce85cece14df326b4f15067618c4"
+        "sha256": "f8499e9d210f5798d04c5406d824263dae42a168f545ec126ca116dd8a94019a"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -421,7 +421,7 @@
       },
       {
         "path": "docs/releases/0.1-preview.md",
-        "sha256": "ed2b42a9d9133a8e9407ebc3cfe61c893a2261f81e75fa210a75e08db0f943b2"
+        "sha256": "544a1fb4a625beca18e59ed9823a8932092511cb22f0b83b8746924454bb6759"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -875,19 +875,19 @@
       "path": "data/documentation/local-docs-index/api-types.ndjson",
       "kind": "api-type",
       "count": 175,
-      "sha256": "aad4ddbb4e79778b27200b05a3aef1874b05295e6abc6c950880a285e3b51104"
+      "sha256": "096e149896c7cc8d586f0ce6e24829b0e787a202bd441dc4981e2e06f5d62bcb"
     },
     {
       "path": "data/documentation/local-docs-index/api-members.ndjson",
       "kind": "api-member",
-      "count": 1825,
-      "sha256": "b58ca66e8b7ea3f0f60daa7bb7fd264636c69c0339ef9f53d7581d9ef4430b7d"
+      "count": 1778,
+      "sha256": "85807e646b8d2ea71ff6a7fe4b573fb6714e149196957a0e5796b7893e03c682"
     },
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
       "count": 159,
-      "sha256": "4d87ab67578957369d3f2ca70db7c66ac386099bde9083187272613a6791164f"
+      "sha256": "47dcb8e65e5d0d1fd7fc239373583d31f4592ceafcb2c31754cd5c7aa7fe6fb7"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -899,7 +899,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "cbd37266cec874ab66bb534512477646374b0fd0ccc7af7ce1db3674f8a07a72",
+    "sourceDigest": "ce726201b5d12536136de1c9918e74e1a0eb73304940f7d4c6eaca30baaa32c6",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

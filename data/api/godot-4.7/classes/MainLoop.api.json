@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MainLoop",
+    "namespace": "Godot",
+    "fullName": "Godot.MainLoop",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "MainLoop",
+    "documentationPath": "doc/classes/MainLoop.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_mainloop.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Finalize",
+      "kind": "Method",
+      "signature": "public void _Finalize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called before the program exits.",
+      "godotName": "_finalize",
+      "xmlDocId": "M:Godot.MainLoop._Finalize",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public void _Initialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called once during initialization.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.MainLoop._Initialize",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_PhysicsProcess",
+      "kind": "Method",
+      "signature": "public bool _PhysicsProcess(float delta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called each physics tick. [param delta] is the logical time between physics ticks in seconds and is equal to [member Engine.time_scale] / [member Engine.physics_ticks_per_second]. Equivalent to [method Node._physics_process]. If implemented, the method must return a boolean value. [code]true[/code] ends the main loop, while [code]false[/code] lets it proceed to the next step. [b]Note:[/b] [method _physics_process] may be called up to [member Engine.max_physics_steps_per_frame] times per (idle) frame. This step limit may be reached when the engine is suffering performance issues. [b]Note:[/b] Accumulated [param delta] may diverge from real world seconds.",
+      "godotName": "_physics_process",
+      "xmlDocId": "M:Godot.MainLoop._PhysicsProcess(float)",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public bool _Process(float delta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called on each idle frame, prior to rendering, and after physics ticks have been processed. [param delta] is the time between frames in seconds. Equivalent to [method Node._process]. If implemented, the method must return a boolean value. [code]true[/code] ends the main loop, while [code]false[/code] lets it proceed to the next frame. [b]Note:[/b] When the engine is struggling and the frame rate is lowered, [param delta] will increase. When [param delta] is increased, it\u0027s capped at a maximum of [member Engine.time_scale] * [member Engine.max_physics_steps_per_frame] / [member Engine.physics_ticks_per_second]. As a result, accumulated [param delta] may not represent real world time. [b]Note:[/b] When [code]--fixed-fps[/code] is enabled or the engine is running in Movie Maker mode (see [MovieWriter]), process [param delta] will always be the same for every frame, regardless of how much time the frame took to render. [b]Note:[/b] Frame delta may be post-processed by [member OS.delta_smoothing] if this is enabled for the project.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.MainLoop._Process(float)",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "OnRequestPermissionsResult",
+      "kind": "Signal",
+      "signature": "public event OnRequestPermissionsResultHandler OnRequestPermissionsResult",
+      "parameters": [
+        {
+          "name": "permission",
+          "type": "String"
+        },
+        {
+          "name": "granted",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when a user responds to a permission request.",
+      "godotName": "on_request_permissions_result",
+      "xmlDocId": "E:Godot.MainLoop.OnRequestPermissionsResult(String,bool)",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [
+    {
+      "name": "NOTIFICATION_OS_MEMORY_WARNING",
+      "value": "2009",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is exceeding its allocated memory. Specific to the iOS platform.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_TRANSLATION_CHANGED",
+      "value": "2010",
+      "kind": "Constant",
+      "summary": "Notification received when translations may have changed. Can be triggered by the user changing the locale. Can be used to respond to language changes, for example to change the UI strings on the fly. Useful when working with the built-in translation support, like [method Object.tr].",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_WM_ABOUT",
+      "value": "2011",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when a request for \u0022About\u0022 information is sent. Specific to the macOS platform.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_CRASH",
+      "value": "2012",
+      "kind": "Constant",
+      "summary": "Notification received from Godot\u0027s crash handler when the engine is about to crash. Implemented on desktop platforms if the crash handler is enabled.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_OS_IME_UPDATE",
+      "value": "2013",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when an update of the Input Method Engine occurs (e.g. change of IME cursor position or composition string). Implemented on desktop and web platforms.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_RESUMED",
+      "value": "2014",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is resumed. Specific to the Android and iOS platforms.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PAUSED",
+      "value": "2015",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is paused. Specific to the Android and iOS platforms. [b]Note:[/b] On iOS, you only have approximately 5 seconds to finish a task started by this signal. If you go over this allotment, iOS will kill the app instead of pausing it.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_FOCUS_IN",
+      "value": "2016",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is focused, i.e. when changing the focus from the OS desktop or a thirdparty application to any open window of the Godot instance. Implemented on desktop and mobile platforms.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_FOCUS_OUT",
+      "value": "2017",
+      "kind": "Constant",
+      "summary": "Notification received from the OS when the application is defocused, i.e. when changing the focus from any open window of the Godot instance to the OS desktop or a thirdparty application. Implemented on desktop and mobile platforms.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_TEXT_SERVER_CHANGED",
+      "value": "2018",
+      "kind": "Constant",
+      "summary": "Notification received when text server is changed.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PIP_MODE_ENTERED",
+      "value": "2019",
+      "kind": "Constant",
+      "summary": "Notification received when the application enters picture-in-picture mode.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "NOTIFICATION_APPLICATION_PIP_MODE_EXITED",
+      "value": "2020",
+      "kind": "Constant",
+      "summary": "Notification received when the application exits picture-in-picture mode.",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Finalize",
+      "kind": "Method",
+      "signature": "public void _Finalize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called before the program exits.",
+      "godotName": "_finalize",
+      "xmlDocId": "M:Godot.MainLoop._Finalize",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public void _Initialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called once during initialization.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.MainLoop._Initialize",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_PhysicsProcess",
+      "kind": "Method",
+      "signature": "public bool _PhysicsProcess(float delta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called each physics tick. [param delta] is the logical time between physics ticks in seconds and is equal to [member Engine.time_scale] / [member Engine.physics_ticks_per_second]. Equivalent to [method Node._physics_process]. If implemented, the method must return a boolean value. [code]true[/code] ends the main loop, while [code]false[/code] lets it proceed to the next step. [b]Note:[/b] [method _physics_process] may be called up to [member Engine.max_physics_steps_per_frame] times per (idle) frame. This step limit may be reached when the engine is suffering performance issues. [b]Note:[/b] Accumulated [param delta] may diverge from real world seconds.",
+      "godotName": "_physics_process",
+      "xmlDocId": "M:Godot.MainLoop._PhysicsProcess(float)",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    },
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public bool _Process(float delta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Called on each idle frame, prior to rendering, and after physics ticks have been processed. [param delta] is the time between frames in seconds. Equivalent to [method Node._process]. If implemented, the method must return a boolean value. [code]true[/code] ends the main loop, while [code]false[/code] lets it proceed to the next frame. [b]Note:[/b] When the engine is struggling and the frame rate is lowered, [param delta] will increase. When [param delta] is increased, it\u0027s capped at a maximum of [member Engine.time_scale] * [member Engine.max_physics_steps_per_frame] / [member Engine.physics_ticks_per_second]. As a result, accumulated [param delta] may not represent real world time. [b]Note:[/b] When [code]--fixed-fps[/code] is enabled or the engine is running in Movie Maker mode (see [MovieWriter]), process [param delta] will always be the same for every frame, regardless of how much time the frame took to render. [b]Note:[/b] Frame delta may be post-processed by [member OS.delta_smoothing] if this is enabled for the project.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.MainLoop._Process(float)",
+      "sourcePath": "doc/classes/MainLoop.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MainLoop.xml",
+      "sha256": "c9f9eb4464501031f68cdae7b2db51dcd25c6e353c5c3380dabec7954faf2da0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

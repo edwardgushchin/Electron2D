@@ -1,0 +1,777 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SurfaceTool",
+    "namespace": "Godot",
+    "fullName": "Godot.SurfaceTool",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "SurfaceTool",
+    "documentationPath": "doc/classes/SurfaceTool.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_surfacetool.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddIndex",
+      "kind": "Method",
+      "signature": "public void AddIndex(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a vertex to index array if you are using indexed vertices. Does not need to be called before adding vertices.",
+      "godotName": "add_index",
+      "xmlDocId": "M:Godot.SurfaceTool.AddIndex(int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "AddTriangleFan",
+      "kind": "Method",
+      "signature": "public void AddTriangleFan(PackedVector3Array vertices, PackedVector2Array uvs, PackedColorArray colors, PackedVector2Array uv2s, PackedVector3Array normals, Plane[] tangents)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "uvs",
+          "type": "PackedVector2Array",
+          "defaultValue": "PackedVector2Array()"
+        },
+        {
+          "name": "colors",
+          "type": "PackedColorArray",
+          "defaultValue": "PackedColorArray()"
+        },
+        {
+          "name": "uv2s",
+          "type": "PackedVector2Array",
+          "defaultValue": "PackedVector2Array()"
+        },
+        {
+          "name": "normals",
+          "type": "PackedVector3Array",
+          "defaultValue": "PackedVector3Array()"
+        },
+        {
+          "name": "tangents",
+          "type": "Plane[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Inserts a triangle fan made of array data into [Mesh] being constructed. Requires the primitive type be set to [constant Mesh.PRIMITIVE_TRIANGLES].",
+      "godotName": "add_triangle_fan",
+      "xmlDocId": "M:Godot.SurfaceTool.AddTriangleFan(PackedVector3Array,PackedVector2Array,PackedColorArray,PackedVector2Array,PackedVector3Array,Plane[])",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "AddVertex",
+      "kind": "Method",
+      "signature": "public void AddVertex(Vector3 vertex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertex",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Specifies the position of current vertex. Should be called after specifying other vertex properties (e.g. Color, UV).",
+      "godotName": "add_vertex",
+      "xmlDocId": "M:Godot.SurfaceTool.AddVertex(Vector3)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "AppendFrom",
+      "kind": "Method",
+      "signature": "public void AppendFrom(Mesh existing, int surface, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "Mesh"
+        },
+        {
+          "name": "surface",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Append vertices from a given [Mesh] surface onto the current vertex array with specified [Transform3D].",
+      "godotName": "append_from",
+      "xmlDocId": "M:Godot.SurfaceTool.AppendFrom(Mesh,int,Transform3D)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "Begin",
+      "kind": "Method",
+      "signature": "public void Begin(int primitive)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "primitive",
+          "type": "int"
+        }
+      ],
+      "summary": "Called before adding any vertices. Takes the primitive type as an argument (e.g. [constant Mesh.PRIMITIVE_TRIANGLES]).",
+      "godotName": "begin",
+      "xmlDocId": "M:Godot.SurfaceTool.Begin(int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all information passed into the surface tool so far.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.SurfaceTool.Clear",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "Commit",
+      "kind": "Method",
+      "signature": "public ArrayMesh Commit(ArrayMesh existing, int flags)",
+      "returnType": "ArrayMesh",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "ArrayMesh",
+          "defaultValue": "null"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns a constructed [ArrayMesh] from current information passed in. If an existing [ArrayMesh] is passed in as an argument, will add an extra surface to the existing [ArrayMesh]. The [param flags] argument can be the bitwise OR of [constant Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE], [constant Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS], or [constant Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY].",
+      "godotName": "commit",
+      "xmlDocId": "M:Godot.SurfaceTool.Commit(ArrayMesh,int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CommitToArrays",
+      "kind": "Method",
+      "signature": "public Array CommitToArrays()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Commits the data to the same format used by [method ArrayMesh.add_surface_from_arrays], [method ImporterMesh.add_surface], and [method create_from_arrays]. This way you can further process the mesh data using the [ArrayMesh] or [ImporterMesh] APIs.",
+      "godotName": "commit_to_arrays",
+      "xmlDocId": "M:Godot.SurfaceTool.CommitToArrays",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CreateFrom",
+      "kind": "Method",
+      "signature": "public void CreateFrom(Mesh existing, int surface)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "Mesh"
+        },
+        {
+          "name": "surface",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a vertex array from an existing [Mesh].",
+      "godotName": "create_from",
+      "xmlDocId": "M:Godot.SurfaceTool.CreateFrom(Mesh,int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CreateFromArrays",
+      "kind": "Method",
+      "signature": "public void CreateFromArrays(Array arrays, int primitiveType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "arrays",
+          "type": "Array"
+        },
+        {
+          "name": "primitive_type",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Creates this SurfaceTool from existing vertex arrays such as returned by [method commit_to_arrays], [method Mesh.surface_get_arrays], [method Mesh.surface_get_blend_shape_arrays], [method ImporterMesh.get_surface_arrays], and [method ImporterMesh.get_surface_blend_shape_arrays]. [param primitive_type] controls the type of mesh data, defaulting to [constant Mesh.PRIMITIVE_TRIANGLES].",
+      "godotName": "create_from_arrays",
+      "xmlDocId": "M:Godot.SurfaceTool.CreateFromArrays(Array,int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CreateFromBlendShape",
+      "kind": "Method",
+      "signature": "public void CreateFromBlendShape(Mesh existing, int surface, String blendShape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "Mesh"
+        },
+        {
+          "name": "surface",
+          "type": "int"
+        },
+        {
+          "name": "blend_shape",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a vertex array from the specified blend shape of an existing [Mesh]. This can be used to extract a specific pose from a blend shape.",
+      "godotName": "create_from_blend_shape",
+      "xmlDocId": "M:Godot.SurfaceTool.CreateFromBlendShape(Mesh,int,String)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "Deindex",
+      "kind": "Method",
+      "signature": "public void Deindex()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes the index array by expanding the vertex array.",
+      "godotName": "deindex",
+      "xmlDocId": "M:Godot.SurfaceTool.Deindex",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GenerateLod",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GenerateLod(float ndThreshold, int targetIndexCount)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "nd_threshold",
+          "type": "float"
+        },
+        {
+          "name": "target_index_count",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Generates an LOD for a given [param nd_threshold] in linear units (square root of quadric error metric), using at most [param target_index_count] indices.",
+      "godotName": "generate_lod",
+      "xmlDocId": "M:Godot.SurfaceTool.GenerateLod(float,int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GenerateNormals",
+      "kind": "Method",
+      "signature": "public void GenerateNormals(bool flip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flip",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Generates normals from vertices so you do not have to do it manually. If [param flip] is [code]true[/code], the resulting normals will be inverted. [method generate_normals] should be called [i]after[/i] generating geometry and [i]before[/i] committing the mesh using [method commit] or [method commit_to_arrays]. For correct display of normal-mapped surfaces, you will also have to generate tangents using [method generate_tangents]. [b]Note:[/b] [method generate_normals] only works if the primitive type is set to [constant Mesh.PRIMITIVE_TRIANGLES]. [b]Note:[/b] [method generate_normals] takes smooth groups into account. To generate smooth normals, set the smooth group to a value greater than or equal to [code]0[/code] using [method set_smooth_group] or leave the smooth group at the default of [code]0[/code]. To generate flat normals, set the smooth group to [code]-1[/code] using [method set_smooth_group] prior to adding vertices.",
+      "godotName": "generate_normals",
+      "xmlDocId": "M:Godot.SurfaceTool.GenerateNormals(bool)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GenerateTangents",
+      "kind": "Method",
+      "signature": "public void GenerateTangents()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Generates a tangent vector for each vertex. Requires that each vertex already has UVs and normals set (see [method generate_normals]).",
+      "godotName": "generate_tangents",
+      "xmlDocId": "M:Godot.SurfaceTool.GenerateTangents",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GetAabb",
+      "kind": "Method",
+      "signature": "public AABB GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the axis-aligned bounding box of the vertex positions.",
+      "godotName": "get_aabb",
+      "xmlDocId": "M:Godot.SurfaceTool.GetAabb",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GetCustomFormat",
+      "kind": "Method",
+      "signature": "public int GetCustomFormat(int channelIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "channel_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the format for custom [param channel_index] (currently up to 4). Returns [constant CUSTOM_MAX] if this custom channel is unused.",
+      "godotName": "get_custom_format",
+      "xmlDocId": "M:Godot.SurfaceTool.GetCustomFormat(int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GetPrimitiveType",
+      "kind": "Method",
+      "signature": "public int GetPrimitiveType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the type of mesh geometry, such as [constant Mesh.PRIMITIVE_TRIANGLES].",
+      "godotName": "get_primitive_type",
+      "xmlDocId": "M:Godot.SurfaceTool.GetPrimitiveType",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "GetSkinWeightCount",
+      "kind": "Method",
+      "signature": "public int GetSkinWeightCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "By default, returns [constant SKIN_4_WEIGHTS] to indicate only 4 bone influences per vertex are used. Returns [constant SKIN_8_WEIGHTS] if up to 8 influences are used. [b]Note:[/b] This function returns an enum, not the exact number of weights.",
+      "godotName": "get_skin_weight_count",
+      "xmlDocId": "M:Godot.SurfaceTool.GetSkinWeightCount",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "Index",
+      "kind": "Method",
+      "signature": "public void Index()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shrinks the vertex array by creating an index array. This can improve performance by avoiding vertex reuse.",
+      "godotName": "index",
+      "xmlDocId": "M:Godot.SurfaceTool.Index",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "OptimizeIndicesForCache",
+      "kind": "Method",
+      "signature": "public void OptimizeIndicesForCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Optimizes triangle sorting for performance. Requires that [method get_primitive_type] is [constant Mesh.PRIMITIVE_TRIANGLES].",
+      "godotName": "optimize_indices_for_cache",
+      "xmlDocId": "M:Godot.SurfaceTool.OptimizeIndicesForCache",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetBones",
+      "kind": "Method",
+      "signature": "public void SetBones(PackedInt32Array bones)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bones",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Specifies an array of bones to use for the [i]next[/i] vertex. [param bones] must contain 4 integers.",
+      "godotName": "set_bones",
+      "xmlDocId": "M:Godot.SurfaceTool.SetBones(PackedInt32Array)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetColor",
+      "kind": "Method",
+      "signature": "public void SetColor(Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Specifies a [Color] to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all. [b]Note:[/b] The material must have [member BaseMaterial3D.vertex_color_use_as_albedo] enabled for the vertex color to be visible.",
+      "godotName": "set_color",
+      "xmlDocId": "M:Godot.SurfaceTool.SetColor(Color)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetCustom",
+      "kind": "Method",
+      "signature": "public void SetCustom(int channelIndex, Color customColor)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "channel_index",
+          "type": "int"
+        },
+        {
+          "name": "custom_color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the custom value on this vertex for [param channel_index]. [method set_custom_format] must be called first for this [param channel_index]. Formats which are not RGBA will ignore other color channels.",
+      "godotName": "set_custom",
+      "xmlDocId": "M:Godot.SurfaceTool.SetCustom(int,Color)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetCustomFormat",
+      "kind": "Method",
+      "signature": "public void SetCustomFormat(int channelIndex, int format)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "channel_index",
+          "type": "int"
+        },
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the color format for this custom [param channel_index]. Use [constant CUSTOM_MAX] to disable. Must be invoked after [method begin] and should be set before [method commit] or [method commit_to_arrays].",
+      "godotName": "set_custom_format",
+      "xmlDocId": "M:Godot.SurfaceTool.SetCustomFormat(int,int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetMaterial",
+      "kind": "Method",
+      "signature": "public void SetMaterial(Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "material",
+          "type": "Material"
+        }
+      ],
+      "summary": "Sets [Material] to be used by the [Mesh] you are constructing.",
+      "godotName": "set_material",
+      "xmlDocId": "M:Godot.SurfaceTool.SetMaterial(Material)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetNormal",
+      "kind": "Method",
+      "signature": "public void SetNormal(Vector3 normal)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "normal",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Specifies a normal to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.",
+      "godotName": "set_normal",
+      "xmlDocId": "M:Godot.SurfaceTool.SetNormal(Vector3)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetSkinWeightCount",
+      "kind": "Method",
+      "signature": "public void SetSkinWeightCount(int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Set to [constant SKIN_8_WEIGHTS] to indicate that up to 8 bone influences per vertex may be used. By default, only 4 bone influences are used ([constant SKIN_4_WEIGHTS]). [b]Note:[/b] This function takes an enum, not the exact number of weights.",
+      "godotName": "set_skin_weight_count",
+      "xmlDocId": "M:Godot.SurfaceTool.SetSkinWeightCount(int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetSmoothGroup",
+      "kind": "Method",
+      "signature": "public void SetSmoothGroup(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Specifies the smooth group to use for the [i]next[/i] vertex. If this is never called, all vertices will have the default smooth group of [code]0[/code] and will be smoothed with adjacent vertices of the same group. To produce a mesh with flat normals, set the smooth group to [code]-1[/code]. [b]Note:[/b] This function actually takes a [code]uint32_t[/code], so C# users should use [code]uint32.MaxValue[/code] instead of [code]-1[/code] to produce a mesh with flat normals.",
+      "godotName": "set_smooth_group",
+      "xmlDocId": "M:Godot.SurfaceTool.SetSmoothGroup(int)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetTangent",
+      "kind": "Method",
+      "signature": "public void SetTangent(Plane tangent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tangent",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Specifies a tangent to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all. [b]Note:[/b] Even though [param tangent] is a [Plane], it does not directly represent the tangent plane. Its [member Plane.x], [member Plane.y], and [member Plane.z] represent the tangent vector and [member Plane.d] should be either [code]-1[/code] or [code]1[/code]. See also [constant Mesh.ARRAY_TANGENT].",
+      "godotName": "set_tangent",
+      "xmlDocId": "M:Godot.SurfaceTool.SetTangent(Plane)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetUv",
+      "kind": "Method",
+      "signature": "public void SetUv(Vector2 uv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "uv",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Specifies a set of UV coordinates to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.",
+      "godotName": "set_uv",
+      "xmlDocId": "M:Godot.SurfaceTool.SetUv(Vector2)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetUv2",
+      "kind": "Method",
+      "signature": "public void SetUv2(Vector2 uv2)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "uv2",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Specifies an optional second set of UV coordinates to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.",
+      "godotName": "set_uv2",
+      "xmlDocId": "M:Godot.SurfaceTool.SetUv2(Vector2)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SetWeights",
+      "kind": "Method",
+      "signature": "public void SetWeights(PackedFloat32Array weights)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "weights",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Specifies weight values to use for the [i]next[/i] vertex. [param weights] must contain 4 values. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.",
+      "godotName": "set_weights",
+      "xmlDocId": "M:Godot.SurfaceTool.SetWeights(PackedFloat32Array)",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CustomFormat",
+      "values": [
+        {
+          "name": "CUSTOM_MAX",
+          "value": "8",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Used to indicate a disabled custom channel.",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RGBA8_SNORM",
+          "value": "1",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Limits range of data passed to [method set_custom] to signed normalized -1 to 1 stored in 8 bits per channel. See [constant Mesh.ARRAY_CUSTOM_RGBA8_SNORM].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RGBA8_UNORM",
+          "value": "0",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Limits range of data passed to [method set_custom] to unsigned normalized 0 to 1 stored in 8 bits per channel. See [constant Mesh.ARRAY_CUSTOM_RGBA8_UNORM].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RGBA_FLOAT",
+          "value": "7",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as full precision floats, and uses all color channels. See [constant Mesh.ARRAY_CUSTOM_RGBA_FLOAT].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RGBA_HALF",
+          "value": "3",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as half precision floats and uses all color channels. See [constant Mesh.ARRAY_CUSTOM_RGBA_HALF].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RGB_FLOAT",
+          "value": "6",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red, green and blue color channels. See [constant Mesh.ARRAY_CUSTOM_RGB_FLOAT].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RG_FLOAT",
+          "value": "5",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red and green color channels. See [constant Mesh.ARRAY_CUSTOM_RG_FLOAT].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_RG_HALF",
+          "value": "2",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as half precision floats, and uses only red and green color channels. See [constant Mesh.ARRAY_CUSTOM_RG_HALF].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "CUSTOM_R_FLOAT",
+          "value": "4",
+          "enum": "CustomFormat",
+          "kind": "EnumValue",
+          "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red color channel. See [constant Mesh.ARRAY_CUSTOM_R_FLOAT].",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        }
+      ]
+    },
+    {
+      "name": "SkinWeightCount",
+      "values": [
+        {
+          "name": "SKIN_4_WEIGHTS",
+          "value": "0",
+          "enum": "SkinWeightCount",
+          "kind": "EnumValue",
+          "summary": "Each individual vertex can be influenced by only 4 bone weights.",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        },
+        {
+          "name": "SKIN_8_WEIGHTS",
+          "value": "1",
+          "enum": "SkinWeightCount",
+          "kind": "EnumValue",
+          "summary": "Each individual vertex can be influenced by up to 8 bone weights.",
+          "sourcePath": "doc/classes/SurfaceTool.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CUSTOM_RGBA8_UNORM",
+      "value": "0",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Limits range of data passed to [method set_custom] to unsigned normalized 0 to 1 stored in 8 bits per channel. See [constant Mesh.ARRAY_CUSTOM_RGBA8_UNORM].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RGBA8_SNORM",
+      "value": "1",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Limits range of data passed to [method set_custom] to signed normalized -1 to 1 stored in 8 bits per channel. See [constant Mesh.ARRAY_CUSTOM_RGBA8_SNORM].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RG_HALF",
+      "value": "2",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as half precision floats, and uses only red and green color channels. See [constant Mesh.ARRAY_CUSTOM_RG_HALF].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RGBA_HALF",
+      "value": "3",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as half precision floats and uses all color channels. See [constant Mesh.ARRAY_CUSTOM_RGBA_HALF].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_R_FLOAT",
+      "value": "4",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red color channel. See [constant Mesh.ARRAY_CUSTOM_R_FLOAT].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RG_FLOAT",
+      "value": "5",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red and green color channels. See [constant Mesh.ARRAY_CUSTOM_RG_FLOAT].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RGB_FLOAT",
+      "value": "6",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as full precision floats, and uses only red, green and blue color channels. See [constant Mesh.ARRAY_CUSTOM_RGB_FLOAT].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_RGBA_FLOAT",
+      "value": "7",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Stores data passed to [method set_custom] as full precision floats, and uses all color channels. See [constant Mesh.ARRAY_CUSTOM_RGBA_FLOAT].",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "CUSTOM_MAX",
+      "value": "8",
+      "enum": "CustomFormat",
+      "kind": "EnumValue",
+      "summary": "Used to indicate a disabled custom channel.",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SKIN_4_WEIGHTS",
+      "value": "0",
+      "enum": "SkinWeightCount",
+      "kind": "EnumValue",
+      "summary": "Each individual vertex can be influenced by only 4 bone weights.",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    },
+    {
+      "name": "SKIN_8_WEIGHTS",
+      "value": "1",
+      "enum": "SkinWeightCount",
+      "kind": "EnumValue",
+      "summary": "Each individual vertex can be influenced by up to 8 bone weights.",
+      "sourcePath": "doc/classes/SurfaceTool.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SurfaceTool.xml",
+      "sha256": "d27f0048fe4903d4965d30a976a3446061dd12c5decc116df3fdbbb05526c8fc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ChainIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ChainIK3D",
+    "kind": "class",
+    "baseType": "IKModifier3D",
+    "interfaces": [],
+    "godotReference": "ChainIK3D",
+    "documentationPath": "doc/classes/ChainIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_chainik3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEndBone",
+      "kind": "Method",
+      "signature": "public int GetEndBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone index of the bone chain.",
+      "godotName": "get_end_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.GetEndBone(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public int GetEndBoneDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tail direction of the end bone of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_direction",
+      "xmlDocId": "M:Godot.ChainIK3D.GetEndBoneDirection(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneLength",
+      "kind": "Method",
+      "signature": "public float GetEndBoneLength(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone tail length of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_length",
+      "xmlDocId": "M:Godot.ChainIK3D.GetEndBoneLength(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetEndBoneName",
+      "kind": "Method",
+      "signature": "public String GetEndBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone name of the bone chain.",
+      "godotName": "get_end_bone_name",
+      "xmlDocId": "M:Godot.ChainIK3D.GetEndBoneName(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetJointBone",
+      "kind": "Method",
+      "signature": "public int GetJointBone(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone index at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.GetJointBone(int,int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetJointBoneName",
+      "kind": "Method",
+      "signature": "public String GetJointBoneName(int index, int joint)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone name at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone_name",
+      "xmlDocId": "M:Godot.ChainIK3D.GetJointBoneName(int,int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetJointCount",
+      "kind": "Method",
+      "signature": "public int GetJointCount(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint count of the bone chain\u0027s joint list.",
+      "godotName": "get_joint_count",
+      "xmlDocId": "M:Godot.ChainIK3D.GetJointCount(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetRootBone",
+      "kind": "Method",
+      "signature": "public int GetRootBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone index of the bone chain.",
+      "godotName": "get_root_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.GetRootBone(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "GetRootBoneName",
+      "kind": "Method",
+      "signature": "public String GetRootBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone name of the bone chain.",
+      "godotName": "get_root_bone_name",
+      "xmlDocId": "M:Godot.ChainIK3D.GetRootBoneName(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "IsEndBoneExtended",
+      "kind": "Method",
+      "signature": "public bool IsEndBoneExtended(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the end bone is extended to have a tail.",
+      "godotName": "is_end_bone_extended",
+      "xmlDocId": "M:Godot.ChainIK3D.IsEndBoneExtended(int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetEndBone",
+      "kind": "Method",
+      "signature": "public void SetEndBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone index of the bone chain.",
+      "godotName": "set_end_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.SetEndBone(int,int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public void SetEndBoneDirection(int index, int boneDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone tail direction of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_direction",
+      "xmlDocId": "M:Godot.ChainIK3D.SetEndBoneDirection(int,int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneLength",
+      "kind": "Method",
+      "signature": "public void SetEndBoneLength(int index, float length)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the end bone tail length of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_length",
+      "xmlDocId": "M:Godot.ChainIK3D.SetEndBoneLength(int,float)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetEndBoneName",
+      "kind": "Method",
+      "signature": "public void SetEndBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the end bone name of the bone chain. [b]Note:[/b] The end bone must be the root bone or a child of the root bone. If they are the same, the tail must be extended by [method set_extend_end_bone] to modify the bone.",
+      "godotName": "set_end_bone_name",
+      "xmlDocId": "M:Godot.ChainIK3D.SetEndBoneName(int,String)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetExtendEndBone",
+      "kind": "Method",
+      "signature": "public void SetExtendEndBone(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the end bone is extended to have a tail. The extended tail config is allocated to the last element in the joint list. In other words, if you set [param enabled] to [code]false[/code], the config of the last element in the joint list has no effect in the simulated result.",
+      "godotName": "set_extend_end_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.SetExtendEndBone(int,bool)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetRootBone",
+      "kind": "Method",
+      "signature": "public void SetRootBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the root bone index of the bone chain.",
+      "godotName": "set_root_bone",
+      "xmlDocId": "M:Godot.ChainIK3D.SetRootBone(int,int)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    },
+    {
+      "name": "SetRootBoneName",
+      "kind": "Method",
+      "signature": "public void SetRootBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the root bone name of the bone chain.",
+      "godotName": "set_root_bone_name",
+      "xmlDocId": "M:Godot.ChainIK3D.SetRootBoneName(int,String)",
+      "sourcePath": "doc/classes/ChainIK3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ChainIK3D.xml",
+      "sha256": "08980b166d8416d8469b3638ed2f6b0c0f11ee41752da3520817417523fb6c02"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

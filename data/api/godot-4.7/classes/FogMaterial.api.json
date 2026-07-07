@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FogMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.FogMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "FogMaterial",
+    "documentationPath": "doc/classes/FogMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fogmaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Albedo",
+      "kind": "Property",
+      "signature": "public Color Albedo { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The single-scattering [Color] of the [FogVolume]. Internally, [member albedo] is converted into single-scattering, which is additively blended with other [FogVolume]s and the [member Environment.volumetric_fog_albedo].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "albedo",
+      "xmlDocId": "P:Godot.FogMaterial.Albedo",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    },
+    {
+      "name": "Density",
+      "kind": "Property",
+      "signature": "public float Density { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The density of the [FogVolume]. Denser objects are more opaque, but may suffer from under-sampling artifacts that look like stripes. Negative values can be used to subtract fog from other [FogVolume]s or global volumetric fog. [b]Note:[/b] Due to limited precision, [member density] values between [code]-0.001[/code] and [code]0.001[/code] (exclusive) act like [code]0.0[/code]. This does not apply to [member Environment.volumetric_fog_density].",
+      "defaultValue": "1.0",
+      "godotName": "density",
+      "xmlDocId": "P:Godot.FogMaterial.Density",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    },
+    {
+      "name": "DensityTexture",
+      "kind": "Property",
+      "signature": "public Texture3D DensityTexture { get; set; }",
+      "returnType": "Texture3D",
+      "parameters": [],
+      "summary": "The 3D texture that is used to scale the [member density] of the [FogVolume]. This can be used to vary fog density within the [FogVolume] with any kind of static pattern. For animated effects, consider using a custom [url=$DOCS_URL/tutorials/shaders/shader_reference/fog_shader.html]fog shader[/url].",
+      "godotName": "density_texture",
+      "xmlDocId": "P:Godot.FogMaterial.DensityTexture",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    },
+    {
+      "name": "EdgeFade",
+      "kind": "Property",
+      "signature": "public float EdgeFade { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The hardness of the edges of the [FogVolume]. A higher value will result in softer edges, while a lower value will result in harder edges.",
+      "defaultValue": "0.1",
+      "godotName": "edge_fade",
+      "xmlDocId": "P:Godot.FogMaterial.EdgeFade",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    },
+    {
+      "name": "Emission",
+      "kind": "Property",
+      "signature": "public Color Emission { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The [Color] of the light emitted by the [FogVolume]. Emitted light will not cast light or shadows on other objects, but can be useful for modulating the [Color] of the [FogVolume] independently from light sources.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "emission",
+      "xmlDocId": "P:Godot.FogMaterial.Emission",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    },
+    {
+      "name": "HeightFalloff",
+      "kind": "Property",
+      "signature": "public float HeightFalloff { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate by which the height-based fog decreases in density as height increases in world space. A high falloff will result in a sharp transition, while a low falloff will result in a smoother transition. A value of [code]0.0[/code] results in uniform-density fog. The height threshold is determined by the height of the associated [FogVolume].",
+      "defaultValue": "0.0",
+      "godotName": "height_falloff",
+      "xmlDocId": "P:Godot.FogMaterial.HeightFalloff",
+      "sourcePath": "doc/classes/FogMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FogMaterial.xml",
+      "sha256": "2884bb7698a41b7ab30a152bc4ce38b8c4f43013812cc80d1b388c05cbfc4d95"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

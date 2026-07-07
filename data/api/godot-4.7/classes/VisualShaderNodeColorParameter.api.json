@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeColorParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeColorParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeColorParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeColorParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecolorparameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DefaultValue",
+      "kind": "Property",
+      "signature": "public Color DefaultValue { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "A default value to be assigned within the shader.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "default_value",
+      "xmlDocId": "P:Godot.VisualShaderNodeColorParameter.DefaultValue",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorParameter.xml"
+    },
+    {
+      "name": "DefaultValueEnabled",
+      "kind": "Property",
+      "signature": "public bool DefaultValueEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables usage of the [member default_value].",
+      "defaultValue": "false",
+      "godotName": "default_value_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeColorParameter.DefaultValueEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeColorParameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeColorParameter.xml",
+      "sha256": "2a452451cf543a3886c067ef290e851e4e9ed6fc86b866e513dba03ae91a8013"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

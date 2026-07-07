@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicalBoneSimulator3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicalBoneSimulator3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "PhysicalBoneSimulator3D",
+    "documentationPath": "doc/classes/PhysicalBoneSimulator3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicalbonesimulator3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsSimulatingPhysics",
+      "kind": "Method",
+      "signature": "public bool IsSimulatingPhysics()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns a boolean that indicates whether the [PhysicalBoneSimulator3D] is running and simulating.",
+      "godotName": "is_simulating_physics",
+      "xmlDocId": "M:Godot.PhysicalBoneSimulator3D.IsSimulatingPhysics",
+      "sourcePath": "doc/classes/PhysicalBoneSimulator3D.xml"
+    },
+    {
+      "name": "PhysicalBonesAddCollisionException",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesAddCollisionException(RID exception)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "exception",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds a collision exception to the physical bone. Works just like the [RigidBody3D] node.",
+      "godotName": "physical_bones_add_collision_exception",
+      "xmlDocId": "M:Godot.PhysicalBoneSimulator3D.PhysicalBonesAddCollisionException(RID)",
+      "sourcePath": "doc/classes/PhysicalBoneSimulator3D.xml"
+    },
+    {
+      "name": "PhysicalBonesRemoveCollisionException",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesRemoveCollisionException(RID exception)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "exception",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes a collision exception to the physical bone. Works just like the [RigidBody3D] node.",
+      "godotName": "physical_bones_remove_collision_exception",
+      "xmlDocId": "M:Godot.PhysicalBoneSimulator3D.PhysicalBonesRemoveCollisionException(RID)",
+      "sourcePath": "doc/classes/PhysicalBoneSimulator3D.xml"
+    },
+    {
+      "name": "PhysicalBonesStartSimulation",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesStartSimulation(StringName[] bones)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bones",
+          "type": "StringName[]",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Tells the [PhysicalBone3D] nodes in the Skeleton to start simulating and reacting to the physics world. Optionally, a list of bone names can be passed-in, allowing only the passed-in bones to be simulated.",
+      "godotName": "physical_bones_start_simulation",
+      "xmlDocId": "M:Godot.PhysicalBoneSimulator3D.PhysicalBonesStartSimulation(StringName[])",
+      "sourcePath": "doc/classes/PhysicalBoneSimulator3D.xml"
+    },
+    {
+      "name": "PhysicalBonesStopSimulation",
+      "kind": "Method",
+      "signature": "public void PhysicalBonesStopSimulation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Tells the [PhysicalBone3D] nodes in the Skeleton to stop simulating.",
+      "godotName": "physical_bones_stop_simulation",
+      "xmlDocId": "M:Godot.PhysicalBoneSimulator3D.PhysicalBonesStopSimulation",
+      "sourcePath": "doc/classes/PhysicalBoneSimulator3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicalBoneSimulator3D.xml",
+      "sha256": "9f02e9b91f8c99aebd7e8020163978c89810fd09fa6621dbdc6cc8153480a9bc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PacketPeerUDP",
+    "namespace": "Godot",
+    "fullName": "Godot.PacketPeerUDP",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "PacketPeerUDP",
+    "documentationPath": "doc/classes/PacketPeerUDP.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packetpeerudp.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bind",
+      "kind": "Method",
+      "signature": "public int Bind(int port, String bindAddress, int recvBufSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "bind_address",
+          "type": "String",
+          "defaultValue": "\u0022*\u0022"
+        },
+        {
+          "name": "recv_buf_size",
+          "type": "int",
+          "defaultValue": "65536"
+        }
+      ],
+      "summary": "Binds this [PacketPeerUDP] to the specified [param port] and [param bind_address] with a buffer size [param recv_buf_size], allowing it to receive incoming packets. If [param bind_address] is set to [code]\u0022*\u0022[/code] (default), the peer will be bound on all available addresses (both IPv4 and IPv6). If [param bind_address] is set to [code]\u00220.0.0.0\u0022[/code] (for IPv4) or [code]\u0022::\u0022[/code] (for IPv6), the peer will be bound to all available addresses matching that IP type. If [param bind_address] is set to any valid address (e.g. [code]\u0022192.168.1.101\u0022[/code], [code]\u0022::1\u0022[/code], etc.), the peer will only be bound to the interface with that address (or fail if no interface with the given address exists).",
+      "godotName": "bind",
+      "xmlDocId": "M:Godot.PacketPeerUDP.Bind(int,String,int)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public void Close()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Closes the [PacketPeerUDP]\u0027s underlying UDP socket.",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.PacketPeerUDP.Close",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "ConnectToHost",
+      "kind": "Method",
+      "signature": "public int ConnectToHost(String host, int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Calling this method connects this UDP peer to the given [param host]/[param port] pair. UDP is in reality connectionless, so this option only means that incoming packets from different addresses are automatically discarded, and that outgoing packets are always sent to the connected address (future calls to [method set_dest_address] are not allowed). This method does not send any data to the remote peer, to do that, use [method PacketPeer.put_var] or [method PacketPeer.put_packet] as usual. See also [UDPServer]. [b]Note:[/b] Connecting to the remote peer does not help to protect from malicious attacks like IP spoofing, etc. Think about using an encryption technique like TLS or DTLS if you feel like your application is transferring sensitive information.",
+      "godotName": "connect_to_host",
+      "xmlDocId": "M:Godot.PacketPeerUDP.ConnectToHost(String,int)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "GetLocalPort",
+      "kind": "Method",
+      "signature": "public int GetLocalPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the local port to which this peer is bound.",
+      "godotName": "get_local_port",
+      "xmlDocId": "M:Godot.PacketPeerUDP.GetLocalPort",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "GetPacketIp",
+      "kind": "Method",
+      "signature": "public String GetPacketIp()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the IP of the remote peer that sent the last packet(that was received with [method PacketPeer.get_packet] or [method PacketPeer.get_var]).",
+      "godotName": "get_packet_ip",
+      "xmlDocId": "M:Godot.PacketPeerUDP.GetPacketIp",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "GetPacketPort",
+      "kind": "Method",
+      "signature": "public int GetPacketPort()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the port of the remote peer that sent the last packet(that was received with [method PacketPeer.get_packet] or [method PacketPeer.get_var]).",
+      "godotName": "get_packet_port",
+      "xmlDocId": "M:Godot.PacketPeerUDP.GetPacketPort",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "IsBound",
+      "kind": "Method",
+      "signature": "public bool IsBound()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether this [PacketPeerUDP] is bound to an address and can receive packets.",
+      "godotName": "is_bound",
+      "xmlDocId": "M:Godot.PacketPeerUDP.IsBound",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "IsSocketConnected",
+      "kind": "Method",
+      "signature": "public bool IsSocketConnected()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the UDP socket is open and has been connected to a remote address. See [method connect_to_host].",
+      "godotName": "is_socket_connected",
+      "xmlDocId": "M:Godot.PacketPeerUDP.IsSocketConnected",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "JoinMulticastGroup",
+      "kind": "Method",
+      "signature": "public int JoinMulticastGroup(String multicastAddress, String interfaceName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "multicast_address",
+          "type": "String"
+        },
+        {
+          "name": "interface_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Joins the multicast group specified by [param multicast_address] using the interface identified by [param interface_name]. You can join the same multicast group with multiple interfaces. Use [method IP.get_local_interfaces] to know which are available. [b]Note:[/b] Some Android devices might require the [code]CHANGE_WIFI_MULTICAST_STATE[/code] permission for multicast to work.",
+      "godotName": "join_multicast_group",
+      "xmlDocId": "M:Godot.PacketPeerUDP.JoinMulticastGroup(String,String)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "LeaveMulticastGroup",
+      "kind": "Method",
+      "signature": "public int LeaveMulticastGroup(String multicastAddress, String interfaceName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "multicast_address",
+          "type": "String"
+        },
+        {
+          "name": "interface_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the interface identified by [param interface_name] from the multicast group specified by [param multicast_address].",
+      "godotName": "leave_multicast_group",
+      "xmlDocId": "M:Godot.PacketPeerUDP.LeaveMulticastGroup(String,String)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "SetBroadcastEnabled",
+      "kind": "Method",
+      "signature": "public void SetBroadcastEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enable or disable sending of broadcast packets (e.g. [code]set_dest_address(\u0022255.255.255.255\u0022, 4343)[/code]. This option is disabled by default. [b]Note:[/b] Some Android devices might require the [code]CHANGE_WIFI_MULTICAST_STATE[/code] permission and this option to be enabled to receive broadcast packets too.",
+      "godotName": "set_broadcast_enabled",
+      "xmlDocId": "M:Godot.PacketPeerUDP.SetBroadcastEnabled(bool)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "SetDestAddress",
+      "kind": "Method",
+      "signature": "public int SetDestAddress(String host, int port)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the destination address and port for sending packets and variables. A hostname will be resolved using DNS if needed. [b]Note:[/b] [method set_broadcast_enabled] must be enabled before sending packets to a broadcast address (e.g. [code]255.255.255.255[/code]).",
+      "godotName": "set_dest_address",
+      "xmlDocId": "M:Godot.PacketPeerUDP.SetDestAddress(String,int)",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    },
+    {
+      "name": "Wait",
+      "kind": "Method",
+      "signature": "public int Wait()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Waits for a packet to arrive on the bound address. See [method bind]. [b]Note:[/b] [method wait] can\u0027t be interrupted once it has been called. This can be worked around by allowing the other party to send a specific \u0022death pill\u0022 packet like this: [codeblocks] [gdscript] socket = PacketPeerUDP.new() # Server socket.set_dest_address(\u0022127.0.0.1\u0022, 789) socket.put_packet(\u0022Time to stop\u0022.to_ascii_buffer()) # Client while socket.wait() == OK: var data = socket.get_packet().get_string_from_ascii() if data == \u0022Time to stop\u0022: return [/gdscript] [csharp] var socket = new PacketPeerUdp(); // Server socket.SetDestAddress(\u0022127.0.0.1\u0022, 789); socket.PutPacket(\u0022Time to stop\u0022.ToAsciiBuffer()); // Client while (socket.Wait() == OK) { string data = socket.GetPacket().GetStringFromASCII(); if (data == \u0022Time to stop\u0022) { return; } } [/csharp] [/codeblocks]",
+      "godotName": "wait",
+      "xmlDocId": "M:Godot.PacketPeerUDP.Wait",
+      "sourcePath": "doc/classes/PacketPeerUDP.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PacketPeerUDP.xml",
+      "sha256": "9168daa3281203c72b5f75953930d6c53d734995a2e98b52e9de4240fb897d2f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourcePreloader",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourcePreloader",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "ResourcePreloader",
+    "documentationPath": "doc/classes/ResourcePreloader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourcepreloader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddResource",
+      "kind": "Method",
+      "signature": "public void AddResource(StringName name, Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Adds a resource to the preloader with the given [param name]. If a resource with the given [param name] already exists, the new resource will be renamed to \u0022[param name] N\u0022 where N is an incrementing number starting from 2.",
+      "godotName": "add_resource",
+      "xmlDocId": "M:Godot.ResourcePreloader.AddResource(StringName,Resource)",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    },
+    {
+      "name": "GetResource",
+      "kind": "Method",
+      "signature": "public Resource GetResource(StringName name)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the resource associated to [param name].",
+      "godotName": "get_resource",
+      "xmlDocId": "M:Godot.ResourcePreloader.GetResource(StringName)",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    },
+    {
+      "name": "GetResourceList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetResourceList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of resources inside the preloader.",
+      "godotName": "get_resource_list",
+      "xmlDocId": "M:Godot.ResourcePreloader.GetResourceList",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    },
+    {
+      "name": "HasResource",
+      "kind": "Method",
+      "signature": "public bool HasResource(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the preloader contains a resource associated to [param name].",
+      "godotName": "has_resource",
+      "xmlDocId": "M:Godot.ResourcePreloader.HasResource(StringName)",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    },
+    {
+      "name": "RemoveResource",
+      "kind": "Method",
+      "signature": "public void RemoveResource(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the resource associated to [param name] from the preloader.",
+      "godotName": "remove_resource",
+      "xmlDocId": "M:Godot.ResourcePreloader.RemoveResource(StringName)",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    },
+    {
+      "name": "RenameResource",
+      "kind": "Method",
+      "signature": "public void RenameResource(StringName name, StringName newname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "newname",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames a resource inside the preloader from [param name] to [param newname].",
+      "godotName": "rename_resource",
+      "xmlDocId": "M:Godot.ResourcePreloader.RenameResource(StringName,StringName)",
+      "sourcePath": "doc/classes/ResourcePreloader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourcePreloader.xml",
+      "sha256": "24a660bceffddf609ec1b82104e5f59f8a3b2fd6f2870d1f8877e796e17c21a0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

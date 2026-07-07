@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneTreeTimer",
+    "namespace": "Godot",
+    "fullName": "Godot.SceneTreeTimer",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "SceneTreeTimer",
+    "documentationPath": "doc/classes/SceneTreeTimer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scenetreetimer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "TimeLeft",
+      "kind": "Property",
+      "signature": "public float TimeLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The time remaining (in seconds).",
+      "godotName": "time_left",
+      "xmlDocId": "P:Godot.SceneTreeTimer.TimeLeft",
+      "sourcePath": "doc/classes/SceneTreeTimer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Timeout",
+      "kind": "Signal",
+      "signature": "public event TimeoutHandler Timeout",
+      "parameters": [],
+      "summary": "Emitted when the timer reaches 0.",
+      "godotName": "timeout",
+      "xmlDocId": "E:Godot.SceneTreeTimer.Timeout",
+      "sourcePath": "doc/classes/SceneTreeTimer.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SceneTreeTimer.xml",
+      "sha256": "78adb6df269b393de3ab962600bf2c7dd1457124c662cd59503e115414c8e7ca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

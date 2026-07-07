@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSceneFormatImporterFBX2GLTF",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSceneFormatImporterFBX2GLTF",
+    "kind": "class",
+    "baseType": "EditorSceneFormatImporter",
+    "interfaces": [],
+    "godotReference": "EditorSceneFormatImporterFBX2GLTF",
+    "documentationPath": "modules/fbx/doc_classes/EditorSceneFormatImporterFBX2GLTF.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorsceneformatimporterfbx2gltf.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/fbx/doc_classes/EditorSceneFormatImporterFBX2GLTF.xml",
+      "sha256": "76d822ea6b2e65619ffab141e75665b2b1bf4e86645d2358b469f3cc6d5d4ec0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "IKModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.IKModifier3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "IKModifier3D",
+    "documentationPath": "doc/classes/IKModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_ikmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearSettings",
+      "kind": "Method",
+      "signature": "public void ClearSettings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all settings.",
+      "godotName": "clear_settings",
+      "xmlDocId": "M:Godot.IKModifier3D.ClearSettings",
+      "sourcePath": "doc/classes/IKModifier3D.xml"
+    },
+    {
+      "name": "GetSettingCount",
+      "kind": "Method",
+      "signature": "public int GetSettingCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of settings.",
+      "godotName": "get_setting_count",
+      "xmlDocId": "M:Godot.IKModifier3D.GetSettingCount",
+      "sourcePath": "doc/classes/IKModifier3D.xml"
+    },
+    {
+      "name": "Reset",
+      "kind": "Method",
+      "signature": "public void Reset()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resets a state with respect to the current bone pose.",
+      "godotName": "reset",
+      "xmlDocId": "M:Godot.IKModifier3D.Reset",
+      "sourcePath": "doc/classes/IKModifier3D.xml"
+    },
+    {
+      "name": "SetSettingCount",
+      "kind": "Method",
+      "signature": "public void SetSettingCount(int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the number of settings.",
+      "godotName": "set_setting_count",
+      "xmlDocId": "M:Godot.IKModifier3D.SetSettingCount(int)",
+      "sourcePath": "doc/classes/IKModifier3D.xml"
+    },
+    {
+      "name": "MutableBoneAxes",
+      "kind": "Property",
+      "signature": "public bool MutableBoneAxes { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the solver retrieves the bone axis from the bone pose every frame. If [code]false[/code], the solver retrieves the bone axis from the bone rest and caches it, which increases performance slightly, but position changes in the bone pose made before processing this [IKModifier3D] are ignored.",
+      "defaultValue": "true",
+      "godotName": "mutable_bone_axes",
+      "xmlDocId": "P:Godot.IKModifier3D.MutableBoneAxes",
+      "sourcePath": "doc/classes/IKModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/IKModifier3D.xml",
+      "sha256": "bf6e22aba7185ec1013c8da6876895de9f4fd100f67922ff2977183bc1b23691"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

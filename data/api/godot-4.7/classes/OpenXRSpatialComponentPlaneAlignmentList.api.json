@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentPlaneAlignmentList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentPlaneAlignmentList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentPlaneAlignmentList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentplanealignmentlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPlaneAlignment",
+      "kind": "Method",
+      "signature": "public int GetPlaneAlignment(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the plane alignment for the parent entity at this [param index].",
+      "godotName": "get_plane_alignment",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPlaneAlignmentList.GetPlaneAlignment(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PlaneAlignment",
+      "values": [
+        {
+          "name": "PLANE_ALIGNMENT_ARBITRARY",
+          "value": "3",
+          "enum": "PlaneAlignment",
+          "kind": "EnumValue",
+          "summary": "Plane has an arbitrary alignment.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+        },
+        {
+          "name": "PLANE_ALIGNMENT_HORIZONTAL_DOWNWARD",
+          "value": "1",
+          "enum": "PlaneAlignment",
+          "kind": "EnumValue",
+          "summary": "Plane is facing downwards.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+        },
+        {
+          "name": "PLANE_ALIGNMENT_HORIZONTAL_UPWARD",
+          "value": "0",
+          "enum": "PlaneAlignment",
+          "kind": "EnumValue",
+          "summary": "Plane is facing upward.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+        },
+        {
+          "name": "PLANE_ALIGNMENT_VERTICAL",
+          "value": "2",
+          "enum": "PlaneAlignment",
+          "kind": "EnumValue",
+          "summary": "Plane is vertically aligned.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PLANE_ALIGNMENT_HORIZONTAL_UPWARD",
+      "value": "0",
+      "enum": "PlaneAlignment",
+      "kind": "EnumValue",
+      "summary": "Plane is facing upward.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+    },
+    {
+      "name": "PLANE_ALIGNMENT_HORIZONTAL_DOWNWARD",
+      "value": "1",
+      "enum": "PlaneAlignment",
+      "kind": "EnumValue",
+      "summary": "Plane is facing downwards.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+    },
+    {
+      "name": "PLANE_ALIGNMENT_VERTICAL",
+      "value": "2",
+      "enum": "PlaneAlignment",
+      "kind": "EnumValue",
+      "summary": "Plane is vertically aligned.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+    },
+    {
+      "name": "PLANE_ALIGNMENT_ARBITRARY",
+      "value": "3",
+      "enum": "PlaneAlignment",
+      "kind": "EnumValue",
+      "summary": "Plane has an arbitrary alignment.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneAlignmentList.xml",
+      "sha256": "21cf990e6b7b5168827e9b2f8008ef32ceb5d1ec74216240db05a9fb8fe714f8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

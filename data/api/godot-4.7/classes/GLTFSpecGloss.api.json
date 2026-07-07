@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFSpecGloss",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFSpecGloss",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFSpecGloss",
+    "documentationPath": "modules/gltf/doc_classes/GLTFSpecGloss.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfspecgloss.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DiffuseFactor",
+      "kind": "Property",
+      "signature": "public Color DiffuseFactor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The reflected diffuse factor of the material.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "diffuse_factor",
+      "xmlDocId": "P:Godot.GLTFSpecGloss.DiffuseFactor",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSpecGloss.xml"
+    },
+    {
+      "name": "DiffuseImg",
+      "kind": "Property",
+      "signature": "public Image DiffuseImg { get; set; }",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "The diffuse texture.",
+      "godotName": "diffuse_img",
+      "xmlDocId": "P:Godot.GLTFSpecGloss.DiffuseImg",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSpecGloss.xml"
+    },
+    {
+      "name": "GlossFactor",
+      "kind": "Property",
+      "signature": "public float GlossFactor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The glossiness or smoothness of the material.",
+      "defaultValue": "1.0",
+      "godotName": "gloss_factor",
+      "xmlDocId": "P:Godot.GLTFSpecGloss.GlossFactor",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSpecGloss.xml"
+    },
+    {
+      "name": "SpecGlossImg",
+      "kind": "Property",
+      "signature": "public Image SpecGlossImg { get; set; }",
+      "returnType": "Image",
+      "parameters": [],
+      "summary": "The specular-glossiness texture.",
+      "godotName": "spec_gloss_img",
+      "xmlDocId": "P:Godot.GLTFSpecGloss.SpecGlossImg",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSpecGloss.xml"
+    },
+    {
+      "name": "SpecularFactor",
+      "kind": "Property",
+      "signature": "public Color SpecularFactor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The specular RGB color of the material. The alpha channel is unused.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "specular_factor",
+      "xmlDocId": "P:Godot.GLTFSpecGloss.SpecularFactor",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSpecGloss.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFSpecGloss.xml",
+      "sha256": "d2aabdf0abbee84a1a177acaa5d6f2b3c427d733691d8661b2be384d5652fa80"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentParentList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentParentList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentParentList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentParentList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentparentlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParent",
+      "kind": "Method",
+      "signature": "public RID GetParent(int index)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the RID for the parent entity at this [param index].",
+      "godotName": "get_parent",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentParentList.GetParent(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentParentList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentParentList.xml",
+      "sha256": "774637947519a6ad1a98165bee13e98e5792d1095b3bf355d185fb071a67f20b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

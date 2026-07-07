@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFNode",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFNode",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFNode",
+    "documentationPath": "modules/gltf/doc_classes/GLTFNode.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfnode.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AppendChildIndex",
+      "kind": "Method",
+      "signature": "public void AppendChildIndex(int childIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "child_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends the given child node index to the [member children] array.",
+      "godotName": "append_child_index",
+      "xmlDocId": "M:Godot.GLTFNode.AppendChildIndex(int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "GetAdditionalData",
+      "kind": "Method",
+      "signature": "public Variant GetAdditionalData(StringName extensionName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Gets additional arbitrary data in this [GLTFNode] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the return value can be anything you set. If nothing was set, the return value is [code]null[/code].",
+      "godotName": "get_additional_data",
+      "xmlDocId": "M:Godot.GLTFNode.GetAdditionalData(StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "GetSceneNodePath",
+      "kind": "Method",
+      "signature": "public NodePath GetSceneNodePath(GLTFState gltfState, bool handleSkeletons)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "gltf_state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "handle_skeletons",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the [NodePath] that this GLTF node will have in the Godot scene tree after being imported. This is useful when importing glTF object model pointers with [GLTFObjectModelProperty], for handling extensions such as [code]KHR_animation_pointer[/code] or [code]KHR_interactivity[/code]. If [param handle_skeletons] is [code]true[/code], paths to skeleton bone glTF nodes will be resolved properly. For example, a path that would be [code]^\u0022A/B/C/Bone1/Bone2/Bone3\u0022[/code] if [code]false[/code] will become [code]^\u0022A/B/C/Skeleton3D:Bone3\u0022[/code].",
+      "godotName": "get_scene_node_path",
+      "xmlDocId": "M:Godot.GLTFNode.GetSceneNodePath(GLTFState,bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "SetAdditionalData",
+      "kind": "Method",
+      "signature": "public void SetAdditionalData(StringName extensionName, Variant additionalData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        },
+        {
+          "name": "additional_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets additional arbitrary data in this [GLTFNode] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The first argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the second argument can be anything you want.",
+      "godotName": "set_additional_data",
+      "xmlDocId": "M:Godot.GLTFNode.SetAdditionalData(StringName,Variant)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Camera",
+      "kind": "Property",
+      "signature": "public int Camera { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If this glTF node is a camera, the index of the [GLTFCamera] in the [GLTFState] that describes the camera\u0027s properties. If [code]-1[/code], this node is not a camera.",
+      "defaultValue": "-1",
+      "godotName": "camera",
+      "xmlDocId": "P:Godot.GLTFNode.Camera",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Children",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Children { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "The indices of the child nodes in the [GLTFState]. If this glTF node has no children, this will be an empty array.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "children",
+      "xmlDocId": "P:Godot.GLTFNode.Children",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public int Height { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "How deep into the node hierarchy this node is. A root node will have a height of 0, its children will have a height of 1, and so on. If -1, the height has not been calculated.",
+      "defaultValue": "-1",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.GLTFNode.Height",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Light",
+      "kind": "Property",
+      "signature": "public int Light { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If this glTF node is a light, the index of the [GLTFLight] in the [GLTFState] that describes the light\u0027s properties. If -1, this node is not a light.",
+      "defaultValue": "-1",
+      "godotName": "light",
+      "xmlDocId": "P:Godot.GLTFNode.Light",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public int Mesh { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If this glTF node is a mesh, the index of the [GLTFMesh] in the [GLTFState] that describes the mesh\u0027s properties. If -1, this node is not a mesh.",
+      "defaultValue": "-1",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.GLTFNode.Mesh",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "OriginalName",
+      "kind": "Property",
+      "signature": "public String OriginalName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The original name of the node.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "original_name",
+      "xmlDocId": "P:Godot.GLTFNode.OriginalName",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Parent",
+      "kind": "Property",
+      "signature": "public int Parent { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the parent node in the [GLTFState]. If -1, this node is a root node.",
+      "defaultValue": "-1",
+      "godotName": "parent",
+      "xmlDocId": "P:Godot.GLTFNode.Parent",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector3 Position { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position of the glTF node relative to its parent.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.GLTFNode.Position",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Rotation",
+      "kind": "Property",
+      "signature": "public Quaternion Rotation { get; set; }",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "The rotation of the glTF node relative to its parent.",
+      "defaultValue": "Quaternion(0, 0, 0, 1)",
+      "godotName": "rotation",
+      "xmlDocId": "P:Godot.GLTFNode.Rotation",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Scale",
+      "kind": "Property",
+      "signature": "public Vector3 Scale { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The scale of the glTF node relative to its parent.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "scale",
+      "xmlDocId": "P:Godot.GLTFNode.Scale",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Skeleton",
+      "kind": "Property",
+      "signature": "public int Skeleton { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If this glTF node has a skeleton, the index of the [GLTFSkeleton] in the [GLTFState] that describes the skeleton\u0027s properties. If -1, this node does not have a skeleton.",
+      "defaultValue": "-1",
+      "godotName": "skeleton",
+      "xmlDocId": "P:Godot.GLTFNode.Skeleton",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Skin",
+      "kind": "Property",
+      "signature": "public int Skin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If this glTF node has a skin, the index of the [GLTFSkin] in the [GLTFState] that describes the skin\u0027s properties. If -1, this node does not have a skin.",
+      "defaultValue": "-1",
+      "godotName": "skin",
+      "xmlDocId": "P:Godot.GLTFNode.Skin",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the GLTF node is visible. If [code]false[/code], the GLTF node is not visible. This is converted to the [member Node3D.visible] property in the Godot scene, and is exported to [code]KHR_node_visibility[/code] when [code]false[/code].",
+      "defaultValue": "true",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.GLTFNode.Visible",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    },
+    {
+      "name": "Xform",
+      "kind": "Property",
+      "signature": "public Transform3D Xform { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "The transform of the glTF node relative to its parent. This property is usually unused since the position, rotation, and scale properties are preferred.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "xform",
+      "xmlDocId": "P:Godot.GLTFNode.Xform",
+      "sourcePath": "modules/gltf/doc_classes/GLTFNode.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFNode.xml",
+      "sha256": "e89fac6b95caed7d6b6ea96264a1b107e49a172f29c05b534c8d37043427c0b9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

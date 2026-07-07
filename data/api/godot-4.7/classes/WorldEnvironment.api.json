@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WorldEnvironment",
+    "namespace": "Godot",
+    "fullName": "Godot.WorldEnvironment",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "WorldEnvironment",
+    "documentationPath": "doc/classes/WorldEnvironment.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_worldenvironment.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CameraAttributes",
+      "kind": "Property",
+      "signature": "public CameraAttributes CameraAttributes { get; set; }",
+      "returnType": "CameraAttributes",
+      "parameters": [],
+      "summary": "The default [CameraAttributes] resource to use if none set on the [Camera3D].",
+      "godotName": "camera_attributes",
+      "xmlDocId": "P:Godot.WorldEnvironment.CameraAttributes",
+      "sourcePath": "doc/classes/WorldEnvironment.xml"
+    },
+    {
+      "name": "Compositor",
+      "kind": "Property",
+      "signature": "public Compositor Compositor { get; set; }",
+      "returnType": "Compositor",
+      "parameters": [],
+      "summary": "The default [Compositor] resource to use if none set on the [Camera3D].",
+      "godotName": "compositor",
+      "xmlDocId": "P:Godot.WorldEnvironment.Compositor",
+      "sourcePath": "doc/classes/WorldEnvironment.xml"
+    },
+    {
+      "name": "Environment",
+      "kind": "Property",
+      "signature": "public Environment Environment { get; set; }",
+      "returnType": "Environment",
+      "parameters": [],
+      "summary": "The [Environment] resource used by this [WorldEnvironment], defining the default properties.",
+      "godotName": "environment",
+      "xmlDocId": "P:Godot.WorldEnvironment.Environment",
+      "sourcePath": "doc/classes/WorldEnvironment.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/WorldEnvironment.xml",
+      "sha256": "a88e200d9598694f92f9fc5870849a04955601529fa8e114ae1b37fa6b100a46"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

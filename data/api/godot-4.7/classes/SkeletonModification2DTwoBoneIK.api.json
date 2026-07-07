@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DTwoBoneIK",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DTwoBoneIK",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DTwoBoneIK",
+    "documentationPath": "doc/classes/SkeletonModification2DTwoBoneIK.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dtwoboneik.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetJointOneBone2dNode",
+      "kind": "Method",
+      "signature": "public NodePath GetJointOneBone2dNode()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Returns the [Bone2D] node that is being used as the first bone in the TwoBoneIK modification.",
+      "godotName": "get_joint_one_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.GetJointOneBone2dNode",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "GetJointOneBoneIdx",
+      "kind": "Method",
+      "signature": "public int GetJointOneBoneIdx()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index of the [Bone2D] node that is being used as the first bone in the TwoBoneIK modification.",
+      "godotName": "get_joint_one_bone_idx",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.GetJointOneBoneIdx",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "GetJointTwoBone2dNode",
+      "kind": "Method",
+      "signature": "public NodePath GetJointTwoBone2dNode()",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Returns the [Bone2D] node that is being used as the second bone in the TwoBoneIK modification.",
+      "godotName": "get_joint_two_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.GetJointTwoBone2dNode",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "GetJointTwoBoneIdx",
+      "kind": "Method",
+      "signature": "public int GetJointTwoBoneIdx()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index of the [Bone2D] node that is being used as the second bone in the TwoBoneIK modification.",
+      "godotName": "get_joint_two_bone_idx",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.GetJointTwoBoneIdx",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "SetJointOneBone2dNode",
+      "kind": "Method",
+      "signature": "public void SetJointOneBone2dNode(NodePath bone2dNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone2d_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [Bone2D] node that is being used as the first bone in the TwoBoneIK modification.",
+      "godotName": "set_joint_one_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.SetJointOneBone2dNode(NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "SetJointOneBoneIdx",
+      "kind": "Method",
+      "signature": "public void SetJointOneBoneIdx(int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the index of the [Bone2D] node that is being used as the first bone in the TwoBoneIK modification.",
+      "godotName": "set_joint_one_bone_idx",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.SetJointOneBoneIdx(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "SetJointTwoBone2dNode",
+      "kind": "Method",
+      "signature": "public void SetJointTwoBone2dNode(NodePath bone2dNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone2d_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [Bone2D] node that is being used as the second bone in the TwoBoneIK modification.",
+      "godotName": "set_joint_two_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.SetJointTwoBone2dNode(NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "SetJointTwoBoneIdx",
+      "kind": "Method",
+      "signature": "public void SetJointTwoBoneIdx(int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the index of the [Bone2D] node that is being used as the second bone in the TwoBoneIK modification.",
+      "godotName": "set_joint_two_bone_idx",
+      "xmlDocId": "M:Godot.SkeletonModification2DTwoBoneIK.SetJointTwoBoneIdx(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "FlipBendDirection",
+      "kind": "Property",
+      "signature": "public bool FlipBendDirection { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the bones in the modification will bend outward as opposed to inwards when contracting. If [code]false[/code], the bones will bend inwards when contracting.",
+      "defaultValue": "false",
+      "godotName": "flip_bend_direction",
+      "xmlDocId": "P:Godot.SkeletonModification2DTwoBoneIK.FlipBendDirection",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "TargetMaximumDistance",
+      "kind": "Property",
+      "signature": "public float TargetMaximumDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance the target can be at. If the target is farther than this distance, the modification will solve as if it\u0027s at this maximum distance. When set to [code]0[/code], the modification will solve without distance constraints.",
+      "defaultValue": "0.0",
+      "godotName": "target_maximum_distance",
+      "xmlDocId": "P:Godot.SkeletonModification2DTwoBoneIK.TargetMaximumDistance",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "TargetMinimumDistance",
+      "kind": "Property",
+      "signature": "public float TargetMinimumDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum distance the target can be at. If the target is closer than this distance, the modification will solve as if it\u0027s at this minimum distance. When set to [code]0[/code], the modification will solve without distance constraints.",
+      "defaultValue": "0.0",
+      "godotName": "target_minimum_distance",
+      "xmlDocId": "P:Godot.SkeletonModification2DTwoBoneIK.TargetMinimumDistance",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    },
+    {
+      "name": "TargetNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TargetNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The NodePath to the node that is the target for the TwoBoneIK modification. This node is what the modification will use when bending the [Bone2D] nodes.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DTwoBoneIK.TargetNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DTwoBoneIK.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DTwoBoneIK.xml",
+      "sha256": "66c51db423069ce75dacab720e6c6575e938a8a46280cd483c089f16ee95ddab"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

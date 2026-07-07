@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BaseButton.ActionMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.BaseButton.ActionMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "BaseButton.ActionMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ButtonPress",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.BaseButton.ActionMode ButtonPress",
+      "returnType": "Electron2D.BaseButton.ActionMode",
+      "parameters": [],
+      "summary": "Activates the button when the input is pressed.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.BaseButton.ActionModeEnum.ButtonPress",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ButtonRelease",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.BaseButton.ActionMode ButtonRelease",
+      "returnType": "Electron2D.BaseButton.ActionMode",
+      "parameters": [],
+      "summary": "Activates the button when the input is released.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.BaseButton.ActionModeEnum.ButtonRelease",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "ButtonPress",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Activates the button when the input is pressed.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ButtonRelease",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Activates the button when the input is released.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

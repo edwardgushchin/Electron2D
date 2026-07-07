@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TouchScreenButton",
+    "namespace": "Godot",
+    "fullName": "Godot.TouchScreenButton",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "TouchScreenButton",
+    "documentationPath": "doc/classes/TouchScreenButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_touchscreenbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsPressed",
+      "kind": "Method",
+      "signature": "public bool IsPressed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this button is currently pressed.",
+      "godotName": "is_pressed",
+      "xmlDocId": "M:Godot.TouchScreenButton.IsPressed",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "Action",
+      "kind": "Property",
+      "signature": "public String Action { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The button\u0027s action. Actions can be handled with [InputEventAction].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "action",
+      "xmlDocId": "P:Godot.TouchScreenButton.Action",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "Bitmask",
+      "kind": "Property",
+      "signature": "public BitMap Bitmask { get; set; }",
+      "returnType": "BitMap",
+      "parameters": [],
+      "summary": "The button\u0027s bitmask.",
+      "godotName": "bitmask",
+      "xmlDocId": "P:Godot.TouchScreenButton.Bitmask",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "PassbyPress",
+      "kind": "Property",
+      "signature": "public bool PassbyPress { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [signal pressed] and [signal released] signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button. [b]Note:[/b] This is a \u0022pass-by\u0022 (not \u0022bypass\u0022) press mode.",
+      "defaultValue": "false",
+      "godotName": "passby_press",
+      "xmlDocId": "P:Godot.TouchScreenButton.PassbyPress",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Shape2D Shape { get; set; }",
+      "returnType": "Shape2D",
+      "parameters": [],
+      "summary": "The button\u0027s shape.",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.TouchScreenButton.Shape",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "ShapeCentered",
+      "kind": "Property",
+      "signature": "public bool ShapeCentered { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button\u0027s shape is centered in the provided texture. If no texture is used, this property has no effect.",
+      "defaultValue": "true",
+      "godotName": "shape_centered",
+      "xmlDocId": "P:Godot.TouchScreenButton.ShapeCentered",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "ShapeVisible",
+      "kind": "Property",
+      "signature": "public bool ShapeVisible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button\u0027s shape is visible in the editor.",
+      "defaultValue": "true",
+      "godotName": "shape_visible",
+      "xmlDocId": "P:Godot.TouchScreenButton.ShapeVisible",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "TextureNormal",
+      "kind": "Property",
+      "signature": "public Texture2D TextureNormal { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The button\u0027s texture for the normal state.",
+      "godotName": "texture_normal",
+      "xmlDocId": "P:Godot.TouchScreenButton.TextureNormal",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "TexturePressed",
+      "kind": "Property",
+      "signature": "public Texture2D TexturePressed { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The button\u0027s texture for the pressed state.",
+      "godotName": "texture_pressed",
+      "xmlDocId": "P:Godot.TouchScreenButton.TexturePressed",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "VisibilityMode",
+      "kind": "Property",
+      "signature": "public int VisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The button\u0027s visibility mode.",
+      "defaultValue": "0",
+      "godotName": "visibility_mode",
+      "xmlDocId": "P:Godot.TouchScreenButton.VisibilityMode",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Pressed",
+      "kind": "Signal",
+      "signature": "public event PressedHandler Pressed",
+      "parameters": [],
+      "summary": "Emitted when the button is pressed (down).",
+      "godotName": "pressed",
+      "xmlDocId": "E:Godot.TouchScreenButton.Pressed",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "Released",
+      "kind": "Signal",
+      "signature": "public event ReleasedHandler Released",
+      "parameters": [],
+      "summary": "Emitted when the button is released (up).",
+      "godotName": "released",
+      "xmlDocId": "E:Godot.TouchScreenButton.Released",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "VisibilityMode",
+      "values": [
+        {
+          "name": "VISIBILITY_ALWAYS",
+          "value": "0",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Always visible.",
+          "sourcePath": "doc/classes/TouchScreenButton.xml"
+        },
+        {
+          "name": "VISIBILITY_TOUCHSCREEN_ONLY",
+          "value": "1",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Visible on touch screens only.",
+          "sourcePath": "doc/classes/TouchScreenButton.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "VISIBILITY_ALWAYS",
+      "value": "0",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Always visible.",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    },
+    {
+      "name": "VISIBILITY_TOUCHSCREEN_ONLY",
+      "value": "1",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Visible on touch screens only.",
+      "sourcePath": "doc/classes/TouchScreenButton.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TouchScreenButton.xml",
+      "sha256": "4c339f5b7b22762744ba8ff33d0a476eb4f3912f567410f228b3b547ba7b5455"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

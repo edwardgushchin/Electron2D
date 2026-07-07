@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoxContainer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.BoxContainer",
+    "kind": "class",
+    "baseType": "Electron2D.Container",
+    "interfaces": [],
+    "godotReference": "BoxContainer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "BoxContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.BoxContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.BoxContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.BoxContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "BoxContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.BoxContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.BoxContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.BoxContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddSpacer",
+      "kind": "Method",
+      "signature": "public Electron2D.Control AddSpacer(System.Boolean begin)",
+      "returnType": "Electron2D.Control",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Adds a spacer control at the beginning or end of this box.",
+      "xmlDocId": "M:Electron2D.BoxContainer.AddSpacer(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this box container.",
+      "xmlDocId": "M:Electron2D.BoxContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public Electron2D.BoxContainerAlignmentMode Alignment { get; set; }",
+      "returnType": "Electron2D.BoxContainerAlignmentMode",
+      "parameters": [],
+      "summary": "Gets or sets how non-expanded children are aligned along the box axis.",
+      "xmlDocId": "P:Electron2D.BoxContainer.Alignment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Vertical",
+      "kind": "Property",
+      "signature": "public System.Boolean Vertical { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this box lays out children vertically.",
+      "xmlDocId": "P:Electron2D.BoxContainer.Vertical",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this box container.",
+      "xmlDocId": "M:Electron2D.BoxContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

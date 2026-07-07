@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedFloat64Array",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedFloat64Array",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedFloat64Array",
+    "documentationPath": "doc/classes/PackedFloat64Array.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedfloat64array.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedFloat64Array",
+      "kind": "Constructor",
+      "signature": "public PackedFloat64Array()",
+      "returnType": "PackedFloat64Array",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedFloat64Array].",
+      "godotName": "PackedFloat64Array",
+      "xmlDocId": "M:Godot.PackedFloat64Array.#ctor",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "PackedFloat64Array",
+      "kind": "Constructor",
+      "signature": "public PackedFloat64Array(PackedFloat64Array from)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Constructs a [PackedFloat64Array] as a copy of the given [PackedFloat64Array].",
+      "godotName": "PackedFloat64Array",
+      "xmlDocId": "M:Godot.PackedFloat64Array.#ctor(PackedFloat64Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "PackedFloat64Array",
+      "kind": "Constructor",
+      "signature": "public PackedFloat64Array(Array from)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedFloat64Array]. Optionally, you can pass in a generic [Array] that will be converted.",
+      "godotName": "PackedFloat64Array",
+      "xmlDocId": "M:Godot.PackedFloat64Array.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Append(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedFloat64Array array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Appends a [PackedFloat64Array] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedFloat64Array.AppendArray(PackedFloat64Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(float value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Bsearch(float,bool)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Clear",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(float value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Count(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array Duplicate()",
+      "returnType": "PackedFloat64Array",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Duplicate",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Erase(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Fill(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(float value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Find(float,int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public float Get(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the 64-bit float at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]0.0[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Get(int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value]. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Has(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, float value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Insert(int,float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedFloat64Array.IsEmpty",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(float value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Appends an element at the end of the array.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedFloat64Array.PushBack(float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedFloat64Array.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Resize(int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Reverse",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(float value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "float"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Rfind(float,int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Changes the float at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Set(int,float)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Size",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array Slice(int begin, int end)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedFloat64Array], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedFloat64Array]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order. [b]Note:[/b] [constant @GDScript.NAN] doesn\u0027t behave the same as other numbers. Therefore, the results from this method may not be accurate if NaNs are included.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedFloat64Array.Sort",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "ToByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedByteArray], where each element has been encoded as 8 bytes. The size of the new array will be [code]float64_array.size() * 8[/code].",
+      "godotName": "to_byte_array",
+      "xmlDocId": "M:Godot.PackedFloat64Array.ToByteArray",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedFloat64Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedFloat64Array.operator !=(PackedFloat64Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedFloat64Array operator \u002B(PackedFloat64Array right)",
+      "returnType": "PackedFloat64Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Returns a new [PackedFloat64Array] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedFloat64Array.operator \u002B(PackedFloat64Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedFloat64Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedFloat64Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal doubles at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedFloat64Array.operator ==(PackedFloat64Array)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public float operator [](int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [float] at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedFloat64Array.operator [](int)",
+      "sourcePath": "doc/classes/PackedFloat64Array.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedFloat64Array.xml",
+      "sha256": "55b6ee7b50b6ef3e67ecca25396b024c5c1c3f39a9e9ccf153ab4d415d113a25"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

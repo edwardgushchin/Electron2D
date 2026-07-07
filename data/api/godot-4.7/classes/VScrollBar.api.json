@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VScrollBar",
+    "namespace": "Godot",
+    "fullName": "Godot.VScrollBar",
+    "kind": "class",
+    "baseType": "ScrollBar",
+    "interfaces": [],
+    "godotReference": "VScrollBar",
+    "documentationPath": "doc/classes/VScrollBar.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vscrollbar.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SizeFlagsHorizontal",
+      "kind": "Property",
+      "signature": "public int SizeFlagsHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "size_flags_horizontal",
+      "xmlDocId": "P:Godot.VScrollBar.SizeFlagsHorizontal",
+      "sourcePath": "doc/classes/VScrollBar.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.VScrollBar.SizeFlagsVertical",
+      "sourcePath": "doc/classes/VScrollBar.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VScrollBar.xml",
+      "sha256": "7d7ba94cda76d655e9c806fdd70afb47826e7c4802e66c3b2bf869deb3c4185b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

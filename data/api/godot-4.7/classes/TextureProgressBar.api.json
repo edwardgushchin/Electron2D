@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureProgressBar",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureProgressBar",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "TextureProgressBar",
+    "documentationPath": "doc/classes/TextureProgressBar.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textureprogressbar.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetStretchMargin",
+      "kind": "Method",
+      "signature": "public int GetStretchMargin(int margin)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stretch margin with the specified index. See [member stretch_margin_bottom] and related properties.",
+      "godotName": "get_stretch_margin",
+      "xmlDocId": "M:Godot.TextureProgressBar.GetStretchMargin(int)",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "SetStretchMargin",
+      "kind": "Method",
+      "signature": "public void SetStretchMargin(int margin, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the stretch margin with the specified index. See [member stretch_margin_bottom] and related properties.",
+      "godotName": "set_stretch_margin",
+      "xmlDocId": "M:Godot.TextureProgressBar.SetStretchMargin(int,int)",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FillMode",
+      "kind": "Property",
+      "signature": "public int FillMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The fill direction. See [enum FillMode] for possible values.",
+      "defaultValue": "0",
+      "godotName": "fill_mode",
+      "xmlDocId": "P:Godot.TextureProgressBar.FillMode",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.TextureProgressBar.MouseFilter",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "NinePatchStretch",
+      "kind": "Property",
+      "signature": "public bool NinePatchStretch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], Godot treats the bar\u0027s textures like in [NinePatchRect]. Use the [code]stretch_margin_*[/code] properties like [member stretch_margin_bottom] to set up the nine patch\u0027s 3\u00D73 grid. When using a radial [member fill_mode], this setting will only enable stretching for [member texture_progress], while [member texture_under] and [member texture_over] will be treated like in [NinePatchRect].",
+      "defaultValue": "false",
+      "godotName": "nine_patch_stretch",
+      "xmlDocId": "P:Godot.TextureProgressBar.NinePatchStretch",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "RadialCenterOffset",
+      "kind": "Property",
+      "signature": "public Vector2 RadialCenterOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Offsets [member texture_progress] if [member fill_mode] is [constant FILL_CLOCKWISE], [constant FILL_COUNTER_CLOCKWISE], or [constant FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE]. [b]Note:[/b] The effective radial center always stays within the [member texture_progress] bounds. If you need to move it outside the texture\u0027s bounds, modify the [member texture_progress] to contain additional empty space where needed.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "radial_center_offset",
+      "xmlDocId": "P:Godot.TextureProgressBar.RadialCenterOffset",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "RadialFillDegrees",
+      "kind": "Property",
+      "signature": "public float RadialFillDegrees { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Upper limit for the fill of [member texture_progress] if [member fill_mode] is [constant FILL_CLOCKWISE], [constant FILL_COUNTER_CLOCKWISE], or [constant FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE]. When the node\u0027s [code]value[/code] is equal to its [code]max_value[/code], the texture fills up to this angle. See [member Range.value], [member Range.max_value].",
+      "defaultValue": "360.0",
+      "godotName": "radial_fill_degrees",
+      "xmlDocId": "P:Godot.TextureProgressBar.RadialFillDegrees",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "RadialInitialAngle",
+      "kind": "Property",
+      "signature": "public float RadialInitialAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Starting angle for the fill of [member texture_progress] if [member fill_mode] is [constant FILL_CLOCKWISE], [constant FILL_COUNTER_CLOCKWISE], or [constant FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE]. When the node\u0027s [code]value[/code] is equal to its [code]min_value[/code], the texture doesn\u0027t show up at all. When the [code]value[/code] increases, the texture fills and tends towards [member radial_fill_degrees]. [b]Note:[/b] [member radial_initial_angle] is wrapped between [code]0[/code] and [code]360[/code] degrees (inclusive).",
+      "defaultValue": "0.0",
+      "godotName": "radial_initial_angle",
+      "xmlDocId": "P:Godot.TextureProgressBar.RadialInitialAngle",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "SizeFlagsVertical",
+      "kind": "Property",
+      "signature": "public int SizeFlagsVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "size_flags_vertical",
+      "xmlDocId": "P:Godot.TextureProgressBar.SizeFlagsVertical",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.TextureProgressBar.Step",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "StretchMarginBottom",
+      "kind": "Property",
+      "signature": "public int StretchMarginBottom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The height of the 9-patch\u0027s bottom row. A margin of 16 means the 9-slice\u0027s bottom corners and side will have a height of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders. Only effective if [member nine_patch_stretch] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "stretch_margin_bottom",
+      "xmlDocId": "P:Godot.TextureProgressBar.StretchMarginBottom",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "StretchMarginLeft",
+      "kind": "Property",
+      "signature": "public int StretchMarginLeft { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the 9-patch\u0027s left column. Only effective if [member nine_patch_stretch] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "stretch_margin_left",
+      "xmlDocId": "P:Godot.TextureProgressBar.StretchMarginLeft",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "StretchMarginRight",
+      "kind": "Property",
+      "signature": "public int StretchMarginRight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the 9-patch\u0027s right column. Only effective if [member nine_patch_stretch] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "stretch_margin_right",
+      "xmlDocId": "P:Godot.TextureProgressBar.StretchMarginRight",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "StretchMarginTop",
+      "kind": "Property",
+      "signature": "public int StretchMarginTop { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The height of the 9-patch\u0027s top row. Only effective if [member nine_patch_stretch] is [code]true[/code].",
+      "defaultValue": "0",
+      "godotName": "stretch_margin_top",
+      "xmlDocId": "P:Godot.TextureProgressBar.StretchMarginTop",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TextureOver",
+      "kind": "Property",
+      "signature": "public Texture2D TextureOver { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] that draws over the progress bar. Use it to add highlights or an upper-frame that hides part of [member texture_progress].",
+      "godotName": "texture_over",
+      "xmlDocId": "P:Godot.TextureProgressBar.TextureOver",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TextureProgress",
+      "kind": "Property",
+      "signature": "public Texture2D TextureProgress { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] that clips based on the node\u0027s [code]value[/code] and [member fill_mode]. As [code]value[/code] increased, the texture fills up. It shows entirely when [code]value[/code] reaches [code]max_value[/code]. It doesn\u0027t show at all if [code]value[/code] is equal to [code]min_value[/code]. The [code]value[/code] property comes from [Range]. See [member Range.value], [member Range.min_value], [member Range.max_value].",
+      "godotName": "texture_progress",
+      "xmlDocId": "P:Godot.TextureProgressBar.TextureProgress",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TextureProgressOffset",
+      "kind": "Property",
+      "signature": "public Vector2 TextureProgressOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The offset of [member texture_progress]. Useful for [member texture_over] and [member texture_under] with fancy borders, to avoid transparent margins in your progress texture.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "texture_progress_offset",
+      "xmlDocId": "P:Godot.TextureProgressBar.TextureProgressOffset",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TextureUnder",
+      "kind": "Property",
+      "signature": "public Texture2D TextureUnder { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] that draws under the progress bar. The bar\u0027s background.",
+      "godotName": "texture_under",
+      "xmlDocId": "P:Godot.TextureProgressBar.TextureUnder",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TintOver",
+      "kind": "Property",
+      "signature": "public Color TintOver { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Multiplies the color of the bar\u0027s [member texture_over] texture. The effect is similar to [member CanvasItem.modulate], except it only affects this specific texture instead of the entire node.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "tint_over",
+      "xmlDocId": "P:Godot.TextureProgressBar.TintOver",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TintProgress",
+      "kind": "Property",
+      "signature": "public Color TintProgress { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Multiplies the color of the bar\u0027s [member texture_progress] texture.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "tint_progress",
+      "xmlDocId": "P:Godot.TextureProgressBar.TintProgress",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "TintUnder",
+      "kind": "Property",
+      "signature": "public Color TintUnder { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Multiplies the color of the bar\u0027s [member texture_under] texture.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "tint_under",
+      "xmlDocId": "P:Godot.TextureProgressBar.TintUnder",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "FillMode",
+      "values": [
+        {
+          "name": "FILL_BILINEAR_LEFT_AND_RIGHT",
+          "value": "6",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from the center, expanding both towards the left and the right.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_BILINEAR_TOP_AND_BOTTOM",
+          "value": "7",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from the center, expanding both towards the top and the bottom.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_BOTTOM_TO_TOP",
+          "value": "3",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from bottom to top.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_CLOCKWISE",
+          "value": "4",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "Turns the node into a radial bar. The [member texture_progress] fills clockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE",
+          "value": "8",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "Turns the node into a radial bar. The [member texture_progress] fills radially from the center, expanding both clockwise and counterclockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_COUNTER_CLOCKWISE",
+          "value": "5",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "Turns the node into a radial bar. The [member texture_progress] fills counterclockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_LEFT_TO_RIGHT",
+          "value": "0",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from left to right.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_RIGHT_TO_LEFT",
+          "value": "1",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from right to left.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        },
+        {
+          "name": "FILL_TOP_TO_BOTTOM",
+          "value": "2",
+          "enum": "FillMode",
+          "kind": "EnumValue",
+          "summary": "The [member texture_progress] fills from top to bottom.",
+          "sourcePath": "doc/classes/TextureProgressBar.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILL_LEFT_TO_RIGHT",
+      "value": "0",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from left to right.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_RIGHT_TO_LEFT",
+      "value": "1",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from right to left.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_TOP_TO_BOTTOM",
+      "value": "2",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from top to bottom.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_BOTTOM_TO_TOP",
+      "value": "3",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from bottom to top.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_CLOCKWISE",
+      "value": "4",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "Turns the node into a radial bar. The [member texture_progress] fills clockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_COUNTER_CLOCKWISE",
+      "value": "5",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "Turns the node into a radial bar. The [member texture_progress] fills counterclockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_BILINEAR_LEFT_AND_RIGHT",
+      "value": "6",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from the center, expanding both towards the left and the right.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_BILINEAR_TOP_AND_BOTTOM",
+      "value": "7",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "The [member texture_progress] fills from the center, expanding both towards the top and the bottom.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    },
+    {
+      "name": "FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE",
+      "value": "8",
+      "enum": "FillMode",
+      "kind": "EnumValue",
+      "summary": "Turns the node into a radial bar. The [member texture_progress] fills radially from the center, expanding both clockwise and counterclockwise. See [member radial_center_offset], [member radial_initial_angle] and [member radial_fill_degrees] to control the way the bar fills up.",
+      "sourcePath": "doc/classes/TextureProgressBar.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureProgressBar.xml",
+      "sha256": "59215cd79e6c36574e7052fdaea9862f6f4e11b2566f12845523f392cebd061e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

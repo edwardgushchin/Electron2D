@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NoiseTexture3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NoiseTexture3D",
+    "kind": "class",
+    "baseType": "Texture3D",
+    "interfaces": [],
+    "godotReference": "NoiseTexture3D",
+    "documentationPath": "modules/noise/doc_classes/NoiseTexture3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_noisetexture3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ColorRamp",
+      "kind": "Property",
+      "signature": "public Gradient ColorRamp { get; set; }",
+      "returnType": "Gradient",
+      "parameters": [],
+      "summary": "A [Gradient] which is used to map the luminance of each pixel to a color value.",
+      "godotName": "color_ramp",
+      "xmlDocId": "P:Godot.NoiseTexture3D.ColorRamp",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Depth",
+      "kind": "Property",
+      "signature": "public int Depth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Depth of the generated texture (in pixels).",
+      "defaultValue": "64",
+      "godotName": "depth",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Depth",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public int Height { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Height of the generated texture (in pixels).",
+      "defaultValue": "64",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Height",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Invert",
+      "kind": "Property",
+      "signature": "public bool Invert { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], inverts the noise texture. White becomes black, black becomes white.",
+      "defaultValue": "false",
+      "godotName": "invert",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Invert",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Noise",
+      "kind": "Property",
+      "signature": "public Noise Noise { get; set; }",
+      "returnType": "Noise",
+      "parameters": [],
+      "summary": "The instance of the [Noise] object.",
+      "godotName": "noise",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Noise",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Normalize",
+      "kind": "Property",
+      "signature": "public bool Normalize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the noise image coming from the noise generator is normalized to the range [code]0.0[/code] to [code]1.0[/code]. Turning normalization off can affect the contrast and allows you to generate non repeating tileable noise textures.",
+      "defaultValue": "true",
+      "godotName": "normalize",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Normalize",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Seamless",
+      "kind": "Property",
+      "signature": "public bool Seamless { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a seamless texture is requested from the [Noise] resource. [b]Note:[/b] Seamless noise textures may take longer to generate and/or can have a lower contrast compared to non-seamless noise depending on the used [Noise] resource. This is because some implementations use higher dimensions for generating seamless noise. [b]Note:[/b] The default [FastNoiseLite] implementation uses the fallback path for seamless generation. If using a [member width], [member height] or [member depth] lower than the default, you may need to increase [member seamless_blend_skirt] to make seamless blending more effective.",
+      "defaultValue": "false",
+      "godotName": "seamless",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Seamless",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "SeamlessBlendSkirt",
+      "kind": "Property",
+      "signature": "public float SeamlessBlendSkirt { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Used for the default/fallback implementation of the seamless texture generation. It determines the distance over which the seams are blended. High values may result in less details and contrast. See [Noise] for further details. [b]Note:[/b] If using a [member width], [member height] or [member depth] lower than the default, you may need to increase [member seamless_blend_skirt] to make seamless blending more effective.",
+      "defaultValue": "0.1",
+      "godotName": "seamless_blend_skirt",
+      "xmlDocId": "P:Godot.NoiseTexture3D.SeamlessBlendSkirt",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Width of the generated texture (in pixels).",
+      "defaultValue": "64",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.NoiseTexture3D.Width",
+      "sourcePath": "modules/noise/doc_classes/NoiseTexture3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/noise/doc_classes/NoiseTexture3D.xml",
+      "sha256": "733b51b25a0776e53348cb0776d870bd3029f7ce89495d42e47d600dc91ac61c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

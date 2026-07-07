@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FocusMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.FocusMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Control.FocusMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "All",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.FocusMode All",
+      "returnType": "Electron2D.FocusMode",
+      "parameters": [],
+      "summary": "The control can receive focus from direct focus calls and pointer input.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.FocusMode.All",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Click",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.FocusMode Click",
+      "returnType": "Electron2D.FocusMode",
+      "parameters": [],
+      "summary": "The control can receive focus from mouse or touch presses.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.FocusMode.Click",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.FocusMode None",
+      "returnType": "Electron2D.FocusMode",
+      "parameters": [],
+      "summary": "The control cannot receive focus.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.FocusMode.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "All",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "The control can receive focus from direct focus calls and pointer input.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Click",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "The control can receive focus from mouse or touch presses.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "The control cannot receive focus.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

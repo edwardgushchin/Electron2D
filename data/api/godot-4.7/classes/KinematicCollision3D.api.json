@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "KinematicCollision3D",
+    "namespace": "Godot",
+    "fullName": "Godot.KinematicCollision3D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "KinematicCollision3D",
+    "documentationPath": "doc/classes/KinematicCollision3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_kinematiccollision3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAngle",
+      "kind": "Method",
+      "signature": "public float GetAngle(int collisionIndex, Vector3 upDirection)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "up_direction",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 1, 0)"
+        }
+      ],
+      "summary": "Returns the collision angle according to [param up_direction], which is [constant Vector3.UP] by default. This value is always positive.",
+      "godotName": "get_angle",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetAngle(int,Vector3)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetCollider",
+      "kind": "Method",
+      "signature": "public Object GetCollider(int collisionIndex)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s attached [Object] given a collision index (the deepest collision by default).",
+      "godotName": "get_collider",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetCollider(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetColliderId",
+      "kind": "Method",
+      "signature": "public int GetColliderId(int collisionIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the unique instance ID of the colliding body\u0027s attached [Object] given a collision index (the deepest collision by default). See [method Object.get_instance_id].",
+      "godotName": "get_collider_id",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetColliderId(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetColliderRid",
+      "kind": "Method",
+      "signature": "public RID GetColliderRid(int collisionIndex)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s [RID] used by the [PhysicsServer3D] given a collision index (the deepest collision by default).",
+      "godotName": "get_collider_rid",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetColliderRid(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetColliderShape",
+      "kind": "Method",
+      "signature": "public Object GetColliderShape(int collisionIndex)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s shape given a collision index (the deepest collision by default).",
+      "godotName": "get_collider_shape",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetColliderShape(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetColliderShapeIndex",
+      "kind": "Method",
+      "signature": "public int GetColliderShapeIndex(int collisionIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s shape index given a collision index (the deepest collision by default). See [CollisionObject3D].",
+      "godotName": "get_collider_shape_index",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetColliderShapeIndex(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetColliderVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetColliderVelocity(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s velocity given a collision index (the deepest collision by default).",
+      "godotName": "get_collider_velocity",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetColliderVelocity(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetCollisionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of detected collisions.",
+      "godotName": "get_collision_count",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetCollisionCount",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetDepth",
+      "kind": "Method",
+      "signature": "public float GetDepth()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the colliding body\u0027s length of overlap along the collision normal.",
+      "godotName": "get_depth",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetDepth",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetLocalShape",
+      "kind": "Method",
+      "signature": "public Object GetLocalShape(int collisionIndex)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the moving object\u0027s colliding shape given a collision index (the deepest collision by default).",
+      "godotName": "get_local_shape",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetLocalShape(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetNormal",
+      "kind": "Method",
+      "signature": "public Vector3 GetNormal(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the colliding body\u0027s shape\u0027s normal at the point of collision given a collision index (the deepest collision by default).",
+      "godotName": "get_normal",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetNormal(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetPosition(int collisionIndex)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "collision_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the point of collision in global coordinates given a collision index (the deepest collision by default).",
+      "godotName": "get_position",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetPosition(int)",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetRemainder",
+      "kind": "Method",
+      "signature": "public Vector3 GetRemainder()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the moving object\u0027s remaining movement vector.",
+      "godotName": "get_remainder",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetRemainder",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    },
+    {
+      "name": "GetTravel",
+      "kind": "Method",
+      "signature": "public Vector3 GetTravel()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the moving object\u0027s travel before collision.",
+      "godotName": "get_travel",
+      "xmlDocId": "M:Godot.KinematicCollision3D.GetTravel",
+      "sourcePath": "doc/classes/KinematicCollision3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/KinematicCollision3D.xml",
+      "sha256": "5bb237ad6db5867cb4e996d95a81e5e8f6e697ca4ea01c4f3458cb359e0aa330"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

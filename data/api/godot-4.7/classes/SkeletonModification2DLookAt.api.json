@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DLookAt",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DLookAt",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DLookAt",
+    "documentationPath": "doc/classes/SkeletonModification2DLookAt.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dlookat.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAdditionalRotation",
+      "kind": "Method",
+      "signature": "public float GetAdditionalRotation()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the amount of additional rotation that is applied after the LookAt modification executes.",
+      "godotName": "get_additional_rotation",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.GetAdditionalRotation",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "GetConstraintAngleInvert",
+      "kind": "Method",
+      "signature": "public bool GetConstraintAngleInvert()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the constraints to this modification are inverted or not.",
+      "godotName": "get_constraint_angle_invert",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.GetConstraintAngleInvert",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "GetConstraintAngleMax",
+      "kind": "Method",
+      "signature": "public float GetConstraintAngleMax()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the constraint\u0027s maximum allowed angle.",
+      "godotName": "get_constraint_angle_max",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.GetConstraintAngleMax",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "GetConstraintAngleMin",
+      "kind": "Method",
+      "signature": "public float GetConstraintAngleMin()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the constraint\u0027s minimum allowed angle.",
+      "godotName": "get_constraint_angle_min",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.GetConstraintAngleMin",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "GetEnableConstraint",
+      "kind": "Method",
+      "signature": "public bool GetEnableConstraint()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the LookAt modification is using constraints.",
+      "godotName": "get_enable_constraint",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.GetEnableConstraint",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "SetAdditionalRotation",
+      "kind": "Method",
+      "signature": "public void SetAdditionalRotation(float rotation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rotation",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the amount of additional rotation that is to be applied after executing the modification. This allows for offsetting the results by the inputted rotation amount.",
+      "godotName": "set_additional_rotation",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.SetAdditionalRotation(float)",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "SetConstraintAngleInvert",
+      "kind": "Method",
+      "signature": "public void SetConstraintAngleInvert(bool invert)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "invert",
+          "type": "bool"
+        }
+      ],
+      "summary": "When [code]true[/code], the modification will use an inverted joint constraint. An inverted joint constraint only constraints the [Bone2D] to the angles [i]outside of[/i] the inputted minimum and maximum angles. For this reason, it is referred to as an inverted joint constraint, as it constraints the joint to the outside of the inputted values.",
+      "godotName": "set_constraint_angle_invert",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.SetConstraintAngleInvert(bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "SetConstraintAngleMax",
+      "kind": "Method",
+      "signature": "public void SetConstraintAngleMax(float angleMax)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "angle_max",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the constraint\u0027s maximum allowed angle.",
+      "godotName": "set_constraint_angle_max",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.SetConstraintAngleMax(float)",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "SetConstraintAngleMin",
+      "kind": "Method",
+      "signature": "public void SetConstraintAngleMin(float angleMin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "angle_min",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the constraint\u0027s minimum allowed angle.",
+      "godotName": "set_constraint_angle_min",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.SetConstraintAngleMin(float)",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "SetEnableConstraint",
+      "kind": "Method",
+      "signature": "public void SetEnableConstraint(bool enableConstraint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable_constraint",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether this modification will use constraints or not. When [code]true[/code], constraints will be applied when solving the LookAt modification.",
+      "godotName": "set_enable_constraint",
+      "xmlDocId": "M:Godot.SkeletonModification2DLookAt.SetEnableConstraint(bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "Bone2dNode",
+      "kind": "Property",
+      "signature": "public NodePath Bone2dNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [Bone2D] node that the modification will operate on.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "bone2d_node",
+      "xmlDocId": "P:Godot.SkeletonModification2DLookAt.Bone2dNode",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "BoneIndex",
+      "kind": "Property",
+      "signature": "public int BoneIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the [Bone2D] node that the modification will operate on.",
+      "defaultValue": "-1",
+      "godotName": "bone_index",
+      "xmlDocId": "P:Godot.SkeletonModification2DLookAt.BoneIndex",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    },
+    {
+      "name": "TargetNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TargetNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The NodePath to the node that is the target for the LookAt modification. This node is what the modification will rotate the [Bone2D] to.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DLookAt.TargetNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DLookAt.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DLookAt.xml",
+      "sha256": "a3e7c420c9d3b26877d754089bca1053e7a66a78bc79cd495188c59dd92d10a8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

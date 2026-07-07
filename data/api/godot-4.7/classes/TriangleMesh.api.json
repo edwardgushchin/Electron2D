@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TriangleMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.TriangleMesh",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "TriangleMesh",
+    "documentationPath": "doc/classes/TriangleMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_trianglemesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateFromFaces",
+      "kind": "Method",
+      "signature": "public bool CreateFromFaces(PackedVector3Array faces)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "faces",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Creates the BVH tree from an array of faces. Each 3 vertices of the input [param faces] array represent one triangle (face). Returns [code]true[/code] if the tree is successfully built, [code]false[/code] otherwise.",
+      "godotName": "create_from_faces",
+      "xmlDocId": "M:Godot.TriangleMesh.CreateFromFaces(PackedVector3Array)",
+      "sourcePath": "doc/classes/TriangleMesh.xml"
+    },
+    {
+      "name": "GetFaces",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetFaces()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns a copy of the geometry faces. Each 3 vertices of the array represent one triangle (face).",
+      "godotName": "get_faces",
+      "xmlDocId": "M:Godot.TriangleMesh.GetFaces",
+      "sourcePath": "doc/classes/TriangleMesh.xml"
+    },
+    {
+      "name": "IntersectRay",
+      "kind": "Method",
+      "signature": "public Dictionary IntersectRay(Vector3 begin, Vector3 dir)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "Vector3"
+        },
+        {
+          "name": "dir",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Tests for intersection with a ray starting at [param begin] and facing [param dir] and extending toward infinity. If an intersection with a triangle happens, returns a [Dictionary] with the following fields: [code]position[/code]: The position on the intersected triangle. [code]normal[/code]: The normal of the intersected triangle. [code]face_index[/code]: The index of the intersected triangle. Returns an empty [Dictionary] if no intersection happens. See also [method intersect_segment], which is similar but uses a finite-length segment.",
+      "godotName": "intersect_ray",
+      "xmlDocId": "M:Godot.TriangleMesh.IntersectRay(Vector3,Vector3)",
+      "sourcePath": "doc/classes/TriangleMesh.xml"
+    },
+    {
+      "name": "IntersectSegment",
+      "kind": "Method",
+      "signature": "public Dictionary IntersectSegment(Vector3 begin, Vector3 end)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "Vector3"
+        },
+        {
+          "name": "end",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Tests for intersection with a segment going from [param begin] to [param end]. If an intersection with a triangle happens returns a [Dictionary] with the following fields: [code]position[/code]: The position on the intersected triangle. [code]normal[/code]: The normal of the intersected triangle. [code]face_index[/code]: The index of the intersected triangle. Returns an empty [Dictionary] if no intersection happens. See also [method intersect_ray], which is similar but uses an infinite-length ray.",
+      "godotName": "intersect_segment",
+      "xmlDocId": "M:Godot.TriangleMesh.IntersectSegment(Vector3,Vector3)",
+      "sourcePath": "doc/classes/TriangleMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TriangleMesh.xml",
+      "sha256": "c83bf02d95daff92bd5a493cc9c3db70da7cd6cf67f83f8d386818c6be33499b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

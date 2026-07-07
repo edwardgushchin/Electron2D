@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SizeFlags",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SizeFlags",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Control.SizeFlags",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Expand",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags Expand",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control receives a share of extra space on the relevant axis.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.SizeFlags.Expand",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExpandFill",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags ExpandFill",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control expands and fills the allocated slot on the relevant axis.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.SizeFlags.ExpandFill",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Fill",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags Fill",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control fills the allocated slot on the relevant axis.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.SizeFlags.Fill",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkBegin",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags ShrinkBegin",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control keeps its minimum size and is placed at the beginning of the allocated slot.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.SizeFlags.ShrinkBegin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkCenter",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags ShrinkCenter",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control keeps its minimum size and is centered inside the allocated slot.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.SizeFlags.ShrinkCenter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkEnd",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SizeFlags ShrinkEnd",
+      "returnType": "Electron2D.SizeFlags",
+      "parameters": [],
+      "summary": "The control keeps its minimum size and is placed at the end of the allocated slot.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.SizeFlags.ShrinkEnd",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Expand",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "The control receives a share of extra space on the relevant axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExpandFill",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "The control expands and fills the allocated slot on the relevant axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Fill",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "The control fills the allocated slot on the relevant axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkBegin",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "The control keeps its minimum size and is placed at the beginning of the allocated slot.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkCenter",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "The control keeps its minimum size and is centered inside the allocated slot.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShrinkEnd",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "The control keeps its minimum size and is placed at the end of the allocated slot.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

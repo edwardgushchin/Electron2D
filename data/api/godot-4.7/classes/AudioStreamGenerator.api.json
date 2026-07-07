@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamGenerator",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamGenerator",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamGenerator",
+    "documentationPath": "doc/classes/AudioStreamGenerator.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamgenerator.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BufferLength",
+      "kind": "Property",
+      "signature": "public float BufferLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The length of the buffer to generate (in seconds). Lower values result in less latency, but require the script to generate audio data faster, resulting in increased CPU usage and more risk for audio cracking if the CPU can\u0027t keep up.",
+      "defaultValue": "0.5",
+      "godotName": "buffer_length",
+      "xmlDocId": "P:Godot.AudioStreamGenerator.BufferLength",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    },
+    {
+      "name": "MixRate",
+      "kind": "Property",
+      "signature": "public float MixRate { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sample rate to use (in Hz). Higher values are more demanding for the CPU to generate, but result in better quality. In games, common sample rates in use are [code]11025[/code], [code]16000[/code], [code]22050[/code], [code]32000[/code], [code]44100[/code], and [code]48000[/code]. According to the [url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem]Nyquist-Shannon sampling theorem[/url], there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are generating lower-pitched sounds such as voices, lower sample rates such as [code]32000[/code] or [code]22050[/code] may be usable with no loss in quality. [b]Note:[/b] [AudioStreamGenerator] is not automatically resampling input data, to produce expected result [member mix_rate_mode] should match the sampling rate of input data. [b]Note:[/b] If you are using [AudioEffectCapture] as the source of your data, set [member mix_rate_mode] to [constant MIX_RATE_INPUT] or [constant MIX_RATE_OUTPUT] to automatically match current [AudioServer] mixing rate.",
+      "defaultValue": "44100.0",
+      "godotName": "mix_rate",
+      "xmlDocId": "P:Godot.AudioStreamGenerator.MixRate",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    },
+    {
+      "name": "MixRateMode",
+      "kind": "Property",
+      "signature": "public int MixRateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Mixing rate mode. If set to [constant MIX_RATE_CUSTOM], [member mix_rate] is used, otherwise current [AudioServer] mixing rate is used.",
+      "defaultValue": "2",
+      "godotName": "mix_rate_mode",
+      "xmlDocId": "P:Godot.AudioStreamGenerator.MixRateMode",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AudioStreamGeneratorMixRate",
+      "values": [
+        {
+          "name": "MIX_RATE_CUSTOM",
+          "value": "2",
+          "enum": "AudioStreamGeneratorMixRate",
+          "kind": "EnumValue",
+          "summary": "Custom mixing rate, specified by [member mix_rate].",
+          "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+        },
+        {
+          "name": "MIX_RATE_INPUT",
+          "value": "1",
+          "enum": "AudioStreamGeneratorMixRate",
+          "kind": "EnumValue",
+          "summary": "Current [AudioServer] input mixing rate.",
+          "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+        },
+        {
+          "name": "MIX_RATE_MAX",
+          "value": "3",
+          "enum": "AudioStreamGeneratorMixRate",
+          "kind": "EnumValue",
+          "summary": "Maximum value for the mixing rate mode enum.",
+          "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+        },
+        {
+          "name": "MIX_RATE_OUTPUT",
+          "value": "0",
+          "enum": "AudioStreamGeneratorMixRate",
+          "kind": "EnumValue",
+          "summary": "Current [AudioServer] output mixing rate.",
+          "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MIX_RATE_OUTPUT",
+      "value": "0",
+      "enum": "AudioStreamGeneratorMixRate",
+      "kind": "EnumValue",
+      "summary": "Current [AudioServer] output mixing rate.",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    },
+    {
+      "name": "MIX_RATE_INPUT",
+      "value": "1",
+      "enum": "AudioStreamGeneratorMixRate",
+      "kind": "EnumValue",
+      "summary": "Current [AudioServer] input mixing rate.",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    },
+    {
+      "name": "MIX_RATE_CUSTOM",
+      "value": "2",
+      "enum": "AudioStreamGeneratorMixRate",
+      "kind": "EnumValue",
+      "summary": "Custom mixing rate, specified by [member mix_rate].",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    },
+    {
+      "name": "MIX_RATE_MAX",
+      "value": "3",
+      "enum": "AudioStreamGeneratorMixRate",
+      "kind": "EnumValue",
+      "summary": "Maximum value for the mixing rate mode enum.",
+      "sourcePath": "doc/classes/AudioStreamGenerator.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamGenerator.xml",
+      "sha256": "aea75184387a6079477ebab14a8125381879c96454830f751dda7eff38212ae5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

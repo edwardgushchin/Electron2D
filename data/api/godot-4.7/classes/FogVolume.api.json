@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FogVolume",
+    "namespace": "Godot",
+    "fullName": "Godot.FogVolume",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "FogVolume",
+    "documentationPath": "doc/classes/FogVolume.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fogvolume.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The [Material] used by the [FogVolume]. Can be either a built-in [FogMaterial] or a custom [ShaderMaterial].",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.FogVolume.Material",
+      "sourcePath": "doc/classes/FogVolume.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public int Shape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The shape of the [FogVolume]. This can be set to either [constant RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID], [constant RenderingServer.FOG_VOLUME_SHAPE_CONE], [constant RenderingServer.FOG_VOLUME_SHAPE_CYLINDER], [constant RenderingServer.FOG_VOLUME_SHAPE_BOX] or [constant RenderingServer.FOG_VOLUME_SHAPE_WORLD].",
+      "defaultValue": "3",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.FogVolume.Shape",
+      "sourcePath": "doc/classes/FogVolume.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The size of the [FogVolume] when [member shape] is [constant RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID], [constant RenderingServer.FOG_VOLUME_SHAPE_CONE], [constant RenderingServer.FOG_VOLUME_SHAPE_CYLINDER] or [constant RenderingServer.FOG_VOLUME_SHAPE_BOX]. [b]Note:[/b] Thin fog volumes may appear to flicker when the camera moves or rotates. This can be alleviated by increasing [member ProjectSettings.rendering/environment/volumetric_fog/volume_depth] (at a performance cost) or by decreasing [member Environment.volumetric_fog_length] (at no performance cost, but at the cost of lower fog range). Alternatively, the [FogVolume] can be made thicker and use a lower density in the [member material]. [b]Note:[/b] If [member shape] is [constant RenderingServer.FOG_VOLUME_SHAPE_CONE] or [constant RenderingServer.FOG_VOLUME_SHAPE_CYLINDER], the cone/cylinder will be adjusted to fit within the size. Non-uniform scaling of cone/cylinder shapes via the [member size] property is not supported, but you can scale the [FogVolume] node instead.",
+      "defaultValue": "Vector3(2, 2, 2)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.FogVolume.Size",
+      "sourcePath": "doc/classes/FogVolume.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FogVolume.xml",
+      "sha256": "952cfabe95ec643ea19a6cd5f2c64f207cf4052dede99efb6d78af578fb14e17"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

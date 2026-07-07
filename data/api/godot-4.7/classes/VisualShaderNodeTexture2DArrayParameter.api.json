@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTexture2DArrayParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTexture2DArrayParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeTextureParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTexture2DArrayParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetexture2darrayparameter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml",
+      "sha256": "eee3f95724e3e24ff00ed6641747a112ef74831aafe7d8c4f6b7091dd7bf7d5a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

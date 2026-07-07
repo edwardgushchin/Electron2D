@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDScriptSyntaxHighlighter",
+    "namespace": "Godot",
+    "fullName": "Godot.GDScriptSyntaxHighlighter",
+    "kind": "class",
+    "baseType": "EditorSyntaxHighlighter",
+    "interfaces": [],
+    "godotReference": "GDScriptSyntaxHighlighter",
+    "documentationPath": "modules/gdscript/doc_classes/GDScriptSyntaxHighlighter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdscriptsyntaxhighlighter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gdscript/doc_classes/GDScriptSyntaxHighlighter.xml",
+      "sha256": "793c3c5af092c7409b2a296c22393ad56ff7610fd3ac7551553d1639f6ffe360"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

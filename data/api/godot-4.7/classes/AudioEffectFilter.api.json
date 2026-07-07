@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectFilter",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectFilter",
+    "documentationPath": "doc/classes/AudioEffectFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectfilter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CutoffHz",
+      "kind": "Property",
+      "signature": "public float CutoffHz { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Frequency threshold for the filter, in Hz. Value can range from 1 to 20500.",
+      "defaultValue": "2000.0",
+      "godotName": "cutoff_hz",
+      "xmlDocId": "P:Godot.AudioEffectFilter.CutoffHz",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "Db",
+      "kind": "Property",
+      "signature": "public int Db { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Steepness of the cutoff curve in dB per octave (twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz]), also known as the \u0022order\u0022 of the filter. Higher orders have a more aggressive cutoff.",
+      "defaultValue": "0",
+      "godotName": "db",
+      "xmlDocId": "P:Godot.AudioEffectFilter.Db",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "Gain",
+      "kind": "Property",
+      "signature": "public float Gain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain of the frequencies affected by the filter. This property is only available for [AudioEffectLowShelfFilter] and [AudioEffectHighShelfFilter]. Value can range from 0 to 4.",
+      "defaultValue": "1.0",
+      "godotName": "gain",
+      "xmlDocId": "P:Godot.AudioEffectFilter.Gain",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "Resonance",
+      "kind": "Property",
+      "signature": "public float Resonance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain at or directly next to the [member cutoff_hz] frequency threshold. Value can range from 0 to 1. Its exact behavior depends on the selected filter type: - For shelf filters, it accentuates or masks the order by increasing frequencies right next to the [member cutoff_hz] frequency and decreasing frequencies on the opposite side. - For the band-pass and notch filters, it widens or narrows the filter at the [member cutoff_hz] frequency threshold. - For low/high-pass filters, it increases or decreases frequencies at the [member cutoff_hz] frequency threshold.",
+      "defaultValue": "0.5",
+      "godotName": "resonance",
+      "xmlDocId": "P:Godot.AudioEffectFilter.Resonance",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "FilterDB",
+      "values": [
+        {
+          "name": "FILTER_12DB",
+          "value": "1",
+          "enum": "FilterDB",
+          "kind": "EnumValue",
+          "summary": "Cutting off at 12 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+          "sourcePath": "doc/classes/AudioEffectFilter.xml"
+        },
+        {
+          "name": "FILTER_18DB",
+          "value": "2",
+          "enum": "FilterDB",
+          "kind": "EnumValue",
+          "summary": "Cutting off at 18 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+          "sourcePath": "doc/classes/AudioEffectFilter.xml"
+        },
+        {
+          "name": "FILTER_24DB",
+          "value": "3",
+          "enum": "FilterDB",
+          "kind": "EnumValue",
+          "summary": "Cutting off at 24 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+          "sourcePath": "doc/classes/AudioEffectFilter.xml"
+        },
+        {
+          "name": "FILTER_6DB",
+          "value": "0",
+          "enum": "FilterDB",
+          "kind": "EnumValue",
+          "summary": "Cutting off at 6 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+          "sourcePath": "doc/classes/AudioEffectFilter.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILTER_6DB",
+      "value": "0",
+      "enum": "FilterDB",
+      "kind": "EnumValue",
+      "summary": "Cutting off at 6 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "FILTER_12DB",
+      "value": "1",
+      "enum": "FilterDB",
+      "kind": "EnumValue",
+      "summary": "Cutting off at 12 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "FILTER_18DB",
+      "value": "2",
+      "enum": "FilterDB",
+      "kind": "EnumValue",
+      "summary": "Cutting off at 18 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    },
+    {
+      "name": "FILTER_24DB",
+      "value": "3",
+      "enum": "FilterDB",
+      "kind": "EnumValue",
+      "summary": "Cutting off at 24 dB per octave. One octave is twice the frequency above [member cutoff_hz], or half the frequency below [member cutoff_hz].",
+      "sourcePath": "doc/classes/AudioEffectFilter.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectFilter.xml",
+      "sha256": "ac6157aaf73812f3c66049feb0207e58e462148cdc1a60a2ff386c0699ff1db9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Light2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Light2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Light2D",
+    "documentationPath": "doc/classes/Light2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_light2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public float GetHeight()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the light\u0027s height, which is used in 2D normal mapping. See [member PointLight2D.height] and [member DirectionalLight2D.height].",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.Light2D.GetHeight",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "SetHeight",
+      "kind": "Method",
+      "signature": "public void SetHeight(float height)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "height",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the light\u0027s height, which is used in 2D normal mapping. See [member PointLight2D.height] and [member DirectionalLight2D.height].",
+      "godotName": "set_height",
+      "xmlDocId": "M:Godot.Light2D.SetHeight(float)",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "BlendMode",
+      "kind": "Property",
+      "signature": "public int BlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The Light2D\u0027s blend mode.",
+      "defaultValue": "0",
+      "godotName": "blend_mode",
+      "xmlDocId": "P:Godot.Light2D.BlendMode",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The Light2D\u0027s [Color].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.Light2D.Color",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "EditorOnly",
+      "kind": "Property",
+      "signature": "public bool EditorOnly { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], Light2D will only appear when editing the scene.",
+      "defaultValue": "false",
+      "godotName": "editor_only",
+      "xmlDocId": "P:Godot.Light2D.EditorOnly",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], Light2D will emit light.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.Light2D.Enabled",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "Energy",
+      "kind": "Property",
+      "signature": "public float Energy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The Light2D\u0027s energy value. The larger the value, the stronger the light.",
+      "defaultValue": "1.0",
+      "godotName": "energy",
+      "xmlDocId": "P:Godot.Light2D.Energy",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "RangeItemCullMask",
+      "kind": "Property",
+      "signature": "public int RangeItemCullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The layer mask. Only objects with a matching [member CanvasItem.light_mask] will be affected by the Light2D. See also [member shadow_item_cull_mask], which affects which objects can cast shadows. [b]Note:[/b] [member range_item_cull_mask] is ignored by [DirectionalLight2D], which will always light a 2D node regardless of the 2D node\u0027s [member CanvasItem.light_mask].",
+      "defaultValue": "1",
+      "godotName": "range_item_cull_mask",
+      "xmlDocId": "P:Godot.Light2D.RangeItemCullMask",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "RangeLayerMax",
+      "kind": "Property",
+      "signature": "public int RangeLayerMax { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum layer value of objects that are affected by the Light2D.",
+      "defaultValue": "0",
+      "godotName": "range_layer_max",
+      "xmlDocId": "P:Godot.Light2D.RangeLayerMax",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "RangeLayerMin",
+      "kind": "Property",
+      "signature": "public int RangeLayerMin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Minimum layer value of objects that are affected by the Light2D.",
+      "defaultValue": "0",
+      "godotName": "range_layer_min",
+      "xmlDocId": "P:Godot.Light2D.RangeLayerMin",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "RangeZMax",
+      "kind": "Property",
+      "signature": "public int RangeZMax { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum [code]z[/code] value of objects that are affected by the Light2D.",
+      "defaultValue": "1024",
+      "godotName": "range_z_max",
+      "xmlDocId": "P:Godot.Light2D.RangeZMax",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "RangeZMin",
+      "kind": "Property",
+      "signature": "public int RangeZMin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Minimum [code]z[/code] value of objects that are affected by the Light2D.",
+      "defaultValue": "-1024",
+      "godotName": "range_z_min",
+      "xmlDocId": "P:Godot.Light2D.RangeZMin",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "ShadowColor",
+      "kind": "Property",
+      "signature": "public Color ShadowColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "[Color] of shadows cast by the Light2D.",
+      "defaultValue": "Color(0, 0, 0, 0)",
+      "godotName": "shadow_color",
+      "xmlDocId": "P:Godot.Light2D.ShadowColor",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "ShadowEnabled",
+      "kind": "Property",
+      "signature": "public bool ShadowEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the Light2D will cast shadows.",
+      "defaultValue": "false",
+      "godotName": "shadow_enabled",
+      "xmlDocId": "P:Godot.Light2D.ShadowEnabled",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "ShadowFilter",
+      "kind": "Property",
+      "signature": "public int ShadowFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Shadow filter type.",
+      "defaultValue": "0",
+      "godotName": "shadow_filter",
+      "xmlDocId": "P:Godot.Light2D.ShadowFilter",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "ShadowFilterSmooth",
+      "kind": "Property",
+      "signature": "public float ShadowFilterSmooth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Smoothing value for shadows. Higher values will result in softer shadows, at the cost of visible streaks that can appear in shadow rendering. [member shadow_filter_smooth] only has an effect if [member shadow_filter] is [constant SHADOW_FILTER_PCF5] or [constant SHADOW_FILTER_PCF13].",
+      "defaultValue": "0.0",
+      "godotName": "shadow_filter_smooth",
+      "xmlDocId": "P:Godot.Light2D.ShadowFilterSmooth",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "ShadowItemCullMask",
+      "kind": "Property",
+      "signature": "public int ShadowItemCullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The shadow mask. Used with [LightOccluder2D] to cast shadows. Only occluders with a matching [member CanvasItem.light_mask] will cast shadows. See also [member range_item_cull_mask], which affects which objects can [i]receive[/i] the light.",
+      "defaultValue": "1",
+      "godotName": "shadow_item_cull_mask",
+      "xmlDocId": "P:Godot.Light2D.ShadowItemCullMask",
+      "sourcePath": "doc/classes/Light2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BlendMode",
+      "values": [
+        {
+          "name": "BLEND_MODE_ADD",
+          "value": "0",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Adds the value of pixels corresponding to the Light2D to the values of pixels under it. This is the common behavior of a light.",
+          "sourcePath": "doc/classes/Light2D.xml"
+        },
+        {
+          "name": "BLEND_MODE_MIX",
+          "value": "2",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Mix the value of pixels corresponding to the Light2D to the values of pixels under it by linear interpolation.",
+          "sourcePath": "doc/classes/Light2D.xml"
+        },
+        {
+          "name": "BLEND_MODE_SUB",
+          "value": "1",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Subtracts the value of pixels corresponding to the Light2D to the values of pixels under it, resulting in inversed light effect.",
+          "sourcePath": "doc/classes/Light2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ShadowFilter",
+      "values": [
+        {
+          "name": "SHADOW_FILTER_NONE",
+          "value": "0",
+          "enum": "ShadowFilter",
+          "kind": "EnumValue",
+          "summary": "No filter applies to the shadow map. This provides hard shadow edges and is the fastest to render. See [member shadow_filter].",
+          "sourcePath": "doc/classes/Light2D.xml"
+        },
+        {
+          "name": "SHADOW_FILTER_PCF13",
+          "value": "2",
+          "enum": "ShadowFilter",
+          "kind": "EnumValue",
+          "summary": "Percentage closer filtering (13 samples) applies to the shadow map. This is the slowest shadow filtering mode, and should be used sparingly. See [member shadow_filter].",
+          "sourcePath": "doc/classes/Light2D.xml"
+        },
+        {
+          "name": "SHADOW_FILTER_PCF5",
+          "value": "1",
+          "enum": "ShadowFilter",
+          "kind": "EnumValue",
+          "summary": "Percentage closer filtering (5 samples) applies to the shadow map. This is slower compared to hard shadow rendering. See [member shadow_filter].",
+          "sourcePath": "doc/classes/Light2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SHADOW_FILTER_NONE",
+      "value": "0",
+      "enum": "ShadowFilter",
+      "kind": "EnumValue",
+      "summary": "No filter applies to the shadow map. This provides hard shadow edges and is the fastest to render. See [member shadow_filter].",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "SHADOW_FILTER_PCF5",
+      "value": "1",
+      "enum": "ShadowFilter",
+      "kind": "EnumValue",
+      "summary": "Percentage closer filtering (5 samples) applies to the shadow map. This is slower compared to hard shadow rendering. See [member shadow_filter].",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "SHADOW_FILTER_PCF13",
+      "value": "2",
+      "enum": "ShadowFilter",
+      "kind": "EnumValue",
+      "summary": "Percentage closer filtering (13 samples) applies to the shadow map. This is the slowest shadow filtering mode, and should be used sparingly. See [member shadow_filter].",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "BLEND_MODE_ADD",
+      "value": "0",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Adds the value of pixels corresponding to the Light2D to the values of pixels under it. This is the common behavior of a light.",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "BLEND_MODE_SUB",
+      "value": "1",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Subtracts the value of pixels corresponding to the Light2D to the values of pixels under it, resulting in inversed light effect.",
+      "sourcePath": "doc/classes/Light2D.xml"
+    },
+    {
+      "name": "BLEND_MODE_MIX",
+      "value": "2",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Mix the value of pixels corresponding to the Light2D to the values of pixels under it by linear interpolation.",
+      "sourcePath": "doc/classes/Light2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Light2D.xml",
+      "sha256": "3021888496746c524502607812d9d0bbe668ad15d9b6e3ecc4a6aa9452fdbfab"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

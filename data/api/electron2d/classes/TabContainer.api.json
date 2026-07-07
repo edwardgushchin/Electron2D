@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TabContainer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TabContainer",
+    "kind": "class",
+    "baseType": "Electron2D.Container",
+    "interfaces": [],
+    "godotReference": "TabContainer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TabContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TabContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TabContainer\u0060 class.",
+      "xmlDocId": "M:Electron2D.TabContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TabContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TabContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TabContainer\u0060 class.",
+      "xmlDocId": "M:Electron2D.TabContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this tab container.",
+      "xmlDocId": "M:Electron2D.TabContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the tab header and tab button labels.",
+      "xmlDocId": "M:Electron2D.TabContainer._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCurrentTabControl",
+      "kind": "Method",
+      "signature": "public Electron2D.Control GetCurrentTabControl()",
+      "returnType": "Electron2D.Control",
+      "parameters": [],
+      "summary": "Gets the control displayed by the current tab.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetCurrentTabControl",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetPreviousTab",
+      "kind": "Method",
+      "signature": "public System.Int32 GetPreviousTab()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the tab index that was selected before the current tab.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetPreviousTab",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabControl",
+      "kind": "Method",
+      "signature": "public Electron2D.Control GetTabControl(System.Int32 tabIndex)",
+      "returnType": "Electron2D.Control",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the control displayed by a tab.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabControl(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetTabCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of direct child controls treated as tabs.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabIcon",
+      "kind": "Method",
+      "signature": "public Electron2D.Texture2D GetTabIcon(System.Int32 tabIndex)",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the icon displayed by a tab button.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabIcon(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabIdxAtPoint",
+      "kind": "Method",
+      "signature": "public System.Int32 GetTabIdxAtPoint(Electron2D.Vector2 point)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Gets the tab index whose button contains a local point.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabIdxAtPoint(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabIdxFromControl",
+      "kind": "Method",
+      "signature": "public System.Int32 GetTabIdxFromControl(Electron2D.Control control)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Electron2D.Control"
+        }
+      ],
+      "summary": "Gets the tab index for a direct child control.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabIdxFromControl(Electron2D.Control)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTabTitle",
+      "kind": "Method",
+      "signature": "public System.String GetTabTitle(System.Int32 tabIndex)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the title displayed by a tab button.",
+      "xmlDocId": "M:Electron2D.TabContainer.GetTabTitle(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this tab container.",
+      "xmlDocId": "M:Electron2D.TabContainer._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsTabDisabled",
+      "kind": "Method",
+      "signature": "public System.Boolean IsTabDisabled(System.Int32 tabIndex)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether a tab is disabled.",
+      "xmlDocId": "M:Electron2D.TabContainer.IsTabDisabled(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsTabHidden",
+      "kind": "Method",
+      "signature": "public System.Boolean IsTabHidden(System.Int32 tabIndex)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Reports whether a tab is hidden.",
+      "xmlDocId": "M:Electron2D.TabContainer.IsTabHidden(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SelectNextAvailable",
+      "kind": "Method",
+      "signature": "public System.Boolean SelectNextAvailable()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Selects the next available tab.",
+      "xmlDocId": "M:Electron2D.TabContainer.SelectNextAvailable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SelectPreviousAvailable",
+      "kind": "Method",
+      "signature": "public System.Boolean SelectPreviousAvailable()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Selects the previous available tab.",
+      "xmlDocId": "M:Electron2D.TabContainer.SelectPreviousAvailable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTabDisabled",
+      "kind": "Method",
+      "signature": "public System.Void SetTabDisabled(System.Int32 tabIndex, System.Boolean disabled)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "disabled",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a tab is disabled.",
+      "xmlDocId": "M:Electron2D.TabContainer.SetTabDisabled(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTabHidden",
+      "kind": "Method",
+      "signature": "public System.Void SetTabHidden(System.Int32 tabIndex, System.Boolean hidden)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "hidden",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a tab is hidden.",
+      "xmlDocId": "M:Electron2D.TabContainer.SetTabHidden(System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTabIcon",
+      "kind": "Method",
+      "signature": "public System.Void SetTabIcon(System.Int32 tabIndex, Electron2D.Texture2D icon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "icon",
+          "type": "Electron2D.Texture2D"
+        }
+      ],
+      "summary": "Sets the icon displayed by a tab button.",
+      "xmlDocId": "M:Electron2D.TabContainer.SetTabIcon(System.Int32,Electron2D.Texture2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTabTitle",
+      "kind": "Method",
+      "signature": "public System.Void SetTabTitle(System.Int32 tabIndex, System.String title)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "tabIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "title",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets the title displayed by a tab button.",
+      "xmlDocId": "M:Electron2D.TabContainer.SetTabTitle(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllTabsInFront",
+      "kind": "Property",
+      "signature": "public System.Boolean AllTabsInFront { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether all tab buttons should be drawn in front.",
+      "xmlDocId": "P:Electron2D.TabContainer.AllTabsInFront",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CurrentTab",
+      "kind": "Property",
+      "signature": "public System.Int32 CurrentTab { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the current selected tab index.",
+      "xmlDocId": "P:Electron2D.TabContainer.CurrentTab",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DeselectEnabled",
+      "kind": "Property",
+      "signature": "public System.Boolean DeselectEnabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the container may have no selected tab.",
+      "xmlDocId": "P:Electron2D.TabContainer.DeselectEnabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TabAlignment",
+      "kind": "Property",
+      "signature": "public Electron2D.TabContainer.AlignmentMode TabAlignment { get; set; }",
+      "returnType": "Electron2D.TabContainer.AlignmentMode",
+      "parameters": [],
+      "summary": "Gets or sets tab button alignment inside the header.",
+      "xmlDocId": "P:Electron2D.TabContainer.TabAlignment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TabsPosition",
+      "kind": "Property",
+      "signature": "public Electron2D.TabContainer.TabPosition TabsPosition { get; set; }",
+      "returnType": "Electron2D.TabContainer.TabPosition",
+      "parameters": [],
+      "summary": "Gets or sets the tab header position.",
+      "xmlDocId": "P:Electron2D.TabContainer.TabsPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TabsVisible",
+      "kind": "Property",
+      "signature": "public System.Boolean TabsVisible { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the tab header is visible.",
+      "xmlDocId": "P:Electron2D.TabContainer.TabsVisible",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "UseHiddenTabsForMinSize",
+      "kind": "Property",
+      "signature": "public System.Boolean UseHiddenTabsForMinSize { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether hidden tabs contribute to minimum size.",
+      "xmlDocId": "P:Electron2D.TabContainer.UseHiddenTabsForMinSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this tab container.",
+      "xmlDocId": "M:Electron2D.TabContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the tab header and tab button labels.",
+      "xmlDocId": "M:Electron2D.TabContainer._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this tab container.",
+      "xmlDocId": "M:Electron2D.TabContainer._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

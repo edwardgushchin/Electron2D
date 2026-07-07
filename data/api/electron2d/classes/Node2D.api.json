@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Node2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Node2D",
+    "kind": "class",
+    "baseType": "Electron2D.CanvasItem",
+    "interfaces": [],
+    "godotReference": "Node2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Node2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Node2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Node2D type.",
+      "xmlDocId": "M:Electron2D.Node2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Node2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Node2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Node2D type.",
+      "xmlDocId": "M:Electron2D.Node2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ApplyScale",
+      "kind": "Method",
+      "signature": "public System.Void ApplyScale(Electron2D.Vector2 ratio)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "ratio",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Multiplies the current local scale by a ratio.",
+      "xmlDocId": "M:Electron2D.Node2D.ApplyScale(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalTranslate",
+      "kind": "Method",
+      "signature": "public System.Void GlobalTranslate(Electron2D.Vector2 offset)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Translates the node in global coordinates.",
+      "xmlDocId": "M:Electron2D.Node2D.GlobalTranslate(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rotate",
+      "kind": "Method",
+      "signature": "public System.Void Rotate(System.Single radians)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "radians",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Adds a rotation in radians to the local transform.",
+      "xmlDocId": "M:Electron2D.Node2D.Rotate(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToGlobal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ToGlobal(Electron2D.Vector2 localPoint)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "localPoint",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Transforms a local point into global coordinates.",
+      "xmlDocId": "M:Electron2D.Node2D.ToGlobal(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToLocal",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ToLocal(Electron2D.Vector2 globalPoint)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "globalPoint",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Transforms a global point into this node\u0027s local coordinates.",
+      "xmlDocId": "M:Electron2D.Node2D.ToLocal(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Translate",
+      "kind": "Method",
+      "signature": "public System.Void Translate(Electron2D.Vector2 offset)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Translates the node in local coordinates.",
+      "xmlDocId": "M:Electron2D.Node2D.Translate(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalPosition",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 GlobalPosition { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the global 2D position.",
+      "xmlDocId": "P:Electron2D.Node2D.GlobalPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalRotation",
+      "kind": "Property",
+      "signature": "public System.Single GlobalRotation { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the global rotation in radians.",
+      "xmlDocId": "P:Electron2D.Node2D.GlobalRotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalRotationDegrees",
+      "kind": "Property",
+      "signature": "public System.Single GlobalRotationDegrees { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the global rotation in degrees.",
+      "xmlDocId": "P:Electron2D.Node2D.GlobalRotationDegrees",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalScale",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 GlobalScale { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the global 2D scale.",
+      "xmlDocId": "P:Electron2D.Node2D.GlobalScale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GlobalTransform",
+      "kind": "Property",
+      "signature": "public Electron2D.Transform2D GlobalTransform { get; set; }",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets or sets the transform relative to the global 2D canvas.",
+      "xmlDocId": "P:Electron2D.Node2D.GlobalTransform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Position { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the local position relative to the direct \u0060Node2D\u0060 parent.",
+      "xmlDocId": "P:Electron2D.Node2D.Position",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rotation",
+      "kind": "Property",
+      "signature": "public System.Single Rotation { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the local rotation in radians.",
+      "xmlDocId": "P:Electron2D.Node2D.Rotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RotationDegrees",
+      "kind": "Property",
+      "signature": "public System.Single RotationDegrees { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the local rotation in degrees.",
+      "xmlDocId": "P:Electron2D.Node2D.RotationDegrees",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Scale",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Scale { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the local 2D scale.",
+      "xmlDocId": "P:Electron2D.Node2D.Scale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Electron2D.Transform2D Transform { get; set; }",
+      "returnType": "Electron2D.Transform2D",
+      "parameters": [],
+      "summary": "Gets or sets the local transform built from position, rotation and scale.",
+      "xmlDocId": "P:Electron2D.Node2D.Transform",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

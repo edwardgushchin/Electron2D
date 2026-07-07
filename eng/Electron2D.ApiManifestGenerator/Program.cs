@@ -110,9 +110,10 @@ static ApiTypeEntry CreateTypeEntry(
     CompatibilityTable compatibility)
 {
     var fullName = DisplayName(type);
+    var rawFullName = RawDisplayName(type);
     var typeDocId = TypeId(type);
     var typeDoc = FindDoc(docs, typeDocId);
-    var compatibilityEntry = compatibility.GetRequired(fullName);
+    var compatibilityEntry = compatibility.GetRequired(fullName, rawFullName);
     var profile = CreateProfile(compatibilityEntry);
     var members = GetMembers(type, docs, profile)
         .OrderBy(member => member.Id, StringComparer.Ordinal)
@@ -169,19 +170,23 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
     const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
     var members = new List<ApiMemberEntry>();
 
-    foreach (var field in type.GetFields(flags).OrderBy(field => field.Name, StringComparer.Ordinal))
+    foreach (var field in type.GetFields(flags)
+        .Where(field => !type.IsEnum || field.Name != "value__")
+        .OrderBy(field => field.Name, StringComparer.Ordinal))
     {
-        var kind = type.IsEnum ? "EnumValue" : "Field";
+        var kind = type.IsEnum ? "EnumValue" : field.IsLiteral ? "Constant" : "Field";
         var signature = FieldSignature(field);
         var xmlDocId = "F:" + XmlTypeName(type) + "." + field.Name;
         var doc = FindDoc(docs, xmlDocId);
+        var fieldName = ProjectMemberName(field.Name);
         members.Add(new ApiMemberEntry(
-            Id: MemberId(type, kind, field.Name),
+            Id: MemberId(type, kind, fieldName),
             DeclaringType: DisplayName(type),
-            Name: field.Name,
+            Name: fieldName,
             Kind: kind,
             Signature: signature,
             ReturnType: TypeDisplayName(field.FieldType),
+            Value: FieldValue(field, type),
             Parameters: [],
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
@@ -192,13 +197,15 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
     {
         var xmlDocId = "P:" + XmlTypeName(type) + "." + property.Name;
         var doc = FindDoc(docs, xmlDocId);
+        var propertyName = ProjectMemberName(property.Name);
         members.Add(new ApiMemberEntry(
-            Id: MemberId(type, "Property", property.Name),
+            Id: MemberId(type, "Property", propertyName),
             DeclaringType: DisplayName(type),
-            Name: property.Name,
+            Name: propertyName,
             Kind: "Property",
             Signature: PropertySignature(property),
             ReturnType: TypeDisplayName(property.PropertyType),
+            Value: PropertyValue(property, type),
             Parameters: property.GetIndexParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
@@ -209,13 +216,15 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
     {
         var xmlDocId = "E:" + XmlTypeName(type) + "." + eventInfo.Name;
         var doc = FindDoc(docs, xmlDocId);
+        var eventName = ProjectMemberName(eventInfo.Name);
         members.Add(new ApiMemberEntry(
-            Id: MemberId(type, "Event", eventInfo.Name),
+            Id: MemberId(type, "Event", eventName),
             DeclaringType: DisplayName(type),
-            Name: eventInfo.Name,
+            Name: eventName,
             Kind: "Event",
             Signature: EventSignature(eventInfo),
             ReturnType: TypeDisplayName(eventInfo.EventHandlerType!),
+            Value: null,
             Parameters: [],
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
@@ -229,10 +238,11 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, "Constructor", ConstructorDisplayName(constructor)),
             DeclaringType: DisplayName(type),
-            Name: type.Name,
+            Name: ShortDisplayName(type).Split('.').Last(),
             Kind: "Constructor",
             Signature: ConstructorSignature(type, constructor),
             ReturnType: null,
+            Value: null,
             Parameters: constructor.GetParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
@@ -243,15 +253,18 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         .Where(method => !method.IsSpecialName || method.Name.StartsWith("op_", StringComparison.Ordinal))
         .OrderBy(MethodDisplayName, StringComparer.Ordinal))
     {
+        var kind = method.Name.StartsWith("op_", StringComparison.Ordinal) ? "Operator" : "Method";
         var xmlDocId = MethodId(type, method, method.Name);
         var doc = FindDoc(docs, xmlDocId);
+        var methodName = ProjectMemberName(method.Name);
         members.Add(new ApiMemberEntry(
-            Id: MemberId(type, "Method", MethodDisplayName(method)),
+            Id: MemberId(type, kind, MethodDisplayName(method)),
             DeclaringType: DisplayName(type),
-            Name: method.Name,
-            Kind: "Method",
+            Name: methodName,
+            Kind: kind,
             Signature: MethodSignature(method),
             ReturnType: TypeDisplayName(method.ReturnType),
+            Value: null,
             Parameters: method.GetParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
@@ -300,6 +313,58 @@ static object? NormalizeDefaultValue(ParameterInfo parameter)
     }
 
     return Convert.ToString(value, CultureInfo.InvariantCulture);
+}
+
+static string? FieldValue(FieldInfo field, Type declaringType)
+{
+    if (field.IsLiteral)
+    {
+        return FormatReflectionValue(field.GetRawConstantValue());
+    }
+
+    if (field.IsStatic &&
+        field.IsInitOnly &&
+        IsPredefinedValueSingleton(declaringType, field.FieldType))
+    {
+        return FormatReflectionValue(field.GetValue(null));
+    }
+
+    return null;
+}
+
+static string? PropertyValue(PropertyInfo property, Type declaringType)
+{
+    if (property.GetMethod is null ||
+        !property.GetMethod.IsStatic ||
+        property.SetMethod is not null ||
+        !IsPredefinedValueSingleton(declaringType, property.PropertyType))
+    {
+        return null;
+    }
+
+    try
+    {
+        return FormatReflectionValue(property.GetValue(null));
+    }
+    catch (Exception exception) when (exception is TargetInvocationException or TargetParameterCountException or MemberAccessException)
+    {
+        return null;
+    }
+}
+
+static bool IsPredefinedValueSingleton(Type declaringType, Type valueType)
+{
+    return declaringType.IsValueType && valueType == declaringType;
+}
+
+static string? FormatReflectionValue(object? value)
+{
+    return value switch
+    {
+        null => null,
+        IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
+        _ => Convert.ToString(value, CultureInfo.InvariantCulture)
+    };
 }
 
 static bool IsNullableParameter(ParameterInfo parameter)
@@ -493,7 +558,7 @@ static string NormalizeWhitespace(string value)
 static string FieldSignature(FieldInfo field)
 {
     var modifiers = field.IsLiteral ? "public const " : field.IsStatic ? "public static " : "public ";
-    return modifiers + TypeDisplayName(field.FieldType) + " " + field.Name;
+    return modifiers + TypeDisplayName(field.FieldType) + " " + ProjectMemberName(field.Name);
 }
 
 static string PropertySignature(PropertyInfo property)
@@ -511,31 +576,119 @@ static string PropertySignature(PropertyInfo property)
 
     var indexParameters = property.GetIndexParameters();
     var name = indexParameters.Length == 0
-        ? property.Name
+        ? ProjectMemberName(property.Name)
         : "this[" + Parameters(indexParameters) + "]";
-    return "public " + TypeDisplayName(property.PropertyType) + " " + name + " { " + string.Join(" ", accessors) + " }";
+    var modifiers = property.GetMethod?.IsStatic == true || property.SetMethod?.IsStatic == true ? "public static " : "public ";
+    return modifiers + TypeDisplayName(property.PropertyType) + " " + name + " { " + string.Join(" ", accessors) + " }";
 }
 
-static string EventSignature(EventInfo eventInfo) => "public event " + TypeDisplayName(eventInfo.EventHandlerType!) + " " + eventInfo.Name;
+static string EventSignature(EventInfo eventInfo) => "public event " + TypeDisplayName(eventInfo.EventHandlerType!) + " " + ProjectMemberName(eventInfo.Name);
 
 static string ConstructorSignature(Type type, ConstructorInfo constructor) => "public " + TypeDisplayName(type) + "(" + Parameters(constructor.GetParameters()) + ")";
 
 static string MethodSignature(MethodInfo method)
 {
     var modifiers = method.IsStatic ? "public static " : "public ";
-    return modifiers + TypeDisplayName(method.ReturnType) + " " + MethodDisplayName(method) + "(" + Parameters(method.GetParameters()) + ")";
+    return modifiers + TypeDisplayName(method.ReturnType) + " " + ProjectMemberName(method.Name) + "(" + Parameters(method.GetParameters()) + ")";
 }
 
 static string ConstructorDisplayName(ConstructorInfo constructor) => ".ctor(" + Parameters(constructor.GetParameters(), includeTypesOnly: true) + ")";
 
-static string MethodDisplayName(MethodInfo method) => method.Name + "(" + Parameters(method.GetParameters(), includeTypesOnly: true) + ")";
+static string MethodDisplayName(MethodInfo method) => ProjectMemberName(method.Name) + "(" + Parameters(method.GetParameters(), includeTypesOnly: true) + ")";
 
 static string Parameters(ParameterInfo[] parameters, bool includeTypesOnly = false)
 {
     return string.Join(", ", parameters.Select(parameter =>
         includeTypesOnly
             ? TypeDisplayName(parameter.ParameterType)
-            : TypeDisplayName(parameter.ParameterType) + " " + parameter.Name));
+            : TypeDisplayName(parameter.ParameterType) + " " + EscapeCSharpIdentifier(parameter.Name ?? "arg")));
+}
+
+static string EscapeCSharpIdentifier(string name)
+{
+    return IsCSharpReservedKeyword(name) ? "@" + name : name;
+}
+
+static bool IsCSharpReservedKeyword(string name)
+{
+    return name is
+        "abstract" or
+        "as" or
+        "base" or
+        "bool" or
+        "break" or
+        "byte" or
+        "case" or
+        "catch" or
+        "char" or
+        "checked" or
+        "class" or
+        "const" or
+        "continue" or
+        "decimal" or
+        "default" or
+        "delegate" or
+        "do" or
+        "double" or
+        "else" or
+        "enum" or
+        "event" or
+        "explicit" or
+        "extern" or
+        "false" or
+        "finally" or
+        "fixed" or
+        "float" or
+        "for" or
+        "foreach" or
+        "goto" or
+        "if" or
+        "implicit" or
+        "in" or
+        "int" or
+        "interface" or
+        "internal" or
+        "is" or
+        "lock" or
+        "long" or
+        "namespace" or
+        "new" or
+        "null" or
+        "object" or
+        "operator" or
+        "out" or
+        "override" or
+        "params" or
+        "private" or
+        "protected" or
+        "public" or
+        "readonly" or
+        "ref" or
+        "return" or
+        "sbyte" or
+        "sealed" or
+        "short" or
+        "sizeof" or
+        "stackalloc" or
+        "static" or
+        "string" or
+        "struct" or
+        "switch" or
+        "this" or
+        "throw" or
+        "true" or
+        "try" or
+        "typeof" or
+        "uint" or
+        "ulong" or
+        "unchecked" or
+        "unsafe" or
+        "ushort" or
+        "using" or
+        "virtual" or
+        "void" or
+        "volatile" or
+        "while";
 }
 
 static string TypeDisplayName(Type type)
@@ -563,10 +716,10 @@ static string TypeDisplayName(Type type)
 
     if (!type.IsGenericType)
     {
-        return (type.FullName ?? type.Name).Replace('+', '.');
+        return DisplayName(type);
     }
 
-    var definitionName = (type.GetGenericTypeDefinition().FullName ?? type.Name).Replace('+', '.');
+    var definitionName = DisplayName(type.GetGenericTypeDefinition());
     var tickIndex = definitionName.IndexOf('`', StringComparison.Ordinal);
     if (tickIndex >= 0)
     {
@@ -586,7 +739,9 @@ static string TypeKind(Type type)
     return type.IsEnum ? "enum" : type.IsValueType ? "struct" : type.IsInterface ? "interface" : "class";
 }
 
-static string DisplayName(Type type) => (type.FullName ?? type.Name).Replace('+', '.');
+static string DisplayName(Type type) => ProjectTypeDisplayName(RawDisplayName(type), type.IsEnum);
+
+static string RawDisplayName(Type type) => (type.FullName ?? type.Name).Replace('+', '.');
 
 static string ShortDisplayName(Type type)
 {
@@ -595,6 +750,35 @@ static string ShortDisplayName(Type type)
     return displayName.StartsWith(rootNamespace, StringComparison.Ordinal)
         ? displayName[rootNamespace.Length..]
         : displayName;
+}
+
+static string ProjectTypeDisplayName(string displayName, bool isEnum)
+{
+    const string rootNamespace = "Electron2D.";
+    if (!isEnum || !displayName.StartsWith(rootNamespace, StringComparison.Ordinal))
+    {
+        return displayName;
+    }
+
+    const string suffix = "Enum";
+    var lastDot = displayName.LastIndexOf('.');
+    var nameStart = lastDot < 0 ? 0 : lastDot + 1;
+    return displayName.EndsWith(suffix, StringComparison.Ordinal) &&
+        displayName.Length > nameStart + suffix.Length
+        ? displayName[..^suffix.Length]
+        : displayName;
+}
+
+static string ProjectMemberName(string name)
+{
+    return name switch
+    {
+        "_GetMinimumSize" => "ComputeMinimumSize",
+        "_GetTooltip" => "GetTooltipText",
+        "_MakeCustomTooltip" => "MakeCustomTooltip",
+        _ when name.Length > 1 && name[0] == '_' && char.IsUpper(name[1]) => name[1..],
+        _ => name
+    };
 }
 
 static string TypeId(Type type) => "T:" + XmlTypeName(type);
@@ -715,6 +899,7 @@ public sealed record ApiMemberEntry(
     string Kind,
     string Signature,
     string? ReturnType,
+    string? Value,
     IReadOnlyList<ApiParameterEntry> Parameters,
     string XmlDocId,
     string Summary,
@@ -782,12 +967,21 @@ public sealed class CompatibilityTable
         return new CompatibilityTable(entries);
     }
 
-    public CompatibilityEntry GetRequired(string fullName)
+    public CompatibilityEntry GetRequired(string fullName, string? rawFullName = null)
     {
         var normalized = NormalizeApiName(fullName);
         if (entries.TryGetValue(normalized, out var entry))
         {
             return entry;
+        }
+
+        if (!string.IsNullOrWhiteSpace(rawFullName))
+        {
+            var rawNormalized = NormalizeApiName(rawFullName);
+            if (entries.TryGetValue(rawNormalized, out entry))
+            {
+                return entry;
+            }
         }
 
         throw new InvalidOperationException("Public type is missing from API-Compatibility.md: " + fullName);

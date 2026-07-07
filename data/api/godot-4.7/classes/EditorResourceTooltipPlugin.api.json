@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorResourceTooltipPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorResourceTooltipPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorResourceTooltipPlugin",
+    "documentationPath": "doc/classes/EditorResourceTooltipPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorresourcetooltipplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Handles",
+      "kind": "Method",
+      "signature": "public bool _Handles(String type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        }
+      ],
+      "summary": "Return [code]true[/code] if the plugin is going to handle the given [Resource] [param type].",
+      "godotName": "_handles",
+      "xmlDocId": "M:Godot.EditorResourceTooltipPlugin._Handles(String)",
+      "sourcePath": "doc/classes/EditorResourceTooltipPlugin.xml"
+    },
+    {
+      "name": "_MakeTooltipForPath",
+      "kind": "Method",
+      "signature": "public Control _MakeTooltipForPath(String path, Dictionary metadata, Control @base)",
+      "returnType": "Control",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "metadata",
+          "type": "Dictionary"
+        },
+        {
+          "name": "base",
+          "type": "Control"
+        }
+      ],
+      "summary": "Create and return a tooltip that will be displayed when the user hovers a resource under the given [param path] in filesystem dock. The [param metadata] dictionary is provided by preview generator (see [method EditorResourcePreviewGenerator._generate]). [param base] is the base default tooltip, which is a [VBoxContainer] with a file name, type and size labels. If another plugin handled the same file type, [param base] will be output from the previous plugin. For best result, make sure the base tooltip is part of the returned [Control]. [b]Note:[/b] It\u0027s unadvised to use [method ResourceLoader.load], especially with heavy resources like models or textures, because it will make the editor unresponsive when creating the tooltip. You can use [method request_thumbnail] if you want to display a preview in your tooltip. [b]Note:[/b] If you decide to discard the [param base], make sure to call [method Node.queue_free], because it\u0027s not freed automatically. [codeblock] func _make_tooltip_for_path(path, metadata, base): var t_rect = TextureRect.new() request_thumbnail(path, t_rect) base.add_child(t_rect) # The TextureRect will appear at the bottom of the tooltip. return base [/codeblock]",
+      "godotName": "_make_tooltip_for_path",
+      "xmlDocId": "M:Godot.EditorResourceTooltipPlugin._MakeTooltipForPath(String,Dictionary,Control)",
+      "sourcePath": "doc/classes/EditorResourceTooltipPlugin.xml"
+    },
+    {
+      "name": "RequestThumbnail",
+      "kind": "Method",
+      "signature": "public void RequestThumbnail(String path, TextureRect control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "control",
+          "type": "TextureRect"
+        }
+      ],
+      "summary": "Requests a thumbnail for the given [TextureRect]. The thumbnail is created asynchronously by [EditorResourcePreview] and automatically set when available.",
+      "godotName": "request_thumbnail",
+      "xmlDocId": "M:Godot.EditorResourceTooltipPlugin.RequestThumbnail(String,TextureRect)",
+      "sourcePath": "doc/classes/EditorResourceTooltipPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Handles",
+      "kind": "Method",
+      "signature": "public bool _Handles(String type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        }
+      ],
+      "summary": "Return [code]true[/code] if the plugin is going to handle the given [Resource] [param type].",
+      "godotName": "_handles",
+      "xmlDocId": "M:Godot.EditorResourceTooltipPlugin._Handles(String)",
+      "sourcePath": "doc/classes/EditorResourceTooltipPlugin.xml"
+    },
+    {
+      "name": "_MakeTooltipForPath",
+      "kind": "Method",
+      "signature": "public Control _MakeTooltipForPath(String path, Dictionary metadata, Control @base)",
+      "returnType": "Control",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "metadata",
+          "type": "Dictionary"
+        },
+        {
+          "name": "base",
+          "type": "Control"
+        }
+      ],
+      "summary": "Create and return a tooltip that will be displayed when the user hovers a resource under the given [param path] in filesystem dock. The [param metadata] dictionary is provided by preview generator (see [method EditorResourcePreviewGenerator._generate]). [param base] is the base default tooltip, which is a [VBoxContainer] with a file name, type and size labels. If another plugin handled the same file type, [param base] will be output from the previous plugin. For best result, make sure the base tooltip is part of the returned [Control]. [b]Note:[/b] It\u0027s unadvised to use [method ResourceLoader.load], especially with heavy resources like models or textures, because it will make the editor unresponsive when creating the tooltip. You can use [method request_thumbnail] if you want to display a preview in your tooltip. [b]Note:[/b] If you decide to discard the [param base], make sure to call [method Node.queue_free], because it\u0027s not freed automatically. [codeblock] func _make_tooltip_for_path(path, metadata, base): var t_rect = TextureRect.new() request_thumbnail(path, t_rect) base.add_child(t_rect) # The TextureRect will appear at the bottom of the tooltip. return base [/codeblock]",
+      "godotName": "_make_tooltip_for_path",
+      "xmlDocId": "M:Godot.EditorResourceTooltipPlugin._MakeTooltipForPath(String,Dictionary,Control)",
+      "sourcePath": "doc/classes/EditorResourceTooltipPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorResourceTooltipPlugin.xml",
+      "sha256": "26bc1db5f70a6880ccfd923dcc94386e02afaf4e6873f64ea47a344b5ab1e267"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicalBone3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicalBone3D",
+    "kind": "class",
+    "baseType": "PhysicsBody3D",
+    "interfaces": [],
+    "godotReference": "PhysicalBone3D",
+    "documentationPath": "doc/classes/PhysicalBone3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicalbone3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces(PhysicsDirectBodyState3D state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "PhysicsDirectBodyState3D"
+        }
+      ],
+      "summary": "Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it is called before the standard force integration, but the [member custom_integrator] property allows you to disable the standard force integration and do fully custom force integration for a body.",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicalBone3D._IntegrateForces(PhysicsDirectBodyState3D)",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyCentralImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Applies a directional impulse without affecting rotation. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_integrate_forces\u0022 functions otherwise). This is equivalent to using [method apply_impulse] at the body\u0027s center of mass.",
+      "godotName": "apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicalBone3D.ApplyCentralImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void ApplyImpulse(Vector3 impulse, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned impulse to the PhysicsBone3D. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_integrate_forces\u0022 functions otherwise). [param position] is the offset from the PhysicsBone3D origin in global coordinates.",
+      "godotName": "apply_impulse",
+      "xmlDocId": "M:Godot.PhysicalBone3D.ApplyImpulse(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "GetBoneId",
+      "kind": "Method",
+      "signature": "public int GetBoneId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the unique identifier of the PhysicsBone3D.",
+      "godotName": "get_bone_id",
+      "xmlDocId": "M:Godot.PhysicalBone3D.GetBoneId",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "GetSimulatePhysics",
+      "kind": "Method",
+      "signature": "public bool GetSimulatePhysics()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the PhysicsBone3D is allowed to simulate physics.",
+      "godotName": "get_simulate_physics",
+      "xmlDocId": "M:Godot.PhysicalBone3D.GetSimulatePhysics",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "IsSimulatingPhysics",
+      "kind": "Method",
+      "signature": "public bool IsSimulatingPhysics()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the PhysicsBone3D is currently simulating physics.",
+      "godotName": "is_simulating_physics",
+      "xmlDocId": "M:Godot.PhysicalBone3D.IsSimulatingPhysics",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "AngularDamp",
+      "kind": "Property",
+      "signature": "public float AngularDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Damps the body\u0027s rotation. By default, the body will use the [member ProjectSettings.physics/3d/default_angular_damp] project setting or any value override set by an [Area3D] the body is in. Depending on [member angular_damp_mode], you can set [member angular_damp] to be added to or to replace the body\u0027s damping value. See [member ProjectSettings.physics/3d/default_angular_damp] for more details about damping.",
+      "defaultValue": "0.0",
+      "godotName": "angular_damp",
+      "xmlDocId": "P:Godot.PhysicalBone3D.AngularDamp",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "AngularDampMode",
+      "kind": "Property",
+      "signature": "public int AngularDampMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines how [member angular_damp] is applied.",
+      "defaultValue": "0",
+      "godotName": "angular_damp_mode",
+      "xmlDocId": "P:Godot.PhysicalBone3D.AngularDampMode",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 AngularVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The PhysicalBone3D\u0027s rotational velocity in [i]radians[/i] per second.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "angular_velocity",
+      "xmlDocId": "P:Godot.PhysicalBone3D.AngularVelocity",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "BodyOffset",
+      "kind": "Property",
+      "signature": "public Transform3D BodyOffset { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Sets the body\u0027s transform.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "body_offset",
+      "xmlDocId": "P:Godot.PhysicalBone3D.BodyOffset",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "Bounce",
+      "kind": "Property",
+      "signature": "public float Bounce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s bounciness. Values range from [code]0[/code] (no bounce) to [code]1[/code] (full bounciness). [b]Note:[/b] Even with [member bounce] set to [code]1.0[/code], some energy will be lost over time due to linear and angular damping. To have a [PhysicalBone3D] that preserves all its energy over time, set [member bounce] to [code]1.0[/code], [member linear_damp_mode] to [constant DAMP_MODE_REPLACE], [member linear_damp] to [code]0.0[/code], [member angular_damp_mode] to [constant DAMP_MODE_REPLACE], and [member angular_damp] to [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "bounce",
+      "xmlDocId": "P:Godot.PhysicalBone3D.Bounce",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "CanSleep",
+      "kind": "Property",
+      "signature": "public bool CanSleep { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body is deactivated when there is no movement, so it will not take part in the simulation until it is awakened by an external force.",
+      "defaultValue": "true",
+      "godotName": "can_sleep",
+      "xmlDocId": "P:Godot.PhysicalBone3D.CanSleep",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "CustomIntegrator",
+      "kind": "Property",
+      "signature": "public bool CustomIntegrator { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the standard force integration (like gravity or damping) will be disabled for this body. Other than collision response, the body will only move as determined by the [method _integrate_forces] method, if that virtual method is overridden. Setting this property will call the method [method PhysicsServer3D.body_set_omit_force_integration] internally.",
+      "defaultValue": "false",
+      "godotName": "custom_integrator",
+      "xmlDocId": "P:Godot.PhysicalBone3D.CustomIntegrator",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "Friction",
+      "kind": "Property",
+      "signature": "public float Friction { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s friction, from [code]0[/code] (frictionless) to [code]1[/code] (max friction).",
+      "defaultValue": "1.0",
+      "godotName": "friction",
+      "xmlDocId": "P:Godot.PhysicalBone3D.Friction",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "GravityScale",
+      "kind": "Property",
+      "signature": "public float GravityScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "This is multiplied by [member ProjectSettings.physics/3d/default_gravity] to produce this body\u0027s gravity. For example, a value of [code]1.0[/code] will apply normal gravity, [code]2.0[/code] will apply double the gravity, and [code]0.5[/code] will apply half the gravity to this body.",
+      "defaultValue": "1.0",
+      "godotName": "gravity_scale",
+      "xmlDocId": "P:Godot.PhysicalBone3D.GravityScale",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JointOffset",
+      "kind": "Property",
+      "signature": "public Transform3D JointOffset { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Sets the joint\u0027s transform.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "joint_offset",
+      "xmlDocId": "P:Godot.PhysicalBone3D.JointOffset",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JointRotation",
+      "kind": "Property",
+      "signature": "public Vector3 JointRotation { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Sets the joint\u0027s rotation in radians.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "joint_rotation",
+      "xmlDocId": "P:Godot.PhysicalBone3D.JointRotation",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JointType",
+      "kind": "Property",
+      "signature": "public int JointType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the joint type.",
+      "defaultValue": "0",
+      "godotName": "joint_type",
+      "xmlDocId": "P:Godot.PhysicalBone3D.JointType",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "LinearDamp",
+      "kind": "Property",
+      "signature": "public float LinearDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Damps the body\u0027s movement. By default, the body will use [member ProjectSettings.physics/3d/default_linear_damp] or any value override set by an [Area3D] the body is in. Depending on [member linear_damp_mode], [member linear_damp] may be added to or replace the body\u0027s damping value. See [member ProjectSettings.physics/3d/default_linear_damp] for more details about damping.",
+      "defaultValue": "0.0",
+      "godotName": "linear_damp",
+      "xmlDocId": "P:Godot.PhysicalBone3D.LinearDamp",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "LinearDampMode",
+      "kind": "Property",
+      "signature": "public int LinearDampMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines how [member linear_damp] is applied.",
+      "defaultValue": "0",
+      "godotName": "linear_damp_mode",
+      "xmlDocId": "P:Godot.PhysicalBone3D.LinearDampMode",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 LinearVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The body\u0027s linear velocity in units per second. Can be used sporadically, but [b]don\u0027t set this every frame[/b], because physics may run in another thread and runs at a different granularity. Use [method _integrate_forces] as your process loop for precise control of the body state.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "linear_velocity",
+      "xmlDocId": "P:Godot.PhysicalBone3D.LinearVelocity",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public float Mass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s mass.",
+      "defaultValue": "1.0",
+      "godotName": "mass",
+      "xmlDocId": "P:Godot.PhysicalBone3D.Mass",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DampMode",
+      "values": [
+        {
+          "name": "DAMP_MODE_COMBINE",
+          "value": "0",
+          "enum": "DampMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s damping value is added to any value set in areas or the default value.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "DAMP_MODE_REPLACE",
+          "value": "1",
+          "enum": "DampMode",
+          "kind": "EnumValue",
+          "summary": "In this mode, the body\u0027s damping value replaces any value set in areas or the default value.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "JointType",
+      "values": [
+        {
+          "name": "JOINT_TYPE_6DOF",
+          "value": "5",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "A 6 degrees of freedom joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_CONE",
+          "value": "2",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "A cone joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_HINGE",
+          "value": "3",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "A hinge joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_NONE",
+          "value": "0",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "No joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_PIN",
+          "value": "1",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "A pin joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_SLIDER",
+          "value": "4",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "A slider joint is applied to the PhysicsBone3D.",
+          "sourcePath": "doc/classes/PhysicalBone3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DAMP_MODE_COMBINE",
+      "value": "0",
+      "enum": "DampMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s damping value is added to any value set in areas or the default value.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "DAMP_MODE_REPLACE",
+      "value": "1",
+      "enum": "DampMode",
+      "kind": "EnumValue",
+      "summary": "In this mode, the body\u0027s damping value replaces any value set in areas or the default value.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_NONE",
+      "value": "0",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "No joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_PIN",
+      "value": "1",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "A pin joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_CONE",
+      "value": "2",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "A cone joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_HINGE",
+      "value": "3",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "A hinge joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_SLIDER",
+      "value": "4",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "A slider joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_6DOF",
+      "value": "5",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "A 6 degrees of freedom joint is applied to the PhysicsBone3D.",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces(PhysicsDirectBodyState3D state)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "PhysicsDirectBodyState3D"
+        }
+      ],
+      "summary": "Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it is called before the standard force integration, but the [member custom_integrator] property allows you to disable the standard force integration and do fully custom force integration for a body.",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicalBone3D._IntegrateForces(PhysicsDirectBodyState3D)",
+      "sourcePath": "doc/classes/PhysicalBone3D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicalBone3D.xml",
+      "sha256": "a75202fdfc95bb46d527dc11565d86ffc26b58ad625b3081008cf5de1f3a2255"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

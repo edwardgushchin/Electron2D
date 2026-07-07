@@ -1,0 +1,1671 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRInterface",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRInterface",
+    "kind": "class",
+    "baseType": "XRInterface",
+    "interfaces": [],
+    "godotReference": "OpenXRInterface",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRInterface.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrinterface.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetActionSets",
+      "kind": "Method",
+      "signature": "public Array GetActionSets()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns a list of action sets registered with Godot (loaded from the action map at runtime).",
+      "godotName": "get_action_sets",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetActionSets",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetAvailableDisplayRefreshRates",
+      "kind": "Method",
+      "signature": "public Array GetAvailableDisplayRefreshRates()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns a list of display refresh rates supported by the current HMD. Only returned if this feature is supported by the OpenXR runtime and after the interface has been initialized.",
+      "godotName": "get_available_display_refresh_rates",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetAvailableDisplayRefreshRates",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointAngularVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetHandJointAngularVelocity(int hand, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns the angular velocity of a joint ([param joint]) of a hand ([param hand]) as provided by OpenXR. This is relative to [XROrigin3D]!",
+      "godotName": "get_hand_joint_angular_velocity",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointAngularVelocity(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointFlags",
+      "kind": "Method",
+      "signature": "public int GetHandJointFlags(int hand, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns flags that inform us of the validity of the tracking data.",
+      "godotName": "get_hand_joint_flags",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointFlags(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetHandJointLinearVelocity(int hand, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns the linear velocity of a joint ([param joint]) of a hand ([param hand]) as provided by OpenXR. This is relative to [XROrigin3D] without worldscale applied!",
+      "godotName": "get_hand_joint_linear_velocity",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointLinearVelocity(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetHandJointPosition(int hand, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns the position of a joint ([param joint]) of a hand ([param hand]) as provided by OpenXR. This is relative to [XROrigin3D] without worldscale applied!",
+      "godotName": "get_hand_joint_position",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointPosition(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointRadius",
+      "kind": "Method",
+      "signature": "public float GetHandJointRadius(int hand, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns the radius of a joint ([param joint]) of a hand ([param hand]) as provided by OpenXR. This is without worldscale applied!",
+      "godotName": "get_hand_joint_radius",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointRadius(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandJointRotation",
+      "kind": "Method",
+      "signature": "public Quaternion GetHandJointRotation(int hand, int joint)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled, returns the rotation of a joint ([param joint]) of a hand ([param hand]) as provided by OpenXR.",
+      "godotName": "get_hand_joint_rotation",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandJointRotation(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetHandTrackingSource",
+      "kind": "Method",
+      "signature": "public int GetHandTrackingSource(int hand)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled and hand tracking source is supported, gets the source of the hand tracking data for [param hand].",
+      "godotName": "get_hand_tracking_source",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetHandTrackingSource(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetMotionRange",
+      "kind": "Method",
+      "signature": "public int GetMotionRange(int hand)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled and motion range is supported, gets the currently configured motion range for [param hand].",
+      "godotName": "get_motion_range",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetMotionRange(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GetSessionState",
+      "kind": "Method",
+      "signature": "public int GetSessionState()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current state of our OpenXR session.",
+      "godotName": "get_session_state",
+      "xmlDocId": "M:Godot.OpenXRInterface.GetSessionState",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsActionSetActive",
+      "kind": "Method",
+      "signature": "public bool IsActionSetActive(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given action set is active.",
+      "godotName": "is_action_set_active",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsActionSetActive(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsEyeGazeInteractionSupported",
+      "kind": "Method",
+      "signature": "public bool IsEyeGazeInteractionSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns the capabilities of the eye gaze interaction extension. [b]Note:[/b] This only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_eye_gaze_interaction_supported",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsEyeGazeInteractionSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsFoveationSupported",
+      "kind": "Method",
+      "signature": "public bool IsFoveationSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR\u0027s foveation extension is supported. The interface must be initialized before this returns a valid value. [b]Note:[/b] When using the Vulkan rendering driver, [member Viewport.vrs_mode] must be set to [constant Viewport.VRS_XR] to support foveation.",
+      "godotName": "is_foveation_supported",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsFoveationSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsHandInteractionSupported",
+      "kind": "Method",
+      "signature": "public bool IsHandInteractionSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR\u0027s hand interaction profile is supported and enabled. [b]Note:[/b] This only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_hand_interaction_supported",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsHandInteractionSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsHandTrackingSupported",
+      "kind": "Method",
+      "signature": "public bool IsHandTrackingSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR\u0027s hand tracking is supported and enabled. [b]Note:[/b] This only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_hand_tracking_supported",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsHandTrackingSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsUserPresenceSupported",
+      "kind": "Method",
+      "signature": "public bool IsUserPresenceSupported()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if OpenXR\u0027s user presence extension is supported and enabled. [b]Note:[/b] This only returns a valid value after OpenXR has been initialized.",
+      "godotName": "is_user_presence_supported",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsUserPresenceSupported",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "IsUserPresent",
+      "kind": "Method",
+      "signature": "public bool IsUserPresent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if system has detected the presence of a user in the XR experience.",
+      "godotName": "is_user_present",
+      "xmlDocId": "M:Godot.OpenXRInterface.IsUserPresent",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SetActionSetActive",
+      "kind": "Method",
+      "signature": "public void SetActionSetActive(String name, bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the given action set as active or inactive.",
+      "godotName": "set_action_set_active",
+      "xmlDocId": "M:Godot.OpenXRInterface.SetActionSetActive(String,bool)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SetCpuLevel",
+      "kind": "Method",
+      "signature": "public void SetCpuLevel(int level)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the CPU performance level of the OpenXR device.",
+      "godotName": "set_cpu_level",
+      "xmlDocId": "M:Godot.OpenXRInterface.SetCpuLevel(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SetGpuLevel",
+      "kind": "Method",
+      "signature": "public void SetGpuLevel(int level)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the GPU performance level of the OpenXR device.",
+      "godotName": "set_gpu_level",
+      "xmlDocId": "M:Godot.OpenXRInterface.SetGpuLevel(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SetMotionRange",
+      "kind": "Method",
+      "signature": "public void SetMotionRange(int hand, int motionRange)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "hand",
+          "type": "int"
+        },
+        {
+          "name": "motion_range",
+          "type": "int"
+        }
+      ],
+      "summary": "If handtracking is enabled and motion range is supported, sets the currently configured motion range for [param hand] to [param motion_range].",
+      "godotName": "set_motion_range",
+      "xmlDocId": "M:Godot.OpenXRInterface.SetMotionRange(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "DisplayRefreshRate",
+      "kind": "Property",
+      "signature": "public float DisplayRefreshRate { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The display refresh rate for the current HMD. Only functional if this feature is supported by the OpenXR runtime and after the interface has been initialized.",
+      "defaultValue": "0.0",
+      "godotName": "display_refresh_rate",
+      "xmlDocId": "P:Godot.OpenXRInterface.DisplayRefreshRate",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "FoveationDynamic",
+      "kind": "Property",
+      "signature": "public bool FoveationDynamic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables dynamic foveation adjustment. The interface must be initialized before this is accessible. If enabled, foveation will automatically be adjusted between low and [member foveation_level].",
+      "defaultValue": "false",
+      "godotName": "foveation_dynamic",
+      "xmlDocId": "P:Godot.OpenXRInterface.FoveationDynamic",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "FoveationLevel",
+      "kind": "Property",
+      "signature": "public int FoveationLevel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The foveation level, from [code]0[/code] (off) to [code]3[/code] (high). The interface must be initialized before this is accessible.",
+      "defaultValue": "0",
+      "godotName": "foveation_level",
+      "xmlDocId": "P:Godot.OpenXRInterface.FoveationLevel",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "FoveationWithSubsampledImages",
+      "kind": "Property",
+      "signature": "public bool FoveationWithSubsampledImages { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables subsampled images with foveation, which can provide a performance boost on Vulkan.",
+      "defaultValue": "false",
+      "godotName": "foveation_with_subsampled_images",
+      "xmlDocId": "P:Godot.OpenXRInterface.FoveationWithSubsampledImages",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "RenderTargetSizeMultiplier",
+      "kind": "Property",
+      "signature": "public float RenderTargetSizeMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The render size multiplier for the current HMD. Must be set before the interface has been initialized.",
+      "defaultValue": "1.0",
+      "godotName": "render_target_size_multiplier",
+      "xmlDocId": "P:Godot.OpenXRInterface.RenderTargetSizeMultiplier",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "VrsMinRadius",
+      "kind": "Property",
+      "signature": "public float VrsMinRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum radius around the focal point where full quality is guaranteed if VRS is used as a percentage of screen size. [b]Note:[/b] Mobile and Forward\u002B renderers only. Requires [member Viewport.vrs_mode] to be set to [constant Viewport.VRS_XR].",
+      "defaultValue": "20.0",
+      "godotName": "vrs_min_radius",
+      "xmlDocId": "P:Godot.OpenXRInterface.VrsMinRadius",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "VrsStrength",
+      "kind": "Property",
+      "signature": "public float VrsStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength used to calculate the VRS density map. The greater this value, the more noticeable VRS is. This improves performance at the cost of quality. [b]Note:[/b] Mobile and Forward\u002B renderers only. Requires [member Viewport.vrs_mode] to be set to [constant Viewport.VRS_XR].",
+      "defaultValue": "1.0",
+      "godotName": "vrs_strength",
+      "xmlDocId": "P:Godot.OpenXRInterface.VrsStrength",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "CpuLevelChanged",
+      "kind": "Signal",
+      "signature": "public event CpuLevelChangedHandler CpuLevelChanged",
+      "parameters": [
+        {
+          "name": "sub_domain",
+          "type": "int"
+        },
+        {
+          "name": "from_level",
+          "type": "int"
+        },
+        {
+          "name": "to_level",
+          "type": "int"
+        }
+      ],
+      "summary": "Informs the device CPU performance level has changed in the specified subdomain.",
+      "godotName": "cpu_level_changed",
+      "xmlDocId": "E:Godot.OpenXRInterface.CpuLevelChanged(int,int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "GpuLevelChanged",
+      "kind": "Signal",
+      "signature": "public event GpuLevelChangedHandler GpuLevelChanged",
+      "parameters": [
+        {
+          "name": "sub_domain",
+          "type": "int"
+        },
+        {
+          "name": "from_level",
+          "type": "int"
+        },
+        {
+          "name": "to_level",
+          "type": "int"
+        }
+      ],
+      "summary": "Informs the device GPU performance level has changed in the specified subdomain.",
+      "godotName": "gpu_level_changed",
+      "xmlDocId": "E:Godot.OpenXRInterface.GpuLevelChanged(int,int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "InstanceExiting",
+      "kind": "Signal",
+      "signature": "public event InstanceExitingHandler InstanceExiting",
+      "parameters": [],
+      "summary": "Informs our OpenXR instance is exiting.",
+      "godotName": "instance_exiting",
+      "xmlDocId": "E:Godot.OpenXRInterface.InstanceExiting",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PoseRecentered",
+      "kind": "Signal",
+      "signature": "public event PoseRecenteredHandler PoseRecentered",
+      "parameters": [],
+      "summary": "Informs the user queued a recenter of the player position.",
+      "godotName": "pose_recentered",
+      "xmlDocId": "E:Godot.OpenXRInterface.PoseRecentered",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "RefreshRateChanged",
+      "kind": "Signal",
+      "signature": "public event RefreshRateChangedHandler RefreshRateChanged",
+      "parameters": [
+        {
+          "name": "refresh_rate",
+          "type": "float"
+        }
+      ],
+      "summary": "Informs the user the HMD refresh rate has changed. [b]Note:[/b] Only emitted if XR runtime supports the refresh rate extension.",
+      "godotName": "refresh_rate_changed",
+      "xmlDocId": "E:Godot.OpenXRInterface.RefreshRateChanged(float)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionBegun",
+      "kind": "Signal",
+      "signature": "public event SessionBegunHandler SessionBegun",
+      "parameters": [],
+      "summary": "Informs our OpenXR session has been started.",
+      "godotName": "session_begun",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionBegun",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionFocussed",
+      "kind": "Signal",
+      "signature": "public event SessionFocussedHandler SessionFocussed",
+      "parameters": [],
+      "summary": "Informs our OpenXR session now has focus, for example output is sent to the HMD and we\u0027re receiving XR input.",
+      "godotName": "session_focussed",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionFocussed",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionLossPending",
+      "kind": "Signal",
+      "signature": "public event SessionLossPendingHandler SessionLossPending",
+      "parameters": [],
+      "summary": "Informs our OpenXR session is in the process of being lost.",
+      "godotName": "session_loss_pending",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionLossPending",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionStopping",
+      "kind": "Signal",
+      "signature": "public event SessionStoppingHandler SessionStopping",
+      "parameters": [],
+      "summary": "Informs our OpenXR session is stopping.",
+      "godotName": "session_stopping",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionStopping",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionSynchronized",
+      "kind": "Signal",
+      "signature": "public event SessionSynchronizedHandler SessionSynchronized",
+      "parameters": [],
+      "summary": "Informs our OpenXR session has been synchronized.",
+      "godotName": "session_synchronized",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionSynchronized",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SessionVisible",
+      "kind": "Signal",
+      "signature": "public event SessionVisibleHandler SessionVisible",
+      "parameters": [],
+      "summary": "Informs our OpenXR session is now visible, for example output is sent to the HMD but we don\u0027t receive XR input.",
+      "godotName": "session_visible",
+      "xmlDocId": "E:Godot.OpenXRInterface.SessionVisible",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "UserPresenceChanged",
+      "kind": "Signal",
+      "signature": "public event UserPresenceChangedHandler UserPresenceChanged",
+      "parameters": [
+        {
+          "name": "is_user_present",
+          "type": "bool"
+        }
+      ],
+      "summary": "Signal emitted when the user presence value changes. [b]Note:[/b] This signal will not be emitted during application startup and application shutdown. Developers should assume user presence is gained on startup and lost on shutdown.",
+      "godotName": "user_presence_changed",
+      "xmlDocId": "E:Godot.OpenXRInterface.UserPresenceChanged(bool)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "Hand",
+      "values": [
+        {
+          "name": "HAND_LEFT",
+          "value": "0",
+          "enum": "Hand",
+          "kind": "EnumValue",
+          "summary": "Left hand.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_MAX",
+          "value": "2",
+          "enum": "Hand",
+          "kind": "EnumValue",
+          "summary": "Maximum value for the hand enum.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_RIGHT",
+          "value": "1",
+          "enum": "Hand",
+          "kind": "EnumValue",
+          "summary": "Right hand.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandJointFlags",
+      "values": [
+        {
+          "name": "HAND_JOINT_ANGULAR_VELOCITY_VALID",
+          "value": "32",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, our angular velocity data is valid, otherwise, the angular velocity data is unreliable and should not be used.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LINEAR_VELOCITY_VALID",
+          "value": "16",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, our linear velocity data is valid, otherwise, the linear velocity data is unreliable and should not be used.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_NONE",
+          "value": "0",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "No flags are set.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_ORIENTATION_TRACKED",
+          "value": "2",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, the orientation data comes from tracking data, otherwise, the orientation data contains predicted data.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_ORIENTATION_VALID",
+          "value": "1",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, the orientation data is valid, otherwise, the orientation data is unreliable and should not be used.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_POSITION_TRACKED",
+          "value": "8",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, the positional data comes from tracking data, otherwise, the positional data contains predicted data.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_POSITION_VALID",
+          "value": "4",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "If set, the positional data is valid, otherwise, the positional data is unreliable and should not be used.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandJoints",
+      "values": [
+        {
+          "name": "HAND_JOINT_INDEX_DISTAL",
+          "value": "9",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx distal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_INTERMEDIATE",
+          "value": "8",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx intermediate joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_METACARPAL",
+          "value": "6",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Index finger metacarpal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_PROXIMAL",
+          "value": "7",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx proximal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_TIP",
+          "value": "10",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Index finger tip joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LITTLE_DISTAL",
+          "value": "24",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx distal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LITTLE_INTERMEDIATE",
+          "value": "23",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx intermediate joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LITTLE_METACARPAL",
+          "value": "21",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Pinky finger metacarpal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LITTLE_PROXIMAL",
+          "value": "22",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx proximal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_LITTLE_TIP",
+          "value": "25",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Pinky finger tip joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MAX",
+          "value": "26",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum HandJoints] enum.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_DISTAL",
+          "value": "14",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx distal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_INTERMEDIATE",
+          "value": "13",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx intermediate joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_METACARPAL",
+          "value": "11",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Middle finger metacarpal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_PROXIMAL",
+          "value": "12",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx proximal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_TIP",
+          "value": "15",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Middle finger tip joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_PALM",
+          "value": "0",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Palm joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_DISTAL",
+          "value": "19",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx distal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_INTERMEDIATE",
+          "value": "18",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx intermediate joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_METACARPAL",
+          "value": "16",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Ring finger metacarpal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_PROXIMAL",
+          "value": "17",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx proximal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_TIP",
+          "value": "20",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Ring finger tip joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_DISTAL",
+          "value": "4",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Thumb distal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_METACARPAL",
+          "value": "2",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Thumb metacarpal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_PROXIMAL",
+          "value": "3",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Thumb proximal joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_TIP",
+          "value": "5",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Thumb tip joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_JOINT_WRIST",
+          "value": "1",
+          "enum": "HandJoints",
+          "kind": "EnumValue",
+          "summary": "Wrist joint.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandMotionRange",
+      "values": [
+        {
+          "name": "HAND_MOTION_RANGE_CONFORM_TO_CONTROLLER",
+          "value": "1",
+          "enum": "HandMotionRange",
+          "kind": "EnumValue",
+          "summary": "Conform to controller, if user closes their hands, the tracked data conforms to the shape of the controller.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_MOTION_RANGE_MAX",
+          "value": "2",
+          "enum": "HandMotionRange",
+          "kind": "EnumValue",
+          "summary": "Maximum value for the motion range enum.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_MOTION_RANGE_UNOBSTRUCTED",
+          "value": "0",
+          "enum": "HandMotionRange",
+          "kind": "EnumValue",
+          "summary": "Full hand range, if user closes their hands, we make a full fist.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandTrackedSource",
+      "values": [
+        {
+          "name": "HAND_TRACKED_SOURCE_CONTROLLER",
+          "value": "2",
+          "enum": "HandTrackedSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking is a controller, bone positions are inferred from controller inputs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_TRACKED_SOURCE_MAX",
+          "value": "3",
+          "enum": "HandTrackedSource",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum HandTrackedSource] enum.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_TRACKED_SOURCE_UNKNOWN",
+          "value": "0",
+          "enum": "HandTrackedSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking data is unknown (the extension is likely unsupported).",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "HAND_TRACKED_SOURCE_UNOBSTRUCTED",
+          "value": "1",
+          "enum": "HandTrackedSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking is unobstructed, this means that an accurate method of hand tracking is used, e.g. optical hand tracking, data gloves, etc.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "PerfSettingsLevel",
+      "values": [
+        {
+          "name": "PERF_SETTINGS_LEVEL_BOOST",
+          "value": "3",
+          "enum": "PerfSettingsLevel",
+          "kind": "EnumValue",
+          "summary": "The application has entered a section with very high complexity, during which the XR Runtime is allowed to step up beyond the thermally sustainable range.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_LEVEL_POWER_SAVINGS",
+          "value": "0",
+          "enum": "PerfSettingsLevel",
+          "kind": "EnumValue",
+          "summary": "The application has entered a non-XR section (head-locked / static screen), during which power savings are to be prioritized.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_LEVEL_SUSTAINED_HIGH",
+          "value": "2",
+          "enum": "PerfSettingsLevel",
+          "kind": "EnumValue",
+          "summary": "The application has entered a high or dynamic complexity section, during which the XR Runtime strives for consistent XR compositing and frame rendering within a thermally sustainable range.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_LEVEL_SUSTAINED_LOW",
+          "value": "1",
+          "enum": "PerfSettingsLevel",
+          "kind": "EnumValue",
+          "summary": "The application has entered a low and stable complexity section, during which reducing power is more important than occasional late rendering frames.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "PerfSettingsNotificationLevel",
+      "values": [
+        {
+          "name": "PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED",
+          "value": "2",
+          "enum": "PerfSettingsNotificationLevel",
+          "kind": "EnumValue",
+          "summary": "The sub-domain has reached a critical level where the application should start drastic mitigation actions.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_NOTIF_LEVEL_NORMAL",
+          "value": "0",
+          "enum": "PerfSettingsNotificationLevel",
+          "kind": "EnumValue",
+          "summary": "The sub-domain has reached a level where no further actions other than currently applied are necessary.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_NOTIF_LEVEL_WARNING",
+          "value": "1",
+          "enum": "PerfSettingsNotificationLevel",
+          "kind": "EnumValue",
+          "summary": "The sub-domain has reached an early warning level where the application should start proactive mitigation actions.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "PerfSettingsSubDomain",
+      "values": [
+        {
+          "name": "PERF_SETTINGS_SUB_DOMAIN_COMPOSITING",
+          "value": "0",
+          "enum": "PerfSettingsSubDomain",
+          "kind": "EnumValue",
+          "summary": "The compositing performance within the runtime has reached a new level.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_SUB_DOMAIN_RENDERING",
+          "value": "1",
+          "enum": "PerfSettingsSubDomain",
+          "kind": "EnumValue",
+          "summary": "The application rendering performance has reached a new level.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "PERF_SETTINGS_SUB_DOMAIN_THERMAL",
+          "value": "2",
+          "enum": "PerfSettingsSubDomain",
+          "kind": "EnumValue",
+          "summary": "The temperature of the device has reached a new level.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    },
+    {
+      "name": "SessionState",
+      "values": [
+        {
+          "name": "SESSION_STATE_EXITING",
+          "value": "8",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The OpenXR instance is about to be destroyed and we\u0027re exiting. [signal instance_exiting] is emitted when we change to this state.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_FOCUSED",
+          "value": "5",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The application has synched its frame loop with the runtime, we\u0027re rendering output to the user and we\u0027re receiving XR input. [signal session_focussed] is emitted when we change to this state. [b]Note:[/b] This is the state OpenXR will be in when the user can fully interact with your game.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_IDLE",
+          "value": "1",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The initial state after the OpenXR session is created or after the session is destroyed.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_LOSS_PENDING",
+          "value": "7",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The session is about to be lost. [signal session_loss_pending] is emitted when we change to this state.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_READY",
+          "value": "2",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "OpenXR is ready to begin our session. [signal session_begun] is emitted when we change to this state.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_STOPPING",
+          "value": "6",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "Our session is being stopped. [signal session_stopping] is emitted when we change to this state.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_SYNCHRONIZED",
+          "value": "3",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The application has synched its frame loop with the runtime but we\u0027re not rendering anything. [signal session_synchronized] is emitted when we change to this state.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_UNKNOWN",
+          "value": "0",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The state of the session is unknown, we haven\u0027t tried setting up OpenXR yet.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        },
+        {
+          "name": "SESSION_STATE_VISIBLE",
+          "value": "4",
+          "enum": "SessionState",
+          "kind": "EnumValue",
+          "summary": "The application has synched its frame loop with the runtime and we\u0027re rendering output to the user, however we receive no user input. [signal session_visible] is emitted when we change to this state. [b]Note:[/b] This is the current state just before we get the focused state, whenever the user opens a system menu, switches to another application, or takes off their headset.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SESSION_STATE_UNKNOWN",
+      "value": "0",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The state of the session is unknown, we haven\u0027t tried setting up OpenXR yet.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_IDLE",
+      "value": "1",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The initial state after the OpenXR session is created or after the session is destroyed.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_READY",
+      "value": "2",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "OpenXR is ready to begin our session. [signal session_begun] is emitted when we change to this state.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_SYNCHRONIZED",
+      "value": "3",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The application has synched its frame loop with the runtime but we\u0027re not rendering anything. [signal session_synchronized] is emitted when we change to this state.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_VISIBLE",
+      "value": "4",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The application has synched its frame loop with the runtime and we\u0027re rendering output to the user, however we receive no user input. [signal session_visible] is emitted when we change to this state. [b]Note:[/b] This is the current state just before we get the focused state, whenever the user opens a system menu, switches to another application, or takes off their headset.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_FOCUSED",
+      "value": "5",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The application has synched its frame loop with the runtime, we\u0027re rendering output to the user and we\u0027re receiving XR input. [signal session_focussed] is emitted when we change to this state. [b]Note:[/b] This is the state OpenXR will be in when the user can fully interact with your game.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_STOPPING",
+      "value": "6",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "Our session is being stopped. [signal session_stopping] is emitted when we change to this state.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_LOSS_PENDING",
+      "value": "7",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The session is about to be lost. [signal session_loss_pending] is emitted when we change to this state.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "SESSION_STATE_EXITING",
+      "value": "8",
+      "enum": "SessionState",
+      "kind": "EnumValue",
+      "summary": "The OpenXR instance is about to be destroyed and we\u0027re exiting. [signal instance_exiting] is emitted when we change to this state.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_LEFT",
+      "value": "0",
+      "enum": "Hand",
+      "kind": "EnumValue",
+      "summary": "Left hand.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_RIGHT",
+      "value": "1",
+      "enum": "Hand",
+      "kind": "EnumValue",
+      "summary": "Right hand.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_MAX",
+      "value": "2",
+      "enum": "Hand",
+      "kind": "EnumValue",
+      "summary": "Maximum value for the hand enum.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_MOTION_RANGE_UNOBSTRUCTED",
+      "value": "0",
+      "enum": "HandMotionRange",
+      "kind": "EnumValue",
+      "summary": "Full hand range, if user closes their hands, we make a full fist.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_MOTION_RANGE_CONFORM_TO_CONTROLLER",
+      "value": "1",
+      "enum": "HandMotionRange",
+      "kind": "EnumValue",
+      "summary": "Conform to controller, if user closes their hands, the tracked data conforms to the shape of the controller.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_MOTION_RANGE_MAX",
+      "value": "2",
+      "enum": "HandMotionRange",
+      "kind": "EnumValue",
+      "summary": "Maximum value for the motion range enum.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_TRACKED_SOURCE_UNKNOWN",
+      "value": "0",
+      "enum": "HandTrackedSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking data is unknown (the extension is likely unsupported).",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_TRACKED_SOURCE_UNOBSTRUCTED",
+      "value": "1",
+      "enum": "HandTrackedSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking is unobstructed, this means that an accurate method of hand tracking is used, e.g. optical hand tracking, data gloves, etc.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_TRACKED_SOURCE_CONTROLLER",
+      "value": "2",
+      "enum": "HandTrackedSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking is a controller, bone positions are inferred from controller inputs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_TRACKED_SOURCE_MAX",
+      "value": "3",
+      "enum": "HandTrackedSource",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum HandTrackedSource] enum.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_PALM",
+      "value": "0",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Palm joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_WRIST",
+      "value": "1",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Wrist joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_METACARPAL",
+      "value": "2",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Thumb metacarpal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_PROXIMAL",
+      "value": "3",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Thumb proximal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_DISTAL",
+      "value": "4",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Thumb distal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_TIP",
+      "value": "5",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Thumb tip joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_METACARPAL",
+      "value": "6",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Index finger metacarpal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_PROXIMAL",
+      "value": "7",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx proximal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_INTERMEDIATE",
+      "value": "8",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx intermediate joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_DISTAL",
+      "value": "9",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx distal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_TIP",
+      "value": "10",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Index finger tip joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_METACARPAL",
+      "value": "11",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Middle finger metacarpal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_PROXIMAL",
+      "value": "12",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx proximal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_INTERMEDIATE",
+      "value": "13",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx intermediate joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_DISTAL",
+      "value": "14",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx distal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_TIP",
+      "value": "15",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Middle finger tip joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_METACARPAL",
+      "value": "16",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Ring finger metacarpal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_PROXIMAL",
+      "value": "17",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx proximal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_INTERMEDIATE",
+      "value": "18",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx intermediate joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_DISTAL",
+      "value": "19",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx distal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_TIP",
+      "value": "20",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Ring finger tip joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LITTLE_METACARPAL",
+      "value": "21",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Pinky finger metacarpal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LITTLE_PROXIMAL",
+      "value": "22",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx proximal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LITTLE_INTERMEDIATE",
+      "value": "23",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx intermediate joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LITTLE_DISTAL",
+      "value": "24",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx distal joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LITTLE_TIP",
+      "value": "25",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Pinky finger tip joint.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_MAX",
+      "value": "26",
+      "enum": "HandJoints",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum HandJoints] enum.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_LEVEL_POWER_SAVINGS",
+      "value": "0",
+      "enum": "PerfSettingsLevel",
+      "kind": "EnumValue",
+      "summary": "The application has entered a non-XR section (head-locked / static screen), during which power savings are to be prioritized.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_LEVEL_SUSTAINED_LOW",
+      "value": "1",
+      "enum": "PerfSettingsLevel",
+      "kind": "EnumValue",
+      "summary": "The application has entered a low and stable complexity section, during which reducing power is more important than occasional late rendering frames.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_LEVEL_SUSTAINED_HIGH",
+      "value": "2",
+      "enum": "PerfSettingsLevel",
+      "kind": "EnumValue",
+      "summary": "The application has entered a high or dynamic complexity section, during which the XR Runtime strives for consistent XR compositing and frame rendering within a thermally sustainable range.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_LEVEL_BOOST",
+      "value": "3",
+      "enum": "PerfSettingsLevel",
+      "kind": "EnumValue",
+      "summary": "The application has entered a section with very high complexity, during which the XR Runtime is allowed to step up beyond the thermally sustainable range.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_SUB_DOMAIN_COMPOSITING",
+      "value": "0",
+      "enum": "PerfSettingsSubDomain",
+      "kind": "EnumValue",
+      "summary": "The compositing performance within the runtime has reached a new level.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_SUB_DOMAIN_RENDERING",
+      "value": "1",
+      "enum": "PerfSettingsSubDomain",
+      "kind": "EnumValue",
+      "summary": "The application rendering performance has reached a new level.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_SUB_DOMAIN_THERMAL",
+      "value": "2",
+      "enum": "PerfSettingsSubDomain",
+      "kind": "EnumValue",
+      "summary": "The temperature of the device has reached a new level.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_NOTIF_LEVEL_NORMAL",
+      "value": "0",
+      "enum": "PerfSettingsNotificationLevel",
+      "kind": "EnumValue",
+      "summary": "The sub-domain has reached a level where no further actions other than currently applied are necessary.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_NOTIF_LEVEL_WARNING",
+      "value": "1",
+      "enum": "PerfSettingsNotificationLevel",
+      "kind": "EnumValue",
+      "summary": "The sub-domain has reached an early warning level where the application should start proactive mitigation actions.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED",
+      "value": "2",
+      "enum": "PerfSettingsNotificationLevel",
+      "kind": "EnumValue",
+      "summary": "The sub-domain has reached a critical level where the application should start drastic mitigation actions.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_NONE",
+      "value": "0",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "No flags are set.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_ORIENTATION_VALID",
+      "value": "1",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, the orientation data is valid, otherwise, the orientation data is unreliable and should not be used.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_ORIENTATION_TRACKED",
+      "value": "2",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, the orientation data comes from tracking data, otherwise, the orientation data contains predicted data.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_POSITION_VALID",
+      "value": "4",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, the positional data is valid, otherwise, the positional data is unreliable and should not be used.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_POSITION_TRACKED",
+      "value": "8",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, the positional data comes from tracking data, otherwise, the positional data contains predicted data.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_LINEAR_VELOCITY_VALID",
+      "value": "16",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, our linear velocity data is valid, otherwise, the linear velocity data is unreliable and should not be used.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    },
+    {
+      "name": "HAND_JOINT_ANGULAR_VELOCITY_VALID",
+      "value": "32",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "If set, our angular velocity data is valid, otherwise, the angular velocity data is unreliable and should not be used.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInterface.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRInterface.xml",
+      "sha256": "aeaa6d72b13415ed02285cfadfd2686be403bf603d34107c04b50945adc5e26d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

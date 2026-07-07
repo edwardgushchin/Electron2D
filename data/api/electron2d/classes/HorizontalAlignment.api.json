@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HorizontalAlignment",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.HorizontalAlignment",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "HorizontalAlignment",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Center",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.HorizontalAlignment Center",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Align text to the center of the available width.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.HorizontalAlignment.Center",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Fill",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.HorizontalAlignment Fill",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Expand text spacing to fill the available width when supported.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.HorizontalAlignment.Fill",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.HorizontalAlignment Left",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Align text to the left side of the available width.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.HorizontalAlignment.Left",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.HorizontalAlignment Right",
+      "returnType": "Electron2D.HorizontalAlignment",
+      "parameters": [],
+      "summary": "Align text to the right side of the available width.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.HorizontalAlignment.Right",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Center",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Align text to the center of the available width.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Fill",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Expand text spacing to fill the available width when supported.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Align text to the left side of the available width.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Align text to the right side of the available width.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

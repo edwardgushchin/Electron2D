@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventAction",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventAction",
+    "kind": "class",
+    "baseType": "Electron2D.InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventAction",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventAction",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventAction()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventAction type.",
+      "xmlDocId": "M:Electron2D.InputEventAction.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventAction",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventAction()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventAction type.",
+      "xmlDocId": "M:Electron2D.InputEventAction.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Action",
+      "kind": "Property",
+      "signature": "public System.String Action { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the action name carried by this event.",
+      "xmlDocId": "P:Electron2D.InputEventAction.Action",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public System.Boolean Pressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this event presses the action.",
+      "xmlDocId": "P:Electron2D.InputEventAction.Pressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Strength",
+      "kind": "Property",
+      "signature": "public System.Single Strength { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the action strength.",
+      "xmlDocId": "P:Electron2D.InputEventAction.Strength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

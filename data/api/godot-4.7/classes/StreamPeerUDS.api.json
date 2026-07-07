@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerUDS",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerUDS",
+    "kind": "class",
+    "baseType": "StreamPeerSocket",
+    "interfaces": [],
+    "godotReference": "StreamPeerUDS",
+    "documentationPath": "doc/classes/StreamPeerUDS.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeeruds.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bind",
+      "kind": "Method",
+      "signature": "public int Bind(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Opens the UDS socket, and binds it to the specified socket path. This method is generally not needed, and only used to force the subsequent call to [method connect_to_host] to use the specified [param path] as the source address.",
+      "godotName": "bind",
+      "xmlDocId": "M:Godot.StreamPeerUDS.Bind(String)",
+      "sourcePath": "doc/classes/StreamPeerUDS.xml"
+    },
+    {
+      "name": "ConnectToHost",
+      "kind": "Method",
+      "signature": "public int ConnectToHost(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Connects to the specified UNIX Domain Socket path. Returns [constant OK] on success.",
+      "godotName": "connect_to_host",
+      "xmlDocId": "M:Godot.StreamPeerUDS.ConnectToHost(String)",
+      "sourcePath": "doc/classes/StreamPeerUDS.xml"
+    },
+    {
+      "name": "GetConnectedPath",
+      "kind": "Method",
+      "signature": "public String GetConnectedPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the socket path of this peer.",
+      "godotName": "get_connected_path",
+      "xmlDocId": "M:Godot.StreamPeerUDS.GetConnectedPath",
+      "sourcePath": "doc/classes/StreamPeerUDS.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerUDS.xml",
+      "sha256": "9d473d691c9ffb7dad2960126ce8a41835736f82796974a470857564d7b29426"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

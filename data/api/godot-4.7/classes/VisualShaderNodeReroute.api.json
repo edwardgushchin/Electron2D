@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeReroute",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeReroute",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeReroute",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeReroute.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodereroute.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPortType",
+      "kind": "Method",
+      "signature": "public int GetPortType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the port type of the reroute node.",
+      "godotName": "get_port_type",
+      "xmlDocId": "M:Godot.VisualShaderNodeReroute.GetPortType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeReroute.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeReroute.xml",
+      "sha256": "9119b606d3a7343cd3246446d51179eba8adea4899aac88fbe060f89d0dfe214"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

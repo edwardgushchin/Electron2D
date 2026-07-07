@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventScreenDrag",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventScreenDrag",
+    "kind": "class",
+    "baseType": "InputEventFromWindow",
+    "interfaces": [],
+    "godotReference": "InputEventScreenDrag",
+    "documentationPath": "doc/classes/InputEventScreenDrag.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventscreendrag.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Index",
+      "kind": "Property",
+      "signature": "public int Index { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The drag event index in the case of a multi-drag event.",
+      "defaultValue": "0",
+      "godotName": "index",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Index",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "PenInverted",
+      "kind": "Property",
+      "signature": "public bool PenInverted { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when using the eraser end of a stylus pen.",
+      "defaultValue": "false",
+      "godotName": "pen_inverted",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.PenInverted",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The drag position in the viewport the node is in, using the coordinate system of this viewport.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Position",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "Pressure",
+      "kind": "Property",
+      "signature": "public float Pressure { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Represents the pressure the user puts on the pen. Ranges from [code]0.0[/code] to [code]1.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "pressure",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Pressure",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "Relative",
+      "kind": "Property",
+      "signature": "public Vector2 Relative { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The drag position relative to the previous position (position at the last frame). [b]Note:[/b] [member relative] is automatically scaled according to the content scale factor, which is defined by the project\u0027s stretch mode settings. This means touch sensitivity will appear different depending on resolution when using [member relative] in a script that handles touch aiming. To avoid this, use [member screen_relative] instead.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "relative",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Relative",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "ScreenRelative",
+      "kind": "Property",
+      "signature": "public Vector2 ScreenRelative { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The unscaled drag position relative to the previous position in screen coordinates (position at the last frame). This position is [i]not[/i] scaled according to the content scale factor or calls to [method InputEvent.xformed_by]. This should be preferred over [member relative] for touch aiming regardless of the project\u0027s stretch mode.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "screen_relative",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.ScreenRelative",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "ScreenVelocity",
+      "kind": "Property",
+      "signature": "public Vector2 ScreenVelocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The unscaled drag velocity in pixels per second in screen coordinates. This velocity is [i]not[/i] scaled according to the content scale factor or calls to [method InputEvent.xformed_by]. This should be preferred over [member velocity] for touch aiming regardless of the project\u0027s stretch mode.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "screen_velocity",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.ScreenVelocity",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "Tilt",
+      "kind": "Property",
+      "signature": "public Vector2 Tilt { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Represents the angles of tilt of the pen. Positive X-coordinate value indicates a tilt to the right. Positive Y-coordinate value indicates a tilt toward the user. Ranges from [code]-1.0[/code] to [code]1.0[/code] for both axes.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "tilt",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Tilt",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Vector2 Velocity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The drag velocity. [b]Note:[/b] [member velocity] is automatically scaled according to the content scale factor, which is defined by the project\u0027s stretch mode settings. This means touch sensitivity will appear different depending on resolution when using [member velocity] in a script that handles touch aiming. To avoid this, use [member screen_velocity] instead.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "velocity",
+      "xmlDocId": "P:Godot.InputEventScreenDrag.Velocity",
+      "sourcePath": "doc/classes/InputEventScreenDrag.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventScreenDrag.xml",
+      "sha256": "267804005ea9b01f97ac7c2112ae0d888c7690d7dfae6424ce4ab556d0df8d3f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

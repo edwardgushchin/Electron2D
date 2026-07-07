@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Container",
+    "namespace": "Godot",
+    "fullName": "Godot.Container",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "Container",
+    "documentationPath": "doc/classes/Container.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_container.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAllowedSizeFlagsHorizontal",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetAllowedSizeFlagsHorizontal()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Implement to return a list of allowed horizontal [enum Control.SizeFlags] for child nodes. This doesn\u0027t technically prevent the usages of any other size flags, if your implementation requires that. This only limits the options available to the user in the Inspector dock. [b]Note:[/b] Having no size flags is equal to having [constant Control.SIZE_SHRINK_BEGIN]. As such, this value is always implicitly allowed.",
+      "godotName": "_get_allowed_size_flags_horizontal",
+      "xmlDocId": "M:Godot.Container._GetAllowedSizeFlagsHorizontal",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "_GetAllowedSizeFlagsVertical",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetAllowedSizeFlagsVertical()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Implement to return a list of allowed vertical [enum Control.SizeFlags] for child nodes. This doesn\u0027t technically prevent the usages of any other size flags, if your implementation requires that. This only limits the options available to the user in the Inspector dock. [b]Note:[/b] Having no size flags is equal to having [constant Control.SIZE_SHRINK_BEGIN]. As such, this value is always implicitly allowed.",
+      "godotName": "_get_allowed_size_flags_vertical",
+      "xmlDocId": "M:Godot.Container._GetAllowedSizeFlagsVertical",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "FitChildInRect",
+      "kind": "Method",
+      "signature": "public void FitChildInRect(Control child, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "child",
+          "type": "Control"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Fit a child control in a given rect. This is mainly a helper for creating custom container classes.",
+      "godotName": "fit_child_in_rect",
+      "xmlDocId": "M:Godot.Container.FitChildInRect(Control,Rect2)",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "QueueSort",
+      "kind": "Method",
+      "signature": "public void QueueSort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Queue resort of the contained children. This is called automatically anyway, but can be called upon request.",
+      "godotName": "queue_sort",
+      "xmlDocId": "M:Godot.Container.QueueSort",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "AccessibilityRegion",
+      "kind": "Property",
+      "signature": "public bool AccessibilityRegion { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this container is marked as a region for accessibility. Use [member Control.accessibility_name] to give the region a descriptive name. Screen readers can navigate between regions using landmark navigation.",
+      "defaultValue": "false",
+      "godotName": "accessibility_region",
+      "xmlDocId": "P:Godot.Container.AccessibilityRegion",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.Container.MouseFilter",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "PropagateMaximumSize",
+      "kind": "Property",
+      "signature": "public bool PropagateMaximumSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "propagate_maximum_size",
+      "xmlDocId": "P:Godot.Container.PropagateMaximumSize",
+      "sourcePath": "doc/classes/Container.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PreSortChildren",
+      "kind": "Signal",
+      "signature": "public event PreSortChildrenHandler PreSortChildren",
+      "parameters": [],
+      "summary": "Emitted when children are going to be sorted.",
+      "godotName": "pre_sort_children",
+      "xmlDocId": "E:Godot.Container.PreSortChildren",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "SortChildren",
+      "kind": "Signal",
+      "signature": "public event SortChildrenHandler SortChildren",
+      "parameters": [],
+      "summary": "Emitted when sorting the children is needed.",
+      "godotName": "sort_children",
+      "xmlDocId": "E:Godot.Container.SortChildren",
+      "sourcePath": "doc/classes/Container.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [
+    {
+      "name": "NOTIFICATION_PRE_SORT_CHILDREN",
+      "value": "50",
+      "kind": "Constant",
+      "summary": "Notification just before children are going to be sorted, in case there\u0027s something to process beforehand.",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "NOTIFICATION_SORT_CHILDREN",
+      "value": "51",
+      "kind": "Constant",
+      "summary": "Notification for when sorting the children, it must be obeyed immediately.",
+      "sourcePath": "doc/classes/Container.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAllowedSizeFlagsHorizontal",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetAllowedSizeFlagsHorizontal()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Implement to return a list of allowed horizontal [enum Control.SizeFlags] for child nodes. This doesn\u0027t technically prevent the usages of any other size flags, if your implementation requires that. This only limits the options available to the user in the Inspector dock. [b]Note:[/b] Having no size flags is equal to having [constant Control.SIZE_SHRINK_BEGIN]. As such, this value is always implicitly allowed.",
+      "godotName": "_get_allowed_size_flags_horizontal",
+      "xmlDocId": "M:Godot.Container._GetAllowedSizeFlagsHorizontal",
+      "sourcePath": "doc/classes/Container.xml"
+    },
+    {
+      "name": "_GetAllowedSizeFlagsVertical",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetAllowedSizeFlagsVertical()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Implement to return a list of allowed vertical [enum Control.SizeFlags] for child nodes. This doesn\u0027t technically prevent the usages of any other size flags, if your implementation requires that. This only limits the options available to the user in the Inspector dock. [b]Note:[/b] Having no size flags is equal to having [constant Control.SIZE_SHRINK_BEGIN]. As such, this value is always implicitly allowed.",
+      "godotName": "_get_allowed_size_flags_vertical",
+      "xmlDocId": "M:Godot.Container._GetAllowedSizeFlagsVertical",
+      "sourcePath": "doc/classes/Container.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Container.xml",
+      "sha256": "3a30427a921e72a70d2bc071bd40bdb4cf475086cb415fafdb61e24ab1add1b0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

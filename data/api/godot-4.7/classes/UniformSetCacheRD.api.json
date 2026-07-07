@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "UniformSetCacheRD",
+    "namespace": "Godot",
+    "fullName": "Godot.UniformSetCacheRD",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "UniformSetCacheRD",
+    "documentationPath": "doc/classes/UniformSetCacheRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_uniformsetcacherd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCache",
+      "kind": "Method",
+      "signature": "public RID GetCache(RID shader, int set, RDUniform[] uniforms)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "shader",
+          "type": "RID"
+        },
+        {
+          "name": "set",
+          "type": "int"
+        },
+        {
+          "name": "uniforms",
+          "type": "RDUniform[]"
+        }
+      ],
+      "summary": "Creates/returns a cached uniform set based on the provided uniforms for a given shader.",
+      "godotName": "get_cache",
+      "xmlDocId": "M:Godot.UniformSetCacheRD.GetCache(RID,int,RDUniform[])",
+      "sourcePath": "doc/classes/UniformSetCacheRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/UniformSetCacheRD.xml",
+      "sha256": "5f3e5db53ab62e8617af617b53d569d5eef53bd5c29bdfba50643043dbd1a819"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

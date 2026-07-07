@@ -1,0 +1,567 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorScenePostImportPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorScenePostImportPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorScenePostImportPlugin",
+    "documentationPath": "doc/classes/EditorScenePostImportPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorscenepostimportplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetImportOptions(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override to add general import options. These will appear in the main import dock on the editor. Add options via [method add_import_option] and [method add_import_option_advanced].",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetImportOptions(String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetInternalImportOptions(int category)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        }
+      ],
+      "summary": "Override to add internal import options. These will appear in the 3D scene import dialog. Add options via [method add_import_option] and [method add_import_option_advanced].",
+      "godotName": "_get_internal_import_options",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalImportOptions(int)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalOptionUpdateViewRequired",
+      "kind": "Method",
+      "signature": "public Variant _GetInternalOptionUpdateViewRequired(int category, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] if the 3D view of the import dialog needs to update when changing the given option.",
+      "godotName": "_get_internal_option_update_view_required",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalOptionUpdateViewRequired(int,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetInternalOptionVisibility(int category, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_internal_option_visibility",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalOptionVisibility(int,bool,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetOptionVisibility(String path, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetOptionVisibility(String,bool,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_InternalProcess",
+      "kind": "Method",
+      "signature": "public void _InternalProcess(int category, Node baseNode, Node node, Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "base_node",
+          "type": "Node"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Process a specific node or resource for a given category.",
+      "godotName": "_internal_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._InternalProcess(int,Node,Node,Resource)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_PostProcess",
+      "kind": "Method",
+      "signature": "public void _PostProcess(Node scene)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Post-process the scene. This function is called after the final scene has been configured.",
+      "godotName": "_post_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._PostProcess(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_PreProcess",
+      "kind": "Method",
+      "signature": "public void _PreProcess(Node scene)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Pre-process the scene. This function is called right after the scene format loader loaded the scene and no changes have been made. Pre-process may be used to adjust internal import options in the [code]\u0022nodes\u0022[/code], [code]\u0022meshes\u0022[/code], [code]\u0022animations\u0022[/code] or [code]\u0022materials\u0022[/code] keys inside [code]get_option_value(\u0022_subresources\u0022)[/code].",
+      "godotName": "_pre_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._PreProcess(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "AddImportOption",
+      "kind": "Method",
+      "signature": "public void AddImportOption(String name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Add a specific import option (name and default value only). This function can only be called from [method _get_import_options] and [method _get_internal_import_options].",
+      "godotName": "add_import_option",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin.AddImportOption(String,Variant)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "AddImportOptionAdvanced",
+      "kind": "Method",
+      "signature": "public void AddImportOptionAdvanced(int type, String name, Variant defaultValue, int hint, String hintString, int usageFlags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "default_value",
+          "type": "Variant"
+        },
+        {
+          "name": "hint",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "hint_string",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "usage_flags",
+          "type": "int",
+          "defaultValue": "6"
+        }
+      ],
+      "summary": "Add a specific import option. This function can only be called from [method _get_import_options] and [method _get_internal_import_options].",
+      "godotName": "add_import_option_advanced",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin.AddImportOptionAdvanced(int,String,Variant,int,String,int)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "GetOptionValue",
+      "kind": "Method",
+      "signature": "public Variant GetOptionValue(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Query the value of an option. This function can only be called from those querying visibility, or processing.",
+      "godotName": "get_option_value",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin.GetOptionValue(StringName)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "InternalImportCategory",
+      "values": [
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_ANIMATION",
+          "value": "4",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_ANIMATION_NODE",
+          "value": "5",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_MATERIAL",
+          "value": "3",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_MAX",
+          "value": "7",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_MESH",
+          "value": "2",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_MESH_3D_NODE",
+          "value": "1",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_NODE",
+          "value": "0",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        },
+        {
+          "name": "INTERNAL_IMPORT_CATEGORY_SKELETON_3D_NODE",
+          "value": "6",
+          "enum": "InternalImportCategory",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_NODE",
+      "value": "0",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_MESH_3D_NODE",
+      "value": "1",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_MESH",
+      "value": "2",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_MATERIAL",
+      "value": "3",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_ANIMATION",
+      "value": "4",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_ANIMATION_NODE",
+      "value": "5",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_SKELETON_3D_NODE",
+      "value": "6",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "INTERNAL_IMPORT_CATEGORY_MAX",
+      "value": "7",
+      "enum": "InternalImportCategory",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetImportOptions(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override to add general import options. These will appear in the main import dock on the editor. Add options via [method add_import_option] and [method add_import_option_advanced].",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetImportOptions(String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetInternalImportOptions(int category)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        }
+      ],
+      "summary": "Override to add internal import options. These will appear in the 3D scene import dialog. Add options via [method add_import_option] and [method add_import_option_advanced].",
+      "godotName": "_get_internal_import_options",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalImportOptions(int)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalOptionUpdateViewRequired",
+      "kind": "Method",
+      "signature": "public Variant _GetInternalOptionUpdateViewRequired(int category, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] if the 3D view of the import dialog needs to update when changing the given option.",
+      "godotName": "_get_internal_option_update_view_required",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalOptionUpdateViewRequired(int,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetInternalOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetInternalOptionVisibility(int category, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_internal_option_visibility",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetInternalOptionVisibility(int,bool,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetOptionVisibility(String path, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._GetOptionVisibility(String,bool,String)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_InternalProcess",
+      "kind": "Method",
+      "signature": "public void _InternalProcess(int category, Node baseNode, Node node, Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "base_node",
+          "type": "Node"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        },
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Process a specific node or resource for a given category.",
+      "godotName": "_internal_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._InternalProcess(int,Node,Node,Resource)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_PostProcess",
+      "kind": "Method",
+      "signature": "public void _PostProcess(Node scene)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Post-process the scene. This function is called after the final scene has been configured.",
+      "godotName": "_post_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._PostProcess(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    },
+    {
+      "name": "_PreProcess",
+      "kind": "Method",
+      "signature": "public void _PreProcess(Node scene)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Pre-process the scene. This function is called right after the scene format loader loaded the scene and no changes have been made. Pre-process may be used to adjust internal import options in the [code]\u0022nodes\u0022[/code], [code]\u0022meshes\u0022[/code], [code]\u0022animations\u0022[/code] or [code]\u0022materials\u0022[/code] keys inside [code]get_option_value(\u0022_subresources\u0022)[/code].",
+      "godotName": "_pre_process",
+      "xmlDocId": "M:Godot.EditorScenePostImportPlugin._PreProcess(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImportPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorScenePostImportPlugin.xml",
+      "sha256": "60027c8e3aad2fcddf54f65e6183c1c0a787fa2ad72c5c9b29575c800fabbbf2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

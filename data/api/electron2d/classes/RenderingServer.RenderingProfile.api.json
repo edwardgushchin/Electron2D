@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderingServer.RenderingProfile",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RenderingServer.RenderingProfile",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "RenderingServer profile enum",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Compatibility",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingProfile Compatibility",
+      "returnType": "Electron2D.RenderingServer.RenderingProfile",
+      "parameters": [],
+      "summary": "Guaranteed minimum renderer profile for supported desktop platforms.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingProfile.Compatibility",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Standard",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingProfile Standard",
+      "returnType": "Electron2D.RenderingServer.RenderingProfile",
+      "parameters": [],
+      "summary": "Full the native GPU backend-oriented renderer profile.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingProfile.Standard",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Compatibility",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Guaranteed minimum renderer profile for supported desktop platforms.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Standard",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Full the native GPU backend-oriented renderer profile.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

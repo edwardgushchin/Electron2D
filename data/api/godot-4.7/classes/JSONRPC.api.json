@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JSONRPC",
+    "namespace": "Godot",
+    "fullName": "Godot.JSONRPC",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "JSONRPC",
+    "documentationPath": "doc/classes/JSONRPC.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_jsonrpc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MakeNotification",
+      "kind": "Method",
+      "signature": "public Dictionary MakeNotification(String method, Variant @params)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "String"
+        },
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns a dictionary in the form of a JSON-RPC notification. Notifications are one-shot messages which do not expect a response. - [param method]: Name of the method being called. - [param params]: An array or dictionary of parameters being passed to the method.",
+      "godotName": "make_notification",
+      "xmlDocId": "M:Godot.JSONRPC.MakeNotification(String,Variant)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "MakeRequest",
+      "kind": "Method",
+      "signature": "public Dictionary MakeRequest(String method, Variant @params, Variant id)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "String"
+        },
+        {
+          "name": "params",
+          "type": "Variant"
+        },
+        {
+          "name": "id",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns a dictionary in the form of a JSON-RPC request. Requests are sent to a server with the expectation of a response. The ID field is used for the server to specify which exact request it is responding to. - [param method]: Name of the method being called. - [param params]: An array or dictionary of parameters being passed to the method. - [param id]: Uniquely identifies this request. The server is expected to send a response with the same ID.",
+      "godotName": "make_request",
+      "xmlDocId": "M:Godot.JSONRPC.MakeRequest(String,Variant,Variant)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "MakeResponse",
+      "kind": "Method",
+      "signature": "public Dictionary MakeResponse(Variant result, Variant id)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "result",
+          "type": "Variant"
+        },
+        {
+          "name": "id",
+          "type": "Variant"
+        }
+      ],
+      "summary": "When a server has received and processed a request, it is expected to send a response. If you did not want a response then you need to have sent a Notification instead. - [param result]: The return value of the function which was called. - [param id]: The ID of the request this response is targeted to.",
+      "godotName": "make_response",
+      "xmlDocId": "M:Godot.JSONRPC.MakeResponse(Variant,Variant)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "MakeResponseError",
+      "kind": "Method",
+      "signature": "public Dictionary MakeResponseError(int code, String message, Variant id)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "int"
+        },
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Creates a response which indicates a previous reply has failed in some way. - [param code]: The error code corresponding to what kind of error this is. See the [enum ErrorCode] constants. - [param message]: A custom message about this error. - [param id]: The request this error is a response to.",
+      "godotName": "make_response_error",
+      "xmlDocId": "M:Godot.JSONRPC.MakeResponseError(int,String,Variant)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "ProcessAction",
+      "kind": "Method",
+      "signature": "public Variant ProcessAction(Variant action, bool recurse)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "Variant"
+        },
+        {
+          "name": "recurse",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Given a Dictionary which takes the form of a JSON-RPC request: unpack the request and run it. Methods are resolved by looking at the field called \u0022method\u0022 and looking for an equivalently named function in the JSONRPC object. If one is found that method is called. To add new supported methods extend the JSONRPC class and call [method process_action] on your subclass. [param action]: The action to be run, as a Dictionary in the form of a JSON-RPC request or notification.",
+      "godotName": "process_action",
+      "xmlDocId": "M:Godot.JSONRPC.ProcessAction(Variant,bool)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "ProcessString",
+      "kind": "Method",
+      "signature": "public String ProcessString(String action)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "process_string",
+      "xmlDocId": "M:Godot.JSONRPC.ProcessString(String)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "SetMethod",
+      "kind": "Method",
+      "signature": "public void SetMethod(String name, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Registers a callback for the given method name. - [param name]: The name that clients can use to access the callback. - [param callback]: The callback which will handle the specified method.",
+      "godotName": "set_method",
+      "xmlDocId": "M:Godot.JSONRPC.SetMethod(String,Callable)",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ErrorCode",
+      "values": [
+        {
+          "name": "INTERNAL_ERROR",
+          "value": "-32603",
+          "enum": "ErrorCode",
+          "kind": "EnumValue",
+          "summary": "An internal error occurred while processing the request. Not used by the built-in JSONRPC.",
+          "sourcePath": "doc/classes/JSONRPC.xml"
+        },
+        {
+          "name": "INVALID_PARAMS",
+          "value": "-32602",
+          "enum": "ErrorCode",
+          "kind": "EnumValue",
+          "summary": "A method call was requested but the given method parameters are not valid. Not used by the built-in JSONRPC.",
+          "sourcePath": "doc/classes/JSONRPC.xml"
+        },
+        {
+          "name": "INVALID_REQUEST",
+          "value": "-32600",
+          "enum": "ErrorCode",
+          "kind": "EnumValue",
+          "summary": "A method call was requested but the request\u0027s format is not valid.",
+          "sourcePath": "doc/classes/JSONRPC.xml"
+        },
+        {
+          "name": "METHOD_NOT_FOUND",
+          "value": "-32601",
+          "enum": "ErrorCode",
+          "kind": "EnumValue",
+          "summary": "A method call was requested but no function of that name existed in the JSONRPC subclass.",
+          "sourcePath": "doc/classes/JSONRPC.xml"
+        },
+        {
+          "name": "PARSE_ERROR",
+          "value": "-32700",
+          "enum": "ErrorCode",
+          "kind": "EnumValue",
+          "summary": "The request could not be parsed as it was not valid by JSON standard ([method JSON.parse] failed).",
+          "sourcePath": "doc/classes/JSONRPC.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARSE_ERROR",
+      "value": "-32700",
+      "enum": "ErrorCode",
+      "kind": "EnumValue",
+      "summary": "The request could not be parsed as it was not valid by JSON standard ([method JSON.parse] failed).",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "INVALID_REQUEST",
+      "value": "-32600",
+      "enum": "ErrorCode",
+      "kind": "EnumValue",
+      "summary": "A method call was requested but the request\u0027s format is not valid.",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "METHOD_NOT_FOUND",
+      "value": "-32601",
+      "enum": "ErrorCode",
+      "kind": "EnumValue",
+      "summary": "A method call was requested but no function of that name existed in the JSONRPC subclass.",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "INVALID_PARAMS",
+      "value": "-32602",
+      "enum": "ErrorCode",
+      "kind": "EnumValue",
+      "summary": "A method call was requested but the given method parameters are not valid. Not used by the built-in JSONRPC.",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    },
+    {
+      "name": "INTERNAL_ERROR",
+      "value": "-32603",
+      "enum": "ErrorCode",
+      "kind": "EnumValue",
+      "summary": "An internal error occurred while processing the request. Not used by the built-in JSONRPC.",
+      "sourcePath": "doc/classes/JSONRPC.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/JSONRPC.xml",
+      "sha256": "a6c35c6e83e3c6ba5a1d79f97a8c47d475ff081beaaeab609dbc19fe4d10d272"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorPaths",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorPaths",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorPaths",
+    "documentationPath": "doc/classes/EditorPaths.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorpaths.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCacheDir",
+      "kind": "Method",
+      "signature": "public String GetCacheDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute path to the user\u0027s cache folder. This folder should be used for temporary data that can be removed safely whenever the editor is closed (such as generated resource thumbnails). [b]Default paths per platform:[/b] [codeblock lang=text] - Windows: %LOCALAPPDATA%\\Godot\\ - macOS: ~/Library/Caches/Godot/ - Linux: ~/.cache/godot/ [/codeblock]",
+      "godotName": "get_cache_dir",
+      "xmlDocId": "M:Godot.EditorPaths.GetCacheDir",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    },
+    {
+      "name": "GetConfigDir",
+      "kind": "Method",
+      "signature": "public String GetConfigDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute path to the user\u0027s configuration folder. This folder should be used for [i]persistent[/i] user configuration files. [b]Default paths per platform:[/b] [codeblock lang=text] - Windows: %APPDATA%\\Godot\\ (same as \u0060get_data_dir()\u0060) - macOS: ~/Library/Application Support/Godot/ (same as \u0060get_data_dir()\u0060) - Linux: ~/.config/godot/ [/codeblock]",
+      "godotName": "get_config_dir",
+      "xmlDocId": "M:Godot.EditorPaths.GetConfigDir",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    },
+    {
+      "name": "GetDataDir",
+      "kind": "Method",
+      "signature": "public String GetDataDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute path to the user\u0027s data folder. This folder should be used for [i]persistent[/i] user data files such as installed export templates. [b]Default paths per platform:[/b] [codeblock lang=text] - Windows: %APPDATA%\\Godot\\ (same as \u0060get_config_dir()\u0060) - macOS: ~/Library/Application Support/Godot/ (same as \u0060get_config_dir()\u0060) - Linux: ~/.local/share/godot/ [/codeblock]",
+      "godotName": "get_data_dir",
+      "xmlDocId": "M:Godot.EditorPaths.GetDataDir",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    },
+    {
+      "name": "GetProjectSettingsDir",
+      "kind": "Method",
+      "signature": "public String GetProjectSettingsDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the relative path to the editor settings for this project. This is usually [code]\u0022res://.godot/editor\u0022[/code]. Projects all have a unique subdirectory inside the settings path where project-specific editor settings are saved.",
+      "godotName": "get_project_settings_dir",
+      "xmlDocId": "M:Godot.EditorPaths.GetProjectSettingsDir",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    },
+    {
+      "name": "GetSelfContainedFile",
+      "kind": "Method",
+      "signature": "public String GetSelfContainedFile()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute path to the self-contained file that makes the current Godot editor instance be considered as self-contained. Returns an empty string if the current Godot editor instance isn\u0027t self-contained. See also [method is_self_contained].",
+      "godotName": "get_self_contained_file",
+      "xmlDocId": "M:Godot.EditorPaths.GetSelfContainedFile",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    },
+    {
+      "name": "IsSelfContained",
+      "kind": "Method",
+      "signature": "public bool IsSelfContained()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the editor is marked as self-contained, [code]false[/code] otherwise. When self-contained mode is enabled, user configuration, data and cache files are saved in an [code]editor_data/[/code] folder next to the editor binary. This makes portable usage easier and ensures the Godot editor minimizes file writes outside its own folder. Self-contained mode is not available for exported projects. Self-contained mode can be enabled by creating a file named [code]._sc_[/code] or [code]_sc_[/code] in the same folder as the editor binary or macOS .app bundle while the editor is not running. See also [method get_self_contained_file]. [b]Note:[/b] On macOS, quarantine flag should be manually removed before using self-contained mode, see [url=https://docs.godotengine.org/en/4.7/tutorials/export/running_on_macos.html]Running on macOS[/url]. [b]Note:[/b] On macOS, placing [code]_sc_[/code] or any other file inside .app bundle will break digital signature and make it non-portable, consider placing it in the same folder as the .app bundle instead. [b]Note:[/b] The Steam release of Godot uses self-contained mode by default.",
+      "godotName": "is_self_contained",
+      "xmlDocId": "M:Godot.EditorPaths.IsSelfContained",
+      "sourcePath": "doc/classes/EditorPaths.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorPaths.xml",
+      "sha256": "fddd9696c9b7b9f6afba9775000da51c5d9e66249672e05be17bcf330d6446f3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

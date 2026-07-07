@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Basis",
+    "namespace": "Godot",
+    "fullName": "Godot.Basis",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Basis",
+    "documentationPath": "doc/classes/Basis.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_basis.html"
+  },
+  "constructors": [
+    {
+      "name": "Basis",
+      "kind": "Constructor",
+      "signature": "public Basis()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "Constructs a [Basis] identical to [constant IDENTITY]. [b]Note:[/b] In C#, this constructs a [Basis] with all of its components set to [constant Vector3.ZERO].",
+      "godotName": "Basis",
+      "xmlDocId": "M:Godot.Basis.#ctor",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Basis",
+      "kind": "Constructor",
+      "signature": "public Basis(Basis from)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Constructs a [Basis] as a copy of the given [Basis].",
+      "godotName": "Basis",
+      "xmlDocId": "M:Godot.Basis.#ctor(Basis)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Basis",
+      "kind": "Constructor",
+      "signature": "public Basis(Vector3 axis, float angle)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Constructs a [Basis] that only represents rotation, rotated around the [param axis] by the given [param angle], in radians. The axis must be a normalized vector. [b]Note:[/b] This is the same as using [method rotated] on the [constant IDENTITY] basis. With more than one angle consider using [method from_euler], instead.",
+      "godotName": "Basis",
+      "xmlDocId": "M:Godot.Basis.#ctor(Vector3,float)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Basis",
+      "kind": "Constructor",
+      "signature": "public Basis(Quaternion from)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Constructs a [Basis] that only represents rotation from the given [Quaternion]. [b]Note:[/b] Quaternions [i]only[/i] store rotation, not scale. Because of this, conversions from [Basis] to [Quaternion] cannot always be reversed.",
+      "godotName": "Basis",
+      "xmlDocId": "M:Godot.Basis.#ctor(Quaternion)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Basis",
+      "kind": "Constructor",
+      "signature": "public Basis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "x_axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "y_axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "z_axis",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a [Basis] from 3 axis vectors. These are the columns of the basis matrix.",
+      "godotName": "Basis",
+      "xmlDocId": "M:Godot.Basis.#ctor(Vector3,Vector3,Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Determinant",
+      "kind": "Method",
+      "signature": "public float Determinant()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Determinant]determinant[/url] of this basis\u0027s matrix. For advanced math, this number can be used to determine a few attributes: - If the determinant is exactly [code]0.0[/code], the basis is not invertible (see [method inverse]). - If the determinant is a negative number, the basis represents a negative scale. [b]Note:[/b] If the basis\u0027s scale is the same for every axis, its determinant is always that scale by the power of 3.",
+      "godotName": "determinant",
+      "xmlDocId": "M:Godot.Basis.Determinant",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "FromEuler",
+      "kind": "Method",
+      "signature": "public Basis FromEuler(Vector3 euler, int order)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "euler",
+          "type": "Vector3"
+        },
+        {
+          "name": "order",
+          "type": "int",
+          "defaultValue": "2"
+        }
+      ],
+      "summary": "Constructs a new [Basis] that only represents rotation from the given [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. - The [member Vector3.x] should contain the angle around the [member x] axis (pitch); - The [member Vector3.y] should contain the angle around the [member y] axis (yaw); - The [member Vector3.z] should contain the angle around the [member z] axis (roll). [codeblocks] [gdscript] # Creates a Basis whose z axis points down. var my_basis = Basis.from_euler(Vector3(TAU / 4, 0, 0)) print(my_basis.z) # Prints (0.0, -1.0, 0.0) [/gdscript] [csharp] // Creates a Basis whose z axis points down. var myBasis = Basis.FromEuler(new Vector3(Mathf.Tau / 4.0f, 0.0f, 0.0f)); GD.Print(myBasis.Z); // Prints (0, -1, 0) [/csharp] [/codeblocks] The order of each consecutive rotation can be changed with [param order] (see [enum EulerOrder] constants). In Godot, Euler angles always use intrinsic order. By default, the intrinsic YXZ convention is used ([constant EULER_ORDER_YXZ]): the basis rotates first around the local Y axis (yaw), then local X (pitch), and lastly local Z (roll). When using the opposite method [method get_euler] to decompose a rotation, this order is reversed.",
+      "godotName": "from_euler",
+      "xmlDocId": "M:Godot.Basis.FromEuler(Vector3,int)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "FromScale",
+      "kind": "Method",
+      "signature": "public Basis FromScale(Vector3 scale)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs a new [Basis] that only represents scale, with no rotation or shear, from the given [param scale] vector. [codeblocks] [gdscript] var my_basis = Basis.from_scale(Vector3(2, 4, 8)) print(my_basis.x) # Prints (2.0, 0.0, 0.0) print(my_basis.y) # Prints (0.0, 4.0, 0.0) print(my_basis.z) # Prints (0.0, 0.0, 8.0) [/gdscript] [csharp] var myBasis = Basis.FromScale(new Vector3(2.0f, 4.0f, 8.0f)); GD.Print(myBasis.X); // Prints (2, 0, 0) GD.Print(myBasis.Y); // Prints (0, 4, 0) GD.Print(myBasis.Z); // Prints (0, 0, 8) [/csharp] [/codeblocks] [b]Note:[/b] In linear algebra, the matrix of this basis is also known as a [url=https://en.wikipedia.org/wiki/Diagonal_matrix]diagonal matrix[/url].",
+      "godotName": "from_scale",
+      "xmlDocId": "M:Godot.Basis.FromScale(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "GetEuler",
+      "kind": "Method",
+      "signature": "public Vector3 GetEuler(int order)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "order",
+          "type": "int",
+          "defaultValue": "2"
+        }
+      ],
+      "summary": "Returns this basis\u0027s rotation as a [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. For the returned value: - The [member Vector3.x] contains the angle around the [member x] axis (pitch); - The [member Vector3.y] contains the angle around the [member y] axis (yaw); - The [member Vector3.z] contains the angle around the [member z] axis (roll). The order of each consecutive rotation can be changed with [param order] (see [enum EulerOrder] constants). In Godot, Euler angles always use intrinsic order. By default, the intrinsic YXZ convention is used ([constant EULER_ORDER_YXZ]): since we are decomposing, local Z (roll) is calculated first, then local X (pitch), and lastly local Y (yaw). When using the opposite method [method from_euler] to compose a rotation, this order is reversed. [b]Note:[/b] For this method to return correctly, the basis needs to be [i]orthonormal[/i] (see [method orthonormalized]). [b]Note:[/b] Euler angles are much more intuitive but are not suitable for 3D math. Because of this, consider using the [method get_rotation_quaternion] method instead, which returns a [Quaternion]. [b]Note:[/b] In the Inspector dock, a basis\u0027s rotation is often displayed in Euler angles (in degrees), as is the case with the [member Node3D.rotation] property.",
+      "godotName": "get_euler",
+      "xmlDocId": "M:Godot.Basis.GetEuler(int)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "GetRotationQuaternion",
+      "kind": "Method",
+      "signature": "public Quaternion GetRotationQuaternion()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Returns this basis\u0027s rotation as a [Quaternion]. [b]Note:[/b] Quaternions are much more suitable for 3D math but are less intuitive. For user interfaces, consider using the [method get_euler] method, which returns Euler angles.",
+      "godotName": "get_rotation_quaternion",
+      "xmlDocId": "M:Godot.Basis.GetRotationQuaternion",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "GetScale",
+      "kind": "Method",
+      "signature": "public Vector3 GetScale()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the length of each axis of this basis, as a [Vector3]. If the basis is not sheared, this value is the scaling factor. It is not affected by rotation. [codeblocks] [gdscript] var my_basis = Basis( Vector3(2, 0, 0), Vector3(0, 4, 0), Vector3(0, 0, 8) ) # Rotating the Basis in any way preserves its scale. my_basis = my_basis.rotated(Vector3.UP, TAU / 2) my_basis = my_basis.rotated(Vector3.RIGHT, TAU / 4) print(my_basis.get_scale()) # Prints (2.0, 4.0, 8.0) [/gdscript] [csharp] var myBasis = new Basis( Vector3(2.0f, 0.0f, 0.0f), Vector3(0.0f, 4.0f, 0.0f), Vector3(0.0f, 0.0f, 8.0f) ); // Rotating the Basis in any way preserves its scale. myBasis = myBasis.Rotated(Vector3.Up, Mathf.Tau / 2.0f); myBasis = myBasis.Rotated(Vector3.Right, Mathf.Tau / 4.0f); GD.Print(myBasis.Scale); // Prints (2, 4, 8) [/csharp] [/codeblocks] [b]Note:[/b] If the value returned by [method determinant] is negative, the scale is also negative.",
+      "godotName": "get_scale",
+      "xmlDocId": "M:Godot.Basis.GetScale",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Basis Inverse()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "Returns the [url=https://en.wikipedia.org/wiki/Invertible_matrix]inverse of this basis\u0027s matrix[/url].",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Basis.Inverse",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "IsConformal",
+      "kind": "Method",
+      "signature": "public bool IsConformal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this basis is conformal. A conformal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]uniform[/i] (the axes share the same length). This method can be especially useful during physics calculations.",
+      "godotName": "is_conformal",
+      "xmlDocId": "M:Godot.Basis.IsConformal",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(Basis b)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this basis and [param b] are approximately equal, by calling [method @GlobalScope.is_equal_approx] on all vector components.",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.Basis.IsEqualApprox(Basis)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this basis is finite, by calling [method @GlobalScope.is_finite] on all vector components.",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.Basis.IsFinite",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "IsOrthonormal",
+      "kind": "Method",
+      "signature": "public bool IsOrthonormal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this basis is orthonormal. An orthonormal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]normalized[/i] (the length of every axis is [code]1.0[/code]). This method can be especially useful during physics calculations.",
+      "godotName": "is_orthonormal",
+      "xmlDocId": "M:Godot.Basis.IsOrthonormal",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "LookingAt",
+      "kind": "Method",
+      "signature": "public Basis LookingAt(Vector3 target, Vector3 up, bool useModelFront)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Vector3"
+        },
+        {
+          "name": "up",
+          "type": "Vector3",
+          "defaultValue": "Vector3(0, 1, 0)"
+        },
+        {
+          "name": "use_model_front",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new [Basis] with a rotation such that the forward axis (-Z) points towards the [param target] position. By default, the -Z axis (camera forward) is treated as forward (implies \u002BX is right). If [param use_model_front] is [code]true[/code], the \u002BZ axis (asset front) is treated as forward (implies \u002BX is left) and points toward the [param target] position. The up axis (\u002BY) points as close to the [param up] vector as possible while staying perpendicular to the forward axis. The returned basis is orthonormalized (see [method orthonormalized]). The [param target] and the [param up] cannot be [constant Vector3.ZERO], and shouldn\u0027t be colinear to avoid unintended rotation around local Z axis.",
+      "godotName": "looking_at",
+      "xmlDocId": "M:Godot.Basis.LookingAt(Vector3,Vector3,bool)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Orthonormalized",
+      "kind": "Method",
+      "signature": "public Basis Orthonormalized()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "Returns the orthonormalized version of this basis. An orthonormal basis is both [i]orthogonal[/i] (the axes are perpendicular to each other) and [i]normalized[/i] (the axes have a length of [code]1.0[/code]), which also means it can only represent a rotation. It is often useful to call this method to avoid rounding errors on a rotating basis: [codeblocks] [gdscript] # Rotate this Node3D every frame. func _process(delta): basis = basis.rotated(Vector3.UP, TAU * delta) basis = basis.rotated(Vector3.RIGHT, TAU * delta) basis = basis.orthonormalized() [/gdscript] [csharp] // Rotate this Node3D every frame. public override void _Process(double delta) { Basis = Basis.Rotated(Vector3.Up, Mathf.Tau * (float)delta) .Rotated(Vector3.Right, Mathf.Tau * (float)delta) .Orthonormalized(); } [/csharp] [/codeblocks]",
+      "godotName": "orthonormalized",
+      "xmlDocId": "M:Godot.Basis.Orthonormalized",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Rotated",
+      "kind": "Method",
+      "signature": "public Basis Rotated(Vector3 axis, float angle)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "axis",
+          "type": "Vector3"
+        },
+        {
+          "name": "angle",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this basis rotated around the given [param axis] by the given [param angle] (in radians). The [param axis] must be a normalized vector (see [method Vector3.normalized]). If [param angle] is positive, the basis is rotated counter-clockwise around the axis. [codeblocks] [gdscript] var my_basis = Basis.IDENTITY var angle = TAU / 2 my_basis = my_basis.rotated(Vector3.UP, angle) # Rotate around the up axis (yaw). my_basis = my_basis.rotated(Vector3.RIGHT, angle) # Rotate around the right axis (pitch). my_basis = my_basis.rotated(Vector3.BACK, angle) # Rotate around the back axis (roll). [/gdscript] [csharp] var myBasis = Basis.Identity; var angle = Mathf.Tau / 2.0f; myBasis = myBasis.Rotated(Vector3.Up, angle); // Rotate around the up axis (yaw). myBasis = myBasis.Rotated(Vector3.Right, angle); // Rotate around the right axis (pitch). myBasis = myBasis.Rotated(Vector3.Back, angle); // Rotate around the back axis (roll). [/csharp] [/codeblocks]",
+      "godotName": "rotated",
+      "xmlDocId": "M:Godot.Basis.Rotated(Vector3,float)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Scaled",
+      "kind": "Method",
+      "signature": "public Basis Scaled(Vector3 scale)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns this basis with each axis\u0027s components scaled by the given [param scale]\u0027s components. The basis matrix\u0027s rows are multiplied by [param scale]\u0027s components. This operation is a global scale (relative to the parent). [codeblocks] [gdscript] var my_basis = Basis( Vector3(1, 1, 1), Vector3(2, 2, 2), Vector3(3, 3, 3) ) my_basis = my_basis.scaled(Vector3(0, 2, -2)) print(my_basis.x) # Prints (0.0, 2.0, -2.0) print(my_basis.y) # Prints (0.0, 4.0, -4.0) print(my_basis.z) # Prints (0.0, 6.0, -6.0) [/gdscript] [csharp] var myBasis = new Basis( new Vector3(1.0f, 1.0f, 1.0f), new Vector3(2.0f, 2.0f, 2.0f), new Vector3(3.0f, 3.0f, 3.0f) ); myBasis = myBasis.Scaled(new Vector3(0.0f, 2.0f, -2.0f)); GD.Print(myBasis.X); // Prints (0, 2, -2) GD.Print(myBasis.Y); // Prints (0, 4, -4) GD.Print(myBasis.Z); // Prints (0, 6, -6) [/csharp] [/codeblocks]",
+      "godotName": "scaled",
+      "xmlDocId": "M:Godot.Basis.Scaled(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "ScaledLocal",
+      "kind": "Method",
+      "signature": "public Basis ScaledLocal(Vector3 scale)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns this basis with each axis scaled by the corresponding component in the given [param scale]. The basis matrix\u0027s columns are multiplied by [param scale]\u0027s components. This operation is a local scale (relative to self). [codeblocks] [gdscript] var my_basis = Basis( Vector3(1, 1, 1), Vector3(2, 2, 2), Vector3(3, 3, 3) ) my_basis = my_basis.scaled_local(Vector3(0, 2, -2)) print(my_basis.x) # Prints (0.0, 0.0, 0.0) print(my_basis.y) # Prints (4.0, 4.0, 4.0) print(my_basis.z) # Prints (-6.0, -6.0, -6.0) [/gdscript] [csharp] var myBasis = new Basis( new Vector3(1.0f, 1.0f, 1.0f), new Vector3(2.0f, 2.0f, 2.0f), new Vector3(3.0f, 3.0f, 3.0f) ); myBasis = myBasis.ScaledLocal(new Vector3(0.0f, 2.0f, -2.0f)); GD.Print(myBasis.X); // Prints (0, 0, 0) GD.Print(myBasis.Y); // Prints (4, 4, 4) GD.Print(myBasis.Z); // Prints (-6, -6, -6) [/csharp] [/codeblocks]",
+      "godotName": "scaled_local",
+      "xmlDocId": "M:Godot.Basis.ScaledLocal(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Slerp",
+      "kind": "Method",
+      "signature": "public Basis Slerp(Basis to, float weight)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Basis"
+        },
+        {
+          "name": "weight",
+          "type": "float"
+        }
+      ],
+      "summary": "Performs a spherical-linear interpolation with the [param to] basis, given a [param weight]. Both this basis and [param to] should represent a rotation. [b]Example:[/b] Smoothly rotate a [Node3D] to the target basis over time, with a [Tween]: [codeblock] var start_basis = Basis.IDENTITY var target_basis = Basis.IDENTITY.rotated(Vector3.UP, TAU / 2) func _ready(): create_tween().tween_method(interpolate, 0.0, 1.0, 5.0).set_trans(Tween.TRANS_EXPO) func interpolate(weight): basis = start_basis.slerp(target_basis, weight) [/codeblock]",
+      "godotName": "slerp",
+      "xmlDocId": "M:Godot.Basis.Slerp(Basis,float)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Tdotx",
+      "kind": "Method",
+      "signature": "public float Tdotx(Vector3 with)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the transposed dot product between [param with] and the [member x] axis (see [method transposed]). This is equivalent to [code]basis.x.dot(vector)[/code].",
+      "godotName": "tdotx",
+      "xmlDocId": "M:Godot.Basis.Tdotx(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Tdoty",
+      "kind": "Method",
+      "signature": "public float Tdoty(Vector3 with)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the transposed dot product between [param with] and the [member y] axis (see [method transposed]). This is equivalent to [code]basis.y.dot(vector)[/code].",
+      "godotName": "tdoty",
+      "xmlDocId": "M:Godot.Basis.Tdoty(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Tdotz",
+      "kind": "Method",
+      "signature": "public float Tdotz(Vector3 with)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the transposed dot product between [param with] and the [member z] axis (see [method transposed]). This is equivalent to [code]basis.z.dot(vector)[/code].",
+      "godotName": "tdotz",
+      "xmlDocId": "M:Godot.Basis.Tdotz(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Transposed",
+      "kind": "Method",
+      "signature": "public Basis Transposed()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "Returns the transposed version of this basis. This turns the basis matrix\u0027s columns into rows, and its rows into columns. [codeblocks] [gdscript] var my_basis = Basis( Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9) ) my_basis = my_basis.transposed() print(my_basis.x) # Prints (1.0, 4.0, 7.0) print(my_basis.y) # Prints (2.0, 5.0, 8.0) print(my_basis.z) # Prints (3.0, 6.0, 9.0) [/gdscript] [csharp] var myBasis = new Basis( new Vector3(1.0f, 2.0f, 3.0f), new Vector3(4.0f, 5.0f, 6.0f), new Vector3(7.0f, 8.0f, 9.0f) ); myBasis = myBasis.Transposed(); GD.Print(myBasis.X); // Prints (1, 4, 7) GD.Print(myBasis.Y); // Prints (2, 5, 8) GD.Print(myBasis.Z); // Prints (3, 6, 9) [/csharp] [/codeblocks]",
+      "godotName": "transposed",
+      "xmlDocId": "M:Godot.Basis.Transposed",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public Vector3 X { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The basis\u0027s X axis, and the column [code]0[/code] of the matrix. On the identity basis, this vector points right ([constant Vector3.RIGHT]).",
+      "defaultValue": "Vector3(1, 0, 0)",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Basis.X",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public Vector3 Y { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The basis\u0027s Y axis, and the column [code]1[/code] of the matrix. On the identity basis, this vector points up ([constant Vector3.UP]).",
+      "defaultValue": "Vector3(0, 1, 0)",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Basis.Y",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "Z",
+      "kind": "Property",
+      "signature": "public Vector3 Z { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The basis\u0027s Z axis, and the column [code]2[/code] of the matrix. On the identity basis, this vector points back ([constant Vector3.BACK]).",
+      "defaultValue": "Vector3(0, 0, 1)",
+      "godotName": "z",
+      "xmlDocId": "P:Godot.Basis.Z",
+      "sourcePath": "doc/classes/Basis.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "IDENTITY",
+      "value": "Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "The identity [Basis]. This is an orthonormal basis with no rotation, no shear, and a scale of [constant Vector3.ONE]. This also means that: - The [member x] points right ([constant Vector3.RIGHT]); - The [member y] points up ([constant Vector3.UP]); - The [member z] points back ([constant Vector3.BACK]). [codeblock] var basis = Basis.IDENTITY print(\u0022| X | Y | Z\u0022) print(\u0022| %.f | %.f | %.f\u0022 % [basis.x.x, basis.y.x, basis.z.x]) print(\u0022| %.f | %.f | %.f\u0022 % [basis.x.y, basis.y.y, basis.z.y]) print(\u0022| %.f | %.f | %.f\u0022 % [basis.x.z, basis.y.z, basis.z.z]) # Prints: # | X | Y | Z # | 1 | 0 | 0 # | 0 | 1 | 0 # | 0 | 0 | 1 [/codeblock] If a [Vector3] or another [Basis] is transformed (multiplied) by this constant, no transformation occurs. [b]Note:[/b] In GDScript, this constant is equivalent to creating a [constructor Basis] without any arguments. It can be used to make your code clearer, and for consistency with C#.",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "FLIP_X",
+      "value": "Basis(-1, 0, 0, 0, 1, 0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "When any basis is multiplied by [constant FLIP_X], it negates all components of the [member x] axis (the X column). When [constant FLIP_X] is multiplied by any basis, it negates the [member Vector3.x] component of all axes (the X row).",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "FLIP_Y",
+      "value": "Basis(1, 0, 0, 0, -1, 0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "When any basis is multiplied by [constant FLIP_Y], it negates all components of the [member y] axis (the Y column). When [constant FLIP_Y] is multiplied by any basis, it negates the [member Vector3.y] component of all axes (the Y row).",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "FLIP_Z",
+      "value": "Basis(1, 0, 0, 0, 1, 0, 0, 0, -1)",
+      "kind": "Constant",
+      "summary": "When any basis is multiplied by [constant FLIP_Z], it negates all components of the [member z] axis (the Z column). When [constant FLIP_Z] is multiplied by any basis, it negates the [member Vector3.z] component of all axes (the Z row).",
+      "sourcePath": "doc/classes/Basis.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Basis right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both [Basis] matrices are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Basis.operator !=(Basis)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Basis operator *(Basis right)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [param right] basis by this basis. This is the operation performed between parent and child [Node3D]s.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Basis.operator *(Basis)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector3 operator *(Vector3 right)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Transforms (multiplies) the [param right] vector by this basis, returning a [Vector3]. [codeblocks] [gdscript] # Basis that swaps the X/Z axes and doubles the scale. var my_basis = Basis(Vector3(0, 2, 0), Vector3(2, 0, 0), Vector3(0, 0, 2)) print(my_basis * Vector3(1, 2, 3)) # Prints (4.0, 2.0, 6.0) [/gdscript] [csharp] // Basis that swaps the X/Z axes and doubles the scale. var myBasis = new Basis(new Vector3(0, 2, 0), new Vector3(2, 0, 0), new Vector3(0, 0, 2)); GD.Print(myBasis * new Vector3(1, 2, 3)); // Prints (4, 2, 6) [/csharp] [/codeblocks]",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Basis.operator *(Vector3)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Basis operator *(float right)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Multiplies all components of the [Basis] by the given [float]. This affects the basis\u0027s scale uniformly, resizing all 3 axes by the [param right] value.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Basis.operator *(float)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Basis operator *(int right)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Multiplies all components of the [Basis] by the given [int]. This affects the basis\u0027s scale uniformly, resizing all 3 axes by the [param right] value.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Basis.operator *(int)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Basis operator /(float right)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "float"
+        }
+      ],
+      "summary": "Divides all components of the [Basis] by the given [float]. This affects the basis\u0027s scale uniformly, resizing all 3 axes by the [param right] value.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Basis.operator /(float)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator /",
+      "kind": "Operator",
+      "signature": "public Basis operator /(int right)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "int"
+        }
+      ],
+      "summary": "Divides all components of the [Basis] by the given [int]. This affects the basis\u0027s scale uniformly, resizing all 3 axes by the [param right] value.",
+      "godotName": "operator /",
+      "xmlDocId": "M:Godot.Basis.operator /(int)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Basis right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Basis"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the components of both [Basis] matrices are exactly equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Basis.operator ==(Basis)",
+      "sourcePath": "doc/classes/Basis.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Vector3 operator [](int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Accesses each axis (column) of this basis by their index. Index [code]0[/code] is the same as [member x], index [code]1[/code] is the same as [member y], and index [code]2[/code] is the same as [member z]. [b]Note:[/b] In C\u002B\u002B, this operator accesses the rows of the basis matrix, [i]not[/i] the columns. For the same behavior as scripting languages, use the [code]set_column[/code] and [code]get_column[/code] methods.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Basis.operator [](int)",
+      "sourcePath": "doc/classes/Basis.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Basis.xml",
+      "sha256": "7fb883e02efa25e086f992145391c31d4b2e04694e0e43998cb08ed13aa049f2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

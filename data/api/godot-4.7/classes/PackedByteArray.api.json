@@ -1,0 +1,1274 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedByteArray",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedByteArray",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedByteArray",
+    "documentationPath": "doc/classes/PackedByteArray.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedbytearray.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedByteArray",
+      "kind": "Constructor",
+      "signature": "public PackedByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedByteArray].",
+      "godotName": "PackedByteArray",
+      "xmlDocId": "M:Godot.PackedByteArray.#ctor",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "PackedByteArray",
+      "kind": "Constructor",
+      "signature": "public PackedByteArray(PackedByteArray from)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Constructs a [PackedByteArray] as a copy of the given [PackedByteArray].",
+      "godotName": "PackedByteArray",
+      "xmlDocId": "M:Godot.PackedByteArray.#ctor(PackedByteArray)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "PackedByteArray",
+      "kind": "Constructor",
+      "signature": "public PackedByteArray(Array from)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedByteArray]. Optionally, you can pass in a generic [Array] that will be converted.",
+      "godotName": "PackedByteArray",
+      "xmlDocId": "M:Godot.PackedByteArray.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedByteArray.Append(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedByteArray array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Appends a [PackedByteArray] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedByteArray.AppendArray(PackedByteArray)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(int value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedByteArray.Bsearch(int,bool)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Bswap16",
+      "kind": "Method",
+      "signature": "public void Bswap16(int offset, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "count",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Swaps the byte order of [param count] 16-bit segments of the array starting at [param offset]. Swap is done in-place. If [param count] is less than zero, all segments to the end of array are processed, if processed data size is not a multiple of 2, the byte after the last processed 16-bit segment is not modified.",
+      "godotName": "bswap16",
+      "xmlDocId": "M:Godot.PackedByteArray.Bswap16(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Bswap32",
+      "kind": "Method",
+      "signature": "public void Bswap32(int offset, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "count",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Swaps the byte order of [param count] 32-bit segments of the array starting at [param offset]. Swap is done in-place. If [param count] is less than zero, all segments to the end of array are processed, if processed data size is not a multiple of 4, bytes after the last processed 32-bit segment are not modified.",
+      "godotName": "bswap32",
+      "xmlDocId": "M:Godot.PackedByteArray.Bswap32(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Bswap64",
+      "kind": "Method",
+      "signature": "public void Bswap64(int offset, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "count",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Swaps the byte order of [param count] 64-bit segments of the array starting at [param offset]. Swap is done in-place. If [param count] is less than zero, all segments to the end of array are processed, if processed data size is not a multiple of 8, bytes after the last processed 64-bit segment are not modified.",
+      "godotName": "bswap64",
+      "xmlDocId": "M:Godot.PackedByteArray.Bswap64(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedByteArray.Clear",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Compress",
+      "kind": "Method",
+      "signature": "public PackedByteArray Compress(int compressionMode)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "compression_mode",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns a new [PackedByteArray] with the data compressed. Set the compression mode using one of [enum FileAccess.CompressionMode]\u0027s constants.",
+      "godotName": "compress",
+      "xmlDocId": "M:Godot.PackedByteArray.Compress(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(int value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedByteArray.Count(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeDouble",
+      "kind": "Method",
+      "signature": "public float DecodeDouble(int byteOffset)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 64-bit floating-point number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0.0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_double",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeDouble(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeFloat",
+      "kind": "Method",
+      "signature": "public float DecodeFloat(int byteOffset)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 32-bit floating-point number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0.0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_float",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeFloat(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeHalf",
+      "kind": "Method",
+      "signature": "public float DecodeHalf(int byteOffset)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 16-bit floating-point number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0.0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_half",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeHalf(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeS8",
+      "kind": "Method",
+      "signature": "public int DecodeS8(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 8-bit signed integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_s8",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeS8(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeS16",
+      "kind": "Method",
+      "signature": "public int DecodeS16(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 16-bit signed integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_s16",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeS16(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeS32",
+      "kind": "Method",
+      "signature": "public int DecodeS32(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 32-bit signed integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_s32",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeS32(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeS64",
+      "kind": "Method",
+      "signature": "public int DecodeS64(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 64-bit signed integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_s64",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeS64(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeU8",
+      "kind": "Method",
+      "signature": "public int DecodeU8(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 8-bit unsigned integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_u8",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeU8(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeU16",
+      "kind": "Method",
+      "signature": "public int DecodeU16(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 16-bit unsigned integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_u16",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeU16(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeU32",
+      "kind": "Method",
+      "signature": "public int DecodeU32(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 32-bit unsigned integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_u32",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeU32(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeU64",
+      "kind": "Method",
+      "signature": "public int DecodeU64(int byteOffset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        }
+      ],
+      "summary": "Decodes a 64-bit unsigned integer number from the bytes starting at [param byte_offset]. Fails if the byte count is insufficient. Returns [code]0[/code] if a valid number can\u0027t be decoded.",
+      "godotName": "decode_u64",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeU64(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeVar",
+      "kind": "Method",
+      "signature": "public Variant DecodeVar(int byteOffset, bool allowObjects)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Decodes a [Variant] from the bytes starting at [param byte_offset]. Returns [code]null[/code] if a valid variant can\u0027t be decoded or the value is [Object]-derived and [param allow_objects] is [code]false[/code].",
+      "godotName": "decode_var",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeVar(int,bool)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecodeVarSize",
+      "kind": "Method",
+      "signature": "public int DecodeVarSize(int byteOffset, bool allowObjects)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Decodes a size of a [Variant] from the bytes starting at [param byte_offset]. Requires at least 4 bytes of data starting at the offset, otherwise fails.",
+      "godotName": "decode_var_size",
+      "xmlDocId": "M:Godot.PackedByteArray.DecodeVarSize(int,bool)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Decompress",
+      "kind": "Method",
+      "signature": "public PackedByteArray Decompress(int bufferSize, int compressionMode)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "buffer_size",
+          "type": "int"
+        },
+        {
+          "name": "compression_mode",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns a new [PackedByteArray] with the data decompressed. Set [param buffer_size] to the size of the uncompressed data. Set the compression mode using one of [enum FileAccess.CompressionMode]\u0027s constants. [b]Note:[/b] Decompression is not guaranteed to work with data not compressed by Godot, for example if data compressed with the deflate compression mode lacks a checksum or header.",
+      "godotName": "decompress",
+      "xmlDocId": "M:Godot.PackedByteArray.Decompress(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "DecompressDynamic",
+      "kind": "Method",
+      "signature": "public PackedByteArray DecompressDynamic(int maxOutputSize, int compressionMode)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "max_output_size",
+          "type": "int"
+        },
+        {
+          "name": "compression_mode",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns a new [PackedByteArray] with the data decompressed. Set the compression mode using one of [enum FileAccess.CompressionMode]\u0027s constants. [b]This method only accepts brotli, gzip, and deflate compression modes.[/b] This method is potentially slower than [method decompress], as it may have to re-allocate its output buffer multiple times while decompressing, whereas [method decompress] knows it\u0027s output buffer size from the beginning. GZIP has a maximal compression ratio of 1032:1, meaning it\u0027s very possible for a small compressed payload to decompress to a potentially very large output. To guard against this, you may provide a maximum size this function is allowed to allocate in bytes via [param max_output_size]. Passing -1 will allow for unbounded output. If any positive value is passed, and the decompression exceeds that amount in bytes, then an error will be returned. [b]Note:[/b] Decompression is not guaranteed to work with data not compressed by Godot, for example if data compressed with the deflate compression mode lacks a checksum or header.",
+      "godotName": "decompress_dynamic",
+      "xmlDocId": "M:Godot.PackedByteArray.DecompressDynamic(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedByteArray Duplicate()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedByteArray.Duplicate",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeDouble",
+      "kind": "Method",
+      "signature": "public void EncodeDouble(int byteOffset, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Encodes a 64-bit floating-point number as bytes at the index of [param byte_offset] bytes. The array must have at least 8 bytes of allocated space, starting at the offset.",
+      "godotName": "encode_double",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeDouble(int,float)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeFloat",
+      "kind": "Method",
+      "signature": "public void EncodeFloat(int byteOffset, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Encodes a 32-bit floating-point number as bytes at the index of [param byte_offset] bytes. The array must have at least 4 bytes of space, starting at the offset.",
+      "godotName": "encode_float",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeFloat(int,float)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeHalf",
+      "kind": "Method",
+      "signature": "public void EncodeHalf(int byteOffset, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Encodes a 16-bit floating-point number as bytes at the index of [param byte_offset] bytes. The array must have at least 2 bytes of space, starting at the offset.",
+      "godotName": "encode_half",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeHalf(int,float)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeS8",
+      "kind": "Method",
+      "signature": "public void EncodeS8(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 8-bit signed integer number (signed byte) at the index of [param byte_offset] bytes. The array must have at least 1 byte of space, starting at the offset.",
+      "godotName": "encode_s8",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeS8(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeS16",
+      "kind": "Method",
+      "signature": "public void EncodeS16(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 16-bit signed integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 2 bytes of space, starting at the offset.",
+      "godotName": "encode_s16",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeS16(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeS32",
+      "kind": "Method",
+      "signature": "public void EncodeS32(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 32-bit signed integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 4 bytes of space, starting at the offset.",
+      "godotName": "encode_s32",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeS32(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeS64",
+      "kind": "Method",
+      "signature": "public void EncodeS64(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 64-bit signed integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 8 bytes of space, starting at the offset.",
+      "godotName": "encode_s64",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeS64(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeU8",
+      "kind": "Method",
+      "signature": "public void EncodeU8(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 8-bit unsigned integer number (byte) at the index of [param byte_offset] bytes. The array must have at least 1 byte of space, starting at the offset.",
+      "godotName": "encode_u8",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeU8(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeU16",
+      "kind": "Method",
+      "signature": "public void EncodeU16(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 16-bit unsigned integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 2 bytes of space, starting at the offset.",
+      "godotName": "encode_u16",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeU16(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeU32",
+      "kind": "Method",
+      "signature": "public void EncodeU32(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 32-bit unsigned integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 4 bytes of space, starting at the offset.",
+      "godotName": "encode_u32",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeU32(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeU64",
+      "kind": "Method",
+      "signature": "public void EncodeU64(int byteOffset, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Encodes a 64-bit unsigned integer number as bytes at the index of [param byte_offset] bytes. The array must have at least 8 bytes of space, starting at the offset.",
+      "godotName": "encode_u64",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeU64(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "EncodeVar",
+      "kind": "Method",
+      "signature": "public int EncodeVar(int byteOffset, Variant value, bool allowObjects)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Encodes a [Variant] at the index of [param byte_offset] bytes. A sufficient space must be allocated, depending on the encoded variant\u0027s size. If [param allow_objects] is [code]false[/code], [Object]-derived values are not permitted and will instead be serialized as ID-only.",
+      "godotName": "encode_var",
+      "xmlDocId": "M:Godot.PackedByteArray.EncodeVar(int,Variant,bool)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedByteArray.Erase(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedByteArray.Fill(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(int value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedByteArray.Find(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public int Get(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the byte at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]0[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedByteArray.Get(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromAscii",
+      "kind": "Method",
+      "signature": "public String GetStringFromAscii()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Converts ASCII/Latin-1 encoded array to [String]. Fast alternative to [method get_string_from_utf8] if the content is ASCII/Latin-1 only. Unlike the UTF-8 function this function maps every byte to a character in the array. Multibyte sequences will not be interpreted correctly. For parsing user input always use [method get_string_from_utf8]. This is the inverse of [method String.to_ascii_buffer].",
+      "godotName": "get_string_from_ascii",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromAscii",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromMultibyteChar",
+      "kind": "Method",
+      "signature": "public String GetStringFromMultibyteChar(String encoding)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "encoding",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Converts system multibyte code page encoded array to [String]. If conversion fails, empty string is returned. This is the inverse of [method String.to_multibyte_char_buffer]. The values permitted for [param encoding] are system dependent. If [param encoding] is empty string, system default encoding is used. - For Windows, see [url=https://learn.microsoft.com/en-us/windows/win32/Intl/code-page-identifiers]Code Page Identifiers[/url] .NET names. - For macOS and Linux/BSD, see [code]libiconv[/code] library documentation and [code]iconv --list[/code] for a list of supported encodings.",
+      "godotName": "get_string_from_multibyte_char",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromMultibyteChar(String)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromUtf8",
+      "kind": "Method",
+      "signature": "public String GetStringFromUtf8()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Converts UTF-8 encoded array to [String]. Slower than [method get_string_from_ascii] but supports UTF-8 encoded data. Use this function if you are unsure about the source of the data. For user input this function should always be preferred. Returns empty string if source array is not valid UTF-8 string. This is the inverse of [method String.to_utf8_buffer].",
+      "godotName": "get_string_from_utf8",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromUtf8",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromUtf16",
+      "kind": "Method",
+      "signature": "public String GetStringFromUtf16()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Converts UTF-16 encoded array to [String]. If the BOM is missing, little-endianness is assumed. Returns empty string if source array is not valid UTF-16 string. This is the inverse of [method String.to_utf16_buffer].",
+      "godotName": "get_string_from_utf16",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromUtf16",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromUtf32",
+      "kind": "Method",
+      "signature": "public String GetStringFromUtf32()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Converts UTF-32 encoded array to [String]. Returns empty string if source array is not valid UTF-32 string. This is the inverse of [method String.to_utf32_buffer].",
+      "godotName": "get_string_from_utf32",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromUtf32",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "GetStringFromWchar",
+      "kind": "Method",
+      "signature": "public String GetStringFromWchar()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Converts wide character ([code]wchar_t[/code], UTF-16 on Windows, UTF-32 on other platforms) encoded array to [String]. Returns empty string if source array is not valid wide string. This is the inverse of [method String.to_wchar_buffer].",
+      "godotName": "get_string_from_wchar",
+      "xmlDocId": "M:Godot.PackedByteArray.GetStringFromWchar",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedByteArray.Has(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "HasEncodedVar",
+      "kind": "Method",
+      "signature": "public bool HasEncodedVar(int byteOffset, bool allowObjects)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "byte_offset",
+          "type": "int"
+        },
+        {
+          "name": "allow_objects",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a valid [Variant] value can be decoded at the [param byte_offset]. Returns [code]false[/code] otherwise or when the value is [Object]-derived and [param allow_objects] is [code]false[/code].",
+      "godotName": "has_encoded_var",
+      "xmlDocId": "M:Godot.PackedByteArray.HasEncodedVar(int,bool)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "HexEncode",
+      "kind": "Method",
+      "signature": "public String HexEncode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a hexadecimal representation of this array as a [String]. [codeblocks] [gdscript] var array = PackedByteArray([11, 46, 255]) print(array.hex_encode()) # Prints \u00220b2eff\u0022 [/gdscript] [csharp] byte[] array = [11, 46, 255]; GD.Print(array.HexEncode()); // Prints \u00220b2eff\u0022 [/csharp] [/codeblocks]",
+      "godotName": "hex_encode",
+      "xmlDocId": "M:Godot.PackedByteArray.HexEncode",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, int value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedByteArray.Insert(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedByteArray.IsEmpty",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends an element at the end of the array.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedByteArray.PushBack(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedByteArray.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedByteArray.Resize(int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedByteArray.Reverse",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(int value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedByteArray.Rfind(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes the byte at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedByteArray.Set(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedByteArray.Size",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedByteArray Slice(int begin, int end)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedByteArray], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedByteArray]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedByteArray.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedByteArray.Sort",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToColorArray",
+      "kind": "Method",
+      "signature": "public PackedColorArray ToColorArray()",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedColorArray], where each block of 16 bytes has been converted to a [Color] variant. [b]Note:[/b] The size of the input array must be a multiple of 16 (size of four 32-bit float variables). The size of the new array will be [code]byte_array.size() / 16[/code]. If the original data can\u0027t be converted to [Color] variants, the resulting data is undefined.",
+      "godotName": "to_color_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToColorArray",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToFloat32Array",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array ToFloat32Array()",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedFloat32Array], where each block of 4 bytes has been converted to a 32-bit float (C\u002B\u002B [code skip-lint]float[/code]). The size of the input array must be a multiple of 4 (size of 32-bit float). The size of the new array will be [code]byte_array.size() / 4[/code]. If the original data can\u0027t be converted to 32-bit floats, the resulting data is undefined.",
+      "godotName": "to_float32_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToFloat32Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToFloat64Array",
+      "kind": "Method",
+      "signature": "public PackedFloat64Array ToFloat64Array()",
+      "returnType": "PackedFloat64Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedFloat64Array], where each block of 8 bytes has been converted to a 64-bit float (C\u002B\u002B [code]double[/code], Godot [float]). The size of the input array must be a multiple of 8 (size of 64-bit double). The size of the new array will be [code]byte_array.size() / 8[/code]. If the original data can\u0027t be converted to 64-bit floats, the resulting data is undefined.",
+      "godotName": "to_float64_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToFloat64Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToInt32Array",
+      "kind": "Method",
+      "signature": "public PackedInt32Array ToInt32Array()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedInt32Array], where each block of 4 bytes has been converted to a signed 32-bit integer (C\u002B\u002B [code]int32_t[/code]). The size of the input array must be a multiple of 4 (size of 32-bit integer). The size of the new array will be [code]byte_array.size() / 4[/code]. If the original data can\u0027t be converted to signed 32-bit integers, the resulting data is undefined.",
+      "godotName": "to_int32_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToInt32Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToInt64Array",
+      "kind": "Method",
+      "signature": "public PackedInt64Array ToInt64Array()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedInt64Array], where each block of 8 bytes has been converted to a signed 64-bit integer (C\u002B\u002B [code]int64_t[/code], Godot [int]). The size of the input array must be a multiple of 8 (size of 64-bit integer). The size of the new array will be [code]byte_array.size() / 8[/code]. If the original data can\u0027t be converted to signed 64-bit integers, the resulting data is undefined.",
+      "godotName": "to_int64_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToInt64Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToVector2Array",
+      "kind": "Method",
+      "signature": "public PackedVector2Array ToVector2Array()",
+      "returnType": "PackedVector2Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedVector2Array], where each block of 8 bytes or 16 bytes (32-bit or 64-bit) has been converted to a [Vector2] variant. [b]Note:[/b] The size of the input array must be a multiple of 8 or 16 (depending on the build settings, see [Vector2] for more details). The size of the new array will be [code]byte_array.size() / (8 or 16)[/code]. If the original data can\u0027t be converted to [Vector2] variants, the resulting data is undefined.",
+      "godotName": "to_vector2_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToVector2Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToVector3Array",
+      "kind": "Method",
+      "signature": "public PackedVector3Array ToVector3Array()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedVector3Array], where each block of 12 or 24 bytes (32-bit or 64-bit) has been converted to a [Vector3] variant. [b]Note:[/b] The size of the input array must be a multiple of 12 or 24 (depending on the build settings, see [Vector3] for more details). The size of the new array will be [code]byte_array.size() / (12 or 24)[/code]. If the original data can\u0027t be converted to [Vector3] variants, the resulting data is undefined.",
+      "godotName": "to_vector3_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToVector3Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "ToVector4Array",
+      "kind": "Method",
+      "signature": "public PackedVector4Array ToVector4Array()",
+      "returnType": "PackedVector4Array",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedVector4Array], where each block of 16 or 32 bytes (32-bit or 64-bit) has been converted to a [Vector4] variant. [b]Note:[/b] The size of the input array must be a multiple of 16 or 32 (depending on the build settings, see [Vector4] for more details). The size of the new array will be [code]byte_array.size() / (16 or 32)[/code]. If the original data can\u0027t be converted to [Vector4] variants, the resulting data is undefined.",
+      "godotName": "to_vector4_array",
+      "xmlDocId": "M:Godot.PackedByteArray.ToVector4Array",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedByteArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedByteArray.operator !=(PackedByteArray)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedByteArray operator \u002B(PackedByteArray right)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Returns a new [PackedByteArray] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedByteArray.operator \u002B(PackedByteArray)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedByteArray right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal bytes at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedByteArray.operator ==(PackedByteArray)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public int operator [](int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the byte at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error. Note that the byte is returned as a 64-bit [int].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedByteArray.operator [](int)",
+      "sourcePath": "doc/classes/PackedByteArray.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedByteArray.xml",
+      "sha256": "0c65bc52e26462561eb993b7e3b5cd1a500dbdbcfa98d9f785d2f88cae4aa809"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

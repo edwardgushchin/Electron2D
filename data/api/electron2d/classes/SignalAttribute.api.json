@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SignalAttribute",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SignalAttribute",
+    "kind": "class",
+    "baseType": "System.Attribute",
+    "interfaces": [],
+    "godotReference": "SignalAttribute / [Signal]",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "SignalAttribute",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SignalAttribute()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SignalAttribute type.",
+      "xmlDocId": "M:Electron2D.SignalAttribute.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "SignalAttribute",
+      "kind": "Constructor",
+      "signature": "public Electron2D.SignalAttribute()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the SignalAttribute type.",
+      "xmlDocId": "M:Electron2D.SignalAttribute.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

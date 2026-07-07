@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AspectRatioContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.AspectRatioContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "AspectRatioContainer",
+    "documentationPath": "doc/classes/AspectRatioContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_aspectratiocontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AlignmentHorizontal",
+      "kind": "Property",
+      "signature": "public int AlignmentHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the horizontal relative position of child controls.",
+      "defaultValue": "1",
+      "godotName": "alignment_horizontal",
+      "xmlDocId": "P:Godot.AspectRatioContainer.AlignmentHorizontal",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "AlignmentVertical",
+      "kind": "Property",
+      "signature": "public int AlignmentVertical { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the vertical relative position of child controls.",
+      "defaultValue": "1",
+      "godotName": "alignment_vertical",
+      "xmlDocId": "P:Godot.AspectRatioContainer.AlignmentVertical",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "Ratio",
+      "kind": "Property",
+      "signature": "public float Ratio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The aspect ratio to enforce on child controls. This is the width divided by the height. The ratio depends on the [member stretch_mode].",
+      "defaultValue": "1.0",
+      "godotName": "ratio",
+      "xmlDocId": "P:Godot.AspectRatioContainer.Ratio",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "StretchMode",
+      "kind": "Property",
+      "signature": "public int StretchMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stretch mode used to align child controls.",
+      "defaultValue": "2",
+      "godotName": "stretch_mode",
+      "xmlDocId": "P:Godot.AspectRatioContainer.StretchMode",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AlignmentMode",
+      "values": [
+        {
+          "name": "ALIGNMENT_BEGIN",
+          "value": "0",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "Aligns child controls with the beginning (left or top) of the container.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_CENTER",
+          "value": "1",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "Aligns child controls with the center of the container.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        },
+        {
+          "name": "ALIGNMENT_END",
+          "value": "2",
+          "enum": "AlignmentMode",
+          "kind": "EnumValue",
+          "summary": "Aligns child controls with the end (right or bottom) of the container.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        }
+      ]
+    },
+    {
+      "name": "StretchMode",
+      "values": [
+        {
+          "name": "STRETCH_COVER",
+          "value": "3",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The width and height of child controls is automatically adjusted to make their bounding rectangle cover the entire area of the container while keeping the aspect ratio. When the bounding rectangle of child controls exceed the container\u0027s size and [member Control.clip_contents] is enabled, this allows to show only the container\u0027s area restricted by its own bounding rectangle.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        },
+        {
+          "name": "STRETCH_FIT",
+          "value": "2",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The bounding rectangle of child controls is automatically adjusted to fit inside the container while keeping the aspect ratio.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        },
+        {
+          "name": "STRETCH_HEIGHT_CONTROLS_WIDTH",
+          "value": "1",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The width of child controls is automatically adjusted based on the height of the container.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        },
+        {
+          "name": "STRETCH_WIDTH_CONTROLS_HEIGHT",
+          "value": "0",
+          "enum": "StretchMode",
+          "kind": "EnumValue",
+          "summary": "The height of child controls is automatically adjusted based on the width of the container.",
+          "sourcePath": "doc/classes/AspectRatioContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STRETCH_WIDTH_CONTROLS_HEIGHT",
+      "value": "0",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The height of child controls is automatically adjusted based on the width of the container.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "STRETCH_HEIGHT_CONTROLS_WIDTH",
+      "value": "1",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The width of child controls is automatically adjusted based on the height of the container.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "STRETCH_FIT",
+      "value": "2",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The bounding rectangle of child controls is automatically adjusted to fit inside the container while keeping the aspect ratio.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "STRETCH_COVER",
+      "value": "3",
+      "enum": "StretchMode",
+      "kind": "EnumValue",
+      "summary": "The width and height of child controls is automatically adjusted to make their bounding rectangle cover the entire area of the container while keeping the aspect ratio. When the bounding rectangle of child controls exceed the container\u0027s size and [member Control.clip_contents] is enabled, this allows to show only the container\u0027s area restricted by its own bounding rectangle.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_BEGIN",
+      "value": "0",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "Aligns child controls with the beginning (left or top) of the container.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_CENTER",
+      "value": "1",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "Aligns child controls with the center of the container.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    },
+    {
+      "name": "ALIGNMENT_END",
+      "value": "2",
+      "enum": "AlignmentMode",
+      "kind": "EnumValue",
+      "summary": "Aligns child controls with the end (right or bottom) of the container.",
+      "sourcePath": "doc/classes/AspectRatioContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AspectRatioContainer.xml",
+      "sha256": "b00d8f70e5640d3476ec5740d4c1dd1420b04332c48b95541293ba0a359cfa90"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

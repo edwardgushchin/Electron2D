@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GraphFrame",
+    "namespace": "Godot",
+    "fullName": "Godot.GraphFrame",
+    "kind": "class",
+    "baseType": "GraphElement",
+    "interfaces": [],
+    "godotReference": "GraphFrame",
+    "documentationPath": "doc/classes/GraphFrame.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_graphframe.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetTitlebarHbox",
+      "kind": "Method",
+      "signature": "public HBoxContainer GetTitlebarHbox()",
+      "returnType": "HBoxContainer",
+      "parameters": [],
+      "summary": "Returns the [HBoxContainer] used for the title bar, only containing a [Label] for displaying the title by default. This can be used to add custom controls to the title bar such as option or close buttons.",
+      "godotName": "get_titlebar_hbox",
+      "xmlDocId": "M:Godot.GraphFrame.GetTitlebarHbox",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "AutoshrinkEnabled",
+      "kind": "Property",
+      "signature": "public bool AutoshrinkEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the frame\u0027s rect will be adjusted automatically to enclose all attached [GraphElement]s.",
+      "defaultValue": "true",
+      "godotName": "autoshrink_enabled",
+      "xmlDocId": "P:Godot.GraphFrame.AutoshrinkEnabled",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "AutoshrinkMargin",
+      "kind": "Property",
+      "signature": "public int AutoshrinkMargin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The margin around the attached nodes that is used to calculate the size of the frame when [member autoshrink_enabled] is [code]true[/code].",
+      "defaultValue": "40",
+      "godotName": "autoshrink_margin",
+      "xmlDocId": "P:Godot.GraphFrame.AutoshrinkMargin",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "DragMargin",
+      "kind": "Property",
+      "signature": "public int DragMargin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The margin inside the frame that can be used to drag the frame.",
+      "defaultValue": "16",
+      "godotName": "drag_margin",
+      "xmlDocId": "P:Godot.GraphFrame.DragMargin",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.GraphFrame.MouseFilter",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "TintColor",
+      "kind": "Property",
+      "signature": "public Color TintColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color of the frame when [member tint_color_enabled] is [code]true[/code].",
+      "defaultValue": "Color(0.3, 0.3, 0.3, 0.75)",
+      "godotName": "tint_color",
+      "xmlDocId": "P:Godot.GraphFrame.TintColor",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "TintColorEnabled",
+      "kind": "Property",
+      "signature": "public bool TintColorEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tint color will be used to tint the frame.",
+      "defaultValue": "false",
+      "godotName": "tint_color_enabled",
+      "xmlDocId": "P:Godot.GraphFrame.TintColorEnabled",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Title of the frame.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.GraphFrame.Title",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AutoshrinkChanged",
+      "kind": "Signal",
+      "signature": "public event AutoshrinkChangedHandler AutoshrinkChanged",
+      "parameters": [],
+      "summary": "Emitted when [member autoshrink_enabled] or [member autoshrink_margin] changes.",
+      "godotName": "autoshrink_changed",
+      "xmlDocId": "E:Godot.GraphFrame.AutoshrinkChanged",
+      "sourcePath": "doc/classes/GraphFrame.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GraphFrame.xml",
+      "sha256": "d2c4cfb570d54c1390b43ede27c518776409eaee887cdb11db1880d707e1a56e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

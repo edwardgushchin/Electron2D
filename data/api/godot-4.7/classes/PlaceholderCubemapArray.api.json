@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderCubemapArray",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderCubemapArray",
+    "kind": "class",
+    "baseType": "PlaceholderTextureLayered",
+    "interfaces": [],
+    "godotReference": "PlaceholderCubemapArray",
+    "documentationPath": "doc/classes/PlaceholderCubemapArray.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdercubemaparray.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderCubemapArray.xml",
+      "sha256": "c07a9e593f1559ba08bab66d770953f7afae06f0cc72a47c828623248e41f1c6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JavaScriptBridge",
+    "namespace": "Godot",
+    "fullName": "Godot.JavaScriptBridge",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "JavaScriptBridge",
+    "documentationPath": "doc/classes/JavaScriptBridge.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_javascriptbridge.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateCallback",
+      "kind": "Method",
+      "signature": "public JavaScriptObject CreateCallback(Callable callable)",
+      "returnType": "JavaScriptObject",
+      "parameters": [
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Creates a reference to a [Callable] that can be used as a callback by JavaScript. The reference must be kept until the callback happens, or it won\u0027t be called at all. See [JavaScriptObject] for usage. [b]Note:[/b] The callback function must take exactly one [Array] argument, which is going to be the JavaScript [url=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments]arguments object[/url] converted to an array.",
+      "godotName": "create_callback",
+      "xmlDocId": "M:Godot.JavaScriptBridge.CreateCallback(Callable)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "CreateObject",
+      "kind": "Method",
+      "signature": "public Variant CreateObject(String @object)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new JavaScript object using the [code]new[/code] constructor. The [param object] must a valid property of the JavaScript [code]window[/code]. See [JavaScriptObject] for usage.",
+      "godotName": "create_object",
+      "xmlDocId": "M:Godot.JavaScriptBridge.CreateObject(String)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "DownloadBuffer",
+      "kind": "Method",
+      "signature": "public void DownloadBuffer(PackedByteArray buffer, String name, String mime)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "mime",
+          "type": "String",
+          "defaultValue": "\u0022application/octet-stream\u0022"
+        }
+      ],
+      "summary": "Prompts the user to download a file containing the specified [param buffer]. The file will have the given [param name] and [param mime] type. [b]Note:[/b] The browser may override the [url=https://en.wikipedia.org/wiki/Media_type]MIME type[/url] provided based on the file [param name]\u0027s extension. [b]Note:[/b] Browsers might block the download if [method download_buffer] is not being called from a user interaction (e.g. button click). [b]Note:[/b] Browsers might ask the user for permission or block the download if multiple download requests are made in a quick succession.",
+      "godotName": "download_buffer",
+      "xmlDocId": "M:Godot.JavaScriptBridge.DownloadBuffer(PackedByteArray,String,String)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "Eval",
+      "kind": "Method",
+      "signature": "public Variant Eval(String code, bool useGlobalExecutionContext)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "use_global_execution_context",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Execute the string [param code] as JavaScript code within the browser window. This is a call to the actual global JavaScript function [code skip-lint]eval()[/code]. If [param use_global_execution_context] is [code]true[/code], the code will be evaluated in the global execution context. Otherwise, it is evaluated in the execution context of a function within the engine\u0027s runtime environment.",
+      "godotName": "eval",
+      "xmlDocId": "M:Godot.JavaScriptBridge.Eval(String,bool)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "ForceFsSync",
+      "kind": "Method",
+      "signature": "public void ForceFsSync()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Force synchronization of the persistent file system (when enabled). [b]Note:[/b] This is only useful for modules or extensions that can\u0027t use [FileAccess] to write files.",
+      "godotName": "force_fs_sync",
+      "xmlDocId": "M:Godot.JavaScriptBridge.ForceFsSync",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "GetInterface",
+      "kind": "Method",
+      "signature": "public JavaScriptObject GetInterface(String @interface)",
+      "returnType": "JavaScriptObject",
+      "parameters": [
+        {
+          "name": "interface",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an interface to a JavaScript object that can be used by scripts. The [param interface] must be a valid property of the JavaScript [code]window[/code]. The callback must accept a single [Array] argument, which will contain the JavaScript [code]arguments[/code]. See [JavaScriptObject] for usage.",
+      "godotName": "get_interface",
+      "xmlDocId": "M:Godot.JavaScriptBridge.GetInterface(String)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "IsJsBuffer",
+      "kind": "Method",
+      "signature": "public bool IsJsBuffer(JavaScriptObject javascriptObject)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "javascript_object",
+          "type": "JavaScriptObject"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param javascript_object] is of type [url=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer]ArrayBuffer[/url], [url=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView]DataView[/url], or one of the many [url=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray]typed array objects[/url].",
+      "godotName": "is_js_buffer",
+      "xmlDocId": "M:Godot.JavaScriptBridge.IsJsBuffer(JavaScriptObject)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "JsBufferToPackedByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray JsBufferToPackedByteArray(JavaScriptObject javascriptBuffer)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "javascript_buffer",
+          "type": "JavaScriptObject"
+        }
+      ],
+      "summary": "Returns a copy of [param javascript_buffer]\u0027s contents as a [PackedByteArray]. See also [method is_js_buffer].",
+      "godotName": "js_buffer_to_packed_byte_array",
+      "xmlDocId": "M:Godot.JavaScriptBridge.JsBufferToPackedByteArray(JavaScriptObject)",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "PwaNeedsUpdate",
+      "kind": "Method",
+      "signature": "public bool PwaNeedsUpdate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a new version of the progressive web app is waiting to be activated. [b]Note:[/b] Only relevant when exported as a Progressive Web App.",
+      "godotName": "pwa_needs_update",
+      "xmlDocId": "M:Godot.JavaScriptBridge.PwaNeedsUpdate",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    },
+    {
+      "name": "PwaUpdate",
+      "kind": "Method",
+      "signature": "public int PwaUpdate()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Performs the live update of the progressive web app. Forcing the new version to be installed and the page to be reloaded. [b]Note:[/b] Your application will be [b]reloaded in all browser tabs[/b]. [b]Note:[/b] Only relevant when exported as a Progressive Web App and [method pwa_needs_update] returns [code]true[/code].",
+      "godotName": "pwa_update",
+      "xmlDocId": "M:Godot.JavaScriptBridge.PwaUpdate",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PwaUpdateAvailable",
+      "kind": "Signal",
+      "signature": "public event PwaUpdateAvailableHandler PwaUpdateAvailable",
+      "parameters": [],
+      "summary": "Emitted when an update for this progressive web app has been detected but is waiting to be activated because a previous version is active. See [method pwa_update] to force the update to take place immediately.",
+      "godotName": "pwa_update_available",
+      "xmlDocId": "E:Godot.JavaScriptBridge.PwaUpdateAvailable",
+      "sourcePath": "doc/classes/JavaScriptBridge.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/JavaScriptBridge.xml",
+      "sha256": "f718acaa28c730907f9a3b9ad817f5581b882539384140771f72497bdbbba434"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

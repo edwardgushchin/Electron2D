@@ -1,0 +1,3030 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationServer3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationServer3D",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "NavigationServer3D",
+    "documentationPath": "doc/classes/NavigationServer3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationserver3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AgentCreate",
+      "kind": "Method",
+      "signature": "public RID AgentCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates the agent.",
+      "godotName": "agent_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetAvoidanceEnabled",
+      "kind": "Method",
+      "signature": "public bool AgentGetAvoidanceEnabled(RID agent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param agent] has avoidance enabled.",
+      "godotName": "agent_get_avoidance_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetAvoidanceEnabled(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetAvoidanceLayers",
+      "kind": "Method",
+      "signature": "public int AgentGetAvoidanceLayers(RID agent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]avoidance_layers[/code] bitmask of the specified [param agent].",
+      "godotName": "agent_get_avoidance_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetAvoidanceLayers(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetAvoidanceMask",
+      "kind": "Method",
+      "signature": "public int AgentGetAvoidanceMask(RID agent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]avoidance_mask[/code] bitmask of the specified [param agent].",
+      "godotName": "agent_get_avoidance_mask",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetAvoidanceMask(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetAvoidancePriority",
+      "kind": "Method",
+      "signature": "public float AgentGetAvoidancePriority(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]avoidance_priority[/code] of the specified [param agent].",
+      "godotName": "agent_get_avoidance_priority",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetAvoidancePriority(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetHeight",
+      "kind": "Method",
+      "signature": "public float AgentGetHeight(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]height[/code] of the specified [param agent].",
+      "godotName": "agent_get_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetHeight(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetMap",
+      "kind": "Method",
+      "signature": "public RID AgentGetMap(RID agent)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the navigation map [RID] the requested [param agent] is currently assigned to.",
+      "godotName": "agent_get_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetMap(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetMaxNeighbors",
+      "kind": "Method",
+      "signature": "public int AgentGetMaxNeighbors(RID agent)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the maximum number of other agents the specified [param agent] takes into account in the navigation.",
+      "godotName": "agent_get_max_neighbors",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetMaxNeighbors(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetMaxSpeed",
+      "kind": "Method",
+      "signature": "public float AgentGetMaxSpeed(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the maximum speed of the specified [param agent].",
+      "godotName": "agent_get_max_speed",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetMaxSpeed(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetNeighborDistance",
+      "kind": "Method",
+      "signature": "public float AgentGetNeighborDistance(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the maximum distance to other agents the specified [param agent] takes into account in the navigation.",
+      "godotName": "agent_get_neighbor_distance",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetNeighborDistance(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetPaused",
+      "kind": "Method",
+      "signature": "public bool AgentGetPaused(RID agent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param agent] is paused.",
+      "godotName": "agent_get_paused",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetPaused(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetPosition",
+      "kind": "Method",
+      "signature": "public Vector3 AgentGetPosition(RID agent)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the position of the specified [param agent] in world space.",
+      "godotName": "agent_get_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetPosition(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetRadius",
+      "kind": "Method",
+      "signature": "public float AgentGetRadius(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the radius of the specified [param agent].",
+      "godotName": "agent_get_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetRadius(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetTimeHorizonAgents",
+      "kind": "Method",
+      "signature": "public float AgentGetTimeHorizonAgents(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the minimal amount of time for which the specified [param agent]\u0027s velocities that are computed by the simulation are safe with respect to other agents.",
+      "godotName": "agent_get_time_horizon_agents",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetTimeHorizonAgents(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetTimeHorizonObstacles",
+      "kind": "Method",
+      "signature": "public float AgentGetTimeHorizonObstacles(RID agent)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the minimal amount of time for which the specified [param agent]\u0027s velocities that are computed by the simulation are safe with respect to static avoidance obstacles.",
+      "godotName": "agent_get_time_horizon_obstacles",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetTimeHorizonObstacles(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetUse3dAvoidance",
+      "kind": "Method",
+      "signature": "public bool AgentGetUse3dAvoidance(RID agent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param agent] uses avoidance in 3D space Vector3(x,y,z) instead of horizontal 2D Vector2(x,y) / Vector3(x,0.0,z).",
+      "godotName": "agent_get_use_3d_avoidance",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetUse3dAvoidance(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentGetVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 AgentGetVelocity(RID agent)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the velocity of the specified [param agent].",
+      "godotName": "agent_get_velocity",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentGetVelocity(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentHasAvoidanceCallback",
+      "kind": "Method",
+      "signature": "public bool AgentHasAvoidanceCallback(RID agent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Return [code]true[/code] if the specified [param agent] has an avoidance callback.",
+      "godotName": "agent_has_avoidance_callback",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentHasAvoidanceCallback(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentIsMapChanged",
+      "kind": "Method",
+      "signature": "public bool AgentIsMapChanged(RID agent)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the map got changed the previous frame.",
+      "godotName": "agent_is_map_changed",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentIsMapChanged(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetAvoidanceCallback",
+      "kind": "Method",
+      "signature": "public void AgentSetAvoidanceCallback(RID agent, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the callback [Callable] that gets called after each avoidance processing step for the [param agent]. The calculated [code]safe_velocity[/code] will be dispatched with a signal to the object just before the physics calculations. [b]Note:[/b] Created callbacks are always processed independently of the SceneTree state as long as the agent is on a navigation map and not freed. To disable the dispatch of a callback from an agent use [method agent_set_avoidance_callback] again with an empty [Callable].",
+      "godotName": "agent_set_avoidance_callback",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetAvoidanceCallback(RID,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetAvoidanceEnabled",
+      "kind": "Method",
+      "signature": "public void AgentSetAvoidanceEnabled(RID agent, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the provided [param agent] calculates avoidance.",
+      "godotName": "agent_set_avoidance_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetAvoidanceEnabled(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetAvoidanceLayers",
+      "kind": "Method",
+      "signature": "public void AgentSetAvoidanceLayers(RID agent, int layers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the agent\u0027s [code]avoidance_layers[/code] bitmask.",
+      "godotName": "agent_set_avoidance_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetAvoidanceLayers(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetAvoidanceMask",
+      "kind": "Method",
+      "signature": "public void AgentSetAvoidanceMask(RID agent, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the agent\u0027s [code]avoidance_mask[/code] bitmask.",
+      "godotName": "agent_set_avoidance_mask",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetAvoidanceMask(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetAvoidancePriority",
+      "kind": "Method",
+      "signature": "public void AgentSetAvoidancePriority(RID agent, float priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "priority",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the agent\u0027s [code]avoidance_priority[/code] with a [param priority] between 0.0 (lowest priority) to 1.0 (highest priority). The specified [param agent] does not adjust the velocity for other agents that would match the [code]avoidance_mask[/code] but have a lower [code]avoidance_priority[/code]. This in turn makes the other agents with lower priority adjust their velocities even more to avoid collision with this agent.",
+      "godotName": "agent_set_avoidance_priority",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetAvoidancePriority(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetHeight",
+      "kind": "Method",
+      "signature": "public void AgentSetHeight(RID agent, float height)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "height",
+          "type": "float"
+        }
+      ],
+      "summary": "Updates the provided [param agent] [param height].",
+      "godotName": "agent_set_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetHeight(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetMap",
+      "kind": "Method",
+      "signature": "public void AgentSetMap(RID agent, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Puts the agent in the map.",
+      "godotName": "agent_set_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetMap(RID,RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetMaxNeighbors",
+      "kind": "Method",
+      "signature": "public void AgentSetMaxNeighbors(RID agent, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the maximum number of other agents the agent takes into account in the navigation. The larger this number, the longer the running time of the simulation. If the number is too low, the simulation will not be safe.",
+      "godotName": "agent_set_max_neighbors",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetMaxNeighbors(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetMaxSpeed",
+      "kind": "Method",
+      "signature": "public void AgentSetMaxSpeed(RID agent, float maxSpeed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "max_speed",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum speed of the agent. Must be positive.",
+      "godotName": "agent_set_max_speed",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetMaxSpeed(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetNeighborDistance",
+      "kind": "Method",
+      "signature": "public void AgentSetNeighborDistance(RID agent, float distance)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "distance",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum distance to other agents this agent takes into account in the navigation. The larger this number, the longer the running time of the simulation. If the number is too low, the simulation will not be safe.",
+      "godotName": "agent_set_neighbor_distance",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetNeighborDistance(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetPaused",
+      "kind": "Method",
+      "signature": "public void AgentSetPaused(RID agent, bool paused)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param paused] is [code]true[/code] the specified [param agent] will not be processed. For example, it will not calculate avoidance velocities or receive avoidance callbacks.",
+      "godotName": "agent_set_paused",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetPaused(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetPosition",
+      "kind": "Method",
+      "signature": "public void AgentSetPosition(RID agent, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the position of the agent in world space.",
+      "godotName": "agent_set_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetPosition(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetRadius",
+      "kind": "Method",
+      "signature": "public void AgentSetRadius(RID agent, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the radius of the agent.",
+      "godotName": "agent_set_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetRadius(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetTimeHorizonAgents",
+      "kind": "Method",
+      "signature": "public void AgentSetTimeHorizonAgents(RID agent, float timeHorizon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "time_horizon",
+          "type": "float"
+        }
+      ],
+      "summary": "The minimal amount of time for which the agent\u0027s velocities that are computed by the simulation are safe with respect to other agents. The larger this number, the sooner this agent will respond to the presence of other agents, but the less freedom this agent has in choosing its velocities. A too high value will slow down agents movement considerably. Must be positive.",
+      "godotName": "agent_set_time_horizon_agents",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetTimeHorizonAgents(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetTimeHorizonObstacles",
+      "kind": "Method",
+      "signature": "public void AgentSetTimeHorizonObstacles(RID agent, float timeHorizon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "time_horizon",
+          "type": "float"
+        }
+      ],
+      "summary": "The minimal amount of time for which the agent\u0027s velocities that are computed by the simulation are safe with respect to static avoidance obstacles. The larger this number, the sooner this agent will respond to the presence of static avoidance obstacles, but the less freedom this agent has in choosing its velocities. A too high value will slow down agents movement considerably. Must be positive.",
+      "godotName": "agent_set_time_horizon_obstacles",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetTimeHorizonObstacles(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetUse3dAvoidance",
+      "kind": "Method",
+      "signature": "public void AgentSetUse3dAvoidance(RID agent, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets if the agent uses the 2D avoidance or the 3D avoidance while avoidance is enabled. If [code]true[/code] the agent calculates avoidance velocities in 3D for the xyz-axis, e.g. for games that take place in air, underwater or space. The 3D using agent only avoids other 3D avoidance using agent\u0027s. The 3D using agent only reacts to radius based avoidance obstacles. The 3D using agent ignores any vertices based obstacles. The 3D using agent only avoids other 3D using agent\u0027s. If [code]false[/code] the agent calculates avoidance velocities in 2D along the xz-axis ignoring the y-axis. The 2D using agent only avoids other 2D avoidance using agent\u0027s. The 2D using agent reacts to radius avoidance obstacles. The 2D using agent reacts to vertices based avoidance obstacles. The 2D using agent only avoids other 2D using agent\u0027s. 2D using agents will ignore other 2D using agents or obstacles that are below their current position or above their current position including the agents height in 2D avoidance.",
+      "godotName": "agent_set_use_3d_avoidance",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetUse3dAvoidance(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetVelocity",
+      "kind": "Method",
+      "signature": "public void AgentSetVelocity(RID agent, Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets [param velocity] as the new wanted velocity for the specified [param agent]. The avoidance simulation will try to fulfill this velocity if possible but will modify it to avoid collision with other agent\u0027s and obstacles. When an agent is teleported to a new position use [method agent_set_velocity_forced] as well to reset the internal simulation velocity.",
+      "godotName": "agent_set_velocity",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetVelocity(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "AgentSetVelocityForced",
+      "kind": "Method",
+      "signature": "public void AgentSetVelocityForced(RID agent, Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "agent",
+          "type": "RID"
+        },
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Replaces the internal velocity in the collision avoidance simulation with [param velocity] for the specified [param agent]. When an agent is teleported to a new position this function should be used in the same frame. If called frequently this function can get agents stuck.",
+      "godotName": "agent_set_velocity_forced",
+      "xmlDocId": "M:Godot.NavigationServer3D.AgentSetVelocityForced(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "BakeFromSourceGeometryData",
+      "kind": "Method",
+      "signature": "public void BakeFromSourceGeometryData(NavigationMesh navigationMesh, NavigationMeshSourceGeometryData3D sourceGeometryData, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "source_geometry_data",
+          "type": "NavigationMeshSourceGeometryData3D"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Bakes the provided [param navigation_mesh] with the data from the provided [param source_geometry_data]. After the process is finished the optional [param callback] will be called.",
+      "godotName": "bake_from_source_geometry_data",
+      "xmlDocId": "M:Godot.NavigationServer3D.BakeFromSourceGeometryData(NavigationMesh,NavigationMeshSourceGeometryData3D,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "BakeFromSourceGeometryDataAsync",
+      "kind": "Method",
+      "signature": "public void BakeFromSourceGeometryDataAsync(NavigationMesh navigationMesh, NavigationMeshSourceGeometryData3D sourceGeometryData, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "source_geometry_data",
+          "type": "NavigationMeshSourceGeometryData3D"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Bakes the provided [param navigation_mesh] with the data from the provided [param source_geometry_data] as an async task running on a background thread. After the process is finished the optional [param callback] will be called.",
+      "godotName": "bake_from_source_geometry_data_async",
+      "xmlDocId": "M:Godot.NavigationServer3D.BakeFromSourceGeometryDataAsync(NavigationMesh,NavigationMeshSourceGeometryData3D,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "FreeRid",
+      "kind": "Method",
+      "signature": "public void FreeRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Destroys the given RID.",
+      "godotName": "free_rid",
+      "xmlDocId": "M:Godot.NavigationServer3D.FreeRid(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "GetDebugEnabled",
+      "kind": "Method",
+      "signature": "public bool GetDebugEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when the NavigationServer has debug enabled.",
+      "godotName": "get_debug_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.GetDebugEnabled",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "GetMaps",
+      "kind": "Method",
+      "signature": "public RID[] GetMaps()",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "Returns all created navigation map [RID]s on the NavigationServer. This returns both 2D and 3D created navigation maps as there is technically no distinction between them.",
+      "godotName": "get_maps",
+      "xmlDocId": "M:Godot.NavigationServer3D.GetMaps",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "GetProcessInfo",
+      "kind": "Method",
+      "signature": "public int GetProcessInfo(int processInfo)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "process_info",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns information about the current state of the NavigationServer.",
+      "godotName": "get_process_info",
+      "xmlDocId": "M:Godot.NavigationServer3D.GetProcessInfo(int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "IsBakingNavigationMesh",
+      "kind": "Method",
+      "signature": "public bool IsBakingNavigationMesh(NavigationMesh navigationMesh)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        }
+      ],
+      "summary": "Returns [code]true[/code] when the provided navigation mesh is being baked on a background thread.",
+      "godotName": "is_baking_navigation_mesh",
+      "xmlDocId": "M:Godot.NavigationServer3D.IsBakingNavigationMesh(NavigationMesh)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkCreate",
+      "kind": "Method",
+      "signature": "public RID LinkCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Create a new link between two positions on a map.",
+      "godotName": "link_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetEnabled",
+      "kind": "Method",
+      "signature": "public bool LinkGetEnabled(RID link)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param link] is enabled.",
+      "godotName": "link_get_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetEnabled(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetEndPosition",
+      "kind": "Method",
+      "signature": "public Vector3 LinkGetEndPosition(RID link)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the ending position of this [param link].",
+      "godotName": "link_get_end_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetEndPosition(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetEnterCost",
+      "kind": "Method",
+      "signature": "public float LinkGetEnterCost(RID link)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the enter cost of this [param link].",
+      "godotName": "link_get_enter_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetEnterCost(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetIterationId",
+      "kind": "Method",
+      "signature": "public int LinkGetIterationId(RID link)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the current iteration ID of the navigation link. Every time the navigation link changes and synchronizes, the iteration ID increases. An iteration ID of [code]0[/code] means the navigation link has never synchronized. [b]Note:[/b] The iteration ID will wrap around to [code]1[/code] after reaching its range limit.",
+      "godotName": "link_get_iteration_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetIterationId(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetMap",
+      "kind": "Method",
+      "signature": "public RID LinkGetMap(RID link)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the navigation map [RID] the requested [param link] is currently assigned to.",
+      "godotName": "link_get_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetMap(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetNavigationLayers",
+      "kind": "Method",
+      "signature": "public int LinkGetNavigationLayers(RID link)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the navigation layers for this [param link].",
+      "godotName": "link_get_navigation_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetNavigationLayers(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetOwnerId",
+      "kind": "Method",
+      "signature": "public int LinkGetOwnerId(RID link)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] of the object which manages this link.",
+      "godotName": "link_get_owner_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetOwnerId(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetStartPosition",
+      "kind": "Method",
+      "signature": "public Vector3 LinkGetStartPosition(RID link)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the starting position of this [param link].",
+      "godotName": "link_get_start_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetStartPosition(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkGetTravelCost",
+      "kind": "Method",
+      "signature": "public float LinkGetTravelCost(RID link)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the travel cost of this [param link].",
+      "godotName": "link_get_travel_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkGetTravelCost(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkIsBidirectional",
+      "kind": "Method",
+      "signature": "public bool LinkIsBidirectional(RID link)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns whether this [param link] can be travelled in both directions.",
+      "godotName": "link_is_bidirectional",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkIsBidirectional(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetBidirectional",
+      "kind": "Method",
+      "signature": "public void LinkSetBidirectional(RID link, bool bidirectional)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "bidirectional",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether this [param link] can be travelled in both directions.",
+      "godotName": "link_set_bidirectional",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetBidirectional(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetEnabled",
+      "kind": "Method",
+      "signature": "public void LinkSetEnabled(RID link, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the specified [param link] will contribute to its current navigation map.",
+      "godotName": "link_set_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetEnabled(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetEndPosition",
+      "kind": "Method",
+      "signature": "public void LinkSetEndPosition(RID link, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the exit position for the [param link].",
+      "godotName": "link_set_end_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetEndPosition(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetEnterCost",
+      "kind": "Method",
+      "signature": "public void LinkSetEnterCost(RID link, float enterCost)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "enter_cost",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param enter_cost] for this [param link].",
+      "godotName": "link_set_enter_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetEnterCost(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetMap",
+      "kind": "Method",
+      "signature": "public void LinkSetMap(RID link, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the navigation map [RID] for the link.",
+      "godotName": "link_set_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetMap(RID,RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetNavigationLayers",
+      "kind": "Method",
+      "signature": "public void LinkSetNavigationLayers(RID link, int navigationLayers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the links\u0027s navigation layers. This allows selecting links from a path request (when using [method NavigationServer3D.map_get_path]).",
+      "godotName": "link_set_navigation_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetNavigationLayers(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetOwnerId",
+      "kind": "Method",
+      "signature": "public void LinkSetOwnerId(RID link, int ownerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the [code]ObjectID[/code] of the object which manages this link.",
+      "godotName": "link_set_owner_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetOwnerId(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetStartPosition",
+      "kind": "Method",
+      "signature": "public void LinkSetStartPosition(RID link, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the entry position for this [param link].",
+      "godotName": "link_set_start_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetStartPosition(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "LinkSetTravelCost",
+      "kind": "Method",
+      "signature": "public void LinkSetTravelCost(RID link, float travelCost)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "link",
+          "type": "RID"
+        },
+        {
+          "name": "travel_cost",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param travel_cost] for this [param link].",
+      "godotName": "link_set_travel_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.LinkSetTravelCost(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapCreate",
+      "kind": "Method",
+      "signature": "public RID MapCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Create a new map.",
+      "godotName": "map_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapForceUpdate",
+      "kind": "Method",
+      "signature": "public void MapForceUpdate(RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "This function immediately forces synchronization of the specified navigation [param map] [RID]. By default navigation maps are only synchronized at the end of each physics frame. This function can be used to immediately (re)calculate all the navigation meshes and region connections of the navigation map. This makes it possible to query a navigation path for a changed map immediately and in the same frame (multiple times if needed). Due to technical restrictions the current NavigationServer command queue will be flushed. This means all already queued update commands for this physics frame will be executed, even those intended for other maps, regions and agents not part of the specified map. The expensive computation of the navigation meshes and region connections of a map will only be done for the specified map. Other maps will receive the normal synchronization at the end of the physics frame. Should the specified map receive changes after the forced update it will update again as well when the other maps receive their update. Avoidance processing and dispatch of the [code]safe_velocity[/code] signals is unaffected by this function and continues to happen for all maps and agents at the end of the physics frame. [b]Note:[/b] With great power comes great responsibility. This function should only be used by users that really know what they are doing and have a good reason for it. Forcing an immediate update of a navigation map requires locking the NavigationServer and flushing the entire NavigationServer command queue. Not only can this severely impact the performance of a game but it can also introduce bugs if used inappropriately without much foresight.",
+      "godotName": "map_force_update",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapForceUpdate(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetAgents",
+      "kind": "Method",
+      "signature": "public RID[] MapGetAgents(RID map)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns all navigation agents [RID]s that are currently assigned to the requested navigation [param map].",
+      "godotName": "map_get_agents",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetAgents(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetCellHeight",
+      "kind": "Method",
+      "signature": "public float MapGetCellHeight(RID map)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the map cell height used to rasterize the navigation mesh vertices on the Y axis.",
+      "godotName": "map_get_cell_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetCellHeight(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetCellSize",
+      "kind": "Method",
+      "signature": "public float MapGetCellSize(RID map)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the map cell size used to rasterize the navigation mesh vertices on the XZ plane.",
+      "godotName": "map_get_cell_size",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetCellSize(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetClosestPoint",
+      "kind": "Method",
+      "signature": "public Vector3 MapGetClosestPoint(RID map, Vector3 toPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface point closest to the provided [param to_point] on the navigation [param map].",
+      "godotName": "map_get_closest_point",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetClosestPoint(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetClosestPointNormal",
+      "kind": "Method",
+      "signature": "public Vector3 MapGetClosestPointNormal(RID map, Vector3 toPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface normal closest to the provided [param to_point] on the navigation [param map].",
+      "godotName": "map_get_closest_point_normal",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetClosestPointNormal(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetClosestPointOwner",
+      "kind": "Method",
+      "signature": "public RID MapGetClosestPointOwner(RID map, Vector3 toPoint)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the owner region RID for the navigation mesh surface point closest to the provided [param to_point] on the navigation [param map].",
+      "godotName": "map_get_closest_point_owner",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetClosestPointOwner(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetClosestPointToSegment",
+      "kind": "Method",
+      "signature": "public Vector3 MapGetClosestPointToSegment(RID map, Vector3 start, Vector3 end, bool useCollision)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "start",
+          "type": "Vector3"
+        },
+        {
+          "name": "end",
+          "type": "Vector3"
+        },
+        {
+          "name": "use_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface point closest to the provided [param start] and [param end] segment on the navigation [param map]. If [param use_collision] is [code]true[/code], a closest point test is only done when the segment intersects with the navigation mesh surface.",
+      "godotName": "map_get_closest_point_to_segment",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetClosestPointToSegment(RID,Vector3,Vector3,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetEdgeConnectionMargin",
+      "kind": "Method",
+      "signature": "public float MapGetEdgeConnectionMargin(RID map)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the edge connection margin of the map. This distance is the minimum vertex distance needed to connect two edges from different regions.",
+      "godotName": "map_get_edge_connection_margin",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetEdgeConnectionMargin(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetIterationId",
+      "kind": "Method",
+      "signature": "public int MapGetIterationId(RID map)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the current iteration id of the navigation map. Every time the navigation map changes and synchronizes the iteration id increases. An iteration id of 0 means the navigation map has never synchronized. [b]Note:[/b] The iteration id will wrap back to 1 after reaching its range limit.",
+      "godotName": "map_get_iteration_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetIterationId(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetLinkConnectionRadius",
+      "kind": "Method",
+      "signature": "public float MapGetLinkConnectionRadius(RID map)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the link connection radius of the map. This distance is the maximum range any link will search for navigation mesh polygons to connect to.",
+      "godotName": "map_get_link_connection_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetLinkConnectionRadius(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetLinks",
+      "kind": "Method",
+      "signature": "public RID[] MapGetLinks(RID map)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns all navigation link [RID]s that are currently assigned to the requested navigation [param map].",
+      "godotName": "map_get_links",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetLinks(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetMergeRasterizerCellScale",
+      "kind": "Method",
+      "signature": "public float MapGetMergeRasterizerCellScale(RID map)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns map\u0027s internal merge rasterizer cell scale.",
+      "godotName": "map_get_merge_rasterizer_cell_scale",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetMergeRasterizerCellScale(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetObstacles",
+      "kind": "Method",
+      "signature": "public RID[] MapGetObstacles(RID map)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns all navigation obstacle [RID]s that are currently assigned to the requested navigation [param map].",
+      "godotName": "map_get_obstacles",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetObstacles(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetPath",
+      "kind": "Method",
+      "signature": "public PackedVector3Array MapGetPath(RID map, Vector3 origin, Vector3 destination, bool optimize, int navigationLayers)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "origin",
+          "type": "Vector3"
+        },
+        {
+          "name": "destination",
+          "type": "Vector3"
+        },
+        {
+          "name": "optimize",
+          "type": "bool"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Returns the navigation path to reach the destination from the origin. [param navigation_layers] is a bitmask of all region navigation layers that are allowed to be in the path.",
+      "godotName": "map_get_path",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetPath(RID,Vector3,Vector3,bool,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetRandomPoint",
+      "kind": "Method",
+      "signature": "public Vector3 MapGetRandomPoint(RID map, int navigationLayers, bool uniformly)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int"
+        },
+        {
+          "name": "uniformly",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns a random position picked from all map region polygons with matching [param navigation_layers]. If [param uniformly] is [code]true[/code], all map regions, polygons, and faces are weighted by their surface area (slower). If [param uniformly] is [code]false[/code], just a random region and a random polygon are picked (faster).",
+      "godotName": "map_get_random_point",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetRandomPoint(RID,int,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetRegions",
+      "kind": "Method",
+      "signature": "public RID[] MapGetRegions(RID map)",
+      "returnType": "RID[]",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns all navigation regions [RID]s that are currently assigned to the requested navigation [param map].",
+      "godotName": "map_get_regions",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetRegions(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetUp",
+      "kind": "Method",
+      "signature": "public Vector3 MapGetUp(RID map)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the map\u0027s up direction.",
+      "godotName": "map_get_up",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetUp(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetUseAsyncIterations",
+      "kind": "Method",
+      "signature": "public bool MapGetUseAsyncIterations(RID map)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param map] synchronization uses an async process that runs on a background thread.",
+      "godotName": "map_get_use_async_iterations",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetUseAsyncIterations(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapGetUseEdgeConnections",
+      "kind": "Method",
+      "signature": "public bool MapGetUseEdgeConnections(RID map)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the navigation [param map] allows navigation regions to use edge connections to connect with other navigation regions within proximity of the navigation map edge connection margin.",
+      "godotName": "map_get_use_edge_connections",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapGetUseEdgeConnections(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapIsActive",
+      "kind": "Method",
+      "signature": "public bool MapIsActive(RID map)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the map is active.",
+      "godotName": "map_is_active",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapIsActive(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetActive",
+      "kind": "Method",
+      "signature": "public void MapSetActive(RID map, bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the map active.",
+      "godotName": "map_set_active",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetActive(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetCellHeight",
+      "kind": "Method",
+      "signature": "public void MapSetCellHeight(RID map, float cellHeight)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "cell_height",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the map cell height used to rasterize the navigation mesh vertices on the Y axis. Must match with the cell height of the used navigation meshes.",
+      "godotName": "map_set_cell_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetCellHeight(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetCellSize",
+      "kind": "Method",
+      "signature": "public void MapSetCellSize(RID map, float cellSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "cell_size",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the map cell size used to rasterize the navigation mesh vertices on the XZ plane. Must match with the cell size of the used navigation meshes.",
+      "godotName": "map_set_cell_size",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetCellSize(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetEdgeConnectionMargin",
+      "kind": "Method",
+      "signature": "public void MapSetEdgeConnectionMargin(RID map, float margin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the map edge connection margin used to weld the compatible region edges.",
+      "godotName": "map_set_edge_connection_margin",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetEdgeConnectionMargin(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetLinkConnectionRadius",
+      "kind": "Method",
+      "signature": "public void MapSetLinkConnectionRadius(RID map, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the map\u0027s link connection radius used to connect links to navigation polygons.",
+      "godotName": "map_set_link_connection_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetLinkConnectionRadius(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetMergeRasterizerCellScale",
+      "kind": "Method",
+      "signature": "public void MapSetMergeRasterizerCellScale(RID map, float scale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Set the map\u0027s internal merge rasterizer cell scale used to control merging sensitivity.",
+      "godotName": "map_set_merge_rasterizer_cell_scale",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetMergeRasterizerCellScale(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetUp",
+      "kind": "Method",
+      "signature": "public void MapSetUp(RID map, Vector3 up)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "up",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the map up direction.",
+      "godotName": "map_set_up",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetUp(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetUseAsyncIterations",
+      "kind": "Method",
+      "signature": "public void MapSetUseAsyncIterations(RID map, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code] the [param map] synchronization uses an async process that runs on a background thread.",
+      "godotName": "map_set_use_async_iterations",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetUseAsyncIterations(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapSetUseEdgeConnections",
+      "kind": "Method",
+      "signature": "public void MapSetUseEdgeConnections(RID map, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set the navigation [param map] edge connection use. If [param enabled] is [code]true[/code], the navigation map allows navigation regions to use edge connections to connect with other navigation regions within proximity of the navigation map edge connection margin.",
+      "godotName": "map_set_use_edge_connections",
+      "xmlDocId": "M:Godot.NavigationServer3D.MapSetUseEdgeConnections(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleCreate",
+      "kind": "Method",
+      "signature": "public RID ObstacleCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a new obstacle.",
+      "godotName": "obstacle_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetAvoidanceEnabled",
+      "kind": "Method",
+      "signature": "public bool ObstacleGetAvoidanceEnabled(RID obstacle)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param obstacle] has avoidance enabled.",
+      "godotName": "obstacle_get_avoidance_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetAvoidanceEnabled(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetAvoidanceLayers",
+      "kind": "Method",
+      "signature": "public int ObstacleGetAvoidanceLayers(RID obstacle)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]avoidance_layers[/code] bitmask of the specified [param obstacle].",
+      "godotName": "obstacle_get_avoidance_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetAvoidanceLayers(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetHeight",
+      "kind": "Method",
+      "signature": "public float ObstacleGetHeight(RID obstacle)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]height[/code] of the specified [param obstacle].",
+      "godotName": "obstacle_get_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetHeight(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetMap",
+      "kind": "Method",
+      "signature": "public RID ObstacleGetMap(RID obstacle)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the navigation map [RID] the requested [param obstacle] is currently assigned to.",
+      "godotName": "obstacle_get_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetMap(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetPaused",
+      "kind": "Method",
+      "signature": "public bool ObstacleGetPaused(RID obstacle)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param obstacle] is paused.",
+      "godotName": "obstacle_get_paused",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetPaused(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetPosition",
+      "kind": "Method",
+      "signature": "public Vector3 ObstacleGetPosition(RID obstacle)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the position of the specified [param obstacle] in world space.",
+      "godotName": "obstacle_get_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetPosition(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetRadius",
+      "kind": "Method",
+      "signature": "public float ObstacleGetRadius(RID obstacle)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the radius of the specified dynamic [param obstacle].",
+      "godotName": "obstacle_get_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetRadius(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetUse3dAvoidance",
+      "kind": "Method",
+      "signature": "public bool ObstacleGetUse3dAvoidance(RID obstacle)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param obstacle] uses avoidance in 3D space Vector3(x,y,z) instead of horizontal 2D Vector2(x,y) / Vector3(x,0.0,z).",
+      "godotName": "obstacle_get_use_3d_avoidance",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetUse3dAvoidance(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 ObstacleGetVelocity(RID obstacle)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the velocity of the specified dynamic [param obstacle].",
+      "godotName": "obstacle_get_velocity",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetVelocity(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleGetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector3Array ObstacleGetVertices(RID obstacle)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the outline vertices for the specified [param obstacle].",
+      "godotName": "obstacle_get_vertices",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleGetVertices(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetAvoidanceEnabled",
+      "kind": "Method",
+      "signature": "public void ObstacleSetAvoidanceEnabled(RID obstacle, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the provided [param obstacle] affects avoidance using agents.",
+      "godotName": "obstacle_set_avoidance_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetAvoidanceEnabled(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetAvoidanceLayers",
+      "kind": "Method",
+      "signature": "public void ObstacleSetAvoidanceLayers(RID obstacle, int layers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the obstacles\u0027s [code]avoidance_layers[/code] bitmask.",
+      "godotName": "obstacle_set_avoidance_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetAvoidanceLayers(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetHeight",
+      "kind": "Method",
+      "signature": "public void ObstacleSetHeight(RID obstacle, float height)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "height",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param height] for the [param obstacle]. In 3D agents will ignore obstacles that are above or below them while using 2D avoidance.",
+      "godotName": "obstacle_set_height",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetHeight(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetMap",
+      "kind": "Method",
+      "signature": "public void ObstacleSetMap(RID obstacle, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Assigns the [param obstacle] to a navigation map.",
+      "godotName": "obstacle_set_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetMap(RID,RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetPaused",
+      "kind": "Method",
+      "signature": "public void ObstacleSetPaused(RID obstacle, bool paused)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param paused] is [code]true[/code] the specified [param obstacle] will not be processed. For example, it will no longer affect avoidance velocities.",
+      "godotName": "obstacle_set_paused",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetPaused(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetPosition",
+      "kind": "Method",
+      "signature": "public void ObstacleSetPosition(RID obstacle, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Updates the [param position] in world space for the [param obstacle].",
+      "godotName": "obstacle_set_position",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetPosition(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetRadius",
+      "kind": "Method",
+      "signature": "public void ObstacleSetRadius(RID obstacle, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the radius of the dynamic obstacle.",
+      "godotName": "obstacle_set_radius",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetRadius(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetUse3dAvoidance",
+      "kind": "Method",
+      "signature": "public void ObstacleSetUse3dAvoidance(RID obstacle, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets if the [param obstacle] uses the 2D avoidance or the 3D avoidance while avoidance is enabled.",
+      "godotName": "obstacle_set_use_3d_avoidance",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetUse3dAvoidance(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetVelocity",
+      "kind": "Method",
+      "signature": "public void ObstacleSetVelocity(RID obstacle, Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets [param velocity] of the dynamic [param obstacle]. Allows other agents to better predict the movement of the dynamic obstacle. Only works in combination with the radius of the obstacle.",
+      "godotName": "obstacle_set_velocity",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetVelocity(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ObstacleSetVertices",
+      "kind": "Method",
+      "signature": "public void ObstacleSetVertices(RID obstacle, PackedVector3Array vertices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obstacle",
+          "type": "RID"
+        },
+        {
+          "name": "vertices",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Sets the outline vertices for the obstacle. If the vertices are winded in clockwise order agents will be pushed in by the obstacle, else they will be pushed out.",
+      "godotName": "obstacle_set_vertices",
+      "xmlDocId": "M:Godot.NavigationServer3D.ObstacleSetVertices(RID,PackedVector3Array)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "ParseSourceGeometryData",
+      "kind": "Method",
+      "signature": "public void ParseSourceGeometryData(NavigationMesh navigationMesh, NavigationMeshSourceGeometryData3D sourceGeometryData, Node rootNode, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "source_geometry_data",
+          "type": "NavigationMeshSourceGeometryData3D"
+        },
+        {
+          "name": "root_node",
+          "type": "Node"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Parses the [SceneTree] for source geometry according to the properties of [param navigation_mesh]. Updates the provided [param source_geometry_data] resource with the resulting data. The resource can then be used to bake a navigation mesh with [method bake_from_source_geometry_data]. After the process is finished the optional [param callback] will be called. [b]Note:[/b] This function needs to run on the main thread or with a deferred call as the SceneTree is not thread-safe. [b]Performance:[/b] While convenient, reading data arrays from [Mesh] resources can affect the frame rate negatively. The data needs to be received from the GPU, stalling the [RenderingServer] in the process. For performance prefer the use of e.g. collision shapes or creating the data arrays entirely in code.",
+      "godotName": "parse_source_geometry_data",
+      "xmlDocId": "M:Godot.NavigationServer3D.ParseSourceGeometryData(NavigationMesh,NavigationMeshSourceGeometryData3D,Node,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "QueryPath",
+      "kind": "Method",
+      "signature": "public void QueryPath(NavigationPathQueryParameters3D parameters, NavigationPathQueryResult3D result, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "NavigationPathQueryParameters3D"
+        },
+        {
+          "name": "result",
+          "type": "NavigationPathQueryResult3D"
+        },
+        {
+          "name": "callback",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Queries a path in a given navigation map. Start and target position and other parameters are defined through [NavigationPathQueryParameters3D]. Updates the provided [NavigationPathQueryResult3D] result object with the path among other results requested by the query. After the process is finished the optional [param callback] will be called.",
+      "godotName": "query_path",
+      "xmlDocId": "M:Godot.NavigationServer3D.QueryPath(NavigationPathQueryParameters3D,NavigationPathQueryResult3D,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionBakeNavigationMesh",
+      "kind": "Method",
+      "signature": "public void RegionBakeNavigationMesh(NavigationMesh navigationMesh, Node rootNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        },
+        {
+          "name": "root_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Bakes the [param navigation_mesh] with bake source geometry collected starting from the [param root_node].",
+      "godotName": "region_bake_navigation_mesh",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionBakeNavigationMesh(NavigationMesh,Node)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionCreate",
+      "kind": "Method",
+      "signature": "public RID RegionCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a new region.",
+      "godotName": "region_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetBounds",
+      "kind": "Method",
+      "signature": "public AABB RegionGetBounds(RID region)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the axis-aligned bounding box for the [param region]\u0027s transformed navigation mesh.",
+      "godotName": "region_get_bounds",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetBounds(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetClosestPoint",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetClosestPoint(RID region, Vector3 toPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface point closest to the provided [param to_point] on the navigation [param region].",
+      "godotName": "region_get_closest_point",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetClosestPoint(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetClosestPointNormal",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetClosestPointNormal(RID region, Vector3 toPoint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface normal closest to the provided [param to_point] on the navigation [param region].",
+      "godotName": "region_get_closest_point_normal",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetClosestPointNormal(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetClosestPointToSegment",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetClosestPointToSegment(RID region, Vector3 start, Vector3 end, bool useCollision)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "start",
+          "type": "Vector3"
+        },
+        {
+          "name": "end",
+          "type": "Vector3"
+        },
+        {
+          "name": "use_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the navigation mesh surface point closest to the provided [param start] and [param end] segment on the navigation [param region]. If [param use_collision] is [code]true[/code], a closest point test is only done when the segment intersects with the navigation mesh surface.",
+      "godotName": "region_get_closest_point_to_segment",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetClosestPointToSegment(RID,Vector3,Vector3,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetConnectionPathwayEnd",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetConnectionPathwayEnd(RID region, int connection)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "connection",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the ending point of a connection door. [param connection] is an index between 0 and the return value of [method region_get_connections_count].",
+      "godotName": "region_get_connection_pathway_end",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetConnectionPathwayEnd(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetConnectionPathwayStart",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetConnectionPathwayStart(RID region, int connection)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "connection",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the starting point of a connection door. [param connection] is an index between 0 and the return value of [method region_get_connections_count].",
+      "godotName": "region_get_connection_pathway_start",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetConnectionPathwayStart(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetConnectionsCount",
+      "kind": "Method",
+      "signature": "public int RegionGetConnectionsCount(RID region)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns how many connections this [param region] has with other regions in the map.",
+      "godotName": "region_get_connections_count",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetConnectionsCount(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetEnabled",
+      "kind": "Method",
+      "signature": "public bool RegionGetEnabled(RID region)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param region] is enabled.",
+      "godotName": "region_get_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetEnabled(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetEnterCost",
+      "kind": "Method",
+      "signature": "public float RegionGetEnterCost(RID region)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the enter cost of this [param region].",
+      "godotName": "region_get_enter_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetEnterCost(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetIterationId",
+      "kind": "Method",
+      "signature": "public int RegionGetIterationId(RID region)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the current iteration ID of the navigation region. Every time the navigation region changes and synchronizes, the iteration ID increases. An iteration ID of [code]0[/code] means the navigation region has never synchronized. [b]Note:[/b] The iteration ID will wrap around to [code]1[/code] after reaching its range limit.",
+      "godotName": "region_get_iteration_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetIterationId(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetMap",
+      "kind": "Method",
+      "signature": "public RID RegionGetMap(RID region)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the navigation map [RID] the requested [param region] is currently assigned to.",
+      "godotName": "region_get_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetMap(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetNavigationLayers",
+      "kind": "Method",
+      "signature": "public int RegionGetNavigationLayers(RID region)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the region\u0027s navigation layers.",
+      "godotName": "region_get_navigation_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetNavigationLayers(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetOwnerId",
+      "kind": "Method",
+      "signature": "public int RegionGetOwnerId(RID region)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] of the object which manages this region.",
+      "godotName": "region_get_owner_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetOwnerId(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetRandomPoint",
+      "kind": "Method",
+      "signature": "public Vector3 RegionGetRandomPoint(RID region, int navigationLayers, bool uniformly)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int"
+        },
+        {
+          "name": "uniformly",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns a random position picked from all region polygons with matching [param navigation_layers]. If [param uniformly] is [code]true[/code], all region polygons and faces are weighted by their surface area (slower). If [param uniformly] is [code]false[/code], just a random polygon and face is picked (faster).",
+      "godotName": "region_get_random_point",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetRandomPoint(RID,int,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D RegionGetTransform(RID region)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the global transformation of this [param region].",
+      "godotName": "region_get_transform",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetTransform(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetTravelCost",
+      "kind": "Method",
+      "signature": "public float RegionGetTravelCost(RID region)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the travel cost of this [param region].",
+      "godotName": "region_get_travel_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetTravelCost(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetUseAsyncIterations",
+      "kind": "Method",
+      "signature": "public bool RegionGetUseAsyncIterations(RID region)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [param region] uses an async synchronization process that runs on a background thread.",
+      "godotName": "region_get_use_async_iterations",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetUseAsyncIterations(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionGetUseEdgeConnections",
+      "kind": "Method",
+      "signature": "public bool RegionGetUseEdgeConnections(RID region)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the navigation [param region] is set to use edge connections to connect with other navigation regions within proximity of the navigation map edge connection margin.",
+      "godotName": "region_get_use_edge_connections",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionGetUseEdgeConnections(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionOwnsPoint",
+      "kind": "Method",
+      "signature": "public bool RegionOwnsPoint(RID region, Vector3 point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the provided [param point] in world space is currently owned by the provided navigation [param region]. Owned in this context means that one of the region\u0027s navigation mesh polygon faces has a possible position at the closest distance to this point compared to all other navigation meshes from other navigation regions that are also registered on the navigation map of the provided region. If multiple navigation meshes have positions at equal distance the navigation region whose polygons are processed first wins the ownership. Polygons are processed in the same order that navigation regions were registered on the NavigationServer. [b]Note:[/b] If navigation meshes from different navigation regions overlap (which should be avoided in general) the result might not be what is expected.",
+      "godotName": "region_owns_point",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionOwnsPoint(RID,Vector3)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetEnabled",
+      "kind": "Method",
+      "signature": "public void RegionSetEnabled(RID region, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the specified [param region] will contribute to its current navigation map.",
+      "godotName": "region_set_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetEnabled(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetEnterCost",
+      "kind": "Method",
+      "signature": "public void RegionSetEnterCost(RID region, float enterCost)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "enter_cost",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param enter_cost] for this [param region].",
+      "godotName": "region_set_enter_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetEnterCost(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetMap",
+      "kind": "Method",
+      "signature": "public void RegionSetMap(RID region, RID map)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the map for the region.",
+      "godotName": "region_set_map",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetMap(RID,RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetNavigationLayers",
+      "kind": "Method",
+      "signature": "public void RegionSetNavigationLayers(RID region, int navigationLayers)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "navigation_layers",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the region\u0027s navigation layers. This allows selecting regions from a path request (when using [method NavigationServer3D.map_get_path]).",
+      "godotName": "region_set_navigation_layers",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetNavigationLayers(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetNavigationMesh",
+      "kind": "Method",
+      "signature": "public void RegionSetNavigationMesh(RID region, NavigationMesh navigationMesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "navigation_mesh",
+          "type": "NavigationMesh"
+        }
+      ],
+      "summary": "Sets the navigation mesh for the region.",
+      "godotName": "region_set_navigation_mesh",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetNavigationMesh(RID,NavigationMesh)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetOwnerId",
+      "kind": "Method",
+      "signature": "public void RegionSetOwnerId(RID region, int ownerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "owner_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the [code]ObjectID[/code] of the object which manages this region.",
+      "godotName": "region_set_owner_id",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetOwnerId(RID,int)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetTransform",
+      "kind": "Method",
+      "signature": "public void RegionSetTransform(RID region, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the global transformation for the region.",
+      "godotName": "region_set_transform",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetTransform(RID,Transform3D)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetTravelCost",
+      "kind": "Method",
+      "signature": "public void RegionSetTravelCost(RID region, float travelCost)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "travel_cost",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the [param travel_cost] for this [param region].",
+      "godotName": "region_set_travel_cost",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetTravelCost(RID,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetUseAsyncIterations",
+      "kind": "Method",
+      "signature": "public void RegionSetUseAsyncIterations(RID region, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code] the [param region] uses an async synchronization process that runs on a background thread.",
+      "godotName": "region_set_use_async_iterations",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetUseAsyncIterations(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "RegionSetUseEdgeConnections",
+      "kind": "Method",
+      "signature": "public void RegionSetUseEdgeConnections(RID region, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "region",
+          "type": "RID"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the navigation [param region] will use edge connections to connect with other navigation regions within proximity of the navigation map edge connection margin.",
+      "godotName": "region_set_use_edge_connections",
+      "xmlDocId": "M:Godot.NavigationServer3D.RegionSetUseEdgeConnections(RID,bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "SetActive",
+      "kind": "Method",
+      "signature": "public void SetActive(bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Control activation of this server.",
+      "godotName": "set_active",
+      "xmlDocId": "M:Godot.NavigationServer3D.SetActive(bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "SetDebugEnabled",
+      "kind": "Method",
+      "signature": "public void SetDebugEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code] enables debug mode on the NavigationServer.",
+      "godotName": "set_debug_enabled",
+      "xmlDocId": "M:Godot.NavigationServer3D.SetDebugEnabled(bool)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "SimplifyPath",
+      "kind": "Method",
+      "signature": "public PackedVector3Array SimplifyPath(PackedVector3Array path, float epsilon)",
+      "returnType": "PackedVector3Array",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "PackedVector3Array"
+        },
+        {
+          "name": "epsilon",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a simplified version of [param path] with less critical path points removed. The simplification amount is in worlds units and controlled by [param epsilon]. The simplification uses a variant of Ramer-Douglas-Peucker algorithm for curve point decimation. Path simplification can be helpful to mitigate various path following issues that can arise with certain agent types and script behaviors. E.g. \u0022steering\u0022 agents or avoidance in \u0022open fields\u0022.",
+      "godotName": "simplify_path",
+      "xmlDocId": "M:Godot.NavigationServer3D.SimplifyPath(PackedVector3Array,float)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "SourceGeometryParserCreate",
+      "kind": "Method",
+      "signature": "public RID SourceGeometryParserCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a new source geometry parser. If a [Callable] is set for the parser with [method source_geometry_parser_set_callback] the callback will be called for every single node that gets parsed whenever [method parse_source_geometry_data] is used.",
+      "godotName": "source_geometry_parser_create",
+      "xmlDocId": "M:Godot.NavigationServer3D.SourceGeometryParserCreate",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "SourceGeometryParserSetCallback",
+      "kind": "Method",
+      "signature": "public void SourceGeometryParserSetCallback(RID parser, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "parser",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the [param callback] [Callable] for the specific source geometry [param parser]. The [Callable] will receive a call with the following parameters: - [code]navigation_mesh[/code] - The [NavigationMesh] reference used to define the parse settings. Do NOT edit or add directly to the navigation mesh. - [code]source_geometry_data[/code] - The [NavigationMeshSourceGeometryData3D] reference. Add custom source geometry for navigation mesh baking to this object. - [code]node[/code] - The [Node] that is parsed.",
+      "godotName": "source_geometry_parser_set_callback",
+      "xmlDocId": "M:Godot.NavigationServer3D.SourceGeometryParserSetCallback(RID,Callable)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AvoidanceDebugChanged",
+      "kind": "Signal",
+      "signature": "public event AvoidanceDebugChangedHandler AvoidanceDebugChanged",
+      "parameters": [],
+      "summary": "Emitted when avoidance debug settings are changed. Only available in debug builds.",
+      "godotName": "avoidance_debug_changed",
+      "xmlDocId": "E:Godot.NavigationServer3D.AvoidanceDebugChanged",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "MapChanged",
+      "kind": "Signal",
+      "signature": "public event MapChangedHandler MapChanged",
+      "parameters": [
+        {
+          "name": "map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Emitted when a navigation map is updated, when a region moves or is modified.",
+      "godotName": "map_changed",
+      "xmlDocId": "E:Godot.NavigationServer3D.MapChanged(RID)",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "NavigationDebugChanged",
+      "kind": "Signal",
+      "signature": "public event NavigationDebugChangedHandler NavigationDebugChanged",
+      "parameters": [],
+      "summary": "Emitted when navigation debug settings are changed. Only available in debug builds.",
+      "godotName": "navigation_debug_changed",
+      "xmlDocId": "E:Godot.NavigationServer3D.NavigationDebugChanged",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ProcessInfo",
+      "values": [
+        {
+          "name": "INFO_ACTIVE_MAPS",
+          "value": "0",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of active navigation maps.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_AGENT_COUNT",
+          "value": "2",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of active navigation agents processing avoidance.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_EDGE_CONNECTION_COUNT",
+          "value": "7",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of navigation mesh polygon edges that are considered connected by edge proximity.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_EDGE_COUNT",
+          "value": "5",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of navigation mesh polygon edges.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_EDGE_FREE_COUNT",
+          "value": "8",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of navigation mesh polygon edges that could not be merged but may be still connected by edge proximity or with links.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_EDGE_MERGE_COUNT",
+          "value": "6",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of navigation mesh polygon edges that were merged due to edge key overlap.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_LINK_COUNT",
+          "value": "3",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of active navigation links.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_OBSTACLE_COUNT",
+          "value": "9",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of active navigation obstacles.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_POLYGON_COUNT",
+          "value": "4",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of navigation mesh polygons.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        },
+        {
+          "name": "INFO_REGION_COUNT",
+          "value": "1",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of active navigation regions.",
+          "sourcePath": "doc/classes/NavigationServer3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "INFO_ACTIVE_MAPS",
+      "value": "0",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of active navigation maps.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_REGION_COUNT",
+      "value": "1",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of active navigation regions.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_AGENT_COUNT",
+      "value": "2",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of active navigation agents processing avoidance.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_LINK_COUNT",
+      "value": "3",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of active navigation links.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_POLYGON_COUNT",
+      "value": "4",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of navigation mesh polygons.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_EDGE_COUNT",
+      "value": "5",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of navigation mesh polygon edges.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_EDGE_MERGE_COUNT",
+      "value": "6",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of navigation mesh polygon edges that were merged due to edge key overlap.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_EDGE_CONNECTION_COUNT",
+      "value": "7",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of navigation mesh polygon edges that are considered connected by edge proximity.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_EDGE_FREE_COUNT",
+      "value": "8",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of navigation mesh polygon edges that could not be merged but may be still connected by edge proximity or with links.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    },
+    {
+      "name": "INFO_OBSTACLE_COUNT",
+      "value": "9",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of active navigation obstacles.",
+      "sourcePath": "doc/classes/NavigationServer3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationServer3D.xml",
+      "sha256": "8d5b47654241cb957cbffa5a53d5c7a5a67c4e641562efdc5bac62720d1971d8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

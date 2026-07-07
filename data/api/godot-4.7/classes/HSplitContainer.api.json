@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HSplitContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.HSplitContainer",
+    "kind": "class",
+    "baseType": "SplitContainer",
+    "interfaces": [],
+    "godotReference": "HSplitContainer",
+    "documentationPath": "doc/classes/HSplitContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hsplitcontainer.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HSplitContainer.xml",
+      "sha256": "254a4bd60ad9ea3cd2589c480ae2a42920c9adc38d7e95dd66cdb8ddea4b722b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

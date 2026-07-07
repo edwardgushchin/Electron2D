@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedScene",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PackedScene",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "PackedScene",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "PackedScene",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PackedScene()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PackedScene type.",
+      "xmlDocId": "M:Electron2D.PackedScene.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "PackedScene",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PackedScene()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PackedScene type.",
+      "xmlDocId": "M:Electron2D.PackedScene.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CanInstantiate",
+      "kind": "Method",
+      "signature": "public System.Boolean CanInstantiate()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether instantiate can be performed.",
+      "xmlDocId": "M:Electron2D.PackedScene.CanInstantiate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Instantiate",
+      "kind": "Method",
+      "signature": "public Electron2D.Node Instantiate()",
+      "returnType": "Electron2D.Node",
+      "parameters": [],
+      "summary": "Executes the instantiate operation.",
+      "xmlDocId": "M:Electron2D.PackedScene.Instantiate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pack",
+      "kind": "Method",
+      "signature": "public Electron2D.Error Pack(Electron2D.Node path)",
+      "returnType": "Electron2D.Error",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "Electron2D.Node"
+        }
+      ],
+      "summary": "Executes the pack operation.",
+      "xmlDocId": "M:Electron2D.PackedScene.Pack(Electron2D.Node)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

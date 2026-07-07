@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VFlowContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.VFlowContainer",
+    "kind": "class",
+    "baseType": "FlowContainer",
+    "interfaces": [],
+    "godotReference": "VFlowContainer",
+    "documentationPath": "doc/classes/VFlowContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vflowcontainer.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VFlowContainer.xml",
+      "sha256": "ebd3c7ce0a60f55aec22eb3d211cbe082117e601f44b599ac3316451375b72db"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleEmit",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleEmit",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleEmit",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticleemit.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Flags",
+      "kind": "Property",
+      "signature": "public int Flags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Flags used to override the properties defined in the sub-emitter\u0027s process material.",
+      "defaultValue": "31",
+      "godotName": "flags",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleEmit.Flags",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "EmitFlags",
+      "values": [
+        {
+          "name": "EMIT_FLAG_COLOR",
+          "value": "8",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "If enabled, the particle starts with the color defined by this node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+        },
+        {
+          "name": "EMIT_FLAG_CUSTOM",
+          "value": "16",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "If enabled, the particle starts with the [code]CUSTOM[/code] data defined by this node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+        },
+        {
+          "name": "EMIT_FLAG_POSITION",
+          "value": "1",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "If enabled, the particle starts with the position defined by this node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+        },
+        {
+          "name": "EMIT_FLAG_ROT_SCALE",
+          "value": "2",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "If enabled, the particle starts with the rotation and scale defined by this node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+        },
+        {
+          "name": "EMIT_FLAG_VELOCITY",
+          "value": "4",
+          "enum": "EmitFlags",
+          "kind": "EnumValue",
+          "summary": "If enabled,the particle starts with the velocity defined by this node.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "EMIT_FLAG_POSITION",
+      "value": "1",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "If enabled, the particle starts with the position defined by this node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    },
+    {
+      "name": "EMIT_FLAG_ROT_SCALE",
+      "value": "2",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "If enabled, the particle starts with the rotation and scale defined by this node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    },
+    {
+      "name": "EMIT_FLAG_VELOCITY",
+      "value": "4",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "If enabled,the particle starts with the velocity defined by this node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    },
+    {
+      "name": "EMIT_FLAG_COLOR",
+      "value": "8",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "If enabled, the particle starts with the color defined by this node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    },
+    {
+      "name": "EMIT_FLAG_CUSTOM",
+      "value": "16",
+      "enum": "EmitFlags",
+      "kind": "EnumValue",
+      "summary": "If enabled, the particle starts with the [code]CUSTOM[/code] data defined by this node.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmit.xml",
+      "sha256": "ee11adbab3695db2fbd78e0c6b04f1af8e596aeb436d41da65aabe8c301aaa73"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

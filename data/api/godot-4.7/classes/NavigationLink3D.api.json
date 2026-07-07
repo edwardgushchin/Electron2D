@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationLink3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationLink3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "NavigationLink3D",
+    "documentationPath": "doc/classes/NavigationLink3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationlink3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetGlobalEndPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetGlobalEndPosition()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the [member end_position] that is relative to the link as a global position.",
+      "godotName": "get_global_end_position",
+      "xmlDocId": "M:Godot.NavigationLink3D.GetGlobalEndPosition",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "GetGlobalStartPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetGlobalStartPosition()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the [member start_position] that is relative to the link as a global position.",
+      "godotName": "get_global_start_position",
+      "xmlDocId": "M:Godot.NavigationLink3D.GetGlobalStartPosition",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "GetNavigationLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetNavigationLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member navigation_layers] bitmask is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_navigation_layer_value",
+      "xmlDocId": "M:Godot.NavigationLink3D.GetNavigationLayerValue(int)",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "GetNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetNavigationMap()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the current navigation map [RID] used by this link.",
+      "godotName": "get_navigation_map",
+      "xmlDocId": "M:Godot.NavigationLink3D.GetNavigationMap",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of this link on the [NavigationServer3D].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.NavigationLink3D.GetRid",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "SetGlobalEndPosition",
+      "kind": "Method",
+      "signature": "public void SetGlobalEndPosition(Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the [member end_position] that is relative to the link from a global [param position].",
+      "godotName": "set_global_end_position",
+      "xmlDocId": "M:Godot.NavigationLink3D.SetGlobalEndPosition(Vector3)",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "SetGlobalStartPosition",
+      "kind": "Method",
+      "signature": "public void SetGlobalStartPosition(Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the [member start_position] that is relative to the link from a global [param position].",
+      "godotName": "set_global_start_position",
+      "xmlDocId": "M:Godot.NavigationLink3D.SetGlobalStartPosition(Vector3)",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "SetNavigationLayerValue",
+      "kind": "Method",
+      "signature": "public void SetNavigationLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member navigation_layers] bitmask, given a [param layer_number] between 1 and 32.",
+      "godotName": "set_navigation_layer_value",
+      "xmlDocId": "M:Godot.NavigationLink3D.SetNavigationLayerValue(int,bool)",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "SetNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetNavigationMap(RID navigationMap)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the [RID] of the navigation map this link should use. By default the link will automatically join the [World3D] default navigation map so this function is only required to override the default map.",
+      "godotName": "set_navigation_map",
+      "xmlDocId": "M:Godot.NavigationLink3D.SetNavigationMap(RID)",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "Bidirectional",
+      "kind": "Property",
+      "signature": "public bool Bidirectional { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether this link can be traveled in both directions or only from [member start_position] to [member end_position].",
+      "defaultValue": "true",
+      "godotName": "bidirectional",
+      "xmlDocId": "P:Godot.NavigationLink3D.Bidirectional",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether this link is currently active. If [code]false[/code], [method NavigationServer3D.map_get_path] will ignore this link.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.NavigationLink3D.Enabled",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "EndPosition",
+      "kind": "Property",
+      "signature": "public Vector3 EndPosition { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Ending position of the link. This position will search out the nearest polygon in the navigation mesh to attach to. The distance the link will search is controlled by [method NavigationServer3D.map_set_link_connection_radius].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "end_position",
+      "xmlDocId": "P:Godot.NavigationLink3D.EndPosition",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "EnterCost",
+      "kind": "Property",
+      "signature": "public float EnterCost { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When pathfinding enters this link from another regions navigation mesh the [member enter_cost] value is added to the path distance for determining the shortest path.",
+      "defaultValue": "0.0",
+      "godotName": "enter_cost",
+      "xmlDocId": "P:Godot.NavigationLink3D.EnterCost",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "NavigationLayers",
+      "kind": "Property",
+      "signature": "public int NavigationLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A bitfield determining all navigation layers the link belongs to. These navigation layers will be checked when requesting a path with [method NavigationServer3D.map_get_path].",
+      "defaultValue": "1",
+      "godotName": "navigation_layers",
+      "xmlDocId": "P:Godot.NavigationLink3D.NavigationLayers",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "StartPosition",
+      "kind": "Property",
+      "signature": "public Vector3 StartPosition { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Starting position of the link. This position will search out the nearest polygon in the navigation mesh to attach to. The distance the link will search is controlled by [method NavigationServer3D.map_set_link_connection_radius].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "start_position",
+      "xmlDocId": "P:Godot.NavigationLink3D.StartPosition",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    },
+    {
+      "name": "TravelCost",
+      "kind": "Property",
+      "signature": "public float TravelCost { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When pathfinding moves along the link the traveled distance is multiplied with [member travel_cost] for determining the shortest path.",
+      "defaultValue": "1.0",
+      "godotName": "travel_cost",
+      "xmlDocId": "P:Godot.NavigationLink3D.TravelCost",
+      "sourcePath": "doc/classes/NavigationLink3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationLink3D.xml",
+      "sha256": "a85ba5d6558894ae738797a5515d0ab81a8c4a7cab8b123085a25511febe7fd4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

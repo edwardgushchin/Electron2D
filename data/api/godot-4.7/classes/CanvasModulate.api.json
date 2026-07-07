@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasModulate",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasModulate",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "CanvasModulate",
+    "documentationPath": "doc/classes/CanvasModulate.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvasmodulate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The tint color to apply.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.CanvasModulate.Color",
+      "sourcePath": "doc/classes/CanvasModulate.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasModulate.xml",
+      "sha256": "fc225acde021243479f47436c124816b339dc62f97daeb417552fbcbb78b7dfb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

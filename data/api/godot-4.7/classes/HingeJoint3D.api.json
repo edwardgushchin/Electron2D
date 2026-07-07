@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HingeJoint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.HingeJoint3D",
+    "kind": "class",
+    "baseType": "Joint3D",
+    "interfaces": [],
+    "godotReference": "HingeJoint3D",
+    "documentationPath": "doc/classes/HingeJoint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hingejoint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFlag",
+      "kind": "Method",
+      "signature": "public bool GetFlag(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the specified flag.",
+      "godotName": "get_flag",
+      "xmlDocId": "M:Godot.HingeJoint3D.GetFlag(int)",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "GetParam",
+      "kind": "Method",
+      "signature": "public float GetParam(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the specified parameter.",
+      "godotName": "get_param",
+      "xmlDocId": "M:Godot.HingeJoint3D.GetParam(int)",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "SetFlag",
+      "kind": "Method",
+      "signature": "public void SetFlag(int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], enables the specified flag.",
+      "godotName": "set_flag",
+      "xmlDocId": "M:Godot.HingeJoint3D.SetFlag(int,bool)",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "SetParam",
+      "kind": "Method",
+      "signature": "public void SetParam(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the specified parameter.",
+      "godotName": "set_param",
+      "xmlDocId": "M:Godot.HingeJoint3D.SetParam(int,float)",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "angular_limit/bias",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed with which the rotation across the axis perpendicular to the hinge gets corrected.",
+      "defaultValue": "0.3",
+      "godotName": "angular_limit/bias",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/enable",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the hinges maximum and minimum rotation, defined by [member angular_limit/lower] and [member angular_limit/upper] has effects.",
+      "defaultValue": "false",
+      "godotName": "angular_limit/enable",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/lower",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+      "defaultValue": "-1.5707964",
+      "godotName": "angular_limit/lower",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/relaxation",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The lower this value, the more the rotation gets slowed down.",
+      "defaultValue": "1.0",
+      "godotName": "angular_limit/relaxation",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.9",
+      "godotName": "angular_limit/softness",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "angular_limit/upper",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+      "defaultValue": "1.5707964",
+      "godotName": "angular_limit/upper",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "motor/enable",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "When activated, a motor turns the hinge.",
+      "defaultValue": "false",
+      "godotName": "motor/enable",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "motor/max_impulse",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum acceleration for the motor.",
+      "defaultValue": "1.0",
+      "godotName": "motor/max_impulse",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "motor/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Target speed for the motor.",
+      "defaultValue": "1.0",
+      "godotName": "motor/target_velocity",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "params/bias",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed with which the two bodies get pulled together when they move in different directions.",
+      "defaultValue": "0.3",
+      "godotName": "params/bias",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Flag",
+      "values": [
+        {
+          "name": "FLAG_ENABLE_MOTOR",
+          "value": "1",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "When activated, a motor turns the hinge.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "FLAG_MAX",
+          "value": "2",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Flag] enum.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "FLAG_USE_LIMIT",
+          "value": "0",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], the hinges maximum and minimum rotation, defined by [member angular_limit/lower] and [member angular_limit/upper] has effects.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Param",
+      "values": [
+        {
+          "name": "PARAM_BIAS",
+          "value": "0",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The speed with which the two bodies get pulled together when they move in different directions.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LIMIT_BIAS",
+          "value": "3",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The speed with which the rotation across the axis perpendicular to the hinge gets corrected.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LIMIT_LOWER",
+          "value": "2",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The minimum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LIMIT_RELAXATION",
+          "value": "5",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The lower this value, the more the rotation gets slowed down.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LIMIT_SOFTNESS",
+          "value": "4",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LIMIT_UPPER",
+          "value": "1",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The maximum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "8",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Param] enum.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MOTOR_MAX_IMPULSE",
+          "value": "7",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Maximum acceleration for the motor.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MOTOR_TARGET_VELOCITY",
+          "value": "6",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Target speed for the motor.",
+          "sourcePath": "doc/classes/HingeJoint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_BIAS",
+      "value": "0",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The speed with which the two bodies get pulled together when they move in different directions.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LIMIT_UPPER",
+      "value": "1",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The maximum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LIMIT_LOWER",
+      "value": "2",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The minimum rotation. Only active if [member angular_limit/enable] is [code]true[/code].",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LIMIT_BIAS",
+      "value": "3",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The speed with which the rotation across the axis perpendicular to the hinge gets corrected.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LIMIT_SOFTNESS",
+      "value": "4",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LIMIT_RELAXATION",
+      "value": "5",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The lower this value, the more the rotation gets slowed down.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MOTOR_TARGET_VELOCITY",
+      "value": "6",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Target speed for the motor.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MOTOR_MAX_IMPULSE",
+      "value": "7",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Maximum acceleration for the motor.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "8",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Param] enum.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "FLAG_USE_LIMIT",
+      "value": "0",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], the hinges maximum and minimum rotation, defined by [member angular_limit/lower] and [member angular_limit/upper] has effects.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_MOTOR",
+      "value": "1",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "When activated, a motor turns the hinge.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    },
+    {
+      "name": "FLAG_MAX",
+      "value": "2",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Flag] enum.",
+      "sourcePath": "doc/classes/HingeJoint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HingeJoint3D.xml",
+      "sha256": "23ba0745f3952bb7316e19da60a3e11803418a66b849a29bbe63a93aeaa698fc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

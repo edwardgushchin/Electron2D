@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConfigFile",
+    "namespace": "Godot",
+    "fullName": "Godot.ConfigFile",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ConfigFile",
+    "documentationPath": "doc/classes/ConfigFile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_configfile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes the entire contents of the config.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.ConfigFile.Clear",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "EncodeToText",
+      "kind": "Method",
+      "signature": "public String EncodeToText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Obtain the text version of this config file (the same text that would be written to a file).",
+      "godotName": "encode_to_text",
+      "xmlDocId": "M:Godot.ConfigFile.EncodeToText",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "EraseSection",
+      "kind": "Method",
+      "signature": "public void EraseSection(String section)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        }
+      ],
+      "summary": "Deletes the specified section along with all the key-value pairs inside. Raises an error if the section does not exist.",
+      "godotName": "erase_section",
+      "xmlDocId": "M:Godot.ConfigFile.EraseSection(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "EraseSectionKey",
+      "kind": "Method",
+      "signature": "public void EraseSectionKey(String section, String key)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "String"
+        }
+      ],
+      "summary": "Deletes the specified key in a section. Raises an error if either the section or the key do not exist.",
+      "godotName": "erase_section_key",
+      "xmlDocId": "M:Godot.ConfigFile.EraseSectionKey(String,String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "GetSectionKeys",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSectionKeys(String section)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns an array of all defined key identifiers in the specified section. Raises an error and returns an empty array if the section does not exist.",
+      "godotName": "get_section_keys",
+      "xmlDocId": "M:Godot.ConfigFile.GetSectionKeys(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "GetSections",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSections()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of all defined section identifiers.",
+      "godotName": "get_sections",
+      "xmlDocId": "M:Godot.ConfigFile.GetSections",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "GetValue",
+      "kind": "Method",
+      "signature": "public Variant GetValue(String section, String key, Variant @default)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "String"
+        },
+        {
+          "name": "default",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Returns the current value for the specified section and key. If either the section or the key do not exist, the method returns the fallback [param default] value. If [param default] is not specified or set to [code]null[/code], an error is also raised.",
+      "godotName": "get_value",
+      "xmlDocId": "M:Godot.ConfigFile.GetValue(String,String,Variant)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "HasSection",
+      "kind": "Method",
+      "signature": "public bool HasSection(String section)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified section exists.",
+      "godotName": "has_section",
+      "xmlDocId": "M:Godot.ConfigFile.HasSection(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "HasSectionKey",
+      "kind": "Method",
+      "signature": "public bool HasSectionKey(String section, String key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified section-key pair exists.",
+      "godotName": "has_section_key",
+      "xmlDocId": "M:Godot.ConfigFile.HasSectionKey(String,String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "Load",
+      "kind": "Method",
+      "signature": "public int Load(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads the config file specified as a parameter. The file\u0027s contents are parsed and loaded in the [ConfigFile] object which the method was called on. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "load",
+      "xmlDocId": "M:Godot.ConfigFile.Load(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "LoadEncrypted",
+      "kind": "Method",
+      "signature": "public int LoadEncrypted(String path, PackedByteArray key)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Loads the encrypted config file specified as a parameter, using the provided [param key] to decrypt it. The file\u0027s contents are parsed and loaded in the [ConfigFile] object which the method was called on. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "load_encrypted",
+      "xmlDocId": "M:Godot.ConfigFile.LoadEncrypted(String,PackedByteArray)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "LoadEncryptedPass",
+      "kind": "Method",
+      "signature": "public int LoadEncryptedPass(String path, String password)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "password",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads the encrypted config file specified as a parameter, using the provided [param password] to decrypt it. The file\u0027s contents are parsed and loaded in the [ConfigFile] object which the method was called on. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "load_encrypted_pass",
+      "xmlDocId": "M:Godot.ConfigFile.LoadEncryptedPass(String,String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "Parse",
+      "kind": "Method",
+      "signature": "public int Parse(String data)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "String"
+        }
+      ],
+      "summary": "Parses the passed string as the contents of a config file. The string is parsed and loaded in the ConfigFile object which the method was called on. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "parse",
+      "xmlDocId": "M:Godot.ConfigFile.Parse(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "Save",
+      "kind": "Method",
+      "signature": "public int Save(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the contents of the [ConfigFile] object to the file specified as a parameter. The output file uses an INI-style structure. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "save",
+      "xmlDocId": "M:Godot.ConfigFile.Save(String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "SaveEncrypted",
+      "kind": "Method",
+      "signature": "public int SaveEncrypted(String path, PackedByteArray key)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Saves the contents of the [ConfigFile] object to the AES-256 encrypted file specified as a parameter, using the provided [param key] to encrypt it. The output file uses an INI-style structure. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "save_encrypted",
+      "xmlDocId": "M:Godot.ConfigFile.SaveEncrypted(String,PackedByteArray)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "SaveEncryptedPass",
+      "kind": "Method",
+      "signature": "public int SaveEncryptedPass(String path, String password)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "password",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves the contents of the [ConfigFile] object to the AES-256 encrypted file specified as a parameter, using the provided [param password] to encrypt it. The output file uses an INI-style structure. Returns [constant OK] on success, or one of the other [enum Error] values if the operation failed.",
+      "godotName": "save_encrypted_pass",
+      "xmlDocId": "M:Godot.ConfigFile.SaveEncryptedPass(String,String)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    },
+    {
+      "name": "SetValue",
+      "kind": "Method",
+      "signature": "public void SetValue(String section, String key, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "section",
+          "type": "String"
+        },
+        {
+          "name": "key",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Assigns a value to the specified key of the specified section. If either the section or the key do not exist, they are created. Passing a [code]null[/code] value deletes the specified key if it exists, and deletes the section if it ends up empty once the key has been removed.",
+      "godotName": "set_value",
+      "xmlDocId": "M:Godot.ConfigFile.SetValue(String,String,Variant)",
+      "sourcePath": "doc/classes/ConfigFile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConfigFile.xml",
+      "sha256": "95d44fa7226effef7bc4583e0b80ae22255a2b93cdca2afdeb3da5503d894422"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

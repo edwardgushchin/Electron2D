@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderMesh",
+    "kind": "class",
+    "baseType": "Mesh",
+    "interfaces": [],
+    "godotReference": "PlaceholderMesh",
+    "documentationPath": "doc/classes/PlaceholderMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdermesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Aabb",
+      "kind": "Property",
+      "signature": "public AABB Aabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "The smallest [AABB] enclosing this mesh in local space.",
+      "defaultValue": "AABB(0, 0, 0, 0, 0, 0)",
+      "godotName": "aabb",
+      "xmlDocId": "P:Godot.PlaceholderMesh.Aabb",
+      "sourcePath": "doc/classes/PlaceholderMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderMesh.xml",
+      "sha256": "d634907f613864790d3f3bc913fc07efdcb38b23e18420c47cdd5084354f9be7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

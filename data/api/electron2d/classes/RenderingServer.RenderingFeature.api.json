@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderingServer.RenderingFeature",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RenderingServer.RenderingFeature",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "RenderingServer feature enum",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AdvancedBlending",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature AdvancedBlending",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Advanced blending support.",
+      "value": "13",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.AdvancedBlending",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Animation",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Animation",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Sprite or UI animation support.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Animation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Camera",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Camera",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "2D camera support.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Camera",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clipping",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Clipping",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Canvas clipping support.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Clipping",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CustomShaders",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature CustomShaders",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Custom canvas shader support.",
+      "value": "10",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.CustomShaders",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MultiPass",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature MultiPass",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Multi-pass rendering support.",
+      "value": "12",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.MultiPass",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PostProcessing",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature PostProcessing",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Post-processing support.",
+      "value": "14",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.PostProcessing",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Primitives",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Primitives",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "2D primitive drawing support.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Primitives",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenderTargets",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature RenderTargets",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Render target support.",
+      "value": "9",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.RenderTargets",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShaderMaterial",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature ShaderMaterial",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Shader material support.",
+      "value": "11",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.ShaderMaterial",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sprites",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Sprites",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Basic sprite drawing.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Sprites",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StandardBlendModes",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature StandardBlendModes",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Standard blend mode support.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.StandardBlendModes",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Text",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Text",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Text drawing support.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Text",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileMap",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature TileMap",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "Tile map drawing support.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.TileMap",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ui",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.RenderingServer.RenderingFeature Ui",
+      "returnType": "Electron2D.RenderingServer.RenderingFeature",
+      "parameters": [],
+      "summary": "User interface drawing support.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.RenderingServer.RenderingFeature.Ui",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "AdvancedBlending",
+      "value": "13",
+      "kind": "EnumValue",
+      "summary": "Advanced blending support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Animation",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Sprite or UI animation support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Camera",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "2D camera support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clipping",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Canvas clipping support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CustomShaders",
+      "value": "10",
+      "kind": "EnumValue",
+      "summary": "Custom canvas shader support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MultiPass",
+      "value": "12",
+      "kind": "EnumValue",
+      "summary": "Multi-pass rendering support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PostProcessing",
+      "value": "14",
+      "kind": "EnumValue",
+      "summary": "Post-processing support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Primitives",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "2D primitive drawing support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RenderTargets",
+      "value": "9",
+      "kind": "EnumValue",
+      "summary": "Render target support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShaderMaterial",
+      "value": "11",
+      "kind": "EnumValue",
+      "summary": "Shader material support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sprites",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Basic sprite drawing.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "StandardBlendModes",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Standard blend mode support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Text",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Text drawing support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TileMap",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Tile map drawing support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ui",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "User interface drawing support.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

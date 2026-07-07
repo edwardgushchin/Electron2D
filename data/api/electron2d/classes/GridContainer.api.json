@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GridContainer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.GridContainer",
+    "kind": "class",
+    "baseType": "Electron2D.Container",
+    "interfaces": [],
+    "godotReference": "GridContainer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "GridContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.GridContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.GridContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.GridContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "GridContainer",
+      "kind": "Constructor",
+      "signature": "public Electron2D.GridContainer()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.GridContainer\u0060 type.",
+      "xmlDocId": "M:Electron2D.GridContainer.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this grid container.",
+      "xmlDocId": "M:Electron2D.GridContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Columns",
+      "kind": "Property",
+      "signature": "public System.Int32 Columns { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the number of columns used by this grid.",
+      "xmlDocId": "P:Electron2D.GridContainer.Columns",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size required by this grid container.",
+      "xmlDocId": "M:Electron2D.GridContainer._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

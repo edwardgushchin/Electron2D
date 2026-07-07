@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AABB",
+    "namespace": "Godot",
+    "fullName": "Godot.AABB",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "AABB",
+    "documentationPath": "doc/classes/AABB.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_aabb.html"
+  },
+  "constructors": [
+    {
+      "name": "AABB",
+      "kind": "Constructor",
+      "signature": "public AABB()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Constructs an [AABB] with its [member position] and [member size] set to [constant Vector3.ZERO].",
+      "godotName": "AABB",
+      "xmlDocId": "M:Godot.AABB.#ctor",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "AABB",
+      "kind": "Constructor",
+      "signature": "public AABB(AABB from)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Constructs an [AABB] as a copy of the given [AABB].",
+      "godotName": "AABB",
+      "xmlDocId": "M:Godot.AABB.#ctor(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "AABB",
+      "kind": "Constructor",
+      "signature": "public AABB(Vector3 position, Vector3 size)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3"
+        },
+        {
+          "name": "size",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Constructs an [AABB] by [param position] and [param size].",
+      "godotName": "AABB",
+      "xmlDocId": "M:Godot.AABB.#ctor(Vector3,Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public AABB Abs()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns an [AABB] equivalent to this bounding box, with its width, height, and depth modified to be non-negative values. [codeblocks] [gdscript] var box = AABB(Vector3(5, 0, 5), Vector3(-20, -10, -5)) var absolute = box.abs() print(absolute.position) # Prints (-15.0, -10.0, 0.0) print(absolute.size) # Prints (20.0, 10.0, 5.0) [/gdscript] [csharp] var box = new Aabb(new Vector3(5, 0, 5), new Vector3(-20, -10, -5)); var absolute = box.Abs(); GD.Print(absolute.Position); // Prints (-15, -10, 0) GD.Print(absolute.Size); // Prints (20, 10, 5) [/csharp] [/codeblocks] [b]Note:[/b] It\u0027s recommended to use this method when [member size] is negative, as most other methods in Godot assume that the [member size]\u0027s components are greater than [code]0[/code].",
+      "godotName": "abs",
+      "xmlDocId": "M:Godot.AABB.Abs",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Encloses",
+      "kind": "Method",
+      "signature": "public bool Encloses(AABB with)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this bounding box [i]completely[/i] encloses the [param with] box. The edges of both boxes are included. [codeblocks] [gdscript] var a = AABB(Vector3(0, 0, 0), Vector3(4, 4, 4)) var b = AABB(Vector3(1, 1, 1), Vector3(3, 3, 3)) var c = AABB(Vector3(2, 2, 2), Vector3(8, 8, 8)) print(a.encloses(a)) # Prints true print(a.encloses(b)) # Prints true print(a.encloses(c)) # Prints false [/gdscript] [csharp] var a = new Aabb(new Vector3(0, 0, 0), new Vector3(4, 4, 4)); var b = new Aabb(new Vector3(1, 1, 1), new Vector3(3, 3, 3)); var c = new Aabb(new Vector3(2, 2, 2), new Vector3(8, 8, 8)); GD.Print(a.Encloses(a)); // Prints True GD.Print(a.Encloses(b)); // Prints True GD.Print(a.Encloses(c)); // Prints False [/csharp] [/codeblocks]",
+      "godotName": "encloses",
+      "xmlDocId": "M:Godot.AABB.Encloses(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Expand",
+      "kind": "Method",
+      "signature": "public AABB Expand(Vector3 toPoint)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "to_point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns a copy of this bounding box expanded to align the edges with the given [param to_point], if necessary. [codeblocks] [gdscript] var box = AABB(Vector3(0, 0, 0), Vector3(5, 2, 5)) box = box.expand(Vector3(10, 0, 0)) print(box.position) # Prints (0.0, 0.0, 0.0) print(box.size) # Prints (10.0, 2.0, 5.0) box = box.expand(Vector3(-5, 0, 5)) print(box.position) # Prints (-5.0, 0.0, 0.0) print(box.size) # Prints (15.0, 2.0, 5.0) [/gdscript] [csharp] var box = new Aabb(new Vector3(0, 0, 0), new Vector3(5, 2, 5)); box = box.Expand(new Vector3(10, 0, 0)); GD.Print(box.Position); // Prints (0, 0, 0) GD.Print(box.Size); // Prints (10, 2, 5) box = box.Expand(new Vector3(-5, 0, 5)); GD.Print(box.Position); // Prints (-5, 0, 0) GD.Print(box.Size); // Prints (15, 2, 5) [/csharp] [/codeblocks]",
+      "godotName": "expand",
+      "xmlDocId": "M:Godot.AABB.Expand(Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetCenter",
+      "kind": "Method",
+      "signature": "public Vector3 GetCenter()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the center point of the bounding box. This is the same as [code]position \u002B (size / 2.0)[/code].",
+      "godotName": "get_center",
+      "xmlDocId": "M:Godot.AABB.GetCenter",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetEndpoint",
+      "kind": "Method",
+      "signature": "public Vector3 GetEndpoint(int idx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position of one of the 8 vertices that compose this bounding box. With an [param idx] of [code]0[/code] this is the same as [member position], and an [param idx] of [code]7[/code] is the same as [member end].",
+      "godotName": "get_endpoint",
+      "xmlDocId": "M:Godot.AABB.GetEndpoint(int)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetLongestAxis",
+      "kind": "Method",
+      "signature": "public Vector3 GetLongestAxis()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the longest normalized axis of this bounding box\u0027s [member size], as a [Vector3] ([constant Vector3.RIGHT], [constant Vector3.UP], or [constant Vector3.BACK]). [codeblocks] [gdscript] var box = AABB(Vector3(0, 0, 0), Vector3(2, 4, 8)) print(box.get_longest_axis()) # Prints (0.0, 0.0, 1.0) print(box.get_longest_axis_index()) # Prints 2 print(box.get_longest_axis_size()) # Prints 8.0 [/gdscript] [csharp] var box = new Aabb(new Vector3(0, 0, 0), new Vector3(2, 4, 8)); GD.Print(box.GetLongestAxis()); // Prints (0, 0, 1) GD.Print(box.GetLongestAxisIndex()); // Prints Z GD.Print(box.GetLongestAxisSize()); // Prints 8 [/csharp] [/codeblocks] See also [method get_longest_axis_index] and [method get_longest_axis_size].",
+      "godotName": "get_longest_axis",
+      "xmlDocId": "M:Godot.AABB.GetLongestAxis",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetLongestAxisIndex",
+      "kind": "Method",
+      "signature": "public int GetLongestAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index to the longest axis of this bounding box\u0027s [member size] (see [constant Vector3.AXIS_X], [constant Vector3.AXIS_Y], and [constant Vector3.AXIS_Z]). For an example, see [method get_longest_axis].",
+      "godotName": "get_longest_axis_index",
+      "xmlDocId": "M:Godot.AABB.GetLongestAxisIndex",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetLongestAxisSize",
+      "kind": "Method",
+      "signature": "public float GetLongestAxisSize()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the longest dimension of this bounding box\u0027s [member size]. For an example, see [method get_longest_axis].",
+      "godotName": "get_longest_axis_size",
+      "xmlDocId": "M:Godot.AABB.GetLongestAxisSize",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetShortestAxis",
+      "kind": "Method",
+      "signature": "public Vector3 GetShortestAxis()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the shortest normalized axis of this bounding box\u0027s [member size], as a [Vector3] ([constant Vector3.RIGHT], [constant Vector3.UP], or [constant Vector3.BACK]). [codeblocks] [gdscript] var box = AABB(Vector3(0, 0, 0), Vector3(2, 4, 8)) print(box.get_shortest_axis()) # Prints (1.0, 0.0, 0.0) print(box.get_shortest_axis_index()) # Prints 0 print(box.get_shortest_axis_size()) # Prints 2.0 [/gdscript] [csharp] var box = new Aabb(new Vector3(0, 0, 0), new Vector3(2, 4, 8)); GD.Print(box.GetShortestAxis()); // Prints (1, 0, 0) GD.Print(box.GetShortestAxisIndex()); // Prints X GD.Print(box.GetShortestAxisSize()); // Prints 2 [/csharp] [/codeblocks] See also [method get_shortest_axis_index] and [method get_shortest_axis_size].",
+      "godotName": "get_shortest_axis",
+      "xmlDocId": "M:Godot.AABB.GetShortestAxis",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetShortestAxisIndex",
+      "kind": "Method",
+      "signature": "public int GetShortestAxisIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the index to the shortest axis of this bounding box\u0027s [member size] (see [constant Vector3.AXIS_X], [constant Vector3.AXIS_Y], and [constant Vector3.AXIS_Z]). For an example, see [method get_shortest_axis].",
+      "godotName": "get_shortest_axis_index",
+      "xmlDocId": "M:Godot.AABB.GetShortestAxisIndex",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetShortestAxisSize",
+      "kind": "Method",
+      "signature": "public float GetShortestAxisSize()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the shortest dimension of this bounding box\u0027s [member size]. For an example, see [method get_shortest_axis].",
+      "godotName": "get_shortest_axis_size",
+      "xmlDocId": "M:Godot.AABB.GetShortestAxisSize",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetSupport",
+      "kind": "Method",
+      "signature": "public Vector3 GetSupport(Vector3 direction)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "direction",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the vertex\u0027s position of this bounding box that\u0027s the farthest in the given direction. This point is commonly known as the support point in collision detection algorithms.",
+      "godotName": "get_support",
+      "xmlDocId": "M:Godot.AABB.GetSupport(Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "GetVolume",
+      "kind": "Method",
+      "signature": "public float GetVolume()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the bounding box\u0027s volume. This is equivalent to [code]size.x * size.y * size.z[/code]. See also [method has_volume].",
+      "godotName": "get_volume",
+      "xmlDocId": "M:Godot.AABB.GetVolume",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Grow",
+      "kind": "Method",
+      "signature": "public AABB Grow(float by)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "by",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a copy of this bounding box extended on all sides by the given amount [param by]. A negative amount shrinks the box instead. [codeblocks] [gdscript] var a = AABB(Vector3(4, 4, 4), Vector3(8, 8, 8)).grow(4) print(a.position) # Prints (0.0, 0.0, 0.0) print(a.size) # Prints (16.0, 16.0, 16.0) var b = AABB(Vector3(0, 0, 0), Vector3(8, 4, 2)).grow(2) print(b.position) # Prints (-2.0, -2.0, -2.0) print(b.size) # Prints (12.0, 8.0, 6.0) [/gdscript] [csharp] var a = new Aabb(new Vector3(4, 4, 4), new Vector3(8, 8, 8)).Grow(4); GD.Print(a.Position); // Prints (0, 0, 0) GD.Print(a.Size); // Prints (16, 16, 16) var b = new Aabb(new Vector3(0, 0, 0), new Vector3(8, 4, 2)).Grow(2); GD.Print(b.Position); // Prints (-2, -2, -2) GD.Print(b.Size); // Prints (12, 8, 6) [/csharp] [/codeblocks]",
+      "godotName": "grow",
+      "xmlDocId": "M:Godot.AABB.Grow(float)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public bool HasPoint(Vector3 point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the bounding box contains the given [param point]. By convention, points exactly on the right, top, and front sides are [b]not[/b] included. [b]Note:[/b] This method is not reliable for [AABB] with a [i]negative[/i] [member size]. Use [method abs] first to get a valid bounding box.",
+      "godotName": "has_point",
+      "xmlDocId": "M:Godot.AABB.HasPoint(Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "HasSurface",
+      "kind": "Method",
+      "signature": "public bool HasSurface()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this bounding box has a surface or a length, that is, at least one component of [member size] is greater than [code]0[/code]. Otherwise, returns [code]false[/code].",
+      "godotName": "has_surface",
+      "xmlDocId": "M:Godot.AABB.HasSurface",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "HasVolume",
+      "kind": "Method",
+      "signature": "public bool HasVolume()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this bounding box\u0027s width, height, and depth are all positive. See also [method get_volume].",
+      "godotName": "has_volume",
+      "xmlDocId": "M:Godot.AABB.HasVolume",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Intersection",
+      "kind": "Method",
+      "signature": "public AABB Intersection(AABB with)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns the intersection between this bounding box and [param with]. If the boxes do not intersect, returns an empty [AABB]. If the boxes intersect at the edge, returns a flat [AABB] with no volume (see [method has_surface] and [method has_volume]). [codeblocks] [gdscript] var box1 = AABB(Vector3(0, 0, 0), Vector3(5, 2, 8)) var box2 = AABB(Vector3(2, 0, 2), Vector3(8, 4, 4)) var intersection = box1.intersection(box2) print(intersection.position) # Prints (2.0, 0.0, 2.0) print(intersection.size) # Prints (3.0, 2.0, 4.0) [/gdscript] [csharp] var box1 = new Aabb(new Vector3(0, 0, 0), new Vector3(5, 2, 8)); var box2 = new Aabb(new Vector3(2, 0, 2), new Vector3(8, 4, 4)); var intersection = box1.Intersection(box2); GD.Print(intersection.Position); // Prints (2, 0, 2) GD.Print(intersection.Size); // Prints (3, 2, 4) [/csharp] [/codeblocks] [b]Note:[/b] If you only need to know whether two bounding boxes are intersecting, use [method intersects], instead.",
+      "godotName": "intersection",
+      "xmlDocId": "M:Godot.AABB.Intersection(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Intersects",
+      "kind": "Method",
+      "signature": "public bool Intersects(AABB with)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this bounding box overlaps with the box [param with]. The edges of both boxes are [i]always[/i] excluded.",
+      "godotName": "intersects",
+      "xmlDocId": "M:Godot.AABB.Intersects(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "IntersectsPlane",
+      "kind": "Method",
+      "signature": "public bool IntersectsPlane(Plane plane)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "plane",
+          "type": "Plane"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this bounding box is on both sides of the given [param plane].",
+      "godotName": "intersects_plane",
+      "xmlDocId": "M:Godot.AABB.IntersectsPlane(Plane)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "IntersectsRay",
+      "kind": "Method",
+      "signature": "public Variant IntersectsRay(Vector3 from, Vector3 dir)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "dir",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the first point where this bounding box and the given ray intersect, as a [Vector3]. If no intersection occurs, returns [code]null[/code]. The ray begin at [param from], faces [param dir] and extends towards infinity.",
+      "godotName": "intersects_ray",
+      "xmlDocId": "M:Godot.AABB.IntersectsRay(Vector3,Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "IntersectsSegment",
+      "kind": "Method",
+      "signature": "public Variant IntersectsSegment(Vector3 from, Vector3 to)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector3"
+        },
+        {
+          "name": "to",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the first point where this bounding box and the given segment intersect, as a [Vector3]. If no intersection occurs, returns [code]null[/code]. The segment begins at [param from] and ends at [param to].",
+      "godotName": "intersects_segment",
+      "xmlDocId": "M:Godot.AABB.IntersectsSegment(Vector3,Vector3)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public bool IsEqualApprox(AABB aabb)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "aabb",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this bounding box and [param aabb] are approximately equal, by calling [method Vector3.is_equal_approx] on the [member position] and the [member size].",
+      "godotName": "is_equal_approx",
+      "xmlDocId": "M:Godot.AABB.IsEqualApprox(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public bool IsFinite()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this bounding box\u0027s values are finite, by calling [method Vector3.is_finite] on the [member position] and the [member size].",
+      "godotName": "is_finite",
+      "xmlDocId": "M:Godot.AABB.IsFinite",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public AABB Merge(AABB with)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns an [AABB] that encloses both this bounding box and [param with] around the edges. See also [method encloses].",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.AABB.Merge(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "End",
+      "kind": "Property",
+      "signature": "public Vector3 End { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The ending point. This is usually the corner on the top-right and back of the bounding box, and is equivalent to [code]position \u002B size[/code]. Setting this point affects the [member size].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "end",
+      "xmlDocId": "P:Godot.AABB.End",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector3 Position { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The origin point. This is usually the corner on the bottom-left and forward of the bounding box.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.AABB.Position",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The bounding box\u0027s width, height, and depth starting from [member position]. Setting this value also affects the [member end] point. [b]Note:[/b] It\u0027s recommended setting the width, height, and depth to non-negative values. This is because most methods in Godot assume that the [member position] is the bottom-left-forward corner, and the [member end] is the top-right-back corner. To get an equivalent bounding box with non-negative size, use [method abs].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.AABB.Size",
+      "sourcePath": "doc/classes/AABB.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(AABB right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [member position] or [member size] of both bounding boxes are not equal. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.AABB.operator !=(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public AABB operator *(Transform3D right)",
+      "returnType": "AABB",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Inversely transforms (multiplies) the [AABB] by the given [Transform3D] transformation matrix, under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection is fine, scaling/skew is not). [code]aabb * transform[/code] is equivalent to [code]transform.inverse() * aabb[/code]. See [method Transform3D.inverse]. For transforming by inverse of an affine transformation (e.g. with scaling) [code]transform.affine_inverse() * aabb[/code] can be used instead. See [method Transform3D.affine_inverse].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.AABB.operator *(Transform3D)",
+      "sourcePath": "doc/classes/AABB.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(AABB right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both [member position] and [member size] of the bounding boxes are exactly equal, respectively. [b]Note:[/b] Due to floating-point precision errors, consider using [method is_equal_approx] instead, which is more reliable.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.AABB.operator ==(AABB)",
+      "sourcePath": "doc/classes/AABB.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AABB.xml",
+      "sha256": "1887f551561a623c56f22cf0847e2fe83a55848d6cf27f4e4bbdf6add5fc42e0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

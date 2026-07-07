@@ -1,0 +1,1839 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CodeEdit",
+    "namespace": "Godot",
+    "fullName": "Godot.CodeEdit",
+    "kind": "class",
+    "baseType": "TextEdit",
+    "interfaces": [],
+    "godotReference": "CodeEdit",
+    "documentationPath": "doc/classes/CodeEdit.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_codeedit.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ConfirmCodeCompletion",
+      "kind": "Method",
+      "signature": "public void _ConfirmCodeCompletion(bool replace)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "replace",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to define how the selected entry should be inserted. If [param replace] is [code]true[/code], any existing text should be replaced.",
+      "godotName": "_confirm_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit._ConfirmCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "_FilterCodeCompletionCandidates",
+      "kind": "Method",
+      "signature": "public Dictionary[] _FilterCodeCompletionCandidates(Dictionary[] candidates)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "candidates",
+          "type": "Dictionary[]"
+        }
+      ],
+      "summary": "Override this method to define what items in [param candidates] should be displayed. Both [param candidates] and the return is an [Array] of [Dictionary], see [method get_code_completion_option] for [Dictionary] content.",
+      "godotName": "_filter_code_completion_candidates",
+      "xmlDocId": "M:Godot.CodeEdit._FilterCodeCompletionCandidates(Dictionary[])",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "_RequestCodeCompletion",
+      "kind": "Method",
+      "signature": "public void _RequestCodeCompletion(bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user requests code completion. If [param force] is [code]true[/code], any checks should be bypassed.",
+      "godotName": "_request_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit._RequestCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AddAutoBraceCompletionPair",
+      "kind": "Method",
+      "signature": "public void AddAutoBraceCompletionPair(String startKey, String endKey)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        },
+        {
+          "name": "end_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a brace pair. Both the start and end keys must be symbols. Only the start key has to be unique.",
+      "godotName": "add_auto_brace_completion_pair",
+      "xmlDocId": "M:Godot.CodeEdit.AddAutoBraceCompletionPair(String,String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AddCodeCompletionOption",
+      "kind": "Method",
+      "signature": "public void AddCodeCompletionOption(int type, String displayText, String insertText, Color textColor, Resource icon, Variant value, int location)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "display_text",
+          "type": "String"
+        },
+        {
+          "name": "insert_text",
+          "type": "String"
+        },
+        {
+          "name": "text_color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "icon",
+          "type": "Resource",
+          "defaultValue": "null"
+        },
+        {
+          "name": "value",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "location",
+          "type": "int",
+          "defaultValue": "1024"
+        }
+      ],
+      "summary": "Submits an item to the queue of potential candidates for the autocomplete menu. Call [method update_code_completion_options] to update the list. [param location] indicates location of the option relative to the location of the code completion query. See [enum CodeEdit.CodeCompletionLocation] for how to set this value. [b]Note:[/b] This list will replace all current candidates.",
+      "godotName": "add_code_completion_option",
+      "xmlDocId": "M:Godot.CodeEdit.AddCodeCompletionOption(int,String,String,Color,Resource,Variant,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AddCommentDelimiter",
+      "kind": "Method",
+      "signature": "public void AddCommentDelimiter(String startKey, String endKey, bool lineOnly)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        },
+        {
+          "name": "end_key",
+          "type": "String"
+        },
+        {
+          "name": "line_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a comment delimiter from [param start_key] to [param end_key]. Both keys should be symbols, and [param start_key] must not be shared with other delimiters. If [param line_only] is [code]true[/code] or [param end_key] is an empty [String], the region does not carry over to the next line.",
+      "godotName": "add_comment_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.AddCommentDelimiter(String,String,bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AddStringDelimiter",
+      "kind": "Method",
+      "signature": "public void AddStringDelimiter(String startKey, String endKey, bool lineOnly)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        },
+        {
+          "name": "end_key",
+          "type": "String"
+        },
+        {
+          "name": "line_only",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Defines a string delimiter from [param start_key] to [param end_key]. Both keys should be symbols, and [param start_key] must not be shared with other delimiters. If [param line_only] is [code]true[/code] or [param end_key] is an empty [String], the region does not carry over to the next line.",
+      "godotName": "add_string_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.AddStringDelimiter(String,String,bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CanFoldLine",
+      "kind": "Method",
+      "signature": "public bool CanFoldLine(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is foldable. A line is foldable if it is the start of a valid code region (see [method get_code_region_start_tag]), if it is the start of a comment or string block, or if the next non-empty line is more indented (see [method TextEdit.get_indent_level]).",
+      "godotName": "can_fold_line",
+      "xmlDocId": "M:Godot.CodeEdit.CanFoldLine(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CancelCodeCompletion",
+      "kind": "Method",
+      "signature": "public void CancelCodeCompletion()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Cancels the autocomplete menu.",
+      "godotName": "cancel_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit.CancelCodeCompletion",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ClearBookmarkedLines",
+      "kind": "Method",
+      "signature": "public void ClearBookmarkedLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all bookmarked lines.",
+      "godotName": "clear_bookmarked_lines",
+      "xmlDocId": "M:Godot.CodeEdit.ClearBookmarkedLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ClearBreakpointedLines",
+      "kind": "Method",
+      "signature": "public void ClearBreakpointedLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all breakpointed lines.",
+      "godotName": "clear_breakpointed_lines",
+      "xmlDocId": "M:Godot.CodeEdit.ClearBreakpointedLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ClearCommentDelimiters",
+      "kind": "Method",
+      "signature": "public void ClearCommentDelimiters()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all comment delimiters.",
+      "godotName": "clear_comment_delimiters",
+      "xmlDocId": "M:Godot.CodeEdit.ClearCommentDelimiters",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ClearExecutingLines",
+      "kind": "Method",
+      "signature": "public void ClearExecutingLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all executed lines.",
+      "godotName": "clear_executing_lines",
+      "xmlDocId": "M:Godot.CodeEdit.ClearExecutingLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ClearStringDelimiters",
+      "kind": "Method",
+      "signature": "public void ClearStringDelimiters()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all string delimiters.",
+      "godotName": "clear_string_delimiters",
+      "xmlDocId": "M:Godot.CodeEdit.ClearStringDelimiters",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ConfirmCodeCompletion",
+      "kind": "Method",
+      "signature": "public void ConfirmCodeCompletion(bool replace)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "replace",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Inserts the selected entry into the text. If [param replace] is [code]true[/code], any existing text is replaced rather than merged.",
+      "godotName": "confirm_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit.ConfirmCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ConvertIndent",
+      "kind": "Method",
+      "signature": "public void ConvertIndent(int fromLine, int toLine)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "to_line",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Converts the indents of lines between [param from_line] and [param to_line] to tabs or spaces as set by [member indent_use_spaces]. Values of [code]-1[/code] convert the entire text.",
+      "godotName": "convert_indent",
+      "xmlDocId": "M:Godot.CodeEdit.ConvertIndent(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CreateCodeRegion",
+      "kind": "Method",
+      "signature": "public void CreateCodeRegion()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Creates a new code region with the selection. At least one single line comment delimiter have to be defined (see [method add_comment_delimiter]). A code region is a part of code that is highlighted when folded and can help organize your script. Code region start and end tags can be customized (see [method set_code_region_tags]). Code regions are delimited using start and end tags (respectively [code]region[/code] and [code]endregion[/code] by default) preceded by one line comment delimiter. (eg. [code]#region[/code] and [code]#endregion[/code])",
+      "godotName": "create_code_region",
+      "xmlDocId": "M:Godot.CodeEdit.CreateCodeRegion",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DeleteLines",
+      "kind": "Method",
+      "signature": "public void DeleteLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Deletes all lines that are selected or have a caret on them.",
+      "godotName": "delete_lines",
+      "xmlDocId": "M:Godot.CodeEdit.DeleteLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DoIndent",
+      "kind": "Method",
+      "signature": "public void DoIndent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "If there is no selection, indentation is inserted at the caret. Otherwise, the selected lines are indented like [method indent_lines]. Equivalent to the [member ProjectSettings.input/ui_text_indent] action. The indentation characters used depend on [member indent_use_spaces] and [member indent_size].",
+      "godotName": "do_indent",
+      "xmlDocId": "M:Godot.CodeEdit.DoIndent",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DuplicateLines",
+      "kind": "Method",
+      "signature": "public void DuplicateLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Duplicates all lines currently selected with any caret. Duplicates the entire line beneath the current one no matter where the caret is within the line.",
+      "godotName": "duplicate_lines",
+      "xmlDocId": "M:Godot.CodeEdit.DuplicateLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DuplicateSelection",
+      "kind": "Method",
+      "signature": "public void DuplicateSelection()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Duplicates all selected text and duplicates all lines with a caret on them.",
+      "godotName": "duplicate_selection",
+      "xmlDocId": "M:Godot.CodeEdit.DuplicateSelection",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "FoldAllLines",
+      "kind": "Method",
+      "signature": "public void FoldAllLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Folds all lines that are possible to be folded (see [method can_fold_line]).",
+      "godotName": "fold_all_lines",
+      "xmlDocId": "M:Godot.CodeEdit.FoldAllLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "FoldLine",
+      "kind": "Method",
+      "signature": "public void FoldLine(int line)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Folds the given line, if possible (see [method can_fold_line]).",
+      "godotName": "fold_line",
+      "xmlDocId": "M:Godot.CodeEdit.FoldLine(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetAutoBraceCompletionCloseKey",
+      "kind": "Method",
+      "signature": "public String GetAutoBraceCompletionCloseKey(String openKey)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "open_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Gets the matching auto brace close key for [param open_key].",
+      "godotName": "get_auto_brace_completion_close_key",
+      "xmlDocId": "M:Godot.CodeEdit.GetAutoBraceCompletionCloseKey(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetBookmarkedLines",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetBookmarkedLines()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Gets all bookmarked lines.",
+      "godotName": "get_bookmarked_lines",
+      "xmlDocId": "M:Godot.CodeEdit.GetBookmarkedLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetBreakpointedLines",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetBreakpointedLines()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Gets all breakpointed lines.",
+      "godotName": "get_breakpointed_lines",
+      "xmlDocId": "M:Godot.CodeEdit.GetBreakpointedLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetCodeCompletionOption",
+      "kind": "Method",
+      "signature": "public Dictionary GetCodeCompletionOption(int index)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the completion option at [param index]. The return [Dictionary] has the following key-values: [code]kind[/code]: [enum CodeCompletionKind] [code]display_text[/code]: Text that is shown on the autocomplete menu. [code]insert_text[/code]: Text that is to be inserted when this item is selected. [code]font_color[/code]: Color of the text on the autocomplete menu. [code]icon[/code]: Icon to draw on the autocomplete menu. [code]default_value[/code]: Value of the symbol.",
+      "godotName": "get_code_completion_option",
+      "xmlDocId": "M:Godot.CodeEdit.GetCodeCompletionOption(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetCodeCompletionOptions",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetCodeCompletionOptions()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Gets all completion options, see [method get_code_completion_option] for return content.",
+      "godotName": "get_code_completion_options",
+      "xmlDocId": "M:Godot.CodeEdit.GetCodeCompletionOptions",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetCodeCompletionSelectedIndex",
+      "kind": "Method",
+      "signature": "public int GetCodeCompletionSelectedIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Gets the index of the current selected completion option.",
+      "godotName": "get_code_completion_selected_index",
+      "xmlDocId": "M:Godot.CodeEdit.GetCodeCompletionSelectedIndex",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetCodeRegionEndTag",
+      "kind": "Method",
+      "signature": "public String GetCodeRegionEndTag()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the code region end tag (without comment delimiter).",
+      "godotName": "get_code_region_end_tag",
+      "xmlDocId": "M:Godot.CodeEdit.GetCodeRegionEndTag",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetCodeRegionStartTag",
+      "kind": "Method",
+      "signature": "public String GetCodeRegionStartTag()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the code region start tag (without comment delimiter).",
+      "godotName": "get_code_region_start_tag",
+      "xmlDocId": "M:Godot.CodeEdit.GetCodeRegionStartTag",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetDelimiterEndKey",
+      "kind": "Method",
+      "signature": "public String GetDelimiterEndKey(int delimiterIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "delimiter_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the end key for a string or comment region index.",
+      "godotName": "get_delimiter_end_key",
+      "xmlDocId": "M:Godot.CodeEdit.GetDelimiterEndKey(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetDelimiterEndPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetDelimiterEndPosition(int line, int column)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "If [param line] [param column] is in a string or comment, returns the end position of the region. If not or no end could be found, both [Vector2] values will be [code]-1[/code].",
+      "godotName": "get_delimiter_end_position",
+      "xmlDocId": "M:Godot.CodeEdit.GetDelimiterEndPosition(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetDelimiterStartKey",
+      "kind": "Method",
+      "signature": "public String GetDelimiterStartKey(int delimiterIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "delimiter_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the start key for a string or comment region index.",
+      "godotName": "get_delimiter_start_key",
+      "xmlDocId": "M:Godot.CodeEdit.GetDelimiterStartKey(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetDelimiterStartPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetDelimiterStartPosition(int line, int column)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "If [param line] [param column] is in a string or comment, returns the start position of the region. If not or no start could be found, both [Vector2] values will be [code]-1[/code].",
+      "godotName": "get_delimiter_start_position",
+      "xmlDocId": "M:Godot.CodeEdit.GetDelimiterStartPosition(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetExecutingLines",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetExecutingLines()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Gets all executing lines.",
+      "godotName": "get_executing_lines",
+      "xmlDocId": "M:Godot.CodeEdit.GetExecutingLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetFoldedLines",
+      "kind": "Method",
+      "signature": "public int[] GetFoldedLines()",
+      "returnType": "int[]",
+      "parameters": [],
+      "summary": "Returns all lines that are currently folded.",
+      "godotName": "get_folded_lines",
+      "xmlDocId": "M:Godot.CodeEdit.GetFoldedLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetTextForCodeCompletion",
+      "kind": "Method",
+      "signature": "public String GetTextForCodeCompletion()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the full text with char [code]0xFFFF[/code] at the caret location.",
+      "godotName": "get_text_for_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit.GetTextForCodeCompletion",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetTextForSymbolLookup",
+      "kind": "Method",
+      "signature": "public String GetTextForSymbolLookup()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the full text with char [code]0xFFFF[/code] at the cursor location.",
+      "godotName": "get_text_for_symbol_lookup",
+      "xmlDocId": "M:Godot.CodeEdit.GetTextForSymbolLookup",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GetTextWithCursorChar",
+      "kind": "Method",
+      "signature": "public String GetTextWithCursorChar(int line, int column)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the full text with char [code]0xFFFF[/code] at the specified location.",
+      "godotName": "get_text_with_cursor_char",
+      "xmlDocId": "M:Godot.CodeEdit.GetTextWithCursorChar(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "HasAutoBraceCompletionCloseKey",
+      "kind": "Method",
+      "signature": "public bool HasAutoBraceCompletionCloseKey(String closeKey)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "close_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if close key [param close_key] exists.",
+      "godotName": "has_auto_brace_completion_close_key",
+      "xmlDocId": "M:Godot.CodeEdit.HasAutoBraceCompletionCloseKey(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "HasAutoBraceCompletionOpenKey",
+      "kind": "Method",
+      "signature": "public bool HasAutoBraceCompletionOpenKey(String openKey)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "open_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if open key [param open_key] exists.",
+      "godotName": "has_auto_brace_completion_open_key",
+      "xmlDocId": "M:Godot.CodeEdit.HasAutoBraceCompletionOpenKey(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "HasCommentDelimiter",
+      "kind": "Method",
+      "signature": "public bool HasCommentDelimiter(String startKey)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if comment [param start_key] exists.",
+      "godotName": "has_comment_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.HasCommentDelimiter(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "HasStringDelimiter",
+      "kind": "Method",
+      "signature": "public bool HasStringDelimiter(String startKey)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if string [param start_key] exists.",
+      "godotName": "has_string_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.HasStringDelimiter(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IndentLines",
+      "kind": "Method",
+      "signature": "public void IndentLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Indents all lines that are selected or have a caret on them. Uses spaces or a tab depending on [member indent_use_spaces]. See [method unindent_lines].",
+      "godotName": "indent_lines",
+      "xmlDocId": "M:Godot.CodeEdit.IndentLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsInComment",
+      "kind": "Method",
+      "signature": "public int IsInComment(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns delimiter index if [param line] [param column] is in a comment. If [param column] is not provided, will return delimiter index if the entire [param line] is a comment. Otherwise [code]-1[/code].",
+      "godotName": "is_in_comment",
+      "xmlDocId": "M:Godot.CodeEdit.IsInComment(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsInString",
+      "kind": "Method",
+      "signature": "public int IsInString(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the delimiter index if [param line] [param column] is in a string. If [param column] is not provided, will return the delimiter index if the entire [param line] is a string. Otherwise [code]-1[/code].",
+      "godotName": "is_in_string",
+      "xmlDocId": "M:Godot.CodeEdit.IsInString(int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineBookmarked",
+      "kind": "Method",
+      "signature": "public bool IsLineBookmarked(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is bookmarked. See [method set_line_as_bookmarked].",
+      "godotName": "is_line_bookmarked",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineBookmarked(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineBreakpointed",
+      "kind": "Method",
+      "signature": "public bool IsLineBreakpointed(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is breakpointed. See [method set_line_as_breakpoint].",
+      "godotName": "is_line_breakpointed",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineBreakpointed(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineCodeRegionEnd",
+      "kind": "Method",
+      "signature": "public bool IsLineCodeRegionEnd(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is a code region end. See [method set_code_region_tags].",
+      "godotName": "is_line_code_region_end",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineCodeRegionEnd(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineCodeRegionStart",
+      "kind": "Method",
+      "signature": "public bool IsLineCodeRegionStart(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is a code region start. See [method set_code_region_tags].",
+      "godotName": "is_line_code_region_start",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineCodeRegionStart(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineExecuting",
+      "kind": "Method",
+      "signature": "public bool IsLineExecuting(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is marked as executing. See [method set_line_as_executing].",
+      "godotName": "is_line_executing",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineExecuting(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IsLineFolded",
+      "kind": "Method",
+      "signature": "public bool IsLineFolded(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is folded. See [method fold_line].",
+      "godotName": "is_line_folded",
+      "xmlDocId": "M:Godot.CodeEdit.IsLineFolded(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "JoinLines",
+      "kind": "Method",
+      "signature": "public void JoinLines(String lineEnding)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line_ending",
+          "type": "String",
+          "defaultValue": "\u0022 \u0022"
+        }
+      ],
+      "summary": "Joins all selected lines or lines containing a caret with their next line. Whitespace in between will be removed. If the next line has content, the [param line_ending] will be inserted in between.",
+      "godotName": "join_lines",
+      "xmlDocId": "M:Godot.CodeEdit.JoinLines(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "MoveLinesDown",
+      "kind": "Method",
+      "signature": "public void MoveLinesDown()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Moves all lines down that are selected or have a caret on them.",
+      "godotName": "move_lines_down",
+      "xmlDocId": "M:Godot.CodeEdit.MoveLinesDown",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "MoveLinesUp",
+      "kind": "Method",
+      "signature": "public void MoveLinesUp()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Moves all lines up that are selected or have a caret on them.",
+      "godotName": "move_lines_up",
+      "xmlDocId": "M:Godot.CodeEdit.MoveLinesUp",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "RemoveCommentDelimiter",
+      "kind": "Method",
+      "signature": "public void RemoveCommentDelimiter(String startKey)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the comment delimiter with [param start_key].",
+      "godotName": "remove_comment_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.RemoveCommentDelimiter(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "RemoveStringDelimiter",
+      "kind": "Method",
+      "signature": "public void RemoveStringDelimiter(String startKey)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start_key",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the string delimiter with [param start_key].",
+      "godotName": "remove_string_delimiter",
+      "xmlDocId": "M:Godot.CodeEdit.RemoveStringDelimiter(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "RequestCodeCompletion",
+      "kind": "Method",
+      "signature": "public void RequestCodeCompletion(bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Emits [signal code_completion_requested], if [param force] is [code]true[/code] will bypass all checks. Otherwise will check that the caret is in a word or in front of a prefix. Will ignore the request if all current options are of type file path, node path, or signal.",
+      "godotName": "request_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit.RequestCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetCodeCompletionSelectedIndex",
+      "kind": "Method",
+      "signature": "public void SetCodeCompletionSelectedIndex(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the current selected completion option.",
+      "godotName": "set_code_completion_selected_index",
+      "xmlDocId": "M:Godot.CodeEdit.SetCodeCompletionSelectedIndex(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetCodeHint",
+      "kind": "Method",
+      "signature": "public void SetCodeHint(String codeHint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "code_hint",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the code hint text. Pass an empty string to clear.",
+      "godotName": "set_code_hint",
+      "xmlDocId": "M:Godot.CodeEdit.SetCodeHint(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetCodeHintDrawBelow",
+      "kind": "Method",
+      "signature": "public void SetCodeHintDrawBelow(bool drawBelow)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "draw_below",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the code hint will draw below the main caret. If [code]false[/code], the code hint will draw above the main caret. See [method set_code_hint].",
+      "godotName": "set_code_hint_draw_below",
+      "xmlDocId": "M:Godot.CodeEdit.SetCodeHintDrawBelow(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetCodeRegionTags",
+      "kind": "Method",
+      "signature": "public void SetCodeRegionTags(String start, String end)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "start",
+          "type": "String",
+          "defaultValue": "\u0022region\u0022"
+        },
+        {
+          "name": "end",
+          "type": "String",
+          "defaultValue": "\u0022endregion\u0022"
+        }
+      ],
+      "summary": "Sets the code region start and end tags (without comment delimiter).",
+      "godotName": "set_code_region_tags",
+      "xmlDocId": "M:Godot.CodeEdit.SetCodeRegionTags(String,String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetLineAsBookmarked",
+      "kind": "Method",
+      "signature": "public void SetLineAsBookmarked(int line, bool bookmarked)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "bookmarked",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the given line as bookmarked. If [code]true[/code] and [member gutters_draw_bookmarks] is [code]true[/code], draws the [theme_item bookmark] icon in the gutter for this line. See [method get_bookmarked_lines] and [method is_line_bookmarked].",
+      "godotName": "set_line_as_bookmarked",
+      "xmlDocId": "M:Godot.CodeEdit.SetLineAsBookmarked(int,bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetLineAsBreakpoint",
+      "kind": "Method",
+      "signature": "public void SetLineAsBreakpoint(int line, bool breakpointed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "breakpointed",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the given line as a breakpoint. If [code]true[/code] and [member gutters_draw_breakpoints_gutter] is [code]true[/code], draws the [theme_item breakpoint] icon in the gutter for this line. See [method get_breakpointed_lines] and [method is_line_breakpointed].",
+      "godotName": "set_line_as_breakpoint",
+      "xmlDocId": "M:Godot.CodeEdit.SetLineAsBreakpoint(int,bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetLineAsExecuting",
+      "kind": "Method",
+      "signature": "public void SetLineAsExecuting(int line, bool executing)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "executing",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the given line as executing. If [code]true[/code] and [member gutters_draw_executing_lines] is [code]true[/code], draws the [theme_item executing_line] icon in the gutter for this line. See [method get_executing_lines] and [method is_line_executing].",
+      "godotName": "set_line_as_executing",
+      "xmlDocId": "M:Godot.CodeEdit.SetLineAsExecuting(int,bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SetSymbolLookupWordAsValid",
+      "kind": "Method",
+      "signature": "public void SetSymbolLookupWordAsValid(bool valid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "valid",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the symbol emitted by [signal symbol_validate] as a valid lookup.",
+      "godotName": "set_symbol_lookup_word_as_valid",
+      "xmlDocId": "M:Godot.CodeEdit.SetSymbolLookupWordAsValid(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ToggleFoldableLine",
+      "kind": "Method",
+      "signature": "public void ToggleFoldableLine(int line)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Toggle the folding of the code block at the given line.",
+      "godotName": "toggle_foldable_line",
+      "xmlDocId": "M:Godot.CodeEdit.ToggleFoldableLine(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "ToggleFoldableLinesAtCarets",
+      "kind": "Method",
+      "signature": "public void ToggleFoldableLinesAtCarets()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Toggle the folding of the code block on all lines with a caret on them.",
+      "godotName": "toggle_foldable_lines_at_carets",
+      "xmlDocId": "M:Godot.CodeEdit.ToggleFoldableLinesAtCarets",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "UnfoldAllLines",
+      "kind": "Method",
+      "signature": "public void UnfoldAllLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Unfolds all lines that are folded.",
+      "godotName": "unfold_all_lines",
+      "xmlDocId": "M:Godot.CodeEdit.UnfoldAllLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "UnfoldLine",
+      "kind": "Method",
+      "signature": "public void UnfoldLine(int line)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Unfolds the given line if it is folded or if it is hidden under a folded line.",
+      "godotName": "unfold_line",
+      "xmlDocId": "M:Godot.CodeEdit.UnfoldLine(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "UnindentLines",
+      "kind": "Method",
+      "signature": "public void UnindentLines()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Unindents all lines that are selected or have a caret on them. Uses spaces or a tab depending on [member indent_use_spaces]. Equivalent to the [member ProjectSettings.input/ui_text_dedent] action. See [method indent_lines].",
+      "godotName": "unindent_lines",
+      "xmlDocId": "M:Godot.CodeEdit.UnindentLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "UpdateCodeCompletionOptions",
+      "kind": "Method",
+      "signature": "public void UpdateCodeCompletionOptions(bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Submits all completion options added with [method add_code_completion_option]. Will try to force the autocomplete menu to popup, if [param force] is [code]true[/code]. [b]Note:[/b] This will replace all current candidates.",
+      "godotName": "update_code_completion_options",
+      "xmlDocId": "M:Godot.CodeEdit.UpdateCodeCompletionOptions(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AutoBraceCompletionEnabled",
+      "kind": "Property",
+      "signature": "public bool AutoBraceCompletionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses [member auto_brace_completion_pairs] to automatically insert the closing brace when the opening brace is inserted by typing or autocompletion. Also automatically removes the closing brace when using backspace on the opening brace.",
+      "defaultValue": "false",
+      "godotName": "auto_brace_completion_enabled",
+      "xmlDocId": "P:Godot.CodeEdit.AutoBraceCompletionEnabled",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AutoBraceCompletionHighlightMatching",
+      "kind": "Property",
+      "signature": "public bool AutoBraceCompletionHighlightMatching { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], highlights brace pairs when the caret is on either one, using [member auto_brace_completion_pairs]. If matching, the pairs will be underlined. If a brace is unmatched, it is colored with [theme_item brace_mismatch_color].",
+      "defaultValue": "false",
+      "godotName": "auto_brace_completion_highlight_matching",
+      "xmlDocId": "P:Godot.CodeEdit.AutoBraceCompletionHighlightMatching",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "AutoBraceCompletionPairs",
+      "kind": "Property",
+      "signature": "public Dictionary AutoBraceCompletionPairs { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the opening brace and the value is the closing brace that matches it. A brace is a [String] made of symbols. See [member auto_brace_completion_enabled] and [member auto_brace_completion_highlight_matching].",
+      "defaultValue": "{ \u0022\\\u0022\u0022: \u0022\\\u0022\u0022, \u0022\u0027\u0022: \u0022\u0027\u0022, \u0022(\u0022: \u0022)\u0022, \u0022[\u0022: \u0022]\u0022, \u0022{\u0022: \u0022}\u0022 }",
+      "godotName": "auto_brace_completion_pairs",
+      "xmlDocId": "P:Godot.CodeEdit.AutoBraceCompletionPairs",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CodeCompletionEnabled",
+      "kind": "Property",
+      "signature": "public bool CodeCompletionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [member ProjectSettings.input/ui_text_completion_query] action requests code completion. To handle it, see [method _request_code_completion] or [signal code_completion_requested].",
+      "defaultValue": "false",
+      "godotName": "code_completion_enabled",
+      "xmlDocId": "P:Godot.CodeEdit.CodeCompletionEnabled",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CodeCompletionPrefixes",
+      "kind": "Property",
+      "signature": "public String[] CodeCompletionPrefixes { get; set; }",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Sets prefixes that will trigger code completion.",
+      "defaultValue": "[]",
+      "godotName": "code_completion_prefixes",
+      "xmlDocId": "P:Godot.CodeEdit.CodeCompletionPrefixes",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DelimiterComments",
+      "kind": "Property",
+      "signature": "public String[] DelimiterComments { get; set; }",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Sets the comment delimiters. All existing comment delimiters will be removed.",
+      "defaultValue": "[]",
+      "godotName": "delimiter_comments",
+      "xmlDocId": "P:Godot.CodeEdit.DelimiterComments",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "DelimiterStrings",
+      "kind": "Property",
+      "signature": "public String[] DelimiterStrings { get; set; }",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Sets the string delimiters. All existing string delimiters will be removed.",
+      "defaultValue": "[\u0022\u0027 \u0027\u0022, \u0022\\\u0022 \\\u0022\u0022]",
+      "godotName": "delimiter_strings",
+      "xmlDocId": "P:Godot.CodeEdit.DelimiterStrings",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersDrawBookmarks",
+      "kind": "Property",
+      "signature": "public bool GuttersDrawBookmarks { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], bookmarks are drawn in the gutter. This gutter is shared with breakpoints and executing lines. See [method set_line_as_bookmarked].",
+      "defaultValue": "false",
+      "godotName": "gutters_draw_bookmarks",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersDrawBookmarks",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersDrawBreakpointsGutter",
+      "kind": "Property",
+      "signature": "public bool GuttersDrawBreakpointsGutter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], breakpoints are drawn in the gutter. This gutter is shared with bookmarks and executing lines. Clicking the gutter will toggle the breakpoint for the line, see [method set_line_as_breakpoint].",
+      "defaultValue": "false",
+      "godotName": "gutters_draw_breakpoints_gutter",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersDrawBreakpointsGutter",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersDrawExecutingLines",
+      "kind": "Property",
+      "signature": "public bool GuttersDrawExecutingLines { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], executing lines are marked in the gutter. This gutter is shared with breakpoints and bookmarks. See [method set_line_as_executing].",
+      "defaultValue": "false",
+      "godotName": "gutters_draw_executing_lines",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersDrawExecutingLines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersDrawFoldGutter",
+      "kind": "Property",
+      "signature": "public bool GuttersDrawFoldGutter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the fold gutter is drawn. In this gutter, the [theme_item can_fold_code_region] icon is drawn for each foldable line (see [method can_fold_line]) and the [theme_item folded_code_region] icon is drawn for each folded line (see [method is_line_folded]). These icons can be clicked to toggle the fold state, see [method toggle_foldable_line]. [member line_folding] must be [code]true[/code] to show icons.",
+      "defaultValue": "false",
+      "godotName": "gutters_draw_fold_gutter",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersDrawFoldGutter",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersDrawLineNumbers",
+      "kind": "Property",
+      "signature": "public bool GuttersDrawLineNumbers { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the line number gutter is drawn. Line numbers start at [code]1[/code] and are incremented for each line of text. Clicking and dragging in the line number gutter will select entire lines of text.",
+      "defaultValue": "false",
+      "godotName": "gutters_draw_line_numbers",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersDrawLineNumbers",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersLineNumbersMinDigits",
+      "kind": "Property",
+      "signature": "public int GuttersLineNumbersMinDigits { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The minimum width in digits reserved for the line number gutter.",
+      "defaultValue": "3",
+      "godotName": "gutters_line_numbers_min_digits",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersLineNumbersMinDigits",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "GuttersZeroPadLineNumbers",
+      "kind": "Property",
+      "signature": "public bool GuttersZeroPadLineNumbers { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], line numbers drawn in the gutter are zero padded based on the total line count. Requires [member gutters_draw_line_numbers] to be set to [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "gutters_zero_pad_line_numbers",
+      "xmlDocId": "P:Godot.CodeEdit.GuttersZeroPadLineNumbers",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IndentAutomatic",
+      "kind": "Property",
+      "signature": "public bool IndentAutomatic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], an extra indent is automatically inserted when a new line is added and a prefix in [member indent_automatic_prefixes] is found. If a brace pair opening key is found, the matching closing brace will be moved to another new line (see [member auto_brace_completion_pairs]).",
+      "defaultValue": "false",
+      "godotName": "indent_automatic",
+      "xmlDocId": "P:Godot.CodeEdit.IndentAutomatic",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IndentAutomaticPrefixes",
+      "kind": "Property",
+      "signature": "public String[] IndentAutomaticPrefixes { get; set; }",
+      "returnType": "String[]",
+      "parameters": [],
+      "summary": "Prefixes to trigger an automatic indent. Used when [member indent_automatic] is set to [code]true[/code].",
+      "defaultValue": "[\u0022:\u0022, \u0022{\u0022, \u0022[\u0022, \u0022(\u0022]",
+      "godotName": "indent_automatic_prefixes",
+      "xmlDocId": "P:Godot.CodeEdit.IndentAutomaticPrefixes",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IndentSize",
+      "kind": "Property",
+      "signature": "public int IndentSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Size of the tabulation indent (one [kbd]Tab[/kbd] press) in characters. If [member indent_use_spaces] is enabled the number of spaces to use.",
+      "defaultValue": "4",
+      "godotName": "indent_size",
+      "xmlDocId": "P:Godot.CodeEdit.IndentSize",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "IndentUseSpaces",
+      "kind": "Property",
+      "signature": "public bool IndentUseSpaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Use spaces instead of tabs for indentation.",
+      "defaultValue": "false",
+      "godotName": "indent_use_spaces",
+      "xmlDocId": "P:Godot.CodeEdit.IndentUseSpaces",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LayoutDirection",
+      "kind": "Property",
+      "signature": "public int LayoutDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "layout_direction",
+      "xmlDocId": "P:Godot.CodeEdit.LayoutDirection",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LineFolding",
+      "kind": "Property",
+      "signature": "public bool LineFolding { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], lines can be folded. Otherwise, line folding methods like [method fold_line] will not work and [method can_fold_line] will always return [code]false[/code]. See [member gutters_draw_fold_gutter].",
+      "defaultValue": "false",
+      "godotName": "line_folding",
+      "xmlDocId": "P:Godot.CodeEdit.LineFolding",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LineLengthGuidelines",
+      "kind": "Property",
+      "signature": "public int[] LineLengthGuidelines { get; set; }",
+      "returnType": "int[]",
+      "parameters": [],
+      "summary": "Draws vertical lines at the provided columns. The first entry is considered a main hard guideline and is drawn more prominently.",
+      "defaultValue": "[]",
+      "godotName": "line_length_guidelines",
+      "xmlDocId": "P:Godot.CodeEdit.LineLengthGuidelines",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SymbolLookupOnClick",
+      "kind": "Property",
+      "signature": "public bool SymbolLookupOnClick { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Set when a validated word from [signal symbol_validate] is clicked, the [signal symbol_lookup] should be emitted.",
+      "defaultValue": "false",
+      "godotName": "symbol_lookup_on_click",
+      "xmlDocId": "P:Godot.CodeEdit.SymbolLookupOnClick",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SymbolTooltipOnHover",
+      "kind": "Property",
+      "signature": "public bool SymbolTooltipOnHover { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [signal symbol_hovered] signal is emitted when hovering over a word.",
+      "defaultValue": "false",
+      "godotName": "symbol_tooltip_on_hover",
+      "xmlDocId": "P:Godot.CodeEdit.SymbolTooltipOnHover",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.CodeEdit.TextDirection",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BreakpointToggled",
+      "kind": "Signal",
+      "signature": "public event BreakpointToggledHandler BreakpointToggled",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a breakpoint is added or removed from a line. If the line is removed via backspace, a signal is emitted at the old line.",
+      "godotName": "breakpoint_toggled",
+      "xmlDocId": "E:Godot.CodeEdit.BreakpointToggled(int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "CodeCompletionRequested",
+      "kind": "Signal",
+      "signature": "public event CodeCompletionRequestedHandler CodeCompletionRequested",
+      "parameters": [],
+      "summary": "Emitted when the user requests code completion. This signal will not be sent if [method _request_code_completion] is overridden or [member code_completion_enabled] is [code]false[/code].",
+      "godotName": "code_completion_requested",
+      "xmlDocId": "E:Godot.CodeEdit.CodeCompletionRequested",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SymbolHovered",
+      "kind": "Signal",
+      "signature": "public event SymbolHoveredHandler SymbolHovered",
+      "parameters": [
+        {
+          "name": "symbol",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user hovers over a symbol. Unlike [signal Control.mouse_entered], this signal is not emitted immediately, but when the cursor is over the symbol for [member ProjectSettings.gui/timers/tooltip_delay_sec] seconds. [b]Note:[/b] [member symbol_tooltip_on_hover] must be [code]true[/code] for this signal to be emitted.",
+      "godotName": "symbol_hovered",
+      "xmlDocId": "E:Godot.CodeEdit.SymbolHovered(String,int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SymbolLookup",
+      "kind": "Signal",
+      "signature": "public event SymbolLookupHandler SymbolLookup",
+      "parameters": [
+        {
+          "name": "symbol",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when the user has clicked on a valid symbol.",
+      "godotName": "symbol_lookup",
+      "xmlDocId": "E:Godot.CodeEdit.SymbolLookup(String,int,int)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "SymbolValidate",
+      "kind": "Signal",
+      "signature": "public event SymbolValidateHandler SymbolValidate",
+      "parameters": [
+        {
+          "name": "symbol",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the user hovers over a symbol. The symbol should be validated and responded to, by calling [method set_symbol_lookup_word_as_valid]. [b]Note:[/b] [member symbol_lookup_on_click] must be [code]true[/code] for this signal to be emitted.",
+      "godotName": "symbol_validate",
+      "xmlDocId": "E:Godot.CodeEdit.SymbolValidate(String)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CodeCompletionKind",
+      "values": [
+        {
+          "name": "KIND_CLASS",
+          "value": "0",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a class.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_CONSTANT",
+          "value": "6",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a constant.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_ENUM",
+          "value": "5",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as an enum entry.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_FILE_PATH",
+          "value": "8",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a file path.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_FUNCTION",
+          "value": "1",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a function.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_KEYWORD",
+          "value": "10",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a keyword.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_MEMBER",
+          "value": "4",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a member.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_NODE_PATH",
+          "value": "7",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a Godot node path.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_PLAIN_TEXT",
+          "value": "9",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as unclassified or plain text.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_SIGNAL",
+          "value": "2",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a Godot signal.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "KIND_VARIABLE",
+          "value": "3",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "Marks the option as a variable.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "CodeCompletionLocation",
+      "values": [
+        {
+          "name": "LOCATION_LOCAL",
+          "value": "0",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is local to the location of the code completion query - e.g. a local variable. Subsequent value of location represent options from the outer class, the exact value represent how far they are (in terms of inner classes).",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "LOCATION_OTHER",
+          "value": "1024",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from other engine code, not covered by the other enum constants - e.g. built-in classes.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "LOCATION_OTHER_USER_CODE",
+          "value": "512",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from user code which is not local and not in a derived class (e.g. Autoload Singletons).",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        },
+        {
+          "name": "LOCATION_PARENT_MASK",
+          "value": "256",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from the containing class or a parent class, relative to the location of the code completion query. Perform a bitwise OR with the class depth (e.g. [code]0[/code] for the local class, [code]1[/code] for the parent, [code]2[/code] for the grandparent, etc.) to store the depth of an option in the class or a parent class.",
+          "sourcePath": "doc/classes/CodeEdit.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "KIND_CLASS",
+      "value": "0",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a class.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_FUNCTION",
+      "value": "1",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a function.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_SIGNAL",
+      "value": "2",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a Godot signal.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_VARIABLE",
+      "value": "3",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a variable.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_MEMBER",
+      "value": "4",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a member.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_ENUM",
+      "value": "5",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as an enum entry.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_CONSTANT",
+      "value": "6",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a constant.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_NODE_PATH",
+      "value": "7",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a Godot node path.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_FILE_PATH",
+      "value": "8",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a file path.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_PLAIN_TEXT",
+      "value": "9",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as unclassified or plain text.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "KIND_KEYWORD",
+      "value": "10",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "Marks the option as a keyword.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LOCATION_LOCAL",
+      "value": "0",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is local to the location of the code completion query - e.g. a local variable. Subsequent value of location represent options from the outer class, the exact value represent how far they are (in terms of inner classes).",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LOCATION_PARENT_MASK",
+      "value": "256",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from the containing class or a parent class, relative to the location of the code completion query. Perform a bitwise OR with the class depth (e.g. [code]0[/code] for the local class, [code]1[/code] for the parent, [code]2[/code] for the grandparent, etc.) to store the depth of an option in the class or a parent class.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LOCATION_OTHER_USER_CODE",
+      "value": "512",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from user code which is not local and not in a derived class (e.g. Autoload Singletons).",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "LOCATION_OTHER",
+      "value": "1024",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from other engine code, not covered by the other enum constants - e.g. built-in classes.",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ConfirmCodeCompletion",
+      "kind": "Method",
+      "signature": "public void _ConfirmCodeCompletion(bool replace)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "replace",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to define how the selected entry should be inserted. If [param replace] is [code]true[/code], any existing text should be replaced.",
+      "godotName": "_confirm_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit._ConfirmCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "_FilterCodeCompletionCandidates",
+      "kind": "Method",
+      "signature": "public Dictionary[] _FilterCodeCompletionCandidates(Dictionary[] candidates)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "candidates",
+          "type": "Dictionary[]"
+        }
+      ],
+      "summary": "Override this method to define what items in [param candidates] should be displayed. Both [param candidates] and the return is an [Array] of [Dictionary], see [method get_code_completion_option] for [Dictionary] content.",
+      "godotName": "_filter_code_completion_candidates",
+      "xmlDocId": "M:Godot.CodeEdit._FilterCodeCompletionCandidates(Dictionary[])",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    },
+    {
+      "name": "_RequestCodeCompletion",
+      "kind": "Method",
+      "signature": "public void _RequestCodeCompletion(bool force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "bool"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user requests code completion. If [param force] is [code]true[/code], any checks should be bypassed.",
+      "godotName": "_request_code_completion",
+      "xmlDocId": "M:Godot.CodeEdit._RequestCodeCompletion(bool)",
+      "sourcePath": "doc/classes/CodeEdit.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CodeEdit.xml",
+      "sha256": "ef22774cca9eadc32d5cc1eb77ed207cfd00cd3b26875985384091333de0286e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

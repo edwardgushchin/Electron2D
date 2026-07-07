@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Script",
+    "namespace": "Godot",
+    "fullName": "Godot.Script",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Script",
+    "documentationPath": "doc/classes/Script.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_script.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanInstantiate",
+      "kind": "Method",
+      "signature": "public bool CanInstantiate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script can be instantiated.",
+      "godotName": "can_instantiate",
+      "xmlDocId": "M:Godot.Script.CanInstantiate",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetBaseScript",
+      "kind": "Method",
+      "signature": "public Script GetBaseScript()",
+      "returnType": "Script",
+      "parameters": [],
+      "summary": "Returns the script directly inherited by this script.",
+      "godotName": "get_base_script",
+      "xmlDocId": "M:Godot.Script.GetBaseScript",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetGlobalName",
+      "kind": "Method",
+      "signature": "public StringName GetGlobalName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the class name associated with the script, if there is one. Returns an empty string otherwise. To give the script a global name, you can use the [code]class_name[/code] keyword in GDScript and the [code][GlobalClass][/code] attribute in C#. [codeblocks] [gdscript] class_name MyNode extends Node [/gdscript] [csharp] using Godot; [GlobalClass] public partial class MyNode : Node { } [/csharp] [/codeblocks]",
+      "godotName": "get_global_name",
+      "xmlDocId": "M:Godot.Script.GetGlobalName",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetInstanceBaseType",
+      "kind": "Method",
+      "signature": "public StringName GetInstanceBaseType()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the script\u0027s base type.",
+      "godotName": "get_instance_base_type",
+      "xmlDocId": "M:Godot.Script.GetInstanceBaseType",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant GetPropertyDefaultValue(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the default value of the specified property.",
+      "godotName": "get_property_default_value",
+      "xmlDocId": "M:Godot.Script.GetPropertyDefaultValue(StringName)",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetRpcConfig",
+      "kind": "Method",
+      "signature": "public Variant GetRpcConfig()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] mapping method names to their RPC configuration defined by this script.",
+      "godotName": "get_rpc_config",
+      "xmlDocId": "M:Godot.Script.GetRpcConfig",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetScriptConstantMap",
+      "kind": "Method",
+      "signature": "public Dictionary GetScriptConstantMap()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a dictionary containing constant names and their values.",
+      "godotName": "get_script_constant_map",
+      "xmlDocId": "M:Godot.Script.GetScriptConstantMap",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetScriptMethodList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetScriptMethodList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns the list of methods in this [Script]. [b]Note:[/b] The dictionaries returned by this method are formatted identically to those returned by [method Object.get_method_list].",
+      "godotName": "get_script_method_list",
+      "xmlDocId": "M:Godot.Script.GetScriptMethodList",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetScriptPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetScriptPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns the list of properties in this [Script]. [b]Note:[/b] The dictionaries returned by this method are formatted identically to those returned by [method Object.get_property_list].",
+      "godotName": "get_script_property_list",
+      "xmlDocId": "M:Godot.Script.GetScriptPropertyList",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "GetScriptSignalList",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetScriptSignalList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns the list of signals defined in this [Script]. [b]Note:[/b] The dictionaries returned by this method are formatted identically to those returned by [method Object.get_signal_list].",
+      "godotName": "get_script_signal_list",
+      "xmlDocId": "M:Godot.Script.GetScriptSignalList",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "HasScriptMethod",
+      "kind": "Method",
+      "signature": "public bool HasScriptMethod(StringName methodName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the script, or a base class, defines a method with the given name.",
+      "godotName": "has_script_method",
+      "xmlDocId": "M:Godot.Script.HasScriptMethod(StringName)",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "HasScriptSignal",
+      "kind": "Method",
+      "signature": "public bool HasScriptSignal(StringName signalName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the script, or a base class, defines a signal with the given name.",
+      "godotName": "has_script_signal",
+      "xmlDocId": "M:Godot.Script.HasScriptSignal(StringName)",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "HasSourceCode",
+      "kind": "Method",
+      "signature": "public bool HasSourceCode()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script contains non-empty source code. [b]Note:[/b] If a script does not have source code, this does not mean that it is invalid or unusable. For example, a [GDScript] that was exported with binary tokenization has no source code, but still behaves as expected and could be instantiated. This can be checked with [method can_instantiate].",
+      "godotName": "has_source_code",
+      "xmlDocId": "M:Godot.Script.HasSourceCode",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "InstanceHas",
+      "kind": "Method",
+      "signature": "public bool InstanceHas(Object baseObject)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "base_object",
+          "type": "Object"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param base_object] is an instance of this script.",
+      "godotName": "instance_has",
+      "xmlDocId": "M:Godot.Script.InstanceHas(Object)",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "IsAbstract",
+      "kind": "Method",
+      "signature": "public bool IsAbstract()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script is an abstract script. An abstract script does not have a constructor and cannot be instantiated.",
+      "godotName": "is_abstract",
+      "xmlDocId": "M:Godot.Script.IsAbstract",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "IsTool",
+      "kind": "Method",
+      "signature": "public bool IsTool()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script is a tool script. A tool script can run in the editor.",
+      "godotName": "is_tool",
+      "xmlDocId": "M:Godot.Script.IsTool",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "Reload",
+      "kind": "Method",
+      "signature": "public int Reload(bool keepState)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "keep_state",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Reloads the script\u0027s class implementation. Returns an error code.",
+      "godotName": "reload",
+      "xmlDocId": "M:Godot.Script.Reload(bool)",
+      "sourcePath": "doc/classes/Script.xml"
+    },
+    {
+      "name": "SourceCode",
+      "kind": "Property",
+      "signature": "public String SourceCode { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The script source code or an empty string if source code is not available. When set, does not reload the class implementation automatically.",
+      "godotName": "source_code",
+      "xmlDocId": "P:Godot.Script.SourceCode",
+      "sourcePath": "doc/classes/Script.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Script.xml",
+      "sha256": "2d8bde9d68a9c2b35709fc312c01344c977511025c99d46649dd825fe6927111"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

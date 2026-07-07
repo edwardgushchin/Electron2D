@@ -1,0 +1,889 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRHandTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.XRHandTracker",
+    "kind": "class",
+    "baseType": "XRPositionalTracker",
+    "interfaces": [],
+    "godotReference": "XRHandTracker",
+    "documentationPath": "doc/classes/XRHandTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrhandtracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHandJointAngularVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetHandJointAngularVelocity(int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the angular velocity for the given hand joint.",
+      "godotName": "get_hand_joint_angular_velocity",
+      "xmlDocId": "M:Godot.XRHandTracker.GetHandJointAngularVelocity(int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "GetHandJointFlags",
+      "kind": "Method",
+      "signature": "public int GetHandJointFlags(int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns flags about the validity of the tracking data for the given hand joint.",
+      "godotName": "get_hand_joint_flags",
+      "xmlDocId": "M:Godot.XRHandTracker.GetHandJointFlags(int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "GetHandJointLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 GetHandJointLinearVelocity(int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the linear velocity for the given hand joint.",
+      "godotName": "get_hand_joint_linear_velocity",
+      "xmlDocId": "M:Godot.XRHandTracker.GetHandJointLinearVelocity(int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "GetHandJointRadius",
+      "kind": "Method",
+      "signature": "public float GetHandJointRadius(int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the radius of the given hand joint.",
+      "godotName": "get_hand_joint_radius",
+      "xmlDocId": "M:Godot.XRHandTracker.GetHandJointRadius(int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "GetHandJointTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetHandJointTransform(int joint)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for the given hand joint.",
+      "godotName": "get_hand_joint_transform",
+      "xmlDocId": "M:Godot.XRHandTracker.GetHandJointTransform(int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "SetHandJointAngularVelocity",
+      "kind": "Method",
+      "signature": "public void SetHandJointAngularVelocity(int joint, Vector3 angularVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "angular_velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the angular velocity for the given hand joint.",
+      "godotName": "set_hand_joint_angular_velocity",
+      "xmlDocId": "M:Godot.XRHandTracker.SetHandJointAngularVelocity(int,Vector3)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "SetHandJointFlags",
+      "kind": "Method",
+      "signature": "public void SetHandJointFlags(int joint, int flags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets flags about the validity of the tracking data for the given hand joint.",
+      "godotName": "set_hand_joint_flags",
+      "xmlDocId": "M:Godot.XRHandTracker.SetHandJointFlags(int,int)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "SetHandJointLinearVelocity",
+      "kind": "Method",
+      "signature": "public void SetHandJointLinearVelocity(int joint, Vector3 linearVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "linear_velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the linear velocity for the given hand joint.",
+      "godotName": "set_hand_joint_linear_velocity",
+      "xmlDocId": "M:Godot.XRHandTracker.SetHandJointLinearVelocity(int,Vector3)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "SetHandJointRadius",
+      "kind": "Method",
+      "signature": "public void SetHandJointRadius(int joint, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the radius of the given hand joint.",
+      "godotName": "set_hand_joint_radius",
+      "xmlDocId": "M:Godot.XRHandTracker.SetHandJointRadius(int,float)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "SetHandJointTransform",
+      "kind": "Method",
+      "signature": "public void SetHandJointTransform(int joint, Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Sets the transform for the given hand joint.",
+      "godotName": "set_hand_joint_transform",
+      "xmlDocId": "M:Godot.XRHandTracker.SetHandJointTransform(int,Transform3D)",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "Hand",
+      "kind": "Property",
+      "signature": "public int Hand { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "hand",
+      "xmlDocId": "P:Godot.XRHandTracker.Hand",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HandTrackingSource",
+      "kind": "Property",
+      "signature": "public int HandTrackingSource { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The source of the hand tracking data.",
+      "defaultValue": "0",
+      "godotName": "hand_tracking_source",
+      "xmlDocId": "P:Godot.XRHandTracker.HandTrackingSource",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HasTrackingData",
+      "kind": "Property",
+      "signature": "public bool HasTrackingData { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the hand tracking data is valid.",
+      "defaultValue": "false",
+      "godotName": "has_tracking_data",
+      "xmlDocId": "P:Godot.XRHandTracker.HasTrackingData",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "16",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.XRHandTracker.Type",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "HandJoint",
+      "values": [
+        {
+          "name": "HAND_JOINT_INDEX_FINGER_METACARPAL",
+          "value": "6",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Index finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_FINGER_PHALANX_DISTAL",
+          "value": "9",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+          "value": "8",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_FINGER_PHALANX_PROXIMAL",
+          "value": "7",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Index finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_INDEX_FINGER_TIP",
+          "value": "10",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Index finger tip joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MAX",
+          "value": "26",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum HandJoint] enum.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_FINGER_METACARPAL",
+          "value": "11",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Middle finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_DISTAL",
+          "value": "14",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+          "value": "13",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+          "value": "12",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Middle finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_MIDDLE_FINGER_TIP",
+          "value": "15",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Middle finger tip joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PALM",
+          "value": "0",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Palm joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PINKY_FINGER_METACARPAL",
+          "value": "21",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Pinky finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PINKY_FINGER_PHALANX_DISTAL",
+          "value": "24",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+          "value": "23",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PINKY_FINGER_PHALANX_PROXIMAL",
+          "value": "22",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Pinky finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_PINKY_FINGER_TIP",
+          "value": "25",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Pinky finger tip joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_FINGER_METACARPAL",
+          "value": "16",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Ring finger metacarpal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_FINGER_PHALANX_DISTAL",
+          "value": "19",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx distal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_FINGER_PHALANX_INTERMEDIATE",
+          "value": "18",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx intermediate joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_FINGER_PHALANX_PROXIMAL",
+          "value": "17",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Ring finger phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_RING_FINGER_TIP",
+          "value": "20",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Ring finger tip joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_METACARPAL",
+          "value": "2",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Thumb metacarpal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_PHALANX_DISTAL",
+          "value": "4",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Thumb phalanx distal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_PHALANX_PROXIMAL",
+          "value": "3",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Thumb phalanx proximal joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_THUMB_TIP",
+          "value": "5",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Thumb tip joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_WRIST",
+          "value": "1",
+          "enum": "HandJoint",
+          "kind": "EnumValue",
+          "summary": "Wrist joint.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandJointFlags",
+      "values": [
+        {
+          "name": "HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID",
+          "value": "32",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s angular velocity data is valid.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_FLAG_LINEAR_VELOCITY_VALID",
+          "value": "16",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s linear velocity data is valid.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_FLAG_ORIENTATION_TRACKED",
+          "value": "2",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s orientation is actively tracked. May not be set if tracking has been temporarily lost.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_FLAG_ORIENTATION_VALID",
+          "value": "1",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s orientation data is valid.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_FLAG_POSITION_TRACKED",
+          "value": "8",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s position is actively tracked. May not be set if tracking has been temporarily lost.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_JOINT_FLAG_POSITION_VALID",
+          "value": "4",
+          "enum": "HandJointFlags",
+          "kind": "EnumValue",
+          "summary": "The hand joint\u0027s position data is valid.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        }
+      ]
+    },
+    {
+      "name": "HandTrackingSource",
+      "values": [
+        {
+          "name": "HAND_TRACKING_SOURCE_CONTROLLER",
+          "value": "2",
+          "enum": "HandTrackingSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking data is a controller, meaning that joint positions are inferred from controller inputs.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_TRACKING_SOURCE_MAX",
+          "value": "4",
+          "enum": "HandTrackingSource",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum HandTrackingSource] enum.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_TRACKING_SOURCE_NOT_TRACKED",
+          "value": "3",
+          "enum": "HandTrackingSource",
+          "kind": "EnumValue",
+          "summary": "No hand tracking data is tracked, this either means the hand is obscured, the controller is turned off, or tracking is not supported for the current input type.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_TRACKING_SOURCE_UNKNOWN",
+          "value": "0",
+          "enum": "HandTrackingSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking data is unknown.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        },
+        {
+          "name": "HAND_TRACKING_SOURCE_UNOBSTRUCTED",
+          "value": "1",
+          "enum": "HandTrackingSource",
+          "kind": "EnumValue",
+          "summary": "The source of hand tracking data is unobstructed, meaning that an accurate method of hand tracking is used. These include optical hand tracking, data gloves, etc.",
+          "sourcePath": "doc/classes/XRHandTracker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "HAND_TRACKING_SOURCE_UNKNOWN",
+      "value": "0",
+      "enum": "HandTrackingSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking data is unknown.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_TRACKING_SOURCE_UNOBSTRUCTED",
+      "value": "1",
+      "enum": "HandTrackingSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking data is unobstructed, meaning that an accurate method of hand tracking is used. These include optical hand tracking, data gloves, etc.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_TRACKING_SOURCE_CONTROLLER",
+      "value": "2",
+      "enum": "HandTrackingSource",
+      "kind": "EnumValue",
+      "summary": "The source of hand tracking data is a controller, meaning that joint positions are inferred from controller inputs.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_TRACKING_SOURCE_NOT_TRACKED",
+      "value": "3",
+      "enum": "HandTrackingSource",
+      "kind": "EnumValue",
+      "summary": "No hand tracking data is tracked, this either means the hand is obscured, the controller is turned off, or tracking is not supported for the current input type.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_TRACKING_SOURCE_MAX",
+      "value": "4",
+      "enum": "HandTrackingSource",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum HandTrackingSource] enum.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PALM",
+      "value": "0",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Palm joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_WRIST",
+      "value": "1",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Wrist joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_METACARPAL",
+      "value": "2",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Thumb metacarpal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_PHALANX_PROXIMAL",
+      "value": "3",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Thumb phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_PHALANX_DISTAL",
+      "value": "4",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Thumb phalanx distal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_THUMB_TIP",
+      "value": "5",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Thumb tip joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_FINGER_METACARPAL",
+      "value": "6",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Index finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_FINGER_PHALANX_PROXIMAL",
+      "value": "7",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_FINGER_PHALANX_INTERMEDIATE",
+      "value": "8",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_FINGER_PHALANX_DISTAL",
+      "value": "9",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Index finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_INDEX_FINGER_TIP",
+      "value": "10",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Index finger tip joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_FINGER_METACARPAL",
+      "value": "11",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Middle finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_PROXIMAL",
+      "value": "12",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_INTERMEDIATE",
+      "value": "13",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_FINGER_PHALANX_DISTAL",
+      "value": "14",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Middle finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MIDDLE_FINGER_TIP",
+      "value": "15",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Middle finger tip joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_FINGER_METACARPAL",
+      "value": "16",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Ring finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_FINGER_PHALANX_PROXIMAL",
+      "value": "17",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_FINGER_PHALANX_INTERMEDIATE",
+      "value": "18",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_FINGER_PHALANX_DISTAL",
+      "value": "19",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Ring finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_RING_FINGER_TIP",
+      "value": "20",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Ring finger tip joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PINKY_FINGER_METACARPAL",
+      "value": "21",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Pinky finger metacarpal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PINKY_FINGER_PHALANX_PROXIMAL",
+      "value": "22",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx proximal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PINKY_FINGER_PHALANX_INTERMEDIATE",
+      "value": "23",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx intermediate joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PINKY_FINGER_PHALANX_DISTAL",
+      "value": "24",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Pinky finger phalanx distal joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_PINKY_FINGER_TIP",
+      "value": "25",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Pinky finger tip joint.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_MAX",
+      "value": "26",
+      "enum": "HandJoint",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum HandJoint] enum.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_ORIENTATION_VALID",
+      "value": "1",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s orientation data is valid.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_ORIENTATION_TRACKED",
+      "value": "2",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s orientation is actively tracked. May not be set if tracking has been temporarily lost.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_POSITION_VALID",
+      "value": "4",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s position data is valid.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_POSITION_TRACKED",
+      "value": "8",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s position is actively tracked. May not be set if tracking has been temporarily lost.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_LINEAR_VELOCITY_VALID",
+      "value": "16",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s linear velocity data is valid.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    },
+    {
+      "name": "HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID",
+      "value": "32",
+      "enum": "HandJointFlags",
+      "kind": "EnumValue",
+      "summary": "The hand joint\u0027s angular velocity data is valid.",
+      "sourcePath": "doc/classes/XRHandTracker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRHandTracker.xml",
+      "sha256": "f3d1a1e3ddf68529b3a140665d6ba1d26e15a7c28117ff5640cefcad2cf3c5aa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

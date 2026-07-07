@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderTextureLayered",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderTextureLayered",
+    "kind": "class",
+    "baseType": "TextureLayered",
+    "interfaces": [],
+    "godotReference": "PlaceholderTextureLayered",
+    "documentationPath": "doc/classes/PlaceholderTextureLayered.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdertexturelayered.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Layers",
+      "kind": "Property",
+      "signature": "public int Layers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of layers in the texture array.",
+      "defaultValue": "1",
+      "godotName": "layers",
+      "xmlDocId": "P:Godot.PlaceholderTextureLayered.Layers",
+      "sourcePath": "doc/classes/PlaceholderTextureLayered.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The size of each texture layer (in pixels).",
+      "defaultValue": "Vector2i(1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.PlaceholderTextureLayered.Size",
+      "sourcePath": "doc/classes/PlaceholderTextureLayered.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderTextureLayered.xml",
+      "sha256": "d316fc467bbacb93fbf7b4e3267d0820cf308aa6254098a1b3e74e660336ef9e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

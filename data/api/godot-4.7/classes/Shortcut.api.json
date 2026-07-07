@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Shortcut",
+    "namespace": "Godot",
+    "fullName": "Godot.Shortcut",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Shortcut",
+    "documentationPath": "doc/classes/Shortcut.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_shortcut.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAsText",
+      "kind": "Method",
+      "signature": "public String GetAsText()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the shortcut\u0027s first valid [InputEvent] as a [String].",
+      "godotName": "get_as_text",
+      "xmlDocId": "M:Godot.Shortcut.GetAsText",
+      "sourcePath": "doc/classes/Shortcut.xml"
+    },
+    {
+      "name": "HasValidEvent",
+      "kind": "Method",
+      "signature": "public bool HasValidEvent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether [member events] contains an [InputEvent] which is valid.",
+      "godotName": "has_valid_event",
+      "xmlDocId": "M:Godot.Shortcut.HasValidEvent",
+      "sourcePath": "doc/classes/Shortcut.xml"
+    },
+    {
+      "name": "MatchesEvent",
+      "kind": "Method",
+      "signature": "public bool MatchesEvent(InputEvent @event)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Returns whether any [InputEvent] in [member events] equals [param event]. This uses [method InputEvent.is_match] to compare events.",
+      "godotName": "matches_event",
+      "xmlDocId": "M:Godot.Shortcut.MatchesEvent(InputEvent)",
+      "sourcePath": "doc/classes/Shortcut.xml"
+    },
+    {
+      "name": "Events",
+      "kind": "Property",
+      "signature": "public Array Events { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "The shortcut\u0027s [InputEvent] array. Generally the [InputEvent] used is an [InputEventKey], though it can be any [InputEvent], including an [InputEventAction].",
+      "defaultValue": "[]",
+      "godotName": "events",
+      "xmlDocId": "P:Godot.Shortcut.Events",
+      "sourcePath": "doc/classes/Shortcut.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Shortcut.xml",
+      "sha256": "466d922320e4ac457fa3d9de49055d8776bb2b61c3086157ae7e7c5d1f9525b5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

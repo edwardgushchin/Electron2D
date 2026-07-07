@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VideoStreamPlayback",
+    "namespace": "Godot",
+    "fullName": "Godot.VideoStreamPlayback",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "VideoStreamPlayback",
+    "documentationPath": "doc/classes/VideoStreamPlayback.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_videostreamplayback.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetChannels",
+      "kind": "Method",
+      "signature": "public int _GetChannels()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of audio channels.",
+      "godotName": "_get_channels",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetChannels",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetLength",
+      "kind": "Method",
+      "signature": "public float _GetLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the video duration in seconds, if known, or 0 if unknown.",
+      "godotName": "_get_length",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetLength",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetMixRate",
+      "kind": "Method",
+      "signature": "public int _GetMixRate()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the audio sample rate used for mixing.",
+      "godotName": "_get_mix_rate",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetMixRate",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float _GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Return the current playback timestamp. Called in response to the [member VideoStreamPlayer.stream_position] getter.",
+      "godotName": "_get_playback_position",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetPlaybackPosition",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetTexture",
+      "kind": "Method",
+      "signature": "public Texture2D _GetTexture()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Allocates a [Texture2D] in which decoded video frames will be drawn.",
+      "godotName": "_get_texture",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetTexture",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPaused",
+      "kind": "Method",
+      "signature": "public bool _IsPaused()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns the paused status, as set by [method _set_paused].",
+      "godotName": "_is_paused",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._IsPaused",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPlaying",
+      "kind": "Method",
+      "signature": "public bool _IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns the playback state, as determined by calls to [method _play] and [method _stop].",
+      "godotName": "_is_playing",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._IsPlaying",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Play",
+      "kind": "Method",
+      "signature": "public void _Play()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called in response to [member VideoStreamPlayer.autoplay] or [method VideoStreamPlayer.play]. Note that manual playback may also invoke [method _stop] multiple times before this method is called. [method _is_playing] should return [code]true[/code] once playing.",
+      "godotName": "_play",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Play",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Seek",
+      "kind": "Method",
+      "signature": "public void _Seek(float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Seeks to [param time] seconds. Called in response to the [member VideoStreamPlayer.stream_position] setter.",
+      "godotName": "_seek",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Seek(float)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_SetAudioTrack",
+      "kind": "Method",
+      "signature": "public void _SetAudioTrack(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Select the audio track [param idx]. Called when playback starts, and in response to the [member VideoStreamPlayer.audio_track] setter.",
+      "godotName": "_set_audio_track",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._SetAudioTrack(int)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_SetPaused",
+      "kind": "Method",
+      "signature": "public void _SetPaused(bool paused)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set the paused status of video playback. [method _is_paused] must return [param paused]. Called in response to the [member VideoStreamPlayer.paused] setter.",
+      "godotName": "_set_paused",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._SetPaused(bool)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Stop",
+      "kind": "Method",
+      "signature": "public void _Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops playback. May be called multiple times before [method _play], or in response to [method VideoStreamPlayer.stop]. [method _is_playing] should return [code]false[/code] once stopped.",
+      "godotName": "_stop",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Stop",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Update",
+      "kind": "Method",
+      "signature": "public void _Update(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Ticks video playback for [param delta] seconds. Called every frame as long as both [method _is_paused] and [method _is_playing] return [code]true[/code].",
+      "godotName": "_update",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Update(float)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "MixAudio",
+      "kind": "Method",
+      "signature": "public int MixAudio(int numFrames, PackedFloat32Array buffer, int offset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "num_frames",
+          "type": "int"
+        },
+        {
+          "name": "buffer",
+          "type": "PackedFloat32Array",
+          "defaultValue": "PackedFloat32Array()"
+        },
+        {
+          "name": "offset",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Render [param num_frames] audio frames (of [method _get_channels] floats each) from [param buffer], starting from index [param offset] in the array. Returns the number of audio frames rendered, or -1 on error.",
+      "godotName": "mix_audio",
+      "xmlDocId": "M:Godot.VideoStreamPlayback.MixAudio(int,PackedFloat32Array,int)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetChannels",
+      "kind": "Method",
+      "signature": "public int _GetChannels()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of audio channels.",
+      "godotName": "_get_channels",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetChannels",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetLength",
+      "kind": "Method",
+      "signature": "public float _GetLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the video duration in seconds, if known, or 0 if unknown.",
+      "godotName": "_get_length",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetLength",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetMixRate",
+      "kind": "Method",
+      "signature": "public int _GetMixRate()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the audio sample rate used for mixing.",
+      "godotName": "_get_mix_rate",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetMixRate",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetPlaybackPosition",
+      "kind": "Method",
+      "signature": "public float _GetPlaybackPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Return the current playback timestamp. Called in response to the [member VideoStreamPlayer.stream_position] getter.",
+      "godotName": "_get_playback_position",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetPlaybackPosition",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_GetTexture",
+      "kind": "Method",
+      "signature": "public Texture2D _GetTexture()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Allocates a [Texture2D] in which decoded video frames will be drawn.",
+      "godotName": "_get_texture",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._GetTexture",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPaused",
+      "kind": "Method",
+      "signature": "public bool _IsPaused()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns the paused status, as set by [method _set_paused].",
+      "godotName": "_is_paused",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._IsPaused",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_IsPlaying",
+      "kind": "Method",
+      "signature": "public bool _IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns the playback state, as determined by calls to [method _play] and [method _stop].",
+      "godotName": "_is_playing",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._IsPlaying",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Play",
+      "kind": "Method",
+      "signature": "public void _Play()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called in response to [member VideoStreamPlayer.autoplay] or [method VideoStreamPlayer.play]. Note that manual playback may also invoke [method _stop] multiple times before this method is called. [method _is_playing] should return [code]true[/code] once playing.",
+      "godotName": "_play",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Play",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Seek",
+      "kind": "Method",
+      "signature": "public void _Seek(float time)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Seeks to [param time] seconds. Called in response to the [member VideoStreamPlayer.stream_position] setter.",
+      "godotName": "_seek",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Seek(float)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_SetAudioTrack",
+      "kind": "Method",
+      "signature": "public void _SetAudioTrack(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Select the audio track [param idx]. Called when playback starts, and in response to the [member VideoStreamPlayer.audio_track] setter.",
+      "godotName": "_set_audio_track",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._SetAudioTrack(int)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_SetPaused",
+      "kind": "Method",
+      "signature": "public void _SetPaused(bool paused)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set the paused status of video playback. [method _is_paused] must return [param paused]. Called in response to the [member VideoStreamPlayer.paused] setter.",
+      "godotName": "_set_paused",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._SetPaused(bool)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Stop",
+      "kind": "Method",
+      "signature": "public void _Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops playback. May be called multiple times before [method _play], or in response to [method VideoStreamPlayer.stop]. [method _is_playing] should return [code]false[/code] once stopped.",
+      "godotName": "_stop",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Stop",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    },
+    {
+      "name": "_Update",
+      "kind": "Method",
+      "signature": "public void _Update(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Ticks video playback for [param delta] seconds. Called every frame as long as both [method _is_paused] and [method _is_playing] return [code]true[/code].",
+      "godotName": "_update",
+      "xmlDocId": "M:Godot.VideoStreamPlayback._Update(float)",
+      "sourcePath": "doc/classes/VideoStreamPlayback.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VideoStreamPlayback.xml",
+      "sha256": "25fd39d02ab93a5b2b9359d0f9d91679183e7b1bd7a534441062ac78bddf4c8d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

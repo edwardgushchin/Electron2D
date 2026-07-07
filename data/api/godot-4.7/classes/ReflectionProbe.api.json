@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ReflectionProbe",
+    "namespace": "Godot",
+    "fullName": "Godot.ReflectionProbe",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "ReflectionProbe",
+    "documentationPath": "doc/classes/ReflectionProbe.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_reflectionprobe.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AmbientColor",
+      "kind": "Property",
+      "signature": "public Color AmbientColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The custom ambient color to use within the [ReflectionProbe]\u0027s box defined by its [member size]. Only effective if [member ambient_mode] is [constant AMBIENT_COLOR].",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "ambient_color",
+      "xmlDocId": "P:Godot.ReflectionProbe.AmbientColor",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "AmbientColorEnergy",
+      "kind": "Property",
+      "signature": "public float AmbientColorEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The custom ambient color energy to use within the [ReflectionProbe]\u0027s box defined by its [member size]. Only effective if [member ambient_mode] is [constant AMBIENT_COLOR].",
+      "defaultValue": "1.0",
+      "godotName": "ambient_color_energy",
+      "xmlDocId": "P:Godot.ReflectionProbe.AmbientColorEnergy",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "AmbientMode",
+      "kind": "Property",
+      "signature": "public int AmbientMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ambient color to use within the [ReflectionProbe]\u0027s box defined by its [member size]. The ambient color will smoothly blend with other [ReflectionProbe]s and the rest of the scene (outside the [ReflectionProbe]\u0027s box defined by its [member size]).",
+      "defaultValue": "1",
+      "godotName": "ambient_mode",
+      "xmlDocId": "P:Godot.ReflectionProbe.AmbientMode",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "BlendDistance",
+      "kind": "Property",
+      "signature": "public float BlendDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Defines the distance in meters over which a probe blends into the scene.",
+      "defaultValue": "1.0",
+      "godotName": "blend_distance",
+      "xmlDocId": "P:Godot.ReflectionProbe.BlendDistance",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "BoxProjection",
+      "kind": "Property",
+      "signature": "public bool BoxProjection { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables box projection. This makes reflections look more correct in rectangle-shaped rooms by offsetting the reflection center depending on the camera\u0027s location. [b]Note:[/b] To better fit rectangle-shaped rooms that are not aligned to the grid, you can rotate the [ReflectionProbe] node.",
+      "defaultValue": "false",
+      "godotName": "box_projection",
+      "xmlDocId": "P:Godot.ReflectionProbe.BoxProjection",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "CullMask",
+      "kind": "Property",
+      "signature": "public int CullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the cull mask which determines what objects are drawn by this probe. Every [VisualInstance3D] with a layer included in this cull mask will be rendered by the probe. It is best to only include large objects which are likely to take up a lot of space in the reflection in order to save on rendering cost. This can also be used to prevent an object from reflecting upon itself (for instance, a [ReflectionProbe] centered on a vehicle).",
+      "defaultValue": "1048575",
+      "godotName": "cull_mask",
+      "xmlDocId": "P:Godot.ReflectionProbe.CullMask",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "EnableShadows",
+      "kind": "Property",
+      "signature": "public bool EnableShadows { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], computes shadows in the reflection probe. This makes the reflection probe slower to render; you may want to disable this if using the [constant UPDATE_ALWAYS] [member update_mode].",
+      "defaultValue": "false",
+      "godotName": "enable_shadows",
+      "xmlDocId": "P:Godot.ReflectionProbe.EnableShadows",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "Intensity",
+      "kind": "Property",
+      "signature": "public float Intensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Defines the reflection intensity. Intensity modulates the strength of the reflection.",
+      "defaultValue": "1.0",
+      "godotName": "intensity",
+      "xmlDocId": "P:Godot.ReflectionProbe.Intensity",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "Interior",
+      "kind": "Property",
+      "signature": "public bool Interior { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], reflections will ignore sky contribution.",
+      "defaultValue": "false",
+      "godotName": "interior",
+      "xmlDocId": "P:Godot.ReflectionProbe.Interior",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "MaxDistance",
+      "kind": "Property",
+      "signature": "public float MaxDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance away from the [ReflectionProbe] an object can be before it is culled. Decrease this to improve performance, especially when using the [constant UPDATE_ALWAYS] [member update_mode]. [b]Note:[/b] The maximum reflection distance is always at least equal to the probe\u0027s extents. This means that decreasing [member max_distance] will not always cull objects from reflections, especially if the reflection probe\u0027s box defined by its [member size] is already large.",
+      "defaultValue": "0.0",
+      "godotName": "max_distance",
+      "xmlDocId": "P:Godot.ReflectionProbe.MaxDistance",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "MeshLodThreshold",
+      "kind": "Property",
+      "signature": "public float MeshLodThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The automatic LOD bias to use for meshes rendered within the [ReflectionProbe] (this is analog to [member Viewport.mesh_lod_threshold]). Higher values will use less detailed versions of meshes that have LOD variations generated. If set to [code]0.0[/code], automatic LOD is disabled. Increase [member mesh_lod_threshold] to improve performance at the cost of geometry detail, especially when using the [constant UPDATE_ALWAYS] [member update_mode]. [b]Note:[/b] [member mesh_lod_threshold] does not affect [GeometryInstance3D] visibility ranges (also known as \u0022manual\u0022 LOD or hierarchical LOD).",
+      "defaultValue": "1.0",
+      "godotName": "mesh_lod_threshold",
+      "xmlDocId": "P:Godot.ReflectionProbe.MeshLodThreshold",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "OriginOffset",
+      "kind": "Property",
+      "signature": "public Vector3 OriginOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Sets the origin offset to be used when this [ReflectionProbe] is in [member box_projection] mode. This can be set to a non-zero value to ensure a reflection fits a rectangle-shaped room, while reducing the number of objects that \u0022get in the way\u0022 of the reflection.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "origin_offset",
+      "xmlDocId": "P:Godot.ReflectionProbe.OriginOffset",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "ReflectionMask",
+      "kind": "Property",
+      "signature": "public int ReflectionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the reflection mask which determines what objects have reflections applied from this probe. Every [VisualInstance3D] with a layer included in this reflection mask will have reflections applied from this probe. See also [member cull_mask], which can be used to exclude objects from appearing in the reflection while still making them affected by the [ReflectionProbe].",
+      "defaultValue": "1048575",
+      "godotName": "reflection_mask",
+      "xmlDocId": "P:Godot.ReflectionProbe.ReflectionMask",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The size of the reflection probe. The larger the size, the more space covered by the probe, which will lower the perceived resolution. It is best to keep the size only as large as you need it. [b]Note:[/b] To better fit areas that are not aligned to the grid, you can rotate the [ReflectionProbe] node.",
+      "defaultValue": "Vector3(20, 20, 20)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.ReflectionProbe.Size",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "UpdateMode",
+      "kind": "Property",
+      "signature": "public int UpdateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets how frequently the [ReflectionProbe] is updated. Can be [constant UPDATE_ONCE] or [constant UPDATE_ALWAYS].",
+      "defaultValue": "0",
+      "godotName": "update_mode",
+      "xmlDocId": "P:Godot.ReflectionProbe.UpdateMode",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AmbientMode",
+      "values": [
+        {
+          "name": "AMBIENT_COLOR",
+          "value": "2",
+          "enum": "AmbientMode",
+          "kind": "EnumValue",
+          "summary": "Apply custom ambient lighting inside the [ReflectionProbe]\u0027s box defined by its [member size]. See [member ambient_color] and [member ambient_color_energy].",
+          "sourcePath": "doc/classes/ReflectionProbe.xml"
+        },
+        {
+          "name": "AMBIENT_DISABLED",
+          "value": "0",
+          "enum": "AmbientMode",
+          "kind": "EnumValue",
+          "summary": "Do not apply any ambient lighting inside the [ReflectionProbe]\u0027s box defined by its [member size].",
+          "sourcePath": "doc/classes/ReflectionProbe.xml"
+        },
+        {
+          "name": "AMBIENT_ENVIRONMENT",
+          "value": "1",
+          "enum": "AmbientMode",
+          "kind": "EnumValue",
+          "summary": "Apply automatically-sourced environment lighting inside the [ReflectionProbe]\u0027s box defined by its [member size].",
+          "sourcePath": "doc/classes/ReflectionProbe.xml"
+        }
+      ]
+    },
+    {
+      "name": "UpdateMode",
+      "values": [
+        {
+          "name": "UPDATE_ALWAYS",
+          "value": "1",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the probe every frame. This provides better results for fast-moving dynamic objects (such as cars). However, it has a significant performance cost. Due to the cost, it\u0027s recommended to only use one ReflectionProbe with [constant UPDATE_ALWAYS] at most per scene. For all other use cases, use [constant UPDATE_ONCE].",
+          "sourcePath": "doc/classes/ReflectionProbe.xml"
+        },
+        {
+          "name": "UPDATE_ONCE",
+          "value": "0",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the probe once on the next frame (recommended for most objects). The corresponding radiance map will be generated over the following six frames. This takes more time to update than [constant UPDATE_ALWAYS], but it has a lower performance cost and can result in higher-quality reflections. The ReflectionProbe is updated when its transform changes, but not when nearby geometry changes. You can force a [ReflectionProbe] update by moving the [ReflectionProbe] slightly in any direction.",
+          "sourcePath": "doc/classes/ReflectionProbe.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "UPDATE_ONCE",
+      "value": "0",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the probe once on the next frame (recommended for most objects). The corresponding radiance map will be generated over the following six frames. This takes more time to update than [constant UPDATE_ALWAYS], but it has a lower performance cost and can result in higher-quality reflections. The ReflectionProbe is updated when its transform changes, but not when nearby geometry changes. You can force a [ReflectionProbe] update by moving the [ReflectionProbe] slightly in any direction.",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "UPDATE_ALWAYS",
+      "value": "1",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the probe every frame. This provides better results for fast-moving dynamic objects (such as cars). However, it has a significant performance cost. Due to the cost, it\u0027s recommended to only use one ReflectionProbe with [constant UPDATE_ALWAYS] at most per scene. For all other use cases, use [constant UPDATE_ONCE].",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "AMBIENT_DISABLED",
+      "value": "0",
+      "enum": "AmbientMode",
+      "kind": "EnumValue",
+      "summary": "Do not apply any ambient lighting inside the [ReflectionProbe]\u0027s box defined by its [member size].",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "AMBIENT_ENVIRONMENT",
+      "value": "1",
+      "enum": "AmbientMode",
+      "kind": "EnumValue",
+      "summary": "Apply automatically-sourced environment lighting inside the [ReflectionProbe]\u0027s box defined by its [member size].",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    },
+    {
+      "name": "AMBIENT_COLOR",
+      "value": "2",
+      "enum": "AmbientMode",
+      "kind": "EnumValue",
+      "summary": "Apply custom ambient lighting inside the [ReflectionProbe]\u0027s box defined by its [member size]. See [member ambient_color] and [member ambient_color_energy].",
+      "sourcePath": "doc/classes/ReflectionProbe.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ReflectionProbe.xml",
+      "sha256": "408c73d571360dd87c264219ead43f7e1e57f30d3ef526384575301b931faffb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectRecord",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectRecord",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectRecord",
+    "documentationPath": "doc/classes/AudioEffectRecord.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectrecord.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetRecording",
+      "kind": "Method",
+      "signature": "public AudioStreamWAV GetRecording()",
+      "returnType": "AudioStreamWAV",
+      "parameters": [],
+      "summary": "Returns the recorded sample.",
+      "godotName": "get_recording",
+      "xmlDocId": "M:Godot.AudioEffectRecord.GetRecording",
+      "sourcePath": "doc/classes/AudioEffectRecord.xml"
+    },
+    {
+      "name": "IsRecordingActive",
+      "kind": "Method",
+      "signature": "public bool IsRecordingActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the recording is active or not.",
+      "godotName": "is_recording_active",
+      "xmlDocId": "M:Godot.AudioEffectRecord.IsRecordingActive",
+      "sourcePath": "doc/classes/AudioEffectRecord.xml"
+    },
+    {
+      "name": "SetRecordingActive",
+      "kind": "Method",
+      "signature": "public void SetRecordingActive(bool record)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "record",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the sound will be recorded. Note that restarting the recording will remove the previously recorded sample.",
+      "godotName": "set_recording_active",
+      "xmlDocId": "M:Godot.AudioEffectRecord.SetRecordingActive(bool)",
+      "sourcePath": "doc/classes/AudioEffectRecord.xml"
+    },
+    {
+      "name": "Format",
+      "kind": "Property",
+      "signature": "public int Format { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the format in which the sample will be recorded.",
+      "defaultValue": "1",
+      "godotName": "format",
+      "xmlDocId": "P:Godot.AudioEffectRecord.Format",
+      "sourcePath": "doc/classes/AudioEffectRecord.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectRecord.xml",
+      "sha256": "492c09f5181d51cf7880580b99288514ef44642c76114e4ebadc2e6113366008"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,3890 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BaseMaterial3D",
+    "namespace": "Godot",
+    "fullName": "Godot.BaseMaterial3D",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "BaseMaterial3D",
+    "documentationPath": "doc/classes/BaseMaterial3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_basematerial3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFeature",
+      "kind": "Method",
+      "signature": "public bool GetFeature(int feature)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param feature] is enabled.",
+      "godotName": "get_feature",
+      "xmlDocId": "M:Godot.BaseMaterial3D.GetFeature(int)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "GetFlag",
+      "kind": "Method",
+      "signature": "public bool GetFlag(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param flag] is enabled.",
+      "godotName": "get_flag",
+      "xmlDocId": "M:Godot.BaseMaterial3D.GetFlag(int)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "GetTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetTexture(int param)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Texture2D] associated with the specified texture [param param].",
+      "godotName": "get_texture",
+      "xmlDocId": "M:Godot.BaseMaterial3D.GetTexture(int)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SetFeature",
+      "kind": "Method",
+      "signature": "public void SetFeature(int feature, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enable] is [code]true[/code], enables the specified [param feature]. Many features that are available in [BaseMaterial3D] need to be enabled before use. This way, the cost for using the feature is only incurred when specified. Features can also be enabled by setting their corresponding property to [code]true[/code].",
+      "godotName": "set_feature",
+      "xmlDocId": "M:Godot.BaseMaterial3D.SetFeature(int,bool)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SetFlag",
+      "kind": "Method",
+      "signature": "public void SetFlag(int flag, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enable] is [code]true[/code], enables the specified [param flag]. Flags are optional behavior that can be turned on and off. Only one flag can be enabled at a time with this function, the flag enumerators cannot be bit-masked together to enable or disable multiple flags at once. Flags can also be enabled by setting their corresponding property to [code]true[/code].",
+      "godotName": "set_flag",
+      "xmlDocId": "M:Godot.BaseMaterial3D.SetFlag(int,bool)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SetTexture",
+      "kind": "Method",
+      "signature": "public void SetTexture(int param, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the texture for the slot specified by [param param].",
+      "godotName": "set_texture",
+      "xmlDocId": "M:Godot.BaseMaterial3D.SetTexture(int,Texture2D)",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlbedoColor",
+      "kind": "Property",
+      "signature": "public Color AlbedoColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The material\u0027s base color. [b]Note:[/b] If [member detail_enabled] is [code]true[/code] and a [member detail_albedo] texture is specified, [member albedo_color] will [i]not[/i] modulate the detail texture. This can be used to color partial areas of a material by not specifying an albedo texture and using a transparent [member detail_albedo] texture instead.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "albedo_color",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlbedoColor",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlbedoTexture",
+      "kind": "Property",
+      "signature": "public Texture2D AlbedoTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture to multiply by [member albedo_color]. Used for basic texturing of objects. If the texture appears unexpectedly too dark or too bright, check [member albedo_texture_force_srgb].",
+      "godotName": "albedo_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlbedoTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlbedoTextureForceSrgb",
+      "kind": "Property",
+      "signature": "public bool AlbedoTextureForceSrgb { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], forces a conversion of the [member albedo_texture] from nonlinear sRGB encoding to linear encoding. See also [member vertex_color_is_srgb]. This should only be enabled when needed (typically when using a [ViewportTexture] as [member albedo_texture]). If [member albedo_texture_force_srgb] is [code]true[/code] when it shouldn\u0027t be, the texture will appear to be too dark. If [member albedo_texture_force_srgb] is [code]false[/code] when it shouldn\u0027t be, the texture will appear to be too bright.",
+      "defaultValue": "false",
+      "godotName": "albedo_texture_force_srgb",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlbedoTextureForceSrgb",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlbedoTextureMsdf",
+      "kind": "Property",
+      "signature": "public bool AlbedoTextureMsdf { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables multichannel signed distance field rendering shader. Use [member msdf_pixel_range] and [member msdf_outline_size] to configure MSDF parameters.",
+      "defaultValue": "false",
+      "godotName": "albedo_texture_msdf",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlbedoTextureMsdf",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlphaAntialiasingEdge",
+      "kind": "Property",
+      "signature": "public float AlphaAntialiasingEdge { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Threshold at which antialiasing will be applied on the alpha channel.",
+      "godotName": "alpha_antialiasing_edge",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlphaAntialiasingEdge",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlphaAntialiasingMode",
+      "kind": "Property",
+      "signature": "public int AlphaAntialiasingMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of alpha antialiasing to apply.",
+      "godotName": "alpha_antialiasing_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlphaAntialiasingMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlphaHashScale",
+      "kind": "Property",
+      "signature": "public float AlphaHashScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The hashing scale for Alpha Hash. Recommended values between [code]0[/code] and [code]2[/code].",
+      "godotName": "alpha_hash_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlphaHashScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AlphaScissorThreshold",
+      "kind": "Property",
+      "signature": "public float AlphaScissorThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Threshold at which the alpha scissor will discard values. Higher values will result in more pixels being discarded. If the material becomes too opaque at a distance, try increasing [member alpha_scissor_threshold]. If the material disappears at a distance, try decreasing [member alpha_scissor_threshold].",
+      "godotName": "alpha_scissor_threshold",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AlphaScissorThreshold",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Anisotropy",
+      "kind": "Property",
+      "signature": "public float Anisotropy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength of the anisotropy effect. This is multiplied by [member anisotropy_flowmap]\u0027s alpha channel if a texture is defined there and the texture contains an alpha channel.",
+      "defaultValue": "0.0",
+      "godotName": "anisotropy",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Anisotropy",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AnisotropyEnabled",
+      "kind": "Property",
+      "signature": "public bool AnisotropyEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], anisotropy is enabled. Anisotropy changes the shape of the specular blob and aligns it to tangent space. This is useful for brushed aluminum and hair reflections. [b]Note:[/b] Mesh tangents are needed for anisotropy to work. If the mesh does not contain tangents, the anisotropy effect will appear broken. [b]Note:[/b] Material anisotropy should not to be confused with anisotropic texture filtering, which can be enabled by setting [member texture_filter] to [constant TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC].",
+      "defaultValue": "false",
+      "godotName": "anisotropy_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AnisotropyEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AnisotropyFlowmap",
+      "kind": "Property",
+      "signature": "public Texture2D AnisotropyFlowmap { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that offsets the tangent map for anisotropy calculations and optionally controls the anisotropy effect (if an alpha channel is present). The flowmap texture is expected to be a derivative map, with the red channel representing distortion on the X axis and green channel representing distortion on the Y axis. Values below 0.5 will result in negative distortion, whereas values above 0.5 will result in positive distortion. If present, the texture\u0027s alpha channel will be used to multiply the strength of the [member anisotropy] effect. Fully opaque pixels will keep the anisotropy effect\u0027s original strength while fully transparent pixels will disable the anisotropy effect entirely. The flowmap texture\u0027s blue channel is ignored.",
+      "godotName": "anisotropy_flowmap",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AnisotropyFlowmap",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AoEnabled",
+      "kind": "Property",
+      "signature": "public bool AoEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], ambient occlusion is enabled. Ambient occlusion darkens areas based on the [member ao_texture].",
+      "defaultValue": "false",
+      "godotName": "ao_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AoEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AoLightAffect",
+      "kind": "Property",
+      "signature": "public float AoLightAffect { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Amount that ambient occlusion affects lighting from lights. If [code]0[/code], ambient occlusion only affects ambient light. If [code]1[/code], ambient occlusion affects lights just as much as it affects ambient light. This can be used to impact the strength of the ambient occlusion effect, but typically looks unrealistic.",
+      "defaultValue": "0.0",
+      "godotName": "ao_light_affect",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AoLightAffect",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AoOnUv2",
+      "kind": "Property",
+      "signature": "public bool AoOnUv2 { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], use [code]UV2[/code] coordinates to look up from the [member ao_texture].",
+      "defaultValue": "false",
+      "godotName": "ao_on_uv2",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AoOnUv2",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AoTexture",
+      "kind": "Property",
+      "signature": "public Texture2D AoTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that defines the amount of ambient occlusion for a given point on the object.",
+      "godotName": "ao_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AoTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "AoTextureChannel",
+      "kind": "Property",
+      "signature": "public int AoTextureChannel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the channel of the [member ao_texture] in which the ambient occlusion information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.",
+      "defaultValue": "0",
+      "godotName": "ao_texture_channel",
+      "xmlDocId": "P:Godot.BaseMaterial3D.AoTextureChannel",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Backlight",
+      "kind": "Property",
+      "signature": "public Color Backlight { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color used by the backlight effect. Represents the light passing through an object.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "backlight",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Backlight",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BacklightEnabled",
+      "kind": "Property",
+      "signature": "public bool BacklightEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the backlight effect is enabled. See also [member subsurf_scatter_transmittance_enabled].",
+      "defaultValue": "false",
+      "godotName": "backlight_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BacklightEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BacklightTexture",
+      "kind": "Property",
+      "signature": "public Texture2D BacklightTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to control the backlight effect per-pixel. Added to [member backlight].",
+      "godotName": "backlight_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BacklightTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BentNormalEnabled",
+      "kind": "Property",
+      "signature": "public bool BentNormalEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the bent normal map is enabled. This allows for more accurate indirect lighting and specular occlusion.",
+      "defaultValue": "false",
+      "godotName": "bent_normal_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BentNormalEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BentNormalTexture",
+      "kind": "Property",
+      "signature": "public Texture2D BentNormalTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that specifies the average direction of incoming ambient light at a given pixel. The [member bent_normal_texture] only uses the red and green channels; the blue and alpha channels are ignored. The normal read from [member bent_normal_texture] is oriented around the surface normal provided by the [Mesh]. [b]Note:[/b] A bent normal map is different from a regular normal map. When baking a bent normal map make sure to use [b]a cosine distribution[/b] for the bent normal map to work correctly. [b]Note:[/b] The mesh must have both normals and tangents defined in its vertex data. Otherwise, the shading produced by the bent normal map will not look correct. If creating geometry with [SurfaceTool], you can use [method SurfaceTool.generate_normals] and [method SurfaceTool.generate_tangents] to automatically generate normals and tangents respectively. [b]Note:[/b] Godot expects the bent normal map to use X\u002B, Y\u002B, and Z\u002B coordinates. See [url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates]this page[/url] for a comparison of normal map coordinates expected by popular engines.",
+      "godotName": "bent_normal_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BentNormalTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BillboardKeepScale",
+      "kind": "Property",
+      "signature": "public bool BillboardKeepScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the shader will keep the scale set for the mesh. Otherwise, the scale is lost when billboarding. Only applies when [member billboard_mode] is not [constant BILLBOARD_DISABLED].",
+      "defaultValue": "false",
+      "godotName": "billboard_keep_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BillboardKeepScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BillboardMode",
+      "kind": "Property",
+      "signature": "public int BillboardMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the object faces the camera. [b]Note:[/b] Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See [url=https://github.com/godotengine/godot/issues/41567]GitHub issue #41567[/url] for details.",
+      "defaultValue": "0",
+      "godotName": "billboard_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BillboardMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BlendMode",
+      "kind": "Property",
+      "signature": "public int BlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The material\u0027s blend mode. [b]Note:[/b] Values other than [code]Mix[/code] force the object into the transparent pipeline.",
+      "defaultValue": "0",
+      "godotName": "blend_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.BlendMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Clearcoat",
+      "kind": "Property",
+      "signature": "public float Clearcoat { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the strength of the clearcoat effect. Setting to [code]0[/code] looks the same as disabling the clearcoat effect.",
+      "defaultValue": "1.0",
+      "godotName": "clearcoat",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Clearcoat",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ClearcoatEnabled",
+      "kind": "Property",
+      "signature": "public bool ClearcoatEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], clearcoat rendering is enabled. Adds a secondary transparent pass to the lighting calculation resulting in an added specular blob. This makes materials appear as if they have a clear layer on them that can be either glossy or rough. [b]Note:[/b] Clearcoat rendering is not visible if the material\u0027s [member shading_mode] is [constant SHADING_MODE_UNSHADED].",
+      "defaultValue": "false",
+      "godotName": "clearcoat_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ClearcoatEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ClearcoatRoughness",
+      "kind": "Property",
+      "signature": "public float ClearcoatRoughness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the roughness of the clearcoat pass. A higher value results in a rougher clearcoat while a lower value results in a smoother clearcoat.",
+      "defaultValue": "0.5",
+      "godotName": "clearcoat_roughness",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ClearcoatRoughness",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ClearcoatTexture",
+      "kind": "Property",
+      "signature": "public Texture2D ClearcoatTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that defines the strength of the clearcoat effect and the glossiness of the clearcoat. Strength is specified in the red channel while glossiness is specified in the green channel.",
+      "godotName": "clearcoat_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ClearcoatTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "CullMode",
+      "kind": "Property",
+      "signature": "public int CullMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines which side of the triangle to cull depending on whether the triangle faces towards or away from the camera.",
+      "defaultValue": "0",
+      "godotName": "cull_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.CullMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DepthDrawMode",
+      "kind": "Property",
+      "signature": "public int DepthDrawMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines when depth rendering takes place. See also [member transparency].",
+      "defaultValue": "0",
+      "godotName": "depth_draw_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DepthDrawMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DepthTest",
+      "kind": "Property",
+      "signature": "public int DepthTest { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines which comparison operator is used when testing depth. [b]Note:[/b] Changing [member depth_test] to a non-default value only has a visible effect when used on a transparent material, or a material that has [member depth_draw_mode] set to [constant DEPTH_DRAW_DISABLED].",
+      "defaultValue": "0",
+      "godotName": "depth_test",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DepthTest",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailAlbedo",
+      "kind": "Property",
+      "signature": "public Texture2D DetailAlbedo { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that specifies the color of the detail overlay. [member detail_albedo]\u0027s alpha channel is used as a mask, even when the material is opaque. To use a dedicated texture as a mask, see [member detail_mask]. [b]Note:[/b] [member detail_albedo] is [i]not[/i] modulated by [member albedo_color].",
+      "godotName": "detail_albedo",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailAlbedo",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailBlendMode",
+      "kind": "Property",
+      "signature": "public int DetailBlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies how the [member detail_albedo] should blend with the current [code]ALBEDO[/code].",
+      "defaultValue": "0",
+      "godotName": "detail_blend_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailBlendMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailEnabled",
+      "kind": "Property",
+      "signature": "public bool DetailEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the detail overlay. Detail is a second texture that gets mixed over the surface of the object based on [member detail_mask] and [member detail_albedo]\u0027s alpha channel. This can be used to add variation to objects, or to blend between two different albedo/normal textures.",
+      "defaultValue": "false",
+      "godotName": "detail_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailMask",
+      "kind": "Property",
+      "signature": "public Texture2D DetailMask { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to specify how the detail textures get blended with the base textures. [member detail_mask] can be used together with [member detail_albedo]\u0027s alpha channel (if any).",
+      "godotName": "detail_mask",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailMask",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailNormal",
+      "kind": "Property",
+      "signature": "public Texture2D DetailNormal { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that specifies the per-pixel normal of the detail overlay. The [member detail_normal] texture only uses the red and green channels; the blue and alpha channels are ignored. The normal read from [member detail_normal] is oriented around the surface normal provided by the [Mesh]. [b]Note:[/b] Godot expects the normal map to use X\u002B, Y\u002B, and Z\u002B coordinates. See [url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates]this page[/url] for a comparison of normal map coordinates expected by popular engines.",
+      "godotName": "detail_normal",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailNormal",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DetailUvLayer",
+      "kind": "Property",
+      "signature": "public int DetailUvLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies whether to use [code]UV[/code] or [code]UV2[/code] for the detail layer.",
+      "defaultValue": "0",
+      "godotName": "detail_uv_layer",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DetailUvLayer",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DiffuseMode",
+      "kind": "Property",
+      "signature": "public int DiffuseMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The algorithm used for diffuse light scattering.",
+      "defaultValue": "0",
+      "godotName": "diffuse_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DiffuseMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DisableAmbientLight",
+      "kind": "Property",
+      "signature": "public bool DisableAmbientLight { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the object receives no ambient light.",
+      "defaultValue": "false",
+      "godotName": "disable_ambient_light",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DisableAmbientLight",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DisableFog",
+      "kind": "Property",
+      "signature": "public bool DisableFog { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the object will not be affected by fog (neither volumetric nor depth fog). This is useful for unshaded or transparent materials (e.g. particles), which without this setting will be affected even if fully transparent.",
+      "defaultValue": "false",
+      "godotName": "disable_fog",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DisableFog",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DisableReceiveShadows",
+      "kind": "Property",
+      "signature": "public bool DisableReceiveShadows { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the object receives no shadow that would otherwise be cast onto it.",
+      "defaultValue": "false",
+      "godotName": "disable_receive_shadows",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DisableReceiveShadows",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DisableSpecularOcclusion",
+      "kind": "Property",
+      "signature": "public bool DisableSpecularOcclusion { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], disables specular occlusion even if [member ProjectSettings.rendering/reflections/specular_occlusion/enabled] is [code]false[/code].",
+      "defaultValue": "false",
+      "godotName": "disable_specular_occlusion",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DisableSpecularOcclusion",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DistanceFadeMaxDistance",
+      "kind": "Property",
+      "signature": "public float DistanceFadeMaxDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance at which the object appears fully opaque. [b]Note:[/b] If [member distance_fade_max_distance] is less than [member distance_fade_min_distance], the behavior will be reversed. The object will start to fade away at [member distance_fade_max_distance] and will fully disappear once it reaches [member distance_fade_min_distance].",
+      "defaultValue": "10.0",
+      "godotName": "distance_fade_max_distance",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DistanceFadeMaxDistance",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DistanceFadeMinDistance",
+      "kind": "Property",
+      "signature": "public float DistanceFadeMinDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance at which the object starts to become visible. If the object is less than this distance away, it will be invisible. [b]Note:[/b] If [member distance_fade_min_distance] is greater than [member distance_fade_max_distance], the behavior will be reversed. The object will start to fade away at [member distance_fade_max_distance] and will fully disappear once it reaches [member distance_fade_min_distance].",
+      "defaultValue": "0.0",
+      "godotName": "distance_fade_min_distance",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DistanceFadeMinDistance",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DistanceFadeMode",
+      "kind": "Property",
+      "signature": "public int DistanceFadeMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies which type of fade to use. Can be any of the [enum DistanceFadeMode]s.",
+      "defaultValue": "0",
+      "godotName": "distance_fade_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.DistanceFadeMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Emission",
+      "kind": "Property",
+      "signature": "public Color Emission { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The emitted light\u0027s color. See [member emission_enabled].",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "emission",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Emission",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionEnabled",
+      "kind": "Property",
+      "signature": "public bool EmissionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the body emits light. Emitting light makes the object appear brighter. The object can also cast light on other objects if a [VoxelGI], SDFGI, or [LightmapGI] is used and this object is used in baked lighting.",
+      "defaultValue": "false",
+      "godotName": "emission_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionEnergyMultiplier",
+      "kind": "Property",
+      "signature": "public float EmissionEnergyMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplier for emitted light. See [member emission_enabled].",
+      "defaultValue": "1.0",
+      "godotName": "emission_energy_multiplier",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionEnergyMultiplier",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionIntensity",
+      "kind": "Property",
+      "signature": "public float EmissionIntensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Luminance of emitted light, measured in nits (candela per square meter). Only available when [member ProjectSettings.rendering/lights_and_shadows/use_physical_light_units] is enabled. The default is roughly equivalent to an indoor lightbulb.",
+      "godotName": "emission_intensity",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionIntensity",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionOnUv2",
+      "kind": "Property",
+      "signature": "public bool EmissionOnUv2 { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Use [code]UV2[/code] to read from the [member emission_texture].",
+      "defaultValue": "false",
+      "godotName": "emission_on_uv2",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionOnUv2",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionOperator",
+      "kind": "Property",
+      "signature": "public int EmissionOperator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets how [member emission] interacts with [member emission_texture]. Can either add or multiply.",
+      "defaultValue": "0",
+      "godotName": "emission_operator",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionOperator",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EmissionTexture",
+      "kind": "Property",
+      "signature": "public Texture2D EmissionTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that specifies how much surface emits light at a given point.",
+      "godotName": "emission_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.EmissionTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FixedSize",
+      "kind": "Property",
+      "signature": "public bool FixedSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the object is rendered at the same size regardless of distance. The object\u0027s size on screen is the same as if the camera was [code]1.0[/code] units away from the object\u0027s origin, regardless of the actual distance from the camera. The [Camera3D]\u0027s field of view (or [member Camera3D.size] when in orthogonal/frustum mode) still affects the size the object is drawn at.",
+      "defaultValue": "false",
+      "godotName": "fixed_size",
+      "xmlDocId": "P:Godot.BaseMaterial3D.FixedSize",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FovOverride",
+      "kind": "Property",
+      "signature": "public float FovOverride { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides the [Camera3D]\u0027s field of view angle (in degrees). [b]Note:[/b] This behaves as if the field of view is set on a [Camera3D] with [member Camera3D.keep_aspect] set to [constant Camera3D.KEEP_HEIGHT]. Additionally, it may not look correct on a non-perspective camera where the field of view setting is ignored.",
+      "defaultValue": "75.0",
+      "godotName": "fov_override",
+      "xmlDocId": "P:Godot.BaseMaterial3D.FovOverride",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Grow",
+      "kind": "Property",
+      "signature": "public bool Grow { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the vertex grow setting. This can be used to create mesh-based outlines using a second material pass and its [member cull_mode] set to [constant CULL_FRONT]. See also [member grow_amount]. [b]Note:[/b] Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp corners. This can be alleviated by designing the mesh to use smooth normals exclusively using [url=http://wiki.polycount.com/wiki/Face_weighted_normals]face weighted normals[/url] in the 3D authoring software. In this case, grow will be able to join every outline together, just like in the original mesh.",
+      "defaultValue": "false",
+      "godotName": "grow",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Grow",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "GrowAmount",
+      "kind": "Property",
+      "signature": "public float GrowAmount { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Grows object vertices in the direction of their normals. Only effective if [member grow] is [code]true[/code].",
+      "defaultValue": "0.0",
+      "godotName": "grow_amount",
+      "xmlDocId": "P:Godot.BaseMaterial3D.GrowAmount",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapDeepParallax",
+      "kind": "Property",
+      "signature": "public bool HeightmapDeepParallax { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses parallax occlusion mapping to represent depth in the material instead of simple offset mapping (see [member heightmap_enabled]). This results in a more convincing depth effect, but is much more expensive on the GPU. Only enable this on materials where it makes a significant visual difference.",
+      "defaultValue": "false",
+      "godotName": "heightmap_deep_parallax",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapDeepParallax",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapEnabled",
+      "kind": "Property",
+      "signature": "public bool HeightmapEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], height mapping is enabled (also called \u0022parallax mapping\u0022 or \u0022depth mapping\u0022). See also [member normal_enabled]. Height mapping is a demanding feature on the GPU, so it should only be used on materials where it makes a significant visual difference. [b]Note:[/b] Height mapping is not supported if triplanar mapping is used on the same material. The value of [member heightmap_enabled] will be ignored if [member uv1_triplanar] is enabled.",
+      "defaultValue": "false",
+      "godotName": "heightmap_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapFlipBinormal",
+      "kind": "Property",
+      "signature": "public bool HeightmapFlipBinormal { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], flips the mesh\u0027s binormal vectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "heightmap_flip_binormal",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapFlipBinormal",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapFlipTangent",
+      "kind": "Property",
+      "signature": "public bool HeightmapFlipTangent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], flips the mesh\u0027s tangent vectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].",
+      "defaultValue": "false",
+      "godotName": "heightmap_flip_tangent",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapFlipTangent",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapFlipTexture",
+      "kind": "Property",
+      "signature": "public bool HeightmapFlipTexture { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], interprets the height map texture as a depth map, with brighter values appearing to be \u0022lower\u0022 in altitude compared to darker values. This can be enabled for compatibility with some materials authored for Godot 3.x. This is not necessary if the Invert import option was used to invert the depth map in Godot 3.x, in which case [member heightmap_flip_texture] should remain [code]false[/code].",
+      "defaultValue": "false",
+      "godotName": "heightmap_flip_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapFlipTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapMaxLayers",
+      "kind": "Property",
+      "signature": "public int HeightmapMaxLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of layers to use for parallax occlusion mapping when the camera is up close to the material. Higher values result in a more convincing depth effect, especially in materials that have steep height changes. Higher values have a significant cost on the GPU, so it should only be increased on materials where it makes a significant visual difference. [b]Note:[/b] Only effective if [member heightmap_deep_parallax] is [code]true[/code].",
+      "godotName": "heightmap_max_layers",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapMaxLayers",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapMinLayers",
+      "kind": "Property",
+      "signature": "public int HeightmapMinLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of layers to use for parallax occlusion mapping when the camera is far away from the material. Higher values result in a more convincing depth effect, especially in materials that have steep height changes. Higher values have a significant cost on the GPU, so it should only be increased on materials where it makes a significant visual difference. [b]Note:[/b] Only effective if [member heightmap_deep_parallax] is [code]true[/code].",
+      "godotName": "heightmap_min_layers",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapMinLayers",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapScale",
+      "kind": "Property",
+      "signature": "public float HeightmapScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The heightmap scale to use for the parallax effect (see [member heightmap_enabled]). The default value is tuned so that the highest point (value = 255) appears to be 5 cm higher than the lowest point (value = 0). Higher values result in a deeper appearance, but may result in artifacts appearing when looking at the material from oblique angles, especially when the camera moves. Negative values can be used to invert the parallax effect, but this is different from inverting the texture using [member heightmap_flip_texture] as the material will also appear to be \u0022closer\u0022 to the camera. In most cases, [member heightmap_scale] should be kept to a positive value. [b]Note:[/b] If the height map effect looks strange regardless of this value, try adjusting [member heightmap_flip_binormal] and [member heightmap_flip_tangent]. See also [member heightmap_texture] for recommendations on authoring heightmap textures, as the way the heightmap texture is authored affects how [member heightmap_scale] behaves.",
+      "defaultValue": "5.0",
+      "godotName": "heightmap_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "HeightmapTexture",
+      "kind": "Property",
+      "signature": "public Texture2D HeightmapTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The texture to use as a height map. See also [member heightmap_enabled]. For best results, the texture should be normalized (with [member heightmap_scale] reduced to compensate). In [url=https://gimp.org]GIMP[/url], this can be done using [b]Colors \u003E Auto \u003E Equalize[/b]. If the texture only uses a small part of its available range, the parallax effect may look strange, especially when the camera moves. [b]Note:[/b] To reduce memory usage and improve loading times, you may be able to use a lower-resolution heightmap texture as most heightmaps are only comprised of low-frequency data.",
+      "godotName": "heightmap_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.HeightmapTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Metallic",
+      "kind": "Property",
+      "signature": "public float Metallic { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A high value makes the material appear more like a metal. Non-metals use their albedo as the diffuse color and add diffuse to the specular reflection. With non-metals, the reflection appears on top of the albedo color. Metals use their albedo as a multiplier to the specular reflection and set the diffuse color to black resulting in a tinted reflection. Materials work better when fully metal or fully non-metal, values between [code]0[/code] and [code]1[/code] should only be used for blending between metal and non-metal sections. To alter the amount of reflection use [member roughness].",
+      "defaultValue": "0.0",
+      "godotName": "metallic",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Metallic",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "MetallicSpecular",
+      "kind": "Property",
+      "signature": "public float MetallicSpecular { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Adjusts the strength of specular reflections. Specular reflections are composed of scene reflections and the specular lobe which is the bright spot that is reflected from light sources. When set to [code]0.0[/code], no specular reflections will be visible. This differs from the [constant SPECULAR_DISABLED] [enum SpecularMode] as [constant SPECULAR_DISABLED] only applies to the specular lobe from the light source. [b]Note:[/b] Unlike [member metallic], this is not energy-conserving, so it should be left at [code]0.5[/code] in most cases. See also [member roughness].",
+      "defaultValue": "0.5",
+      "godotName": "metallic_specular",
+      "xmlDocId": "P:Godot.BaseMaterial3D.MetallicSpecular",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "MetallicTexture",
+      "kind": "Property",
+      "signature": "public Texture2D MetallicTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to specify metallic for an object. This is multiplied by [member metallic].",
+      "godotName": "metallic_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.MetallicTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "MetallicTextureChannel",
+      "kind": "Property",
+      "signature": "public int MetallicTextureChannel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the channel of the [member metallic_texture] in which the metallic information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.",
+      "defaultValue": "0",
+      "godotName": "metallic_texture_channel",
+      "xmlDocId": "P:Godot.BaseMaterial3D.MetallicTextureChannel",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "MsdfOutlineSize",
+      "kind": "Property",
+      "signature": "public float MsdfOutlineSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The width of the shape outline.",
+      "defaultValue": "0.0",
+      "godotName": "msdf_outline_size",
+      "xmlDocId": "P:Godot.BaseMaterial3D.MsdfOutlineSize",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "MsdfPixelRange",
+      "kind": "Property",
+      "signature": "public float MsdfPixelRange { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The width of the range around the shape between the minimum and maximum representable signed distance.",
+      "defaultValue": "4.0",
+      "godotName": "msdf_pixel_range",
+      "xmlDocId": "P:Godot.BaseMaterial3D.MsdfPixelRange",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "NoDepthTest",
+      "kind": "Property",
+      "signature": "public bool NoDepthTest { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], depth testing is disabled and the object will be drawn in render order.",
+      "defaultValue": "false",
+      "godotName": "no_depth_test",
+      "xmlDocId": "P:Godot.BaseMaterial3D.NoDepthTest",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "NormalEnabled",
+      "kind": "Property",
+      "signature": "public bool NormalEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], normal mapping is enabled. This has a slight performance cost, especially on mobile GPUs.",
+      "defaultValue": "false",
+      "godotName": "normal_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.NormalEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "NormalScale",
+      "kind": "Property",
+      "signature": "public float NormalScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength of the normal map\u0027s effect.",
+      "defaultValue": "1.0",
+      "godotName": "normal_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.NormalScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "NormalTexture",
+      "kind": "Property",
+      "signature": "public Texture2D NormalTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to specify the normal at a given pixel. The [member normal_texture] only uses the red and green channels; the blue and alpha channels are ignored. The normal read from [member normal_texture] is oriented around the surface normal provided by the [Mesh]. [b]Note:[/b] The mesh must have both normals and tangents defined in its vertex data. Otherwise, the normal map won\u0027t render correctly and will only appear to darken the whole surface. If creating geometry with [SurfaceTool], you can use [method SurfaceTool.generate_normals] and [method SurfaceTool.generate_tangents] to automatically generate normals and tangents respectively. [b]Note:[/b] Godot expects the normal map to use X\u002B, Y\u002B, and Z\u002B coordinates. See [url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates]this page[/url] for a comparison of normal map coordinates expected by popular engines. [b]Note:[/b] If [member detail_enabled] is [code]true[/code], the [member detail_albedo] texture is drawn [i]below[/i] the [member normal_texture]. To display a normal map [i]above[/i] the [member detail_albedo] texture, use [member detail_normal] instead.",
+      "godotName": "normal_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.NormalTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "OrmTexture",
+      "kind": "Property",
+      "signature": "public Texture2D OrmTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The Occlusion/Roughness/Metallic texture to use. This is a more efficient replacement of [member ao_texture], [member roughness_texture] and [member metallic_texture] in [ORMMaterial3D]. Ambient occlusion is stored in the red channel. Roughness map is stored in the green channel. Metallic map is stored in the blue channel. The alpha channel is ignored.",
+      "godotName": "orm_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.OrmTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ParticlesAnimHFrames",
+      "kind": "Property",
+      "signature": "public int ParticlesAnimHFrames { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of horizontal frames in the particle sprite sheet. Only enabled when using [constant BILLBOARD_PARTICLES]. See [member billboard_mode].",
+      "godotName": "particles_anim_h_frames",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ParticlesAnimHFrames",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ParticlesAnimLoop",
+      "kind": "Property",
+      "signature": "public bool ParticlesAnimLoop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], particle animations are looped. Only enabled when using [constant BILLBOARD_PARTICLES]. See [member billboard_mode].",
+      "godotName": "particles_anim_loop",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ParticlesAnimLoop",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ParticlesAnimVFrames",
+      "kind": "Property",
+      "signature": "public int ParticlesAnimVFrames { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of vertical frames in the particle sprite sheet. Only enabled when using [constant BILLBOARD_PARTICLES]. See [member billboard_mode].",
+      "godotName": "particles_anim_v_frames",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ParticlesAnimVFrames",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "PointSize",
+      "kind": "Property",
+      "signature": "public float PointSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The point size in pixels. See [member use_point_size].",
+      "defaultValue": "1.0",
+      "godotName": "point_size",
+      "xmlDocId": "P:Godot.BaseMaterial3D.PointSize",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ProximityFadeDistance",
+      "kind": "Property",
+      "signature": "public float ProximityFadeDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance over which the fade effect takes place. The larger the distance the longer it takes for an object to fade.",
+      "defaultValue": "1.0",
+      "godotName": "proximity_fade_distance",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ProximityFadeDistance",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ProximityFadeEnabled",
+      "kind": "Property",
+      "signature": "public bool ProximityFadeEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the proximity fade effect is enabled. The proximity fade effect fades out each pixel based on its distance to another object.",
+      "defaultValue": "false",
+      "godotName": "proximity_fade_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ProximityFadeEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RefractionEnabled",
+      "kind": "Property",
+      "signature": "public bool RefractionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the refraction effect is enabled. Distorts transparency based on light from behind the object. [b]Note:[/b] Refraction is implemented using the screen texture. Only opaque materials will appear in the refraction, since transparent materials do not appear in the screen texture.",
+      "defaultValue": "false",
+      "godotName": "refraction_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RefractionEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RefractionScale",
+      "kind": "Property",
+      "signature": "public float RefractionScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength of the refraction effect.",
+      "defaultValue": "0.05",
+      "godotName": "refraction_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RefractionScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RefractionTexture",
+      "kind": "Property",
+      "signature": "public Texture2D RefractionTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture that controls the strength of the refraction per-pixel. Multiplied by [member refraction_scale].",
+      "godotName": "refraction_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RefractionTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RefractionTextureChannel",
+      "kind": "Property",
+      "signature": "public int RefractionTextureChannel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the channel of the [member refraction_texture] in which the refraction information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored refraction in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.",
+      "defaultValue": "0",
+      "godotName": "refraction_texture_channel",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RefractionTextureChannel",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Rim",
+      "kind": "Property",
+      "signature": "public float Rim { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the strength of the rim lighting effect.",
+      "defaultValue": "1.0",
+      "godotName": "rim",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Rim",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RimEnabled",
+      "kind": "Property",
+      "signature": "public bool RimEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], rim effect is enabled. Rim lighting increases the brightness at glancing angles on an object. [b]Note:[/b] Rim lighting is not visible if the material\u0027s [member shading_mode] is [constant SHADING_MODE_UNSHADED].",
+      "defaultValue": "false",
+      "godotName": "rim_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RimEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RimTexture",
+      "kind": "Property",
+      "signature": "public Texture2D RimTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to set the strength of the rim lighting effect per-pixel. Multiplied by [member rim].",
+      "godotName": "rim_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RimTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RimTint",
+      "kind": "Property",
+      "signature": "public float RimTint { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of to blend light and albedo color when rendering rim effect. If [code]0[/code] the light color is used, while [code]1[/code] means albedo color is used. An intermediate value generally works best.",
+      "defaultValue": "0.5",
+      "godotName": "rim_tint",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RimTint",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Roughness",
+      "kind": "Property",
+      "signature": "public float Roughness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Surface reflection. A value of [code]0[/code] represents a perfect mirror while a value of [code]1[/code] completely blurs the reflection. See also [member metallic].",
+      "defaultValue": "1.0",
+      "godotName": "roughness",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Roughness",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RoughnessTexture",
+      "kind": "Property",
+      "signature": "public Texture2D RoughnessTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to control the roughness per-pixel. Multiplied by [member roughness].",
+      "godotName": "roughness_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RoughnessTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "RoughnessTextureChannel",
+      "kind": "Property",
+      "signature": "public int RoughnessTextureChannel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the channel of the [member roughness_texture] in which the roughness information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.",
+      "defaultValue": "0",
+      "godotName": "roughness_texture_channel",
+      "xmlDocId": "P:Godot.BaseMaterial3D.RoughnessTextureChannel",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ShadingMode",
+      "kind": "Property",
+      "signature": "public int ShadingMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets whether the shading takes place, per-pixel, per-vertex or unshaded. Per-vertex lighting is faster, making it the best choice for mobile applications, however it looks considerably worse than per-pixel. Unshaded rendering is the fastest, but disables all interactions with lights.",
+      "defaultValue": "1",
+      "godotName": "shading_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ShadingMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ShadowToOpacity",
+      "kind": "Property",
+      "signature": "public bool ShadowToOpacity { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the \u0022shadow to opacity\u0022 render mode where lighting modifies the alpha so shadowed areas are opaque and non-shadowed areas are transparent. Useful for overlaying shadows onto a camera feed in AR.",
+      "defaultValue": "false",
+      "godotName": "shadow_to_opacity",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ShadowToOpacity",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SpecularMode",
+      "kind": "Property",
+      "signature": "public int SpecularMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The method for rendering the specular blob. [b]Note:[/b] [member specular_mode] only applies to the specular blob. It does not affect specular reflections from the sky, screen-space reflections, [VoxelGI], SDFGI or [ReflectionProbe]s. To disable reflections from these sources as well, set [member metallic_specular] to [code]0.0[/code] instead.",
+      "defaultValue": "0",
+      "godotName": "specular_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SpecularMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilColor",
+      "kind": "Property",
+      "signature": "public Color StencilColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The primary color of the stencil effect.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "stencil_color",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilColor",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilCompare",
+      "kind": "Property",
+      "signature": "public int StencilCompare { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The comparison operator to use for stencil masking operations.",
+      "defaultValue": "0",
+      "godotName": "stencil_compare",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilCompare",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilFlags",
+      "kind": "Property",
+      "signature": "public int StencilFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The flags dictating how the stencil operation behaves.",
+      "defaultValue": "0",
+      "godotName": "stencil_flags",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilFlags",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilMode",
+      "kind": "Property",
+      "signature": "public int StencilMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stencil effect mode.",
+      "defaultValue": "0",
+      "godotName": "stencil_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilOutlineThickness",
+      "kind": "Property",
+      "signature": "public float StencilOutlineThickness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The outline thickness for [constant STENCIL_MODE_OUTLINE].",
+      "defaultValue": "0.01",
+      "godotName": "stencil_outline_thickness",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilOutlineThickness",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "StencilReference",
+      "kind": "Property",
+      "signature": "public int StencilReference { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stencil reference value (0-255). Typically a power of 2.",
+      "defaultValue": "1",
+      "godotName": "stencil_reference",
+      "xmlDocId": "P:Godot.BaseMaterial3D.StencilReference",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterEnabled",
+      "kind": "Property",
+      "signature": "public bool SubsurfScatterEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], subsurface scattering is enabled. Emulates light that penetrates an object\u0027s surface, is scattered, and then emerges. Subsurface scattering quality is controlled by [member ProjectSettings.rendering/environment/subsurface_scattering/subsurface_scattering_quality]. [b]Note:[/b] Subsurface scattering is not supported on viewports that have a transparent background (where [member Viewport.transparent_bg] is [code]true[/code]).",
+      "defaultValue": "false",
+      "godotName": "subsurf_scatter_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterSkinMode",
+      "kind": "Property",
+      "signature": "public bool SubsurfScatterSkinMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], subsurface scattering will use a special mode optimized for the color and density of human skin, such as boosting the intensity of the red channel in subsurface scattering.",
+      "defaultValue": "false",
+      "godotName": "subsurf_scatter_skin_mode",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterSkinMode",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterStrength",
+      "kind": "Property",
+      "signature": "public float SubsurfScatterStrength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The strength of the subsurface scattering effect. The depth of the effect is also controlled by [member ProjectSettings.rendering/environment/subsurface_scattering/subsurface_scattering_scale], which is set globally.",
+      "defaultValue": "0.0",
+      "godotName": "subsurf_scatter_strength",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterStrength",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTexture",
+      "kind": "Property",
+      "signature": "public Texture2D SubsurfScatterTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Texture used to control the subsurface scattering strength. Stored in the red texture channel. Multiplied by [member subsurf_scatter_strength].",
+      "godotName": "subsurf_scatter_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTransmittanceBoost",
+      "kind": "Property",
+      "signature": "public float SubsurfScatterTransmittanceBoost { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the subsurface scattering transmittance effect.",
+      "defaultValue": "0.0",
+      "godotName": "subsurf_scatter_transmittance_boost",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTransmittanceBoost",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTransmittanceColor",
+      "kind": "Property",
+      "signature": "public Color SubsurfScatterTransmittanceColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color to multiply the subsurface scattering transmittance effect with. Ignored if [member subsurf_scatter_skin_mode] is [code]true[/code].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "subsurf_scatter_transmittance_color",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTransmittanceColor",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTransmittanceDepth",
+      "kind": "Property",
+      "signature": "public float SubsurfScatterTransmittanceDepth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The depth of the subsurface scattering transmittance effect.",
+      "defaultValue": "0.1",
+      "godotName": "subsurf_scatter_transmittance_depth",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTransmittanceDepth",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTransmittanceEnabled",
+      "kind": "Property",
+      "signature": "public bool SubsurfScatterTransmittanceEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables subsurface scattering transmittance. Only effective if [member subsurf_scatter_enabled] is [code]true[/code]. See also [member backlight_enabled].",
+      "defaultValue": "false",
+      "godotName": "subsurf_scatter_transmittance_enabled",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTransmittanceEnabled",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SubsurfScatterTransmittanceTexture",
+      "kind": "Property",
+      "signature": "public Texture2D SubsurfScatterTransmittanceTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The texture to use for multiplying the intensity of the subsurface scattering transmittance intensity. See also [member subsurf_scatter_texture]. Ignored if [member subsurf_scatter_skin_mode] is [code]true[/code].",
+      "godotName": "subsurf_scatter_transmittance_texture",
+      "xmlDocId": "P:Godot.BaseMaterial3D.SubsurfScatterTransmittanceTexture",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TextureFilter",
+      "kind": "Property",
+      "signature": "public int TextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Filter flags for the texture. [b]Note:[/b] [member heightmap_texture] is always sampled with linear filtering, even if nearest-neighbor filtering is selected here. This is to ensure the heightmap effect looks as intended. If you need sharper height transitions between pixels, resize the heightmap texture in an image editor with nearest-neighbor filtering.",
+      "defaultValue": "3",
+      "godotName": "texture_filter",
+      "xmlDocId": "P:Godot.BaseMaterial3D.TextureFilter",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TextureRepeat",
+      "kind": "Property",
+      "signature": "public bool TextureRepeat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the texture repeats when exceeding the texture\u0027s size. See [constant FLAG_USE_TEXTURE_REPEAT].",
+      "defaultValue": "true",
+      "godotName": "texture_repeat",
+      "xmlDocId": "P:Godot.BaseMaterial3D.TextureRepeat",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Transparency",
+      "kind": "Property",
+      "signature": "public int Transparency { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The material\u0027s transparency mode. Some transparency modes will disable shadow casting. Any transparency mode other than [constant TRANSPARENCY_DISABLED] has a greater performance impact compared to opaque rendering. See also [member blend_mode].",
+      "defaultValue": "0",
+      "godotName": "transparency",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Transparency",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "UseFovOverride",
+      "kind": "Property",
+      "signature": "public bool UseFovOverride { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] use [member fov_override] to override the [Camera3D]\u0027s field of view angle.",
+      "defaultValue": "false",
+      "godotName": "use_fov_override",
+      "xmlDocId": "P:Godot.BaseMaterial3D.UseFovOverride",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "UseParticleTrails",
+      "kind": "Property",
+      "signature": "public bool UseParticleTrails { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables parts of the shader required for [GPUParticles3D] trails to function. This also requires using a mesh with appropriate skinning, such as [RibbonTrailMesh] or [TubeTrailMesh]. Enabling this feature outside of materials used in [GPUParticles3D] meshes will break material rendering.",
+      "defaultValue": "false",
+      "godotName": "use_particle_trails",
+      "xmlDocId": "P:Godot.BaseMaterial3D.UseParticleTrails",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "UsePointSize",
+      "kind": "Property",
+      "signature": "public bool UsePointSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], render point size can be changed. [b]Note:[/b] This is only effective for objects whose geometry is point-based rather than triangle-based. See also [member point_size].",
+      "defaultValue": "false",
+      "godotName": "use_point_size",
+      "xmlDocId": "P:Godot.BaseMaterial3D.UsePointSize",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "UseZClipScale",
+      "kind": "Property",
+      "signature": "public bool UseZClipScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] use [member z_clip_scale] to scale the object being rendered towards the camera to avoid clipping into things like walls.",
+      "defaultValue": "false",
+      "godotName": "use_z_clip_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.UseZClipScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv1Offset",
+      "kind": "Property",
+      "signature": "public Vector3 Uv1Offset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "How much to offset the [code]UV[/code] coordinates. This amount will be added to [code]UV[/code] in the vertex function. This can be used to offset a texture. The Z component is used when [member uv1_triplanar] is enabled, but it is not used anywhere else.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "uv1_offset",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv1Offset",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv1Scale",
+      "kind": "Property",
+      "signature": "public Vector3 Uv1Scale { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "How much to scale the [code]UV[/code] coordinates. This is multiplied by [code]UV[/code] in the vertex function. The Z component is used when [member uv1_triplanar] is enabled, but it is not used anywhere else.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "uv1_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv1Scale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv1Triplanar",
+      "kind": "Property",
+      "signature": "public bool Uv1Triplanar { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], instead of using [code]UV[/code] textures will use a triplanar texture lookup to determine how to apply textures. Triplanar uses the orientation of the object\u0027s surface to blend between texture coordinates. It reads from the source texture 3 times, once for each axis and then blends between the results based on how closely the pixel aligns with each axis. This is often used for natural features to get a realistic blend of materials. Because triplanar texturing requires many more texture reads per-pixel it is much slower than normal UV texturing. Additionally, because it is blending the texture between the three axes, it is unsuitable when you are trying to achieve crisp texturing.",
+      "defaultValue": "false",
+      "godotName": "uv1_triplanar",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv1Triplanar",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv1TriplanarSharpness",
+      "kind": "Property",
+      "signature": "public float Uv1TriplanarSharpness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A lower number blends the texture more softly while a higher number blends the texture more sharply. [b]Note:[/b] [member uv1_triplanar_sharpness] is clamped between [code]0.0[/code] and [code]150.0[/code] (inclusive) as values outside that range can look broken depending on the mesh.",
+      "defaultValue": "1.0",
+      "godotName": "uv1_triplanar_sharpness",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv1TriplanarSharpness",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv1WorldTriplanar",
+      "kind": "Property",
+      "signature": "public bool Uv1WorldTriplanar { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], triplanar mapping for [code]UV[/code] is calculated in world space rather than object local space. See also [member uv1_triplanar].",
+      "defaultValue": "false",
+      "godotName": "uv1_world_triplanar",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv1WorldTriplanar",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv2Offset",
+      "kind": "Property",
+      "signature": "public Vector3 Uv2Offset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "How much to offset the [code]UV2[/code] coordinates. This amount will be added to [code]UV2[/code] in the vertex function. This can be used to offset a texture. The Z component is used when [member uv2_triplanar] is enabled, but it is not used anywhere else.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "uv2_offset",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv2Offset",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv2Scale",
+      "kind": "Property",
+      "signature": "public Vector3 Uv2Scale { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "How much to scale the [code]UV2[/code] coordinates. This is multiplied by [code]UV2[/code] in the vertex function. The Z component is used when [member uv2_triplanar] is enabled, but it is not used anywhere else.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "uv2_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv2Scale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv2Triplanar",
+      "kind": "Property",
+      "signature": "public bool Uv2Triplanar { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], instead of using [code]UV2[/code] textures will use a triplanar texture lookup to determine how to apply textures. Triplanar uses the orientation of the object\u0027s surface to blend between texture coordinates. It reads from the source texture 3 times, once for each axis and then blends between the results based on how closely the pixel aligns with each axis. This is often used for natural features to get a realistic blend of materials. Because triplanar texturing requires many more texture reads per-pixel it is much slower than normal UV texturing. Additionally, because it is blending the texture between the three axes, it is unsuitable when you are trying to achieve crisp texturing.",
+      "defaultValue": "false",
+      "godotName": "uv2_triplanar",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv2Triplanar",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv2TriplanarSharpness",
+      "kind": "Property",
+      "signature": "public float Uv2TriplanarSharpness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A lower number blends the texture more softly while a higher number blends the texture more sharply. [b]Note:[/b] [member uv2_triplanar_sharpness] is clamped between [code]0.0[/code] and [code]150.0[/code] (inclusive) as values outside that range can look broken depending on the mesh.",
+      "defaultValue": "1.0",
+      "godotName": "uv2_triplanar_sharpness",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv2TriplanarSharpness",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "Uv2WorldTriplanar",
+      "kind": "Property",
+      "signature": "public bool Uv2WorldTriplanar { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], triplanar mapping for [code]UV2[/code] is calculated in world space rather than object local space. See also [member uv2_triplanar].",
+      "defaultValue": "false",
+      "godotName": "uv2_world_triplanar",
+      "xmlDocId": "P:Godot.BaseMaterial3D.Uv2WorldTriplanar",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "VertexColorIsSrgb",
+      "kind": "Property",
+      "signature": "public bool VertexColorIsSrgb { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], vertex colors are considered to be stored in nonlinear sRGB encoding and are converted to linear encoding during rendering. If [code]false[/code], vertex colors are considered to be stored in linear encoding and are rendered as-is. See also [member albedo_texture_force_srgb]. [b]Note:[/b] Only effective when using the Forward\u002B and Mobile rendering methods, not Compatibility.",
+      "defaultValue": "false",
+      "godotName": "vertex_color_is_srgb",
+      "xmlDocId": "P:Godot.BaseMaterial3D.VertexColorIsSrgb",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "VertexColorUseAsAlbedo",
+      "kind": "Property",
+      "signature": "public bool VertexColorUseAsAlbedo { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the vertex color is used as albedo color.",
+      "defaultValue": "false",
+      "godotName": "vertex_color_use_as_albedo",
+      "xmlDocId": "P:Godot.BaseMaterial3D.VertexColorUseAsAlbedo",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ZClipScale",
+      "kind": "Property",
+      "signature": "public float ZClipScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the object being rendered towards the camera to avoid clipping into things like walls. This is intended to be used for objects that are fixed with respect to the camera like player arms, tools, etc. Lighting and shadows will continue to work correctly when this setting is adjusted, but screen-space effects like SSAO and SSR may break with lower scales. Therefore, try to keep this setting as close to [code]1.0[/code] as possible.",
+      "defaultValue": "1.0",
+      "godotName": "z_clip_scale",
+      "xmlDocId": "P:Godot.BaseMaterial3D.ZClipScale",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AlphaAntiAliasing",
+      "values": [
+        {
+          "name": "ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE",
+          "value": "1",
+          "enum": "AlphaAntiAliasing",
+          "kind": "EnumValue",
+          "summary": "Enables AlphaToCoverage. Alpha values in the material are passed to the AntiAliasing sample mask.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE",
+          "value": "2",
+          "enum": "AlphaAntiAliasing",
+          "kind": "EnumValue",
+          "summary": "Enables AlphaToCoverage and forces all non-zero alpha values to [code]1[/code]. Alpha values in the material are passed to the AntiAliasing sample mask.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "ALPHA_ANTIALIASING_OFF",
+          "value": "0",
+          "enum": "AlphaAntiAliasing",
+          "kind": "EnumValue",
+          "summary": "Disables Alpha AntiAliasing for the material.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BillboardMode",
+      "values": [
+        {
+          "name": "BILLBOARD_DISABLED",
+          "value": "0",
+          "enum": "BillboardMode",
+          "kind": "EnumValue",
+          "summary": "Billboard mode is disabled.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BILLBOARD_ENABLED",
+          "value": "1",
+          "enum": "BillboardMode",
+          "kind": "EnumValue",
+          "summary": "The object\u0027s Z axis will always face the camera.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BILLBOARD_FIXED_Y",
+          "value": "2",
+          "enum": "BillboardMode",
+          "kind": "EnumValue",
+          "summary": "The object\u0027s X axis will always face the camera.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BILLBOARD_PARTICLES",
+          "value": "3",
+          "enum": "BillboardMode",
+          "kind": "EnumValue",
+          "summary": "Used for particle systems when assigned to [GPUParticles3D] and [CPUParticles3D] nodes (flipbook animation). Enables [code]particles_anim_*[/code] properties. The [member ParticleProcessMaterial.anim_speed_min] or [member CPUParticles3D.anim_speed_min] should also be set to a value bigger than zero for the animation to play.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BlendMode",
+      "values": [
+        {
+          "name": "BLEND_MODE_ADD",
+          "value": "1",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The color of the object is added to the background.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BLEND_MODE_MIX",
+          "value": "0",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Default blend mode. The color of the object is blended over the background based on the object\u0027s alpha value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BLEND_MODE_MUL",
+          "value": "3",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The color of the object is multiplied by the background.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BLEND_MODE_PREMULT_ALPHA",
+          "value": "4",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The color of the object is added to the background and the alpha channel is used to mask out the background. This is effectively a hybrid of the blend mix and add modes, useful for effects like fire where you want the flame to add but the smoke to mix. By default, this works with unshaded materials using premultiplied textures. For shaded materials, use the [code]PREMUL_ALPHA_FACTOR[/code] built-in so that lighting can be modulated as well.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "BLEND_MODE_SUB",
+          "value": "2",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "The color of the object is subtracted from the background.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "CullMode",
+      "values": [
+        {
+          "name": "CULL_BACK",
+          "value": "0",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "Default cull mode. The back of the object is culled when not visible. Back face triangles will be culled when facing the camera. This results in only the front side of triangles being drawn. For closed-surface meshes, this means that only the exterior of the mesh will be visible.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "CULL_DISABLED",
+          "value": "2",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "No face culling is performed; both the front face and back face will be visible.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "CULL_FRONT",
+          "value": "1",
+          "enum": "CullMode",
+          "kind": "EnumValue",
+          "summary": "Front face triangles will be culled when facing the camera. This results in only the back side of triangles being drawn. For closed-surface meshes, this means that the interior of the mesh will be drawn instead of the exterior.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DepthDrawMode",
+      "values": [
+        {
+          "name": "DEPTH_DRAW_ALWAYS",
+          "value": "1",
+          "enum": "DepthDrawMode",
+          "kind": "EnumValue",
+          "summary": "Objects will write to depth during the opaque and the transparent passes. Transparent objects that are close to the camera may obscure other transparent objects behind them. [b]Note:[/b] This does not influence whether transparent objects are included in the depth prepass or not. For that, see [enum Transparency].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DEPTH_DRAW_DISABLED",
+          "value": "2",
+          "enum": "DepthDrawMode",
+          "kind": "EnumValue",
+          "summary": "Objects will not write their depth to the depth buffer, even during the depth prepass (if enabled).",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DEPTH_DRAW_OPAQUE_ONLY",
+          "value": "0",
+          "enum": "DepthDrawMode",
+          "kind": "EnumValue",
+          "summary": "Default depth draw mode. Depth is drawn only for opaque objects during the opaque prepass (if any) and during the opaque pass.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DepthTest",
+      "values": [
+        {
+          "name": "DEPTH_TEST_DEFAULT",
+          "value": "0",
+          "enum": "DepthTest",
+          "kind": "EnumValue",
+          "summary": "Depth test will discard the pixel if it is behind other pixels.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DEPTH_TEST_INVERTED",
+          "value": "1",
+          "enum": "DepthTest",
+          "kind": "EnumValue",
+          "summary": "Depth test will discard the pixel if it is in front of other pixels. Useful for stencil effects.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DetailUV",
+      "values": [
+        {
+          "name": "DETAIL_UV_1",
+          "value": "0",
+          "enum": "DetailUV",
+          "kind": "EnumValue",
+          "summary": "Use [code]UV[/code] with the detail texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DETAIL_UV_2",
+          "value": "1",
+          "enum": "DetailUV",
+          "kind": "EnumValue",
+          "summary": "Use [code]UV2[/code] with the detail texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DiffuseMode",
+      "values": [
+        {
+          "name": "DIFFUSE_BURLEY",
+          "value": "0",
+          "enum": "DiffuseMode",
+          "kind": "EnumValue",
+          "summary": "Default diffuse scattering algorithm.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DIFFUSE_LAMBERT",
+          "value": "1",
+          "enum": "DiffuseMode",
+          "kind": "EnumValue",
+          "summary": "Diffuse scattering ignores roughness.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DIFFUSE_LAMBERT_WRAP",
+          "value": "2",
+          "enum": "DiffuseMode",
+          "kind": "EnumValue",
+          "summary": "Extends Lambert to cover more than 90 degrees when roughness increases.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DIFFUSE_TOON",
+          "value": "3",
+          "enum": "DiffuseMode",
+          "kind": "EnumValue",
+          "summary": "Uses a hard cut for lighting, with smoothing affected by roughness.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DistanceFadeMode",
+      "values": [
+        {
+          "name": "DISTANCE_FADE_DISABLED",
+          "value": "0",
+          "enum": "DistanceFadeMode",
+          "kind": "EnumValue",
+          "summary": "Do not use distance fade.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DISTANCE_FADE_OBJECT_DITHER",
+          "value": "3",
+          "enum": "DistanceFadeMode",
+          "kind": "EnumValue",
+          "summary": "Smoothly fades the object out based on the object\u0027s distance from the camera using a dithering approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling transparency. On certain hardware, this can be faster than [constant DISTANCE_FADE_PIXEL_ALPHA] and [constant DISTANCE_FADE_PIXEL_DITHER].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DISTANCE_FADE_PIXEL_ALPHA",
+          "value": "1",
+          "enum": "DistanceFadeMode",
+          "kind": "EnumValue",
+          "summary": "Smoothly fades the object out based on each pixel\u0027s distance from the camera using the alpha channel.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "DISTANCE_FADE_PIXEL_DITHER",
+          "value": "2",
+          "enum": "DistanceFadeMode",
+          "kind": "EnumValue",
+          "summary": "Smoothly fades the object out based on each pixel\u0027s distance from the camera using a dithering approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling transparency. On certain hardware, this can be faster than [constant DISTANCE_FADE_PIXEL_ALPHA].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "EmissionOperator",
+      "values": [
+        {
+          "name": "EMISSION_OP_ADD",
+          "value": "0",
+          "enum": "EmissionOperator",
+          "kind": "EnumValue",
+          "summary": "Adds the emission color to the color from the emission texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "EMISSION_OP_MULTIPLY",
+          "value": "1",
+          "enum": "EmissionOperator",
+          "kind": "EnumValue",
+          "summary": "Multiplies the emission color by the color from the emission texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Feature",
+      "values": [
+        {
+          "name": "FEATURE_AMBIENT_OCCLUSION",
+          "value": "5",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member ao_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_ANISOTROPY",
+          "value": "4",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member anisotropy_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_BACKLIGHT",
+          "value": "9",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member backlight_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_BENT_NORMAL_MAPPING",
+          "value": "12",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member bent_normal_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_CLEARCOAT",
+          "value": "3",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member clearcoat_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_DETAIL",
+          "value": "11",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member detail_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_EMISSION",
+          "value": "0",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member emission_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_HEIGHT_MAPPING",
+          "value": "6",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member heightmap_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_MAX",
+          "value": "13",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Feature] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_NORMAL_MAPPING",
+          "value": "1",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member normal_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_REFRACTION",
+          "value": "10",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member refraction_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_RIM",
+          "value": "2",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member rim_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_SUBSURFACE_SCATTERING",
+          "value": "7",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member subsurf_scatter_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FEATURE_SUBSURFACE_TRANSMITTANCE",
+          "value": "8",
+          "enum": "Feature",
+          "kind": "EnumValue",
+          "summary": "Constant for setting [member subsurf_scatter_transmittance_enabled].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Flags",
+      "values": [
+        {
+          "name": "FLAG_ALBEDO_FROM_VERTEX_COLOR",
+          "value": "1",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Set [code]ALBEDO[/code] to the per-vertex color specified in the mesh.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_ALBEDO_TEXTURE_FORCE_SRGB",
+          "value": "12",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Forces the shader to convert albedo from nonlinear sRGB encoding to linear encoding. See also [member albedo_texture_force_srgb].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_ALBEDO_TEXTURE_MSDF",
+          "value": "20",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables multichannel signed distance field rendering shader.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_AO_ON_UV2",
+          "value": "10",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use [code]UV2[/code] coordinates to look up from the [member ao_texture].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_BILLBOARD_KEEP_SCALE",
+          "value": "5",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Shader will keep the scale set for the mesh. Otherwise the scale is lost when billboarding. Only applies when [member billboard_mode] is [constant BILLBOARD_ENABLED].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_DISABLE_AMBIENT_LIGHT",
+          "value": "14",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Disables receiving ambient light.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_DISABLE_DEPTH_TEST",
+          "value": "0",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Disables the depth test, so this object is drawn on top of all others drawn before it. This puts the object in the transparent draw pass where it is sorted based on distance to camera. Objects drawn after it in the draw order may cover it. This also disables writing to depth.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_DISABLE_FOG",
+          "value": "21",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Disables receiving depth-based or volumetric fog.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_DISABLE_SPECULAR_OCCLUSION",
+          "value": "22",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Disables specular occlusion.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_DONT_RECEIVE_SHADOWS",
+          "value": "13",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Disables receiving shadows from other objects.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_EMISSION_ON_UV2",
+          "value": "11",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use [code]UV2[/code] coordinates to look up from the [member emission_texture].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_FIXED_SIZE",
+          "value": "4",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Object is scaled by depth so that it always appears the same size on screen.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_INVERT_HEIGHTMAP",
+          "value": "17",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Invert values read from a depth texture to convert them to height values (heightmap).",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_MAX",
+          "value": "25",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Flags] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_PARTICLE_TRAILS_MODE",
+          "value": "19",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables parts of the shader required for [GPUParticles3D] trails to function. This also requires using a mesh with appropriate skinning, such as [RibbonTrailMesh] or [TubeTrailMesh]. Enabling this feature outside of materials used in [GPUParticles3D] meshes will break material rendering.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_SRGB_VERTEX_COLOR",
+          "value": "2",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Vertex colors are considered to be stored in nonlinear sRGB encoding and are converted to linear encoding during rendering. See also [member vertex_color_is_srgb]. [b]Note:[/b] Only effective when using the Forward\u002B and Mobile rendering methods.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_SUBSURFACE_MODE_SKIN",
+          "value": "18",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables the skin mode for subsurface scattering which is used to improve the look of subsurface scattering when used for human skin.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_USE_FOV_OVERRIDE",
+          "value": "24",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables using [member fov_override].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_USE_POINT_SIZE",
+          "value": "3",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Uses point size to alter the size of primitive points. Also changes the albedo texture lookup to use [code]POINT_COORD[/code] instead of [code]UV[/code].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_USE_SHADOW_TO_OPACITY",
+          "value": "15",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables the shadow to opacity feature.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_USE_TEXTURE_REPEAT",
+          "value": "16",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables the texture to repeat when UV coordinates are outside the 0-1 range. If using one of the linear filtering modes, this can result in artifacts at the edges of a texture when the sampler filters across the edges of the texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_USE_Z_CLIP_SCALE",
+          "value": "23",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Enables using [member z_clip_scale].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_UV1_USE_TRIPLANAR",
+          "value": "6",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV[/code].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_UV1_USE_WORLD_TRIPLANAR",
+          "value": "8",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV[/code].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_UV2_USE_TRIPLANAR",
+          "value": "7",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV2[/code].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "FLAG_UV2_USE_WORLD_TRIPLANAR",
+          "value": "9",
+          "enum": "Flags",
+          "kind": "EnumValue",
+          "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV2[/code].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ShadingMode",
+      "values": [
+        {
+          "name": "SHADING_MODE_MAX",
+          "value": "3",
+          "enum": "ShadingMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ShadingMode] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "SHADING_MODE_PER_PIXEL",
+          "value": "1",
+          "enum": "ShadingMode",
+          "kind": "EnumValue",
+          "summary": "The object will be shaded per pixel. Useful for realistic shading effects.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "SHADING_MODE_PER_VERTEX",
+          "value": "2",
+          "enum": "ShadingMode",
+          "kind": "EnumValue",
+          "summary": "The object will be shaded per vertex. Useful when you want cheaper shaders and do not care about visual quality.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "SHADING_MODE_UNSHADED",
+          "value": "0",
+          "enum": "ShadingMode",
+          "kind": "EnumValue",
+          "summary": "The object will not receive shadows. This is the fastest to render, but it disables all interactions with lights.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "SpecularMode",
+      "values": [
+        {
+          "name": "SPECULAR_DISABLED",
+          "value": "2",
+          "enum": "SpecularMode",
+          "kind": "EnumValue",
+          "summary": "No specular blob. This is slightly faster to render than other specular modes.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "SPECULAR_SCHLICK_GGX",
+          "value": "0",
+          "enum": "SpecularMode",
+          "kind": "EnumValue",
+          "summary": "Default specular blob. [b]Note:[/b] Forward\u002B uses multiscattering for more accurate reflections, although the impact of multiscattering is more noticeable on rough metallic surfaces than on smooth, non-metallic surfaces. [b]Note:[/b] Mobile and Compatibility don\u0027t perform multiscattering for performance reasons. Instead, they perform single scattering, which means rough metallic surfaces may look slightly darker than intended.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "SPECULAR_TOON",
+          "value": "1",
+          "enum": "SpecularMode",
+          "kind": "EnumValue",
+          "summary": "Toon blob which changes size based on roughness.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "StencilCompare",
+      "values": [
+        {
+          "name": "STENCIL_COMPARE_ALWAYS",
+          "value": "0",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Always passes the stencil test.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_EQUAL",
+          "value": "2",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is equal to the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_GREATER",
+          "value": "4",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is greater than the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_GREATER_OR_EQUAL",
+          "value": "6",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is greater than or equal to the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_LESS",
+          "value": "1",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is less than the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_LESS_OR_EQUAL",
+          "value": "3",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is less than or equal to the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_COMPARE_NOT_EQUAL",
+          "value": "5",
+          "enum": "StencilCompare",
+          "kind": "EnumValue",
+          "summary": "Passes the stencil test when the reference value is not equal to the existing stencil value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "StencilFlags",
+      "values": [
+        {
+          "name": "STENCIL_FLAG_READ",
+          "value": "1",
+          "enum": "StencilFlags",
+          "kind": "EnumValue",
+          "summary": "The material will only be rendered where it passes a stencil comparison with existing stencil buffer values.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_FLAG_WRITE",
+          "value": "2",
+          "enum": "StencilFlags",
+          "kind": "EnumValue",
+          "summary": "The material will write the reference value to the stencil buffer where it passes the depth test.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_FLAG_WRITE_DEPTH_FAIL",
+          "value": "4",
+          "enum": "StencilFlags",
+          "kind": "EnumValue",
+          "summary": "The material will write the reference value to the stencil buffer where it fails the depth test.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "StencilMode",
+      "values": [
+        {
+          "name": "STENCIL_MODE_CUSTOM",
+          "value": "3",
+          "enum": "StencilMode",
+          "kind": "EnumValue",
+          "summary": "Enables stencil operations without a preset.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_MODE_DISABLED",
+          "value": "0",
+          "enum": "StencilMode",
+          "kind": "EnumValue",
+          "summary": "Disables stencil operations.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_MODE_OUTLINE",
+          "value": "1",
+          "enum": "StencilMode",
+          "kind": "EnumValue",
+          "summary": "Stencil preset which applies an outline to the object. [b]Note:[/b] Requires a [member Material.next_pass] material which will be automatically applied. Any manual changes made to [member Material.next_pass] will be lost when the stencil properties are modified or the scene is reloaded. To safely apply a [member Material.next_pass] material on a material that uses stencil presets, use [member GeometryInstance3D.material_overlay] instead.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "STENCIL_MODE_XRAY",
+          "value": "2",
+          "enum": "StencilMode",
+          "kind": "EnumValue",
+          "summary": "Stencil preset which shows a silhouette of the object behind walls. [b]Note:[/b] Requires a [member Material.next_pass] material which will be automatically applied. Any manual changes made to [member Material.next_pass] will be lost when the stencil properties are modified or the scene is reloaded. To safely apply a [member Material.next_pass] material on a material that uses stencil presets, use [member GeometryInstance3D.material_overlay] instead.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureChannel",
+      "values": [
+        {
+          "name": "TEXTURE_CHANNEL_ALPHA",
+          "value": "3",
+          "enum": "TextureChannel",
+          "kind": "EnumValue",
+          "summary": "Used to read from the alpha channel of a texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_CHANNEL_BLUE",
+          "value": "2",
+          "enum": "TextureChannel",
+          "kind": "EnumValue",
+          "summary": "Used to read from the blue channel of a texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_CHANNEL_GRAYSCALE",
+          "value": "4",
+          "enum": "TextureChannel",
+          "kind": "EnumValue",
+          "summary": "Used to read from the linear (non-perceptual) average of the red, green and blue channels of a texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_CHANNEL_GREEN",
+          "value": "1",
+          "enum": "TextureChannel",
+          "kind": "EnumValue",
+          "summary": "Used to read from the green channel of a texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_CHANNEL_RED",
+          "value": "0",
+          "enum": "TextureChannel",
+          "kind": "EnumValue",
+          "summary": "Used to read from the red channel of a texture.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureFilter",
+      "values": [
+        {
+          "name": "TEXTURE_FILTER_LINEAR",
+          "value": "1",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from up close, and grainy from a distance (due to mipmaps not being sampled).",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+          "value": "3",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look smooth from up close, and smooth from a distance.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+          "value": "5",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_MAX",
+          "value": "6",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureFilter] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST",
+          "value": "0",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel only. This makes the texture look pixelated from up close, and grainy from a distance (due to mipmaps not being sampled).",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+          "value": "2",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look pixelated from up close, and smooth from a distance.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+          "value": "4",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureParam",
+      "values": [
+        {
+          "name": "TEXTURE_ALBEDO",
+          "value": "0",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel color.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_AMBIENT_OCCLUSION",
+          "value": "8",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel ambient occlusion value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_BACKLIGHT",
+          "value": "12",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel backlight color.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_BENT_NORMAL",
+          "value": "18",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel bent normal vector.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_CLEARCOAT",
+          "value": "6",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel clearcoat value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_DETAIL_ALBEDO",
+          "value": "15",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel detail color.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_DETAIL_MASK",
+          "value": "14",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel detail mask blending value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_DETAIL_NORMAL",
+          "value": "16",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel detail normal.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_EMISSION",
+          "value": "3",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel emission color.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_FLOWMAP",
+          "value": "7",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel flowmap direction for use with [member anisotropy].",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_HEIGHTMAP",
+          "value": "9",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel height.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_MAX",
+          "value": "19",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureParam] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_METALLIC",
+          "value": "1",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel metallic value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_NORMAL",
+          "value": "4",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel normal vector.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_ORM",
+          "value": "17",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture holding ambient occlusion, roughness, and metallic.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_REFRACTION",
+          "value": "13",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel refraction strength.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_RIM",
+          "value": "5",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel rim value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_ROUGHNESS",
+          "value": "2",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel roughness value.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_SUBSURFACE_SCATTERING",
+          "value": "10",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel subsurface scattering.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TEXTURE_SUBSURFACE_TRANSMITTANCE",
+          "value": "11",
+          "enum": "TextureParam",
+          "kind": "EnumValue",
+          "summary": "Texture specifying per-pixel transmittance for subsurface scattering.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Transparency",
+      "values": [
+        {
+          "name": "TRANSPARENCY_ALPHA",
+          "value": "1",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "The material will use the texture\u0027s alpha values for transparency. This is the slowest to render, and disables shadow casting.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TRANSPARENCY_ALPHA_DEPTH_PRE_PASS",
+          "value": "4",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "The material will use the texture\u0027s alpha value for transparency, but will discard fragments with an alpha of less than 0.99 during the depth prepass and fragments with an alpha less than 0.1 during the shadow pass. This also supports casting shadows.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TRANSPARENCY_ALPHA_HASH",
+          "value": "3",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "The material will cut off all values below a spatially-deterministic threshold, the rest will remain opaque. This is faster to render than alpha blending, but slower than opaque rendering. This also supports casting shadows. Alpha hashing is suited for hair rendering.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TRANSPARENCY_ALPHA_SCISSOR",
+          "value": "2",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "The material will cut off all values below a threshold, the rest will remain opaque. The opaque portions will be rendered in the depth prepass. This is faster to render than alpha blending, but slower than opaque rendering. This also supports casting shadows.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TRANSPARENCY_DISABLED",
+          "value": "0",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "The material will not use transparency. This is the fastest to render.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        },
+        {
+          "name": "TRANSPARENCY_MAX",
+          "value": "5",
+          "enum": "Transparency",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Transparency] enum.",
+          "sourcePath": "doc/classes/BaseMaterial3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TEXTURE_ALBEDO",
+      "value": "0",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel color.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_METALLIC",
+      "value": "1",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel metallic value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_ROUGHNESS",
+      "value": "2",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel roughness value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_EMISSION",
+      "value": "3",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel emission color.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_NORMAL",
+      "value": "4",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel normal vector.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_BENT_NORMAL",
+      "value": "18",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel bent normal vector.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_RIM",
+      "value": "5",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel rim value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CLEARCOAT",
+      "value": "6",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel clearcoat value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FLOWMAP",
+      "value": "7",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel flowmap direction for use with [member anisotropy].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_AMBIENT_OCCLUSION",
+      "value": "8",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel ambient occlusion value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_HEIGHTMAP",
+      "value": "9",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel height.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_SUBSURFACE_SCATTERING",
+      "value": "10",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel subsurface scattering.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_SUBSURFACE_TRANSMITTANCE",
+      "value": "11",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel transmittance for subsurface scattering.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_BACKLIGHT",
+      "value": "12",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel backlight color.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_REFRACTION",
+      "value": "13",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel refraction strength.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_DETAIL_MASK",
+      "value": "14",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel detail mask blending value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_DETAIL_ALBEDO",
+      "value": "15",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel detail color.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_DETAIL_NORMAL",
+      "value": "16",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture specifying per-pixel detail normal.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_ORM",
+      "value": "17",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Texture holding ambient occlusion, roughness, and metallic.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_MAX",
+      "value": "19",
+      "enum": "TextureParam",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureParam] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST",
+      "value": "0",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel only. This makes the texture look pixelated from up close, and grainy from a distance (due to mipmaps not being sampled).",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR",
+      "value": "1",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from up close, and grainy from a distance (due to mipmaps not being sampled).",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+      "value": "2",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look pixelated from up close, and smooth from a distance.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+      "value": "3",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look smooth from up close, and smooth from a distance.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+      "value": "4",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+      "value": "5",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_MAX",
+      "value": "6",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureFilter] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DETAIL_UV_1",
+      "value": "0",
+      "enum": "DetailUV",
+      "kind": "EnumValue",
+      "summary": "Use [code]UV[/code] with the detail texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DETAIL_UV_2",
+      "value": "1",
+      "enum": "DetailUV",
+      "kind": "EnumValue",
+      "summary": "Use [code]UV2[/code] with the detail texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_DISABLED",
+      "value": "0",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "The material will not use transparency. This is the fastest to render.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_ALPHA",
+      "value": "1",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "The material will use the texture\u0027s alpha values for transparency. This is the slowest to render, and disables shadow casting.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_ALPHA_SCISSOR",
+      "value": "2",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "The material will cut off all values below a threshold, the rest will remain opaque. The opaque portions will be rendered in the depth prepass. This is faster to render than alpha blending, but slower than opaque rendering. This also supports casting shadows.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_ALPHA_HASH",
+      "value": "3",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "The material will cut off all values below a spatially-deterministic threshold, the rest will remain opaque. This is faster to render than alpha blending, but slower than opaque rendering. This also supports casting shadows. Alpha hashing is suited for hair rendering.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_ALPHA_DEPTH_PRE_PASS",
+      "value": "4",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "The material will use the texture\u0027s alpha value for transparency, but will discard fragments with an alpha of less than 0.99 during the depth prepass and fragments with an alpha less than 0.1 during the shadow pass. This also supports casting shadows.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TRANSPARENCY_MAX",
+      "value": "5",
+      "enum": "Transparency",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Transparency] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SHADING_MODE_UNSHADED",
+      "value": "0",
+      "enum": "ShadingMode",
+      "kind": "EnumValue",
+      "summary": "The object will not receive shadows. This is the fastest to render, but it disables all interactions with lights.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SHADING_MODE_PER_PIXEL",
+      "value": "1",
+      "enum": "ShadingMode",
+      "kind": "EnumValue",
+      "summary": "The object will be shaded per pixel. Useful for realistic shading effects.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SHADING_MODE_PER_VERTEX",
+      "value": "2",
+      "enum": "ShadingMode",
+      "kind": "EnumValue",
+      "summary": "The object will be shaded per vertex. Useful when you want cheaper shaders and do not care about visual quality.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SHADING_MODE_MAX",
+      "value": "3",
+      "enum": "ShadingMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ShadingMode] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_EMISSION",
+      "value": "0",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member emission_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_NORMAL_MAPPING",
+      "value": "1",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member normal_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_RIM",
+      "value": "2",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member rim_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_CLEARCOAT",
+      "value": "3",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member clearcoat_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_ANISOTROPY",
+      "value": "4",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member anisotropy_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_AMBIENT_OCCLUSION",
+      "value": "5",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member ao_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_HEIGHT_MAPPING",
+      "value": "6",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member heightmap_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_SUBSURFACE_SCATTERING",
+      "value": "7",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member subsurf_scatter_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_SUBSURFACE_TRANSMITTANCE",
+      "value": "8",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member subsurf_scatter_transmittance_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_BACKLIGHT",
+      "value": "9",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member backlight_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_REFRACTION",
+      "value": "10",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member refraction_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_DETAIL",
+      "value": "11",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member detail_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_BENT_NORMAL_MAPPING",
+      "value": "12",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Constant for setting [member bent_normal_enabled].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FEATURE_MAX",
+      "value": "13",
+      "enum": "Feature",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Feature] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BLEND_MODE_MIX",
+      "value": "0",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Default blend mode. The color of the object is blended over the background based on the object\u0027s alpha value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BLEND_MODE_ADD",
+      "value": "1",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The color of the object is added to the background.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BLEND_MODE_SUB",
+      "value": "2",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The color of the object is subtracted from the background.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BLEND_MODE_MUL",
+      "value": "3",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The color of the object is multiplied by the background.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BLEND_MODE_PREMULT_ALPHA",
+      "value": "4",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "The color of the object is added to the background and the alpha channel is used to mask out the background. This is effectively a hybrid of the blend mix and add modes, useful for effects like fire where you want the flame to add but the smoke to mix. By default, this works with unshaded materials using premultiplied textures. For shaded materials, use the [code]PREMUL_ALPHA_FACTOR[/code] built-in so that lighting can be modulated as well.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ALPHA_ANTIALIASING_OFF",
+      "value": "0",
+      "enum": "AlphaAntiAliasing",
+      "kind": "EnumValue",
+      "summary": "Disables Alpha AntiAliasing for the material.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE",
+      "value": "1",
+      "enum": "AlphaAntiAliasing",
+      "kind": "EnumValue",
+      "summary": "Enables AlphaToCoverage. Alpha values in the material are passed to the AntiAliasing sample mask.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE",
+      "value": "2",
+      "enum": "AlphaAntiAliasing",
+      "kind": "EnumValue",
+      "summary": "Enables AlphaToCoverage and forces all non-zero alpha values to [code]1[/code]. Alpha values in the material are passed to the AntiAliasing sample mask.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DEPTH_DRAW_OPAQUE_ONLY",
+      "value": "0",
+      "enum": "DepthDrawMode",
+      "kind": "EnumValue",
+      "summary": "Default depth draw mode. Depth is drawn only for opaque objects during the opaque prepass (if any) and during the opaque pass.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DEPTH_DRAW_ALWAYS",
+      "value": "1",
+      "enum": "DepthDrawMode",
+      "kind": "EnumValue",
+      "summary": "Objects will write to depth during the opaque and the transparent passes. Transparent objects that are close to the camera may obscure other transparent objects behind them. [b]Note:[/b] This does not influence whether transparent objects are included in the depth prepass or not. For that, see [enum Transparency].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DEPTH_DRAW_DISABLED",
+      "value": "2",
+      "enum": "DepthDrawMode",
+      "kind": "EnumValue",
+      "summary": "Objects will not write their depth to the depth buffer, even during the depth prepass (if enabled).",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DEPTH_TEST_DEFAULT",
+      "value": "0",
+      "enum": "DepthTest",
+      "kind": "EnumValue",
+      "summary": "Depth test will discard the pixel if it is behind other pixels.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DEPTH_TEST_INVERTED",
+      "value": "1",
+      "enum": "DepthTest",
+      "kind": "EnumValue",
+      "summary": "Depth test will discard the pixel if it is in front of other pixels. Useful for stencil effects.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "CULL_BACK",
+      "value": "0",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "Default cull mode. The back of the object is culled when not visible. Back face triangles will be culled when facing the camera. This results in only the front side of triangles being drawn. For closed-surface meshes, this means that only the exterior of the mesh will be visible.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "CULL_FRONT",
+      "value": "1",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "Front face triangles will be culled when facing the camera. This results in only the back side of triangles being drawn. For closed-surface meshes, this means that the interior of the mesh will be drawn instead of the exterior.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "CULL_DISABLED",
+      "value": "2",
+      "enum": "CullMode",
+      "kind": "EnumValue",
+      "summary": "No face culling is performed; both the front face and back face will be visible.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_DISABLE_DEPTH_TEST",
+      "value": "0",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Disables the depth test, so this object is drawn on top of all others drawn before it. This puts the object in the transparent draw pass where it is sorted based on distance to camera. Objects drawn after it in the draw order may cover it. This also disables writing to depth.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_ALBEDO_FROM_VERTEX_COLOR",
+      "value": "1",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Set [code]ALBEDO[/code] to the per-vertex color specified in the mesh.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_SRGB_VERTEX_COLOR",
+      "value": "2",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Vertex colors are considered to be stored in nonlinear sRGB encoding and are converted to linear encoding during rendering. See also [member vertex_color_is_srgb]. [b]Note:[/b] Only effective when using the Forward\u002B and Mobile rendering methods.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_USE_POINT_SIZE",
+      "value": "3",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Uses point size to alter the size of primitive points. Also changes the albedo texture lookup to use [code]POINT_COORD[/code] instead of [code]UV[/code].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_FIXED_SIZE",
+      "value": "4",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Object is scaled by depth so that it always appears the same size on screen.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_BILLBOARD_KEEP_SCALE",
+      "value": "5",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Shader will keep the scale set for the mesh. Otherwise the scale is lost when billboarding. Only applies when [member billboard_mode] is [constant BILLBOARD_ENABLED].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_UV1_USE_TRIPLANAR",
+      "value": "6",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV[/code].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_UV2_USE_TRIPLANAR",
+      "value": "7",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV2[/code].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_UV1_USE_WORLD_TRIPLANAR",
+      "value": "8",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV[/code].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_UV2_USE_WORLD_TRIPLANAR",
+      "value": "9",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use triplanar texture lookup for all texture lookups that would normally use [code]UV2[/code].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_AO_ON_UV2",
+      "value": "10",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use [code]UV2[/code] coordinates to look up from the [member ao_texture].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_EMISSION_ON_UV2",
+      "value": "11",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Use [code]UV2[/code] coordinates to look up from the [member emission_texture].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_ALBEDO_TEXTURE_FORCE_SRGB",
+      "value": "12",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Forces the shader to convert albedo from nonlinear sRGB encoding to linear encoding. See also [member albedo_texture_force_srgb].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_DONT_RECEIVE_SHADOWS",
+      "value": "13",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Disables receiving shadows from other objects.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_DISABLE_AMBIENT_LIGHT",
+      "value": "14",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Disables receiving ambient light.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_USE_SHADOW_TO_OPACITY",
+      "value": "15",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables the shadow to opacity feature.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_USE_TEXTURE_REPEAT",
+      "value": "16",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables the texture to repeat when UV coordinates are outside the 0-1 range. If using one of the linear filtering modes, this can result in artifacts at the edges of a texture when the sampler filters across the edges of the texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_INVERT_HEIGHTMAP",
+      "value": "17",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Invert values read from a depth texture to convert them to height values (heightmap).",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_SUBSURFACE_MODE_SKIN",
+      "value": "18",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables the skin mode for subsurface scattering which is used to improve the look of subsurface scattering when used for human skin.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_PARTICLE_TRAILS_MODE",
+      "value": "19",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables parts of the shader required for [GPUParticles3D] trails to function. This also requires using a mesh with appropriate skinning, such as [RibbonTrailMesh] or [TubeTrailMesh]. Enabling this feature outside of materials used in [GPUParticles3D] meshes will break material rendering.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_ALBEDO_TEXTURE_MSDF",
+      "value": "20",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables multichannel signed distance field rendering shader.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_DISABLE_FOG",
+      "value": "21",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Disables receiving depth-based or volumetric fog.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_DISABLE_SPECULAR_OCCLUSION",
+      "value": "22",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Disables specular occlusion.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_USE_Z_CLIP_SCALE",
+      "value": "23",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables using [member z_clip_scale].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_USE_FOV_OVERRIDE",
+      "value": "24",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Enables using [member fov_override].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "FLAG_MAX",
+      "value": "25",
+      "enum": "Flags",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Flags] enum.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DIFFUSE_BURLEY",
+      "value": "0",
+      "enum": "DiffuseMode",
+      "kind": "EnumValue",
+      "summary": "Default diffuse scattering algorithm.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DIFFUSE_LAMBERT",
+      "value": "1",
+      "enum": "DiffuseMode",
+      "kind": "EnumValue",
+      "summary": "Diffuse scattering ignores roughness.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DIFFUSE_LAMBERT_WRAP",
+      "value": "2",
+      "enum": "DiffuseMode",
+      "kind": "EnumValue",
+      "summary": "Extends Lambert to cover more than 90 degrees when roughness increases.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DIFFUSE_TOON",
+      "value": "3",
+      "enum": "DiffuseMode",
+      "kind": "EnumValue",
+      "summary": "Uses a hard cut for lighting, with smoothing affected by roughness.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SPECULAR_SCHLICK_GGX",
+      "value": "0",
+      "enum": "SpecularMode",
+      "kind": "EnumValue",
+      "summary": "Default specular blob. [b]Note:[/b] Forward\u002B uses multiscattering for more accurate reflections, although the impact of multiscattering is more noticeable on rough metallic surfaces than on smooth, non-metallic surfaces. [b]Note:[/b] Mobile and Compatibility don\u0027t perform multiscattering for performance reasons. Instead, they perform single scattering, which means rough metallic surfaces may look slightly darker than intended.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SPECULAR_TOON",
+      "value": "1",
+      "enum": "SpecularMode",
+      "kind": "EnumValue",
+      "summary": "Toon blob which changes size based on roughness.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "SPECULAR_DISABLED",
+      "value": "2",
+      "enum": "SpecularMode",
+      "kind": "EnumValue",
+      "summary": "No specular blob. This is slightly faster to render than other specular modes.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BILLBOARD_DISABLED",
+      "value": "0",
+      "enum": "BillboardMode",
+      "kind": "EnumValue",
+      "summary": "Billboard mode is disabled.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BILLBOARD_ENABLED",
+      "value": "1",
+      "enum": "BillboardMode",
+      "kind": "EnumValue",
+      "summary": "The object\u0027s Z axis will always face the camera.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BILLBOARD_FIXED_Y",
+      "value": "2",
+      "enum": "BillboardMode",
+      "kind": "EnumValue",
+      "summary": "The object\u0027s X axis will always face the camera.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "BILLBOARD_PARTICLES",
+      "value": "3",
+      "enum": "BillboardMode",
+      "kind": "EnumValue",
+      "summary": "Used for particle systems when assigned to [GPUParticles3D] and [CPUParticles3D] nodes (flipbook animation). Enables [code]particles_anim_*[/code] properties. The [member ParticleProcessMaterial.anim_speed_min] or [member CPUParticles3D.anim_speed_min] should also be set to a value bigger than zero for the animation to play.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CHANNEL_RED",
+      "value": "0",
+      "enum": "TextureChannel",
+      "kind": "EnumValue",
+      "summary": "Used to read from the red channel of a texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CHANNEL_GREEN",
+      "value": "1",
+      "enum": "TextureChannel",
+      "kind": "EnumValue",
+      "summary": "Used to read from the green channel of a texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CHANNEL_BLUE",
+      "value": "2",
+      "enum": "TextureChannel",
+      "kind": "EnumValue",
+      "summary": "Used to read from the blue channel of a texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CHANNEL_ALPHA",
+      "value": "3",
+      "enum": "TextureChannel",
+      "kind": "EnumValue",
+      "summary": "Used to read from the alpha channel of a texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "TEXTURE_CHANNEL_GRAYSCALE",
+      "value": "4",
+      "enum": "TextureChannel",
+      "kind": "EnumValue",
+      "summary": "Used to read from the linear (non-perceptual) average of the red, green and blue channels of a texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EMISSION_OP_ADD",
+      "value": "0",
+      "enum": "EmissionOperator",
+      "kind": "EnumValue",
+      "summary": "Adds the emission color to the color from the emission texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "EMISSION_OP_MULTIPLY",
+      "value": "1",
+      "enum": "EmissionOperator",
+      "kind": "EnumValue",
+      "summary": "Multiplies the emission color by the color from the emission texture.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DISTANCE_FADE_DISABLED",
+      "value": "0",
+      "enum": "DistanceFadeMode",
+      "kind": "EnumValue",
+      "summary": "Do not use distance fade.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DISTANCE_FADE_PIXEL_ALPHA",
+      "value": "1",
+      "enum": "DistanceFadeMode",
+      "kind": "EnumValue",
+      "summary": "Smoothly fades the object out based on each pixel\u0027s distance from the camera using the alpha channel.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DISTANCE_FADE_PIXEL_DITHER",
+      "value": "2",
+      "enum": "DistanceFadeMode",
+      "kind": "EnumValue",
+      "summary": "Smoothly fades the object out based on each pixel\u0027s distance from the camera using a dithering approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling transparency. On certain hardware, this can be faster than [constant DISTANCE_FADE_PIXEL_ALPHA].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "DISTANCE_FADE_OBJECT_DITHER",
+      "value": "3",
+      "enum": "DistanceFadeMode",
+      "kind": "EnumValue",
+      "summary": "Smoothly fades the object out based on the object\u0027s distance from the camera using a dithering approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling transparency. On certain hardware, this can be faster than [constant DISTANCE_FADE_PIXEL_ALPHA] and [constant DISTANCE_FADE_PIXEL_DITHER].",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_MODE_DISABLED",
+      "value": "0",
+      "enum": "StencilMode",
+      "kind": "EnumValue",
+      "summary": "Disables stencil operations.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_MODE_OUTLINE",
+      "value": "1",
+      "enum": "StencilMode",
+      "kind": "EnumValue",
+      "summary": "Stencil preset which applies an outline to the object. [b]Note:[/b] Requires a [member Material.next_pass] material which will be automatically applied. Any manual changes made to [member Material.next_pass] will be lost when the stencil properties are modified or the scene is reloaded. To safely apply a [member Material.next_pass] material on a material that uses stencil presets, use [member GeometryInstance3D.material_overlay] instead.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_MODE_XRAY",
+      "value": "2",
+      "enum": "StencilMode",
+      "kind": "EnumValue",
+      "summary": "Stencil preset which shows a silhouette of the object behind walls. [b]Note:[/b] Requires a [member Material.next_pass] material which will be automatically applied. Any manual changes made to [member Material.next_pass] will be lost when the stencil properties are modified or the scene is reloaded. To safely apply a [member Material.next_pass] material on a material that uses stencil presets, use [member GeometryInstance3D.material_overlay] instead.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_MODE_CUSTOM",
+      "value": "3",
+      "enum": "StencilMode",
+      "kind": "EnumValue",
+      "summary": "Enables stencil operations without a preset.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_FLAG_READ",
+      "value": "1",
+      "enum": "StencilFlags",
+      "kind": "EnumValue",
+      "summary": "The material will only be rendered where it passes a stencil comparison with existing stencil buffer values.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_FLAG_WRITE",
+      "value": "2",
+      "enum": "StencilFlags",
+      "kind": "EnumValue",
+      "summary": "The material will write the reference value to the stencil buffer where it passes the depth test.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_FLAG_WRITE_DEPTH_FAIL",
+      "value": "4",
+      "enum": "StencilFlags",
+      "kind": "EnumValue",
+      "summary": "The material will write the reference value to the stencil buffer where it fails the depth test.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_ALWAYS",
+      "value": "0",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Always passes the stencil test.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_LESS",
+      "value": "1",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is less than the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_EQUAL",
+      "value": "2",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is equal to the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_LESS_OR_EQUAL",
+      "value": "3",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is less than or equal to the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_GREATER",
+      "value": "4",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is greater than the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_NOT_EQUAL",
+      "value": "5",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is not equal to the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    },
+    {
+      "name": "STENCIL_COMPARE_GREATER_OR_EQUAL",
+      "value": "6",
+      "enum": "StencilCompare",
+      "kind": "EnumValue",
+      "summary": "Passes the stencil test when the reference value is greater than or equal to the existing stencil value.",
+      "sourcePath": "doc/classes/BaseMaterial3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BaseMaterial3D.xml",
+      "sha256": "91af14fba7d96a5aeabb1cdcd3566c28d02d81fce72a3eeea112a47ecb2f11e1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

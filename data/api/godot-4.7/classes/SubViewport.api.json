@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SubViewport",
+    "namespace": "Godot",
+    "fullName": "Godot.SubViewport",
+    "kind": "class",
+    "baseType": "Viewport",
+    "interfaces": [],
+    "godotReference": "SubViewport",
+    "documentationPath": "doc/classes/SubViewport.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_subviewport.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "RenderTargetClearMode",
+      "kind": "Property",
+      "signature": "public int RenderTargetClearMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clear mode when the sub-viewport is used as a render target. [b]Note:[/b] This property is intended for 2D usage.",
+      "defaultValue": "0",
+      "godotName": "render_target_clear_mode",
+      "xmlDocId": "P:Godot.SubViewport.RenderTargetClearMode",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "RenderTargetUpdateMode",
+      "kind": "Property",
+      "signature": "public int RenderTargetUpdateMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The update mode when the sub-viewport is used as a render target.",
+      "defaultValue": "2",
+      "godotName": "render_target_update_mode",
+      "xmlDocId": "P:Godot.SubViewport.RenderTargetUpdateMode",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The width and height of the sub-viewport. Must be set to a value greater than or equal to 2 pixels on both dimensions. Otherwise, nothing will be displayed. [b]Note:[/b] If the parent node is a [SubViewportContainer] and its [member SubViewportContainer.stretch] is [code]true[/code], the viewport size cannot be changed manually.",
+      "defaultValue": "Vector2i(512, 512)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.SubViewport.Size",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "Size2dOverride",
+      "kind": "Property",
+      "signature": "public Vector2i Size2dOverride { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "The 2D size override of the sub-viewport. If either the width or height is [code]0[/code], the override is disabled.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "size_2d_override",
+      "xmlDocId": "P:Godot.SubViewport.Size2dOverride",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "Size2dOverrideStretch",
+      "kind": "Property",
+      "signature": "public bool Size2dOverrideStretch { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the 2D size override affects stretch as well.",
+      "defaultValue": "false",
+      "godotName": "size_2d_override_stretch",
+      "xmlDocId": "P:Godot.SubViewport.Size2dOverrideStretch",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "ViewCount",
+      "kind": "Property",
+      "signature": "public int ViewCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of view layers we are rendering to. Set this to [code]2[/code] to enable stereo rendering.",
+      "defaultValue": "1",
+      "godotName": "view_count",
+      "xmlDocId": "P:Godot.SubViewport.ViewCount",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ClearMode",
+      "values": [
+        {
+          "name": "CLEAR_MODE_ALWAYS",
+          "value": "0",
+          "enum": "ClearMode",
+          "kind": "EnumValue",
+          "summary": "Always clear the render target before drawing.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "CLEAR_MODE_NEVER",
+          "value": "1",
+          "enum": "ClearMode",
+          "kind": "EnumValue",
+          "summary": "Never clear the render target.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "CLEAR_MODE_ONCE",
+          "value": "2",
+          "enum": "ClearMode",
+          "kind": "EnumValue",
+          "summary": "Clear the render target on the next frame, then switch to [constant CLEAR_MODE_NEVER].",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        }
+      ]
+    },
+    {
+      "name": "UpdateMode",
+      "values": [
+        {
+          "name": "UPDATE_ALWAYS",
+          "value": "4",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Always update the render target.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "UPDATE_DISABLED",
+          "value": "0",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Do not update the render target.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "UPDATE_ONCE",
+          "value": "1",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the render target once, then switch to [constant UPDATE_DISABLED].",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "UPDATE_WHEN_PARENT_VISIBLE",
+          "value": "3",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the render target only when its parent is visible.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        },
+        {
+          "name": "UPDATE_WHEN_VISIBLE",
+          "value": "2",
+          "enum": "UpdateMode",
+          "kind": "EnumValue",
+          "summary": "Update the render target only when it is visible. This is the default value.",
+          "sourcePath": "doc/classes/SubViewport.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CLEAR_MODE_ALWAYS",
+      "value": "0",
+      "enum": "ClearMode",
+      "kind": "EnumValue",
+      "summary": "Always clear the render target before drawing.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "CLEAR_MODE_NEVER",
+      "value": "1",
+      "enum": "ClearMode",
+      "kind": "EnumValue",
+      "summary": "Never clear the render target.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "CLEAR_MODE_ONCE",
+      "value": "2",
+      "enum": "ClearMode",
+      "kind": "EnumValue",
+      "summary": "Clear the render target on the next frame, then switch to [constant CLEAR_MODE_NEVER].",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "UPDATE_DISABLED",
+      "value": "0",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Do not update the render target.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "UPDATE_ONCE",
+      "value": "1",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the render target once, then switch to [constant UPDATE_DISABLED].",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "UPDATE_WHEN_VISIBLE",
+      "value": "2",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the render target only when it is visible. This is the default value.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "UPDATE_WHEN_PARENT_VISIBLE",
+      "value": "3",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Update the render target only when its parent is visible.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    },
+    {
+      "name": "UPDATE_ALWAYS",
+      "value": "4",
+      "enum": "UpdateMode",
+      "kind": "EnumValue",
+      "summary": "Always update the render target.",
+      "sourcePath": "doc/classes/SubViewport.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SubViewport.xml",
+      "sha256": "1415106b50b1720eea31da5e830c132e54b876d5f0413a775c326671a8ae6efe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

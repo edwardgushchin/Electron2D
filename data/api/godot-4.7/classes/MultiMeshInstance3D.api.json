@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiMeshInstance3D",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiMeshInstance3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "MultiMeshInstance3D",
+    "documentationPath": "doc/classes/MultiMeshInstance3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multimeshinstance3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Multimesh",
+      "kind": "Property",
+      "signature": "public MultiMesh Multimesh { get; set; }",
+      "returnType": "MultiMesh",
+      "parameters": [],
+      "summary": "The [MultiMesh] resource that will be used and shared among all instances of the [MultiMeshInstance3D].",
+      "godotName": "multimesh",
+      "xmlDocId": "P:Godot.MultiMeshInstance3D.Multimesh",
+      "sourcePath": "doc/classes/MultiMeshInstance3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiMeshInstance3D.xml",
+      "sha256": "7762a13ede2468a366ca30cce1fc3bf9fdccb54700419b7cc474b195fba43f2d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

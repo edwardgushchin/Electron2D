@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRAndroidThreadSettingsExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRAndroidThreadSettingsExtension",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRAndroidThreadSettingsExtension",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrandroidthreadsettingsextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetApplicationThreadType",
+      "kind": "Method",
+      "signature": "public bool SetApplicationThreadType(int threadType, int threadId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "thread_type",
+          "type": "int"
+        },
+        {
+          "name": "thread_id",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the thread type of the given thread, so that the XR runtime can adjust its scheduling priority accordingly. [param thread_id] refers to the OS thread id (ie from [code]gettid()[/code]). When [param thread_id] is [code]0[/code], it will set the thread type of the current thread. [b]NOTE:[/b] The id returned by [method Thread.get_id] is incompatible with [param thread_id].",
+      "godotName": "set_application_thread_type",
+      "xmlDocId": "M:Godot.OpenXRAndroidThreadSettingsExtension.SetApplicationThreadType(int,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ThreadType",
+      "values": [
+        {
+          "name": "THREAD_TYPE_APPLICATION_MAIN",
+          "value": "0",
+          "enum": "ThreadType",
+          "kind": "EnumValue",
+          "summary": "Hints to the XR runtime that the thread is doing time critical CPU tasks.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+        },
+        {
+          "name": "THREAD_TYPE_APPLICATION_WORKER",
+          "value": "1",
+          "enum": "ThreadType",
+          "kind": "EnumValue",
+          "summary": "Hints to the XR runtime that the thread is doing background CPU tasks.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+        },
+        {
+          "name": "THREAD_TYPE_RENDERER_MAIN",
+          "value": "2",
+          "enum": "ThreadType",
+          "kind": "EnumValue",
+          "summary": "Hints to the XR runtime that the thread is doing time critical graphics device tasks.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+        },
+        {
+          "name": "THREAD_TYPE_RENDERER_WORKER",
+          "value": "3",
+          "enum": "ThreadType",
+          "kind": "EnumValue",
+          "summary": "Hints to the XR runtime that the thread is doing background graphics device tasks.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "THREAD_TYPE_APPLICATION_MAIN",
+      "value": "0",
+      "enum": "ThreadType",
+      "kind": "EnumValue",
+      "summary": "Hints to the XR runtime that the thread is doing time critical CPU tasks.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+    },
+    {
+      "name": "THREAD_TYPE_APPLICATION_WORKER",
+      "value": "1",
+      "enum": "ThreadType",
+      "kind": "EnumValue",
+      "summary": "Hints to the XR runtime that the thread is doing background CPU tasks.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+    },
+    {
+      "name": "THREAD_TYPE_RENDERER_MAIN",
+      "value": "2",
+      "enum": "ThreadType",
+      "kind": "EnumValue",
+      "summary": "Hints to the XR runtime that the thread is doing time critical graphics device tasks.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+    },
+    {
+      "name": "THREAD_TYPE_RENDERER_WORKER",
+      "value": "3",
+      "enum": "ThreadType",
+      "kind": "EnumValue",
+      "summary": "Hints to the XR runtime that the thread is doing background graphics device tasks.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRAndroidThreadSettingsExtension.xml",
+      "sha256": "b272e0403b74a5d65c7f79282c11783d81f1d1820d4710b3a65300c1f90d8b95"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

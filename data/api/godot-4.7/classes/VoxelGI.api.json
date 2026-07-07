@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VoxelGI",
+    "namespace": "Godot",
+    "fullName": "Godot.VoxelGI",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "VoxelGI",
+    "documentationPath": "doc/classes/VoxelGI.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_voxelgi.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Bake",
+      "kind": "Method",
+      "signature": "public void Bake(Node fromNode, bool createVisualDebug)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_node",
+          "type": "Node",
+          "defaultValue": "null"
+        },
+        {
+          "name": "create_visual_debug",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Bakes the effect from all [GeometryInstance3D]s marked with [constant GeometryInstance3D.GI_MODE_STATIC] and [Light3D]s marked with either [constant Light3D.BAKE_STATIC] or [constant Light3D.BAKE_DYNAMIC]. If [param create_visual_debug] is [code]true[/code], after baking the light, this will generate a [MultiMesh] that has a cube representing each solid cell with each cube colored to the cell\u0027s albedo color. This can be used to visualize the [VoxelGI]\u0027s data and debug any issues that may be occurring. [b]Note:[/b] [method bake] works from the editor and in exported projects. This makes it suitable for procedurally generated or user-built levels. Baking a [VoxelGI] node generally takes from 5 to 20 seconds in most scenes. Reducing [member subdiv] can speed up baking. [b]Note:[/b] [GeometryInstance3D]s and [Light3D]s must be fully ready before [method bake] is called. If you are procedurally creating those and some meshes or lights are missing from your baked [VoxelGI], use [code]call_deferred(\u0022bake\u0022)[/code] instead of calling [method bake] directly.",
+      "godotName": "bake",
+      "xmlDocId": "M:Godot.VoxelGI.Bake(Node,bool)",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "DebugBake",
+      "kind": "Method",
+      "signature": "public void DebugBake()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Calls [method bake] with [code]create_visual_debug[/code] enabled.",
+      "godotName": "debug_bake",
+      "xmlDocId": "M:Godot.VoxelGI.DebugBake",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "CameraAttributes",
+      "kind": "Property",
+      "signature": "public CameraAttributes CameraAttributes { get; set; }",
+      "returnType": "CameraAttributes",
+      "parameters": [],
+      "summary": "The [CameraAttributes] resource that specifies exposure levels to bake at. Auto-exposure and non exposure properties will be ignored. Exposure settings should be used to reduce the dynamic range present when baking. If exposure is too high, the [VoxelGI] will have banding artifacts or may have over-exposure artifacts.",
+      "godotName": "camera_attributes",
+      "xmlDocId": "P:Godot.VoxelGI.CameraAttributes",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "Data",
+      "kind": "Property",
+      "signature": "public VoxelGIData Data { get; set; }",
+      "returnType": "VoxelGIData",
+      "parameters": [],
+      "summary": "The [VoxelGIData] resource that holds the data for this [VoxelGI].",
+      "godotName": "data",
+      "xmlDocId": "P:Godot.VoxelGI.Data",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The size of the area covered by the [VoxelGI]. This must be [code]1.0[/code] or greater on each axis. [b]Note:[/b] If you make the size larger without increasing the number of subdivisions with [member subdiv], the size of each cell will increase and result in less detailed lighting.",
+      "defaultValue": "Vector3(20, 20, 20)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.VoxelGI.Size",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "Subdiv",
+      "kind": "Property",
+      "signature": "public int Subdiv { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of times to subdivide the grid that the [VoxelGI] operates on. A higher number results in finer detail and thus higher visual quality, while lower numbers result in better performance.",
+      "defaultValue": "1",
+      "godotName": "subdiv",
+      "xmlDocId": "P:Godot.VoxelGI.Subdiv",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Subdiv",
+      "values": [
+        {
+          "name": "SUBDIV_128",
+          "value": "1",
+          "enum": "Subdiv",
+          "kind": "EnumValue",
+          "summary": "Use 128 subdivisions. This is the default quality setting.",
+          "sourcePath": "doc/classes/VoxelGI.xml"
+        },
+        {
+          "name": "SUBDIV_256",
+          "value": "2",
+          "enum": "Subdiv",
+          "kind": "EnumValue",
+          "summary": "Use 256 subdivisions.",
+          "sourcePath": "doc/classes/VoxelGI.xml"
+        },
+        {
+          "name": "SUBDIV_512",
+          "value": "3",
+          "enum": "Subdiv",
+          "kind": "EnumValue",
+          "summary": "Use 512 subdivisions. This is the highest quality setting, but the slowest. On lower-end hardware, this could cause the GPU to stall.",
+          "sourcePath": "doc/classes/VoxelGI.xml"
+        },
+        {
+          "name": "SUBDIV_64",
+          "value": "0",
+          "enum": "Subdiv",
+          "kind": "EnumValue",
+          "summary": "Use 64 subdivisions. This is the lowest quality setting, but the fastest. Use it if you can, but especially use it on lower-end hardware.",
+          "sourcePath": "doc/classes/VoxelGI.xml"
+        },
+        {
+          "name": "SUBDIV_MAX",
+          "value": "4",
+          "enum": "Subdiv",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Subdiv] enum.",
+          "sourcePath": "doc/classes/VoxelGI.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SUBDIV_64",
+      "value": "0",
+      "enum": "Subdiv",
+      "kind": "EnumValue",
+      "summary": "Use 64 subdivisions. This is the lowest quality setting, but the fastest. Use it if you can, but especially use it on lower-end hardware.",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "SUBDIV_128",
+      "value": "1",
+      "enum": "Subdiv",
+      "kind": "EnumValue",
+      "summary": "Use 128 subdivisions. This is the default quality setting.",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "SUBDIV_256",
+      "value": "2",
+      "enum": "Subdiv",
+      "kind": "EnumValue",
+      "summary": "Use 256 subdivisions.",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "SUBDIV_512",
+      "value": "3",
+      "enum": "Subdiv",
+      "kind": "EnumValue",
+      "summary": "Use 512 subdivisions. This is the highest quality setting, but the slowest. On lower-end hardware, this could cause the GPU to stall.",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    },
+    {
+      "name": "SUBDIV_MAX",
+      "value": "4",
+      "enum": "Subdiv",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Subdiv] enum.",
+      "sourcePath": "doc/classes/VoxelGI.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VoxelGI.xml",
+      "sha256": "c7acf962a00685de91a4014c88621f7745a1a5277215314dccc43b06c34bbd87"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

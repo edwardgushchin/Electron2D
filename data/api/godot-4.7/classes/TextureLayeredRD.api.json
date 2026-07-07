@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureLayeredRD",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureLayeredRD",
+    "kind": "class",
+    "baseType": "TextureLayered",
+    "interfaces": [],
+    "godotReference": "TextureLayeredRD",
+    "documentationPath": "doc/classes/TextureLayeredRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texturelayeredrd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "TextureRdRid",
+      "kind": "Property",
+      "signature": "public RID TextureRdRid { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The RID of the texture object created on the [RenderingDevice].",
+      "godotName": "texture_rd_rid",
+      "xmlDocId": "P:Godot.TextureLayeredRD.TextureRdRid",
+      "sourcePath": "doc/classes/TextureLayeredRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureLayeredRD.xml",
+      "sha256": "081f0e420687e6b2db7db9b1430d7116e6b7cbd06cae2ef5133e1f0cb1a4cede"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

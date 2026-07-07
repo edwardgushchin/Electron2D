@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HeightMapShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.HeightMapShape3D",
+    "kind": "class",
+    "baseType": "Shape3D",
+    "interfaces": [],
+    "godotReference": "HeightMapShape3D",
+    "documentationPath": "doc/classes/HeightMapShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_heightmapshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMaxHeight",
+      "kind": "Method",
+      "signature": "public float GetMaxHeight()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the largest height value found in [member map_data]. Recalculates only when [member map_data] changes.",
+      "godotName": "get_max_height",
+      "xmlDocId": "M:Godot.HeightMapShape3D.GetMaxHeight",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    },
+    {
+      "name": "GetMinHeight",
+      "kind": "Method",
+      "signature": "public float GetMinHeight()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the smallest height value found in [member map_data]. Recalculates only when [member map_data] changes.",
+      "godotName": "get_min_height",
+      "xmlDocId": "M:Godot.HeightMapShape3D.GetMinHeight",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    },
+    {
+      "name": "UpdateMapDataFromImage",
+      "kind": "Method",
+      "signature": "public void UpdateMapDataFromImage(Image image, float heightMin, float heightMax)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "height_min",
+          "type": "float"
+        },
+        {
+          "name": "height_max",
+          "type": "float"
+        }
+      ],
+      "summary": "Updates [member map_data] with data read from an [Image] reference. Automatically resizes heightmap [member map_width] and [member map_depth] to fit the full image width and height. The image needs to be in either [constant Image.FORMAT_RF] (32 bit), [constant Image.FORMAT_RH] (16 bit), or [constant Image.FORMAT_R8] (8 bit). Each image pixel is read in as a float on the range from [code]0.0[/code] (black pixel) to [code]1.0[/code] (white pixel). This range value gets remapped to [param height_min] and [param height_max] to form the final height value. [b]Note:[/b] Using a heightmap with 16-bit or 32-bit data, stored in EXR or HDR format is recommended. Using 8-bit height data, or a format like PNG that Godot imports as 8-bit, will result in a terraced terrain.",
+      "godotName": "update_map_data_from_image",
+      "xmlDocId": "M:Godot.HeightMapShape3D.UpdateMapDataFromImage(Image,float,float)",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    },
+    {
+      "name": "MapData",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array MapData { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Heightmap data. The array\u0027s size must be equal to [member map_width] multiplied by [member map_depth].",
+      "defaultValue": "PackedFloat32Array(0, 0, 0, 0)",
+      "godotName": "map_data",
+      "xmlDocId": "P:Godot.HeightMapShape3D.MapData",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    },
+    {
+      "name": "MapDepth",
+      "kind": "Property",
+      "signature": "public int MapDepth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of vertices in the depth of the heightmap. Changing this will resize the [member map_data].",
+      "defaultValue": "2",
+      "godotName": "map_depth",
+      "xmlDocId": "P:Godot.HeightMapShape3D.MapDepth",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    },
+    {
+      "name": "MapWidth",
+      "kind": "Property",
+      "signature": "public int MapWidth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of vertices in the width of the heightmap. Changing this will resize the [member map_data].",
+      "defaultValue": "2",
+      "godotName": "map_width",
+      "xmlDocId": "P:Godot.HeightMapShape3D.MapWidth",
+      "sourcePath": "doc/classes/HeightMapShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HeightMapShape3D.xml",
+      "sha256": "b52dec2405305539a33686b7d76cbc4343624ac1383ef42dc95970f8f5981833"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

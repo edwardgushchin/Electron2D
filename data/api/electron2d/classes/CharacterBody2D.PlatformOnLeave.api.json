@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CharacterBody2D.PlatformOnLeave",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CharacterBody2D.PlatformOnLeave",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "CharacterBody2D.PlatformOnLeave",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddUpwardVelocity",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.CharacterBody2D.PlatformOnLeave AddUpwardVelocity",
+      "returnType": "Electron2D.CharacterBody2D.PlatformOnLeave",
+      "parameters": [],
+      "summary": "Add upward platform velocity while ignoring downward platform velocity.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.CharacterBody2D.PlatformOnLeaveEnum.AddUpwardVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddVelocity",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.CharacterBody2D.PlatformOnLeave AddVelocity",
+      "returnType": "Electron2D.CharacterBody2D.PlatformOnLeave",
+      "parameters": [],
+      "summary": "Add the last platform velocity on leave.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.CharacterBody2D.PlatformOnLeaveEnum.AddVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DoNothing",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.CharacterBody2D.PlatformOnLeave DoNothing",
+      "returnType": "Electron2D.CharacterBody2D.PlatformOnLeave",
+      "parameters": [],
+      "summary": "Do not add platform velocity on leave.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.CharacterBody2D.PlatformOnLeaveEnum.DoNothing",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "AddUpwardVelocity",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Add upward platform velocity while ignoring downward platform velocity.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddVelocity",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Add the last platform velocity on leave.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DoNothing",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Do not add platform velocity on leave.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

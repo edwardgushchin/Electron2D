@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoneTwistDisperser3D",
+    "namespace": "Godot",
+    "fullName": "Godot.BoneTwistDisperser3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "BoneTwistDisperser3D",
+    "documentationPath": "doc/classes/BoneTwistDisperser3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_bonetwistdisperser3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearSettings",
+      "kind": "Method",
+      "signature": "public void ClearSettings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all settings.",
+      "godotName": "clear_settings",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.ClearSettings",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetDampingCurve",
+      "kind": "Method",
+      "signature": "public Curve GetDampingCurve(int index)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the damping curve when [method get_disperse_mode] is [constant DISPERSE_MODE_CUSTOM].",
+      "godotName": "get_damping_curve",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetDampingCurve(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetDisperseMode",
+      "kind": "Method",
+      "signature": "public int GetDisperseMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether to use automatic amount assignment or to allow manual assignment.",
+      "godotName": "get_disperse_mode",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetDisperseMode(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetEndBone",
+      "kind": "Method",
+      "signature": "public int GetEndBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone index of the bone chain.",
+      "godotName": "get_end_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetEndBone(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public int GetEndBoneDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tail direction of the end bone of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_direction",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetEndBoneDirection(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetEndBoneName",
+      "kind": "Method",
+      "signature": "public String GetEndBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone name of the bone chain.",
+      "godotName": "get_end_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetEndBoneName(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetJointBone",
+      "kind": "Method",
+      "signature": "public int GetJointBone(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone index at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetJointBone(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetJointBoneName",
+      "kind": "Method",
+      "signature": "public String GetJointBoneName(int index, int joint)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone name at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetJointBoneName(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetJointCount",
+      "kind": "Method",
+      "signature": "public int GetJointCount(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint count of the bone chain\u0027s joint list.",
+      "godotName": "get_joint_count",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetJointCount(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetJointTwistAmount",
+      "kind": "Method",
+      "signature": "public float GetJointTwistAmount(int index, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the twist amount at [param joint] in the bone chain\u0027s joint list when [method get_disperse_mode] is [constant DISPERSE_MODE_CUSTOM].",
+      "godotName": "get_joint_twist_amount",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetJointTwistAmount(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetReferenceBone",
+      "kind": "Method",
+      "signature": "public int GetReferenceBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference bone to extract twist of the setting at [param index]. This bone is either the end of the chain or its parent, depending on [method is_end_bone_extended].",
+      "godotName": "get_reference_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetReferenceBone(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetReferenceBoneName",
+      "kind": "Method",
+      "signature": "public String GetReferenceBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the reference bone name to extract twist of the setting at [param index]. This bone is either the end of the chain or its parent, depending on [method is_end_bone_extended].",
+      "godotName": "get_reference_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetReferenceBoneName(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetRootBone",
+      "kind": "Method",
+      "signature": "public int GetRootBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone index of the bone chain.",
+      "godotName": "get_root_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetRootBone(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetRootBoneName",
+      "kind": "Method",
+      "signature": "public String GetRootBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone name of the bone chain.",
+      "godotName": "get_root_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetRootBoneName(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetTwistFrom",
+      "kind": "Method",
+      "signature": "public Quaternion GetTwistFrom(int index)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation to an arbitrary state before twisting for the current bone pose to extract the twist when [method is_twist_from_rest] is [code]false[/code].",
+      "godotName": "get_twist_from",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetTwistFrom(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "GetWeightPosition",
+      "kind": "Method",
+      "signature": "public float GetWeightPosition(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the position at which to divide the segment between joints for weight assignment when [method get_disperse_mode] is [constant DISPERSE_MODE_WEIGHTED].",
+      "godotName": "get_weight_position",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.GetWeightPosition(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "IsEndBoneExtended",
+      "kind": "Method",
+      "signature": "public bool IsEndBoneExtended(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the end bone is extended to have a tail.",
+      "godotName": "is_end_bone_extended",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.IsEndBoneExtended(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "IsTwistFromRest",
+      "kind": "Method",
+      "signature": "public bool IsTwistFromRest(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if extracting the twist amount from the difference between the bone rest and the current bone pose.",
+      "godotName": "is_twist_from_rest",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.IsTwistFromRest(int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetDampingCurve",
+      "kind": "Method",
+      "signature": "public void SetDampingCurve(int index, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the damping curve when [method get_disperse_mode] is [constant DISPERSE_MODE_CUSTOM].",
+      "godotName": "set_damping_curve",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetDampingCurve(int,Curve)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetDisperseMode",
+      "kind": "Method",
+      "signature": "public void SetDisperseMode(int index, int disperseMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "disperse_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets whether to use automatic amount assignment or to allow manual assignment.",
+      "godotName": "set_disperse_mode",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetDisperseMode(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetEndBone",
+      "kind": "Method",
+      "signature": "public void SetEndBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone index of the bone chain.",
+      "godotName": "set_end_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetEndBone(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public void SetEndBoneDirection(int index, int boneDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone tail direction of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_direction",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetEndBoneDirection(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetEndBoneName",
+      "kind": "Method",
+      "signature": "public void SetEndBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the end bone name of the bone chain. [b]Note:[/b] The end bone must be a child of the root bone.",
+      "godotName": "set_end_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetEndBoneName(int,String)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetExtendEndBone",
+      "kind": "Method",
+      "signature": "public void SetExtendEndBone(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the end bone is extended to have a tail. If [param enabled] is [code]false[/code], [method get_reference_bone] becomes a parent of the end bone and it uses the vector to the end bone as a twist axis.",
+      "godotName": "set_extend_end_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetExtendEndBone(int,bool)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetJointTwistAmount",
+      "kind": "Method",
+      "signature": "public void SetJointTwistAmount(int index, int joint, float twistAmount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "twist_amount",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the twist amount at [param joint] in the bone chain\u0027s joint list when [method get_disperse_mode] is [constant DISPERSE_MODE_CUSTOM].",
+      "godotName": "set_joint_twist_amount",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetJointTwistAmount(int,int,float)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetRootBone",
+      "kind": "Method",
+      "signature": "public void SetRootBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the root bone index of the bone chain.",
+      "godotName": "set_root_bone",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetRootBone(int,int)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetRootBoneName",
+      "kind": "Method",
+      "signature": "public void SetRootBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the root bone name of the bone chain.",
+      "godotName": "set_root_bone_name",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetRootBoneName(int,String)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetTwistFrom",
+      "kind": "Method",
+      "signature": "public void SetTwistFrom(int index, Quaternion from)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Sets the rotation to an arbitrary state before twisting for the current bone pose to extract the twist when [method is_twist_from_rest] is [code]false[/code]. In other words, by calling [method set_twist_from] by [signal SkeletonModifier3D.modification_processed] of a specific [SkeletonModifier3D], you can extract only the twists generated by modifiers processed after that but before this [BoneTwistDisperser3D].",
+      "godotName": "set_twist_from",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetTwistFrom(int,Quaternion)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetTwistFromRest",
+      "kind": "Method",
+      "signature": "public void SetTwistFromRest(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], it extracts the twist amount from the difference between the bone rest and the current bone pose. If [param enabled] is [code]false[/code], it extracts the twist amount from the difference between [method get_twist_from] and the current bone pose. See also [method set_twist_from].",
+      "godotName": "set_twist_from_rest",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetTwistFromRest(int,bool)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SetWeightPosition",
+      "kind": "Method",
+      "signature": "public void SetWeightPosition(int index, float weightPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "weight_position",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the position at which to divide the segment between joints for weight assignment when [method get_disperse_mode] is [constant DISPERSE_MODE_WEIGHTED]. For example, when [param weight_position] is [code]0.5[/code], if two bone segments with a length of [code]1.0[/code] exist between three joints, weights are assigned to each joint from root to end at ratios of [code]0.5[/code], [code]1.0[/code], and [code]0.5[/code]. Then amounts become [code]0.25[/code], [code]0.75[/code], and [code]1.0[/code] respectively.",
+      "godotName": "set_weight_position",
+      "xmlDocId": "M:Godot.BoneTwistDisperser3D.SetWeightPosition(int,float)",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "MutableBoneAxes",
+      "kind": "Property",
+      "signature": "public bool MutableBoneAxes { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the solver retrieves the bone axis from the bone pose every frame. If [code]false[/code], the solver retrieves the bone axis from the bone rest and caches it.",
+      "defaultValue": "true",
+      "godotName": "mutable_bone_axes",
+      "xmlDocId": "P:Godot.BoneTwistDisperser3D.MutableBoneAxes",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.BoneTwistDisperser3D.SettingCount",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DisperseMode",
+      "values": [
+        {
+          "name": "DISPERSE_MODE_CUSTOM",
+          "value": "2",
+          "enum": "DisperseMode",
+          "kind": "EnumValue",
+          "summary": "You can assign arbitrary amounts to the joint list. See also [method set_joint_twist_amount]. When [method is_end_bone_extended] is [code]false[/code], a child of the reference bone exists solely to determine the twist axis, so its custom amount has absolutely no effect at all.",
+          "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+        },
+        {
+          "name": "DISPERSE_MODE_EVEN",
+          "value": "0",
+          "enum": "DisperseMode",
+          "kind": "EnumValue",
+          "summary": "Assign amounts so that they monotonically increase from [code]0.0[/code] to [code]1.0[/code], ensuring all weights are equal. For example, with five joints, the amounts would be [code]0.2[/code], [code]0.4[/code], [code]0.6[/code], [code]0.8[/code], and [code]1.0[/code] starting from the root bone.",
+          "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+        },
+        {
+          "name": "DISPERSE_MODE_WEIGHTED",
+          "value": "1",
+          "enum": "DisperseMode",
+          "kind": "EnumValue",
+          "summary": "Assign amounts so that they monotonically increase from [code]0.0[/code] to [code]1.0[/code], based on the length of the bones between joint segments. See also [method set_weight_position].",
+          "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DISPERSE_MODE_EVEN",
+      "value": "0",
+      "enum": "DisperseMode",
+      "kind": "EnumValue",
+      "summary": "Assign amounts so that they monotonically increase from [code]0.0[/code] to [code]1.0[/code], ensuring all weights are equal. For example, with five joints, the amounts would be [code]0.2[/code], [code]0.4[/code], [code]0.6[/code], [code]0.8[/code], and [code]1.0[/code] starting from the root bone.",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "DISPERSE_MODE_WEIGHTED",
+      "value": "1",
+      "enum": "DisperseMode",
+      "kind": "EnumValue",
+      "summary": "Assign amounts so that they monotonically increase from [code]0.0[/code] to [code]1.0[/code], based on the length of the bones between joint segments. See also [method set_weight_position].",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    },
+    {
+      "name": "DISPERSE_MODE_CUSTOM",
+      "value": "2",
+      "enum": "DisperseMode",
+      "kind": "EnumValue",
+      "summary": "You can assign arbitrary amounts to the joint list. See also [method set_joint_twist_amount]. When [method is_end_bone_extended] is [code]false[/code], a child of the reference bone exists solely to determine the twist axis, so its custom amount has absolutely no effect at all.",
+      "sourcePath": "doc/classes/BoneTwistDisperser3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoneTwistDisperser3D.xml",
+      "sha256": "c5839e8d8f0dd259639b9eda1841aecf6a3d2dafa9a052ce7e5b3579ba243afb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

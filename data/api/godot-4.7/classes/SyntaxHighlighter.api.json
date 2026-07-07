@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SyntaxHighlighter",
+    "namespace": "Godot",
+    "fullName": "Godot.SyntaxHighlighter",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SyntaxHighlighter",
+    "documentationPath": "doc/classes/SyntaxHighlighter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_syntaxhighlighter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ClearHighlightingCache",
+      "kind": "Method",
+      "signature": "public void _ClearHighlightingCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to clear any local caches.",
+      "godotName": "_clear_highlighting_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._ClearHighlightingCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetLineSyntaxHighlighting",
+      "kind": "Method",
+      "signature": "public Dictionary _GetLineSyntaxHighlighting(int line)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method which can be overridden to return syntax highlighting data. See [method get_line_syntax_highlighting] for more details.",
+      "godotName": "_get_line_syntax_highlighting",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._GetLineSyntaxHighlighting(int)",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "_UpdateCache",
+      "kind": "Method",
+      "signature": "public void _UpdateCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to update any local caches.",
+      "godotName": "_update_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._UpdateCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "ClearHighlightingCache",
+      "kind": "Method",
+      "signature": "public void ClearHighlightingCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all cached syntax highlighting data. Then calls overridable method [method _clear_highlighting_cache].",
+      "godotName": "clear_highlighting_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter.ClearHighlightingCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "GetLineSyntaxHighlighting",
+      "kind": "Method",
+      "signature": "public Dictionary GetLineSyntaxHighlighting(int line)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the syntax highlighting data for the line at index [param line]. If the line is not cached, calls [method _get_line_syntax_highlighting] first to calculate the data. Each entry is a column number containing a nested [Dictionary]. The column number denotes the start of a region, the region will end if another region is found, or at the end of the line. The nested [Dictionary] contains the data for that region. Currently only the key [code]\u0022color\u0022[/code] is supported. [b]Example:[/b] Possible return value. This means columns [code]0[/code] to [code]4[/code] should be red, and columns [code]5[/code] to the end of the line should be green: [codeblock] { 0: { \u0022color\u0022: Color(1, 0, 0) }, 5: { \u0022color\u0022: Color(0, 1, 0) } } [/codeblock]",
+      "godotName": "get_line_syntax_highlighting",
+      "xmlDocId": "M:Godot.SyntaxHighlighter.GetLineSyntaxHighlighting(int)",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "GetTextEdit",
+      "kind": "Method",
+      "signature": "public TextEdit GetTextEdit()",
+      "returnType": "TextEdit",
+      "parameters": [],
+      "summary": "Returns the associated [TextEdit] node.",
+      "godotName": "get_text_edit",
+      "xmlDocId": "M:Godot.SyntaxHighlighter.GetTextEdit",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "UpdateCache",
+      "kind": "Method",
+      "signature": "public void UpdateCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears then updates the [SyntaxHighlighter] caches. Override [method _update_cache] for a callback. [b]Note:[/b] This is called automatically when the associated [TextEdit] node, updates its own cache.",
+      "godotName": "update_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter.UpdateCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ClearHighlightingCache",
+      "kind": "Method",
+      "signature": "public void _ClearHighlightingCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to clear any local caches.",
+      "godotName": "_clear_highlighting_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._ClearHighlightingCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "_GetLineSyntaxHighlighting",
+      "kind": "Method",
+      "signature": "public Dictionary _GetLineSyntaxHighlighting(int line)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method which can be overridden to return syntax highlighting data. See [method get_line_syntax_highlighting] for more details.",
+      "godotName": "_get_line_syntax_highlighting",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._GetLineSyntaxHighlighting(int)",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    },
+    {
+      "name": "_UpdateCache",
+      "kind": "Method",
+      "signature": "public void _UpdateCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Virtual method which can be overridden to update any local caches.",
+      "godotName": "_update_cache",
+      "xmlDocId": "M:Godot.SyntaxHighlighter._UpdateCache",
+      "sourcePath": "doc/classes/SyntaxHighlighter.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SyntaxHighlighter.xml",
+      "sha256": "52227864bd843bba301881168d9af487f340ea82e3558a1879aa55421686e83b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

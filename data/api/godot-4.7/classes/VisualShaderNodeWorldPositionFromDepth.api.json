@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeWorldPositionFromDepth",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeWorldPositionFromDepth",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeWorldPositionFromDepth",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeWorldPositionFromDepth.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeworldpositionfromdepth.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeWorldPositionFromDepth.xml",
+      "sha256": "42f9665ad9f1a016134d3deb29fc80905851792032f90a175c511cdc8698f73e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

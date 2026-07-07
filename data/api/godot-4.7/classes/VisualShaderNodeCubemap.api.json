@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeCubemap",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeCubemap",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeCubemap",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecubemap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CubeMap",
+      "kind": "Property",
+      "signature": "public TextureLayered CubeMap { get; set; }",
+      "returnType": "TextureLayered",
+      "parameters": [],
+      "summary": "The [Cubemap] texture to sample when using [constant SOURCE_TEXTURE] as [member source].",
+      "godotName": "cube_map",
+      "xmlDocId": "P:Godot.VisualShaderNodeCubemap.CubeMap",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "Source",
+      "kind": "Property",
+      "signature": "public int Source { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines which source should be used for the sampling.",
+      "defaultValue": "0",
+      "godotName": "source",
+      "xmlDocId": "P:Godot.VisualShaderNodeCubemap.Source",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "TextureType",
+      "kind": "Property",
+      "signature": "public int TextureType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the type of data provided by the source texture.",
+      "defaultValue": "0",
+      "godotName": "texture_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeCubemap.TextureType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Source",
+      "values": [
+        {
+          "name": "SOURCE_MAX",
+          "value": "2",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Source] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        },
+        {
+          "name": "SOURCE_PORT",
+          "value": "1",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the [Cubemap] sampler reference passed via the [code]samplerCube[/code] port. If this is set to [member source], the [member cube_map] texture is ignored.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        },
+        {
+          "name": "SOURCE_TEXTURE",
+          "value": "0",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the [Cubemap] set via [member cube_map]. If this is set to [member source], the [code]samplerCube[/code] port is ignored.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureType",
+      "values": [
+        {
+          "name": "TYPE_COLOR",
+          "value": "1",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Adds [code]source_color[/code] as hint to the uniform declaration for proper conversion from nonlinear sRGB encoding to linear encoding.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        },
+        {
+          "name": "TYPE_DATA",
+          "value": "0",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "No hints are added to the uniform declaration.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        },
+        {
+          "name": "TYPE_MAX",
+          "value": "3",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        },
+        {
+          "name": "TYPE_NORMAL_MAP",
+          "value": "2",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Adds [code]hint_normal[/code] as hint to the uniform declaration, which internally converts the texture for proper usage as normal map.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SOURCE_TEXTURE",
+      "value": "0",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the [Cubemap] set via [member cube_map]. If this is set to [member source], the [code]samplerCube[/code] port is ignored.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "SOURCE_PORT",
+      "value": "1",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the [Cubemap] sampler reference passed via the [code]samplerCube[/code] port. If this is set to [member source], the [member cube_map] texture is ignored.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "SOURCE_MAX",
+      "value": "2",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Source] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "TYPE_DATA",
+      "value": "0",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "No hints are added to the uniform declaration.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "TYPE_COLOR",
+      "value": "1",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Adds [code]source_color[/code] as hint to the uniform declaration for proper conversion from nonlinear sRGB encoding to linear encoding.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "TYPE_NORMAL_MAP",
+      "value": "2",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Adds [code]hint_normal[/code] as hint to the uniform declaration, which internally converts the texture for proper usage as normal map.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    },
+    {
+      "name": "TYPE_MAX",
+      "value": "3",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeCubemap.xml",
+      "sha256": "9feacc9999b19c927953bb590f271f81efd26cf728650fd880bd5ea3ec23a5b2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

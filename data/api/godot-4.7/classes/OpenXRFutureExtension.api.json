@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRFutureExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRFutureExtension",
+    "kind": "class",
+    "baseType": "OpenXRExtensionWrapper",
+    "interfaces": [],
+    "godotReference": "OpenXRFutureExtension",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRFutureExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrfutureextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CancelFuture",
+      "kind": "Method",
+      "signature": "public void CancelFuture(int future)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "future",
+          "type": "int"
+        }
+      ],
+      "summary": "Cancels an in-progress future. [param future] must be an [code]XrFutureEXT[/code] value previously returned by an API that started an asynchronous function.",
+      "godotName": "cancel_future",
+      "xmlDocId": "M:Godot.OpenXRFutureExtension.CancelFuture(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureExtension.xml"
+    },
+    {
+      "name": "IsActive",
+      "kind": "Method",
+      "signature": "public bool IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if futures are available in the OpenXR runtime used. This function will only return a usable result after OpenXR has been initialized.",
+      "godotName": "is_active",
+      "xmlDocId": "M:Godot.OpenXRFutureExtension.IsActive",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureExtension.xml"
+    },
+    {
+      "name": "RegisterFuture",
+      "kind": "Method",
+      "signature": "public OpenXRFutureResult RegisterFuture(int future, Callable onSuccess)",
+      "returnType": "OpenXRFutureResult",
+      "parameters": [
+        {
+          "name": "future",
+          "type": "int"
+        },
+        {
+          "name": "on_success",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Register an OpenXR Future object so we monitor for completion. [param future] must be an [code]XrFutureEXT[/code] value previously returned by an API that started an asynchronous function. You can optionally specify [param on_success], it will be invoked on successful completion of the future. Or you can use the returned [OpenXRFutureResult] object to [code]await[/code] its [signal OpenXRFutureResult.completed] signal. [codeblock] var future_result = OpenXRFutureExtension.register_future(future) await future_result.completed if future_result.get_status() == OpenXRFutureResult.RESULT_FINISHED: # Handle your success pass [/codeblock]",
+      "godotName": "register_future",
+      "xmlDocId": "M:Godot.OpenXRFutureExtension.RegisterFuture(int,Callable)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRFutureExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRFutureExtension.xml",
+      "sha256": "4cd3c687eaf123ff7fcf1223bb64ed8438007ba7acb4b9f574ca0e5346fb6377"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterLayeredTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterLayeredTexture",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterLayeredTexture",
+    "documentationPath": "doc/classes/ResourceImporterLayeredTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimporterlayeredtexture.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [
+    {
+      "name": "compress/channel_pack",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how color channels should be used in the imported texture. [b]sRGB Friendly:[/b], prevents the R and RG color formats from being used, as they do not support nonlinear sRGB encoding. [b]Optimized:[/b], allows the RG color format to be used if the texture does not use the blue channel. This reduces memory usage if the texture\u0027s blue channel can be discarded (all pixels must have a blue value of [code]0[/code]). [b]Normal Map (RG Channels):[/b] This forces all layers from the texture to be imported with the RG color format, with only the red and green channels preserved. RGTC (Red-Green Texture Compression) compression is able to preserve its detail much better, while using the same amount of memory as a standard RGBA VRAM-compressed texture. This only has an effect on textures with the VRAM Compressed or Basis Universal compression modes. This mode is only available in layered textures ([Cubemap], [CubemapArray], [Texture2DArray] and [Texture3D]).",
+      "defaultValue": "0",
+      "godotName": "compress/channel_pack",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/hdr_compression",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how VRAM compression should be performed for HDR images. [b]Disabled:[/b] Never use VRAM compression for HDR textures, regardless of whether they\u0027re opaque or transparent. Instead, the texture is converted to RGBE9995 (9-bits per channel \u002B 5-bit exponent = 32 bits per pixel) to reduce memory usage compared to a half-float or single-precision float image format. [b]Opaque Only:[/b] Only uses VRAM compression for opaque HDR textures. This is due to a limitation of HDR formats, as there is no VRAM-compressed HDR format that supports transparency at the same time. [b]Always:[/b] Force VRAM compression even for HDR textures with an alpha channel. To perform this, the alpha channel is discarded on import. [b]Note:[/b] Only effective on Radiance HDR ([code].hdr[/code]) and OpenEXR ([code].exr[/code]) images.",
+      "defaultValue": "1",
+      "godotName": "compress/hdr_compression",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/high_quality",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses BPTC compression on desktop platforms and ASTC compression on mobile platforms. When using BPTC, BC7 is used for SDR textures and BC6H is used for HDR textures. If [code]false[/code], uses the faster but lower-quality S3TC compression on desktop platforms and ETC2 on mobile/web platforms. When using S3TC, DXT1 (BC1) is used for opaque textures and DXT5 (BC3) is used for transparent or normal map (RGTC) textures. BPTC and ASTC support VRAM compression for HDR textures, but S3TC and ETC2 do not (see [member compress/hdr_compression]).",
+      "defaultValue": "false",
+      "godotName": "compress/high_quality",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/lossy_quality",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The quality to use when using the [b]Lossy[/b] compression mode. Higher values result in better quality, at the cost of larger file sizes. Lossy quality does not affect memory usage of the imported texture, only its file size on disk.",
+      "defaultValue": "0.7",
+      "godotName": "compress/lossy_quality",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/mode",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The compression mode to use. Each compression mode provides a different tradeoff: [b]Lossless[/b]: Original quality, high memory usage, high size on disk, fast import. [b]Lossy:[/b] Reduced quality, high memory usage, low size on disk, fast import. [b]VRAM Compressed:[/b] Reduced quality, low memory usage, low size on disk, slowest import. Only use for textures in 3D scenes, not for 2D elements. [b]VRAM Uncompressed:[/b] Original quality, high memory usage, highest size on disk, fastest import. [b]Basis Universal:[/b] Reduced quality, low memory usage, lowest size on disk, slow import. Only use for textures in 3D scenes, not for 2D elements. See [url=$DOCS_URL/tutorials/assets_pipeline/importing_images.html#compress-mode]Compress mode[/url] in the manual for more details.",
+      "defaultValue": "1",
+      "godotName": "compress/mode",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/rdo_quality_loss",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If greater than or equal to [code]0.01[/code], enables Rate-Distortion Optimization (RDO) to reduce file size. Higher values result in smaller file sizes but lower quality. [b]Note:[/b] Enabling RDO makes encoding times significantly longer, especially when the image is large. See also [member ProjectSettings.rendering/textures/basis_universal/rdo_dict_size] and [member ProjectSettings.rendering/textures/basis_universal/zstd_supercompression_level] if you want to reduce the file size further.",
+      "defaultValue": "0.0",
+      "godotName": "compress/rdo_quality_loss",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "compress/uastc_level",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The UASTC encoding level. Higher values result in better quality but make encoding times longer.",
+      "defaultValue": "0",
+      "godotName": "compress/uastc_level",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "mipmaps/generate",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], smaller versions of the texture are generated on import. For example, a 64\u00D764 texture will generate 6 mipmaps (32\u00D732, 16\u00D716, 8\u00D78, 4\u00D74, 2\u00D72, 1\u00D71). This has several benefits: - Textures will not become grainy in the distance (in 3D), or if scaled down due to [Camera2D] zoom or [CanvasItem] scale (in 2D). - Performance will improve if the texture is displayed in the distance, since sampling smaller versions of the original texture is faster and requires less memory bandwidth. The downside of mipmaps is that they increase memory usage by roughly 33% (for [Texture2DArray], [Cubemap] and [CubemapArray]) or 14% (for [Texture3D]). It\u0027s recommended to enable mipmaps in 3D. However, in 2D, this should only be enabled if your project visibly benefits from having mipmaps enabled. If the camera never zooms out significantly, there won\u0027t be a benefit to enabling mipmaps but memory usage will increase.",
+      "defaultValue": "true",
+      "godotName": "mipmaps/generate",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "mipmaps/limit",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Unimplemented. This currently has no effect when changed.",
+      "defaultValue": "-1",
+      "godotName": "mipmaps/limit",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    },
+    {
+      "name": "slices/arrangement",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls how the cubemap\u0027s texture is internally laid out. When using high-resolution cubemaps, [b]2\u00D73[/b] and [b]3\u00D72[/b] are less prone to exceeding hardware texture size limits compared to [b]1\u00D76[/b] and [b]6\u00D71[/b].",
+      "defaultValue": "1",
+      "godotName": "slices/arrangement",
+      "sourcePath": "doc/classes/ResourceImporterLayeredTexture.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterLayeredTexture.xml",
+      "sha256": "e8ce14ca56e4f5d30a9288796a83ab171bba10528039ffdb0d5af5ae746d83d8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

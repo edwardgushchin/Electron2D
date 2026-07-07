@@ -1,0 +1,875 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tween",
+    "namespace": "Godot",
+    "fullName": "Godot.Tween",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Tween",
+    "documentationPath": "doc/classes/Tween.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tween.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BindNode",
+      "kind": "Method",
+      "signature": "public Tween BindNode(Node node)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Binds this [Tween] with the given [param node]. [Tween]s are processed directly by the [SceneTree], so they run independently of the animated nodes. When you bind a [Node] with the [Tween], the [Tween] will halt the animation when the object is not inside tree and the [Tween] will be automatically killed when the bound object is freed. Also [constant TWEEN_PAUSE_BOUND] will make the pausing behavior dependent on the bound node. For a shorter way to create and bind a [Tween], you can use [method Node.create_tween].",
+      "godotName": "bind_node",
+      "xmlDocId": "M:Godot.Tween.BindNode(Node)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Chain",
+      "kind": "Method",
+      "signature": "public Tween Chain()",
+      "returnType": "Tween",
+      "parameters": [],
+      "summary": "Used to chain two [Tweener]s after [method set_parallel] is called with [code]true[/code]. [codeblocks] [gdscript] var tween = create_tween().set_parallel(true) tween.tween_property(...) tween.tween_property(...) # Will run parallelly with above. tween.chain().tween_property(...) # Will run after two above are finished. [/gdscript] [csharp] Tween tween = CreateTween().SetParallel(true); tween.TweenProperty(...); tween.TweenProperty(...); // Will run parallelly with above. tween.Chain().TweenProperty(...); // Will run after two above are finished. [/csharp] [/codeblocks]",
+      "godotName": "chain",
+      "xmlDocId": "M:Godot.Tween.Chain",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "CustomStep",
+      "kind": "Method",
+      "signature": "public bool CustomStep(float delta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Processes the [Tween] by the given [param delta] value, in seconds. This is mostly useful for manual control when the [Tween] is paused. It can also be used to end the [Tween] animation immediately, by setting [param delta] longer than the whole duration of the [Tween] animation. Returns [code]true[/code] if the [Tween] still has [Tweener]s that haven\u0027t finished.",
+      "godotName": "custom_step",
+      "xmlDocId": "M:Godot.Tween.CustomStep(float)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "GetLoopsLeft",
+      "kind": "Method",
+      "signature": "public int GetLoopsLeft()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of remaining loops for this [Tween] (see [method set_loops]). A return value of [code]-1[/code] indicates an infinitely looping [Tween], and a return value of [code]0[/code] indicates that the [Tween] has already finished.",
+      "godotName": "get_loops_left",
+      "xmlDocId": "M:Godot.Tween.GetLoopsLeft",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "GetTotalElapsedTime",
+      "kind": "Method",
+      "signature": "public float GetTotalElapsedTime()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the total time in seconds the [Tween] has been animating (i.e. the time since it started, not counting pauses etc.). The time is affected by [method set_speed_scale], and [method stop] will reset it to [code]0[/code]. [b]Note:[/b] As it results from accumulating frame deltas, the time returned after the [Tween] has finished animating will be slightly greater than the actual [Tween] duration.",
+      "godotName": "get_total_elapsed_time",
+      "xmlDocId": "M:Godot.Tween.GetTotalElapsedTime",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "HasTweeners",
+      "kind": "Method",
+      "signature": "public bool HasTweeners()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if any [Tweener] has been added to the [Tween] and the [Tween] is valid. Useful when tweeners are added dynamically and the tween can end up empty. Killing an empty tween before it starts will prevent errors.",
+      "godotName": "has_tweeners",
+      "xmlDocId": "M:Godot.Tween.HasTweeners",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "InterpolateValue",
+      "kind": "Method",
+      "signature": "public Variant InterpolateValue(Variant initialValue, Variant deltaValue, float elapsedTime, float duration, int transType, int easeType)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "initial_value",
+          "type": "Variant"
+        },
+        {
+          "name": "delta_value",
+          "type": "Variant"
+        },
+        {
+          "name": "elapsed_time",
+          "type": "float"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        },
+        {
+          "name": "trans_type",
+          "type": "int"
+        },
+        {
+          "name": "ease_type",
+          "type": "int"
+        }
+      ],
+      "summary": "This method can be used for manual interpolation of a value, when you don\u0027t want [Tween] to do animating for you. It\u0027s similar to [method @GlobalScope.lerp], but with support for custom transition and easing. [param initial_value] is the starting value of the interpolation. [param delta_value] is the change of the value in the interpolation, i.e. it\u0027s equal to [code]final_value - initial_value[/code]. [param elapsed_time] is the time in seconds that passed after the interpolation started and it\u0027s used to control the position of the interpolation. E.g. when it\u0027s equal to half of the [param duration], the interpolated value will be halfway between initial and final values. This value can also be greater than [param duration] or lower than 0, which will extrapolate the value. [param duration] is the total time of the interpolation. [b]Note:[/b] If [param duration] is equal to [code]0[/code], the method will always return the final value, regardless of [param elapsed_time] provided.",
+      "godotName": "interpolate_value",
+      "xmlDocId": "M:Godot.Tween.InterpolateValue(Variant,Variant,float,float,int,int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "IsRunning",
+      "kind": "Method",
+      "signature": "public bool IsRunning()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the [Tween] is currently running, i.e. it wasn\u0027t paused and it\u0027s not finished.",
+      "godotName": "is_running",
+      "xmlDocId": "M:Godot.Tween.IsRunning",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "IsValid",
+      "kind": "Method",
+      "signature": "public bool IsValid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the [Tween] is valid. A valid [Tween] is a [Tween] contained by the scene tree (i.e. the array from [method SceneTree.get_processed_tweens] will contain this [Tween]). A [Tween] might become invalid when it has finished tweening, is killed, or when created with [code]Tween.new()[/code]. Invalid [Tween]s can\u0027t have [Tweener]s appended.",
+      "godotName": "is_valid",
+      "xmlDocId": "M:Godot.Tween.IsValid",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Kill",
+      "kind": "Method",
+      "signature": "public void Kill()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Aborts all tweening operations and invalidates the [Tween].",
+      "godotName": "kill",
+      "xmlDocId": "M:Godot.Tween.Kill",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Parallel",
+      "kind": "Method",
+      "signature": "public Tween Parallel()",
+      "returnType": "Tween",
+      "parameters": [],
+      "summary": "Makes the next [Tweener] run parallelly to the previous one. [codeblocks] [gdscript] var tween = create_tween() tween.tween_property(...) tween.parallel().tween_property(...) tween.parallel().tween_property(...) [/gdscript] [csharp] Tween tween = CreateTween(); tween.TweenProperty(...); tween.Parallel().TweenProperty(...); tween.Parallel().TweenProperty(...); [/csharp] [/codeblocks] All [Tweener]s in the example will run at the same time. You can make the [Tween] parallel by default by using [method set_parallel].",
+      "godotName": "parallel",
+      "xmlDocId": "M:Godot.Tween.Parallel",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public void Pause()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Pauses the tweening. The animation can be resumed by using [method play]. [b]Note:[/b] If a Tween is paused and not bound to any node, it will exist indefinitely until manually started or invalidated. If you lose a reference to such Tween, you can retrieve it using [method SceneTree.get_processed_tweens].",
+      "godotName": "pause",
+      "xmlDocId": "M:Godot.Tween.Pause",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public void Play()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resumes a paused or stopped [Tween].",
+      "godotName": "play",
+      "xmlDocId": "M:Godot.Tween.Play",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetEase",
+      "kind": "Method",
+      "signature": "public Tween SetEase(int ease)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "ease",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the default ease type for [PropertyTweener]s and [MethodTweener]s appended after this method. Before this method is called, the default ease type is [constant EASE_IN_OUT]. [codeblocks] [gdscript] var tween = create_tween() tween.tween_property(self, \u0022position\u0022, Vector2(300, 0), 0.5) # Uses EASE_IN_OUT. tween.set_ease(Tween.EASE_IN) tween.tween_property(self, \u0022rotation_degrees\u0022, 45.0, 0.5) # Uses EASE_IN. [/gdscript] [csharp] Tween tween = CreateTween(); tween.TweenProperty(this, \u0022position\u0022, new Vector2(300, 0), 0.5); // Uses EaseType.InOut. tween.SetEase(Tween.EaseType.In); tween.TweenProperty(this, \u0022rotation_degrees\u0022, 45.0, 0.5); // Uses EaseType.In. [/csharp] [/codeblocks]",
+      "godotName": "set_ease",
+      "xmlDocId": "M:Godot.Tween.SetEase(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetIgnoreTimeScale",
+      "kind": "Method",
+      "signature": "public Tween SetIgnoreTimeScale(bool ignore)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "ignore",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "If [param ignore] is [code]true[/code], the tween will ignore [member Engine.time_scale] and update with the real, elapsed time. This affects all [Tweener]s and their delays. Default value is [code]false[/code].",
+      "godotName": "set_ignore_time_scale",
+      "xmlDocId": "M:Godot.Tween.SetIgnoreTimeScale(bool)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetLoops",
+      "kind": "Method",
+      "signature": "public Tween SetLoops(int loops)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "loops",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the number of times the tweening sequence will be repeated, i.e. [code]set_loops(2)[/code] will run the animation twice. Calling this method without arguments will make the [Tween] run infinitely, until either it is killed with [method kill], the [Tween]\u0027s bound node is freed, or all the animated objects have been freed (which makes further animation impossible). [b]Warning:[/b] Make sure to always add some duration/delay when using infinite loops. To prevent the game freezing, 0-duration looped animations (e.g. a single [CallbackTweener] with no delay) are stopped after a small number of loops, which may produce unexpected results. If a [Tween]\u0027s lifetime depends on some node, always use [method bind_node].",
+      "godotName": "set_loops",
+      "xmlDocId": "M:Godot.Tween.SetLoops(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetParallel",
+      "kind": "Method",
+      "signature": "public Tween SetParallel(bool parallel)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "parallel",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "If [param parallel] is [code]true[/code], the [Tweener]s appended after this method will by default run simultaneously, as opposed to sequentially. [b]Note:[/b] Just like with [method parallel], the tweener added right before this method will also be part of the parallel step. [codeblock] tween.tween_property(self, \u0022position\u0022, Vector2(300, 0), 0.5) tween.set_parallel() tween.tween_property(self, \u0022modulate\u0022, Color.GREEN, 0.5) # Runs together with the position tweener. [/codeblock]",
+      "godotName": "set_parallel",
+      "xmlDocId": "M:Godot.Tween.SetParallel(bool)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetPauseMode",
+      "kind": "Method",
+      "signature": "public Tween SetPauseMode(int mode)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Determines the behavior of the [Tween] when the [SceneTree] is paused. Default value is [constant TWEEN_PAUSE_BOUND].",
+      "godotName": "set_pause_mode",
+      "xmlDocId": "M:Godot.Tween.SetPauseMode(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetProcessMode",
+      "kind": "Method",
+      "signature": "public Tween SetProcessMode(int mode)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Determines whether the [Tween] should run after process frames (see [method Node._process]) or physics frames (see [method Node._physics_process]). Default value is [constant TWEEN_PROCESS_IDLE].",
+      "godotName": "set_process_mode",
+      "xmlDocId": "M:Godot.Tween.SetProcessMode(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetSpeedScale",
+      "kind": "Method",
+      "signature": "public Tween SetSpeedScale(float speed)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "float"
+        }
+      ],
+      "summary": "Scales the speed of tweening. This affects all [Tweener]s and their delays.",
+      "godotName": "set_speed_scale",
+      "xmlDocId": "M:Godot.Tween.SetSpeedScale(float)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "SetTrans",
+      "kind": "Method",
+      "signature": "public Tween SetTrans(int trans)",
+      "returnType": "Tween",
+      "parameters": [
+        {
+          "name": "trans",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the default transition type for [PropertyTweener]s and [MethodTweener]s appended after this method. Before this method is called, the default transition type is [constant TRANS_LINEAR]. [codeblock] var tween = create_tween() tween.tween_property(self, \u0022position\u0022, Vector2(300, 0), 0.5) # Uses TRANS_LINEAR. tween.set_trans(Tween.TRANS_SINE) tween.tween_property(self, \u0022rotation_degrees\u0022, 45.0, 0.5) # Uses TRANS_SINE. [/codeblock]",
+      "godotName": "set_trans",
+      "xmlDocId": "M:Godot.Tween.SetTrans(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the tweening and resets the [Tween] to its initial state. This will not remove any appended [Tweener]s. [b]Note:[/b] This does [i]not[/i] reset targets of [PropertyTweener]s to their values when the [Tween] first started. [codeblock] var tween = create_tween() # Will move from 0 to 500 over 1 second. position.x = 0.0 tween.tween_property(self, \u0022position:x\u0022, 500, 1.0) # Will be at (about) 250 when the timer finishes. await get_tree().create_timer(0.5).timeout # Will now move from (about) 250 to 500 over 1 second, # thus at half the speed as before. tween.stop() tween.play() [/codeblock] [b]Note:[/b] If a Tween is stopped and not bound to any node, it will exist indefinitely until manually started or invalidated. If you lose a reference to such Tween, you can retrieve it using [method SceneTree.get_processed_tweens].",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.Tween.Stop",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenAwait",
+      "kind": "Method",
+      "signature": "public AwaitTweener TweenAwait(Signal signal)",
+      "returnType": "AwaitTweener",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "Signal"
+        }
+      ],
+      "summary": "Creates and appends an [AwaitTweener]. This method can be used to await a signal to be emitted and create asynchronous animations or cutscenes. The animation will not progress to the next step until the awaited signal is emitted or the connection becomes invalid (e.g. as a result of freeing the target object). If you know that the emission may not happen, use [method AwaitTweener.set_timeout]. [b]Note:[/b] The awaited signal should be emitted during the step when [AwaitTweener] is active. [b]Example:[/b] An object launches itself and explodes upon collision or after 4 seconds. [codeblock] var tween = create_tween() tween.tween_callback(launch) tween.tween_await(collided).set_timeout(4.0) tween.tween_callback(explode) [/codeblock] [b]Example:[/b] A character walks to a specific point, says some lines and walks back when the player closes the message box. [codeblock] var tween = create_tween() tween.tween_callback(walk_to.bind(600.0)) tween.tween_await(destination_reached) tween.tween_callback(say_dialogue.bind(\u0022Good day, sir!\u0022)) tween.tween_await(dialogue_closed) tween.tween_callback(walk_to.bind(0.0)) [/codeblock] [b]Note:[/b] If you are awaiting a signal from a callback called in the same [Tween], make sure the signal is emitted [i]after[/i] the await starts. If it can\u0027t be reasonably guaranteed, you can await and emit in the same step: [codeblock] var tween = create_tween() tween.tween_await(signal) tween.parallel().tween_callback(method_that_emits_signal) [/codeblock]",
+      "godotName": "tween_await",
+      "xmlDocId": "M:Godot.Tween.TweenAwait(Signal)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenCallback",
+      "kind": "Method",
+      "signature": "public CallbackTweener TweenCallback(Callable callback)",
+      "returnType": "CallbackTweener",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Creates and appends a [CallbackTweener]. This method can be used to call an arbitrary method in any object. Use [method Callable.bind] to bind additional arguments for the call. [b]Example:[/b] Object that keeps shooting every 1 second: [codeblocks] [gdscript] var tween = get_tree().create_tween().set_loops() tween.tween_callback(shoot).set_delay(1.0) [/gdscript] [csharp] Tween tween = GetTree().CreateTween().SetLoops(); tween.TweenCallback(Callable.From(Shoot)).SetDelay(1.0f); [/csharp] [/codeblocks] [b]Example:[/b] Turning a sprite red and then blue, with 2 second delay: [codeblocks] [gdscript] var tween = get_tree().create_tween() tween.tween_callback($Sprite.set_modulate.bind(Color.RED)).set_delay(2) tween.tween_callback($Sprite.set_modulate.bind(Color.BLUE)).set_delay(2) [/gdscript] [csharp] Tween tween = GetTree().CreateTween(); Sprite2D sprite = GetNode\u003CSprite2D\u003E(\u0022Sprite\u0022); tween.TweenCallback(Callable.From(() =\u003E sprite.Modulate = Colors.Red)).SetDelay(2.0f); tween.TweenCallback(Callable.From(() =\u003E sprite.Modulate = Colors.Blue)).SetDelay(2.0f); [/csharp] [/codeblocks]",
+      "godotName": "tween_callback",
+      "xmlDocId": "M:Godot.Tween.TweenCallback(Callable)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenInterval",
+      "kind": "Method",
+      "signature": "public IntervalTweener TweenInterval(float time)",
+      "returnType": "IntervalTweener",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates and appends an [IntervalTweener]. This method can be used to create delays in the tween animation, as an alternative to using the delay in other [Tweener]s, or when there\u0027s no animation (in which case the [Tween] acts as a timer). [param time] is the length of the interval, in seconds. [b]Example:[/b] Creating an interval in code execution: [codeblocks] [gdscript] # ... some code await create_tween().tween_interval(2).finished # ... more code [/gdscript] [csharp] // ... some code await ToSignal(CreateTween().TweenInterval(2.0f), Tween.SignalName.Finished); // ... more code [/csharp] [/codeblocks] [b]Example:[/b] Creating an object that moves back and forth and jumps every few seconds: [codeblocks] [gdscript] var tween = create_tween().set_loops() tween.tween_property($Sprite, \u0022position:x\u0022, 200.0, 1.0).as_relative() tween.tween_callback(jump) tween.tween_interval(2) tween.tween_property($Sprite, \u0022position:x\u0022, -200.0, 1.0).as_relative() tween.tween_callback(jump) tween.tween_interval(2) [/gdscript] [csharp] Tween tween = CreateTween().SetLoops(); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position:x\u0022, 200.0f, 1.0f).AsRelative(); tween.TweenCallback(Callable.From(Jump)); tween.TweenInterval(2.0f); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position:x\u0022, -200.0f, 1.0f).AsRelative(); tween.TweenCallback(Callable.From(Jump)); tween.TweenInterval(2.0f); [/csharp] [/codeblocks]",
+      "godotName": "tween_interval",
+      "xmlDocId": "M:Godot.Tween.TweenInterval(float)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenMethod",
+      "kind": "Method",
+      "signature": "public MethodTweener TweenMethod(Callable method, Variant from, Variant to, float duration)",
+      "returnType": "MethodTweener",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "Callable"
+        },
+        {
+          "name": "from",
+          "type": "Variant"
+        },
+        {
+          "name": "to",
+          "type": "Variant"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates and appends a [MethodTweener]. This method is similar to a combination of [method tween_callback] and [method tween_property]. It calls a method over time with a tweened value provided as an argument. The value is tweened between [param from] and [param to] over the time specified by [param duration], in seconds. Use [method Callable.bind] to bind additional arguments for the call. You can use [method MethodTweener.set_ease] and [method MethodTweener.set_trans] to tweak the easing and transition of the value or [method MethodTweener.set_delay] to delay the tweening. [b]Example:[/b] Making a 3D object look from one point to another point: [codeblocks] [gdscript] var tween = create_tween() tween.tween_method(look_at.bind(Vector3.UP), Vector3(-1, 0, -1), Vector3(1, 0, -1), 1.0) # The look_at() method takes up vector as second argument. [/gdscript] [csharp] Tween tween = CreateTween(); tween.TweenMethod(Callable.From((Vector3 target) =\u003E LookAt(target, Vector3.Up)), new Vector3(-1.0f, 0.0f, -1.0f), new Vector3(1.0f, 0.0f, -1.0f), 1.0f); // Use lambdas to bind additional arguments for the call. [/csharp] [/codeblocks] [b]Example:[/b] Setting the text of a [Label], using an intermediate method and after a delay: [codeblocks] [gdscript] func _ready(): var tween = create_tween() tween.tween_method(set_label_text, 0, 10, 1.0).set_delay(1.0) func set_label_text(value: int): $Label.text = \u0022Counting \u0022 \u002B str(value) [/gdscript] [csharp] public override void _Ready() { base._Ready(); Tween tween = CreateTween(); tween.TweenMethod(Callable.From\u003Cint\u003E(SetLabelText), 0.0f, 10.0f, 1.0f).SetDelay(1.0f); } private void SetLabelText(int value) { GetNode\u003CLabel\u003E(\u0022Label\u0022).Text = $\u0022Counting {value}\u0022; } [/csharp] [/codeblocks]",
+      "godotName": "tween_method",
+      "xmlDocId": "M:Godot.Tween.TweenMethod(Callable,Variant,Variant,float)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenProperty",
+      "kind": "Method",
+      "signature": "public PropertyTweener TweenProperty(Object @object, NodePath property, Variant finalVal, float duration)",
+      "returnType": "PropertyTweener",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "property",
+          "type": "NodePath"
+        },
+        {
+          "name": "final_val",
+          "type": "Variant"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates and appends a [PropertyTweener]. This method tweens a [param property] of an [param object] between an initial value and [param final_val] in a span of time equal to [param duration], in seconds. The initial value by default is the property\u0027s value at the time the tweening of the [PropertyTweener] starts. [codeblocks] [gdscript] var tween = create_tween() tween.tween_property($Sprite, \u0022position\u0022, Vector2(100, 200), 1.0) tween.tween_property($Sprite, \u0022position\u0022, Vector2(200, 300), 1.0) [/gdscript] [csharp] Tween tween = CreateTween(); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position\u0022, new Vector2(100.0f, 200.0f), 1.0f); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position\u0022, new Vector2(200.0f, 300.0f), 1.0f); [/csharp] [/codeblocks] will move the sprite to position (100, 200) and then to (200, 300). If you use [method PropertyTweener.from] or [method PropertyTweener.from_current], the starting position will be overwritten by the given value instead. See other methods in [PropertyTweener] to see how the tweening can be tweaked further. [b]Note:[/b] You can find the correct property name by hovering over the property in the Inspector. You can also provide the components of a property directly by using [code]\u0022property:component\u0022[/code] (eg. [code]position:x[/code]), where it would only apply to that particular component. [b]Example:[/b] Moving an object twice from the same position, with different transition types: [codeblocks] [gdscript] var tween = create_tween() tween.tween_property($Sprite, \u0022position\u0022, Vector2.RIGHT * 300, 1.0).as_relative().set_trans(Tween.TRANS_SINE) tween.tween_property($Sprite, \u0022position\u0022, Vector2.RIGHT * 300, 1.0).as_relative().from_current().set_trans(Tween.TRANS_EXPO) [/gdscript] [csharp] Tween tween = CreateTween(); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position\u0022, Vector2.Right * 300.0f, 1.0f).AsRelative().SetTrans(Tween.TransitionType.Sine); tween.TweenProperty(GetNode(\u0022Sprite\u0022), \u0022position\u0022, Vector2.Right * 300.0f, 1.0f).AsRelative().FromCurrent().SetTrans(Tween.TransitionType.Expo); [/csharp] [/codeblocks]",
+      "godotName": "tween_property",
+      "xmlDocId": "M:Godot.Tween.TweenProperty(Object,NodePath,Variant,float)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TweenSubtween",
+      "kind": "Method",
+      "signature": "public SubtweenTweener TweenSubtween(Tween subtween)",
+      "returnType": "SubtweenTweener",
+      "parameters": [
+        {
+          "name": "subtween",
+          "type": "Tween"
+        }
+      ],
+      "summary": "Creates and appends a [SubtweenTweener]. This method can be used to nest [param subtween] within this [Tween], allowing for the creation of more complex and composable sequences. [codeblock] # Subtween will rotate the object. var subtween = create_tween() subtween.tween_property(self, \u0022rotation_degrees\u0022, 45.0, 1.0) subtween.tween_property(self, \u0022rotation_degrees\u0022, 0.0, 1.0) # Parent tween will execute the subtween as one of its steps. var tween = create_tween() tween.tween_property(self, \u0022position:x\u0022, 500, 3.0) tween.tween_subtween(subtween) tween.tween_property(self, \u0022position:x\u0022, 300, 2.0) [/codeblock] [b]Note:[/b] The methods [method pause], [method stop], and [method set_loops] can cause the parent [Tween] to get stuck on the subtween step; see the documentation for those methods for more information. [b]Note:[/b] The pause and process modes set by [method set_pause_mode] and [method set_process_mode] on [param subtween] will be overridden by the parent [Tween]\u0027s settings.",
+      "godotName": "tween_subtween",
+      "xmlDocId": "M:Godot.Tween.TweenSubtween(Tween)",
+      "sourcePath": "doc/classes/Tween.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Finished",
+      "kind": "Signal",
+      "signature": "public event FinishedHandler Finished",
+      "parameters": [],
+      "summary": "Emitted when the [Tween] has finished all tweening. Never emitted when the [Tween] is set to infinite looping (see [method set_loops]).",
+      "godotName": "finished",
+      "xmlDocId": "E:Godot.Tween.Finished",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "LoopFinished",
+      "kind": "Signal",
+      "signature": "public event LoopFinishedHandler LoopFinished",
+      "parameters": [
+        {
+          "name": "loop_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a full loop is complete (see [method set_loops]), providing the loop index. This signal is not emitted after the final loop, use [signal finished] instead for this case.",
+      "godotName": "loop_finished",
+      "xmlDocId": "E:Godot.Tween.LoopFinished(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "StepFinished",
+      "kind": "Signal",
+      "signature": "public event StepFinishedHandler StepFinished",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one step of the [Tween] is complete, providing the step index. One step is either a single [Tweener] or a group of [Tweener]s running in parallel.",
+      "godotName": "step_finished",
+      "xmlDocId": "E:Godot.Tween.StepFinished(int)",
+      "sourcePath": "doc/classes/Tween.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "EaseType",
+      "values": [
+        {
+          "name": "EASE_IN",
+          "value": "0",
+          "enum": "EaseType",
+          "kind": "EnumValue",
+          "summary": "The interpolation starts slowly and speeds up towards the end.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "EASE_IN_OUT",
+          "value": "2",
+          "enum": "EaseType",
+          "kind": "EnumValue",
+          "summary": "A combination of [constant EASE_IN] and [constant EASE_OUT]. The interpolation is slowest at both ends.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "EASE_OUT",
+          "value": "1",
+          "enum": "EaseType",
+          "kind": "EnumValue",
+          "summary": "The interpolation starts quickly and slows down towards the end.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "EASE_OUT_IN",
+          "value": "3",
+          "enum": "EaseType",
+          "kind": "EnumValue",
+          "summary": "A combination of [constant EASE_IN] and [constant EASE_OUT]. The interpolation is fastest at both ends.",
+          "sourcePath": "doc/classes/Tween.xml"
+        }
+      ]
+    },
+    {
+      "name": "TransitionType",
+      "values": [
+        {
+          "name": "TRANS_BACK",
+          "value": "10",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated backing out at ends.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_BOUNCE",
+          "value": "9",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated by bouncing at the end.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_CIRC",
+          "value": "8",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with a function using square roots.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_CUBIC",
+          "value": "7",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with a cubic (to the power of 3) function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_ELASTIC",
+          "value": "6",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with elasticity, wiggling around the edges.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_EXPO",
+          "value": "5",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with an exponential (to the power of x) function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_LINEAR",
+          "value": "0",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated linearly.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_QUAD",
+          "value": "4",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with a quadratic (to the power of 2) function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_QUART",
+          "value": "3",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with a quartic (to the power of 4) function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_QUINT",
+          "value": "2",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated with a quintic (to the power of 5) function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_SINE",
+          "value": "1",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated using a sine function.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TRANS_SPRING",
+          "value": "11",
+          "enum": "TransitionType",
+          "kind": "EnumValue",
+          "summary": "The animation is interpolated like a spring towards the end.",
+          "sourcePath": "doc/classes/Tween.xml"
+        }
+      ]
+    },
+    {
+      "name": "TweenPauseMode",
+      "values": [
+        {
+          "name": "TWEEN_PAUSE_BOUND",
+          "value": "0",
+          "enum": "TweenPauseMode",
+          "kind": "EnumValue",
+          "summary": "If the [Tween] has a bound node, it will process when that node can process (see [member Node.process_mode]). Otherwise it\u0027s the same as [constant TWEEN_PAUSE_STOP].",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TWEEN_PAUSE_PROCESS",
+          "value": "2",
+          "enum": "TweenPauseMode",
+          "kind": "EnumValue",
+          "summary": "The [Tween] will process regardless of whether [SceneTree] is paused.",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TWEEN_PAUSE_STOP",
+          "value": "1",
+          "enum": "TweenPauseMode",
+          "kind": "EnumValue",
+          "summary": "If [SceneTree] is paused, the [Tween] will also pause.",
+          "sourcePath": "doc/classes/Tween.xml"
+        }
+      ]
+    },
+    {
+      "name": "TweenProcessMode",
+      "values": [
+        {
+          "name": "TWEEN_PROCESS_IDLE",
+          "value": "1",
+          "enum": "TweenProcessMode",
+          "kind": "EnumValue",
+          "summary": "The [Tween] updates after each process frame (see [method Node._process]).",
+          "sourcePath": "doc/classes/Tween.xml"
+        },
+        {
+          "name": "TWEEN_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "TweenProcessMode",
+          "kind": "EnumValue",
+          "summary": "The [Tween] updates after each physics frame (see [method Node._physics_process]).",
+          "sourcePath": "doc/classes/Tween.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TWEEN_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "TweenProcessMode",
+      "kind": "EnumValue",
+      "summary": "The [Tween] updates after each physics frame (see [method Node._physics_process]).",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TWEEN_PROCESS_IDLE",
+      "value": "1",
+      "enum": "TweenProcessMode",
+      "kind": "EnumValue",
+      "summary": "The [Tween] updates after each process frame (see [method Node._process]).",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TWEEN_PAUSE_BOUND",
+      "value": "0",
+      "enum": "TweenPauseMode",
+      "kind": "EnumValue",
+      "summary": "If the [Tween] has a bound node, it will process when that node can process (see [member Node.process_mode]). Otherwise it\u0027s the same as [constant TWEEN_PAUSE_STOP].",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TWEEN_PAUSE_STOP",
+      "value": "1",
+      "enum": "TweenPauseMode",
+      "kind": "EnumValue",
+      "summary": "If [SceneTree] is paused, the [Tween] will also pause.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TWEEN_PAUSE_PROCESS",
+      "value": "2",
+      "enum": "TweenPauseMode",
+      "kind": "EnumValue",
+      "summary": "The [Tween] will process regardless of whether [SceneTree] is paused.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_LINEAR",
+      "value": "0",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated linearly.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_SINE",
+      "value": "1",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated using a sine function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_QUINT",
+      "value": "2",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with a quintic (to the power of 5) function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_QUART",
+      "value": "3",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with a quartic (to the power of 4) function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_QUAD",
+      "value": "4",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with a quadratic (to the power of 2) function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_EXPO",
+      "value": "5",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with an exponential (to the power of x) function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_ELASTIC",
+      "value": "6",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with elasticity, wiggling around the edges.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_CUBIC",
+      "value": "7",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with a cubic (to the power of 3) function.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_CIRC",
+      "value": "8",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated with a function using square roots.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_BOUNCE",
+      "value": "9",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated by bouncing at the end.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_BACK",
+      "value": "10",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated backing out at ends.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "TRANS_SPRING",
+      "value": "11",
+      "enum": "TransitionType",
+      "kind": "EnumValue",
+      "summary": "The animation is interpolated like a spring towards the end.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "EASE_IN",
+      "value": "0",
+      "enum": "EaseType",
+      "kind": "EnumValue",
+      "summary": "The interpolation starts slowly and speeds up towards the end.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "EASE_OUT",
+      "value": "1",
+      "enum": "EaseType",
+      "kind": "EnumValue",
+      "summary": "The interpolation starts quickly and slows down towards the end.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "EASE_IN_OUT",
+      "value": "2",
+      "enum": "EaseType",
+      "kind": "EnumValue",
+      "summary": "A combination of [constant EASE_IN] and [constant EASE_OUT]. The interpolation is slowest at both ends.",
+      "sourcePath": "doc/classes/Tween.xml"
+    },
+    {
+      "name": "EASE_OUT_IN",
+      "value": "3",
+      "enum": "EaseType",
+      "kind": "EnumValue",
+      "summary": "A combination of [constant EASE_IN] and [constant EASE_OUT]. The interpolation is fastest at both ends.",
+      "sourcePath": "doc/classes/Tween.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Tween.xml",
+      "sha256": "f73a5f8cbc210ac2b2eb7a554442b791883a813157ff55c8b9854b3aa8fe7ea5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

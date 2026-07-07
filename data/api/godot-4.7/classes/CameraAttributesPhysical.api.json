@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraAttributesPhysical",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraAttributesPhysical",
+    "kind": "class",
+    "baseType": "CameraAttributes",
+    "interfaces": [],
+    "godotReference": "CameraAttributesPhysical",
+    "documentationPath": "doc/classes/CameraAttributesPhysical.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cameraattributesphysical.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFov",
+      "kind": "Method",
+      "signature": "public float GetFov()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the vertical field of view that corresponds to the [member frustum_focal_length]. This value is calculated internally whenever [member frustum_focal_length] is changed.",
+      "godotName": "get_fov",
+      "xmlDocId": "M:Godot.CameraAttributesPhysical.GetFov",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "AutoExposureMaxExposureValue",
+      "kind": "Property",
+      "signature": "public float AutoExposureMaxExposureValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum luminance (in EV100) used when calculating auto exposure. When calculating scene average luminance, color values will be clamped to at least this value. This limits the auto-exposure from exposing below a certain brightness, resulting in a cut off point where the scene will remain bright.",
+      "defaultValue": "10.0",
+      "godotName": "auto_exposure_max_exposure_value",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.AutoExposureMaxExposureValue",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "AutoExposureMinExposureValue",
+      "kind": "Property",
+      "signature": "public float AutoExposureMinExposureValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum luminance (in EV100) used when calculating auto exposure. When calculating scene average luminance, color values will be clamped to at least this value. This limits the auto-exposure from exposing above a certain brightness, resulting in a cut off point where the scene will remain dark.",
+      "defaultValue": "-8.0",
+      "godotName": "auto_exposure_min_exposure_value",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.AutoExposureMinExposureValue",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "ExposureAperture",
+      "kind": "Property",
+      "signature": "public float ExposureAperture { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Size of the aperture of the camera, measured in f-stops. An f-stop is a unitless ratio between the focal length of the camera and the diameter of the aperture. A high aperture setting will result in a smaller aperture which leads to a dimmer image and sharper focus. A low aperture results in a wide aperture which lets in more light resulting in a brighter, less-focused image. Default is appropriate for outdoors at daytime (i.e. for use with a default [DirectionalLight3D]), for indoor lighting, a value between 2 and 4 is more appropriate. Only available when [member ProjectSettings.rendering/lights_and_shadows/use_physical_light_units] is enabled.",
+      "defaultValue": "16.0",
+      "godotName": "exposure_aperture",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.ExposureAperture",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "ExposureShutterSpeed",
+      "kind": "Property",
+      "signature": "public float ExposureShutterSpeed { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time for shutter to open and close, evaluated as [code]1 / shutter_speed[/code] seconds. A higher value will allow less light (leading to a darker image), while a lower value will allow more light (leading to a brighter image). Only available when [member ProjectSettings.rendering/lights_and_shadows/use_physical_light_units] is enabled.",
+      "defaultValue": "100.0",
+      "godotName": "exposure_shutter_speed",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.ExposureShutterSpeed",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "FrustumFar",
+      "kind": "Property",
+      "signature": "public float FrustumFar { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Override value for [member Camera3D.far]. Used internally when calculating depth of field. When attached to a [Camera3D] as its [member Camera3D.attributes], it will override the [member Camera3D.far] property.",
+      "defaultValue": "4000.0",
+      "godotName": "frustum_far",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.FrustumFar",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "FrustumFocalLength",
+      "kind": "Property",
+      "signature": "public float FrustumFocalLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance between camera lens and camera aperture, measured in millimeters. Controls field of view and depth of field. A larger focal length will result in a smaller field of view and a narrower depth of field meaning fewer objects will be in focus. A smaller focal length will result in a wider field of view and a larger depth of field meaning more objects will be in focus. When attached to a [Camera3D] as its [member Camera3D.attributes], it will override the [member Camera3D.fov] property and the [member Camera3D.keep_aspect] property.",
+      "defaultValue": "35.0",
+      "godotName": "frustum_focal_length",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.FrustumFocalLength",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "FrustumFocusDistance",
+      "kind": "Property",
+      "signature": "public float FrustumFocusDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Distance from camera of object that will be in focus, measured in meters. Internally this will be clamped to be at least 1 millimeter larger than [member frustum_focal_length].",
+      "defaultValue": "10.0",
+      "godotName": "frustum_focus_distance",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.FrustumFocusDistance",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    },
+    {
+      "name": "FrustumNear",
+      "kind": "Property",
+      "signature": "public float FrustumNear { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Override value for [member Camera3D.near]. Used internally when calculating depth of field. When attached to a [Camera3D] as its [member Camera3D.attributes], it will override the [member Camera3D.near] property.",
+      "defaultValue": "0.05",
+      "godotName": "frustum_near",
+      "xmlDocId": "P:Godot.CameraAttributesPhysical.FrustumNear",
+      "sourcePath": "doc/classes/CameraAttributesPhysical.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraAttributesPhysical.xml",
+      "sha256": "924732c647b374a7f08c5f1333db6950b6742048f7af652c80db6d02870d400b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

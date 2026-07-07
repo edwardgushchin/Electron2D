@@ -1,0 +1,473 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DJiggle",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DJiggle",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DJiggle",
+    "documentationPath": "doc/classes/SkeletonModification2DJiggle.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2djiggle.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCollisionMask",
+      "kind": "Method",
+      "signature": "public int GetCollisionMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the collision mask used by the Jiggle modifier when collisions are enabled.",
+      "godotName": "get_collision_mask",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetCollisionMask",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointBone2dNode",
+      "kind": "Method",
+      "signature": "public NodePath GetJiggleJointBone2dNode(int jointIdx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Bone2D] node assigned to the Jiggle joint at [param joint_idx].",
+      "godotName": "get_jiggle_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointBone2dNode(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointBoneIndex",
+      "kind": "Method",
+      "signature": "public int GetJiggleJointBoneIndex(int jointIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the [Bone2D] node assigned to the Jiggle joint at [param joint_idx].",
+      "godotName": "get_jiggle_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointBoneIndex(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointDamping",
+      "kind": "Method",
+      "signature": "public float GetJiggleJointDamping(int jointIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the amount of damping of the Jiggle joint at [param joint_idx].",
+      "godotName": "get_jiggle_joint_damping",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointDamping(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointGravity",
+      "kind": "Method",
+      "signature": "public Vector2 GetJiggleJointGravity(int jointIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Vector2] representing the amount of gravity the Jiggle joint at [param joint_idx] is influenced by.",
+      "godotName": "get_jiggle_joint_gravity",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointGravity(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointMass",
+      "kind": "Method",
+      "signature": "public float GetJiggleJointMass(int jointIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the amount of mass of the jiggle joint at [param joint_idx].",
+      "godotName": "get_jiggle_joint_mass",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointMass(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointOverride",
+      "kind": "Method",
+      "signature": "public bool GetJiggleJointOverride(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a boolean that indicates whether the joint at [param joint_idx] is overriding the default Jiggle joint data defined in the modification.",
+      "godotName": "get_jiggle_joint_override",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointOverride(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointStiffness",
+      "kind": "Method",
+      "signature": "public float GetJiggleJointStiffness(int jointIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stiffness of the Jiggle joint at [param joint_idx].",
+      "godotName": "get_jiggle_joint_stiffness",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointStiffness(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetJiggleJointUseGravity",
+      "kind": "Method",
+      "signature": "public bool GetJiggleJointUseGravity(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a boolean that indicates whether the joint at [param joint_idx] is using gravity or not.",
+      "godotName": "get_jiggle_joint_use_gravity",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetJiggleJointUseGravity(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "GetUseColliders",
+      "kind": "Method",
+      "signature": "public bool GetUseColliders()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the jiggle modifier is taking physics colliders into account when solving.",
+      "godotName": "get_use_colliders",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.GetUseColliders",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "Reset",
+      "kind": "Method",
+      "signature": "public void Reset()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resets the internal jiggle simulation state to the current bone positions, clearing velocity, acceleration, and accumulated forces.",
+      "godotName": "reset",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.Reset",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetCollisionMask",
+      "kind": "Method",
+      "signature": "public void SetCollisionMask(int collisionMask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "collision_mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the collision mask that the Jiggle modifier will use when reacting to colliders, if the Jiggle modifier is set to take colliders into account.",
+      "godotName": "set_collision_mask",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetCollisionMask(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointBone2dNode",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointBone2dNode(int jointIdx, NodePath bone2dNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone2d_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [Bone2D] node assigned to the Jiggle joint at [param joint_idx].",
+      "godotName": "set_jiggle_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointBone2dNode(int,NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointBoneIndex",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointBoneIndex(int jointIdx, int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the bone index, [param bone_idx], of the Jiggle joint at [param joint_idx]. When possible, this will also update the [code]bone2d_node[/code] of the Jiggle joint based on data provided by the linked skeleton.",
+      "godotName": "set_jiggle_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointBoneIndex(int,int)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointDamping",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointDamping(int jointIdx, float damping)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "damping",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the amount of damping of the Jiggle joint at [param joint_idx].",
+      "godotName": "set_jiggle_joint_damping",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointDamping(int,float)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointGravity",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointGravity(int jointIdx, Vector2 gravity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "gravity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the gravity vector of the Jiggle joint at [param joint_idx].",
+      "godotName": "set_jiggle_joint_gravity",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointGravity(int,Vector2)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointMass",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointMass(int jointIdx, float mass)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "mass",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the of mass of the Jiggle joint at [param joint_idx].",
+      "godotName": "set_jiggle_joint_mass",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointMass(int,float)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointOverride",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointOverride(int jointIdx, bool @override)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "override",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the Jiggle joint at [param joint_idx] should override the default Jiggle joint settings. Setting this to [code]true[/code] will make the joint use its own settings rather than the default ones attached to the modification.",
+      "godotName": "set_jiggle_joint_override",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointOverride(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointStiffness",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointStiffness(int jointIdx, float stiffness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "stiffness",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the of stiffness of the Jiggle joint at [param joint_idx].",
+      "godotName": "set_jiggle_joint_stiffness",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointStiffness(int,float)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetJiggleJointUseGravity",
+      "kind": "Method",
+      "signature": "public void SetJiggleJointUseGravity(int jointIdx, bool useGravity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "use_gravity",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the Jiggle joint at [param joint_idx] should use gravity.",
+      "godotName": "set_jiggle_joint_use_gravity",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetJiggleJointUseGravity(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "SetUseColliders",
+      "kind": "Method",
+      "signature": "public void SetUseColliders(bool useColliders)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "use_colliders",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the Jiggle modifier will take colliders into account, keeping them from entering into these collision objects.",
+      "godotName": "set_use_colliders",
+      "xmlDocId": "M:Godot.SkeletonModification2DJiggle.SetUseColliders(bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "Damping",
+      "kind": "Property",
+      "signature": "public float Damping { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The default amount of damping applied to the Jiggle joints, if they are not overridden. Higher values lead to more of the calculated velocity being applied.",
+      "defaultValue": "0.75",
+      "godotName": "damping",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.Damping",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "Gravity",
+      "kind": "Property",
+      "signature": "public Vector2 Gravity { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The default amount of gravity applied to the Jiggle joints, if they are not overridden.",
+      "defaultValue": "Vector2(0, 6)",
+      "godotName": "gravity",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.Gravity",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "JiggleDataChainLength",
+      "kind": "Property",
+      "signature": "public int JiggleDataChainLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of Jiggle joints in the Jiggle modification.",
+      "defaultValue": "0",
+      "godotName": "jiggle_data_chain_length",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.JiggleDataChainLength",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public float Mass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The default amount of mass assigned to the Jiggle joints, if they are not overridden. Higher values lead to faster movements and more overshooting.",
+      "defaultValue": "0.75",
+      "godotName": "mass",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.Mass",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "Stiffness",
+      "kind": "Property",
+      "signature": "public float Stiffness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The default amount of stiffness assigned to the Jiggle joints, if they are not overridden. Higher values act more like springs, quickly moving into the correct position.",
+      "defaultValue": "3.0",
+      "godotName": "stiffness",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.Stiffness",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "TargetNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TargetNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The NodePath to the node that is the target for the Jiggle modification. This node is what the Jiggle chain will attempt to rotate the bone chain to.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.TargetNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    },
+    {
+      "name": "UseGravity",
+      "kind": "Property",
+      "signature": "public bool UseGravity { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Whether the gravity vector, [member gravity], should be applied to the Jiggle joints, assuming they are not overriding the default settings.",
+      "defaultValue": "false",
+      "godotName": "use_gravity",
+      "xmlDocId": "P:Godot.SkeletonModification2DJiggle.UseGravity",
+      "sourcePath": "doc/classes/SkeletonModification2DJiggle.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DJiggle.xml",
+      "sha256": "820801ff320baecef6e5c42df244de8fc673f4fb8373935b874d11cd07255e57"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

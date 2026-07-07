@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureCubemapRD",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureCubemapRD",
+    "kind": "class",
+    "baseType": "TextureLayeredRD",
+    "interfaces": [],
+    "godotReference": "TextureCubemapRD",
+    "documentationPath": "doc/classes/TextureCubemapRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texturecubemaprd.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureCubemapRD.xml",
+      "sha256": "93c894cd78c4580b06008f94effdb967b9071e49617dedca8e96d1fac3c3964c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AtlasTexture",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AtlasTexture",
+    "kind": "class",
+    "baseType": "Electron2D.Texture2D",
+    "interfaces": [],
+    "godotReference": "AtlasTexture",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "AtlasTexture",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AtlasTexture()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the AtlasTexture type.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "AtlasTexture",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AtlasTexture()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the AtlasTexture type.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHeight()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the height value.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.GetHeight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMipmapCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetMipmapCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the mipmap count value.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.GetMipmapCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public System.Int32 GetWidth()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the width value.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.GetWidth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAlpha",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAlpha()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether alpha is available.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.HasAlpha",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public System.Boolean HasMipmaps()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether mipmaps is available.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.HasMipmaps",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Int32"
+        },
+        {
+          "name": "y",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether pixel opaque is true.",
+      "xmlDocId": "M:Electron2D.AtlasTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Atlas",
+      "kind": "Property",
+      "signature": "public Electron2D.Texture2D Atlas { get; set; }",
+      "returnType": "Electron2D.Texture2D",
+      "parameters": [],
+      "summary": "Gets or sets the texture that contains this atlas region.",
+      "xmlDocId": "P:Electron2D.AtlasTexture.Atlas",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "FilterClip",
+      "kind": "Property",
+      "signature": "public System.Boolean FilterClip { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether sampling outside the region is clipped to reduce bleeding.",
+      "xmlDocId": "P:Electron2D.AtlasTexture.FilterClip",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Margin",
+      "kind": "Property",
+      "signature": "public Electron2D.Rect2 Margin { get; set; }",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets or sets the margin around the atlas region.",
+      "xmlDocId": "P:Electron2D.AtlasTexture.Margin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Region",
+      "kind": "Property",
+      "signature": "public Electron2D.Rect2 Region { get; set; }",
+      "returnType": "Electron2D.Rect2",
+      "parameters": [],
+      "summary": "Gets or sets the rectangle in the atlas texture that this resource draws.",
+      "xmlDocId": "P:Electron2D.AtlasTexture.Region",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

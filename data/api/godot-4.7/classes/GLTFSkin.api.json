@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFSkin",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFSkin",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFSkin",
+    "documentationPath": "modules/gltf/doc_classes/GLTFSkin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfskin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetInverseBinds",
+      "kind": "Method",
+      "signature": "public Transform3D[] GetInverseBinds()",
+      "returnType": "Transform3D[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_inverse_binds",
+      "xmlDocId": "M:Godot.GLTFSkin.GetInverseBinds",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "GetJointIToBoneI",
+      "kind": "Method",
+      "signature": "public Dictionary GetJointIToBoneI()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_joint_i_to_bone_i",
+      "xmlDocId": "M:Godot.GLTFSkin.GetJointIToBoneI",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "GetJointIToName",
+      "kind": "Method",
+      "signature": "public Dictionary GetJointIToName()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_joint_i_to_name",
+      "xmlDocId": "M:Godot.GLTFSkin.GetJointIToName",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "SetInverseBinds",
+      "kind": "Method",
+      "signature": "public void SetInverseBinds(Transform3D[] inverseBinds)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "inverse_binds",
+          "type": "Transform3D[]"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_inverse_binds",
+      "xmlDocId": "M:Godot.GLTFSkin.SetInverseBinds(Transform3D[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "SetJointIToBoneI",
+      "kind": "Method",
+      "signature": "public void SetJointIToBoneI(Dictionary jointIToBoneI)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_i_to_bone_i",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_joint_i_to_bone_i",
+      "xmlDocId": "M:Godot.GLTFSkin.SetJointIToBoneI(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "SetJointIToName",
+      "kind": "Method",
+      "signature": "public void SetJointIToName(Dictionary jointIToName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_i_to_name",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_joint_i_to_name",
+      "xmlDocId": "M:Godot.GLTFSkin.SetJointIToName(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "GodotSkin",
+      "kind": "Property",
+      "signature": "public Skin GodotSkin { get; set; }",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "",
+      "godotName": "godot_skin",
+      "xmlDocId": "P:Godot.GLTFSkin.GodotSkin",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "Joints",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Joints { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "joints",
+      "xmlDocId": "P:Godot.GLTFSkin.Joints",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "JointsOriginal",
+      "kind": "Property",
+      "signature": "public PackedInt32Array JointsOriginal { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "joints_original",
+      "xmlDocId": "P:Godot.GLTFSkin.JointsOriginal",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "NonJoints",
+      "kind": "Property",
+      "signature": "public PackedInt32Array NonJoints { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "non_joints",
+      "xmlDocId": "P:Godot.GLTFSkin.NonJoints",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "Roots",
+      "kind": "Property",
+      "signature": "public PackedInt32Array Roots { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "roots",
+      "xmlDocId": "P:Godot.GLTFSkin.Roots",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "Skeleton",
+      "kind": "Property",
+      "signature": "public int Skeleton { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "-1",
+      "godotName": "skeleton",
+      "xmlDocId": "P:Godot.GLTFSkin.Skeleton",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    },
+    {
+      "name": "SkinRoot",
+      "kind": "Property",
+      "signature": "public int SkinRoot { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "-1",
+      "godotName": "skin_root",
+      "xmlDocId": "P:Godot.GLTFSkin.SkinRoot",
+      "sourcePath": "modules/gltf/doc_classes/GLTFSkin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFSkin.xml",
+      "sha256": "8879948ed9ecfaf0b130d325128d4f6bd1135f3c4ede04b9a6f300ba6f50ac28"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsMaterial",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "PhysicsMaterial",
+    "documentationPath": "doc/classes/PhysicsMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsmaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Absorbent",
+      "kind": "Property",
+      "signature": "public bool Absorbent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], subtracts the bounciness from the colliding object\u0027s bounciness instead of adding it.",
+      "defaultValue": "false",
+      "godotName": "absorbent",
+      "xmlDocId": "P:Godot.PhysicsMaterial.Absorbent",
+      "sourcePath": "doc/classes/PhysicsMaterial.xml"
+    },
+    {
+      "name": "Bounce",
+      "kind": "Property",
+      "signature": "public float Bounce { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s bounciness. Values range from [code]0[/code] (no bounce) to [code]1[/code] (full bounciness). [b]Note:[/b] Even with [member bounce] set to [code]1.0[/code], some energy will be lost over time due to linear and angular damping. To have a physics body that preserves all its energy over time, set [member bounce] to [code]1.0[/code], the body\u0027s linear damp mode to [b]Replace[/b] (if applicable), its linear damp to [code]0.0[/code], its angular damp mode to [b]Replace[/b] (if applicable), and its angular damp to [code]0.0[/code].",
+      "defaultValue": "0.0",
+      "godotName": "bounce",
+      "xmlDocId": "P:Godot.PhysicsMaterial.Bounce",
+      "sourcePath": "doc/classes/PhysicsMaterial.xml"
+    },
+    {
+      "name": "Friction",
+      "kind": "Property",
+      "signature": "public float Friction { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The body\u0027s friction. Values range from [code]0[/code] (frictionless) to [code]1[/code] (maximum friction).",
+      "defaultValue": "1.0",
+      "godotName": "friction",
+      "xmlDocId": "P:Godot.PhysicsMaterial.Friction",
+      "sourcePath": "doc/classes/PhysicsMaterial.xml"
+    },
+    {
+      "name": "Rough",
+      "kind": "Property",
+      "signature": "public bool Rough { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the physics engine will use the friction of the object marked as \u0022rough\u0022 when two objects collide. If [code]false[/code], the physics engine will use the lowest friction of all colliding objects instead. If [code]true[/code] for both colliding objects, the physics engine will use the highest friction.",
+      "defaultValue": "false",
+      "godotName": "rough",
+      "xmlDocId": "P:Godot.PhysicsMaterial.Rough",
+      "sourcePath": "doc/classes/PhysicsMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsMaterial.xml",
+      "sha256": "c9306a96613829877e133362ce9bf2687dea22eb64258155da438a6d1ea33453"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

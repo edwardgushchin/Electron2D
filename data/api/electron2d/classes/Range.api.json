@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Range",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Range",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "Range",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Range",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Range()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Range\u0060 class.",
+      "xmlDocId": "M:Electron2D.Range.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Range",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Range()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Range\u0060 class.",
+      "xmlDocId": "M:Electron2D.Range.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetValueNoSignal",
+      "kind": "Method",
+      "signature": "public System.Void SetValueNoSignal(System.Double value)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Sets \u0060Electron2D.Range.Value\u0060 without emitting \u0060value_changed\u0060.",
+      "xmlDocId": "M:Electron2D.Range.SetValueNoSignal(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowGreater",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowGreater { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether values above \u0060Electron2D.Range.MaxValue\u0060 are allowed.",
+      "xmlDocId": "P:Electron2D.Range.AllowGreater",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowLesser",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowLesser { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether values below \u0060Electron2D.Range.MinValue\u0060 are allowed.",
+      "xmlDocId": "P:Electron2D.Range.AllowLesser",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExpEdit",
+      "kind": "Property",
+      "signature": "public System.Boolean ExpEdit { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether exponential editing is requested by UI controls.",
+      "xmlDocId": "P:Electron2D.Range.ExpEdit",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaxValue",
+      "kind": "Property",
+      "signature": "public System.Double MaxValue { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the maximum value.",
+      "xmlDocId": "P:Electron2D.Range.MaxValue",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MinValue",
+      "kind": "Property",
+      "signature": "public System.Double MinValue { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the minimum value.",
+      "xmlDocId": "P:Electron2D.Range.MinValue",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Page",
+      "kind": "Property",
+      "signature": "public System.Double Page { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the page size associated with this range.",
+      "xmlDocId": "P:Electron2D.Range.Page",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ratio",
+      "kind": "Property",
+      "signature": "public System.Double Ratio { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the value as a ratio between minimum and maximum.",
+      "xmlDocId": "P:Electron2D.Range.Ratio",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rounded",
+      "kind": "Property",
+      "signature": "public System.Boolean Rounded { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether values are rounded to integers after step snapping.",
+      "xmlDocId": "P:Electron2D.Range.Rounded",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public System.Double Step { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the step used when snapping values.",
+      "xmlDocId": "P:Electron2D.Range.Step",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Value",
+      "kind": "Property",
+      "signature": "public System.Double Value { get; set; }",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets or sets the current value.",
+      "xmlDocId": "P:Electron2D.Range.Value",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

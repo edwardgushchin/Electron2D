@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDAccelerationStructureGeometry",
+    "namespace": "Godot",
+    "fullName": "Godot.RDAccelerationStructureGeometry",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDAccelerationStructureGeometry",
+    "documentationPath": "doc/classes/RDAccelerationStructureGeometry.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdaccelerationstructuregeometry.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Flags",
+      "kind": "Property",
+      "signature": "public int Flags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Flags for the geometry.",
+      "defaultValue": "0",
+      "godotName": "flags",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.Flags",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "IndexBuffer",
+      "kind": "Property",
+      "signature": "public RID IndexBuffer { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Buffer containing vertex indices. If [code]null[/code], triangles are non-indexed.",
+      "defaultValue": "RID()",
+      "godotName": "index_buffer",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.IndexBuffer",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "IndexCount",
+      "kind": "Property",
+      "signature": "public int IndexCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of indices used by this geometry in [member index_buffer].",
+      "defaultValue": "0",
+      "godotName": "index_count",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.IndexCount",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "IndexOffset",
+      "kind": "Property",
+      "signature": "public int IndexOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Byte offset of the first index in [member index_buffer].",
+      "defaultValue": "0",
+      "godotName": "index_offset",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.IndexOffset",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "VertexBuffer",
+      "kind": "Property",
+      "signature": "public RID VertexBuffer { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Buffer containing vertices.",
+      "defaultValue": "RID()",
+      "godotName": "vertex_buffer",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.VertexBuffer",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "VertexCount",
+      "kind": "Property",
+      "signature": "public int VertexCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of vertices used by this geometry in [member vertex_buffer].",
+      "defaultValue": "0",
+      "godotName": "vertex_count",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.VertexCount",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "VertexFormat",
+      "kind": "Property",
+      "signature": "public int VertexFormat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Format of the vertices in [member vertex_buffer].",
+      "defaultValue": "232",
+      "godotName": "vertex_format",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.VertexFormat",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "VertexOffset",
+      "kind": "Property",
+      "signature": "public int VertexOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Byte offset of the first vertex in [member vertex_buffer].",
+      "defaultValue": "0",
+      "godotName": "vertex_offset",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.VertexOffset",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    },
+    {
+      "name": "VertexStride",
+      "kind": "Property",
+      "signature": "public int VertexStride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of bytes between each vertex in [member vertex_buffer].",
+      "defaultValue": "0",
+      "godotName": "vertex_stride",
+      "xmlDocId": "P:Godot.RDAccelerationStructureGeometry.VertexStride",
+      "sourcePath": "doc/classes/RDAccelerationStructureGeometry.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDAccelerationStructureGeometry.xml",
+      "sha256": "d3a48693a70f216a68e4beeb3137b763d0bc3c01beaa462c002fe6b743120760"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

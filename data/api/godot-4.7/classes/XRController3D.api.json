@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRController3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRController3D",
+    "kind": "class",
+    "baseType": "XRNode3D",
+    "interfaces": [],
+    "godotReference": "XRController3D",
+    "documentationPath": "doc/classes/XRController3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrcontroller3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFloat",
+      "kind": "Method",
+      "signature": "public float GetFloat(StringName name)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a numeric value for the input with the given [param name]. This is used for triggers and grip sensors. [b]Note:[/b] The current [XRInterface] defines the [param name] for each input. In the case of OpenXR, these are the names of actions in the current action set.",
+      "godotName": "get_float",
+      "xmlDocId": "M:Godot.XRController3D.GetFloat(StringName)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "GetInput",
+      "kind": "Method",
+      "signature": "public Variant GetInput(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a [Variant] for the input with the given [param name]. This works for any input type, the variant will be typed according to the actions configuration. [b]Note:[/b] The current [XRInterface] defines the [param name] for each input. In the case of OpenXR, these are the names of actions in the current action set.",
+      "godotName": "get_input",
+      "xmlDocId": "M:Godot.XRController3D.GetInput(StringName)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "GetTrackerHand",
+      "kind": "Method",
+      "signature": "public int GetTrackerHand()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the hand holding this controller, if known.",
+      "godotName": "get_tracker_hand",
+      "xmlDocId": "M:Godot.XRController3D.GetTrackerHand",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "GetVector2",
+      "kind": "Method",
+      "signature": "public Vector2 GetVector2(StringName name)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a [Vector2] for the input with the given [param name]. This is used for thumbsticks and thumbpads found on many controllers. [b]Note:[/b] The current [XRInterface] defines the [param name] for each input. In the case of OpenXR, these are the names of actions in the current action set.",
+      "godotName": "get_vector2",
+      "xmlDocId": "M:Godot.XRController3D.GetVector2(StringName)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "IsButtonPressed",
+      "kind": "Method",
+      "signature": "public bool IsButtonPressed(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the button with the given [param name] is pressed. [b]Note:[/b] The current [XRInterface] defines the [param name] for each input. In the case of OpenXR, these are the names of actions in the current action set.",
+      "godotName": "is_button_pressed",
+      "xmlDocId": "M:Godot.XRController3D.IsButtonPressed(StringName)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ButtonPressed",
+      "kind": "Signal",
+      "signature": "public event ButtonPressedHandler ButtonPressed",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a button on this controller is pressed.",
+      "godotName": "button_pressed",
+      "xmlDocId": "E:Godot.XRController3D.ButtonPressed(String)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "ButtonReleased",
+      "kind": "Signal",
+      "signature": "public event ButtonReleasedHandler ButtonReleased",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when a button on this controller is released.",
+      "godotName": "button_released",
+      "xmlDocId": "E:Godot.XRController3D.ButtonReleased(String)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "InputFloatChanged",
+      "kind": "Signal",
+      "signature": "public event InputFloatChangedHandler InputFloatChanged",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Emitted when a trigger or similar input on this controller changes value.",
+      "godotName": "input_float_changed",
+      "xmlDocId": "E:Godot.XRController3D.InputFloatChanged(String,float)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "InputVector2Changed",
+      "kind": "Signal",
+      "signature": "public event InputVector2ChangedHandler InputVector2Changed",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when a thumbstick or thumbpad on this controller is moved.",
+      "godotName": "input_vector2_changed",
+      "xmlDocId": "E:Godot.XRController3D.InputVector2Changed(String,Vector2)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    },
+    {
+      "name": "ProfileChanged",
+      "kind": "Signal",
+      "signature": "public event ProfileChangedHandler ProfileChanged",
+      "parameters": [
+        {
+          "name": "role",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted when the interaction profile on this controller is changed.",
+      "godotName": "profile_changed",
+      "xmlDocId": "E:Godot.XRController3D.ProfileChanged(String)",
+      "sourcePath": "doc/classes/XRController3D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRController3D.xml",
+      "sha256": "7342750811bacc94a5981e515a889332d7947c11c38fdf02ec68e0bc82f2b5f0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

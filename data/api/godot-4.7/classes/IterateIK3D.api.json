@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "IterateIK3D",
+    "namespace": "Godot",
+    "fullName": "Godot.IterateIK3D",
+    "kind": "class",
+    "baseType": "ChainIK3D",
+    "interfaces": [],
+    "godotReference": "IterateIK3D",
+    "documentationPath": "doc/classes/IterateIK3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_iterateik3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetJointLimitation",
+      "kind": "Method",
+      "signature": "public JointLimitation3D GetJointLimitation(int index, int joint)",
+      "returnType": "JointLimitation3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint limitation at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_limitation",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointLimitation(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetJointLimitationRightAxis",
+      "kind": "Method",
+      "signature": "public int GetJointLimitationRightAxis(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint limitation right axis at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_limitation_right_axis",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointLimitationRightAxis(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetJointLimitationRightAxisVector",
+      "kind": "Method",
+      "signature": "public Vector3 GetJointLimitationRightAxisVector(int index, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint limitation right axis vector at [param joint] in the bone chain\u0027s joint list. If [method get_joint_limitation_right_axis] is [constant SkeletonModifier3D.SECONDARY_DIRECTION_NONE], this method returns [code]Vector3(0, 0, 0)[/code].",
+      "godotName": "get_joint_limitation_right_axis_vector",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointLimitationRightAxisVector(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetJointLimitationRotationOffset",
+      "kind": "Method",
+      "signature": "public Quaternion GetJointLimitationRotationOffset(int index, int joint)",
+      "returnType": "Quaternion",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint limitation rotation offset at [param joint] in the bone chain\u0027s joint list. Rotation is done in the local space which is constructed by the bone direction (in general parent to child) as the \u002BY axis and [method get_joint_limitation_right_axis_vector] as the \u002BX axis. If the \u002BX and \u002BY axes are not orthogonal, the \u002BX axis is implicitly modified to make it orthogonal. Also, if the length of [method get_joint_limitation_right_axis_vector] is zero, the space is created by rotating the reference pose using the shortest arc that rotates the \u002BY axis of the reference pose to match the bone direction. In here, the reference pose is the bone pose immediately before processing IK.",
+      "godotName": "get_joint_limitation_rotation_offset",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointLimitationRotationOffset(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetJointRotationAxis",
+      "kind": "Method",
+      "signature": "public int GetJointRotationAxis(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_rotation_axis",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointRotationAxis(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetJointRotationAxisVector",
+      "kind": "Method",
+      "signature": "public Vector3 GetJointRotationAxisVector(int index, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis vector for the specified joint in the bone chain. This vector represents the axis around which the joint can rotate. It is determined based on the rotation axis set for the joint. If [method get_joint_rotation_axis] is [constant SkeletonModifier3D.ROTATION_AXIS_ALL], this method returns [code]Vector3(0, 0, 0)[/code].",
+      "godotName": "get_joint_rotation_axis_vector",
+      "xmlDocId": "M:Godot.IterateIK3D.GetJointRotationAxisVector(int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "GetTargetNode",
+      "kind": "Method",
+      "signature": "public NodePath GetTargetNode(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the target node that the end bone is trying to reach.",
+      "godotName": "get_target_node",
+      "xmlDocId": "M:Godot.IterateIK3D.GetTargetNode(int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointLimitation",
+      "kind": "Method",
+      "signature": "public void SetJointLimitation(int index, int joint, JointLimitation3D limitation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "limitation",
+          "type": "JointLimitation3D"
+        }
+      ],
+      "summary": "Sets the joint limitation at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "set_joint_limitation",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointLimitation(int,int,JointLimitation3D)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointLimitationRightAxis",
+      "kind": "Method",
+      "signature": "public void SetJointLimitationRightAxis(int index, int joint, int direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the joint limitation right axis at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "set_joint_limitation_right_axis",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointLimitationRightAxis(int,int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointLimitationRightAxisVector",
+      "kind": "Method",
+      "signature": "public void SetJointLimitationRightAxisVector(int index, int joint, Vector3 vector)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "vector",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the optional joint limitation right axis vector at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "set_joint_limitation_right_axis_vector",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointLimitationRightAxisVector(int,int,Vector3)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointLimitationRotationOffset",
+      "kind": "Method",
+      "signature": "public void SetJointLimitationRotationOffset(int index, int joint, Quaternion offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "Quaternion"
+        }
+      ],
+      "summary": "Sets the joint limitation rotation offset at [param joint] in the bone chain\u0027s joint list. Rotation is done in the local space which is constructed by the bone direction (in general parent to child) as the \u002BY axis and [method get_joint_limitation_right_axis_vector] as the \u002BX axis. If the \u002BX and \u002BY axes are not orthogonal, the \u002BX axis is implicitly modified to make it orthogonal. Also, if the length of [method get_joint_limitation_right_axis_vector] is zero, the space is created by rotating the reference pose using the shortest arc that rotates the \u002BY axis of the reference pose to match the bone direction. In here, the reference pose is the bone pose immediately before processing IK.",
+      "godotName": "set_joint_limitation_rotation_offset",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointLimitationRotationOffset(int,int,Quaternion)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointRotationAxis",
+      "kind": "Method",
+      "signature": "public void SetJointRotationAxis(int index, int joint, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the rotation axis at [param joint] in the bone chain\u0027s joint list. The axes are based on the reference pose\u0027s space, if [param axis] is [constant SkeletonModifier3D.ROTATION_AXIS_CUSTOM], you can specify any axis. In here, the reference pose is the bone pose immediately before processing IK. [b]Note:[/b] The rotation axis and the forward vector shouldn\u0027t be colinear to avoid unintended rotation since [ChainIK3D] does not factor in twisting forces.",
+      "godotName": "set_joint_rotation_axis",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointRotationAxis(int,int,int)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetJointRotationAxisVector",
+      "kind": "Method",
+      "signature": "public void SetJointRotationAxisVector(int index, int joint, Vector3 axisVector)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "axis_vector",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the rotation axis vector for the specified joint in the bone chain. This vector is normalized by an internal process and represents the axis around which the bone chain can rotate. If the vector length is [code]0[/code], it is considered synonymous with [constant SkeletonModifier3D.ROTATION_AXIS_ALL].",
+      "godotName": "set_joint_rotation_axis_vector",
+      "xmlDocId": "M:Godot.IterateIK3D.SetJointRotationAxisVector(int,int,Vector3)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SetTargetNode",
+      "kind": "Method",
+      "signature": "public void SetTargetNode(int index, NodePath targetNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "target_node",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the target node that the end bone is trying to reach.",
+      "godotName": "set_target_node",
+      "xmlDocId": "M:Godot.IterateIK3D.SetTargetNode(int,NodePath)",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "AngularDeltaLimit",
+      "kind": "Property",
+      "signature": "public float AngularDeltaLimit { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum amount each bone can rotate in a single iteration. [b]Note:[/b] This limitation is applied during each iteration. For example, if [member max_iterations] is [code]4[/code] and [member angular_delta_limit] is [code]5[/code] degrees, the maximum rotation possible in a single frame is [code]20[/code] degrees.",
+      "defaultValue": "0.034906585",
+      "godotName": "angular_delta_limit",
+      "xmlDocId": "P:Godot.IterateIK3D.AngularDeltaLimit",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "Deterministic",
+      "kind": "Property",
+      "signature": "public bool Deterministic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], the result is calculated from the previous frame\u0027s [IterateIK3D] result as the initial state. If [code]true[/code], the previous frame\u0027s [IterateIK3D] result is discarded. At this point, the new result is calculated from the bone pose excluding the [IterateIK3D] as the initial state. This means the result will be always equal as long as the target position and the previous bone pose are the same. However, if [member angular_delta_limit] and [member max_iterations] are set too small, the end bone of the chain will never reach the target.",
+      "defaultValue": "false",
+      "godotName": "deterministic",
+      "xmlDocId": "P:Godot.IterateIK3D.Deterministic",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "MaxIterations",
+      "kind": "Property",
+      "signature": "public int MaxIterations { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of iteration loops used by the IK solver to produce more accurate results.",
+      "defaultValue": "4",
+      "godotName": "max_iterations",
+      "xmlDocId": "P:Godot.IterateIK3D.MaxIterations",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "MinDistance",
+      "kind": "Property",
+      "signature": "public float MinDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum distance between the end bone and the target. If the distance is below this value, the IK solver stops any further iterations.",
+      "defaultValue": "0.001",
+      "godotName": "min_distance",
+      "xmlDocId": "P:Godot.IterateIK3D.MinDistance",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.IterateIK3D.SettingCount",
+      "sourcePath": "doc/classes/IterateIK3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/IterateIK3D.xml",
+      "sha256": "af1df93349db3d334e0b7128a5c789a79ff3b668f2375599db3e4fb7665cfe9d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,1137 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorExportPlatformExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorExportPlatformExtension",
+    "kind": "class",
+    "baseType": "EditorExportPlatform",
+    "interfaces": [],
+    "godotReference": "EditorExportPlatformExtension",
+    "documentationPath": "doc/classes/EditorExportPlatformExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorexportplatformextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CanExport",
+      "kind": "Method",
+      "signature": "public bool _CanExport(EditorExportPreset preset, bool debug)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param preset] is valid and can be exported. Use [method set_config_error] and [method set_config_missing_templates] to set error details. Usual implementations call [method _has_valid_export_configuration] and [method _has_valid_project_configuration] to determine if exporting is possible.",
+      "godotName": "_can_export",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._CanExport(EditorExportPreset,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Cleanup",
+      "kind": "Method",
+      "signature": "public void _Cleanup()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called by the editor before platform is unregistered.",
+      "godotName": "_cleanup",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Cleanup",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportPack",
+      "kind": "Method",
+      "signature": "public int _ExportPack(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a PCK archive at [param path] for the specified [param preset]. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 disabled, and PCK is selected as a file type.",
+      "godotName": "_export_pack",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportPack(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportPackPatch",
+      "kind": "Method",
+      "signature": "public int _ExportPackPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a patch PCK archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 enabled, and PCK is selected as a file type. [b]Note:[/b] The patches provided in [param patches] have already been loaded when this method is called and are merely provided as context. When empty the patches defined in the export preset have been loaded instead.",
+      "godotName": "_export_pack_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportPackPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportProject",
+      "kind": "Method",
+      "signature": "public int _ExportProject(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a full project at [param path] for the specified [param preset]. This method is called when \u0022Export\u0022 button is pressed in the export dialog. This method implementation can call [method EditorExportPlatform.save_pack] or [method EditorExportPlatform.save_zip] to use default PCK/ZIP export process, or calls [method EditorExportPlatform.export_project_files] and implement custom callback for processing each exported file.",
+      "godotName": "_export_project",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportProject(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportZip",
+      "kind": "Method",
+      "signature": "public int _ExportZip(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Create a ZIP archive at [param path] for the specified [param preset]. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 disabled, and ZIP is selected as a file type.",
+      "godotName": "_export_zip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportZip(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportZipPatch",
+      "kind": "Method",
+      "signature": "public int _ExportZipPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Create a ZIP archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 enabled, and ZIP is selected as a file type. [b]Note:[/b] The patches provided in [param patches] have already been loaded when this method is called and are merely provided as context. When empty the patches defined in the export preset have been loaded instead.",
+      "godotName": "_export_zip_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportZipPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetBinaryExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetBinaryExtensions(EditorExportPreset preset)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns array of supported binary extensions for the full project export.",
+      "godotName": "_get_binary_extensions",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetBinaryExtensions(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetDebugProtocol",
+      "kind": "Method",
+      "signature": "public String _GetDebugProtocol()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns protocol used for remote debugging. Default implementation return [code]tcp://[/code].",
+      "godotName": "_get_debug_protocol",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetDebugProtocol",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetDeviceArchitecture",
+      "kind": "Method",
+      "signature": "public String _GetDeviceArchitecture(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns device architecture for one-click deploy.",
+      "godotName": "_get_device_architecture",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetDeviceArchitecture(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptionVisibility",
+      "kind": "Method",
+      "signature": "public bool _GetExportOptionVisibility(EditorExportPreset preset, String option)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Validates [param option] and returns visibility for the specified [param preset]. Default implementation return [code]true[/code] for all options.",
+      "godotName": "_get_export_option_visibility",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptionVisibility(EditorExportPreset,String)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptionWarning",
+      "kind": "Method",
+      "signature": "public String _GetExportOptionWarning(EditorExportPreset preset, StringName option)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "option",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Validates [param option] and returns warning message for the specified [param preset]. Default implementation return empty string for all options.",
+      "godotName": "_get_export_option_warning",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptionWarning(EditorExportPreset,StringName)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetExportOptions()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns a property list, as an [Array] of dictionaries. Each [Dictionary] must at least contain the [code]name: StringName[/code] and [code]type: Variant.Type[/code] entries. Additionally, the following keys are supported: - [code]hint: PropertyHint[/code] - [code]hint_string: String[/code] - [code]usage: PropertyUsageFlags[/code] - [code]class_name: StringName[/code] - [code]default_value: Variant[/code], default value of the property. - [code]update_visibility: bool[/code], if set to [code]true[/code], [method _get_export_option_visibility] is called for each property when this property is changed. - [code]required: bool[/code], if set to [code]true[/code], this property warnings are critical, and should be resolved to make export possible. This value is a hint for the [method _has_valid_export_configuration] implementation, and not used by the engine directly. See also [method Object._get_property_list].",
+      "godotName": "_get_export_options",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptions",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetLogo",
+      "kind": "Method",
+      "signature": "public Texture2D _GetLogo()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Returns the platform logo displayed in the export dialog. The logo should be 32\u00D732 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_logo",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetLogo",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns export platform name.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetName",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionIcon",
+      "kind": "Method",
+      "signature": "public Texture2D _GetOptionIcon(int device)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item icon for the specified [param device] in the one-click deploy menu. The icon should be 16\u00D716 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_option_icon",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionIcon(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionLabel",
+      "kind": "Method",
+      "signature": "public String _GetOptionLabel(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns one-click deploy menu item label for the specified [param device].",
+      "godotName": "_get_option_label",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionLabel(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionTooltip",
+      "kind": "Method",
+      "signature": "public String _GetOptionTooltip(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns one-click deploy menu item tooltip for the specified [param device].",
+      "godotName": "_get_option_tooltip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionTooltip(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionsCount",
+      "kind": "Method",
+      "signature": "public int _GetOptionsCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of devices (or other options) available in the one-click deploy menu.",
+      "godotName": "_get_options_count",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionsCount",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionsTooltip",
+      "kind": "Method",
+      "signature": "public String _GetOptionsTooltip()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns tooltip of the one-click deploy menu button.",
+      "godotName": "_get_options_tooltip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionsTooltip",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOsName",
+      "kind": "Method",
+      "signature": "public String _GetOsName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns target OS name.",
+      "godotName": "_get_os_name",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOsName",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetPlatformFeatures",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPlatformFeatures()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns array of platform specific features.",
+      "godotName": "_get_platform_features",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetPlatformFeatures",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetPresetFeatures",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPresetFeatures(EditorExportPreset preset)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns array of platform specific features for the specified [param preset].",
+      "godotName": "_get_preset_features",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetPresetFeatures(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetRunIcon",
+      "kind": "Method",
+      "signature": "public Texture2D _GetRunIcon()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Returns the icon of the one-click deploy menu button. The icon should be 16\u00D716 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_run_icon",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetRunIcon",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_HasValidExportConfiguration",
+      "kind": "Method",
+      "signature": "public bool _HasValidExportConfiguration(EditorExportPreset preset, bool debug)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if export configuration is valid.",
+      "godotName": "_has_valid_export_configuration",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._HasValidExportConfiguration(EditorExportPreset,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_HasValidProjectConfiguration",
+      "kind": "Method",
+      "signature": "public bool _HasValidProjectConfiguration(EditorExportPreset preset)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if project configuration is valid.",
+      "godotName": "_has_valid_project_configuration",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._HasValidProjectConfiguration(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public void _Initialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Initializes the plugin. Called by the editor when platform is registered.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Initialize",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_IsExecutable",
+      "kind": "Method",
+      "signature": "public bool _IsExecutable(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if specified file is a valid executable (native executable or script) for the target platform.",
+      "godotName": "_is_executable",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._IsExecutable(String)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_PollExport",
+      "kind": "Method",
+      "signature": "public bool _PollExport()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if one-click deploy options are changed and editor interface should be updated.",
+      "godotName": "_poll_export",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._PollExport",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Run",
+      "kind": "Method",
+      "signature": "public int _Run(EditorExportPreset preset, int device, int debugFlags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "debug_flags",
+          "type": "int"
+        }
+      ],
+      "summary": "This method is called when [param device] one-click deploy menu option is selected. Implementation should export project to a temporary location, upload and run it on the specific [param device], or perform another action associated with the menu item.",
+      "godotName": "_run",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Run(EditorExportPreset,int,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ShouldUpdateExportOptions",
+      "kind": "Method",
+      "signature": "public bool _ShouldUpdateExportOptions()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if export options list is changed and presets should be updated.",
+      "godotName": "_should_update_export_options",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ShouldUpdateExportOptions",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "GetConfigError",
+      "kind": "Method",
+      "signature": "public String GetConfigError()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns current configuration error message text. This method should be called only from the [method _can_export], [method _has_valid_export_configuration], or [method _has_valid_project_configuration] implementations.",
+      "godotName": "get_config_error",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension.GetConfigError",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "GetConfigMissingTemplates",
+      "kind": "Method",
+      "signature": "public bool GetConfigMissingTemplates()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] is export templates are missing from the current configuration. This method should be called only from the [method _can_export], [method _has_valid_export_configuration], or [method _has_valid_project_configuration] implementations.",
+      "godotName": "get_config_missing_templates",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension.GetConfigMissingTemplates",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "SetConfigError",
+      "kind": "Method",
+      "signature": "public void SetConfigError(String errorText)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "error_text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets current configuration error message text. This method should be called only from the [method _can_export], [method _has_valid_export_configuration], or [method _has_valid_project_configuration] implementations.",
+      "godotName": "set_config_error",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension.SetConfigError(String)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "SetConfigMissingTemplates",
+      "kind": "Method",
+      "signature": "public void SetConfigMissingTemplates(bool missingTemplates)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "missing_templates",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set to [code]true[/code] is export templates are missing from the current configuration. This method should be called only from the [method _can_export], [method _has_valid_export_configuration], or [method _has_valid_project_configuration] implementations.",
+      "godotName": "set_config_missing_templates",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension.SetConfigMissingTemplates(bool)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CanExport",
+      "kind": "Method",
+      "signature": "public bool _CanExport(EditorExportPreset preset, bool debug)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the specified [param preset] is valid and can be exported. Use [method set_config_error] and [method set_config_missing_templates] to set error details. Usual implementations call [method _has_valid_export_configuration] and [method _has_valid_project_configuration] to determine if exporting is possible.",
+      "godotName": "_can_export",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._CanExport(EditorExportPreset,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Cleanup",
+      "kind": "Method",
+      "signature": "public void _Cleanup()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called by the editor before platform is unregistered.",
+      "godotName": "_cleanup",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Cleanup",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportPack",
+      "kind": "Method",
+      "signature": "public int _ExportPack(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a PCK archive at [param path] for the specified [param preset]. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 disabled, and PCK is selected as a file type.",
+      "godotName": "_export_pack",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportPack(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportPackPatch",
+      "kind": "Method",
+      "signature": "public int _ExportPackPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a patch PCK archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 enabled, and PCK is selected as a file type. [b]Note:[/b] The patches provided in [param patches] have already been loaded when this method is called and are merely provided as context. When empty the patches defined in the export preset have been loaded instead.",
+      "godotName": "_export_pack_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportPackPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportProject",
+      "kind": "Method",
+      "signature": "public int _ExportProject(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates a full project at [param path] for the specified [param preset]. This method is called when \u0022Export\u0022 button is pressed in the export dialog. This method implementation can call [method EditorExportPlatform.save_pack] or [method EditorExportPlatform.save_zip] to use default PCK/ZIP export process, or calls [method EditorExportPlatform.export_project_files] and implement custom callback for processing each exported file.",
+      "godotName": "_export_project",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportProject(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportZip",
+      "kind": "Method",
+      "signature": "public int _ExportZip(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Create a ZIP archive at [param path] for the specified [param preset]. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 disabled, and ZIP is selected as a file type.",
+      "godotName": "_export_zip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportZip(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ExportZipPatch",
+      "kind": "Method",
+      "signature": "public int _ExportZipPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Create a ZIP archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. This method is called when \u0022Export PCK/ZIP\u0022 button is pressed in the export dialog, with \u0022Export as Patch\u0022 enabled, and ZIP is selected as a file type. [b]Note:[/b] The patches provided in [param patches] have already been loaded when this method is called and are merely provided as context. When empty the patches defined in the export preset have been loaded instead.",
+      "godotName": "_export_zip_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ExportZipPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetBinaryExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetBinaryExtensions(EditorExportPreset preset)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns array of supported binary extensions for the full project export.",
+      "godotName": "_get_binary_extensions",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetBinaryExtensions(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetDebugProtocol",
+      "kind": "Method",
+      "signature": "public String _GetDebugProtocol()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns protocol used for remote debugging. Default implementation return [code]tcp://[/code].",
+      "godotName": "_get_debug_protocol",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetDebugProtocol",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetDeviceArchitecture",
+      "kind": "Method",
+      "signature": "public String _GetDeviceArchitecture(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns device architecture for one-click deploy.",
+      "godotName": "_get_device_architecture",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetDeviceArchitecture(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptionVisibility",
+      "kind": "Method",
+      "signature": "public bool _GetExportOptionVisibility(EditorExportPreset preset, String option)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Validates [param option] and returns visibility for the specified [param preset]. Default implementation return [code]true[/code] for all options.",
+      "godotName": "_get_export_option_visibility",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptionVisibility(EditorExportPreset,String)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptionWarning",
+      "kind": "Method",
+      "signature": "public String _GetExportOptionWarning(EditorExportPreset preset, StringName option)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "option",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Validates [param option] and returns warning message for the specified [param preset]. Default implementation return empty string for all options.",
+      "godotName": "_get_export_option_warning",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptionWarning(EditorExportPreset,StringName)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetExportOptions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetExportOptions()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns a property list, as an [Array] of dictionaries. Each [Dictionary] must at least contain the [code]name: StringName[/code] and [code]type: Variant.Type[/code] entries. Additionally, the following keys are supported: - [code]hint: PropertyHint[/code] - [code]hint_string: String[/code] - [code]usage: PropertyUsageFlags[/code] - [code]class_name: StringName[/code] - [code]default_value: Variant[/code], default value of the property. - [code]update_visibility: bool[/code], if set to [code]true[/code], [method _get_export_option_visibility] is called for each property when this property is changed. - [code]required: bool[/code], if set to [code]true[/code], this property warnings are critical, and should be resolved to make export possible. This value is a hint for the [method _has_valid_export_configuration] implementation, and not used by the engine directly. See also [method Object._get_property_list].",
+      "godotName": "_get_export_options",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetExportOptions",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetLogo",
+      "kind": "Method",
+      "signature": "public Texture2D _GetLogo()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Returns the platform logo displayed in the export dialog. The logo should be 32\u00D732 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_logo",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetLogo",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns export platform name.",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetName",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionIcon",
+      "kind": "Method",
+      "signature": "public Texture2D _GetOptionIcon(int device)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the item icon for the specified [param device] in the one-click deploy menu. The icon should be 16\u00D716 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_option_icon",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionIcon(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionLabel",
+      "kind": "Method",
+      "signature": "public String _GetOptionLabel(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns one-click deploy menu item label for the specified [param device].",
+      "godotName": "_get_option_label",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionLabel(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionTooltip",
+      "kind": "Method",
+      "signature": "public String _GetOptionTooltip(int device)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "device",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns one-click deploy menu item tooltip for the specified [param device].",
+      "godotName": "_get_option_tooltip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionTooltip(int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionsCount",
+      "kind": "Method",
+      "signature": "public int _GetOptionsCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of devices (or other options) available in the one-click deploy menu.",
+      "godotName": "_get_options_count",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionsCount",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOptionsTooltip",
+      "kind": "Method",
+      "signature": "public String _GetOptionsTooltip()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns tooltip of the one-click deploy menu button.",
+      "godotName": "_get_options_tooltip",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOptionsTooltip",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetOsName",
+      "kind": "Method",
+      "signature": "public String _GetOsName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns target OS name.",
+      "godotName": "_get_os_name",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetOsName",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetPlatformFeatures",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPlatformFeatures()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns array of platform specific features.",
+      "godotName": "_get_platform_features",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetPlatformFeatures",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetPresetFeatures",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetPresetFeatures(EditorExportPreset preset)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns array of platform specific features for the specified [param preset].",
+      "godotName": "_get_preset_features",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetPresetFeatures(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_GetRunIcon",
+      "kind": "Method",
+      "signature": "public Texture2D _GetRunIcon()",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Returns the icon of the one-click deploy menu button. The icon should be 16\u00D716 pixels, adjusted for the current editor scale (see [method EditorInterface.get_editor_scale]).",
+      "godotName": "_get_run_icon",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._GetRunIcon",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_HasValidExportConfiguration",
+      "kind": "Method",
+      "signature": "public bool _HasValidExportConfiguration(EditorExportPreset preset, bool debug)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if export configuration is valid.",
+      "godotName": "_has_valid_export_configuration",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._HasValidExportConfiguration(EditorExportPreset,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_HasValidProjectConfiguration",
+      "kind": "Method",
+      "signature": "public bool _HasValidProjectConfiguration(EditorExportPreset preset)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if project configuration is valid.",
+      "godotName": "_has_valid_project_configuration",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._HasValidProjectConfiguration(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Initialize",
+      "kind": "Method",
+      "signature": "public void _Initialize()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Initializes the plugin. Called by the editor when platform is registered.",
+      "godotName": "_initialize",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Initialize",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_IsExecutable",
+      "kind": "Method",
+      "signature": "public bool _IsExecutable(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if specified file is a valid executable (native executable or script) for the target platform.",
+      "godotName": "_is_executable",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._IsExecutable(String)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_PollExport",
+      "kind": "Method",
+      "signature": "public bool _PollExport()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if one-click deploy options are changed and editor interface should be updated.",
+      "godotName": "_poll_export",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._PollExport",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_Run",
+      "kind": "Method",
+      "signature": "public int _Run(EditorExportPreset preset, int device, int debugFlags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "device",
+          "type": "int"
+        },
+        {
+          "name": "debug_flags",
+          "type": "int"
+        }
+      ],
+      "summary": "This method is called when [param device] one-click deploy menu option is selected. Implementation should export project to a temporary location, upload and run it on the specific [param device], or perform another action associated with the menu item.",
+      "godotName": "_run",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._Run(EditorExportPreset,int,int)",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    },
+    {
+      "name": "_ShouldUpdateExportOptions",
+      "kind": "Method",
+      "signature": "public bool _ShouldUpdateExportOptions()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if export options list is changed and presets should be updated.",
+      "godotName": "_should_update_export_options",
+      "xmlDocId": "M:Godot.EditorExportPlatformExtension._ShouldUpdateExportOptions",
+      "sourcePath": "doc/classes/EditorExportPlatformExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorExportPlatformExtension.xml",
+      "sha256": "4e76ab24bcc39dc6c66b4fc5e8ae08ee691b9eb3e4e01e758173d6369d7152dc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Occluder3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Occluder3D",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Occluder3D",
+    "documentationPath": "doc/classes/Occluder3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_occluder3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetIndices",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetIndices()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the occluder shape\u0027s vertex indices.",
+      "godotName": "get_indices",
+      "xmlDocId": "M:Godot.Occluder3D.GetIndices",
+      "sourcePath": "doc/classes/Occluder3D.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetVertices()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns the occluder shape\u0027s vertex positions.",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.Occluder3D.GetVertices",
+      "sourcePath": "doc/classes/Occluder3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Occluder3D.xml",
+      "sha256": "cb964fb90ac4fac552cac5ea480026d0b31ce396e3775924d65495d79ab55f1b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

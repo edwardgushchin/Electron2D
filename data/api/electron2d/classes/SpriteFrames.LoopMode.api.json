@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpriteFrames.LoopMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.SpriteFrames.LoopMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "SpriteFrames.LoopMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Linear",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SpriteFrames.LoopMode Linear",
+      "returnType": "Electron2D.SpriteFrames.LoopMode",
+      "parameters": [],
+      "summary": "The animation wraps to the opposite end and continues in the same direction.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.SpriteFrames.LoopModeEnum.Linear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SpriteFrames.LoopMode None",
+      "returnType": "Electron2D.SpriteFrames.LoopMode",
+      "parameters": [],
+      "summary": "The animation stops when playback reaches the first or last frame.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.SpriteFrames.LoopModeEnum.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pingpong",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.SpriteFrames.LoopMode Pingpong",
+      "returnType": "Electron2D.SpriteFrames.LoopMode",
+      "parameters": [],
+      "summary": "The animation changes direction each time playback reaches the first or last frame.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.SpriteFrames.LoopModeEnum.Pingpong",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Linear",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "The animation wraps to the opposite end and continues in the same direction.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "The animation stops when playback reaches the first or last frame.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pingpong",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "The animation changes direction each time playback reaches the first or last frame.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

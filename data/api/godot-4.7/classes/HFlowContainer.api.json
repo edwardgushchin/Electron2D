@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "HFlowContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.HFlowContainer",
+    "kind": "class",
+    "baseType": "FlowContainer",
+    "interfaces": [],
+    "godotReference": "HFlowContainer",
+    "documentationPath": "doc/classes/HFlowContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_hflowcontainer.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/HFlowContainer.xml",
+      "sha256": "7c7516099d2e01765cae8fc5a27e3e876150b16a0df91eebef25e5f041730fc4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

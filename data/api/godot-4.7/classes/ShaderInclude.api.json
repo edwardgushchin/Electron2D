@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ShaderInclude",
+    "namespace": "Godot",
+    "fullName": "Godot.ShaderInclude",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "ShaderInclude",
+    "documentationPath": "doc/classes/ShaderInclude.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_shaderinclude.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Code",
+      "kind": "Property",
+      "signature": "public String Code { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the code of the shader include file. The returned text is what the user has written, not the full generated code used internally.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "code",
+      "xmlDocId": "P:Godot.ShaderInclude.Code",
+      "sourcePath": "doc/classes/ShaderInclude.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ShaderInclude.xml",
+      "sha256": "48522d274ea536f7ecc4f99a846457303e7073d16eac6db85b0e89f078d5e881"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

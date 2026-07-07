@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStream",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.AudioStream",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "AudioStream",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "AudioStream",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AudioStream()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.AudioStream\u0060 type.",
+      "xmlDocId": "M:Electron2D.AudioStream.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "AudioStream",
+      "kind": "Constructor",
+      "signature": "public Electron2D.AudioStream()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.AudioStream\u0060 type.",
+      "xmlDocId": "M:Electron2D.AudioStream.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CanBeSampled",
+      "kind": "Method",
+      "signature": "public System.Boolean CanBeSampled()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the stream can be converted into a static audio sample.",
+      "xmlDocId": "M:Electron2D.AudioStream.CanBeSampled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLength",
+      "kind": "Method",
+      "signature": "public System.Single GetLength()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Returns the stream length in seconds.",
+      "xmlDocId": "M:Electron2D.AudioStream.GetLength",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsMetaStream",
+      "kind": "Method",
+      "signature": "public System.Boolean IsMetaStream()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this stream is a collection of other streams.",
+      "xmlDocId": "M:Electron2D.AudioStream.IsMetaStream",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsMonophonic",
+      "kind": "Method",
+      "signature": "public System.Boolean IsMonophonic()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this stream contains exactly one audio channel.",
+      "xmlDocId": "M:Electron2D.AudioStream.IsMonophonic",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

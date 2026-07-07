@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedInt64Array",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedInt64Array",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "PackedInt64Array",
+    "documentationPath": "doc/classes/PackedInt64Array.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packedint64array.html"
+  },
+  "constructors": [
+    {
+      "name": "PackedInt64Array",
+      "kind": "Constructor",
+      "signature": "public PackedInt64Array()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Constructs an empty [PackedInt64Array].",
+      "godotName": "PackedInt64Array",
+      "xmlDocId": "M:Godot.PackedInt64Array.#ctor",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "PackedInt64Array",
+      "kind": "Constructor",
+      "signature": "public PackedInt64Array(PackedInt64Array from)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Constructs a [PackedInt64Array] as a copy of the given [PackedInt64Array].",
+      "godotName": "PackedInt64Array",
+      "xmlDocId": "M:Godot.PackedInt64Array.#ctor(PackedInt64Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "PackedInt64Array",
+      "kind": "Constructor",
+      "signature": "public PackedInt64Array(Array from)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Array"
+        }
+      ],
+      "summary": "Constructs a new [PackedInt64Array]. Optionally, you can pass in a generic [Array] that will be converted.",
+      "godotName": "PackedInt64Array",
+      "xmlDocId": "M:Godot.PackedInt64Array.#ctor(Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Append",
+      "kind": "Method",
+      "signature": "public bool Append(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends an element at the end of the array (alias of [method push_back]).",
+      "godotName": "append",
+      "xmlDocId": "M:Godot.PackedInt64Array.Append(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "AppendArray",
+      "kind": "Method",
+      "signature": "public void AppendArray(PackedInt64Array array)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "array",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Appends a [PackedInt64Array] at the end of this array.",
+      "godotName": "append_array",
+      "xmlDocId": "M:Godot.PackedInt64Array.AppendArray(PackedInt64Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Bsearch",
+      "kind": "Method",
+      "signature": "public int Bsearch(int value, bool before)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "before",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Finds the index of an existing value (or the insertion index that maintains sorting order, if the value is not yet present in the array) using binary search. Optionally, a [param before] specifier can be passed. If [code]false[/code], the returned index comes after all existing entries of the value in the array. [b]Note:[/b] Calling [method bsearch] on an unsorted array results in unexpected behavior.",
+      "godotName": "bsearch",
+      "xmlDocId": "M:Godot.PackedInt64Array.Bsearch(int,bool)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array. This is equivalent to using [method resize] with a size of [code]0[/code].",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.PackedInt64Array.Clear",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Method",
+      "signature": "public int Count(int value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of times an element is in the array.",
+      "godotName": "count",
+      "xmlDocId": "M:Godot.PackedInt64Array.Count(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public PackedInt64Array Duplicate()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Creates a copy of the array, and returns it.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.PackedInt64Array.Duplicate",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the first occurrence of a value from the array and returns [code]true[/code]. If the value does not exist in the array, nothing happens and [code]false[/code] is returned. To remove an element by index, use [method remove_at] instead.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.PackedInt64Array.Erase(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Fill",
+      "kind": "Method",
+      "signature": "public void Fill(int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Assigns the given value to all elements in the array. This can typically be used together with [method resize] to create an array with a given size and initialized elements.",
+      "godotName": "fill",
+      "xmlDocId": "M:Godot.PackedInt64Array.Fill(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Find",
+      "kind": "Method",
+      "signature": "public int Find(int value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Searches the array for a value and returns its index or [code]-1[/code] if not found. Optionally, the initial search index can be passed.",
+      "godotName": "find",
+      "xmlDocId": "M:Godot.PackedInt64Array.Find(int,int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public int Get(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the 64-bit integer at the given [param index] in the array. If [param index] is out-of-bounds or negative, this method fails and returns [code]0[/code]. This method is similar (but not identical) to the [code][][/code] operator. Most notably, when this method fails, it doesn\u0027t pause project execution if run from the editor.",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.PackedInt64Array.Get(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the array contains [param value].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.PackedInt64Array.Has(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Insert",
+      "kind": "Method",
+      "signature": "public int Insert(int atIndex, int value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "at_index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Inserts a new integer at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).",
+      "godotName": "insert",
+      "xmlDocId": "M:Godot.PackedInt64Array.Insert(int,int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the array is empty.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.PackedInt64Array.IsEmpty",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "PushBack",
+      "kind": "Method",
+      "signature": "public bool PushBack(int value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Appends a value to the array.",
+      "godotName": "push_back",
+      "xmlDocId": "M:Godot.PackedInt64Array.PushBack(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "RemoveAt",
+      "kind": "Method",
+      "signature": "public void RemoveAt(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes an element from the array by index.",
+      "godotName": "remove_at",
+      "xmlDocId": "M:Godot.PackedInt64Array.RemoveAt(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Resize",
+      "kind": "Method",
+      "signature": "public int Resize(int newSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "new_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size. Calling [method resize] once and assigning the new values is faster than adding new elements one by one. Returns [constant OK] on success, or one of the following [enum Error] constants if this method fails: [constant ERR_INVALID_PARAMETER] if the size is negative, or [constant ERR_OUT_OF_MEMORY] if allocations fail. Use [method size] to find the actual size of the array after resize.",
+      "godotName": "resize",
+      "xmlDocId": "M:Godot.PackedInt64Array.Resize(int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses the order of the elements in the array.",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.PackedInt64Array.Reverse",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Rfind",
+      "kind": "Method",
+      "signature": "public int Rfind(int value, int from)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Searches the array in reverse order. Optionally, a start search index can be passed. If negative, the start index is considered relative to the end of the array.",
+      "godotName": "rfind",
+      "xmlDocId": "M:Godot.PackedInt64Array.Rfind(int,int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public void Set(int index, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes the integer at the given index.",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.PackedInt64Array.Set(int,int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of elements in the array.",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedInt64Array.Size",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Slice",
+      "kind": "Method",
+      "signature": "public PackedInt64Array Slice(int begin, int end)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "begin",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int",
+          "defaultValue": "2147483647"
+        }
+      ],
+      "summary": "Returns the slice of the [PackedInt64Array], from [param begin] (inclusive) to [param end] (exclusive), as a new [PackedInt64Array]. The absolute value of [param begin] and [param end] will be clamped to the array size, so the default value for [param end] makes it slice to the size of the array by default (i.e. [code]arr.slice(1)[/code] is a shorthand for [code]arr.slice(1, arr.size())[/code]). If either [param begin] or [param end] are negative, they will be relative to the end of the array (i.e. [code]arr.slice(0, -2)[/code] is a shorthand for [code]arr.slice(0, arr.size() - 2)[/code]).",
+      "godotName": "slice",
+      "xmlDocId": "M:Godot.PackedInt64Array.Slice(int,int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the elements of the array in ascending order.",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.PackedInt64Array.Sort",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "ToByteArray",
+      "kind": "Method",
+      "signature": "public PackedByteArray ToByteArray()",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Returns a copy of the data converted to a [PackedByteArray], where each element has been encoded as 8 bytes. The size of the new array will be [code]int64_array.size() * 8[/code].",
+      "godotName": "to_byte_array",
+      "xmlDocId": "M:Godot.PackedInt64Array.ToByteArray",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(PackedInt64Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of the arrays differ.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.PackedInt64Array.operator !=(PackedInt64Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "operator \u002B",
+      "kind": "Operator",
+      "signature": "public PackedInt64Array operator \u002B(PackedInt64Array right)",
+      "returnType": "PackedInt64Array",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Returns a new [PackedInt64Array] with contents of [param right] added at the end of this array. For better performance, consider using [method append_array] instead.",
+      "godotName": "operator \u002B",
+      "xmlDocId": "M:Godot.PackedInt64Array.operator \u002B(PackedInt64Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(PackedInt64Array right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "PackedInt64Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if contents of both arrays are the same, i.e. they have all equal ints at the corresponding indices.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.PackedInt64Array.operator ==(PackedInt64Array)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public int operator [](int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [int] at index [param index]. Negative indices can be used to access the elements starting from the end. Using index out of array\u0027s bounds will result in an error.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.PackedInt64Array.operator [](int)",
+      "sourcePath": "doc/classes/PackedInt64Array.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedInt64Array.xml",
+      "sha256": "bebdb5682f1814a265eaa50b11f2d5e272435e16ce74f5fef89928d14319498a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

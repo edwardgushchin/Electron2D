@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDScriptWorkspace",
+    "namespace": "Godot",
+    "fullName": "Godot.GDScriptWorkspace",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "GDScriptWorkspace",
+    "documentationPath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdscriptworkspace.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ApplyNewSignal",
+      "kind": "Method",
+      "signature": "public void ApplyNewSignal(Object obj, String function, PackedStringArray args)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "Object"
+        },
+        {
+          "name": "function",
+          "type": "String"
+        },
+        {
+          "name": "args",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "",
+      "godotName": "apply_new_signal",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.ApplyNewSignal(Object,String,PackedStringArray)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "DidDeleteFiles",
+      "kind": "Method",
+      "signature": "public void DidDeleteFiles(Dictionary @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "didDeleteFiles",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.DidDeleteFiles(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "GenerateScriptApi",
+      "kind": "Method",
+      "signature": "public Dictionary GenerateScriptApi(String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the interface of the script in a machine-readable format.",
+      "godotName": "generate_script_api",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.GenerateScriptApi(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "GetFilePath",
+      "kind": "Method",
+      "signature": "public String GetFilePath(String uri)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts a URI to a file path.",
+      "godotName": "get_file_path",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.GetFilePath(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "GetFileUri",
+      "kind": "Method",
+      "signature": "public String GetFileUri(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts a file path to a URI.",
+      "godotName": "get_file_uri",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.GetFileUri(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "ParseLocalScript",
+      "kind": "Method",
+      "signature": "public int ParseLocalScript(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "parse_local_script",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.ParseLocalScript(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "ParseScript",
+      "kind": "Method",
+      "signature": "public int ParseScript(String path, String content)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "content",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "parse_script",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.ParseScript(String,String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    },
+    {
+      "name": "PublishDiagnostics",
+      "kind": "Method",
+      "signature": "public void PublishDiagnostics(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "publish_diagnostics",
+      "xmlDocId": "M:Godot.GDScriptWorkspace.PublishDiagnostics(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptWorkspace.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gdscript/doc_classes/GDScriptWorkspace.xml",
+      "sha256": "a1e8d02f9e426552f2df5a5d6c5818cfb2eb733d1b4c27daa06602ab62acf4eb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

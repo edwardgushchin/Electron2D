@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeFaceForward",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeFaceForward",
+    "kind": "class",
+    "baseType": "VisualShaderNodeVectorBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeFaceForward",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeFaceForward.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodefaceforward.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeFaceForward.xml",
+      "sha256": "742875bca564e3d8f5c2d1b51e5d822f45088f5170756bc08492329c3a99dfed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerSocket",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerSocket",
+    "kind": "class",
+    "baseType": "StreamPeer",
+    "interfaces": [],
+    "godotReference": "StreamPeerSocket",
+    "documentationPath": "doc/classes/StreamPeerSocket.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeersocket.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DisconnectFromHost",
+      "kind": "Method",
+      "signature": "public void DisconnectFromHost()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disconnects from host.",
+      "godotName": "disconnect_from_host",
+      "xmlDocId": "M:Godot.StreamPeerSocket.DisconnectFromHost",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    },
+    {
+      "name": "GetStatus",
+      "kind": "Method",
+      "signature": "public int GetStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the status of the connection.",
+      "godotName": "get_status",
+      "xmlDocId": "M:Godot.StreamPeerSocket.GetStatus",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public int Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Polls the socket, updating its state. See [method get_status].",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.StreamPeerSocket.Poll",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Status",
+      "values": [
+        {
+          "name": "STATUS_CONNECTED",
+          "value": "2",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerSocket] that is connected to a host.",
+          "sourcePath": "doc/classes/StreamPeerSocket.xml"
+        },
+        {
+          "name": "STATUS_CONNECTING",
+          "value": "1",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerSocket] that is connecting to a host.",
+          "sourcePath": "doc/classes/StreamPeerSocket.xml"
+        },
+        {
+          "name": "STATUS_ERROR",
+          "value": "3",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerSocket] in error state.",
+          "sourcePath": "doc/classes/StreamPeerSocket.xml"
+        },
+        {
+          "name": "STATUS_NONE",
+          "value": "0",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "The initial status of the [StreamPeerSocket]. This is also the status after disconnecting.",
+          "sourcePath": "doc/classes/StreamPeerSocket.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STATUS_NONE",
+      "value": "0",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "The initial status of the [StreamPeerSocket]. This is also the status after disconnecting.",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    },
+    {
+      "name": "STATUS_CONNECTING",
+      "value": "1",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerSocket] that is connecting to a host.",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    },
+    {
+      "name": "STATUS_CONNECTED",
+      "value": "2",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerSocket] that is connected to a host.",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    },
+    {
+      "name": "STATUS_ERROR",
+      "value": "3",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerSocket] in error state.",
+      "sourcePath": "doc/classes/StreamPeerSocket.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerSocket.xml",
+      "sha256": "a20c3aa96d96635a0732dcbb946d24f990451cd7850a455bcc9fd9b42df6a92f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

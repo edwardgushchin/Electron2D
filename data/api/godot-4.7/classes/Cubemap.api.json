@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Cubemap",
+    "namespace": "Godot",
+    "fullName": "Godot.Cubemap",
+    "kind": "class",
+    "baseType": "ImageTextureLayered",
+    "interfaces": [],
+    "godotReference": "Cubemap",
+    "documentationPath": "doc/classes/Cubemap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cubemap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreatePlaceholder",
+      "kind": "Method",
+      "signature": "public Resource CreatePlaceholder()",
+      "returnType": "Resource",
+      "parameters": [],
+      "summary": "Creates a placeholder version of this resource ([PlaceholderCubemap]).",
+      "godotName": "create_placeholder",
+      "xmlDocId": "M:Godot.Cubemap.CreatePlaceholder",
+      "sourcePath": "doc/classes/Cubemap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Cubemap.xml",
+      "sha256": "06e9a72efcd9e1365c3810f9f5758a6bce8ea0c57df3e2f82a4630f9606f1fc3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

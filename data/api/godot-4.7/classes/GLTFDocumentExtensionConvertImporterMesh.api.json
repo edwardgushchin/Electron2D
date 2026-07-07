@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFDocumentExtensionConvertImporterMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFDocumentExtensionConvertImporterMesh",
+    "kind": "class",
+    "baseType": "GLTFDocumentExtension",
+    "interfaces": [],
+    "godotReference": "GLTFDocumentExtensionConvertImporterMesh",
+    "documentationPath": "modules/gltf/doc_classes/GLTFDocumentExtensionConvertImporterMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfdocumentextensionconvertimportermesh.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFDocumentExtensionConvertImporterMesh.xml",
+      "sha256": "bf661a739bbabcbbd91722fecee99838dccd475ff7be1e073a4ae2066c0e4bd6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFPhysicsShape",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFPhysicsShape",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFPhysicsShape",
+    "documentationPath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfphysicsshape.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFPhysicsShape FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFPhysicsShape",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFPhysicsShape instance by parsing the given [Dictionary].",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "FromNode",
+      "kind": "Method",
+      "signature": "public GLTFPhysicsShape FromNode(CollisionShape3D shapeNode)",
+      "returnType": "GLTFPhysicsShape",
+      "parameters": [
+        {
+          "name": "shape_node",
+          "type": "CollisionShape3D"
+        }
+      ],
+      "summary": "Creates a new GLTFPhysicsShape instance from the given Godot [CollisionShape3D] node.",
+      "godotName": "from_node",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.FromNode(CollisionShape3D)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "FromResource",
+      "kind": "Method",
+      "signature": "public GLTFPhysicsShape FromResource(Shape3D shapeResource)",
+      "returnType": "GLTFPhysicsShape",
+      "parameters": [
+        {
+          "name": "shape_resource",
+          "type": "Shape3D"
+        }
+      ],
+      "summary": "Creates a new GLTFPhysicsShape instance from the given Godot [Shape3D] resource.",
+      "godotName": "from_resource",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.FromResource(Shape3D)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFPhysicsShape instance into a [Dictionary] in the format defined by [code]OMI_physics_shape[/code].",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "ToNode",
+      "kind": "Method",
+      "signature": "public CollisionShape3D ToNode(bool cacheShapes)",
+      "returnType": "CollisionShape3D",
+      "parameters": [
+        {
+          "name": "cache_shapes",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Converts this GLTFPhysicsShape instance into a Godot [CollisionShape3D] node.",
+      "godotName": "to_node",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.ToNode(bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "ToResource",
+      "kind": "Method",
+      "signature": "public Shape3D ToResource(bool cacheShapes)",
+      "returnType": "Shape3D",
+      "parameters": [
+        {
+          "name": "cache_shapes",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Converts this GLTFPhysicsShape instance into a Godot [Shape3D] resource.",
+      "godotName": "to_resource",
+      "xmlDocId": "M:Godot.GLTFPhysicsShape.ToResource(bool)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The height of the shape, in meters. This is only used when the shape type is [code]\u0022capsule\u0022[/code] or [code]\u0022cylinder\u0022[/code]. This value should not be negative, and for [code]\u0022capsule\u0022[/code] it should be at least twice the radius.",
+      "defaultValue": "2.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.Height",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "ImporterMesh",
+      "kind": "Property",
+      "signature": "public ImporterMesh ImporterMesh { get; set; }",
+      "returnType": "ImporterMesh",
+      "parameters": [],
+      "summary": "The [ImporterMesh] resource of the shape. This is only used when the shape type is [code]\u0022hull\u0022[/code] (convex hull) or [code]\u0022trimesh\u0022[/code] (concave trimesh).",
+      "godotName": "importer_mesh",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.ImporterMesh",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "IsTrigger",
+      "kind": "Property",
+      "signature": "public bool IsTrigger { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], indicates that this shape is a trigger. For Godot, this means that the shape should be a child of an [Area3D] node. This is the only variable not used in the [method to_node] method, it\u0027s intended to be used alongside when deciding where to add the generated node as a child.",
+      "defaultValue": "false",
+      "godotName": "is_trigger",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.IsTrigger",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "MeshIndex",
+      "kind": "Property",
+      "signature": "public int MeshIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the shape\u0027s mesh in the glTF file. This is only used when the shape type is [code]\u0022hull\u0022[/code] (convex hull) or [code]\u0022trimesh\u0022[/code] (concave trimesh).",
+      "defaultValue": "-1",
+      "godotName": "mesh_index",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.MeshIndex",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The radius of the shape, in meters. This is only used when the shape type is [code]\u0022capsule\u0022[/code], [code]\u0022cylinder\u0022[/code], or [code]\u0022sphere\u0022[/code]. This value should not be negative.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.Radius",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "ShapeType",
+      "kind": "Property",
+      "signature": "public String ShapeType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The type of shape this shape represents. Valid values are [code]\u0022box\u0022[/code], [code]\u0022capsule\u0022[/code], [code]\u0022cylinder\u0022[/code], [code]\u0022sphere\u0022[/code], [code]\u0022hull\u0022[/code], and [code]\u0022trimesh\u0022[/code].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "shape_type",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.ShapeType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The size of the shape, in meters. This is only used when the shape type is [code]\u0022box\u0022[/code], and it represents the [code]\u0022diameter\u0022[/code] of the box. This value should not be negative.",
+      "defaultValue": "Vector3(1, 1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.GLTFPhysicsShape.Size",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsShape.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFPhysicsShape.xml",
+      "sha256": "85bd91d10cae96b19f94db366ecab79f4824c901ae9de0c5b71111acd90868f6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

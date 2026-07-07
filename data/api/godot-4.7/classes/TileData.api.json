@@ -1,0 +1,827 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileData",
+    "namespace": "Godot",
+    "fullName": "Godot.TileData",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "TileData",
+    "documentationPath": "doc/classes/TileData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tiledata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCollisionPolygon",
+      "kind": "Method",
+      "signature": "public void AddCollisionPolygon(int layerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a collision polygon to the tile on the given TileSet physics layer.",
+      "godotName": "add_collision_polygon",
+      "xmlDocId": "M:Godot.TileData.AddCollisionPolygon(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "AddOccluderPolygon",
+      "kind": "Method",
+      "signature": "public void AddOccluderPolygon(int layerId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds an occlusion polygon to the tile on the TileSet occlusion layer with index [param layer_id].",
+      "godotName": "add_occluder_polygon",
+      "xmlDocId": "M:Godot.TileData.AddOccluderPolygon(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetCollisionPolygonOneWayMargin",
+      "kind": "Method",
+      "signature": "public float GetCollisionPolygonOneWayMargin(int layerId, int polygonIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the one-way margin (for one-way platforms) of the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "get_collision_polygon_one_way_margin",
+      "xmlDocId": "M:Godot.TileData.GetCollisionPolygonOneWayMargin(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetCollisionPolygonPoints",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetCollisionPolygonPoints(int layerId, int polygonIndex)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the points of the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "get_collision_polygon_points",
+      "xmlDocId": "M:Godot.TileData.GetCollisionPolygonPoints(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetCollisionPolygonsCount",
+      "kind": "Method",
+      "signature": "public int GetCollisionPolygonsCount(int layerId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns how many polygons the tile has for TileSet physics layer with index [param layer_id].",
+      "godotName": "get_collision_polygons_count",
+      "xmlDocId": "M:Godot.TileData.GetCollisionPolygonsCount(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetConstantAngularVelocity",
+      "kind": "Method",
+      "signature": "public float GetConstantAngularVelocity(int layerId)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the constant angular velocity applied to objects colliding with this tile.",
+      "godotName": "get_constant_angular_velocity",
+      "xmlDocId": "M:Godot.TileData.GetConstantAngularVelocity(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetConstantLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector2 GetConstantLinearVelocity(int layerId)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the constant linear velocity applied to objects colliding with this tile.",
+      "godotName": "get_constant_linear_velocity",
+      "xmlDocId": "M:Godot.TileData.GetConstantLinearVelocity(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetCustomData",
+      "kind": "Method",
+      "signature": "public Variant GetCustomData(String layerName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "layer_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the custom data value for custom data layer named [param layer_name]. To check if a custom data layer exists, use [method has_custom_data].",
+      "godotName": "get_custom_data",
+      "xmlDocId": "M:Godot.TileData.GetCustomData(String)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetCustomDataByLayerId",
+      "kind": "Method",
+      "signature": "public Variant GetCustomDataByLayerId(int layerId)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the custom data value for custom data layer with index [param layer_id].",
+      "godotName": "get_custom_data_by_layer_id",
+      "xmlDocId": "M:Godot.TileData.GetCustomDataByLayerId(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetNavigationPolygon",
+      "kind": "Method",
+      "signature": "public NavigationPolygon GetNavigationPolygon(int layerId, bool flipH, bool flipV, bool transpose)",
+      "returnType": "NavigationPolygon",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "flip_h",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "flip_v",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the navigation polygon of the tile for the TileSet navigation layer with index [param layer_id]. [param flip_h], [param flip_v], and [param transpose] allow transforming the returned polygon.",
+      "godotName": "get_navigation_polygon",
+      "xmlDocId": "M:Godot.TileData.GetNavigationPolygon(int,bool,bool,bool)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetOccluder",
+      "kind": "Method",
+      "signature": "public OccluderPolygon2D GetOccluder(int layerId, bool flipH, bool flipV, bool transpose)",
+      "returnType": "OccluderPolygon2D",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "flip_h",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "flip_v",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the occluder polygon of the tile for the TileSet occlusion layer with index [param layer_id]. [param flip_h], [param flip_v], and [param transpose] allow transforming the returned polygon.",
+      "godotName": "get_occluder",
+      "xmlDocId": "M:Godot.TileData.GetOccluder(int,bool,bool,bool)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetOccluderPolygon",
+      "kind": "Method",
+      "signature": "public OccluderPolygon2D GetOccluderPolygon(int layerId, int polygonIndex, bool flipH, bool flipV, bool transpose)",
+      "returnType": "OccluderPolygon2D",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        },
+        {
+          "name": "flip_h",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "flip_v",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the occluder polygon at index [param polygon_index] from the TileSet occlusion layer with index [param layer_id]. The [param flip_h], [param flip_v], and [param transpose] parameters can be [code]true[/code] to transform the returned polygon.",
+      "godotName": "get_occluder_polygon",
+      "xmlDocId": "M:Godot.TileData.GetOccluderPolygon(int,int,bool,bool,bool)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetOccluderPolygonsCount",
+      "kind": "Method",
+      "signature": "public int GetOccluderPolygonsCount(int layerId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of occluder polygons of the tile in the TileSet occlusion layer with index [param layer_id].",
+      "godotName": "get_occluder_polygons_count",
+      "xmlDocId": "M:Godot.TileData.GetOccluderPolygonsCount(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "GetTerrainPeeringBit",
+      "kind": "Method",
+      "signature": "public int GetTerrainPeeringBit(int peeringBit)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peering_bit",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tile\u0027s terrain bit for the given [param peering_bit] direction. To check that a direction is valid, use [method is_valid_terrain_peering_bit].",
+      "godotName": "get_terrain_peering_bit",
+      "xmlDocId": "M:Godot.TileData.GetTerrainPeeringBit(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "HasCustomData",
+      "kind": "Method",
+      "signature": "public bool HasCustomData(String layerName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns whether there exists a custom data layer named [param layer_name].",
+      "godotName": "has_custom_data",
+      "xmlDocId": "M:Godot.TileData.HasCustomData(String)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "IsCollisionPolygonOneWay",
+      "kind": "Method",
+      "signature": "public bool IsCollisionPolygonOneWay(int layerId, int polygonIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether one-way collisions are enabled for the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "is_collision_polygon_one_way",
+      "xmlDocId": "M:Godot.TileData.IsCollisionPolygonOneWay(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "IsValidTerrainPeeringBit",
+      "kind": "Method",
+      "signature": "public bool IsValidTerrainPeeringBit(int peeringBit)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "peering_bit",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the given [param peering_bit] direction is valid for this tile.",
+      "godotName": "is_valid_terrain_peering_bit",
+      "xmlDocId": "M:Godot.TileData.IsValidTerrainPeeringBit(int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "RemoveCollisionPolygon",
+      "kind": "Method",
+      "signature": "public void RemoveCollisionPolygon(int layerId, int polygonIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "remove_collision_polygon",
+      "xmlDocId": "M:Godot.TileData.RemoveCollisionPolygon(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "RemoveOccluderPolygon",
+      "kind": "Method",
+      "signature": "public void RemoveOccluderPolygon(int layerId, int polygonIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the polygon at index [param polygon_index] for TileSet occlusion layer with index [param layer_id].",
+      "godotName": "remove_occluder_polygon",
+      "xmlDocId": "M:Godot.TileData.RemoveOccluderPolygon(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCollisionPolygonOneWay",
+      "kind": "Method",
+      "signature": "public void SetCollisionPolygonOneWay(int layerId, int polygonIndex, bool oneWay)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        },
+        {
+          "name": "one_way",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables/disables one-way collisions on the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "set_collision_polygon_one_way",
+      "xmlDocId": "M:Godot.TileData.SetCollisionPolygonOneWay(int,int,bool)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCollisionPolygonOneWayMargin",
+      "kind": "Method",
+      "signature": "public void SetCollisionPolygonOneWayMargin(int layerId, int polygonIndex, float oneWayMargin)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        },
+        {
+          "name": "one_way_margin",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the one-way margin (for one-way platforms) of the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "set_collision_polygon_one_way_margin",
+      "xmlDocId": "M:Godot.TileData.SetCollisionPolygonOneWayMargin(int,int,float)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCollisionPolygonPoints",
+      "kind": "Method",
+      "signature": "public void SetCollisionPolygonPoints(int layerId, int polygonIndex, PackedVector2Array polygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        },
+        {
+          "name": "polygon",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Sets the points of the polygon at index [param polygon_index] for TileSet physics layer with index [param layer_id].",
+      "godotName": "set_collision_polygon_points",
+      "xmlDocId": "M:Godot.TileData.SetCollisionPolygonPoints(int,int,PackedVector2Array)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCollisionPolygonsCount",
+      "kind": "Method",
+      "signature": "public void SetCollisionPolygonsCount(int layerId, int polygonsCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygons_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the polygons count for TileSet physics layer with index [param layer_id].",
+      "godotName": "set_collision_polygons_count",
+      "xmlDocId": "M:Godot.TileData.SetCollisionPolygonsCount(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetConstantAngularVelocity",
+      "kind": "Method",
+      "signature": "public void SetConstantAngularVelocity(int layerId, float velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "velocity",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the constant angular velocity. This does not rotate the tile. This angular velocity is applied to objects colliding with this tile.",
+      "godotName": "set_constant_angular_velocity",
+      "xmlDocId": "M:Godot.TileData.SetConstantAngularVelocity(int,float)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetConstantLinearVelocity",
+      "kind": "Method",
+      "signature": "public void SetConstantLinearVelocity(int layerId, Vector2 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the constant linear velocity. This does not move the tile. This linear velocity is applied to objects colliding with this tile. This is useful to create conveyor belts.",
+      "godotName": "set_constant_linear_velocity",
+      "xmlDocId": "M:Godot.TileData.SetConstantLinearVelocity(int,Vector2)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCustomData",
+      "kind": "Method",
+      "signature": "public void SetCustomData(String layerName, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_name",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the tile\u0027s custom data value for the TileSet custom data layer with name [param layer_name].",
+      "godotName": "set_custom_data",
+      "xmlDocId": "M:Godot.TileData.SetCustomData(String,Variant)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetCustomDataByLayerId",
+      "kind": "Method",
+      "signature": "public void SetCustomDataByLayerId(int layerId, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the tile\u0027s custom data value for the TileSet custom data layer with index [param layer_id].",
+      "godotName": "set_custom_data_by_layer_id",
+      "xmlDocId": "M:Godot.TileData.SetCustomDataByLayerId(int,Variant)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetNavigationPolygon",
+      "kind": "Method",
+      "signature": "public void SetNavigationPolygon(int layerId, NavigationPolygon navigationPolygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "navigation_polygon",
+          "type": "NavigationPolygon"
+        }
+      ],
+      "summary": "Sets the navigation polygon for the TileSet navigation layer with index [param layer_id].",
+      "godotName": "set_navigation_polygon",
+      "xmlDocId": "M:Godot.TileData.SetNavigationPolygon(int,NavigationPolygon)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetOccluder",
+      "kind": "Method",
+      "signature": "public void SetOccluder(int layerId, OccluderPolygon2D occluderPolygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "occluder_polygon",
+          "type": "OccluderPolygon2D"
+        }
+      ],
+      "summary": "Sets the occluder for the TileSet occlusion layer with index [param layer_id].",
+      "godotName": "set_occluder",
+      "xmlDocId": "M:Godot.TileData.SetOccluder(int,OccluderPolygon2D)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetOccluderPolygon",
+      "kind": "Method",
+      "signature": "public void SetOccluderPolygon(int layerId, int polygonIndex, OccluderPolygon2D polygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygon_index",
+          "type": "int"
+        },
+        {
+          "name": "polygon",
+          "type": "OccluderPolygon2D"
+        }
+      ],
+      "summary": "Sets the occluder for polygon with index [param polygon_index] in the TileSet occlusion layer with index [param layer_id].",
+      "godotName": "set_occluder_polygon",
+      "xmlDocId": "M:Godot.TileData.SetOccluderPolygon(int,int,OccluderPolygon2D)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetOccluderPolygonsCount",
+      "kind": "Method",
+      "signature": "public void SetOccluderPolygonsCount(int layerId, int polygonsCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_id",
+          "type": "int"
+        },
+        {
+          "name": "polygons_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the occluder polygon count in the TileSet occlusion layer with index [param layer_id].",
+      "godotName": "set_occluder_polygons_count",
+      "xmlDocId": "M:Godot.TileData.SetOccluderPolygonsCount(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "SetTerrainPeeringBit",
+      "kind": "Method",
+      "signature": "public void SetTerrainPeeringBit(int peeringBit, int terrain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "peering_bit",
+          "type": "int"
+        },
+        {
+          "name": "terrain",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the tile\u0027s terrain bit for the given [param peering_bit] direction. To check that a direction is valid, use [method is_valid_terrain_peering_bit].",
+      "godotName": "set_terrain_peering_bit",
+      "xmlDocId": "M:Godot.TileData.SetTerrainPeeringBit(int,int)",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "FlipH",
+      "kind": "Property",
+      "signature": "public bool FlipH { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tile will have its texture flipped horizontally.",
+      "defaultValue": "false",
+      "godotName": "flip_h",
+      "xmlDocId": "P:Godot.TileData.FlipH",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "FlipV",
+      "kind": "Property",
+      "signature": "public bool FlipV { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tile will have its texture flipped vertically.",
+      "defaultValue": "false",
+      "godotName": "flip_v",
+      "xmlDocId": "P:Godot.TileData.FlipV",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The [Material] to use for this [TileData]. This can be a [CanvasItemMaterial] to use the default shader, or a [ShaderMaterial] to use a custom shader.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.TileData.Material",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Color Modulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Color modulation of the tile.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "modulate",
+      "xmlDocId": "P:Godot.TileData.Modulate",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "Probability",
+      "kind": "Property",
+      "signature": "public float Probability { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Relative probability of this tile being selected when drawing a pattern of random tiles.",
+      "defaultValue": "1.0",
+      "godotName": "probability",
+      "xmlDocId": "P:Godot.TileData.Probability",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "Terrain",
+      "kind": "Property",
+      "signature": "public int Terrain { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "ID of the terrain from the terrain set that the tile uses.",
+      "defaultValue": "-1",
+      "godotName": "terrain",
+      "xmlDocId": "P:Godot.TileData.Terrain",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "TerrainSet",
+      "kind": "Property",
+      "signature": "public int TerrainSet { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "ID of the terrain set that the tile uses.",
+      "defaultValue": "-1",
+      "godotName": "terrain_set",
+      "xmlDocId": "P:Godot.TileData.TerrainSet",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "TextureOrigin",
+      "kind": "Property",
+      "signature": "public Vector2i TextureOrigin { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Offsets the position of where the tile is drawn.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "texture_origin",
+      "xmlDocId": "P:Godot.TileData.TextureOrigin",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "Transpose",
+      "kind": "Property",
+      "signature": "public bool Transpose { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the tile will display transposed, i.e. with horizontal and vertical texture UVs swapped.",
+      "defaultValue": "false",
+      "godotName": "transpose",
+      "xmlDocId": "P:Godot.TileData.Transpose",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "YSortOrigin",
+      "kind": "Property",
+      "signature": "public int YSortOrigin { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Vertical point of the tile used for determining y-sorted order.",
+      "defaultValue": "0",
+      "godotName": "y_sort_origin",
+      "xmlDocId": "P:Godot.TileData.YSortOrigin",
+      "sourcePath": "doc/classes/TileData.xml"
+    },
+    {
+      "name": "ZIndex",
+      "kind": "Property",
+      "signature": "public int ZIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Ordering index of this tile, relative to [TileMapLayer].",
+      "defaultValue": "0",
+      "godotName": "z_index",
+      "xmlDocId": "P:Godot.TileData.ZIndex",
+      "sourcePath": "doc/classes/TileData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Changed",
+      "kind": "Signal",
+      "signature": "public event ChangedHandler Changed",
+      "parameters": [],
+      "summary": "Emitted when any of the properties are changed.",
+      "godotName": "changed",
+      "xmlDocId": "E:Godot.TileData.Changed",
+      "sourcePath": "doc/classes/TileData.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileData.xml",
+      "sha256": "49dbe81dba38275f969d22de608ebf2b0bdba6738dcf513abbd83357213e39ca"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

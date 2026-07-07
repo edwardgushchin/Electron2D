@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectInstance",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectInstance",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "AudioEffectInstance",
+    "documentationPath": "doc/classes/AudioEffectInstance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectinstance.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process(const void* srcBuffer, AudioFrame* rDstBuffer, int frameCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src_buffer",
+          "type": "const void*"
+        },
+        {
+          "name": "r_dst_buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "frame_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Called by the [AudioServer] to process this effect. When [method _process_silence] is not overridden or it returns [code]false[/code], this method is called only when the bus is active. [b]Note:[/b] It is not useful to override this method in GDScript or C#. Only GDExtension can take advantage of it.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.AudioEffectInstance._Process(const void*,AudioFrame*,int)",
+      "sourcePath": "doc/classes/AudioEffectInstance.xml"
+    },
+    {
+      "name": "_ProcessSilence",
+      "kind": "Method",
+      "signature": "public bool _ProcessSilence()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Override this method to customize the processing behavior of this effect instance. Should return [code]true[/code] to force the [AudioServer] to always call [method _process], even if the bus has been muted or cannot otherwise be heard.",
+      "godotName": "_process_silence",
+      "xmlDocId": "M:Godot.AudioEffectInstance._ProcessSilence",
+      "sourcePath": "doc/classes/AudioEffectInstance.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Process",
+      "kind": "Method",
+      "signature": "public void _Process(const void* srcBuffer, AudioFrame* rDstBuffer, int frameCount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "src_buffer",
+          "type": "const void*"
+        },
+        {
+          "name": "r_dst_buffer",
+          "type": "AudioFrame*"
+        },
+        {
+          "name": "frame_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Called by the [AudioServer] to process this effect. When [method _process_silence] is not overridden or it returns [code]false[/code], this method is called only when the bus is active. [b]Note:[/b] It is not useful to override this method in GDScript or C#. Only GDExtension can take advantage of it.",
+      "godotName": "_process",
+      "xmlDocId": "M:Godot.AudioEffectInstance._Process(const void*,AudioFrame*,int)",
+      "sourcePath": "doc/classes/AudioEffectInstance.xml"
+    },
+    {
+      "name": "_ProcessSilence",
+      "kind": "Method",
+      "signature": "public bool _ProcessSilence()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Override this method to customize the processing behavior of this effect instance. Should return [code]true[/code] to force the [AudioServer] to always call [method _process], even if the bus has been muted or cannot otherwise be heard.",
+      "godotName": "_process_silence",
+      "xmlDocId": "M:Godot.AudioEffectInstance._ProcessSilence",
+      "sourcePath": "doc/classes/AudioEffectInstance.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectInstance.xml",
+      "sha256": "dad0060f414817f66f1f85dcb56d0b5112b7450a6c120432e86987185b361844"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

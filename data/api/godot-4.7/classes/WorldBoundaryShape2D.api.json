@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WorldBoundaryShape2D",
+    "namespace": "Godot",
+    "fullName": "Godot.WorldBoundaryShape2D",
+    "kind": "class",
+    "baseType": "Shape2D",
+    "interfaces": [],
+    "godotReference": "WorldBoundaryShape2D",
+    "documentationPath": "doc/classes/WorldBoundaryShape2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_worldboundaryshape2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Distance",
+      "kind": "Property",
+      "signature": "public float Distance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from the origin to the line, expressed in terms of [member normal] (according to its direction and magnitude). Actual absolute distance from the origin to the line can be calculated as [code]abs(distance) / normal.length()[/code]. In the scalar equation of the line [code]ax \u002B by = d[/code], this is [code]d[/code], while the [code](a, b)[/code] coordinates are represented by the [member normal] property.",
+      "defaultValue": "0.0",
+      "godotName": "distance",
+      "xmlDocId": "P:Godot.WorldBoundaryShape2D.Distance",
+      "sourcePath": "doc/classes/WorldBoundaryShape2D.xml"
+    },
+    {
+      "name": "Normal",
+      "kind": "Property",
+      "signature": "public Vector2 Normal { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The line\u0027s normal, typically a unit vector. Its direction indicates the non-colliding half-plane. Can be of any length but zero. Defaults to [constant Vector2.UP].",
+      "defaultValue": "Vector2(0, -1)",
+      "godotName": "normal",
+      "xmlDocId": "P:Godot.WorldBoundaryShape2D.Normal",
+      "sourcePath": "doc/classes/WorldBoundaryShape2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/WorldBoundaryShape2D.xml",
+      "sha256": "e3563ed8dff7dcba9b20ac2f7e2d276e934f505a45b8988bbe37575d03653806"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

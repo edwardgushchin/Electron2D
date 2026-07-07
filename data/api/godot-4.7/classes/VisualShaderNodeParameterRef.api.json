@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParameterRef",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParameterRef",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParameterRef",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParameterRef.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparameterref.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ParameterName",
+      "kind": "Property",
+      "signature": "public String ParameterName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The name of the parameter which this reference points to.",
+      "defaultValue": "\u0022[None]\u0022",
+      "godotName": "parameter_name",
+      "xmlDocId": "P:Godot.VisualShaderNodeParameterRef.ParameterName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameterRef.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParameterRef.xml",
+      "sha256": "3f23e009da86aea510d73e0594af44fa516e2904e31d484cc85cab219cf22073"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

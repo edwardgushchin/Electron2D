@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeStateMachineTransition",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeStateMachineTransition",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "AnimationNodeStateMachineTransition",
+    "documentationPath": "doc/classes/AnimationNodeStateMachineTransition.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodestatemachinetransition.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AdvanceCondition",
+      "kind": "Property",
+      "signature": "public StringName AdvanceCondition { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the [AnimationTree] that can be controlled from code (see [url=$DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code]Using AnimationTree[/url]). For example, if [member AnimationTree.tree_root] is an [AnimationNodeStateMachine] and [member advance_condition] is set to [code]\u0022idle\u0022[/code]: [codeblocks] [gdscript] $animation_tree.set(\u0022parameters/conditions/idle\u0022, is_on_floor and (linear_velocity.x == 0)) [/gdscript] [csharp] GetNode\u003CAnimationTree\u003E(\u0022animation_tree\u0022).Set(\u0022parameters/conditions/idle\u0022, IsOnFloor \u0026\u0026 (LinearVelocity.X == 0)); [/csharp] [/codeblocks]",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "advance_condition",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.AdvanceCondition",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "AdvanceExpression",
+      "kind": "Property",
+      "signature": "public String AdvanceExpression { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Use an expression as a condition for state machine transitions. It is possible to create complex animation advance conditions for switching between states and gives much greater flexibility for creating complex state machines by directly interfacing with the script code.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "advance_expression",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.AdvanceExpression",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "AdvanceMode",
+      "kind": "Property",
+      "signature": "public int AdvanceMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines whether the transition should be disabled, enabled when using [method AnimationNodeStateMachinePlayback.travel], or traversed automatically if the [member advance_condition] and [member advance_expression] checks are [code]true[/code] (if assigned).",
+      "defaultValue": "1",
+      "godotName": "advance_mode",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.AdvanceMode",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "BreakLoopAtEnd",
+      "kind": "Property",
+      "signature": "public bool BreakLoopAtEnd { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], breaks the loop at the end of the loop cycle for transition, even if the animation is looping.",
+      "defaultValue": "false",
+      "godotName": "break_loop_at_end",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.BreakLoopAtEnd",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "Priority",
+      "kind": "Property",
+      "signature": "public int Priority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Lower priority transitions are preferred when travelling through the tree via [method AnimationNodeStateMachinePlayback.travel] or [member advance_mode] is set to [constant ADVANCE_MODE_AUTO].",
+      "defaultValue": "1",
+      "godotName": "priority",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.Priority",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "Reset",
+      "kind": "Property",
+      "signature": "public bool Reset { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the destination animation is played back from the beginning when switched.",
+      "defaultValue": "true",
+      "godotName": "reset",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.Reset",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "SwitchMode",
+      "kind": "Property",
+      "signature": "public int SwitchMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The transition type.",
+      "defaultValue": "0",
+      "godotName": "switch_mode",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.SwitchMode",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "XfadeCurve",
+      "kind": "Property",
+      "signature": "public Curve XfadeCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Ease curve for better control over cross-fade between this state and the next. Should be a unit [Curve].",
+      "godotName": "xfade_curve",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.XfadeCurve",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "XfadeTime",
+      "kind": "Property",
+      "signature": "public float XfadeTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The time to cross-fade between this state and the next. [b]Note:[/b] [AnimationNodeStateMachine] transitions the current state immediately after the start of the fading. The precise remaining time can only be inferred from the main animation. When [AnimationNodeOutput] is considered as the most upstream, so the [member xfade_time] is not scaled depending on the downstream delta. See also [member AnimationNodeOneShot.fadeout_time].",
+      "defaultValue": "0.0",
+      "godotName": "xfade_time",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachineTransition.XfadeTime",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AdvanceConditionChanged",
+      "kind": "Signal",
+      "signature": "public event AdvanceConditionChangedHandler AdvanceConditionChanged",
+      "parameters": [],
+      "summary": "Emitted when [member advance_condition] is changed.",
+      "godotName": "advance_condition_changed",
+      "xmlDocId": "E:Godot.AnimationNodeStateMachineTransition.AdvanceConditionChanged",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AdvanceMode",
+      "values": [
+        {
+          "name": "ADVANCE_MODE_AUTO",
+          "value": "2",
+          "enum": "AdvanceMode",
+          "kind": "EnumValue",
+          "summary": "Automatically use this transition if the [member advance_condition] and [member advance_expression] checks are [code]true[/code] (if assigned).",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        },
+        {
+          "name": "ADVANCE_MODE_DISABLED",
+          "value": "0",
+          "enum": "AdvanceMode",
+          "kind": "EnumValue",
+          "summary": "Don\u0027t use this transition.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        },
+        {
+          "name": "ADVANCE_MODE_ENABLED",
+          "value": "1",
+          "enum": "AdvanceMode",
+          "kind": "EnumValue",
+          "summary": "Only use this transition during [method AnimationNodeStateMachinePlayback.travel].",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        }
+      ]
+    },
+    {
+      "name": "SwitchMode",
+      "values": [
+        {
+          "name": "SWITCH_MODE_AT_END",
+          "value": "2",
+          "enum": "SwitchMode",
+          "kind": "EnumValue",
+          "summary": "Wait for the current state playback to end, then switch to the beginning of the next state animation.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        },
+        {
+          "name": "SWITCH_MODE_IMMEDIATE",
+          "value": "0",
+          "enum": "SwitchMode",
+          "kind": "EnumValue",
+          "summary": "Switch to the next state immediately. The current state will end and blend into the beginning of the new one.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        },
+        {
+          "name": "SWITCH_MODE_SYNC",
+          "value": "1",
+          "enum": "SwitchMode",
+          "kind": "EnumValue",
+          "summary": "Switch to the next state immediately, but will seek the new state to the playback position of the old state.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SWITCH_MODE_IMMEDIATE",
+      "value": "0",
+      "enum": "SwitchMode",
+      "kind": "EnumValue",
+      "summary": "Switch to the next state immediately. The current state will end and blend into the beginning of the new one.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "SWITCH_MODE_SYNC",
+      "value": "1",
+      "enum": "SwitchMode",
+      "kind": "EnumValue",
+      "summary": "Switch to the next state immediately, but will seek the new state to the playback position of the old state.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "SWITCH_MODE_AT_END",
+      "value": "2",
+      "enum": "SwitchMode",
+      "kind": "EnumValue",
+      "summary": "Wait for the current state playback to end, then switch to the beginning of the next state animation.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "ADVANCE_MODE_DISABLED",
+      "value": "0",
+      "enum": "AdvanceMode",
+      "kind": "EnumValue",
+      "summary": "Don\u0027t use this transition.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "ADVANCE_MODE_ENABLED",
+      "value": "1",
+      "enum": "AdvanceMode",
+      "kind": "EnumValue",
+      "summary": "Only use this transition during [method AnimationNodeStateMachinePlayback.travel].",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    },
+    {
+      "name": "ADVANCE_MODE_AUTO",
+      "value": "2",
+      "enum": "AdvanceMode",
+      "kind": "EnumValue",
+      "summary": "Automatically use this transition if the [member advance_condition] and [member advance_expression] checks are [code]true[/code] (if assigned).",
+      "sourcePath": "doc/classes/AnimationNodeStateMachineTransition.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeStateMachineTransition.xml",
+      "sha256": "2a32324bca83ef4228af5691ae1ef2e749660cc82d68a7aa00c0390f1e193ae1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

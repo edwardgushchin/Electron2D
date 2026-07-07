@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FramebufferCacheRD",
+    "namespace": "Godot",
+    "fullName": "Godot.FramebufferCacheRD",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "FramebufferCacheRD",
+    "documentationPath": "doc/classes/FramebufferCacheRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_framebuffercacherd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCacheMultipass",
+      "kind": "Method",
+      "signature": "public RID GetCacheMultipass(RID[] textures, RDFramebufferPass[] passes, int views)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "textures",
+          "type": "RID[]"
+        },
+        {
+          "name": "passes",
+          "type": "RDFramebufferPass[]"
+        },
+        {
+          "name": "views",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates, or obtains a cached, framebuffer. [param textures] lists textures accessed. [param passes] defines the subpasses and texture allocation, if left empty a single pass is created and textures are allocated depending on their usage flags. [param views] defines the number of views used when rendering.",
+      "godotName": "get_cache_multipass",
+      "xmlDocId": "M:Godot.FramebufferCacheRD.GetCacheMultipass(RID[],RDFramebufferPass[],int)",
+      "sourcePath": "doc/classes/FramebufferCacheRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FramebufferCacheRD.xml",
+      "sha256": "8b6b307bb7367cbcbf48c5df082918914bf5c7336575bc004e286981039869a9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

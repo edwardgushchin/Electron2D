@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventKey",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventKey",
+    "kind": "class",
+    "baseType": "InputEventWithModifiers",
+    "interfaces": [],
+    "godotReference": "InputEventKey",
+    "documentationPath": "doc/classes/InputEventKey.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventkey.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AsTextKeyLabel",
+      "kind": "Method",
+      "signature": "public String AsTextKeyLabel()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representation of the event\u0027s [member key_label] and modifiers.",
+      "godotName": "as_text_key_label",
+      "xmlDocId": "M:Godot.InputEventKey.AsTextKeyLabel",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "AsTextKeycode",
+      "kind": "Method",
+      "signature": "public String AsTextKeycode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representation of the event\u0027s [member keycode] and modifiers.",
+      "godotName": "as_text_keycode",
+      "xmlDocId": "M:Godot.InputEventKey.AsTextKeycode",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "AsTextLocation",
+      "kind": "Method",
+      "signature": "public String AsTextLocation()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representation of the event\u0027s [member location]. This will be a blank string if the event is not specific to a location.",
+      "godotName": "as_text_location",
+      "xmlDocId": "M:Godot.InputEventKey.AsTextLocation",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "AsTextPhysicalKeycode",
+      "kind": "Method",
+      "signature": "public String AsTextPhysicalKeycode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a [String] representation of the event\u0027s [member physical_keycode] and modifiers.",
+      "godotName": "as_text_physical_keycode",
+      "xmlDocId": "M:Godot.InputEventKey.AsTextPhysicalKeycode",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "GetKeyLabelWithModifiers",
+      "kind": "Method",
+      "signature": "public int GetKeyLabelWithModifiers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the localized key label combined with modifier keys such as [kbd]Shift[/kbd] or [kbd]Alt[/kbd]. See also [InputEventWithModifiers]. To get a human-readable representation of the [InputEventKey] with modifiers, use [code]OS.get_keycode_string(event.get_key_label_with_modifiers())[/code] where [code]event[/code] is the [InputEventKey].",
+      "godotName": "get_key_label_with_modifiers",
+      "xmlDocId": "M:Godot.InputEventKey.GetKeyLabelWithModifiers",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "GetKeycodeWithModifiers",
+      "kind": "Method",
+      "signature": "public int GetKeycodeWithModifiers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the Latin keycode combined with modifier keys such as [kbd]Shift[/kbd] or [kbd]Alt[/kbd]. See also [InputEventWithModifiers]. To get a human-readable representation of the [InputEventKey] with modifiers, use [code]OS.get_keycode_string(event.get_keycode_with_modifiers())[/code] where [code]event[/code] is the [InputEventKey].",
+      "godotName": "get_keycode_with_modifiers",
+      "xmlDocId": "M:Godot.InputEventKey.GetKeycodeWithModifiers",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "GetPhysicalKeycodeWithModifiers",
+      "kind": "Method",
+      "signature": "public int GetPhysicalKeycodeWithModifiers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the physical keycode combined with modifier keys such as [kbd]Shift[/kbd] or [kbd]Alt[/kbd]. See also [InputEventWithModifiers]. To get a human-readable representation of the [InputEventKey] with modifiers, use [code]OS.get_keycode_string(event.get_physical_keycode_with_modifiers())[/code] where [code]event[/code] is the [InputEventKey].",
+      "godotName": "get_physical_keycode_with_modifiers",
+      "xmlDocId": "M:Godot.InputEventKey.GetPhysicalKeycodeWithModifiers",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "Echo",
+      "kind": "Property",
+      "signature": "public bool Echo { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the key was already pressed before this event. An echo event is a repeated key event sent when the user is holding down the key. [b]Note:[/b] The rate at which echo events are sent is typically around 20 events per second (after holding down the key for roughly half a second). However, the key repeat delay/speed can be changed by the user or disabled entirely in the operating system settings. To ensure your project works correctly on all configurations, do not assume the user has a specific key repeat configuration in your project\u0027s behavior.",
+      "defaultValue": "false",
+      "godotName": "echo",
+      "xmlDocId": "P:Godot.InputEventKey.Echo",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "KeyLabel",
+      "kind": "Property",
+      "signature": "public int KeyLabel { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Represents the localized label printed on the key in the current keyboard layout, which corresponds to one of the [enum Key] constants or any valid Unicode character. Key labels are meant for key prompts. For keyboard layouts with a single label on the key, it is equivalent to [member keycode]. To get a human-readable representation of the [InputEventKey], use [code]OS.get_keycode_string(event.key_label)[/code] where [code]event[/code] is the [InputEventKey]. [codeblock lang=text] \u002B-----\u002B \u002B-----\u002B | Q | | Q | - \u0022Q\u0022 - keycode | \u0419 | | \u0636 | - \u0022\u0419\u0022 and \u0022\u0636\u0022 - key_label \u002B-----\u002B \u002B-----\u002B [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "key_label",
+      "xmlDocId": "P:Godot.InputEventKey.KeyLabel",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "Keycode",
+      "kind": "Property",
+      "signature": "public int Keycode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Latin label printed on the key in the current keyboard layout, which corresponds to one of the [enum Key] constants. Key codes are meant for shortcuts expressed with a standard Latin keyboard, such as [kbd]Ctrl \u002B S[/kbd] for a \u0022Save\u0022 shortcut. To get a human-readable representation of the [InputEventKey], use [code]OS.get_keycode_string(event.keycode)[/code] where [code]event[/code] is the [InputEventKey]. [codeblock lang=text] \u002B-----\u002B \u002B-----\u002B | Q | | Q | - \u0022Q\u0022 - keycode | \u0419 | | \u0636 | - \u0022\u0419\u0022 and \u0022\u0636\u0022 - key_label \u002B-----\u002B \u002B-----\u002B [/codeblock]",
+      "defaultValue": "0",
+      "godotName": "keycode",
+      "xmlDocId": "P:Godot.InputEventKey.Keycode",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "Location",
+      "kind": "Property",
+      "signature": "public int Location { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Represents the location of a key which has both left and right versions, such as [kbd]Shift[/kbd] or [kbd]Alt[/kbd].",
+      "defaultValue": "0",
+      "godotName": "location",
+      "xmlDocId": "P:Godot.InputEventKey.Location",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "PhysicalKeycode",
+      "kind": "Property",
+      "signature": "public int PhysicalKeycode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Represents the physical location of a key on the 101/102-key US QWERTY keyboard, which corresponds to one of the [enum Key] constants. Physical key codes meant for game input, such as WASD movement, where only the location of the keys is important. To get a human-readable representation of the [InputEventKey], use [method OS.get_keycode_string] in combination with [method DisplayServer.keyboard_get_keycode_from_physical] or [method DisplayServer.keyboard_get_label_from_physical]: [codeblocks] [gdscript] func _input(event): if event is InputEventKey: var keycode = DisplayServer.keyboard_get_keycode_from_physical(event.physical_keycode) var label = DisplayServer.keyboard_get_label_from_physical(event.physical_keycode) print(OS.get_keycode_string(keycode)) print(OS.get_keycode_string(label)) [/gdscript] [csharp] public override void _Input(InputEvent @event) { if (@event is InputEventKey inputEventKey) { var keycode = DisplayServer.KeyboardGetKeycodeFromPhysical(inputEventKey.PhysicalKeycode); var label = DisplayServer.KeyboardGetLabelFromPhysical(inputEventKey.PhysicalKeycode); GD.Print(OS.GetKeycodeString(keycode)); GD.Print(OS.GetKeycodeString(label)); } } [/csharp] [/codeblocks]",
+      "defaultValue": "0",
+      "godotName": "physical_keycode",
+      "xmlDocId": "P:Godot.InputEventKey.PhysicalKeycode",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public bool Pressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the key\u0027s state is pressed. If [code]false[/code], the key\u0027s state is released.",
+      "defaultValue": "false",
+      "godotName": "pressed",
+      "xmlDocId": "P:Godot.InputEventKey.Pressed",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    },
+    {
+      "name": "Unicode",
+      "kind": "Property",
+      "signature": "public int Unicode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The key Unicode character code (when relevant), shifted by modifier keys. Unicode character codes for composite characters and complex scripts may not be available unless IME input mode is active. See [method Window.set_ime_active] for more information. Unicode character codes are meant for text input. [b]Note:[/b] This property is set by the engine only for a pressed event. If the event is sent by an IME or a virtual keyboard, no corresponding key released event is sent.",
+      "defaultValue": "0",
+      "godotName": "unicode",
+      "xmlDocId": "P:Godot.InputEventKey.Unicode",
+      "sourcePath": "doc/classes/InputEventKey.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventKey.xml",
+      "sha256": "e8e2deae119a9d42d2e9486ed09323fc289b049b8eba94252851561cbfb3103c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

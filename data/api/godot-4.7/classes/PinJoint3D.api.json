@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PinJoint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.PinJoint3D",
+    "kind": "class",
+    "baseType": "Joint3D",
+    "interfaces": [],
+    "godotReference": "PinJoint3D",
+    "documentationPath": "doc/classes/PinJoint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_pinjoint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParam",
+      "kind": "Method",
+      "signature": "public float GetParam(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the specified parameter.",
+      "godotName": "get_param",
+      "xmlDocId": "M:Godot.PinJoint3D.GetParam(int)",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    },
+    {
+      "name": "SetParam",
+      "kind": "Method",
+      "signature": "public void SetParam(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the specified parameter.",
+      "godotName": "set_param",
+      "xmlDocId": "M:Godot.PinJoint3D.SetParam(int,float)",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "params/bias",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The force with which the pinned objects stay in positional relation to each other. The higher, the stronger.",
+      "defaultValue": "0.3",
+      "godotName": "params/bias",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    },
+    {
+      "name": "params/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The force with which the pinned objects stay in velocity relation to each other. The higher, the stronger.",
+      "defaultValue": "1.0",
+      "godotName": "params/damping",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    },
+    {
+      "name": "params/impulse_clamp",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If above 0, this value is the maximum value for an impulse that this Joint3D produces.",
+      "defaultValue": "0.0",
+      "godotName": "params/impulse_clamp",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Param",
+      "values": [
+        {
+          "name": "PARAM_BIAS",
+          "value": "0",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The force with which the pinned objects stay in positional relation to each other. The higher, the stronger.",
+          "sourcePath": "doc/classes/PinJoint3D.xml"
+        },
+        {
+          "name": "PARAM_DAMPING",
+          "value": "1",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The force with which the pinned objects stay in velocity relation to each other. The higher, the stronger.",
+          "sourcePath": "doc/classes/PinJoint3D.xml"
+        },
+        {
+          "name": "PARAM_IMPULSE_CLAMP",
+          "value": "2",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "If above 0, this value is the maximum value for an impulse that this Joint3D produces.",
+          "sourcePath": "doc/classes/PinJoint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_BIAS",
+      "value": "0",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The force with which the pinned objects stay in positional relation to each other. The higher, the stronger.",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    },
+    {
+      "name": "PARAM_DAMPING",
+      "value": "1",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The force with which the pinned objects stay in velocity relation to each other. The higher, the stronger.",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    },
+    {
+      "name": "PARAM_IMPULSE_CLAMP",
+      "value": "2",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "If above 0, this value is the maximum value for an impulse that this Joint3D produces.",
+      "sourcePath": "doc/classes/PinJoint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PinJoint3D.xml",
+      "sha256": "4b473139a896c80dbdcb96258bbcbba26fe24573da0ad96e49dc2805b0e9f775"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

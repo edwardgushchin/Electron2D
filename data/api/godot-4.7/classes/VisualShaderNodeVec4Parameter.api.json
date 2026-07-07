@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVec4Parameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVec4Parameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVec4Parameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Parameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevec4parameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DefaultValue",
+      "kind": "Property",
+      "signature": "public Vector4 DefaultValue { get; set; }",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "A default value to be assigned within the shader.",
+      "defaultValue": "Vector4(0, 0, 0, 0)",
+      "godotName": "default_value",
+      "xmlDocId": "P:Godot.VisualShaderNodeVec4Parameter.DefaultValue",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Parameter.xml"
+    },
+    {
+      "name": "DefaultValueEnabled",
+      "kind": "Property",
+      "signature": "public bool DefaultValueEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables usage of the [member default_value].",
+      "defaultValue": "false",
+      "godotName": "default_value_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeVec4Parameter.DefaultValueEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Parameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVec4Parameter.xml",
+      "sha256": "2d7b53cfd3c7aec85a0690bfd82fcd6482cc1a2c47c76d01a4a69a89098a4255"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

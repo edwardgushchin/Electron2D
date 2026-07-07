@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeStateMachine",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeStateMachine",
+    "kind": "class",
+    "baseType": "AnimationRootNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeStateMachine",
+    "documentationPath": "doc/classes/AnimationNodeStateMachine.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodestatemachine.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddNode",
+      "kind": "Method",
+      "signature": "public void AddNode(StringName name, AnimationNode node, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "node",
+          "type": "AnimationNode"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Adds a new animation node to the graph. The [param position] is used for display in the editor.",
+      "godotName": "add_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.AddNode(StringName,AnimationNode,Vector2)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "AddTransition",
+      "kind": "Method",
+      "signature": "public void AddTransition(StringName from, StringName to, AnimationNodeStateMachineTransition transition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "StringName"
+        },
+        {
+          "name": "to",
+          "type": "StringName"
+        },
+        {
+          "name": "transition",
+          "type": "AnimationNodeStateMachineTransition"
+        }
+      ],
+      "summary": "Adds a transition between the given animation nodes.",
+      "godotName": "add_transition",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.AddTransition(StringName,StringName,AnimationNodeStateMachineTransition)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetGraphOffset",
+      "kind": "Method",
+      "signature": "public Vector2 GetGraphOffset()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the draw offset of the graph. Used for display in the editor.",
+      "godotName": "get_graph_offset",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetGraphOffset",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetNode",
+      "kind": "Method",
+      "signature": "public AnimationNode GetNode(StringName name)",
+      "returnType": "AnimationNode",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the animation node with the given name.",
+      "godotName": "get_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetNodeList",
+      "kind": "Method",
+      "signature": "public StringName[] GetNodeList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns a list containing the names of all animation nodes in this state machine.",
+      "godotName": "get_node_list",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetNodeList",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetNodeName",
+      "kind": "Method",
+      "signature": "public StringName GetNodeName(AnimationNode node)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "AnimationNode"
+        }
+      ],
+      "summary": "Returns the given animation node\u0027s name.",
+      "godotName": "get_node_name",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetNodeName(AnimationNode)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetNodePosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetNodePosition(StringName name)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the given animation node\u0027s coordinates. Used for display in the editor.",
+      "godotName": "get_node_position",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetNodePosition(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetTransition",
+      "kind": "Method",
+      "signature": "public AnimationNodeStateMachineTransition GetTransition(int idx)",
+      "returnType": "AnimationNodeStateMachineTransition",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given transition.",
+      "godotName": "get_transition",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetTransition(int)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetTransitionCount",
+      "kind": "Method",
+      "signature": "public int GetTransitionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of connections in the graph.",
+      "godotName": "get_transition_count",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetTransitionCount",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetTransitionFrom",
+      "kind": "Method",
+      "signature": "public StringName GetTransitionFrom(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given transition\u0027s start node.",
+      "godotName": "get_transition_from",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetTransitionFrom(int)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "GetTransitionTo",
+      "kind": "Method",
+      "signature": "public StringName GetTransitionTo(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given transition\u0027s end node.",
+      "godotName": "get_transition_to",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.GetTransitionTo(int)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "HasNode",
+      "kind": "Method",
+      "signature": "public bool HasNode(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the graph contains the given animation node.",
+      "godotName": "has_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.HasNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "HasTransition",
+      "kind": "Method",
+      "signature": "public bool HasTransition(StringName from, StringName to)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "StringName"
+        },
+        {
+          "name": "to",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if there is a transition between the given animation nodes.",
+      "godotName": "has_transition",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.HasTransition(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "RemoveNode",
+      "kind": "Method",
+      "signature": "public void RemoveNode(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Deletes the given animation node from the graph.",
+      "godotName": "remove_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.RemoveNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "RemoveTransition",
+      "kind": "Method",
+      "signature": "public void RemoveTransition(StringName from, StringName to)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "StringName"
+        },
+        {
+          "name": "to",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Deletes the transition between the two specified animation nodes.",
+      "godotName": "remove_transition",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.RemoveTransition(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "RemoveTransitionByIndex",
+      "kind": "Method",
+      "signature": "public void RemoveTransitionByIndex(int idx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Deletes the given transition by index.",
+      "godotName": "remove_transition_by_index",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.RemoveTransitionByIndex(int)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "RenameNode",
+      "kind": "Method",
+      "signature": "public void RenameNode(StringName name, StringName newName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "new_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the given animation node.",
+      "godotName": "rename_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.RenameNode(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "ReplaceNode",
+      "kind": "Method",
+      "signature": "public void ReplaceNode(StringName name, AnimationNode node)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "node",
+          "type": "AnimationNode"
+        }
+      ],
+      "summary": "Replaces the given animation node with a new animation node.",
+      "godotName": "replace_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.ReplaceNode(StringName,AnimationNode)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "SetGraphOffset",
+      "kind": "Method",
+      "signature": "public void SetGraphOffset(Vector2 offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the draw offset of the graph. Used for display in the editor.",
+      "godotName": "set_graph_offset",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.SetGraphOffset(Vector2)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "SetNodePosition",
+      "kind": "Method",
+      "signature": "public void SetNodePosition(StringName name, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the animation node\u0027s coordinates. Used for display in the editor.",
+      "godotName": "set_node_position",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachine.SetNodePosition(StringName,Vector2)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "AllowTransitionToSelf",
+      "kind": "Property",
+      "signature": "public bool AllowTransitionToSelf { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows teleport to the self state with [method AnimationNodeStateMachinePlayback.travel]. When the reset option is enabled in [method AnimationNodeStateMachinePlayback.travel], the animation is restarted. If [code]false[/code], nothing happens on the teleportation to the self state.",
+      "defaultValue": "false",
+      "godotName": "allow_transition_to_self",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachine.AllowTransitionToSelf",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "ResetEnds",
+      "kind": "Property",
+      "signature": "public bool ResetEnds { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], treat the cross-fade to the start and end nodes as a blend with the RESET animation. In most cases, when additional cross-fades are performed in the parent [AnimationNode] of the state machine, setting this property to [code]false[/code] and matching the cross-fade time of the parent [AnimationNode] and the state machine\u0027s start node and end node gives good results.",
+      "defaultValue": "false",
+      "godotName": "reset_ends",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachine.ResetEnds",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "StateMachineType",
+      "kind": "Property",
+      "signature": "public int StateMachineType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "This property can define the process of transitions for different use cases. See also [enum AnimationNodeStateMachine.StateMachineType].",
+      "defaultValue": "0",
+      "godotName": "state_machine_type",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachine.StateMachineType",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "StateMachineType",
+      "values": [
+        {
+          "name": "STATE_MACHINE_TYPE_GROUPED",
+          "value": "2",
+          "enum": "StateMachineType",
+          "kind": "EnumValue",
+          "summary": "This is a grouped state machine that can be controlled from a parent state machine. It does not work independently. There must be a state machine with [member state_machine_type] of [constant STATE_MACHINE_TYPE_ROOT] or [constant STATE_MACHINE_TYPE_NESTED] in the parent or ancestor.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+        },
+        {
+          "name": "STATE_MACHINE_TYPE_NESTED",
+          "value": "1",
+          "enum": "StateMachineType",
+          "kind": "EnumValue",
+          "summary": "Seeking to the beginning is treated as seeking to the beginning of the animation in the current state. Transition to the end state, or the absence of transitions in each state, is treated as exiting the state machine.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+        },
+        {
+          "name": "STATE_MACHINE_TYPE_ROOT",
+          "value": "0",
+          "enum": "StateMachineType",
+          "kind": "EnumValue",
+          "summary": "Seeking to the beginning is treated as playing from the start state. Transition to the end state is treated as exiting the state machine.",
+          "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STATE_MACHINE_TYPE_ROOT",
+      "value": "0",
+      "enum": "StateMachineType",
+      "kind": "EnumValue",
+      "summary": "Seeking to the beginning is treated as playing from the start state. Transition to the end state is treated as exiting the state machine.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "STATE_MACHINE_TYPE_NESTED",
+      "value": "1",
+      "enum": "StateMachineType",
+      "kind": "EnumValue",
+      "summary": "Seeking to the beginning is treated as seeking to the beginning of the animation in the current state. Transition to the end state, or the absence of transitions in each state, is treated as exiting the state machine.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    },
+    {
+      "name": "STATE_MACHINE_TYPE_GROUPED",
+      "value": "2",
+      "enum": "StateMachineType",
+      "kind": "EnumValue",
+      "summary": "This is a grouped state machine that can be controlled from a parent state machine. It does not work independently. There must be a state machine with [member state_machine_type] of [constant STATE_MACHINE_TYPE_ROOT] or [constant STATE_MACHINE_TYPE_NESTED] in the parent or ancestor.",
+      "sourcePath": "doc/classes/AnimationNodeStateMachine.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeStateMachine.xml",
+      "sha256": "01e1eae47687c76de016989e81a17ed1bb6fd50846998e277c05aa23b59a5bb2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

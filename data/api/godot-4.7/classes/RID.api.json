@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RID",
+    "namespace": "Godot",
+    "fullName": "Godot.RID",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "RID",
+    "documentationPath": "doc/classes/RID.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rid.html"
+  },
+  "constructors": [
+    {
+      "name": "RID",
+      "kind": "Constructor",
+      "signature": "public RID()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Constructs an empty [RID] with the invalid ID [code]0[/code].",
+      "godotName": "RID",
+      "xmlDocId": "M:Godot.RID.#ctor",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "RID",
+      "kind": "Constructor",
+      "signature": "public RID(RID from)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "RID"
+        }
+      ],
+      "summary": "Constructs an [RID] as a copy of the given [RID].",
+      "godotName": "RID",
+      "xmlDocId": "M:Godot.RID.#ctor(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "GetId",
+      "kind": "Method",
+      "signature": "public int GetId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the referenced low-level resource.",
+      "godotName": "get_id",
+      "xmlDocId": "M:Godot.RID.GetId",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "IsValid",
+      "kind": "Method",
+      "signature": "public bool IsValid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [RID] is not [code]0[/code].",
+      "godotName": "is_valid",
+      "xmlDocId": "M:Godot.RID.IsValid",
+      "sourcePath": "doc/classes/RID.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [RID]s are not equal.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.RID.operator !=(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "operator \u003C",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [RID]\u0027s ID is less than [param right]\u0027s ID.",
+      "godotName": "operator \u003C",
+      "xmlDocId": "M:Godot.RID.operator \u003C(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "operator \u003C=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003C=(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [RID]\u0027s ID is less than or equal to [param right]\u0027s ID.",
+      "godotName": "operator \u003C=",
+      "xmlDocId": "M:Godot.RID.operator \u003C=(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if both [RID]s are equal, which means they both refer to the same low-level resource.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.RID.operator ==(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "operator \u003E",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [RID]\u0027s ID is greater than [param right]\u0027s ID.",
+      "godotName": "operator \u003E",
+      "xmlDocId": "M:Godot.RID.operator \u003E(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    },
+    {
+      "name": "operator \u003E=",
+      "kind": "Operator",
+      "signature": "public bool operator \u003E=(RID right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [RID]\u0027s ID is greater than or equal to [param right]\u0027s ID.",
+      "godotName": "operator \u003E=",
+      "xmlDocId": "M:Godot.RID.operator \u003E=(RID)",
+      "sourcePath": "doc/classes/RID.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RID.xml",
+      "sha256": "65877718a2f00a23cc908946f50aaab15216c12c332eac8520110b6a51c9f4ed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MeshConvexDecompositionSettings",
+    "namespace": "Godot",
+    "fullName": "Godot.MeshConvexDecompositionSettings",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "MeshConvexDecompositionSettings",
+    "documentationPath": "doc/classes/MeshConvexDecompositionSettings.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_meshconvexdecompositionsettings.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ConvexHullApproximation",
+      "kind": "Property",
+      "signature": "public bool ConvexHullApproximation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses approximation for computing convex hulls.",
+      "defaultValue": "true",
+      "godotName": "convex_hull_approximation",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.ConvexHullApproximation",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "ConvexHullDownsampling",
+      "kind": "Property",
+      "signature": "public int ConvexHullDownsampling { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the precision of the convex-hull generation process during the clipping plane selection stage. Ranges from [code]1[/code] to [code]16[/code].",
+      "defaultValue": "4",
+      "godotName": "convex_hull_downsampling",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.ConvexHullDownsampling",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "MaxConcavity",
+      "kind": "Property",
+      "signature": "public float MaxConcavity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum concavity. Ranges from [code]0.0[/code] to [code]1.0[/code].",
+      "defaultValue": "1.0",
+      "godotName": "max_concavity",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.MaxConcavity",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "MaxConvexHulls",
+      "kind": "Property",
+      "signature": "public int MaxConvexHulls { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The maximum number of convex hulls to produce from the merge operation.",
+      "defaultValue": "1",
+      "godotName": "max_convex_hulls",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.MaxConvexHulls",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "MaxNumVerticesPerConvexHull",
+      "kind": "Property",
+      "signature": "public int MaxNumVerticesPerConvexHull { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the maximum number of triangles per convex-hull. Ranges from [code]4[/code] to [code]1024[/code].",
+      "defaultValue": "32",
+      "godotName": "max_num_vertices_per_convex_hull",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.MaxNumVerticesPerConvexHull",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "MinVolumePerConvexHull",
+      "kind": "Property",
+      "signature": "public float MinVolumePerConvexHull { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the adaptive sampling of the generated convex-hulls. Ranges from [code]0.0[/code] to [code]0.01[/code].",
+      "defaultValue": "0.0001",
+      "godotName": "min_volume_per_convex_hull",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.MinVolumePerConvexHull",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "Mode",
+      "kind": "Property",
+      "signature": "public int Mode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Mode for the approximate convex decomposition.",
+      "defaultValue": "0",
+      "godotName": "mode",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.Mode",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "NormalizeMesh",
+      "kind": "Property",
+      "signature": "public bool NormalizeMesh { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], normalizes the mesh before applying the convex decomposition.",
+      "defaultValue": "false",
+      "godotName": "normalize_mesh",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.NormalizeMesh",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "PlaneDownsampling",
+      "kind": "Property",
+      "signature": "public int PlaneDownsampling { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the granularity of the search for the \u0022best\u0022 clipping plane. Ranges from [code]1[/code] to [code]16[/code].",
+      "defaultValue": "4",
+      "godotName": "plane_downsampling",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.PlaneDownsampling",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "ProjectHullVertices",
+      "kind": "Property",
+      "signature": "public bool ProjectHullVertices { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], projects output convex hull vertices onto the original source mesh to increase floating-point accuracy of the results.",
+      "defaultValue": "true",
+      "godotName": "project_hull_vertices",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.ProjectHullVertices",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "Resolution",
+      "kind": "Property",
+      "signature": "public int Resolution { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum number of voxels generated during the voxelization stage.",
+      "defaultValue": "10000",
+      "godotName": "resolution",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.Resolution",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "RevolutionAxesClippingBias",
+      "kind": "Property",
+      "signature": "public float RevolutionAxesClippingBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the bias toward clipping along revolution axes. Ranges from [code]0.0[/code] to [code]1.0[/code].",
+      "defaultValue": "0.05",
+      "godotName": "revolution_axes_clipping_bias",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.RevolutionAxesClippingBias",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "SymmetryPlanesClippingBias",
+      "kind": "Property",
+      "signature": "public float SymmetryPlanesClippingBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the bias toward clipping along symmetry planes. Ranges from [code]0.0[/code] to [code]1.0[/code].",
+      "defaultValue": "0.05",
+      "godotName": "symmetry_planes_clipping_bias",
+      "xmlDocId": "P:Godot.MeshConvexDecompositionSettings.SymmetryPlanesClippingBias",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "CONVEX_DECOMPOSITION_MODE_TETRAHEDRON",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Constant for tetrahedron-based approximate convex decomposition.",
+          "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+        },
+        {
+          "name": "CONVEX_DECOMPOSITION_MODE_VOXEL",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Constant for voxel-based approximate convex decomposition.",
+          "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CONVEX_DECOMPOSITION_MODE_VOXEL",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Constant for voxel-based approximate convex decomposition.",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    },
+    {
+      "name": "CONVEX_DECOMPOSITION_MODE_TETRAHEDRON",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Constant for tetrahedron-based approximate convex decomposition.",
+      "sourcePath": "doc/classes/MeshConvexDecompositionSettings.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MeshConvexDecompositionSettings.xml",
+      "sha256": "7d8b989a2fad1ad88dfff10231edb7b3cfe6b94ca4b169e911d62a68556e27f4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

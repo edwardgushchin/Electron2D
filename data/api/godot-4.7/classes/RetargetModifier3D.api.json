@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RetargetModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.RetargetModifier3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "RetargetModifier3D",
+    "documentationPath": "doc/classes/RetargetModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_retargetmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsPositionEnabled",
+      "kind": "Method",
+      "signature": "public bool IsPositionEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member enable] has [constant TRANSFORM_FLAG_POSITION].",
+      "godotName": "is_position_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.IsPositionEnabled",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "IsRotationEnabled",
+      "kind": "Method",
+      "signature": "public bool IsRotationEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member enable] has [constant TRANSFORM_FLAG_ROTATION].",
+      "godotName": "is_rotation_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.IsRotationEnabled",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "IsScaleEnabled",
+      "kind": "Method",
+      "signature": "public bool IsScaleEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member enable] has [constant TRANSFORM_FLAG_SCALE].",
+      "godotName": "is_scale_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.IsScaleEnabled",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "SetPositionEnabled",
+      "kind": "Method",
+      "signature": "public void SetPositionEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets [constant TRANSFORM_FLAG_POSITION] into [member enable].",
+      "godotName": "set_position_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.SetPositionEnabled(bool)",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "SetRotationEnabled",
+      "kind": "Method",
+      "signature": "public void SetRotationEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets [constant TRANSFORM_FLAG_ROTATION] into [member enable].",
+      "godotName": "set_rotation_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.SetRotationEnabled(bool)",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "SetScaleEnabled",
+      "kind": "Method",
+      "signature": "public void SetScaleEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets [constant TRANSFORM_FLAG_SCALE] into [member enable].",
+      "godotName": "set_scale_enabled",
+      "xmlDocId": "M:Godot.RetargetModifier3D.SetScaleEnabled(bool)",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "Enable",
+      "kind": "Property",
+      "signature": "public int Enable { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Flags to control the process of the transform elements individually when [member use_global_pose] is disabled.",
+      "defaultValue": "7",
+      "godotName": "enable",
+      "xmlDocId": "P:Godot.RetargetModifier3D.Enable",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "Profile",
+      "kind": "Property",
+      "signature": "public SkeletonProfile Profile { get; set; }",
+      "returnType": "SkeletonProfile",
+      "parameters": [],
+      "summary": "[SkeletonProfile] for retargeting bones with names matching the bone list.",
+      "godotName": "profile",
+      "xmlDocId": "P:Godot.RetargetModifier3D.Profile",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "UseGlobalPose",
+      "kind": "Property",
+      "signature": "public bool UseGlobalPose { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], in case the target skeleton has fewer bones than the source skeleton, the source bone parent\u0027s transform will be ignored. Instead, it is possible to retarget between models with different body shapes, and position, rotation, and scale can be retargeted separately. If [code]true[/code], retargeting is performed taking into account global pose. In case the target skeleton has fewer bones than the source skeleton, the source bone parent\u0027s transform is taken into account. However, bone length between skeletons must match exactly, if not, the bones will be forced to expand or shrink. This is useful for using dummy bone with length [code]0[/code] to match postures when retargeting between models with different number of bones.",
+      "defaultValue": "false",
+      "godotName": "use_global_pose",
+      "xmlDocId": "P:Godot.RetargetModifier3D.UseGlobalPose",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "TransformFlag",
+      "values": [
+        {
+          "name": "TRANSFORM_FLAG_ALL",
+          "value": "7",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to retarget the position/rotation/scale.",
+          "sourcePath": "doc/classes/RetargetModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_POSITION",
+          "value": "1",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to retarget the position.",
+          "sourcePath": "doc/classes/RetargetModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_ROTATION",
+          "value": "2",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to retarget the rotation.",
+          "sourcePath": "doc/classes/RetargetModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_SCALE",
+          "value": "4",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to retarget the scale.",
+          "sourcePath": "doc/classes/RetargetModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TRANSFORM_FLAG_POSITION",
+      "value": "1",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to retarget the position.",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_ROTATION",
+      "value": "2",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to retarget the rotation.",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_SCALE",
+      "value": "4",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to retarget the scale.",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_ALL",
+      "value": "7",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to retarget the position/rotation/scale.",
+      "sourcePath": "doc/classes/RetargetModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RetargetModifier3D.xml",
+      "sha256": "e1e94c5213be6e9d8de63f9c03314649297eff20efabbdb18a629de8b766d66e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

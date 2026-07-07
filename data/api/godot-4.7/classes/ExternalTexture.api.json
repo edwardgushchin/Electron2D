@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ExternalTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.ExternalTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "ExternalTexture",
+    "documentationPath": "doc/classes/ExternalTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_externaltexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetExternalTextureId",
+      "kind": "Method",
+      "signature": "public int GetExternalTextureId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the external texture ID. Depending on your use case, you may need to pass this to platform APIs, for example, when creating an [code]android.graphics.SurfaceTexture[/code] on Android.",
+      "godotName": "get_external_texture_id",
+      "xmlDocId": "M:Godot.ExternalTexture.GetExternalTextureId",
+      "sourcePath": "doc/classes/ExternalTexture.xml"
+    },
+    {
+      "name": "SetExternalBufferId",
+      "kind": "Method",
+      "signature": "public void SetExternalBufferId(int externalBufferId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "external_buffer_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the external buffer ID. Depending on your use case, you may need to call this with data received from a platform API, for example, [code]SurfaceTexture.getHardwareBuffer()[/code] on Android.",
+      "godotName": "set_external_buffer_id",
+      "xmlDocId": "M:Godot.ExternalTexture.SetExternalBufferId(int)",
+      "sourcePath": "doc/classes/ExternalTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.ExternalTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/ExternalTexture.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "External texture size.",
+      "defaultValue": "Vector2(256, 256)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.ExternalTexture.Size",
+      "sourcePath": "doc/classes/ExternalTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ExternalTexture.xml",
+      "sha256": "df5bf927610871501646ba3e369c592cbe3fc6426e5ef1a01b5d4844233357bb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,1087 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFDocumentExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFDocumentExtension",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFDocumentExtension",
+    "documentationPath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfdocumentextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_ConvertSceneNode",
+      "kind": "Method",
+      "signature": "public void _ConvertSceneNode(GLTFState state, GLTFNode gltfNode, Node sceneNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "scene_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _export_preflight] and before [method _export_post_convert]. Runs when converting the data from a Godot scene node. This method can be used to process the Godot scene node data into a format that can be used by [method _export_node].",
+      "godotName": "_convert_scene_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ConvertSceneNode(GLTFState,GLTFNode,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportGetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _ExportGetPropertyList(Node rootNode)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "root_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Runs prior to the export process. This method is run before [method _export_preflight] when exporting a scene from the editor, or it may not be run at all in other situations. Unlike the rest of the export methods, this does not run when calling a [GLTFDocument]\u0027s export methods in sequence with everything else, but rather runs before that entire process occurs, allowing configuration to occur beforehand, potentially minutes or hours in advance of [method _export_preflight]. This allows extensions to decide which properties to show in the editor export settings dialog based on the contents of the scene, hiding any settings that are not relevant for that scene. The [param root_node] parameter may be [code]null[/code], in which case all properties should be shown.",
+      "godotName": "_export_get_property_list",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportGetPropertyList(Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportNode",
+      "kind": "Method",
+      "signature": "public int _ExportNode(GLTFState state, GLTFNode gltfNode, Dictionary json, Node node)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _export_post]. If this [GLTFDocumentExtension] is used for exporting images, this runs after [method _serialize_texture_json]. This method can be used to modify the final JSON of each node. Data should be primarily stored in [param gltf_node] prior to serializing the JSON, but the original Godot [Node] is also provided if available. [param node] may be [code]null[/code] if not available, such as when exporting glTF data not generated from a Godot scene.",
+      "godotName": "_export_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportNode(GLTFState,GLTFNode,Dictionary,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty _ExportObjectModelProperty(GLTFState state, NodePath nodePath, Node godotNode, int gltfNodeIndex, Object targetObject, int targetDepth)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        },
+        {
+          "name": "godot_node",
+          "type": "Node"
+        },
+        {
+          "name": "gltf_node_index",
+          "type": "int"
+        },
+        {
+          "name": "target_object",
+          "type": "Object"
+        },
+        {
+          "name": "target_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "Part of the export process. Allows GLTFDocumentExtension classes to provide mappings for properties of nodes in the Godot scene tree, to JSON pointers to glTF properties, as defined by the glTF object model. Returns a [GLTFObjectModelProperty] instance that defines how the property should be mapped. If your extension can\u0027t handle the property, return [code]null[/code] or an instance without any JSON pointers (see [method GLTFObjectModelProperty.has_json_pointers]). You should use [method GLTFObjectModelProperty.set_types] to set the types, and set the JSON pointer(s) using the [member GLTFObjectModelProperty.json_pointers] property. The parameters provide context for the property, including the NodePath, the Godot node, the GLTF node index, and the target object. The [param target_object] will be equal to [param godot_node] if no sub-object can be found, otherwise it will point to a sub-object. For example, if the path is [code]^\u0022A/B/C/MeshInstance3D:mesh:surface_0/material:emission_intensity\u0022[/code], it will get the node, then the mesh, and then the material, so [param target_object] will be the [Material] resource, and [param target_depth] will be 2 because 2 levels were traversed to get to the target.",
+      "godotName": "_export_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportObjectModelProperty(GLTFState,NodePath,Node,int,Object,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPost",
+      "kind": "Method",
+      "signature": "public int _ExportPost(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the export process. This method is run last, after all other parts of the export process. This method can be used to modify the final JSON of the generated glTF file.",
+      "godotName": "_export_post",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPost(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPostConvert",
+      "kind": "Method",
+      "signature": "public int _ExportPostConvert(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _convert_scene_node] and before [method _export_preserialize]. This method can be used to modify the converted node data structures before serialization with any additional data from the scene tree.",
+      "godotName": "_export_post_convert",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPostConvert(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPreflight",
+      "kind": "Method",
+      "signature": "public int _ExportPreflight(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run first, before all other parts of the export process. The return value is used to determine if this [GLTFDocumentExtension] instance should be used for exporting a given glTF file. If [constant OK], the export will use this [GLTFDocumentExtension] instance. If not overridden, [constant OK] is returned.",
+      "godotName": "_export_preflight",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPreflight(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPreserialize",
+      "kind": "Method",
+      "signature": "public int _ExportPreserialize(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _export_post_convert] and before [method _get_saveable_image_formats]. This method can be used to alter the state before performing serialization. It runs every time when generating a buffer with [method GLTFDocument.generate_buffer] or writing to the file system with [method GLTFDocument.write_to_filesystem].",
+      "godotName": "_export_preserialize",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPreserialize(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GenerateSceneNode",
+      "kind": "Method",
+      "signature": "public Node3D _GenerateSceneNode(GLTFState state, GLTFNode gltfNode, Node sceneParent)",
+      "returnType": "Node3D",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "scene_parent",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _import_pre_generate] and before [method _import_node]. Runs when generating a Godot scene node from a GLTFNode. The returned node will be added to the scene tree. Multiple nodes can be generated in this step if they are added as a child of the returned node. [b]Note:[/b] The [param scene_parent] parameter may be [code]null[/code] if this is the single root node.",
+      "godotName": "_generate_scene_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GenerateSceneNode(GLTFState,GLTFNode,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetImageFileExtension",
+      "kind": "Method",
+      "signature": "public String _GetImageFileExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the file extension to use for saving image data into, for example, [code]\u0022.png\u0022[/code]. If defined, when this extension is used to handle images, and the images are saved to a separate file, the image bytes will be copied to a file with this extension. If this is set, there should be a [ResourceImporter] class able to import the file. If not defined or empty, Godot will save the image into a PNG file.",
+      "godotName": "_get_image_file_extension",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetImageFileExtension",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetSaveableImageFormats",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSaveableImageFormats()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Part of the export process. This method is run after [method _convert_scene_node] and before [method _export_node]. Returns an array of the image formats that can be saved/exported by this extension. This extension will only be selected as the image exporter if the [GLTFDocument]\u0027s [member GLTFDocument.image_format] is in this array. If this [GLTFDocumentExtension] is selected as the image exporter, one of the [method _save_image_at_path] or [method _serialize_image_to_bytes] methods will run next, otherwise [method _export_node] will run next. If the format name contains [code]\u0022Lossy\u0022[/code], the lossy quality slider will be displayed.",
+      "godotName": "_get_saveable_image_formats",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetSaveableImageFormats",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetSupportedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Part of the import process. This method is run after [method _import_preflight] and before [method _parse_node_extensions]. Returns an array of the glTF extensions supported by this GLTFDocumentExtension class. This is used to validate if a glTF file with required extensions can be loaded.",
+      "godotName": "_get_supported_extensions",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetSupportedExtensions",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportNode",
+      "kind": "Method",
+      "signature": "public int _ImportNode(GLTFState state, GLTFNode gltfNode, Dictionary json, Node node)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _generate_scene_node] and before [method _import_post]. This method can be used to make modifications to each of the generated Godot scene nodes.",
+      "godotName": "_import_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportNode(GLTFState,GLTFNode,Dictionary,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty _ImportObjectModelProperty(GLTFState state, PackedStringArray splitJsonPointer, NodePath[] partialPaths)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "split_json_pointer",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "partial_paths",
+          "type": "NodePath[]"
+        }
+      ],
+      "summary": "Part of the import process. Allows GLTFDocumentExtension classes to provide mappings for JSON pointers to glTF properties, as defined by the glTF object model, to properties of nodes in the Godot scene tree. Returns a [GLTFObjectModelProperty] instance that defines how the property should be mapped. If your extension can\u0027t handle the property, return [code]null[/code] or an instance without any NodePaths (see [method GLTFObjectModelProperty.has_node_paths]). You should use [method GLTFObjectModelProperty.set_types] to set the types, and [method GLTFObjectModelProperty.append_path_to_property] function is useful for most simple cases. In many cases, [param partial_paths] will contain the start of a path, allowing the extension to complete the path. For example, for [code]/nodes/3/extensions/MY_ext/prop[/code], Godot will pass you a NodePath that leads to node 3, so the GLTFDocumentExtension class only needs to resolve the last [code]MY_ext/prop[/code] part of the path. In this example, the extension should check [code]split.size() \u003E 4 and split[0] == \u0022nodes\u0022 and split[2] == \u0022extensions\u0022 and split[3] == \u0022MY_ext\u0022[/code] at the start of the function to check if this JSON pointer applies to it, then it can use [param partial_paths] and handle [code]split[4][/code].",
+      "godotName": "_import_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportObjectModelProperty(GLTFState,PackedStringArray,NodePath[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPost",
+      "kind": "Method",
+      "signature": "public int _ImportPost(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run last, after all other parts of the import process. This method can be used to modify the final Godot scene generated by the import process.",
+      "godotName": "_import_post",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPost(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPostParse",
+      "kind": "Method",
+      "signature": "public int _ImportPostParse(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_node_extensions] and before [method _import_pre_generate]. This method can be used to modify any of the data imported so far after parsing each node, but before generating the scene or any of its nodes.",
+      "godotName": "_import_post_parse",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPostParse(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPreGenerate",
+      "kind": "Method",
+      "signature": "public int _ImportPreGenerate(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _import_post_parse] and before [method _generate_scene_node]. This method can be used to modify or read from any of the processed data structures, before generating the nodes and then running the final per-node import step.",
+      "godotName": "_import_pre_generate",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPreGenerate(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPreflight",
+      "kind": "Method",
+      "signature": "public int _ImportPreflight(GLTFState state, PackedStringArray extensions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "extensions",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Part of the import process. This method is run first, before all other parts of the import process. The return value is used to determine if this [GLTFDocumentExtension] instance should be used for importing a given glTF file. If [constant OK], the import will use this [GLTFDocumentExtension] instance. If not overridden, [constant OK] is returned.",
+      "godotName": "_import_preflight",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPreflight(GLTFState,PackedStringArray)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseImageData",
+      "kind": "Method",
+      "signature": "public int _ParseImageData(GLTFState state, PackedByteArray imageData, String mimeType, Image retImage)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image_data",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "mime_type",
+          "type": "String"
+        },
+        {
+          "name": "ret_image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_node_extensions] and before [method _parse_texture_json]. Runs when parsing image data from a glTF file. The data could be sourced from a separate file, a URI, or a buffer, and then is passed as a byte array.",
+      "godotName": "_parse_image_data",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseImageData(GLTFState,PackedByteArray,String,Image)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseNodeExtensions",
+      "kind": "Method",
+      "signature": "public int _ParseNodeExtensions(GLTFState state, GLTFNode gltfNode, Dictionary extensions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "extensions",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _get_supported_extensions] and before [method _import_post_parse]. Runs when parsing the node extensions of a GLTFNode. This method can be used to process the extension JSON data into a format that can be used by [method _generate_scene_node]. The return value should be a member of the [enum Error] enum.",
+      "godotName": "_parse_node_extensions",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseNodeExtensions(GLTFState,GLTFNode,Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseTextureJson",
+      "kind": "Method",
+      "signature": "public int _ParseTextureJson(GLTFState state, Dictionary textureJson, GLTFTexture retGltfTexture)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "texture_json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "ret_gltf_texture",
+          "type": "GLTFTexture"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_image_data] and before [method _generate_scene_node]. Runs when parsing the texture JSON from the glTF textures array. This can be used to set the source image index to use as the texture.",
+      "godotName": "_parse_texture_json",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseTextureJson(GLTFState,Dictionary,GLTFTexture)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SaveImageAtPath",
+      "kind": "Method",
+      "signature": "public int _SaveImageAtPath(GLTFState state, Image image, String filePath, String imageFormat, float lossyQuality)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "file_path",
+          "type": "String"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        },
+        {
+          "name": "lossy_quality",
+          "type": "float"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _serialize_texture_json]. This method is run when saving images separately from the glTF file. When images are embedded, [method _serialize_image_to_bytes] runs instead. Note that these methods only run when this [GLTFDocumentExtension] is selected as the image exporter.",
+      "godotName": "_save_image_at_path",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SaveImageAtPath(GLTFState,Image,String,String,float)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SerializeImageToBytes",
+      "kind": "Method",
+      "signature": "public PackedByteArray _SerializeImageToBytes(GLTFState state, Image image, Dictionary imageDict, String imageFormat, float lossyQuality)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "image_dict",
+          "type": "Dictionary"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        },
+        {
+          "name": "lossy_quality",
+          "type": "float"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _serialize_texture_json]. This method is run when embedding images in the glTF file. When images are saved separately, [method _save_image_at_path] runs instead. Note that these methods only run when this [GLTFDocumentExtension] is selected as the image exporter. This method must set the image MIME type in the [param image_dict] with the [code]\u0022mimeType\u0022[/code] key. For example, for a PNG image, it would be set to [code]\u0022image/png\u0022[/code]. The return value must be a [PackedByteArray] containing the image data.",
+      "godotName": "_serialize_image_to_bytes",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SerializeImageToBytes(GLTFState,Image,Dictionary,String,float)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SerializeTextureJson",
+      "kind": "Method",
+      "signature": "public int _SerializeTextureJson(GLTFState state, Dictionary textureJson, GLTFTexture gltfTexture, String imageFormat)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "texture_json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "gltf_texture",
+          "type": "GLTFTexture"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _save_image_at_path] or [method _serialize_image_to_bytes], and before [method _export_node]. Note that this method only runs when this [GLTFDocumentExtension] is selected as the image exporter. This method can be used to set up the extensions for the texture JSON by editing [param texture_json]. The extension must also be added as used extension with [method GLTFState.add_used_extension], be sure to set [code]required[/code] to [code]true[/code] if you are not providing a fallback.",
+      "godotName": "_serialize_texture_json",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SerializeTextureJson(GLTFState,Dictionary,GLTFTexture,String)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_ConvertSceneNode",
+      "kind": "Method",
+      "signature": "public void _ConvertSceneNode(GLTFState state, GLTFNode gltfNode, Node sceneNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "scene_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _export_preflight] and before [method _export_post_convert]. Runs when converting the data from a Godot scene node. This method can be used to process the Godot scene node data into a format that can be used by [method _export_node].",
+      "godotName": "_convert_scene_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ConvertSceneNode(GLTFState,GLTFNode,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportGetPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _ExportGetPropertyList(Node rootNode)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "root_node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Runs prior to the export process. This method is run before [method _export_preflight] when exporting a scene from the editor, or it may not be run at all in other situations. Unlike the rest of the export methods, this does not run when calling a [GLTFDocument]\u0027s export methods in sequence with everything else, but rather runs before that entire process occurs, allowing configuration to occur beforehand, potentially minutes or hours in advance of [method _export_preflight]. This allows extensions to decide which properties to show in the editor export settings dialog based on the contents of the scene, hiding any settings that are not relevant for that scene. The [param root_node] parameter may be [code]null[/code], in which case all properties should be shown.",
+      "godotName": "_export_get_property_list",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportGetPropertyList(Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportNode",
+      "kind": "Method",
+      "signature": "public int _ExportNode(GLTFState state, GLTFNode gltfNode, Dictionary json, Node node)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _export_post]. If this [GLTFDocumentExtension] is used for exporting images, this runs after [method _serialize_texture_json]. This method can be used to modify the final JSON of each node. Data should be primarily stored in [param gltf_node] prior to serializing the JSON, but the original Godot [Node] is also provided if available. [param node] may be [code]null[/code] if not available, such as when exporting glTF data not generated from a Godot scene.",
+      "godotName": "_export_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportNode(GLTFState,GLTFNode,Dictionary,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty _ExportObjectModelProperty(GLTFState state, NodePath nodePath, Node godotNode, int gltfNodeIndex, Object targetObject, int targetDepth)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        },
+        {
+          "name": "godot_node",
+          "type": "Node"
+        },
+        {
+          "name": "gltf_node_index",
+          "type": "int"
+        },
+        {
+          "name": "target_object",
+          "type": "Object"
+        },
+        {
+          "name": "target_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "Part of the export process. Allows GLTFDocumentExtension classes to provide mappings for properties of nodes in the Godot scene tree, to JSON pointers to glTF properties, as defined by the glTF object model. Returns a [GLTFObjectModelProperty] instance that defines how the property should be mapped. If your extension can\u0027t handle the property, return [code]null[/code] or an instance without any JSON pointers (see [method GLTFObjectModelProperty.has_json_pointers]). You should use [method GLTFObjectModelProperty.set_types] to set the types, and set the JSON pointer(s) using the [member GLTFObjectModelProperty.json_pointers] property. The parameters provide context for the property, including the NodePath, the Godot node, the GLTF node index, and the target object. The [param target_object] will be equal to [param godot_node] if no sub-object can be found, otherwise it will point to a sub-object. For example, if the path is [code]^\u0022A/B/C/MeshInstance3D:mesh:surface_0/material:emission_intensity\u0022[/code], it will get the node, then the mesh, and then the material, so [param target_object] will be the [Material] resource, and [param target_depth] will be 2 because 2 levels were traversed to get to the target.",
+      "godotName": "_export_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportObjectModelProperty(GLTFState,NodePath,Node,int,Object,int)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPost",
+      "kind": "Method",
+      "signature": "public int _ExportPost(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the export process. This method is run last, after all other parts of the export process. This method can be used to modify the final JSON of the generated glTF file.",
+      "godotName": "_export_post",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPost(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPostConvert",
+      "kind": "Method",
+      "signature": "public int _ExportPostConvert(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _convert_scene_node] and before [method _export_preserialize]. This method can be used to modify the converted node data structures before serialization with any additional data from the scene tree.",
+      "godotName": "_export_post_convert",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPostConvert(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPreflight",
+      "kind": "Method",
+      "signature": "public int _ExportPreflight(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the export process. This method is run first, before all other parts of the export process. The return value is used to determine if this [GLTFDocumentExtension] instance should be used for exporting a given glTF file. If [constant OK], the export will use this [GLTFDocumentExtension] instance. If not overridden, [constant OK] is returned.",
+      "godotName": "_export_preflight",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPreflight(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ExportPreserialize",
+      "kind": "Method",
+      "signature": "public int _ExportPreserialize(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _export_post_convert] and before [method _get_saveable_image_formats]. This method can be used to alter the state before performing serialization. It runs every time when generating a buffer with [method GLTFDocument.generate_buffer] or writing to the file system with [method GLTFDocument.write_to_filesystem].",
+      "godotName": "_export_preserialize",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ExportPreserialize(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GenerateSceneNode",
+      "kind": "Method",
+      "signature": "public Node3D _GenerateSceneNode(GLTFState state, GLTFNode gltfNode, Node sceneParent)",
+      "returnType": "Node3D",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "scene_parent",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _import_pre_generate] and before [method _import_node]. Runs when generating a Godot scene node from a GLTFNode. The returned node will be added to the scene tree. Multiple nodes can be generated in this step if they are added as a child of the returned node. [b]Note:[/b] The [param scene_parent] parameter may be [code]null[/code] if this is the single root node.",
+      "godotName": "_generate_scene_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GenerateSceneNode(GLTFState,GLTFNode,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetImageFileExtension",
+      "kind": "Method",
+      "signature": "public String _GetImageFileExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the file extension to use for saving image data into, for example, [code]\u0022.png\u0022[/code]. If defined, when this extension is used to handle images, and the images are saved to a separate file, the image bytes will be copied to a file with this extension. If this is set, there should be a [ResourceImporter] class able to import the file. If not defined or empty, Godot will save the image into a PNG file.",
+      "godotName": "_get_image_file_extension",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetImageFileExtension",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetSaveableImageFormats",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSaveableImageFormats()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Part of the export process. This method is run after [method _convert_scene_node] and before [method _export_node]. Returns an array of the image formats that can be saved/exported by this extension. This extension will only be selected as the image exporter if the [GLTFDocument]\u0027s [member GLTFDocument.image_format] is in this array. If this [GLTFDocumentExtension] is selected as the image exporter, one of the [method _save_image_at_path] or [method _serialize_image_to_bytes] methods will run next, otherwise [method _export_node] will run next. If the format name contains [code]\u0022Lossy\u0022[/code], the lossy quality slider will be displayed.",
+      "godotName": "_get_saveable_image_formats",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetSaveableImageFormats",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_GetSupportedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Part of the import process. This method is run after [method _import_preflight] and before [method _parse_node_extensions]. Returns an array of the glTF extensions supported by this GLTFDocumentExtension class. This is used to validate if a glTF file with required extensions can be loaded.",
+      "godotName": "_get_supported_extensions",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._GetSupportedExtensions",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportNode",
+      "kind": "Method",
+      "signature": "public int _ImportNode(GLTFState state, GLTFNode gltfNode, Dictionary json, Node node)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "node",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _generate_scene_node] and before [method _import_post]. This method can be used to make modifications to each of the generated Godot scene nodes.",
+      "godotName": "_import_node",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportNode(GLTFState,GLTFNode,Dictionary,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportObjectModelProperty",
+      "kind": "Method",
+      "signature": "public GLTFObjectModelProperty _ImportObjectModelProperty(GLTFState state, PackedStringArray splitJsonPointer, NodePath[] partialPaths)",
+      "returnType": "GLTFObjectModelProperty",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "split_json_pointer",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "partial_paths",
+          "type": "NodePath[]"
+        }
+      ],
+      "summary": "Part of the import process. Allows GLTFDocumentExtension classes to provide mappings for JSON pointers to glTF properties, as defined by the glTF object model, to properties of nodes in the Godot scene tree. Returns a [GLTFObjectModelProperty] instance that defines how the property should be mapped. If your extension can\u0027t handle the property, return [code]null[/code] or an instance without any NodePaths (see [method GLTFObjectModelProperty.has_node_paths]). You should use [method GLTFObjectModelProperty.set_types] to set the types, and [method GLTFObjectModelProperty.append_path_to_property] function is useful for most simple cases. In many cases, [param partial_paths] will contain the start of a path, allowing the extension to complete the path. For example, for [code]/nodes/3/extensions/MY_ext/prop[/code], Godot will pass you a NodePath that leads to node 3, so the GLTFDocumentExtension class only needs to resolve the last [code]MY_ext/prop[/code] part of the path. In this example, the extension should check [code]split.size() \u003E 4 and split[0] == \u0022nodes\u0022 and split[2] == \u0022extensions\u0022 and split[3] == \u0022MY_ext\u0022[/code] at the start of the function to check if this JSON pointer applies to it, then it can use [param partial_paths] and handle [code]split[4][/code].",
+      "godotName": "_import_object_model_property",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportObjectModelProperty(GLTFState,PackedStringArray,NodePath[])",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPost",
+      "kind": "Method",
+      "signature": "public int _ImportPost(GLTFState state, Node root)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "root",
+          "type": "Node"
+        }
+      ],
+      "summary": "Part of the import process. This method is run last, after all other parts of the import process. This method can be used to modify the final Godot scene generated by the import process.",
+      "godotName": "_import_post",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPost(GLTFState,Node)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPostParse",
+      "kind": "Method",
+      "signature": "public int _ImportPostParse(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_node_extensions] and before [method _import_pre_generate]. This method can be used to modify any of the data imported so far after parsing each node, but before generating the scene or any of its nodes.",
+      "godotName": "_import_post_parse",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPostParse(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPreGenerate",
+      "kind": "Method",
+      "signature": "public int _ImportPreGenerate(GLTFState state)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _import_post_parse] and before [method _generate_scene_node]. This method can be used to modify or read from any of the processed data structures, before generating the nodes and then running the final per-node import step.",
+      "godotName": "_import_pre_generate",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPreGenerate(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ImportPreflight",
+      "kind": "Method",
+      "signature": "public int _ImportPreflight(GLTFState state, PackedStringArray extensions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "extensions",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Part of the import process. This method is run first, before all other parts of the import process. The return value is used to determine if this [GLTFDocumentExtension] instance should be used for importing a given glTF file. If [constant OK], the import will use this [GLTFDocumentExtension] instance. If not overridden, [constant OK] is returned.",
+      "godotName": "_import_preflight",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ImportPreflight(GLTFState,PackedStringArray)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseImageData",
+      "kind": "Method",
+      "signature": "public int _ParseImageData(GLTFState state, PackedByteArray imageData, String mimeType, Image retImage)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image_data",
+          "type": "PackedByteArray"
+        },
+        {
+          "name": "mime_type",
+          "type": "String"
+        },
+        {
+          "name": "ret_image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_node_extensions] and before [method _parse_texture_json]. Runs when parsing image data from a glTF file. The data could be sourced from a separate file, a URI, or a buffer, and then is passed as a byte array.",
+      "godotName": "_parse_image_data",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseImageData(GLTFState,PackedByteArray,String,Image)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseNodeExtensions",
+      "kind": "Method",
+      "signature": "public int _ParseNodeExtensions(GLTFState state, GLTFNode gltfNode, Dictionary extensions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "gltf_node",
+          "type": "GLTFNode"
+        },
+        {
+          "name": "extensions",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _get_supported_extensions] and before [method _import_post_parse]. Runs when parsing the node extensions of a GLTFNode. This method can be used to process the extension JSON data into a format that can be used by [method _generate_scene_node]. The return value should be a member of the [enum Error] enum.",
+      "godotName": "_parse_node_extensions",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseNodeExtensions(GLTFState,GLTFNode,Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_ParseTextureJson",
+      "kind": "Method",
+      "signature": "public int _ParseTextureJson(GLTFState state, Dictionary textureJson, GLTFTexture retGltfTexture)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "texture_json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "ret_gltf_texture",
+          "type": "GLTFTexture"
+        }
+      ],
+      "summary": "Part of the import process. This method is run after [method _parse_image_data] and before [method _generate_scene_node]. Runs when parsing the texture JSON from the glTF textures array. This can be used to set the source image index to use as the texture.",
+      "godotName": "_parse_texture_json",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._ParseTextureJson(GLTFState,Dictionary,GLTFTexture)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SaveImageAtPath",
+      "kind": "Method",
+      "signature": "public int _SaveImageAtPath(GLTFState state, Image image, String filePath, String imageFormat, float lossyQuality)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "file_path",
+          "type": "String"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        },
+        {
+          "name": "lossy_quality",
+          "type": "float"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _serialize_texture_json]. This method is run when saving images separately from the glTF file. When images are embedded, [method _serialize_image_to_bytes] runs instead. Note that these methods only run when this [GLTFDocumentExtension] is selected as the image exporter.",
+      "godotName": "_save_image_at_path",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SaveImageAtPath(GLTFState,Image,String,String,float)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SerializeImageToBytes",
+      "kind": "Method",
+      "signature": "public PackedByteArray _SerializeImageToBytes(GLTFState state, Image image, Dictionary imageDict, String imageFormat, float lossyQuality)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "image_dict",
+          "type": "Dictionary"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        },
+        {
+          "name": "lossy_quality",
+          "type": "float"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _get_saveable_image_formats] and before [method _serialize_texture_json]. This method is run when embedding images in the glTF file. When images are saved separately, [method _save_image_at_path] runs instead. Note that these methods only run when this [GLTFDocumentExtension] is selected as the image exporter. This method must set the image MIME type in the [param image_dict] with the [code]\u0022mimeType\u0022[/code] key. For example, for a PNG image, it would be set to [code]\u0022image/png\u0022[/code]. The return value must be a [PackedByteArray] containing the image data.",
+      "godotName": "_serialize_image_to_bytes",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SerializeImageToBytes(GLTFState,Image,Dictionary,String,float)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    },
+    {
+      "name": "_SerializeTextureJson",
+      "kind": "Method",
+      "signature": "public int _SerializeTextureJson(GLTFState state, Dictionary textureJson, GLTFTexture gltfTexture, String imageFormat)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        },
+        {
+          "name": "texture_json",
+          "type": "Dictionary"
+        },
+        {
+          "name": "gltf_texture",
+          "type": "GLTFTexture"
+        },
+        {
+          "name": "image_format",
+          "type": "String"
+        }
+      ],
+      "summary": "Part of the export process. This method is run after [method _save_image_at_path] or [method _serialize_image_to_bytes], and before [method _export_node]. Note that this method only runs when this [GLTFDocumentExtension] is selected as the image exporter. This method can be used to set up the extensions for the texture JSON by editing [param texture_json]. The extension must also be added as used extension with [method GLTFState.add_used_extension], be sure to set [code]required[/code] to [code]true[/code] if you are not providing a fallback.",
+      "godotName": "_serialize_texture_json",
+      "xmlDocId": "M:Godot.GLTFDocumentExtension._SerializeTextureJson(GLTFState,Dictionary,GLTFTexture,String)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFDocumentExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFDocumentExtension.xml",
+      "sha256": "43d2d2edbd8f78508ca24eba1acf3656af98fa36a064fcc9a58a39c08b6fefc5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

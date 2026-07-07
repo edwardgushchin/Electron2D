@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BoneMap",
+    "namespace": "Godot",
+    "fullName": "Godot.BoneMap",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "BoneMap",
+    "documentationPath": "doc/classes/BoneMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_bonemap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FindProfileBoneName",
+      "kind": "Method",
+      "signature": "public StringName FindProfileBoneName(StringName skeletonBoneName)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "skeleton_bone_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a profile bone name having [param skeleton_bone_name]. If not found, an empty [StringName] will be returned. In the retargeting process, the returned bone name is the bone name of the target skeleton.",
+      "godotName": "find_profile_bone_name",
+      "xmlDocId": "M:Godot.BoneMap.FindProfileBoneName(StringName)",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    },
+    {
+      "name": "GetSkeletonBoneName",
+      "kind": "Method",
+      "signature": "public StringName GetSkeletonBoneName(StringName profileBoneName)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "profile_bone_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a skeleton bone name is mapped to [param profile_bone_name]. In the retargeting process, the returned bone name is the bone name of the source skeleton.",
+      "godotName": "get_skeleton_bone_name",
+      "xmlDocId": "M:Godot.BoneMap.GetSkeletonBoneName(StringName)",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    },
+    {
+      "name": "SetSkeletonBoneName",
+      "kind": "Method",
+      "signature": "public void SetSkeletonBoneName(StringName profileBoneName, StringName skeletonBoneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "profile_bone_name",
+          "type": "StringName"
+        },
+        {
+          "name": "skeleton_bone_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Maps a skeleton bone name to [param profile_bone_name]. In the retargeting process, the setting bone name is the bone name of the source skeleton.",
+      "godotName": "set_skeleton_bone_name",
+      "xmlDocId": "M:Godot.BoneMap.SetSkeletonBoneName(StringName,StringName)",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    },
+    {
+      "name": "Profile",
+      "kind": "Property",
+      "signature": "public SkeletonProfile Profile { get; set; }",
+      "returnType": "SkeletonProfile",
+      "parameters": [],
+      "summary": "A [SkeletonProfile] of the mapping target. Key names in the [BoneMap] are synchronized with it.",
+      "godotName": "profile",
+      "xmlDocId": "P:Godot.BoneMap.Profile",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BoneMapUpdated",
+      "kind": "Signal",
+      "signature": "public event BoneMapUpdatedHandler BoneMapUpdated",
+      "parameters": [],
+      "summary": "This signal is emitted when change the key value in the [BoneMap]. This is used to validate mapping and to update [BoneMap] editor.",
+      "godotName": "bone_map_updated",
+      "xmlDocId": "E:Godot.BoneMap.BoneMapUpdated",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    },
+    {
+      "name": "ProfileUpdated",
+      "kind": "Signal",
+      "signature": "public event ProfileUpdatedHandler ProfileUpdated",
+      "parameters": [],
+      "summary": "This signal is emitted when change the value in profile or change the reference of profile. This is used to update key names in the [BoneMap] and to redraw the [BoneMap] editor.",
+      "godotName": "profile_updated",
+      "xmlDocId": "E:Godot.BoneMap.ProfileUpdated",
+      "sourcePath": "doc/classes/BoneMap.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BoneMap.xml",
+      "sha256": "02e41a23f89c7075ca92f9c0658634091eb281759f6a9623cf746a079be948d2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

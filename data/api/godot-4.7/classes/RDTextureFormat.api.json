@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDTextureFormat",
+    "namespace": "Godot",
+    "fullName": "Godot.RDTextureFormat",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDTextureFormat",
+    "documentationPath": "doc/classes/RDTextureFormat.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdtextureformat.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddShareableFormat",
+      "kind": "Method",
+      "signature": "public void AddShareableFormat(int format)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds [param format] as a valid format for the corresponding [RDTextureView]\u0027s [member RDTextureView.format_override] property. If any format is added as shareable, then the main [member format] must also be added.",
+      "godotName": "add_shareable_format",
+      "xmlDocId": "M:Godot.RDTextureFormat.AddShareableFormat(int)",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "RemoveShareableFormat",
+      "kind": "Method",
+      "signature": "public void RemoveShareableFormat(int format)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes [param format] from the list of valid formats that the corresponding [RDTextureView]\u0027s [member RDTextureView.format_override] property can be set to.",
+      "godotName": "remove_shareable_format",
+      "xmlDocId": "M:Godot.RDTextureFormat.RemoveShareableFormat(int)",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "ArrayLayers",
+      "kind": "Property",
+      "signature": "public int ArrayLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of layers in the texture. Only relevant for 2D texture arrays.",
+      "defaultValue": "1",
+      "godotName": "array_layers",
+      "xmlDocId": "P:Godot.RDTextureFormat.ArrayLayers",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Depth",
+      "kind": "Property",
+      "signature": "public int Depth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture\u0027s depth (in pixels). This is always [code]1[/code] for 2D textures.",
+      "defaultValue": "1",
+      "godotName": "depth",
+      "xmlDocId": "P:Godot.RDTextureFormat.Depth",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Format",
+      "kind": "Property",
+      "signature": "public int Format { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture\u0027s pixel data format.",
+      "defaultValue": "8",
+      "godotName": "format",
+      "xmlDocId": "P:Godot.RDTextureFormat.Format",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public int Height { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture\u0027s height (in pixels).",
+      "defaultValue": "1",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.RDTextureFormat.Height",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "IsDiscardable",
+      "kind": "Property",
+      "signature": "public bool IsDiscardable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If a texture is discardable, its contents do not need to be preserved between frames. This flag is only relevant when the texture is used as target in a draw list. This information is used by [RenderingDevice] to figure out if a texture\u0027s contents can be discarded, eliminating unnecessary writes to memory and boosting performance.",
+      "defaultValue": "false",
+      "godotName": "is_discardable",
+      "xmlDocId": "P:Godot.RDTextureFormat.IsDiscardable",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "IsResolveBuffer",
+      "kind": "Property",
+      "signature": "public bool IsResolveBuffer { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "The texture will be used as the destination of a resolve operation.",
+      "defaultValue": "false",
+      "godotName": "is_resolve_buffer",
+      "xmlDocId": "P:Godot.RDTextureFormat.IsResolveBuffer",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Mipmaps",
+      "kind": "Property",
+      "signature": "public int Mipmaps { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of mipmaps available in the texture.",
+      "defaultValue": "1",
+      "godotName": "mipmaps",
+      "xmlDocId": "P:Godot.RDTextureFormat.Mipmaps",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Samples",
+      "kind": "Property",
+      "signature": "public int Samples { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of samples used when sampling the texture.",
+      "defaultValue": "0",
+      "godotName": "samples",
+      "xmlDocId": "P:Godot.RDTextureFormat.Samples",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "TextureType",
+      "kind": "Property",
+      "signature": "public int TextureType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture type.",
+      "defaultValue": "1",
+      "godotName": "texture_type",
+      "xmlDocId": "P:Godot.RDTextureFormat.TextureType",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "UsageBits",
+      "kind": "Property",
+      "signature": "public int UsageBits { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture\u0027s usage bits, which determine what can be done using the texture.",
+      "defaultValue": "0",
+      "godotName": "usage_bits",
+      "xmlDocId": "P:Godot.RDTextureFormat.UsageBits",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The texture\u0027s width (in pixels).",
+      "defaultValue": "1",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.RDTextureFormat.Width",
+      "sourcePath": "doc/classes/RDTextureFormat.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDTextureFormat.xml",
+      "sha256": "d3fc88346022d4cf2dfa0d96fdaf1e6d67f2e127e04f48a9b84924bfffe71bae"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

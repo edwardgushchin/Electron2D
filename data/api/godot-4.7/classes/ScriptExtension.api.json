@@ -1,0 +1,1001 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptExtension",
+    "kind": "class",
+    "baseType": "Script",
+    "interfaces": [],
+    "godotReference": "ScriptExtension",
+    "documentationPath": "doc/classes/ScriptExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scriptextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CanInstantiate",
+      "kind": "Method",
+      "signature": "public bool _CanInstantiate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_instantiate",
+      "xmlDocId": "M:Godot.ScriptExtension._CanInstantiate",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_EditorCanReloadFromFile",
+      "kind": "Method",
+      "signature": "public bool _EditorCanReloadFromFile()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_editor_can_reload_from_file",
+      "xmlDocId": "M:Godot.ScriptExtension._EditorCanReloadFromFile",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetBaseScript",
+      "kind": "Method",
+      "signature": "public Script _GetBaseScript()",
+      "returnType": "Script",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_base_script",
+      "xmlDocId": "M:Godot.ScriptExtension._GetBaseScript",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetClassIconPath",
+      "kind": "Method",
+      "signature": "public String _GetClassIconPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_class_icon_path",
+      "xmlDocId": "M:Godot.ScriptExtension._GetClassIconPath",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetConstants",
+      "kind": "Method",
+      "signature": "public Dictionary _GetConstants()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constants",
+      "xmlDocId": "M:Godot.ScriptExtension._GetConstants",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetDocClassName",
+      "kind": "Method",
+      "signature": "public StringName _GetDocClassName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_doc_class_name",
+      "xmlDocId": "M:Godot.ScriptExtension._GetDocClassName",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetDocumentation",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetDocumentation()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_documentation",
+      "xmlDocId": "M:Godot.ScriptExtension._GetDocumentation",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetGlobalName",
+      "kind": "Method",
+      "signature": "public StringName _GetGlobalName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_global_name",
+      "xmlDocId": "M:Godot.ScriptExtension._GetGlobalName",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetInstanceBaseType",
+      "kind": "Method",
+      "signature": "public StringName _GetInstanceBaseType()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_instance_base_type",
+      "xmlDocId": "M:Godot.ScriptExtension._GetInstanceBaseType",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetLanguage",
+      "kind": "Method",
+      "signature": "public ScriptLanguage _GetLanguage()",
+      "returnType": "ScriptLanguage",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_language",
+      "xmlDocId": "M:Godot.ScriptExtension._GetLanguage",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMemberLine",
+      "kind": "Method",
+      "signature": "public int _GetMemberLine(StringName member)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "member",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_member_line",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMemberLine(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMembers",
+      "kind": "Method",
+      "signature": "public StringName[] _GetMembers()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_members",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMembers",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMethodInfo",
+      "kind": "Method",
+      "signature": "public Dictionary _GetMethodInfo(StringName method)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_method_info",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMethodInfo(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetPropertyDefaultValue(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_property_default_value",
+      "xmlDocId": "M:Godot.ScriptExtension._GetPropertyDefaultValue(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetRpcConfig",
+      "kind": "Method",
+      "signature": "public Variant _GetRpcConfig()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_rpc_config",
+      "xmlDocId": "M:Godot.ScriptExtension._GetRpcConfig",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptMethodArgumentCount",
+      "kind": "Method",
+      "signature": "public Variant _GetScriptMethodArgumentCount(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Return the expected argument count for the given [param method], or [code]null[/code] if it can\u0027t be determined (which will then fall back to the default behavior).",
+      "godotName": "_get_script_method_argument_count",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptMethodArgumentCount(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptMethodList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptMethodList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_method_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptMethodList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_property_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptPropertyList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptSignalList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptSignalList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_signal_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptSignalList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetSourceCode",
+      "kind": "Method",
+      "signature": "public String _GetSourceCode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._GetSourceCode",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasMethod",
+      "kind": "Method",
+      "signature": "public bool _HasMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_method",
+      "xmlDocId": "M:Godot.ScriptExtension._HasMethod(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public bool _HasPropertyDefaultValue(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_property_default_value",
+      "xmlDocId": "M:Godot.ScriptExtension._HasPropertyDefaultValue(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasScriptSignal",
+      "kind": "Method",
+      "signature": "public bool _HasScriptSignal(StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_script_signal",
+      "xmlDocId": "M:Godot.ScriptExtension._HasScriptSignal(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasSourceCode",
+      "kind": "Method",
+      "signature": "public bool _HasSourceCode()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_has_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._HasSourceCode",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasStaticMethod",
+      "kind": "Method",
+      "signature": "public bool _HasStaticMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_static_method",
+      "xmlDocId": "M:Godot.ScriptExtension._HasStaticMethod(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InheritsScript",
+      "kind": "Method",
+      "signature": "public bool _InheritsScript(Script script)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "",
+      "godotName": "_inherits_script",
+      "xmlDocId": "M:Godot.ScriptExtension._InheritsScript(Script)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InstanceCreate",
+      "kind": "Method",
+      "signature": "public void* _InstanceCreate(Object forObject)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "for_object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_instance_create",
+      "xmlDocId": "M:Godot.ScriptExtension._InstanceCreate(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InstanceHas",
+      "kind": "Method",
+      "signature": "public bool _InstanceHas(Object @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_instance_has",
+      "xmlDocId": "M:Godot.ScriptExtension._InstanceHas(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsAbstract",
+      "kind": "Method",
+      "signature": "public bool _IsAbstract()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script is an abstract script. Abstract scripts cannot be instantiated directly, instead other scripts should inherit them. Abstract scripts will be either unselectable or hidden in the Create New Node dialog (unselectable if there are non-abstract classes inheriting it, otherwise hidden).",
+      "godotName": "_is_abstract",
+      "xmlDocId": "M:Godot.ScriptExtension._IsAbstract",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsPlaceholderFallbackEnabled",
+      "kind": "Method",
+      "signature": "public bool _IsPlaceholderFallbackEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_placeholder_fallback_enabled",
+      "xmlDocId": "M:Godot.ScriptExtension._IsPlaceholderFallbackEnabled",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsTool",
+      "kind": "Method",
+      "signature": "public bool _IsTool()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_tool",
+      "xmlDocId": "M:Godot.ScriptExtension._IsTool",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsValid",
+      "kind": "Method",
+      "signature": "public bool _IsValid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_valid",
+      "xmlDocId": "M:Godot.ScriptExtension._IsValid",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_PlaceholderErased",
+      "kind": "Method",
+      "signature": "public void _PlaceholderErased(void* placeholder)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "placeholder",
+          "type": "void*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_placeholder_erased",
+      "xmlDocId": "M:Godot.ScriptExtension._PlaceholderErased(void*)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_PlaceholderInstanceCreate",
+      "kind": "Method",
+      "signature": "public void* _PlaceholderInstanceCreate(Object forObject)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "for_object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_placeholder_instance_create",
+      "xmlDocId": "M:Godot.ScriptExtension._PlaceholderInstanceCreate(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_Reload",
+      "kind": "Method",
+      "signature": "public int _Reload(bool keepState)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "keep_state",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_reload",
+      "xmlDocId": "M:Godot.ScriptExtension._Reload(bool)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_SetSourceCode",
+      "kind": "Method",
+      "signature": "public void _SetSourceCode(String code)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._SetSourceCode(String)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_UpdateExports",
+      "kind": "Method",
+      "signature": "public void _UpdateExports()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_update_exports",
+      "xmlDocId": "M:Godot.ScriptExtension._UpdateExports",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CanInstantiate",
+      "kind": "Method",
+      "signature": "public bool _CanInstantiate()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_instantiate",
+      "xmlDocId": "M:Godot.ScriptExtension._CanInstantiate",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_EditorCanReloadFromFile",
+      "kind": "Method",
+      "signature": "public bool _EditorCanReloadFromFile()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_editor_can_reload_from_file",
+      "xmlDocId": "M:Godot.ScriptExtension._EditorCanReloadFromFile",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetBaseScript",
+      "kind": "Method",
+      "signature": "public Script _GetBaseScript()",
+      "returnType": "Script",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_base_script",
+      "xmlDocId": "M:Godot.ScriptExtension._GetBaseScript",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetClassIconPath",
+      "kind": "Method",
+      "signature": "public String _GetClassIconPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_class_icon_path",
+      "xmlDocId": "M:Godot.ScriptExtension._GetClassIconPath",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetConstants",
+      "kind": "Method",
+      "signature": "public Dictionary _GetConstants()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constants",
+      "xmlDocId": "M:Godot.ScriptExtension._GetConstants",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetDocClassName",
+      "kind": "Method",
+      "signature": "public StringName _GetDocClassName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_doc_class_name",
+      "xmlDocId": "M:Godot.ScriptExtension._GetDocClassName",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetDocumentation",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetDocumentation()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_documentation",
+      "xmlDocId": "M:Godot.ScriptExtension._GetDocumentation",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetGlobalName",
+      "kind": "Method",
+      "signature": "public StringName _GetGlobalName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_global_name",
+      "xmlDocId": "M:Godot.ScriptExtension._GetGlobalName",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetInstanceBaseType",
+      "kind": "Method",
+      "signature": "public StringName _GetInstanceBaseType()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_instance_base_type",
+      "xmlDocId": "M:Godot.ScriptExtension._GetInstanceBaseType",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetLanguage",
+      "kind": "Method",
+      "signature": "public ScriptLanguage _GetLanguage()",
+      "returnType": "ScriptLanguage",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_language",
+      "xmlDocId": "M:Godot.ScriptExtension._GetLanguage",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMemberLine",
+      "kind": "Method",
+      "signature": "public int _GetMemberLine(StringName member)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "member",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_member_line",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMemberLine(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMembers",
+      "kind": "Method",
+      "signature": "public StringName[] _GetMembers()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_members",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMembers",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetMethodInfo",
+      "kind": "Method",
+      "signature": "public Dictionary _GetMethodInfo(StringName method)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_method_info",
+      "xmlDocId": "M:Godot.ScriptExtension._GetMethodInfo(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public Variant _GetPropertyDefaultValue(StringName property)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_property_default_value",
+      "xmlDocId": "M:Godot.ScriptExtension._GetPropertyDefaultValue(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetRpcConfig",
+      "kind": "Method",
+      "signature": "public Variant _GetRpcConfig()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_rpc_config",
+      "xmlDocId": "M:Godot.ScriptExtension._GetRpcConfig",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptMethodArgumentCount",
+      "kind": "Method",
+      "signature": "public Variant _GetScriptMethodArgumentCount(StringName method)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Return the expected argument count for the given [param method], or [code]null[/code] if it can\u0027t be determined (which will then fall back to the default behavior).",
+      "godotName": "_get_script_method_argument_count",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptMethodArgumentCount(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptMethodList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptMethodList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_method_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptMethodList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptPropertyList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptPropertyList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_property_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptPropertyList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetScriptSignalList",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetScriptSignalList()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_script_signal_list",
+      "xmlDocId": "M:Godot.ScriptExtension._GetScriptSignalList",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_GetSourceCode",
+      "kind": "Method",
+      "signature": "public String _GetSourceCode()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._GetSourceCode",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasMethod",
+      "kind": "Method",
+      "signature": "public bool _HasMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_method",
+      "xmlDocId": "M:Godot.ScriptExtension._HasMethod(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasPropertyDefaultValue",
+      "kind": "Method",
+      "signature": "public bool _HasPropertyDefaultValue(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_property_default_value",
+      "xmlDocId": "M:Godot.ScriptExtension._HasPropertyDefaultValue(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasScriptSignal",
+      "kind": "Method",
+      "signature": "public bool _HasScriptSignal(StringName signal)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_script_signal",
+      "xmlDocId": "M:Godot.ScriptExtension._HasScriptSignal(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasSourceCode",
+      "kind": "Method",
+      "signature": "public bool _HasSourceCode()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_has_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._HasSourceCode",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_HasStaticMethod",
+      "kind": "Method",
+      "signature": "public bool _HasStaticMethod(StringName method)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_has_static_method",
+      "xmlDocId": "M:Godot.ScriptExtension._HasStaticMethod(StringName)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InheritsScript",
+      "kind": "Method",
+      "signature": "public bool _InheritsScript(Script script)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "",
+      "godotName": "_inherits_script",
+      "xmlDocId": "M:Godot.ScriptExtension._InheritsScript(Script)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InstanceCreate",
+      "kind": "Method",
+      "signature": "public void* _InstanceCreate(Object forObject)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "for_object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_instance_create",
+      "xmlDocId": "M:Godot.ScriptExtension._InstanceCreate(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_InstanceHas",
+      "kind": "Method",
+      "signature": "public bool _InstanceHas(Object @object)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_instance_has",
+      "xmlDocId": "M:Godot.ScriptExtension._InstanceHas(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsAbstract",
+      "kind": "Method",
+      "signature": "public bool _IsAbstract()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the script is an abstract script. Abstract scripts cannot be instantiated directly, instead other scripts should inherit them. Abstract scripts will be either unselectable or hidden in the Create New Node dialog (unselectable if there are non-abstract classes inheriting it, otherwise hidden).",
+      "godotName": "_is_abstract",
+      "xmlDocId": "M:Godot.ScriptExtension._IsAbstract",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsPlaceholderFallbackEnabled",
+      "kind": "Method",
+      "signature": "public bool _IsPlaceholderFallbackEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_placeholder_fallback_enabled",
+      "xmlDocId": "M:Godot.ScriptExtension._IsPlaceholderFallbackEnabled",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsTool",
+      "kind": "Method",
+      "signature": "public bool _IsTool()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_tool",
+      "xmlDocId": "M:Godot.ScriptExtension._IsTool",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_IsValid",
+      "kind": "Method",
+      "signature": "public bool _IsValid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_valid",
+      "xmlDocId": "M:Godot.ScriptExtension._IsValid",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_PlaceholderErased",
+      "kind": "Method",
+      "signature": "public void _PlaceholderErased(void* placeholder)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "placeholder",
+          "type": "void*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_placeholder_erased",
+      "xmlDocId": "M:Godot.ScriptExtension._PlaceholderErased(void*)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_PlaceholderInstanceCreate",
+      "kind": "Method",
+      "signature": "public void* _PlaceholderInstanceCreate(Object forObject)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "for_object",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_placeholder_instance_create",
+      "xmlDocId": "M:Godot.ScriptExtension._PlaceholderInstanceCreate(Object)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_Reload",
+      "kind": "Method",
+      "signature": "public int _Reload(bool keepState)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "keep_state",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_reload",
+      "xmlDocId": "M:Godot.ScriptExtension._Reload(bool)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_SetSourceCode",
+      "kind": "Method",
+      "signature": "public void _SetSourceCode(String code)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_source_code",
+      "xmlDocId": "M:Godot.ScriptExtension._SetSourceCode(String)",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    },
+    {
+      "name": "_UpdateExports",
+      "kind": "Method",
+      "signature": "public void _UpdateExports()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_update_exports",
+      "xmlDocId": "M:Godot.ScriptExtension._UpdateExports",
+      "sourcePath": "doc/classes/ScriptExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptExtension.xml",
+      "sha256": "b4d7f5f27319fd21a9d277d3c6314eb73c42d0841efddabb1806534a3ee7da02"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

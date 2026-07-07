@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaneMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaneMesh",
+    "kind": "class",
+    "baseType": "PrimitiveMesh",
+    "interfaces": [],
+    "godotReference": "PlaneMesh",
+    "documentationPath": "doc/classes/PlaneMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_planemesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CenterOffset",
+      "kind": "Property",
+      "signature": "public Vector3 CenterOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Offset of the generated plane. Useful for particles.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "center_offset",
+      "xmlDocId": "P:Godot.PlaneMesh.CenterOffset",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "Orientation",
+      "kind": "Property",
+      "signature": "public int Orientation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Direction that the [PlaneMesh] is facing.",
+      "defaultValue": "1",
+      "godotName": "orientation",
+      "xmlDocId": "P:Godot.PlaneMesh.Orientation",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Size of the generated plane.",
+      "defaultValue": "Vector2(2, 2)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.PlaneMesh.Size",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "SubdivideDepth",
+      "kind": "Property",
+      "signature": "public int SubdivideDepth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of subdivision along the Z axis.",
+      "defaultValue": "0",
+      "godotName": "subdivide_depth",
+      "xmlDocId": "P:Godot.PlaneMesh.SubdivideDepth",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "SubdivideWidth",
+      "kind": "Property",
+      "signature": "public int SubdivideWidth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of subdivision along the X axis.",
+      "defaultValue": "0",
+      "godotName": "subdivide_width",
+      "xmlDocId": "P:Godot.PlaneMesh.SubdivideWidth",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Orientation",
+      "values": [
+        {
+          "name": "FACE_X",
+          "value": "0",
+          "enum": "Orientation",
+          "kind": "EnumValue",
+          "summary": "[PlaneMesh] will face the positive X-axis.",
+          "sourcePath": "doc/classes/PlaneMesh.xml"
+        },
+        {
+          "name": "FACE_Y",
+          "value": "1",
+          "enum": "Orientation",
+          "kind": "EnumValue",
+          "summary": "[PlaneMesh] will face the positive Y-axis. This matches the behavior of the [PlaneMesh] in Godot 3.x.",
+          "sourcePath": "doc/classes/PlaneMesh.xml"
+        },
+        {
+          "name": "FACE_Z",
+          "value": "2",
+          "enum": "Orientation",
+          "kind": "EnumValue",
+          "summary": "[PlaneMesh] will face the positive Z-axis. This matches the behavior of the QuadMesh in Godot 3.x.",
+          "sourcePath": "doc/classes/PlaneMesh.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FACE_X",
+      "value": "0",
+      "enum": "Orientation",
+      "kind": "EnumValue",
+      "summary": "[PlaneMesh] will face the positive X-axis.",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "FACE_Y",
+      "value": "1",
+      "enum": "Orientation",
+      "kind": "EnumValue",
+      "summary": "[PlaneMesh] will face the positive Y-axis. This matches the behavior of the [PlaneMesh] in Godot 3.x.",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    },
+    {
+      "name": "FACE_Z",
+      "value": "2",
+      "enum": "Orientation",
+      "kind": "EnumValue",
+      "summary": "[PlaneMesh] will face the positive Z-axis. This matches the behavior of the QuadMesh in Godot 3.x.",
+      "sourcePath": "doc/classes/PlaneMesh.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaneMesh.xml",
+      "sha256": "7fcb09579346f412168a0990ecf26931bc5caf761d556f06e24eafc02264d0c9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

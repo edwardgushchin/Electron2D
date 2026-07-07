@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleEmitter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleEmitter",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleEmitter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmitter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticleemitter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Mode2d",
+      "kind": "Property",
+      "signature": "public bool Mode2d { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the result of this emitter is projected to 2D space. By default it is [code]false[/code] and meant for use in 3D space.",
+      "defaultValue": "false",
+      "godotName": "mode_2d",
+      "xmlDocId": "P:Godot.VisualShaderNodeParticleEmitter.Mode2d",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmitter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleEmitter.xml",
+      "sha256": "f1ba074141e70fdd65d4078461695fb12520d6b78e764ac60bef78670b8957d2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

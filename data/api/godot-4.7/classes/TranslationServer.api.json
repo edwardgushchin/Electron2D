@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TranslationServer",
+    "namespace": "Godot",
+    "fullName": "Godot.TranslationServer",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "TranslationServer",
+    "documentationPath": "doc/classes/TranslationServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_translationserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddTranslation",
+      "kind": "Method",
+      "signature": "public void AddTranslation(Translation translation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Adds a translation to the main translation domain.",
+      "godotName": "add_translation",
+      "xmlDocId": "M:Godot.TranslationServer.AddTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all translations from the main translation domain.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TranslationServer.Clear",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "CompareLocales",
+      "kind": "Method",
+      "signature": "public int CompareLocales(String localeA, String localeB)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "locale_a",
+          "type": "String"
+        },
+        {
+          "name": "locale_b",
+          "type": "String"
+        }
+      ],
+      "summary": "Compares two locales and returns a similarity score between [code]0[/code] (no match) and [code]10[/code] (full match).",
+      "godotName": "compare_locales",
+      "xmlDocId": "M:Godot.TranslationServer.CompareLocales(String,String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "FindTranslations",
+      "kind": "Method",
+      "signature": "public Translation[] FindTranslations(String locale, bool exact)",
+      "returnType": "Translation[]",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        },
+        {
+          "name": "exact",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns the [Translation] instances in the main translation domain that match [param locale] (see [method compare_locales]). If [param exact] is [code]true[/code], only instances whose locale exactly equals [param locale] will be returned.",
+      "godotName": "find_translations",
+      "xmlDocId": "M:Godot.TranslationServer.FindTranslations(String,bool)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "FormatNumber",
+      "kind": "Method",
+      "signature": "public String FormatNumber(String number, String locale)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "number",
+          "type": "String"
+        },
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts a number from Western Arabic (0..9) to the numeral system used in the given [param locale].",
+      "godotName": "format_number",
+      "xmlDocId": "M:Godot.TranslationServer.FormatNumber(String,String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetAllCountries",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAllCountries()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of known country codes.",
+      "godotName": "get_all_countries",
+      "xmlDocId": "M:Godot.TranslationServer.GetAllCountries",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetAllLanguages",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAllLanguages()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns array of known language codes.",
+      "godotName": "get_all_languages",
+      "xmlDocId": "M:Godot.TranslationServer.GetAllLanguages",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetAllScripts",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAllScripts()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of known script codes.",
+      "godotName": "get_all_scripts",
+      "xmlDocId": "M:Godot.TranslationServer.GetAllScripts",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetCountryName",
+      "kind": "Method",
+      "signature": "public String GetCountryName(String country)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "country",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a readable country name for the [param country] code.",
+      "godotName": "get_country_name",
+      "xmlDocId": "M:Godot.TranslationServer.GetCountryName(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetLanguageName",
+      "kind": "Method",
+      "signature": "public String GetLanguageName(String language)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a readable language name for the [param language] code.",
+      "godotName": "get_language_name",
+      "xmlDocId": "M:Godot.TranslationServer.GetLanguageName(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetLoadedLocales",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetLoadedLocales()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of all loaded locales of the project.",
+      "godotName": "get_loaded_locales",
+      "xmlDocId": "M:Godot.TranslationServer.GetLoadedLocales",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetLocale",
+      "kind": "Method",
+      "signature": "public String GetLocale()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the current locale of the project. See also [method OS.get_locale] and [method OS.get_locale_language] to query the locale of the user system.",
+      "godotName": "get_locale",
+      "xmlDocId": "M:Godot.TranslationServer.GetLocale",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetLocaleName",
+      "kind": "Method",
+      "signature": "public String GetLocaleName(String locale)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a locale\u0027s language and its variant (e.g. [code]\u0022en_US\u0022[/code] would return [code]\u0022English (United States)\u0022[/code]).",
+      "godotName": "get_locale_name",
+      "xmlDocId": "M:Godot.TranslationServer.GetLocaleName(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetOrAddDomain",
+      "kind": "Method",
+      "signature": "public TranslationDomain GetOrAddDomain(StringName domain)",
+      "returnType": "TranslationDomain",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the translation domain with the specified name. An empty translation domain will be created and added if it does not exist.",
+      "godotName": "get_or_add_domain",
+      "xmlDocId": "M:Godot.TranslationServer.GetOrAddDomain(StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetPercentSign",
+      "kind": "Method",
+      "signature": "public String GetPercentSign(String locale)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the percent sign used in the given [param locale].",
+      "godotName": "get_percent_sign",
+      "xmlDocId": "M:Godot.TranslationServer.GetPercentSign(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetPluralRules",
+      "kind": "Method",
+      "signature": "public String GetPluralRules(String locale)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the default plural rules for the [param locale].",
+      "godotName": "get_plural_rules",
+      "xmlDocId": "M:Godot.TranslationServer.GetPluralRules(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetScriptName",
+      "kind": "Method",
+      "signature": "public String GetScriptName(String script)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a readable script name for the [param script] code.",
+      "godotName": "get_script_name",
+      "xmlDocId": "M:Godot.TranslationServer.GetScriptName(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetToolLocale",
+      "kind": "Method",
+      "signature": "public String GetToolLocale()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the current locale of the editor. [b]Note:[/b] When called from an exported project returns the same value as [method get_locale].",
+      "godotName": "get_tool_locale",
+      "xmlDocId": "M:Godot.TranslationServer.GetToolLocale",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetTranslationObject",
+      "kind": "Method",
+      "signature": "public Translation GetTranslationObject(String locale)",
+      "returnType": "Translation",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the [Translation] instance that best matches [param locale] in the main translation domain. Returns [code]null[/code] if there are no matches.",
+      "godotName": "get_translation_object",
+      "xmlDocId": "M:Godot.TranslationServer.GetTranslationObject(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "GetTranslations",
+      "kind": "Method",
+      "signature": "public Translation[] GetTranslations()",
+      "returnType": "Translation[]",
+      "parameters": [],
+      "summary": "Returns all available [Translation] instances in the main translation domain as added by [method add_translation].",
+      "godotName": "get_translations",
+      "xmlDocId": "M:Godot.TranslationServer.GetTranslations",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "HasDomain",
+      "kind": "Method",
+      "signature": "public bool HasDomain(StringName domain)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a translation domain with the specified name exists.",
+      "godotName": "has_domain",
+      "xmlDocId": "M:Godot.TranslationServer.HasDomain(StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "HasTranslation",
+      "kind": "Method",
+      "signature": "public bool HasTranslation(Translation translation)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the main translation domain contains the given [param translation].",
+      "godotName": "has_translation",
+      "xmlDocId": "M:Godot.TranslationServer.HasTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "HasTranslationForLocale",
+      "kind": "Method",
+      "signature": "public bool HasTranslationForLocale(String locale, bool exact)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        },
+        {
+          "name": "exact",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if there are any [Translation] instances in the main translation domain that match [param locale] (see [method compare_locales]). If [param exact] is [code]true[/code], only instances whose locale exactly equals [param locale] are considered.",
+      "godotName": "has_translation_for_locale",
+      "xmlDocId": "M:Godot.TranslationServer.HasTranslationForLocale(String,bool)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "ParseNumber",
+      "kind": "Method",
+      "signature": "public String ParseNumber(String number, String locale)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "number",
+          "type": "String"
+        },
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Converts [param number] from the numeral system used in the given [param locale] to Western Arabic (0..9).",
+      "godotName": "parse_number",
+      "xmlDocId": "M:Godot.TranslationServer.ParseNumber(String,String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "Pseudolocalize",
+      "kind": "Method",
+      "signature": "public StringName Pseudolocalize(StringName message)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the pseudolocalized string based on the [param message] passed in. [b]Note:[/b] This method always uses the main translation domain.",
+      "godotName": "pseudolocalize",
+      "xmlDocId": "M:Godot.TranslationServer.Pseudolocalize(StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "ReloadPseudolocalization",
+      "kind": "Method",
+      "signature": "public void ReloadPseudolocalization()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reparses the pseudolocalization options and reloads the translation for the main translation domain.",
+      "godotName": "reload_pseudolocalization",
+      "xmlDocId": "M:Godot.TranslationServer.ReloadPseudolocalization",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "RemoveDomain",
+      "kind": "Method",
+      "signature": "public void RemoveDomain(StringName domain)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the translation domain with the specified name. [b]Note:[/b] Trying to remove the main translation domain is an error.",
+      "godotName": "remove_domain",
+      "xmlDocId": "M:Godot.TranslationServer.RemoveDomain(StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "RemoveTranslation",
+      "kind": "Method",
+      "signature": "public void RemoveTranslation(Translation translation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Removes the given translation from the main translation domain.",
+      "godotName": "remove_translation",
+      "xmlDocId": "M:Godot.TranslationServer.RemoveTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "SetLocale",
+      "kind": "Method",
+      "signature": "public void SetLocale(String locale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the locale of the project. The [param locale] string will be standardized to match known locales (e.g. [code]en-US[/code] would be matched to [code]en_US[/code]). If translations have been loaded beforehand for the new locale, they will be applied.",
+      "godotName": "set_locale",
+      "xmlDocId": "M:Godot.TranslationServer.SetLocale(String)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "StandardizeLocale",
+      "kind": "Method",
+      "signature": "public String StandardizeLocale(String locale, bool addDefaults)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        },
+        {
+          "name": "add_defaults",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a [param locale] string standardized to match known locales (e.g. [code]en-US[/code] would be matched to [code]en_US[/code]). If [param add_defaults] is [code]true[/code], the locale may have a default script or country added.",
+      "godotName": "standardize_locale",
+      "xmlDocId": "M:Godot.TranslationServer.StandardizeLocale(String,bool)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "Translate",
+      "kind": "Method",
+      "signature": "public StringName Translate(StringName message, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns the current locale\u0027s translation for the given message and context. [b]Note:[/b] This method always uses the main translation domain.",
+      "godotName": "translate",
+      "xmlDocId": "M:Godot.TranslationServer.Translate(StringName,StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "TranslatePlural",
+      "kind": "Method",
+      "signature": "public StringName TranslatePlural(StringName message, StringName pluralMessage, int n, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "plural_message",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns the current locale\u0027s translation for the given message, plural message and context. The number [param n] is the number or quantity of the plural object. It will be used to guide the translation system to fetch the correct plural form for the selected language. [b]Note:[/b] This method always uses the main translation domain.",
+      "godotName": "translate_plural",
+      "xmlDocId": "M:Godot.TranslationServer.TranslatePlural(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    },
+    {
+      "name": "PseudolocalizationEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the use of pseudolocalization on the main translation domain. See [member ProjectSettings.internationalization/pseudolocalization/use_pseudolocalization] for details.",
+      "defaultValue": "false",
+      "godotName": "pseudolocalization_enabled",
+      "xmlDocId": "P:Godot.TranslationServer.PseudolocalizationEnabled",
+      "sourcePath": "doc/classes/TranslationServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TranslationServer.xml",
+      "sha256": "d95000c370da61f2979aff90e4dccd3ed2f7084692389a25c8ca19dc81f5eabd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

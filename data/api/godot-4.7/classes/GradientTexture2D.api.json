@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GradientTexture2D",
+    "namespace": "Godot",
+    "fullName": "Godot.GradientTexture2D",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "GradientTexture2D",
+    "documentationPath": "doc/classes/GradientTexture2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gradienttexture2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Fill",
+      "kind": "Property",
+      "signature": "public int Fill { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The gradient\u0027s fill type.",
+      "defaultValue": "0",
+      "godotName": "fill",
+      "xmlDocId": "P:Godot.GradientTexture2D.Fill",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "FillFrom",
+      "kind": "Property",
+      "signature": "public Vector2 FillFrom { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The initial offset used to fill the texture specified in UV coordinates.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "fill_from",
+      "xmlDocId": "P:Godot.GradientTexture2D.FillFrom",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "FillTo",
+      "kind": "Property",
+      "signature": "public Vector2 FillTo { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The final offset used to fill the texture specified in UV coordinates.",
+      "defaultValue": "Vector2(1, 0)",
+      "godotName": "fill_to",
+      "xmlDocId": "P:Godot.GradientTexture2D.FillTo",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "Gradient",
+      "kind": "Property",
+      "signature": "public Gradient Gradient { get; set; }",
+      "returnType": "Gradient",
+      "parameters": [],
+      "summary": "The [Gradient] used to fill the texture.",
+      "godotName": "gradient",
+      "xmlDocId": "P:Godot.GradientTexture2D.Gradient",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public int Height { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of vertical color samples that will be obtained from the [Gradient], which also represents the texture\u0027s height.",
+      "defaultValue": "64",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.GradientTexture2D.Height",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "Repeat",
+      "kind": "Property",
+      "signature": "public int Repeat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The gradient\u0027s repeat type.",
+      "defaultValue": "0",
+      "godotName": "repeat",
+      "xmlDocId": "P:Godot.GradientTexture2D.Repeat",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.GradientTexture2D.ResourceLocalToScene",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "UseHdr",
+      "kind": "Property",
+      "signature": "public bool UseHdr { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the generated texture will support high dynamic range ([constant Image.FORMAT_RGBAF] format). This allows for glow effects to work if [member Environment.glow_enabled] is [code]true[/code]. If [code]false[/code], the generated texture will use low dynamic range; overbright colors will be clamped ([constant Image.FORMAT_RGBA8] format).",
+      "defaultValue": "false",
+      "godotName": "use_hdr",
+      "xmlDocId": "P:Godot.GradientTexture2D.UseHdr",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public int Width { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of horizontal color samples that will be obtained from the [Gradient], which also represents the texture\u0027s width.",
+      "defaultValue": "64",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.GradientTexture2D.Width",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Fill",
+      "values": [
+        {
+          "name": "FILL_CONIC",
+          "value": "3",
+          "enum": "Fill",
+          "kind": "EnumValue",
+          "summary": "The colors are linearly interpolated in a cone pattern.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        },
+        {
+          "name": "FILL_LINEAR",
+          "value": "0",
+          "enum": "Fill",
+          "kind": "EnumValue",
+          "summary": "The colors are linearly interpolated in a straight line.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        },
+        {
+          "name": "FILL_RADIAL",
+          "value": "1",
+          "enum": "Fill",
+          "kind": "EnumValue",
+          "summary": "The colors are linearly interpolated in a circular pattern.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        },
+        {
+          "name": "FILL_SQUARE",
+          "value": "2",
+          "enum": "Fill",
+          "kind": "EnumValue",
+          "summary": "The colors are linearly interpolated in a square pattern.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Repeat",
+      "values": [
+        {
+          "name": "REPEAT",
+          "value": "1",
+          "enum": "Repeat",
+          "kind": "EnumValue",
+          "summary": "The texture is filled starting from [member fill_from] to [member fill_to] offsets, repeating the same pattern in both directions.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        },
+        {
+          "name": "REPEAT_MIRROR",
+          "value": "2",
+          "enum": "Repeat",
+          "kind": "EnumValue",
+          "summary": "The texture is filled starting from [member fill_from] to [member fill_to] offsets, mirroring the pattern in both directions.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        },
+        {
+          "name": "REPEAT_NONE",
+          "value": "0",
+          "enum": "Repeat",
+          "kind": "EnumValue",
+          "summary": "The gradient fill is restricted to the range defined by [member fill_from] to [member fill_to] offsets.",
+          "sourcePath": "doc/classes/GradientTexture2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FILL_LINEAR",
+      "value": "0",
+      "enum": "Fill",
+      "kind": "EnumValue",
+      "summary": "The colors are linearly interpolated in a straight line.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "FILL_RADIAL",
+      "value": "1",
+      "enum": "Fill",
+      "kind": "EnumValue",
+      "summary": "The colors are linearly interpolated in a circular pattern.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "FILL_SQUARE",
+      "value": "2",
+      "enum": "Fill",
+      "kind": "EnumValue",
+      "summary": "The colors are linearly interpolated in a square pattern.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "FILL_CONIC",
+      "value": "3",
+      "enum": "Fill",
+      "kind": "EnumValue",
+      "summary": "The colors are linearly interpolated in a cone pattern.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "REPEAT_NONE",
+      "value": "0",
+      "enum": "Repeat",
+      "kind": "EnumValue",
+      "summary": "The gradient fill is restricted to the range defined by [member fill_from] to [member fill_to] offsets.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "REPEAT",
+      "value": "1",
+      "enum": "Repeat",
+      "kind": "EnumValue",
+      "summary": "The texture is filled starting from [member fill_from] to [member fill_to] offsets, repeating the same pattern in both directions.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    },
+    {
+      "name": "REPEAT_MIRROR",
+      "value": "2",
+      "enum": "Repeat",
+      "kind": "EnumValue",
+      "summary": "The texture is filled starting from [member fill_from] to [member fill_to] offsets, mirroring the pattern in both directions.",
+      "sourcePath": "doc/classes/GradientTexture2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GradientTexture2D.xml",
+      "sha256": "f5f7dee10d41baccf4b60b57bed687dec9652ccf10c87cae75e837149873ccd1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

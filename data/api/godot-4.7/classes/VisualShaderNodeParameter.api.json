@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "InstanceIndex",
+      "kind": "Property",
+      "signature": "public int InstanceIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index within 0-15 range, which is used to avoid clashes when shader used on multiple materials.",
+      "defaultValue": "0",
+      "godotName": "instance_index",
+      "xmlDocId": "P:Godot.VisualShaderNodeParameter.InstanceIndex",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "ParameterName",
+      "kind": "Property",
+      "signature": "public String ParameterName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Name of the parameter, by which it can be accessed through the [ShaderMaterial] properties.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "parameter_name",
+      "xmlDocId": "P:Godot.VisualShaderNodeParameter.ParameterName",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "Qualifier",
+      "kind": "Property",
+      "signature": "public int Qualifier { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the scope of the parameter.",
+      "defaultValue": "0",
+      "godotName": "qualifier",
+      "xmlDocId": "P:Godot.VisualShaderNodeParameter.Qualifier",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Qualifier",
+      "values": [
+        {
+          "name": "QUAL_GLOBAL",
+          "value": "1",
+          "enum": "Qualifier",
+          "kind": "EnumValue",
+          "summary": "The parameter will use a global value, defined in Project Settings.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+        },
+        {
+          "name": "QUAL_INSTANCE",
+          "value": "2",
+          "enum": "Qualifier",
+          "kind": "EnumValue",
+          "summary": "The parameter will be tied to the node with attached [ShaderMaterial] using this shader.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+        },
+        {
+          "name": "QUAL_INSTANCE_INDEX",
+          "value": "3",
+          "enum": "Qualifier",
+          "kind": "EnumValue",
+          "summary": "The parameter will be tied to the node with attached [ShaderMaterial] using this shader. Enables setting a [member instance_index] property.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+        },
+        {
+          "name": "QUAL_MAX",
+          "value": "4",
+          "enum": "Qualifier",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Qualifier] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+        },
+        {
+          "name": "QUAL_NONE",
+          "value": "0",
+          "enum": "Qualifier",
+          "kind": "EnumValue",
+          "summary": "The parameter will be tied to the [ShaderMaterial] using this shader.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "QUAL_NONE",
+      "value": "0",
+      "enum": "Qualifier",
+      "kind": "EnumValue",
+      "summary": "The parameter will be tied to the [ShaderMaterial] using this shader.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "QUAL_GLOBAL",
+      "value": "1",
+      "enum": "Qualifier",
+      "kind": "EnumValue",
+      "summary": "The parameter will use a global value, defined in Project Settings.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "QUAL_INSTANCE",
+      "value": "2",
+      "enum": "Qualifier",
+      "kind": "EnumValue",
+      "summary": "The parameter will be tied to the node with attached [ShaderMaterial] using this shader.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "QUAL_INSTANCE_INDEX",
+      "value": "3",
+      "enum": "Qualifier",
+      "kind": "EnumValue",
+      "summary": "The parameter will be tied to the node with attached [ShaderMaterial] using this shader. Enables setting a [member instance_index] property.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    },
+    {
+      "name": "QUAL_MAX",
+      "value": "4",
+      "enum": "Qualifier",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Qualifier] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParameter.xml",
+      "sha256": "104c8d8e40c365d78aebe71d10f79fc52e28fa76a39f8e2342f70af13af8065e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Decal",
+    "namespace": "Godot",
+    "fullName": "Godot.Decal",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "Decal",
+    "documentationPath": "doc/classes/Decal.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_decal.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetTexture",
+      "kind": "Method",
+      "signature": "public Texture2D GetTexture(int type)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Texture2D] associated with the specified [enum DecalTexture]. This is a convenience method, in most cases you should access the texture directly. For example, instead of [code]albedo_tex = $Decal.get_texture(Decal.TEXTURE_ALBEDO)[/code], use [code]albedo_tex = $Decal.texture_albedo[/code]. One case where this is better than accessing the texture directly is when you want to copy one Decal\u0027s textures to another. For example: [codeblocks] [gdscript] for i in Decal.TEXTURE_MAX: $NewDecal.set_texture(i, $OldDecal.get_texture(i)) [/gdscript] [csharp] for (int i = 0; i \u003C (int)Decal.DecalTexture.Max; i\u002B\u002B) { GetNode\u003CDecal\u003E(\u0022NewDecal\u0022).SetTexture(i, GetNode\u003CDecal\u003E(\u0022OldDecal\u0022).GetTexture(i)); } [/csharp] [/codeblocks]",
+      "godotName": "get_texture",
+      "xmlDocId": "M:Godot.Decal.GetTexture(int)",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "SetTexture",
+      "kind": "Method",
+      "signature": "public void SetTexture(int type, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the [Texture2D] associated with the specified [enum DecalTexture]. This is a convenience method, in most cases you should access the texture directly. For example, instead of [code]$Decal.set_texture(Decal.TEXTURE_ALBEDO, albedo_tex)[/code], use [code]$Decal.texture_albedo = albedo_tex[/code]. One case where this is better than accessing the texture directly is when you want to copy one Decal\u0027s textures to another. For example: [codeblocks] [gdscript] for i in Decal.TEXTURE_MAX: $NewDecal.set_texture(i, $OldDecal.get_texture(i)) [/gdscript] [csharp] for (int i = 0; i \u003C (int)Decal.DecalTexture.Max; i\u002B\u002B) { GetNode\u003CDecal\u003E(\u0022NewDecal\u0022).SetTexture(i, GetNode\u003CDecal\u003E(\u0022OldDecal\u0022).GetTexture(i)); } [/csharp] [/codeblocks]",
+      "godotName": "set_texture",
+      "xmlDocId": "M:Godot.Decal.SetTexture(int,Texture2D)",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "AlbedoMix",
+      "kind": "Property",
+      "signature": "public float AlbedoMix { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Blends the albedo [Color] of the decal with albedo [Color] of the underlying mesh. This can be set to [code]0.0[/code] to create a decal that only affects normal or ORM. In this case, an albedo texture is still required as its alpha channel will determine where the normal and ORM will be overridden. See also [member modulate].",
+      "defaultValue": "1.0",
+      "godotName": "albedo_mix",
+      "xmlDocId": "P:Godot.Decal.AlbedoMix",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "CullMask",
+      "kind": "Property",
+      "signature": "public int CullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies which [member VisualInstance3D.layers] this decal will project on. By default, Decals affect all layers. This is used so you can specify which types of objects receive the Decal and which do not. This is especially useful so you can ensure that dynamic objects don\u0027t accidentally receive a Decal intended for the terrain under them.",
+      "defaultValue": "1048575",
+      "godotName": "cull_mask",
+      "xmlDocId": "P:Godot.Decal.CullMask",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "DistanceFadeBegin",
+      "kind": "Property",
+      "signature": "public float DistanceFadeBegin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance from the camera at which the Decal begins to fade away (in 3D units).",
+      "defaultValue": "40.0",
+      "godotName": "distance_fade_begin",
+      "xmlDocId": "P:Godot.Decal.DistanceFadeBegin",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "DistanceFadeEnabled",
+      "kind": "Property",
+      "signature": "public bool DistanceFadeEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], decals will smoothly fade away when far from the active [Camera3D] starting at [member distance_fade_begin]. The Decal will fade out over [member distance_fade_begin] \u002B [member distance_fade_length], after which it will be culled and not sent to the shader at all. Use this to reduce the number of active Decals in a scene and thus improve performance.",
+      "defaultValue": "false",
+      "godotName": "distance_fade_enabled",
+      "xmlDocId": "P:Godot.Decal.DistanceFadeEnabled",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "DistanceFadeLength",
+      "kind": "Property",
+      "signature": "public float DistanceFadeLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance over which the Decal fades (in 3D units). The Decal becomes slowly more transparent over this distance and is completely invisible at the end. Higher values result in a smoother fade-out transition, which is more suited when the camera moves fast.",
+      "defaultValue": "10.0",
+      "godotName": "distance_fade_length",
+      "xmlDocId": "P:Godot.Decal.DistanceFadeLength",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "EmissionEnergy",
+      "kind": "Property",
+      "signature": "public float EmissionEnergy { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Energy multiplier for the emission texture. This will make the decal emit light at a higher or lower intensity, independently of the albedo color. See also [member modulate].",
+      "defaultValue": "1.0",
+      "godotName": "emission_energy",
+      "xmlDocId": "P:Godot.Decal.EmissionEnergy",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "LowerFade",
+      "kind": "Property",
+      "signature": "public float LowerFade { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the curve over which the decal will fade as the surface gets further from the center of the [AABB]. Only positive values are valid (negative values will be clamped to [code]0.0[/code]). See also [member upper_fade].",
+      "defaultValue": "0.3",
+      "godotName": "lower_fade",
+      "xmlDocId": "P:Godot.Decal.LowerFade",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Color Modulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Changes the [Color] of the Decal by multiplying the albedo and emission colors with this value. The alpha component is only taken into account when multiplying the albedo color, not the emission color. See also [member emission_energy] and [member albedo_mix] to change the emission and albedo intensity independently of each other.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "modulate",
+      "xmlDocId": "P:Godot.Decal.Modulate",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "NormalFade",
+      "kind": "Property",
+      "signature": "public float NormalFade { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Fades the Decal if the angle between the Decal\u0027s [AABB] and the target surface becomes too large. A value of [code]0[/code] projects the Decal regardless of angle, a value of [code]1[/code] limits the Decal to surfaces that are nearly perpendicular. [b]Note:[/b] Setting [member normal_fade] to a value greater than [code]0.0[/code] has a small performance cost due to the added normal angle computations.",
+      "defaultValue": "0.0",
+      "godotName": "normal_fade",
+      "xmlDocId": "P:Godot.Decal.NormalFade",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector3 Size { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Sets the size of the [AABB] used by the decal. All dimensions must be set to a value greater than zero (they will be clamped to [code]0.001[/code] if this is not the case). The AABB goes from [code]-size/2[/code] to [code]size/2[/code]. [b]Note:[/b] To improve culling efficiency of \u0022hard surface\u0022 decals, set their [member upper_fade] and [member lower_fade] to [code]0.0[/code] and set the Y component of the [member size] as low as possible. This will reduce the decals\u0027 AABB size without affecting their appearance.",
+      "defaultValue": "Vector3(2, 2, 2)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.Decal.Size",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TextureAlbedo",
+      "kind": "Property",
+      "signature": "public Texture2D TextureAlbedo { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] with the base [Color] of the Decal. Either this or the [member texture_emission] must be set for the Decal to be visible. Use the alpha channel like a mask to smoothly blend the edges of the decal with the underlying object. [b]Note:[/b] Unlike [BaseMaterial3D] whose filter mode can be adjusted on a per-material basis, the filter mode for [Decal] textures is set globally with [member ProjectSettings.rendering/textures/decals/filter].",
+      "godotName": "texture_albedo",
+      "xmlDocId": "P:Godot.Decal.TextureAlbedo",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TextureEmission",
+      "kind": "Property",
+      "signature": "public Texture2D TextureEmission { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] with the emission [Color] of the Decal. Either this or the [member texture_albedo] must be set for the Decal to be visible. Use the alpha channel like a mask to smoothly blend the edges of the decal with the underlying object. [b]Note:[/b] Unlike [BaseMaterial3D] whose filter mode can be adjusted on a per-material basis, the filter mode for [Decal] textures is set globally with [member ProjectSettings.rendering/textures/decals/filter].",
+      "godotName": "texture_emission",
+      "xmlDocId": "P:Godot.Decal.TextureEmission",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TextureNormal",
+      "kind": "Property",
+      "signature": "public Texture2D TextureNormal { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] with the per-pixel normal map for the decal. Use this to add extra detail to decals. [b]Note:[/b] Unlike [BaseMaterial3D] whose filter mode can be adjusted on a per-material basis, the filter mode for [Decal] textures is set globally with [member ProjectSettings.rendering/textures/decals/filter]. [b]Note:[/b] Setting this texture alone will not result in a visible decal, as [member texture_albedo] must also be set. To create a normal-only decal, load an albedo texture into [member texture_albedo] and set [member albedo_mix] to [code]0.0[/code]. The albedo texture\u0027s alpha channel will be used to determine where the underlying surface\u0027s normal map should be overridden (and its intensity).",
+      "godotName": "texture_normal",
+      "xmlDocId": "P:Godot.Decal.TextureNormal",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TextureOrm",
+      "kind": "Property",
+      "signature": "public Texture2D TextureOrm { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] storing ambient occlusion, roughness, and metallic for the decal. Use this to add extra detail to decals. [b]Note:[/b] Unlike [BaseMaterial3D] whose filter mode can be adjusted on a per-material basis, the filter mode for [Decal] textures is set globally with [member ProjectSettings.rendering/textures/decals/filter]. [b]Note:[/b] Setting this texture alone will not result in a visible decal, as [member texture_albedo] must also be set. To create an ORM-only decal, load an albedo texture into [member texture_albedo] and set [member albedo_mix] to [code]0.0[/code]. The albedo texture\u0027s alpha channel will be used to determine where the underlying surface\u0027s ORM map should be overridden (and its intensity). [b]Note:[/b] Due to technical limitations, modifying the underlying surface\u0027s roughness using [member texture_orm] does [i]not[/i] affect screen-space reflections ([member Environment.ssr_enabled]), reflections from [VoxelGI], and reflections from SDFGI ([member Environment.sdfgi_enabled]). Only reflections from [ReflectionProbe]s are affected.",
+      "godotName": "texture_orm",
+      "xmlDocId": "P:Godot.Decal.TextureOrm",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "UpperFade",
+      "kind": "Property",
+      "signature": "public float UpperFade { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the curve over which the decal will fade as the surface gets further from the center of the [AABB]. Only positive values are valid (negative values will be clamped to [code]0.0[/code]). See also [member lower_fade].",
+      "defaultValue": "0.3",
+      "godotName": "upper_fade",
+      "xmlDocId": "P:Godot.Decal.UpperFade",
+      "sourcePath": "doc/classes/Decal.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DecalTexture",
+      "values": [
+        {
+          "name": "TEXTURE_ALBEDO",
+          "value": "0",
+          "enum": "DecalTexture",
+          "kind": "EnumValue",
+          "summary": "[Texture2D] corresponding to [member texture_albedo].",
+          "sourcePath": "doc/classes/Decal.xml"
+        },
+        {
+          "name": "TEXTURE_EMISSION",
+          "value": "3",
+          "enum": "DecalTexture",
+          "kind": "EnumValue",
+          "summary": "[Texture2D] corresponding to [member texture_emission].",
+          "sourcePath": "doc/classes/Decal.xml"
+        },
+        {
+          "name": "TEXTURE_MAX",
+          "value": "4",
+          "enum": "DecalTexture",
+          "kind": "EnumValue",
+          "summary": "Max size of [enum DecalTexture] enum.",
+          "sourcePath": "doc/classes/Decal.xml"
+        },
+        {
+          "name": "TEXTURE_NORMAL",
+          "value": "1",
+          "enum": "DecalTexture",
+          "kind": "EnumValue",
+          "summary": "[Texture2D] corresponding to [member texture_normal].",
+          "sourcePath": "doc/classes/Decal.xml"
+        },
+        {
+          "name": "TEXTURE_ORM",
+          "value": "2",
+          "enum": "DecalTexture",
+          "kind": "EnumValue",
+          "summary": "[Texture2D] corresponding to [member texture_orm].",
+          "sourcePath": "doc/classes/Decal.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TEXTURE_ALBEDO",
+      "value": "0",
+      "enum": "DecalTexture",
+      "kind": "EnumValue",
+      "summary": "[Texture2D] corresponding to [member texture_albedo].",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TEXTURE_NORMAL",
+      "value": "1",
+      "enum": "DecalTexture",
+      "kind": "EnumValue",
+      "summary": "[Texture2D] corresponding to [member texture_normal].",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TEXTURE_ORM",
+      "value": "2",
+      "enum": "DecalTexture",
+      "kind": "EnumValue",
+      "summary": "[Texture2D] corresponding to [member texture_orm].",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TEXTURE_EMISSION",
+      "value": "3",
+      "enum": "DecalTexture",
+      "kind": "EnumValue",
+      "summary": "[Texture2D] corresponding to [member texture_emission].",
+      "sourcePath": "doc/classes/Decal.xml"
+    },
+    {
+      "name": "TEXTURE_MAX",
+      "value": "4",
+      "enum": "DecalTexture",
+      "kind": "EnumValue",
+      "summary": "Max size of [enum DecalTexture] enum.",
+      "sourcePath": "doc/classes/Decal.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Decal.xml",
+      "sha256": "2aa65a8c619a074f055f8522c047c7841cef70f75bc29fabcf63c10cadf6c9e6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

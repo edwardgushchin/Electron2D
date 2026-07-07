@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioServer",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioServer",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "AudioServer",
+    "documentationPath": "doc/classes/AudioServer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioserver.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddBus",
+      "kind": "Method",
+      "signature": "public void AddBus(int atPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "at_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds a bus at [param at_position].",
+      "godotName": "add_bus",
+      "xmlDocId": "M:Godot.AudioServer.AddBus(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "AddBusEffect",
+      "kind": "Method",
+      "signature": "public void AddBusEffect(int busIdx, AudioEffect effect, int atPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect",
+          "type": "AudioEffect"
+        },
+        {
+          "name": "at_position",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds an [AudioEffect] effect to the bus [param bus_idx] at [param at_position].",
+      "godotName": "add_bus_effect",
+      "xmlDocId": "M:Godot.AudioServer.AddBusEffect(int,AudioEffect,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GenerateBusLayout",
+      "kind": "Method",
+      "signature": "public AudioBusLayout GenerateBusLayout()",
+      "returnType": "AudioBusLayout",
+      "parameters": [],
+      "summary": "Generates an [AudioBusLayout] using the available buses and effects.",
+      "godotName": "generate_bus_layout",
+      "xmlDocId": "M:Godot.AudioServer.GenerateBusLayout",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusChannels",
+      "kind": "Method",
+      "signature": "public int GetBusChannels(int busIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of channels of the bus at index [param bus_idx].",
+      "godotName": "get_bus_channels",
+      "xmlDocId": "M:Godot.AudioServer.GetBusChannels(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusEffect",
+      "kind": "Method",
+      "signature": "public AudioEffect GetBusEffect(int busIdx, int effectIdx)",
+      "returnType": "AudioEffect",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [AudioEffect] at position [param effect_idx] in bus [param bus_idx].",
+      "godotName": "get_bus_effect",
+      "xmlDocId": "M:Godot.AudioServer.GetBusEffect(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusEffectCount",
+      "kind": "Method",
+      "signature": "public int GetBusEffectCount(int busIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of effects on the bus at [param bus_idx].",
+      "godotName": "get_bus_effect_count",
+      "xmlDocId": "M:Godot.AudioServer.GetBusEffectCount(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusEffectInstance",
+      "kind": "Method",
+      "signature": "public AudioEffectInstance GetBusEffectInstance(int busIdx, int effectIdx, int channel)",
+      "returnType": "AudioEffectInstance",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        },
+        {
+          "name": "channel",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the [AudioEffectInstance] assigned to the given bus and effect indices (and optionally channel).",
+      "godotName": "get_bus_effect_instance",
+      "xmlDocId": "M:Godot.AudioServer.GetBusEffectInstance(int,int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusIndex",
+      "kind": "Method",
+      "signature": "public int GetBusIndex(StringName busName)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "bus_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the index of the bus with the name [param bus_name]. Returns [code]-1[/code] if no bus with the specified name exist.",
+      "godotName": "get_bus_index",
+      "xmlDocId": "M:Godot.AudioServer.GetBusIndex(StringName)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusName",
+      "kind": "Method",
+      "signature": "public String GetBusName(int busIdx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bus with the index [param bus_idx].",
+      "godotName": "get_bus_name",
+      "xmlDocId": "M:Godot.AudioServer.GetBusName(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusPeakVolumeLeftDb",
+      "kind": "Method",
+      "signature": "public float GetBusPeakVolumeLeftDb(int busIdx, int channel)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "channel",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the peak volume of the left speaker at bus index [param bus_idx] and channel index [param channel].",
+      "godotName": "get_bus_peak_volume_left_db",
+      "xmlDocId": "M:Godot.AudioServer.GetBusPeakVolumeLeftDb(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusPeakVolumeRightDb",
+      "kind": "Method",
+      "signature": "public float GetBusPeakVolumeRightDb(int busIdx, int channel)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "channel",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the peak volume of the right speaker at bus index [param bus_idx] and channel index [param channel].",
+      "godotName": "get_bus_peak_volume_right_db",
+      "xmlDocId": "M:Godot.AudioServer.GetBusPeakVolumeRightDb(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusSend",
+      "kind": "Method",
+      "signature": "public StringName GetBusSend(int busIdx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the bus that the bus at index [param bus_idx] sends to.",
+      "godotName": "get_bus_send",
+      "xmlDocId": "M:Godot.AudioServer.GetBusSend(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusVolumeDb",
+      "kind": "Method",
+      "signature": "public float GetBusVolumeDb(int busIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the volume of the bus at index [param bus_idx] in dB.",
+      "godotName": "get_bus_volume_db",
+      "xmlDocId": "M:Godot.AudioServer.GetBusVolumeDb(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetBusVolumeLinear",
+      "kind": "Method",
+      "signature": "public float GetBusVolumeLinear(int busIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the volume of the bus at index [param bus_idx] as a linear value. [b]Note:[/b] The returned value is equivalent to the result of [method @GlobalScope.db_to_linear] on the result of [method get_bus_volume_db].",
+      "godotName": "get_bus_volume_linear",
+      "xmlDocId": "M:Godot.AudioServer.GetBusVolumeLinear(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetDriverName",
+      "kind": "Method",
+      "signature": "public String GetDriverName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the current audio driver. The default usually depends on the operating system, but may be overridden via the [code]--audio-driver[/code] [url=$DOCS_URL/tutorials/editor/command_line_tutorial.html]command line argument[/url]. [code]--headless[/code] also automatically sets the audio driver to [code]Dummy[/code]. See also [member ProjectSettings.audio/driver/driver].",
+      "godotName": "get_driver_name",
+      "xmlDocId": "M:Godot.AudioServer.GetDriverName",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetInputBufferLengthFrames",
+      "kind": "Method",
+      "signature": "public int GetInputBufferLengthFrames()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the absolute size of the microphone input buffer. This is set to a multiple of the audio latency and can be used to estimate the minimum rate at which the frames need to be fetched.",
+      "godotName": "get_input_buffer_length_frames",
+      "xmlDocId": "M:Godot.AudioServer.GetInputBufferLengthFrames",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetInputDeviceList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetInputDeviceList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the names of all audio input devices detected on the system. [b]Note:[/b] [member ProjectSettings.audio/driver/enable_input] must be [code]true[/code] for audio input to work. See also that setting\u0027s description for caveats related to permissions and operating system privacy settings.",
+      "godotName": "get_input_device_list",
+      "xmlDocId": "M:Godot.AudioServer.GetInputDeviceList",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetInputFrames",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetInputFrames(int frames)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [PackedVector2Array] containing exactly [param frames] audio samples from the internal microphone buffer if available, otherwise returns an empty [PackedVector2Array]. The buffer is filled at the rate of [method get_input_mix_rate] frames per second when [method set_input_device_active] has successfully been set to [code]true[/code]. The samples are signed floating-point PCM values between [code]-1[/code] and [code]1[/code].",
+      "godotName": "get_input_frames",
+      "xmlDocId": "M:Godot.AudioServer.GetInputFrames(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetInputFramesAvailable",
+      "kind": "Method",
+      "signature": "public int GetInputFramesAvailable()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of frames available to read using [method get_input_frames].",
+      "godotName": "get_input_frames_available",
+      "xmlDocId": "M:Godot.AudioServer.GetInputFramesAvailable",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetInputMixRate",
+      "kind": "Method",
+      "signature": "public float GetInputMixRate()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the sample rate at the input of the [AudioServer].",
+      "godotName": "get_input_mix_rate",
+      "xmlDocId": "M:Godot.AudioServer.GetInputMixRate",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetMixRate",
+      "kind": "Method",
+      "signature": "public float GetMixRate()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the sample rate at the output of the [AudioServer].",
+      "godotName": "get_mix_rate",
+      "xmlDocId": "M:Godot.AudioServer.GetMixRate",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetOutputDeviceList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetOutputDeviceList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the names of all audio output devices detected on the system.",
+      "godotName": "get_output_device_list",
+      "xmlDocId": "M:Godot.AudioServer.GetOutputDeviceList",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetOutputLatency",
+      "kind": "Method",
+      "signature": "public float GetOutputLatency()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the audio driver\u0027s effective output latency. This is based on [member ProjectSettings.audio/driver/output_latency], but the exact returned value will differ depending on the operating system and audio driver. [b]Note:[/b] This can be expensive; it is not recommended to call [method get_output_latency] every frame.",
+      "godotName": "get_output_latency",
+      "xmlDocId": "M:Godot.AudioServer.GetOutputLatency",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetSpeakerMode",
+      "kind": "Method",
+      "signature": "public int GetSpeakerMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the speaker configuration.",
+      "godotName": "get_speaker_mode",
+      "xmlDocId": "M:Godot.AudioServer.GetSpeakerMode",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetTimeSinceLastMix",
+      "kind": "Method",
+      "signature": "public float GetTimeSinceLastMix()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the relative time since the last mix occurred, in seconds.",
+      "godotName": "get_time_since_last_mix",
+      "xmlDocId": "M:Godot.AudioServer.GetTimeSinceLastMix",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "GetTimeToNextMix",
+      "kind": "Method",
+      "signature": "public float GetTimeToNextMix()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the relative time until the next mix occurs, in seconds.",
+      "godotName": "get_time_to_next_mix",
+      "xmlDocId": "M:Godot.AudioServer.GetTimeToNextMix",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "IsBusBypassingEffects",
+      "kind": "Method",
+      "signature": "public bool IsBusBypassingEffects(int busIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is bypassing effects.",
+      "godotName": "is_bus_bypassing_effects",
+      "xmlDocId": "M:Godot.AudioServer.IsBusBypassingEffects(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "IsBusEffectEnabled",
+      "kind": "Method",
+      "signature": "public bool IsBusEffectEnabled(int busIdx, int effectIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "If [code]true[/code], the effect at index [param effect_idx] on the bus at index [param bus_idx] is enabled.",
+      "godotName": "is_bus_effect_enabled",
+      "xmlDocId": "M:Godot.AudioServer.IsBusEffectEnabled(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "IsBusMute",
+      "kind": "Method",
+      "signature": "public bool IsBusMute(int busIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is muted.",
+      "godotName": "is_bus_mute",
+      "xmlDocId": "M:Godot.AudioServer.IsBusMute(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "IsBusSolo",
+      "kind": "Method",
+      "signature": "public bool IsBusSolo(int busIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is in solo mode.",
+      "godotName": "is_bus_solo",
+      "xmlDocId": "M:Godot.AudioServer.IsBusSolo(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "IsStreamRegisteredAsSample",
+      "kind": "Method",
+      "signature": "public bool IsStreamRegisteredAsSample(AudioStream stream)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "AudioStream"
+        }
+      ],
+      "summary": "If [code]true[/code], the stream is registered as a sample. The engine will not have to register it before playing the sample. If [code]false[/code], the stream will have to be registered before playing it. To prevent lag spikes, register the stream as sample with [method register_stream_as_sample].",
+      "godotName": "is_stream_registered_as_sample",
+      "xmlDocId": "M:Godot.AudioServer.IsStreamRegisteredAsSample(AudioStream)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "Lock",
+      "kind": "Method",
+      "signature": "public void Lock()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Locks the audio driver\u0027s main loop. [b]Note:[/b] Remember to unlock it afterwards.",
+      "godotName": "lock",
+      "xmlDocId": "M:Godot.AudioServer.Lock",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "MoveBus",
+      "kind": "Method",
+      "signature": "public void MoveBus(int index, int toIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "to_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the bus from index [param index] to index [param to_index].",
+      "godotName": "move_bus",
+      "xmlDocId": "M:Godot.AudioServer.MoveBus(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "RegisterStreamAsSample",
+      "kind": "Method",
+      "signature": "public void RegisterStreamAsSample(AudioStream stream)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "AudioStream"
+        }
+      ],
+      "summary": "Forces the registration of a stream as a sample. [b]Note:[/b] Lag spikes may occur when calling this method, especially on single-threaded builds. It is suggested to call this method while loading assets, where the lag spike could be masked, instead of registering the sample right before it needs to be played.",
+      "godotName": "register_stream_as_sample",
+      "xmlDocId": "M:Godot.AudioServer.RegisterStreamAsSample(AudioStream)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "RemoveBus",
+      "kind": "Method",
+      "signature": "public void RemoveBus(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the bus at index [param index].",
+      "godotName": "remove_bus",
+      "xmlDocId": "M:Godot.AudioServer.RemoveBus(int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "RemoveBusEffect",
+      "kind": "Method",
+      "signature": "public void RemoveBusEffect(int busIdx, int effectIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the effect at index [param effect_idx] from the bus at index [param bus_idx].",
+      "godotName": "remove_bus_effect",
+      "xmlDocId": "M:Godot.AudioServer.RemoveBusEffect(int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusBypassEffects",
+      "kind": "Method",
+      "signature": "public void SetBusBypassEffects(int busIdx, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is bypassing effects.",
+      "godotName": "set_bus_bypass_effects",
+      "xmlDocId": "M:Godot.AudioServer.SetBusBypassEffects(int,bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusEffectEnabled",
+      "kind": "Method",
+      "signature": "public void SetBusEffectEnabled(int busIdx, int effectIdx, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the effect at index [param effect_idx] on the bus at index [param bus_idx] is enabled.",
+      "godotName": "set_bus_effect_enabled",
+      "xmlDocId": "M:Godot.AudioServer.SetBusEffectEnabled(int,int,bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusLayout",
+      "kind": "Method",
+      "signature": "public void SetBusLayout(AudioBusLayout busLayout)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_layout",
+          "type": "AudioBusLayout"
+        }
+      ],
+      "summary": "Overwrites the currently used [AudioBusLayout].",
+      "godotName": "set_bus_layout",
+      "xmlDocId": "M:Godot.AudioServer.SetBusLayout(AudioBusLayout)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusMute",
+      "kind": "Method",
+      "signature": "public void SetBusMute(int busIdx, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is muted.",
+      "godotName": "set_bus_mute",
+      "xmlDocId": "M:Godot.AudioServer.SetBusMute(int,bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusName",
+      "kind": "Method",
+      "signature": "public void SetBusName(int busIdx, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the name of the bus at index [param bus_idx] to [param name].",
+      "godotName": "set_bus_name",
+      "xmlDocId": "M:Godot.AudioServer.SetBusName(int,String)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusSend",
+      "kind": "Method",
+      "signature": "public void SetBusSend(int busIdx, StringName send)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "send",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Connects the output of the bus at [param bus_idx] to the bus named [param send].",
+      "godotName": "set_bus_send",
+      "xmlDocId": "M:Godot.AudioServer.SetBusSend(int,StringName)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusSolo",
+      "kind": "Method",
+      "signature": "public void SetBusSolo(int busIdx, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the bus at index [param bus_idx] is in solo mode.",
+      "godotName": "set_bus_solo",
+      "xmlDocId": "M:Godot.AudioServer.SetBusSolo(int,bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusVolumeDb",
+      "kind": "Method",
+      "signature": "public void SetBusVolumeDb(int busIdx, float volumeDb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "volume_db",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the volume in decibels of the bus at index [param bus_idx] to [param volume_db].",
+      "godotName": "set_bus_volume_db",
+      "xmlDocId": "M:Godot.AudioServer.SetBusVolumeDb(int,float)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetBusVolumeLinear",
+      "kind": "Method",
+      "signature": "public void SetBusVolumeLinear(int busIdx, float volumeLinear)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "volume_linear",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the volume as a linear value of the bus at index [param bus_idx] to [param volume_linear]. [b]Note:[/b] Using this method is equivalent to calling [method set_bus_volume_db] with the result of [method @GlobalScope.linear_to_db] on a value.",
+      "godotName": "set_bus_volume_linear",
+      "xmlDocId": "M:Godot.AudioServer.SetBusVolumeLinear(int,float)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetEnableTaggingUsedAudioStreams",
+      "kind": "Method",
+      "signature": "public void SetEnableTaggingUsedAudioStreams(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If set to [code]true[/code], all instances of [AudioStreamPlayback] will call [method AudioStreamPlayback._tag_used_streams] every mix step. [b]Note:[/b] This is enabled by default in the editor, as it is used by editor plugins for the audio stream previews.",
+      "godotName": "set_enable_tagging_used_audio_streams",
+      "xmlDocId": "M:Godot.AudioServer.SetEnableTaggingUsedAudioStreams(bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SetInputDeviceActive",
+      "kind": "Method",
+      "signature": "public int SetInputDeviceActive(bool active)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param active] is [code]true[/code], starts the microphone input stream specified by [member input_device] or returns an error if it failed. If [param active] is [code]false[/code], stops the input stream if it is running.",
+      "godotName": "set_input_device_active",
+      "xmlDocId": "M:Godot.AudioServer.SetInputDeviceActive(bool)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SwapBusEffects",
+      "kind": "Method",
+      "signature": "public void SwapBusEffects(int busIdx, int effectIdx, int byEffectIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "bus_idx",
+          "type": "int"
+        },
+        {
+          "name": "effect_idx",
+          "type": "int"
+        },
+        {
+          "name": "by_effect_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Swaps the position of two effects in bus [param bus_idx].",
+      "godotName": "swap_bus_effects",
+      "xmlDocId": "M:Godot.AudioServer.SwapBusEffects(int,int,int)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "Unlock",
+      "kind": "Method",
+      "signature": "public void Unlock()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Unlocks the audio driver\u0027s main loop. (After locking it, you should always unlock it.)",
+      "godotName": "unlock",
+      "xmlDocId": "M:Godot.AudioServer.Unlock",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "BusCount",
+      "kind": "Property",
+      "signature": "public int BusCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of available audio buses.",
+      "defaultValue": "1",
+      "godotName": "bus_count",
+      "xmlDocId": "P:Godot.AudioServer.BusCount",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "InputDevice",
+      "kind": "Property",
+      "signature": "public String InputDevice { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Name of the current device for audio input (see [method get_input_device_list]). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value [code]\u0022Default\u0022[/code] will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to [code]\u0022Default\u0022[/code]. [b]Note:[/b] [member ProjectSettings.audio/driver/enable_input] must be [code]true[/code] for audio input to work. See also that setting\u0027s description for caveats related to permissions and operating system privacy settings.",
+      "defaultValue": "\u0022Default\u0022",
+      "godotName": "input_device",
+      "xmlDocId": "P:Godot.AudioServer.InputDevice",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "OutputDevice",
+      "kind": "Property",
+      "signature": "public String OutputDevice { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Name of the current device for audio output (see [method get_output_device_list]). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value [code]\u0022Default\u0022[/code] will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to [code]\u0022Default\u0022[/code].",
+      "defaultValue": "\u0022Default\u0022",
+      "godotName": "output_device",
+      "xmlDocId": "P:Godot.AudioServer.OutputDevice",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "PlaybackSpeedScale",
+      "kind": "Property",
+      "signature": "public float PlaybackSpeedScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Scales the rate at which audio is played (i.e. setting it to [code]0.5[/code] will make the audio be played at half its speed). See also [member Engine.time_scale] to affect the general simulation speed, which is independent from [member AudioServer.playback_speed_scale].",
+      "defaultValue": "1.0",
+      "godotName": "playback_speed_scale",
+      "xmlDocId": "P:Godot.AudioServer.PlaybackSpeedScale",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BusLayoutChanged",
+      "kind": "Signal",
+      "signature": "public event BusLayoutChangedHandler BusLayoutChanged",
+      "parameters": [],
+      "summary": "Emitted when an audio bus is added, deleted, or moved.",
+      "godotName": "bus_layout_changed",
+      "xmlDocId": "E:Godot.AudioServer.BusLayoutChanged",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "BusRenamed",
+      "kind": "Signal",
+      "signature": "public event BusRenamedHandler BusRenamed",
+      "parameters": [
+        {
+          "name": "bus_index",
+          "type": "int"
+        },
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "new_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when the audio bus at [param bus_index] is renamed from [param old_name] to [param new_name].",
+      "godotName": "bus_renamed",
+      "xmlDocId": "E:Godot.AudioServer.BusRenamed(int,StringName,StringName)",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "PlaybackType",
+      "values": [
+        {
+          "name": "PLAYBACK_TYPE_DEFAULT",
+          "value": "0",
+          "enum": "PlaybackType",
+          "kind": "EnumValue",
+          "summary": "The playback will be considered of the type declared at [member ProjectSettings.audio/general/default_playback_type].",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "PLAYBACK_TYPE_MAX",
+          "value": "3",
+          "enum": "PlaybackType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum PlaybackType] enum.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "PLAYBACK_TYPE_SAMPLE",
+          "value": "2",
+          "enum": "PlaybackType",
+          "kind": "EnumValue",
+          "summary": "Force the playback to be considered as a sample. This can provide lower latency and more stable playback (with less risk of audio crackling), at the cost of having less flexibility. [b]Note:[/b] Only currently supported on the web platform. [b]Note:[/b] [AudioEffect]s are not supported when playback is considered as a sample.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "PLAYBACK_TYPE_STREAM",
+          "value": "1",
+          "enum": "PlaybackType",
+          "kind": "EnumValue",
+          "summary": "Force the playback to be considered as a stream.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        }
+      ]
+    },
+    {
+      "name": "SpeakerMode",
+      "values": [
+        {
+          "name": "SPEAKER_MODE_STEREO",
+          "value": "0",
+          "enum": "SpeakerMode",
+          "kind": "EnumValue",
+          "summary": "Two or fewer speakers were detected.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "SPEAKER_SURROUND_31",
+          "value": "1",
+          "enum": "SpeakerMode",
+          "kind": "EnumValue",
+          "summary": "A 3.1 channel surround setup was detected.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "SPEAKER_SURROUND_51",
+          "value": "2",
+          "enum": "SpeakerMode",
+          "kind": "EnumValue",
+          "summary": "A 5.1 channel surround setup was detected.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        },
+        {
+          "name": "SPEAKER_SURROUND_71",
+          "value": "3",
+          "enum": "SpeakerMode",
+          "kind": "EnumValue",
+          "summary": "A 7.1 channel surround setup was detected.",
+          "sourcePath": "doc/classes/AudioServer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SPEAKER_MODE_STEREO",
+      "value": "0",
+      "enum": "SpeakerMode",
+      "kind": "EnumValue",
+      "summary": "Two or fewer speakers were detected.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SPEAKER_SURROUND_31",
+      "value": "1",
+      "enum": "SpeakerMode",
+      "kind": "EnumValue",
+      "summary": "A 3.1 channel surround setup was detected.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SPEAKER_SURROUND_51",
+      "value": "2",
+      "enum": "SpeakerMode",
+      "kind": "EnumValue",
+      "summary": "A 5.1 channel surround setup was detected.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "SPEAKER_SURROUND_71",
+      "value": "3",
+      "enum": "SpeakerMode",
+      "kind": "EnumValue",
+      "summary": "A 7.1 channel surround setup was detected.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "PLAYBACK_TYPE_DEFAULT",
+      "value": "0",
+      "enum": "PlaybackType",
+      "kind": "EnumValue",
+      "summary": "The playback will be considered of the type declared at [member ProjectSettings.audio/general/default_playback_type].",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "PLAYBACK_TYPE_STREAM",
+      "value": "1",
+      "enum": "PlaybackType",
+      "kind": "EnumValue",
+      "summary": "Force the playback to be considered as a stream.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "PLAYBACK_TYPE_SAMPLE",
+      "value": "2",
+      "enum": "PlaybackType",
+      "kind": "EnumValue",
+      "summary": "Force the playback to be considered as a sample. This can provide lower latency and more stable playback (with less risk of audio crackling), at the cost of having less flexibility. [b]Note:[/b] Only currently supported on the web platform. [b]Note:[/b] [AudioEffect]s are not supported when playback is considered as a sample.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    },
+    {
+      "name": "PLAYBACK_TYPE_MAX",
+      "value": "3",
+      "enum": "PlaybackType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum PlaybackType] enum.",
+      "sourcePath": "doc/classes/AudioServer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioServer.xml",
+      "sha256": "e103b88c0e1b7dacdd534c18e1e8f6b2b5f74f9cfd51bb7363a509ce793a76c0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

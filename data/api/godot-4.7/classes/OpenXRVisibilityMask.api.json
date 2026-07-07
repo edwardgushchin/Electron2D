@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRVisibilityMask",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRVisibilityMask",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "OpenXRVisibilityMask",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRVisibilityMask.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrvisibilitymask.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRVisibilityMask.xml",
+      "sha256": "261e55e9718716abb598f3d58dc5895c7e808168ed6209c8cd533b92dc682795"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRActionBindingModifier",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRActionBindingModifier",
+    "kind": "class",
+    "baseType": "OpenXRBindingModifier",
+    "interfaces": [],
+    "godotReference": "OpenXRActionBindingModifier",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRActionBindingModifier.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxractionbindingmodifier.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRActionBindingModifier.xml",
+      "sha256": "5653baade332321982ba0f492a58cdb8e9876d4c1394547b252850b807e3625b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

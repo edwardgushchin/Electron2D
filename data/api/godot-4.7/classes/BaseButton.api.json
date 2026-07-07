@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BaseButton",
+    "namespace": "Godot",
+    "fullName": "Godot.BaseButton",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "BaseButton",
+    "documentationPath": "doc/classes/BaseButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_basebutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Pressed",
+      "kind": "Method",
+      "signature": "public void _Pressed()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the button is pressed. If you need to know the button\u0027s pressed state (and [member toggle_mode] is active), use [method _toggled] instead.",
+      "godotName": "_pressed",
+      "xmlDocId": "M:Godot.BaseButton._Pressed",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "_Toggled",
+      "kind": "Method",
+      "signature": "public void _Toggled(bool toggledOn)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "toggled_on",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the button is toggled (only if [member toggle_mode] is active).",
+      "godotName": "_toggled",
+      "xmlDocId": "M:Godot.BaseButton._Toggled(bool)",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "GetDrawMode",
+      "kind": "Method",
+      "signature": "public int GetDrawMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the visual state used to draw the button. This is useful mainly when implementing your own draw code by either overriding _draw() or connecting to \u0022draw\u0022 signal. The visual state of the button is defined by the [enum DrawMode] enum.",
+      "godotName": "get_draw_mode",
+      "xmlDocId": "M:Godot.BaseButton.GetDrawMode",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "IsHovered",
+      "kind": "Method",
+      "signature": "public bool IsHovered()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the mouse has entered the button and has not left it yet.",
+      "godotName": "is_hovered",
+      "xmlDocId": "M:Godot.BaseButton.IsHovered",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "SetPressedNoSignal",
+      "kind": "Method",
+      "signature": "public void SetPressedNoSignal(bool pressed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "pressed",
+          "type": "bool"
+        }
+      ],
+      "summary": "Changes the [member button_pressed] state of the button, without emitting [signal toggled]. Use when you just want to change the state of the button without sending the pressed event (e.g. when initializing scene). Only works if [member toggle_mode] is [code]true[/code]. [b]Note:[/b] This method doesn\u0027t unpress other buttons in [member button_group].",
+      "godotName": "set_pressed_no_signal",
+      "xmlDocId": "M:Godot.BaseButton.SetPressedNoSignal(bool)",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ActionMode",
+      "kind": "Property",
+      "signature": "public int ActionMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines when the button is considered clicked.",
+      "defaultValue": "1",
+      "godotName": "action_mode",
+      "xmlDocId": "P:Godot.BaseButton.ActionMode",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ButtonGroup",
+      "kind": "Property",
+      "signature": "public ButtonGroup ButtonGroup { get; set; }",
+      "returnType": "ButtonGroup",
+      "parameters": [],
+      "summary": "The [ButtonGroup] associated with the button. Not to be confused with node groups. [b]Note:[/b] The button will be configured as a radio button if a [ButtonGroup] is assigned to it.",
+      "godotName": "button_group",
+      "xmlDocId": "P:Godot.BaseButton.ButtonGroup",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ButtonMask",
+      "kind": "Property",
+      "signature": "public int ButtonMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Binary mask to choose which mouse buttons this button will respond to. To allow both left-click and right-click, use [code]MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT[/code].",
+      "defaultValue": "1",
+      "godotName": "button_mask",
+      "xmlDocId": "P:Godot.BaseButton.ButtonMask",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ButtonPressed",
+      "kind": "Property",
+      "signature": "public bool ButtonPressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button\u0027s state is pressed. Means the button is pressed down or toggled (if [member toggle_mode] is active). Only works if [member toggle_mode] is [code]true[/code]. [b]Note:[/b] Changing the value of [member button_pressed] will result in [signal toggled] to be emitted. If you want to change the pressed state without emitting that signal, use [method set_pressed_no_signal].",
+      "defaultValue": "false",
+      "godotName": "button_pressed",
+      "xmlDocId": "P:Godot.BaseButton.ButtonPressed",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public bool Disabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button is in disabled state and can\u0027t be clicked or toggled. [b]Note:[/b] If the button is disabled while held down, [signal button_up] will be emitted.",
+      "defaultValue": "false",
+      "godotName": "disabled",
+      "xmlDocId": "P:Godot.BaseButton.Disabled",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.BaseButton.FocusMode",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "KeepPressedOutside",
+      "kind": "Property",
+      "signature": "public bool KeepPressedOutside { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button stays pressed when moving the cursor outside the button while pressing it. [b]Note:[/b] This property only affects the button\u0027s visual appearance. Signals will be emitted at the same moment regardless of this property\u0027s value.",
+      "defaultValue": "false",
+      "godotName": "keep_pressed_outside",
+      "xmlDocId": "P:Godot.BaseButton.KeepPressedOutside",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "Shortcut",
+      "kind": "Property",
+      "signature": "public Shortcut Shortcut { get; set; }",
+      "returnType": "Shortcut",
+      "parameters": [],
+      "summary": "[Shortcut] associated to the button.",
+      "godotName": "shortcut",
+      "xmlDocId": "P:Godot.BaseButton.Shortcut",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ShortcutFeedback",
+      "kind": "Property",
+      "signature": "public bool ShortcutFeedback { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button will highlight for a short amount of time when its shortcut is activated. If [code]false[/code] and [member toggle_mode] is [code]false[/code], the shortcut will activate without any visual feedback.",
+      "defaultValue": "true",
+      "godotName": "shortcut_feedback",
+      "xmlDocId": "P:Godot.BaseButton.ShortcutFeedback",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ShortcutInTooltip",
+      "kind": "Property",
+      "signature": "public bool ShortcutInTooltip { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button will add information about its shortcut in the tooltip. This includes the shortcut\u0027s events and its [member Resource.resource_name]. If both events and name are empty, the shortcut will not be included. [b]Note:[/b] This property does nothing when the tooltip control is customized using [method Control._make_custom_tooltip].",
+      "defaultValue": "true",
+      "godotName": "shortcut_in_tooltip",
+      "xmlDocId": "P:Godot.BaseButton.ShortcutInTooltip",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the button is in toggle mode. Makes the button flip state between pressed and unpressed each time its area is clicked.",
+      "defaultValue": "false",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.BaseButton.ToggleMode",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ButtonDown",
+      "kind": "Signal",
+      "signature": "public event ButtonDownHandler ButtonDown",
+      "parameters": [],
+      "summary": "Emitted when the button starts being held down.",
+      "godotName": "button_down",
+      "xmlDocId": "E:Godot.BaseButton.ButtonDown",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ButtonUp",
+      "kind": "Signal",
+      "signature": "public event ButtonUpHandler ButtonUp",
+      "parameters": [],
+      "summary": "Emitted when the button stops being held down.",
+      "godotName": "button_up",
+      "xmlDocId": "E:Godot.BaseButton.ButtonUp",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Signal",
+      "signature": "public event PressedHandler Pressed",
+      "parameters": [],
+      "summary": "Emitted when the button is toggled or pressed. This is on [signal button_down] if [member action_mode] is [constant ACTION_MODE_BUTTON_PRESS] and on [signal button_up] otherwise. If you need to know the button\u0027s pressed state (and [member toggle_mode] is active), use [signal toggled] instead.",
+      "godotName": "pressed",
+      "xmlDocId": "E:Godot.BaseButton.Pressed",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "Toggled",
+      "kind": "Signal",
+      "signature": "public event ToggledHandler Toggled",
+      "parameters": [
+        {
+          "name": "toggled_on",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the button was just toggled between pressed and normal states (only if [member toggle_mode] is active). The new state is contained in the [param toggled_on] argument.",
+      "godotName": "toggled",
+      "xmlDocId": "E:Godot.BaseButton.Toggled(bool)",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ActionMode",
+      "values": [
+        {
+          "name": "ACTION_MODE_BUTTON_PRESS",
+          "value": "0",
+          "enum": "ActionMode",
+          "kind": "EnumValue",
+          "summary": "Require just a press to consider the button clicked.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        },
+        {
+          "name": "ACTION_MODE_BUTTON_RELEASE",
+          "value": "1",
+          "enum": "ActionMode",
+          "kind": "EnumValue",
+          "summary": "Require a press and a subsequent release before considering the button clicked.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        }
+      ]
+    },
+    {
+      "name": "DrawMode",
+      "values": [
+        {
+          "name": "DRAW_DISABLED",
+          "value": "3",
+          "enum": "DrawMode",
+          "kind": "EnumValue",
+          "summary": "The state of buttons are disabled.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        },
+        {
+          "name": "DRAW_HOVER",
+          "value": "2",
+          "enum": "DrawMode",
+          "kind": "EnumValue",
+          "summary": "The state of buttons are hovered.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        },
+        {
+          "name": "DRAW_HOVER_PRESSED",
+          "value": "4",
+          "enum": "DrawMode",
+          "kind": "EnumValue",
+          "summary": "The state of buttons are both hovered and pressed.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        },
+        {
+          "name": "DRAW_NORMAL",
+          "value": "0",
+          "enum": "DrawMode",
+          "kind": "EnumValue",
+          "summary": "The normal state (i.e. not pressed, not hovered, not toggled and enabled) of buttons.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        },
+        {
+          "name": "DRAW_PRESSED",
+          "value": "1",
+          "enum": "DrawMode",
+          "kind": "EnumValue",
+          "summary": "The state of buttons are pressed.",
+          "sourcePath": "doc/classes/BaseButton.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DRAW_NORMAL",
+      "value": "0",
+      "enum": "DrawMode",
+      "kind": "EnumValue",
+      "summary": "The normal state (i.e. not pressed, not hovered, not toggled and enabled) of buttons.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "DRAW_PRESSED",
+      "value": "1",
+      "enum": "DrawMode",
+      "kind": "EnumValue",
+      "summary": "The state of buttons are pressed.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "DRAW_HOVER",
+      "value": "2",
+      "enum": "DrawMode",
+      "kind": "EnumValue",
+      "summary": "The state of buttons are hovered.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "DRAW_DISABLED",
+      "value": "3",
+      "enum": "DrawMode",
+      "kind": "EnumValue",
+      "summary": "The state of buttons are disabled.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "DRAW_HOVER_PRESSED",
+      "value": "4",
+      "enum": "DrawMode",
+      "kind": "EnumValue",
+      "summary": "The state of buttons are both hovered and pressed.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ACTION_MODE_BUTTON_PRESS",
+      "value": "0",
+      "enum": "ActionMode",
+      "kind": "EnumValue",
+      "summary": "Require just a press to consider the button clicked.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "ACTION_MODE_BUTTON_RELEASE",
+      "value": "1",
+      "enum": "ActionMode",
+      "kind": "EnumValue",
+      "summary": "Require a press and a subsequent release before considering the button clicked.",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Pressed",
+      "kind": "Method",
+      "signature": "public void _Pressed()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the button is pressed. If you need to know the button\u0027s pressed state (and [member toggle_mode] is active), use [method _toggled] instead.",
+      "godotName": "_pressed",
+      "xmlDocId": "M:Godot.BaseButton._Pressed",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    },
+    {
+      "name": "_Toggled",
+      "kind": "Method",
+      "signature": "public void _Toggled(bool toggledOn)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "toggled_on",
+          "type": "bool"
+        }
+      ],
+      "summary": "Called when the button is toggled (only if [member toggle_mode] is active).",
+      "godotName": "_toggled",
+      "xmlDocId": "M:Godot.BaseButton._Toggled(bool)",
+      "sourcePath": "doc/classes/BaseButton.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BaseButton.xml",
+      "sha256": "24606ee7d9593dafd55366318d94f7c63a83939a37b48aa6714724815bb3108d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDShaderSPIRV",
+    "namespace": "Godot",
+    "fullName": "Godot.RDShaderSPIRV",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "RDShaderSPIRV",
+    "documentationPath": "doc/classes/RDShaderSPIRV.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdshaderspirv.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetStageBytecode",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetStageBytecode(int stage)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        }
+      ],
+      "summary": "Equivalent to getting one of [member bytecode_compute], [member bytecode_fragment], [member bytecode_tesselation_control], [member bytecode_tesselation_evaluation], [member bytecode_vertex].",
+      "godotName": "get_stage_bytecode",
+      "xmlDocId": "M:Godot.RDShaderSPIRV.GetStageBytecode(int)",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "GetStageCompileError",
+      "kind": "Method",
+      "signature": "public String GetStageCompileError(int stage)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the compilation error message for the given shader [param stage]. Equivalent to getting one of [member compile_error_compute], [member compile_error_fragment], [member compile_error_tesselation_control], [member compile_error_tesselation_evaluation], [member compile_error_vertex].",
+      "godotName": "get_stage_compile_error",
+      "xmlDocId": "M:Godot.RDShaderSPIRV.GetStageCompileError(int)",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "SetStageBytecode",
+      "kind": "Method",
+      "signature": "public void SetStageBytecode(int stage, PackedByteArray bytecode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        },
+        {
+          "name": "bytecode",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Sets the SPIR-V [param bytecode] for the given shader [param stage]. Equivalent to setting one of [member bytecode_compute], [member bytecode_fragment], [member bytecode_tesselation_control], [member bytecode_tesselation_evaluation], [member bytecode_vertex].",
+      "godotName": "set_stage_bytecode",
+      "xmlDocId": "M:Godot.RDShaderSPIRV.SetStageBytecode(int,PackedByteArray)",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "SetStageCompileError",
+      "kind": "Method",
+      "signature": "public void SetStageCompileError(int stage, String compileError)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "stage",
+          "type": "int"
+        },
+        {
+          "name": "compile_error",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the compilation error message for the given shader [param stage] to [param compile_error]. Equivalent to setting one of [member compile_error_compute], [member compile_error_fragment], [member compile_error_tesselation_control], [member compile_error_tesselation_evaluation], [member compile_error_vertex].",
+      "godotName": "set_stage_compile_error",
+      "xmlDocId": "M:Godot.RDShaderSPIRV.SetStageCompileError(int,String)",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeAnyHit",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeAnyHit { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the any hit shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_any_hit",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeAnyHit",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeClosestHit",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeClosestHit { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the closest hit shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_closest_hit",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeClosestHit",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeCompute",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeCompute { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the compute shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_compute",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeCompute",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeFragment",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeFragment { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the fragment shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_fragment",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeFragment",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeIntersection",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeIntersection { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the intersection shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_intersection",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeIntersection",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeMiss",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeMiss { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the miss shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_miss",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeMiss",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeRaygen",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeRaygen { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the ray generation shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_raygen",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeRaygen",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeTesselationControl",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeTesselationControl { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the tessellation control shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_tesselation_control",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeTesselationControl",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeTesselationEvaluation",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeTesselationEvaluation { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the tessellation evaluation shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_tesselation_evaluation",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeTesselationEvaluation",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "BytecodeVertex",
+      "kind": "Property",
+      "signature": "public PackedByteArray BytecodeVertex { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "The SPIR-V bytecode for the vertex shader stage.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "bytecode_vertex",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.BytecodeVertex",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorAnyHit",
+      "kind": "Property",
+      "signature": "public String CompileErrorAnyHit { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the any hit shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_any_hit",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorAnyHit",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorClosestHit",
+      "kind": "Property",
+      "signature": "public String CompileErrorClosestHit { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the closest hit shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_closest_hit",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorClosestHit",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorCompute",
+      "kind": "Property",
+      "signature": "public String CompileErrorCompute { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the compute shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_compute",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorCompute",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorFragment",
+      "kind": "Property",
+      "signature": "public String CompileErrorFragment { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the fragment shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_fragment",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorFragment",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorIntersection",
+      "kind": "Property",
+      "signature": "public String CompileErrorIntersection { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the intersection shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_intersection",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorIntersection",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorMiss",
+      "kind": "Property",
+      "signature": "public String CompileErrorMiss { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the miss shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_miss",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorMiss",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorRaygen",
+      "kind": "Property",
+      "signature": "public String CompileErrorRaygen { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the ray generation shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_raygen",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorRaygen",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorTesselationControl",
+      "kind": "Property",
+      "signature": "public String CompileErrorTesselationControl { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the tessellation control shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_tesselation_control",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorTesselationControl",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorTesselationEvaluation",
+      "kind": "Property",
+      "signature": "public String CompileErrorTesselationEvaluation { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the tessellation evaluation shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_tesselation_evaluation",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorTesselationEvaluation",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    },
+    {
+      "name": "CompileErrorVertex",
+      "kind": "Property",
+      "signature": "public String CompileErrorVertex { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The compilation error message for the vertex shader stage (set by the SPIR-V compiler and Godot). If empty, shader compilation was successful.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "compile_error_vertex",
+      "xmlDocId": "P:Godot.RDShaderSPIRV.CompileErrorVertex",
+      "sourcePath": "doc/classes/RDShaderSPIRV.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDShaderSPIRV.xml",
+      "sha256": "a22b81e2ad3a3cd80a30a23d247702451480f92d1e4fe26001a90d5a915ad78f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

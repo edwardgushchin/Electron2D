@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SkeletonModification2DFABRIK",
+    "namespace": "Godot",
+    "fullName": "Godot.SkeletonModification2DFABRIK",
+    "kind": "class",
+    "baseType": "SkeletonModification2D",
+    "interfaces": [],
+    "godotReference": "SkeletonModification2DFABRIK",
+    "documentationPath": "doc/classes/SkeletonModification2DFABRIK.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_skeletonmodification2dfabrik.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFabrikJointBone2dNode",
+      "kind": "Method",
+      "signature": "public NodePath GetFabrikJointBone2dNode(int jointIdx)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Bone2D] node assigned to the FABRIK joint at [param joint_idx].",
+      "godotName": "get_fabrik_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.GetFabrikJointBone2dNode(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "GetFabrikJointBoneIndex",
+      "kind": "Method",
+      "signature": "public int GetFabrikJointBoneIndex(int jointIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the index of the [Bone2D] node assigned to the FABRIK joint at [param joint_idx].",
+      "godotName": "get_fabrik_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.GetFabrikJointBoneIndex(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "GetFabrikJointMagnetPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetFabrikJointMagnetPosition(int jointIdx)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the magnet position vector for the joint at [param joint_idx].",
+      "godotName": "get_fabrik_joint_magnet_position",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.GetFabrikJointMagnetPosition(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "GetFabrikJointUseTargetRotation",
+      "kind": "Method",
+      "signature": "public bool GetFabrikJointUseTargetRotation(int jointIdx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the joint is using the target\u0027s rotation rather than allowing FABRIK to rotate the joint. This option only applies to the tip/final joint in the chain.",
+      "godotName": "get_fabrik_joint_use_target_rotation",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.GetFabrikJointUseTargetRotation(int)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "SetFabrikJointBone2dNode",
+      "kind": "Method",
+      "signature": "public void SetFabrikJointBone2dNode(int jointIdx, NodePath bone2dNodepath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone2d_nodepath",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the [Bone2D] node assigned to the FABRIK joint at [param joint_idx].",
+      "godotName": "set_fabrik_joint_bone2d_node",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.SetFabrikJointBone2dNode(int,NodePath)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "SetFabrikJointBoneIndex",
+      "kind": "Method",
+      "signature": "public void SetFabrikJointBoneIndex(int jointIdx, int boneIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "bone_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the bone index, [param bone_idx], of the FABRIK joint at [param joint_idx]. When possible, this will also update the [code]bone2d_node[/code] of the FABRIK joint based on data provided by the linked skeleton.",
+      "godotName": "set_fabrik_joint_bone_index",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.SetFabrikJointBoneIndex(int,int)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "SetFabrikJointMagnetPosition",
+      "kind": "Method",
+      "signature": "public void SetFabrikJointMagnetPosition(int jointIdx, Vector2 magnetPosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "magnet_position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the magnet position vector for the joint at [param joint_idx].",
+      "godotName": "set_fabrik_joint_magnet_position",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.SetFabrikJointMagnetPosition(int,Vector2)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "SetFabrikJointUseTargetRotation",
+      "kind": "Method",
+      "signature": "public void SetFabrikJointUseTargetRotation(int jointIdx, bool useTargetRotation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint_idx",
+          "type": "int"
+        },
+        {
+          "name": "use_target_rotation",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the joint at [param joint_idx] will use the target node\u0027s rotation rather than letting FABRIK rotate the node. [b]Note:[/b] This option only works for the tip/final joint in the chain. For all other nodes, this option will be ignored.",
+      "godotName": "set_fabrik_joint_use_target_rotation",
+      "xmlDocId": "M:Godot.SkeletonModification2DFABRIK.SetFabrikJointUseTargetRotation(int,bool)",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "FabrikDataChainLength",
+      "kind": "Property",
+      "signature": "public int FabrikDataChainLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of FABRIK joints in the FABRIK modification.",
+      "defaultValue": "0",
+      "godotName": "fabrik_data_chain_length",
+      "xmlDocId": "P:Godot.SkeletonModification2DFABRIK.FabrikDataChainLength",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    },
+    {
+      "name": "TargetNodepath",
+      "kind": "Property",
+      "signature": "public NodePath TargetNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The NodePath to the node that is the target for the FABRIK modification. This node is what the FABRIK chain will attempt to rotate the bone chain to.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_nodepath",
+      "xmlDocId": "P:Godot.SkeletonModification2DFABRIK.TargetNodepath",
+      "sourcePath": "doc/classes/SkeletonModification2DFABRIK.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SkeletonModification2DFABRIK.xml",
+      "sha256": "5a19d323ac9ecc5bb7f38dbd295e9c2e3bc4de83b54402db7b4ecf64c9a71248"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

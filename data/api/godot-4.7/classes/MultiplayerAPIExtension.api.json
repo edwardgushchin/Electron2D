@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerAPIExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerAPIExtension",
+    "kind": "class",
+    "baseType": "MultiplayerAPI",
+    "interfaces": [],
+    "godotReference": "MultiplayerAPIExtension",
+    "documentationPath": "doc/classes/MultiplayerAPIExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayerapiextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetMultiplayerPeer",
+      "kind": "Method",
+      "signature": "public MultiplayerPeer _GetMultiplayerPeer()",
+      "returnType": "MultiplayerPeer",
+      "parameters": [],
+      "summary": "Called when the [member MultiplayerAPI.multiplayer_peer] is retrieved.",
+      "godotName": "_get_multiplayer_peer",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetMultiplayerPeer",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetPeerIds",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetPeerIds()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_peers].",
+      "godotName": "_get_peer_ids",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetPeerIds",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetRemoteSenderId",
+      "kind": "Method",
+      "signature": "public int _GetRemoteSenderId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_remote_sender_id].",
+      "godotName": "_get_remote_sender_id",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetRemoteSenderId",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetUniqueId",
+      "kind": "Method",
+      "signature": "public int _GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_unique_id].",
+      "godotName": "_get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_ObjectConfigurationAdd",
+      "kind": "Method",
+      "signature": "public int _ObjectConfigurationAdd(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.object_configuration_add].",
+      "godotName": "_object_configuration_add",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._ObjectConfigurationAdd(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_ObjectConfigurationRemove",
+      "kind": "Method",
+      "signature": "public int _ObjectConfigurationRemove(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.object_configuration_remove].",
+      "godotName": "_object_configuration_remove",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._ObjectConfigurationRemove(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.poll].",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._Poll",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_Rpc",
+      "kind": "Method",
+      "signature": "public int _Rpc(int peer, Object @object, StringName method, Array args)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "args",
+          "type": "Array"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.rpc].",
+      "godotName": "_rpc",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._Rpc(int,Object,StringName,Array)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_SetMultiplayerPeer",
+      "kind": "Method",
+      "signature": "public void _SetMultiplayerPeer(MultiplayerPeer multiplayerPeer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "multiplayer_peer",
+          "type": "MultiplayerPeer"
+        }
+      ],
+      "summary": "Called when the [member MultiplayerAPI.multiplayer_peer] is set.",
+      "godotName": "_set_multiplayer_peer",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._SetMultiplayerPeer(MultiplayerPeer)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetMultiplayerPeer",
+      "kind": "Method",
+      "signature": "public MultiplayerPeer _GetMultiplayerPeer()",
+      "returnType": "MultiplayerPeer",
+      "parameters": [],
+      "summary": "Called when the [member MultiplayerAPI.multiplayer_peer] is retrieved.",
+      "godotName": "_get_multiplayer_peer",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetMultiplayerPeer",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetPeerIds",
+      "kind": "Method",
+      "signature": "public PackedInt32Array _GetPeerIds()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_peers].",
+      "godotName": "_get_peer_ids",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetPeerIds",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetRemoteSenderId",
+      "kind": "Method",
+      "signature": "public int _GetRemoteSenderId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_remote_sender_id].",
+      "godotName": "_get_remote_sender_id",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetRemoteSenderId",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_GetUniqueId",
+      "kind": "Method",
+      "signature": "public int _GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.get_unique_id].",
+      "godotName": "_get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_ObjectConfigurationAdd",
+      "kind": "Method",
+      "signature": "public int _ObjectConfigurationAdd(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.object_configuration_add].",
+      "godotName": "_object_configuration_add",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._ObjectConfigurationAdd(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_ObjectConfigurationRemove",
+      "kind": "Method",
+      "signature": "public int _ObjectConfigurationRemove(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.object_configuration_remove].",
+      "godotName": "_object_configuration_remove",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._ObjectConfigurationRemove(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_Poll",
+      "kind": "Method",
+      "signature": "public int _Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Callback for [method MultiplayerAPI.poll].",
+      "godotName": "_poll",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._Poll",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_Rpc",
+      "kind": "Method",
+      "signature": "public int _Rpc(int peer, Object @object, StringName method, Array args)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "args",
+          "type": "Array"
+        }
+      ],
+      "summary": "Callback for [method MultiplayerAPI.rpc].",
+      "godotName": "_rpc",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._Rpc(int,Object,StringName,Array)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    },
+    {
+      "name": "_SetMultiplayerPeer",
+      "kind": "Method",
+      "signature": "public void _SetMultiplayerPeer(MultiplayerPeer multiplayerPeer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "multiplayer_peer",
+          "type": "MultiplayerPeer"
+        }
+      ],
+      "summary": "Called when the [member MultiplayerAPI.multiplayer_peer] is set.",
+      "godotName": "_set_multiplayer_peer",
+      "xmlDocId": "M:Godot.MultiplayerAPIExtension._SetMultiplayerPeer(MultiplayerPeer)",
+      "sourcePath": "doc/classes/MultiplayerAPIExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiplayerAPIExtension.xml",
+      "sha256": "7c283bd5a500b15d610e44b3d091f1540750c0223f9267bef6edfb71d337b92f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

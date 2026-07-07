@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentPersistenceList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentPersistenceList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentPersistenceList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentPersistenceList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentpersistencelist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPersistentState",
+      "kind": "Method",
+      "signature": "public int GetPersistentState(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the persistent state ([code]XrSpatialPersistenceStateEXT[/code]) for the entity at this [param index].",
+      "godotName": "get_persistent_state",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPersistenceList.GetPersistentState(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPersistenceList.xml"
+    },
+    {
+      "name": "GetPersistentUuid",
+      "kind": "Method",
+      "signature": "public String GetPersistentUuid(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the persistent uuid for the entity at this [param index].",
+      "godotName": "get_persistent_uuid",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPersistenceList.GetPersistentUuid(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPersistenceList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentPersistenceList.xml",
+      "sha256": "3c75df37c88c65ad726b34a2bef4fcc7f170e7e7a1484e83e011210e9acecd6b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

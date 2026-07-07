@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectCapture",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectCapture",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectCapture",
+    "documentationPath": "doc/classes/AudioEffectCapture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectcapture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanGetBuffer",
+      "kind": "Method",
+      "signature": "public bool CanGetBuffer(int frames)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if at least [param frames] samples are available to read in the internal ring buffer.",
+      "godotName": "can_get_buffer",
+      "xmlDocId": "M:Godot.AudioEffectCapture.CanGetBuffer(int)",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "ClearBuffer",
+      "kind": "Method",
+      "signature": "public void ClearBuffer()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the internal ring buffer. [b]Note:[/b] Calling this during a capture can cause the loss of samples which causes popping in the playback.",
+      "godotName": "clear_buffer",
+      "xmlDocId": "M:Godot.AudioEffectCapture.ClearBuffer",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "GetBuffer",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetBuffer(int frames)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "frames",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets the next [param frames] samples from the internal ring buffer. Returns a [PackedVector2Array] containing exactly [param frames] samples if available, or an empty [PackedVector2Array] if insufficient data was available. The samples are signed floating-point PCM between [code]-1[/code] and [code]1[/code]. You will have to scale them if you want to use them as 8 or 16-bit integer samples. ([code]v = 0x7fff * samples[0].x[/code])",
+      "godotName": "get_buffer",
+      "xmlDocId": "M:Godot.AudioEffectCapture.GetBuffer(int)",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "GetBufferLengthFrames",
+      "kind": "Method",
+      "signature": "public int GetBufferLengthFrames()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the total size of the internal ring buffer in number of samples.",
+      "godotName": "get_buffer_length_frames",
+      "xmlDocId": "M:Godot.AudioEffectCapture.GetBufferLengthFrames",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "GetDiscardedFrames",
+      "kind": "Method",
+      "signature": "public int GetDiscardedFrames()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of samples discarded from the audio bus due to full buffer.",
+      "godotName": "get_discarded_frames",
+      "xmlDocId": "M:Godot.AudioEffectCapture.GetDiscardedFrames",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "GetFramesAvailable",
+      "kind": "Method",
+      "signature": "public int GetFramesAvailable()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of samples available to read using [method get_buffer].",
+      "godotName": "get_frames_available",
+      "xmlDocId": "M:Godot.AudioEffectCapture.GetFramesAvailable",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "GetPushedFrames",
+      "kind": "Method",
+      "signature": "public int GetPushedFrames()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of samples inserted from the audio bus.",
+      "godotName": "get_pushed_frames",
+      "xmlDocId": "M:Godot.AudioEffectCapture.GetPushedFrames",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    },
+    {
+      "name": "BufferLength",
+      "kind": "Property",
+      "signature": "public float BufferLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Length of the internal ring buffer, in seconds. Higher values keep data around for longer, but require more memory. Value can range from 0.01 to 10. [b]Note:[/b] Setting the buffer length will have no effect if already initialized.",
+      "defaultValue": "0.1",
+      "godotName": "buffer_length",
+      "xmlDocId": "P:Godot.AudioEffectCapture.BufferLength",
+      "sourcePath": "doc/classes/AudioEffectCapture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectCapture.xml",
+      "sha256": "05a4a97e756f68cd52faef86266d8c00a03bf0d8d40d106cb03d5fcc12da1558"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

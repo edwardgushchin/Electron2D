@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorScenePostImport",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorScenePostImport",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorScenePostImport",
+    "documentationPath": "doc/classes/EditorScenePostImport.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorscenepostimport.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_PostImport",
+      "kind": "Method",
+      "signature": "public Object _PostImport(Node scene)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Called after the scene was imported. This method must return the modified version of the scene.",
+      "godotName": "_post_import",
+      "xmlDocId": "M:Godot.EditorScenePostImport._PostImport(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImport.xml"
+    },
+    {
+      "name": "GetSourceFile",
+      "kind": "Method",
+      "signature": "public String GetSourceFile()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the source file path which got imported (e.g. [code]res://scene.dae[/code]).",
+      "godotName": "get_source_file",
+      "xmlDocId": "M:Godot.EditorScenePostImport.GetSourceFile",
+      "sourcePath": "doc/classes/EditorScenePostImport.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_PostImport",
+      "kind": "Method",
+      "signature": "public Object _PostImport(Node scene)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "scene",
+          "type": "Node"
+        }
+      ],
+      "summary": "Called after the scene was imported. This method must return the modified version of the scene.",
+      "godotName": "_post_import",
+      "xmlDocId": "M:Godot.EditorScenePostImport._PostImport(Node)",
+      "sourcePath": "doc/classes/EditorScenePostImport.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorScenePostImport.xml",
+      "sha256": "598b17fef7595466f4e346bda42a5db417eb3ff2e21bd303c2c868e95c335fdb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

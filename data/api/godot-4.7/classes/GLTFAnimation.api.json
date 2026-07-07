@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFAnimation",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFAnimation",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFAnimation",
+    "documentationPath": "modules/gltf/doc_classes/GLTFAnimation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfanimation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAdditionalData",
+      "kind": "Method",
+      "signature": "public Variant GetAdditionalData(StringName extensionName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Gets additional arbitrary data in this [GLTFAnimation] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the return value can be anything you set. If nothing was set, the return value is [code]null[/code].",
+      "godotName": "get_additional_data",
+      "xmlDocId": "M:Godot.GLTFAnimation.GetAdditionalData(StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAnimation.xml"
+    },
+    {
+      "name": "SetAdditionalData",
+      "kind": "Method",
+      "signature": "public void SetAdditionalData(StringName extensionName, Variant additionalData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        },
+        {
+          "name": "additional_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets additional arbitrary data in this [GLTFAnimation] instance. This can be used to keep per-node state data in [GLTFDocumentExtension] classes, which is important because they are stateless. The first argument should be the [GLTFDocumentExtension] name (does not have to match the extension name in the glTF file), and the second argument can be anything you want.",
+      "godotName": "set_additional_data",
+      "xmlDocId": "M:Godot.GLTFAnimation.SetAdditionalData(StringName,Variant)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAnimation.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.GLTFAnimation.Loop",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAnimation.xml"
+    },
+    {
+      "name": "OriginalName",
+      "kind": "Property",
+      "signature": "public String OriginalName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The original name of the animation.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "original_name",
+      "xmlDocId": "P:Godot.GLTFAnimation.OriginalName",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAnimation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFAnimation.xml",
+      "sha256": "79b1f1d46b246db2c4a66e5b43189f14ea49835a070cd47b1a574747ebbbabec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

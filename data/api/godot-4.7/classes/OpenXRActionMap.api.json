@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRActionMap",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRActionMap",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRActionMap",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRActionMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxractionmap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddActionSet",
+      "kind": "Method",
+      "signature": "public void AddActionSet(OpenXRActionSet actionSet)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_set",
+          "type": "OpenXRActionSet"
+        }
+      ],
+      "summary": "Add an action set.",
+      "godotName": "add_action_set",
+      "xmlDocId": "M:Godot.OpenXRActionMap.AddActionSet(OpenXRActionSet)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "AddInteractionProfile",
+      "kind": "Method",
+      "signature": "public void AddInteractionProfile(OpenXRInteractionProfile interactionProfile)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interaction_profile",
+          "type": "OpenXRInteractionProfile"
+        }
+      ],
+      "summary": "Add an interaction profile.",
+      "godotName": "add_interaction_profile",
+      "xmlDocId": "M:Godot.OpenXRActionMap.AddInteractionProfile(OpenXRInteractionProfile)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "CreateDefaultActionSets",
+      "kind": "Method",
+      "signature": "public void CreateDefaultActionSets()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Setup this action set with our default actions.",
+      "godotName": "create_default_action_sets",
+      "xmlDocId": "M:Godot.OpenXRActionMap.CreateDefaultActionSets",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "FindActionSet",
+      "kind": "Method",
+      "signature": "public OpenXRActionSet FindActionSet(String name)",
+      "returnType": "OpenXRActionSet",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Retrieve an action set by name.",
+      "godotName": "find_action_set",
+      "xmlDocId": "M:Godot.OpenXRActionMap.FindActionSet(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "FindInteractionProfile",
+      "kind": "Method",
+      "signature": "public OpenXRInteractionProfile FindInteractionProfile(String name)",
+      "returnType": "OpenXRInteractionProfile",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Find an interaction profile by its name (path).",
+      "godotName": "find_interaction_profile",
+      "xmlDocId": "M:Godot.OpenXRActionMap.FindInteractionProfile(String)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "GetActionSet",
+      "kind": "Method",
+      "signature": "public OpenXRActionSet GetActionSet(int idx)",
+      "returnType": "OpenXRActionSet",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Retrieve the action set at this index.",
+      "godotName": "get_action_set",
+      "xmlDocId": "M:Godot.OpenXRActionMap.GetActionSet(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "GetActionSetCount",
+      "kind": "Method",
+      "signature": "public int GetActionSetCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Retrieve the number of actions sets in our action map.",
+      "godotName": "get_action_set_count",
+      "xmlDocId": "M:Godot.OpenXRActionMap.GetActionSetCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "GetInteractionProfile",
+      "kind": "Method",
+      "signature": "public OpenXRInteractionProfile GetInteractionProfile(int idx)",
+      "returnType": "OpenXRInteractionProfile",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Get the interaction profile at this index.",
+      "godotName": "get_interaction_profile",
+      "xmlDocId": "M:Godot.OpenXRActionMap.GetInteractionProfile(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "GetInteractionProfileCount",
+      "kind": "Method",
+      "signature": "public int GetInteractionProfileCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Retrieve the number of interaction profiles in our action map.",
+      "godotName": "get_interaction_profile_count",
+      "xmlDocId": "M:Godot.OpenXRActionMap.GetInteractionProfileCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "RemoveActionSet",
+      "kind": "Method",
+      "signature": "public void RemoveActionSet(OpenXRActionSet actionSet)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_set",
+          "type": "OpenXRActionSet"
+        }
+      ],
+      "summary": "Remove an action set.",
+      "godotName": "remove_action_set",
+      "xmlDocId": "M:Godot.OpenXRActionMap.RemoveActionSet(OpenXRActionSet)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "RemoveInteractionProfile",
+      "kind": "Method",
+      "signature": "public void RemoveInteractionProfile(OpenXRInteractionProfile interactionProfile)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interaction_profile",
+          "type": "OpenXRInteractionProfile"
+        }
+      ],
+      "summary": "Remove an interaction profile.",
+      "godotName": "remove_interaction_profile",
+      "xmlDocId": "M:Godot.OpenXRActionMap.RemoveInteractionProfile(OpenXRInteractionProfile)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "ActionSets",
+      "kind": "Property",
+      "signature": "public Array ActionSets { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Collection of [OpenXRActionSet]s that are part of this action map.",
+      "defaultValue": "[]",
+      "godotName": "action_sets",
+      "xmlDocId": "P:Godot.OpenXRActionMap.ActionSets",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    },
+    {
+      "name": "InteractionProfiles",
+      "kind": "Property",
+      "signature": "public Array InteractionProfiles { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Collection of [OpenXRInteractionProfile]s that are part of this action map.",
+      "defaultValue": "[]",
+      "godotName": "interaction_profiles",
+      "xmlDocId": "P:Godot.OpenXRActionMap.InteractionProfiles",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRActionMap.xml",
+      "sha256": "c9b453f9a6f38c8c1c77c23998367d6ef0ef0195f5a3a1481805999cdd0c4938"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,692 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CopyTransformModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CopyTransformModifier3D",
+    "kind": "class",
+    "baseType": "BoneConstraint3D",
+    "interfaces": [],
+    "godotReference": "CopyTransformModifier3D",
+    "documentationPath": "doc/classes/CopyTransformModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_copytransformmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAxisFlags",
+      "kind": "Method",
+      "signature": "public int GetAxisFlags(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the axis flags of the setting at [param index].",
+      "godotName": "get_axis_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.GetAxisFlags(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "GetCopyFlags",
+      "kind": "Method",
+      "signature": "public int GetCopyFlags(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the copy flags of the setting at [param index].",
+      "godotName": "get_copy_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.GetCopyFlags(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "GetInvertFlags",
+      "kind": "Method",
+      "signature": "public int GetInvertFlags(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the invert flags of the setting at [param index].",
+      "godotName": "get_invert_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.GetInvertFlags(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAdditive",
+      "kind": "Method",
+      "signature": "public bool IsAdditive(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the additive option is enabled in the setting at [param index].",
+      "godotName": "is_additive",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAdditive(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisXEnabled",
+      "kind": "Method",
+      "signature": "public bool IsAxisXEnabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the enable flags has the flag for the X-axis in the setting at [param index]. See also [method set_axis_flags].",
+      "godotName": "is_axis_x_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisXEnabled(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisXInverted",
+      "kind": "Method",
+      "signature": "public bool IsAxisXInverted(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the invert flags has the flag for the X-axis in the setting at [param index]. See also [method set_invert_flags].",
+      "godotName": "is_axis_x_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisXInverted(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisYEnabled",
+      "kind": "Method",
+      "signature": "public bool IsAxisYEnabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the enable flags has the flag for the Y-axis in the setting at [param index]. See also [method set_axis_flags].",
+      "godotName": "is_axis_y_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisYEnabled(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisYInverted",
+      "kind": "Method",
+      "signature": "public bool IsAxisYInverted(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the invert flags has the flag for the Y-axis in the setting at [param index]. See also [method set_invert_flags].",
+      "godotName": "is_axis_y_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisYInverted(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisZEnabled",
+      "kind": "Method",
+      "signature": "public bool IsAxisZEnabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the enable flags has the flag for the Z-axis in the setting at [param index]. See also [method set_axis_flags].",
+      "godotName": "is_axis_z_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisZEnabled(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsAxisZInverted",
+      "kind": "Method",
+      "signature": "public bool IsAxisZInverted(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the invert flags has the flag for the Z-axis in the setting at [param index]. See also [method set_invert_flags].",
+      "godotName": "is_axis_z_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsAxisZInverted(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsPositionCopying",
+      "kind": "Method",
+      "signature": "public bool IsPositionCopying(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the copy flags has the flag for the position in the setting at [param index]. See also [method set_copy_flags].",
+      "godotName": "is_position_copying",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsPositionCopying(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsRelative",
+      "kind": "Method",
+      "signature": "public bool IsRelative(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the relative option is enabled in the setting at [param index].",
+      "godotName": "is_relative",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsRelative(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsRotationCopying",
+      "kind": "Method",
+      "signature": "public bool IsRotationCopying(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the copy flags has the flag for the rotation in the setting at [param index]. See also [method set_copy_flags].",
+      "godotName": "is_rotation_copying",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsRotationCopying(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "IsScaleCopying",
+      "kind": "Method",
+      "signature": "public bool IsScaleCopying(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the copy flags has the flag for the scale in the setting at [param index]. See also [method set_copy_flags].",
+      "godotName": "is_scale_copying",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.IsScaleCopying(int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAdditive",
+      "kind": "Method",
+      "signature": "public void SetAdditive(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets additive option in the setting at [param index] to [param enabled]. This mainly affects the process of applying transform to the [method BoneConstraint3D.set_apply_bone]. If sets [param enabled] to [code]true[/code], the processed transform is added to the pose of the current apply bone. If sets [param enabled] to [code]false[/code], the pose of the current apply bone is replaced with the processed transform. However, if set [method set_relative] to [code]true[/code], the transform is relative to rest.",
+      "godotName": "set_additive",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAdditive(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisFlags",
+      "kind": "Method",
+      "signature": "public void SetAxisFlags(int index, int axisFlags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis_flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the flags to copy axes. If the flag is valid, the axis is copied.",
+      "godotName": "set_axis_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisFlags(int,int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisXEnabled",
+      "kind": "Method",
+      "signature": "public void SetAxisXEnabled(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the X-axis will be copied.",
+      "godotName": "set_axis_x_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisXEnabled(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisXInverted",
+      "kind": "Method",
+      "signature": "public void SetAxisXInverted(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the X-axis will be inverted.",
+      "godotName": "set_axis_x_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisXInverted(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisYEnabled",
+      "kind": "Method",
+      "signature": "public void SetAxisYEnabled(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the Y-axis will be copied.",
+      "godotName": "set_axis_y_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisYEnabled(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisYInverted",
+      "kind": "Method",
+      "signature": "public void SetAxisYInverted(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the Y-axis will be inverted.",
+      "godotName": "set_axis_y_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisYInverted(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisZEnabled",
+      "kind": "Method",
+      "signature": "public void SetAxisZEnabled(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the Z-axis will be copied.",
+      "godotName": "set_axis_z_enabled",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisZEnabled(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetAxisZInverted",
+      "kind": "Method",
+      "signature": "public void SetAxisZInverted(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the Z-axis will be inverted.",
+      "godotName": "set_axis_z_inverted",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetAxisZInverted(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetCopyFlags",
+      "kind": "Method",
+      "signature": "public void SetCopyFlags(int index, int copyFlags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "copy_flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the flags to process the transform operations. If the flag is valid, the transform operation is processed. [b]Note:[/b] If the rotation is valid for only one axis, it respects the roll of the valid axis. If the rotation is valid for two axes, it discards the roll of the invalid axis.",
+      "godotName": "set_copy_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetCopyFlags(int,int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetCopyPosition",
+      "kind": "Method",
+      "signature": "public void SetCopyPosition(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the position will be copied.",
+      "godotName": "set_copy_position",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetCopyPosition(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetCopyRotation",
+      "kind": "Method",
+      "signature": "public void SetCopyRotation(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the rotation will be copied.",
+      "godotName": "set_copy_rotation",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetCopyRotation(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetCopyScale",
+      "kind": "Method",
+      "signature": "public void SetCopyScale(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], the scale will be copied.",
+      "godotName": "set_copy_scale",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetCopyScale(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetInvertFlags",
+      "kind": "Method",
+      "signature": "public void SetInvertFlags(int index, int axisFlags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis_flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the flags to inverte axes. If the flag is valid, the axis is copied. [b]Note:[/b] An inverted scale means an inverse number, not a negative scale. For example, inverting [code]2.0[/code] means [code]0.5[/code]. [b]Note:[/b] An inverted rotation flips the elements of the quaternion. For example, a two-axis inversion will flip the roll of each axis, and a three-axis inversion will flip the final orientation. However, be aware that flipping only one axis may cause unintended rotation by the unflipped axes, due to the characteristics of the quaternion.",
+      "godotName": "set_invert_flags",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetInvertFlags(int,int)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SetRelative",
+      "kind": "Method",
+      "signature": "public void SetRelative(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets relative option in the setting at [param index] to [param enabled]. If sets [param enabled] to [code]true[/code], the extracted and applying transform is relative to the rest. If sets [param enabled] to [code]false[/code], the extracted transform is absolute.",
+      "godotName": "set_relative",
+      "xmlDocId": "M:Godot.CopyTransformModifier3D.SetRelative(int,bool)",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings in the modifier.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.CopyTransformModifier3D.SettingCount",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AxisFlag",
+      "values": [
+        {
+          "name": "AXIS_FLAG_ALL",
+          "value": "7",
+          "enum": "AxisFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to process the all axes.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "AXIS_FLAG_X",
+          "value": "1",
+          "enum": "AxisFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to process the X-axis.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "AXIS_FLAG_Y",
+          "value": "2",
+          "enum": "AxisFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to process the Y-axis.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "AXIS_FLAG_Z",
+          "value": "4",
+          "enum": "AxisFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to process the Z-axis.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "TransformFlag",
+      "values": [
+        {
+          "name": "TRANSFORM_FLAG_ALL",
+          "value": "7",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to copy the position/rotation/scale.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_POSITION",
+          "value": "1",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to copy the position.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_ROTATION",
+          "value": "2",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to copy the rotation.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        },
+        {
+          "name": "TRANSFORM_FLAG_SCALE",
+          "value": "4",
+          "enum": "TransformFlag",
+          "kind": "EnumValue",
+          "summary": "If set, allows to copy the scale.",
+          "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TRANSFORM_FLAG_POSITION",
+      "value": "1",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to copy the position.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_ROTATION",
+      "value": "2",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to copy the rotation.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_SCALE",
+      "value": "4",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to copy the scale.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "TRANSFORM_FLAG_ALL",
+      "value": "7",
+      "enum": "TransformFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to copy the position/rotation/scale.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "AXIS_FLAG_X",
+      "value": "1",
+      "enum": "AxisFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to process the X-axis.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "AXIS_FLAG_Y",
+      "value": "2",
+      "enum": "AxisFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to process the Y-axis.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "AXIS_FLAG_Z",
+      "value": "4",
+      "enum": "AxisFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to process the Z-axis.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    },
+    {
+      "name": "AXIS_FLAG_ALL",
+      "value": "7",
+      "enum": "AxisFlag",
+      "kind": "EnumValue",
+      "summary": "If set, allows to process the all axes.",
+      "sourcePath": "doc/classes/CopyTransformModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CopyTransformModifier3D.xml",
+      "sha256": "4d0f88cc8450dd19a501b64a133a3e1da48967538ac105c7632ff1b3c221ae2e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

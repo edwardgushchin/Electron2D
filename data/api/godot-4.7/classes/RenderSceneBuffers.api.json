@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneBuffers",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneBuffers",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RenderSceneBuffers",
+    "documentationPath": "doc/classes/RenderSceneBuffers.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenebuffers.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Configure",
+      "kind": "Method",
+      "signature": "public void Configure(RenderSceneBuffersConfiguration config)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "config",
+          "type": "RenderSceneBuffersConfiguration"
+        }
+      ],
+      "summary": "This method is called by the rendering server when the associated viewport\u0027s configuration is changed. It will discard the old buffers and recreate the internal buffers used.",
+      "godotName": "configure",
+      "xmlDocId": "M:Godot.RenderSceneBuffers.Configure(RenderSceneBuffersConfiguration)",
+      "sourcePath": "doc/classes/RenderSceneBuffers.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneBuffers.xml",
+      "sha256": "331ccbaf9ce0be229a766ed18d7eeeb10fb6c83936c034c71ddc6a372ae22d00"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

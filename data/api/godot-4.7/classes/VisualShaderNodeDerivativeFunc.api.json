@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeDerivativeFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeDerivativeFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeDerivativeFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodederivativefunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A derivative function type.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeDerivativeFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A type of operands and returned value.",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeDerivativeFunc.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "Precision",
+      "kind": "Property",
+      "signature": "public int Precision { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the level of precision to use for the derivative function. When using the Compatibility renderer, this setting has no effect.",
+      "defaultValue": "0",
+      "godotName": "precision",
+      "xmlDocId": "P:Godot.VisualShaderNodeDerivativeFunc.Precision",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_MAX",
+          "value": "3",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "FUNC_SUM",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Sum of absolute derivative in [code]x[/code] and [code]y[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "FUNC_X",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Derivative in [code]x[/code] using local differencing.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "FUNC_Y",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Derivative in [code]y[/code] using local differencing.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        }
+      ]
+    },
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "OP_TYPE_SCALAR",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        }
+      ]
+    },
+    {
+      "name": "Precision",
+      "values": [
+        {
+          "name": "PRECISION_COARSE",
+          "value": "1",
+          "enum": "Precision",
+          "kind": "EnumValue",
+          "summary": "The derivative will be calculated using the current fragment\u0027s neighbors (which may not include the current fragment). This tends to be faster than using [constant PRECISION_FINE], but may not be suitable when more precision is needed. This is equivalent to using [code]dFdxCoarse()[/code] or [code]dFdyCoarse()[/code] in text shaders.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "PRECISION_FINE",
+          "value": "2",
+          "enum": "Precision",
+          "kind": "EnumValue",
+          "summary": "The derivative will be calculated using the current fragment and its immediate neighbors. This tends to be slower than using [constant PRECISION_COARSE], but may be necessary when more precision is needed. This is equivalent to using [code]dFdxFine()[/code] or [code]dFdyFine()[/code] in text shaders.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "PRECISION_MAX",
+          "value": "3",
+          "enum": "Precision",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Precision] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        },
+        {
+          "name": "PRECISION_NONE",
+          "value": "0",
+          "enum": "Precision",
+          "kind": "EnumValue",
+          "summary": "No precision is specified, the GPU driver is allowed to use whatever level of precision it chooses. This is the default option and is equivalent to using [code]dFdx()[/code] or [code]dFdy()[/code] in text shaders.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_SCALAR",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "FUNC_SUM",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Sum of absolute derivative in [code]x[/code] and [code]y[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "FUNC_X",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Derivative in [code]x[/code] using local differencing.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "FUNC_Y",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Derivative in [code]y[/code] using local differencing.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "3",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "PRECISION_NONE",
+      "value": "0",
+      "enum": "Precision",
+      "kind": "EnumValue",
+      "summary": "No precision is specified, the GPU driver is allowed to use whatever level of precision it chooses. This is the default option and is equivalent to using [code]dFdx()[/code] or [code]dFdy()[/code] in text shaders.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "PRECISION_COARSE",
+      "value": "1",
+      "enum": "Precision",
+      "kind": "EnumValue",
+      "summary": "The derivative will be calculated using the current fragment\u0027s neighbors (which may not include the current fragment). This tends to be faster than using [constant PRECISION_FINE], but may not be suitable when more precision is needed. This is equivalent to using [code]dFdxCoarse()[/code] or [code]dFdyCoarse()[/code] in text shaders.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "PRECISION_FINE",
+      "value": "2",
+      "enum": "Precision",
+      "kind": "EnumValue",
+      "summary": "The derivative will be calculated using the current fragment and its immediate neighbors. This tends to be slower than using [constant PRECISION_COARSE], but may be necessary when more precision is needed. This is equivalent to using [code]dFdxFine()[/code] or [code]dFdyFine()[/code] in text shaders.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    },
+    {
+      "name": "PRECISION_MAX",
+      "value": "3",
+      "enum": "Precision",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Precision] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeDerivativeFunc.xml",
+      "sha256": "877b0b294562344280f678a1cf97e1592e5e0c2f9e885b742e1e9bdd1f3d9184"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

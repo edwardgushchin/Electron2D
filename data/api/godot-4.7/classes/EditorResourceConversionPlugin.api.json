@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorResourceConversionPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorResourceConversionPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorResourceConversionPlugin",
+    "documentationPath": "doc/classes/EditorResourceConversionPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorresourceconversionplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Convert",
+      "kind": "Method",
+      "signature": "public Resource _Convert(Resource resource)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Takes an input [Resource] and converts it to the type given in [method _converts_to]. The returned [Resource] is the result of the conversion, and the input [Resource] remains unchanged.",
+      "godotName": "_convert",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._Convert(Resource)",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    },
+    {
+      "name": "_ConvertsTo",
+      "kind": "Method",
+      "signature": "public String _ConvertsTo()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the class name of the target type of [Resource] that this plugin converts source resources to.",
+      "godotName": "_converts_to",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._ConvertsTo",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    },
+    {
+      "name": "_Handles",
+      "kind": "Method",
+      "signature": "public bool _Handles(Resource resource)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Called to determine whether a particular [Resource] can be converted to the target resource type by this plugin.",
+      "godotName": "_handles",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._Handles(Resource)",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Convert",
+      "kind": "Method",
+      "signature": "public Resource _Convert(Resource resource)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Takes an input [Resource] and converts it to the type given in [method _converts_to]. The returned [Resource] is the result of the conversion, and the input [Resource] remains unchanged.",
+      "godotName": "_convert",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._Convert(Resource)",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    },
+    {
+      "name": "_ConvertsTo",
+      "kind": "Method",
+      "signature": "public String _ConvertsTo()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the class name of the target type of [Resource] that this plugin converts source resources to.",
+      "godotName": "_converts_to",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._ConvertsTo",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    },
+    {
+      "name": "_Handles",
+      "kind": "Method",
+      "signature": "public bool _Handles(Resource resource)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Called to determine whether a particular [Resource] can be converted to the target resource type by this plugin.",
+      "godotName": "_handles",
+      "xmlDocId": "M:Godot.EditorResourceConversionPlugin._Handles(Resource)",
+      "sourcePath": "doc/classes/EditorResourceConversionPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorResourceConversionPlugin.xml",
+      "sha256": "f6fc32e6ba4b5e0dffe57570555d1c6cab2628f1fd34912e347e13cb504606fe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

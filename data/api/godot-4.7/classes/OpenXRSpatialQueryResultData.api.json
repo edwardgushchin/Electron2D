@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialQueryResultData",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialQueryResultData",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialQueryResultData",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialQueryResultData.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialqueryresultdata.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCapacity",
+      "kind": "Method",
+      "signature": "public int GetCapacity()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of entities that were retrieved.",
+      "godotName": "get_capacity",
+      "xmlDocId": "M:Godot.OpenXRSpatialQueryResultData.GetCapacity",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialQueryResultData.xml"
+    },
+    {
+      "name": "GetEntityId",
+      "kind": "Method",
+      "signature": "public int GetEntityId(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the entity id ([code]XrSpatialEntityIdEXT[/code]) for the entity at this [param index].",
+      "godotName": "get_entity_id",
+      "xmlDocId": "M:Godot.OpenXRSpatialQueryResultData.GetEntityId(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialQueryResultData.xml"
+    },
+    {
+      "name": "GetEntityState",
+      "kind": "Method",
+      "signature": "public int GetEntityState(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the entity state for the entity at this [param index].",
+      "godotName": "get_entity_state",
+      "xmlDocId": "M:Godot.OpenXRSpatialQueryResultData.GetEntityState(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialQueryResultData.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialQueryResultData.xml",
+      "sha256": "9eafecababa17626a8eb2245c5ebf50ee8af691b1f62013ecb238cec2c61df44"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

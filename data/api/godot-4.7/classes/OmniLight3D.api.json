@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OmniLight3D",
+    "namespace": "Godot",
+    "fullName": "Godot.OmniLight3D",
+    "kind": "class",
+    "baseType": "Light3D",
+    "interfaces": [],
+    "godotReference": "OmniLight3D",
+    "documentationPath": "doc/classes/OmniLight3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_omnilight3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LightSpecular",
+      "kind": "Property",
+      "signature": "public float LightSpecular { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.5",
+      "godotName": "light_specular",
+      "xmlDocId": "P:Godot.OmniLight3D.LightSpecular",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    },
+    {
+      "name": "OmniAttenuation",
+      "kind": "Property",
+      "signature": "public float OmniAttenuation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Controls the distance attenuation function for omnilights. A value of [code]0.0[/code] will maintain a constant brightness through most of the range, but smoothly attenuate the light at the edge of the range. Use a value of [code]2.0[/code] for physically accurate lights as it results in the proper inverse square attenutation. [b]Note:[/b] Setting attenuation to [code]2.0[/code] or higher may result in distant objects receiving minimal light, even within range. For example, with a range of [code]4096[/code], an object at [code]100[/code] units is attenuated by a factor of [code]0.0001[/code]. With a default brightness of [code]1[/code], the light would not be visible at that distance. [b]Note:[/b] Using negative or values higher than [code]10.0[/code] may lead to unexpected results.",
+      "defaultValue": "1.0",
+      "godotName": "omni_attenuation",
+      "xmlDocId": "P:Godot.OmniLight3D.OmniAttenuation",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    },
+    {
+      "name": "OmniRange",
+      "kind": "Property",
+      "signature": "public float OmniRange { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The light\u0027s radius. Note that the effectively lit area may appear to be smaller depending on the [member omni_attenuation] in use. No matter the [member omni_attenuation] in use, the light will never reach anything outside this radius. [b]Note:[/b] [member omni_range] is not affected by [member Node3D.scale] (the light\u0027s scale or its parent\u0027s scale).",
+      "defaultValue": "5.0",
+      "godotName": "omni_range",
+      "xmlDocId": "P:Godot.OmniLight3D.OmniRange",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    },
+    {
+      "name": "OmniShadowMode",
+      "kind": "Property",
+      "signature": "public int OmniShadowMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "omni_shadow_mode",
+      "xmlDocId": "P:Godot.OmniLight3D.OmniShadowMode",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    },
+    {
+      "name": "ShadowNormalBias",
+      "kind": "Property",
+      "signature": "public float ShadowNormalBias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "shadow_normal_bias",
+      "xmlDocId": "P:Godot.OmniLight3D.ShadowNormalBias",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ShadowMode",
+      "values": [
+        {
+          "name": "SHADOW_CUBE",
+          "value": "1",
+          "enum": "ShadowMode",
+          "kind": "EnumValue",
+          "summary": "Shadows are rendered to a cubemap. Slower than [constant SHADOW_DUAL_PARABOLOID], but higher-quality.",
+          "sourcePath": "doc/classes/OmniLight3D.xml"
+        },
+        {
+          "name": "SHADOW_DUAL_PARABOLOID",
+          "value": "0",
+          "enum": "ShadowMode",
+          "kind": "EnumValue",
+          "summary": "Shadows are rendered to a dual-paraboloid texture. Faster than [constant SHADOW_CUBE], but lower-quality.",
+          "sourcePath": "doc/classes/OmniLight3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SHADOW_DUAL_PARABOLOID",
+      "value": "0",
+      "enum": "ShadowMode",
+      "kind": "EnumValue",
+      "summary": "Shadows are rendered to a dual-paraboloid texture. Faster than [constant SHADOW_CUBE], but lower-quality.",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    },
+    {
+      "name": "SHADOW_CUBE",
+      "value": "1",
+      "enum": "ShadowMode",
+      "kind": "EnumValue",
+      "summary": "Shadows are rendered to a cubemap. Slower than [constant SHADOW_DUAL_PARABOLOID], but higher-quality.",
+      "sourcePath": "doc/classes/OmniLight3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OmniLight3D.xml",
+      "sha256": "0b381c83865d802a95cf6b31d7e5b0cf89228c04c01836c7927c4da8a7786969"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

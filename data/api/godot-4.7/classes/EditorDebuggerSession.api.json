@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorDebuggerSession",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorDebuggerSession",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorDebuggerSession",
+    "documentationPath": "doc/classes/EditorDebuggerSession.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editordebuggersession.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddSessionTab",
+      "kind": "Method",
+      "signature": "public void AddSessionTab(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Adds the given [param control] to the debug session UI in the debugger bottom panel. The [param control]\u0027s node name will be used as the tab title.",
+      "godotName": "add_session_tab",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.AddSessionTab(Control)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "IsActive",
+      "kind": "Method",
+      "signature": "public bool IsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the debug session is currently attached to a remote instance.",
+      "godotName": "is_active",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.IsActive",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "IsBreaked",
+      "kind": "Method",
+      "signature": "public bool IsBreaked()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the attached remote instance is currently in the debug loop.",
+      "godotName": "is_breaked",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.IsBreaked",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "IsDebuggable",
+      "kind": "Method",
+      "signature": "public bool IsDebuggable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the attached remote instance can be debugged.",
+      "godotName": "is_debuggable",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.IsDebuggable",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "RemoveSessionTab",
+      "kind": "Method",
+      "signature": "public void RemoveSessionTab(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Removes the given [param control] from the debug session UI in the debugger bottom panel.",
+      "godotName": "remove_session_tab",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.RemoveSessionTab(Control)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "SendMessage",
+      "kind": "Method",
+      "signature": "public void SendMessage(String message, Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        },
+        {
+          "name": "data",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Sends the given [param message] to the attached remote instance, optionally passing additionally [param data]. See [EngineDebugger] for how to retrieve those messages.",
+      "godotName": "send_message",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.SendMessage(String,Array)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "SetBreakpoint",
+      "kind": "Method",
+      "signature": "public void SetBreakpoint(String path, int line, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables a specific breakpoint based on [param enabled], updating the Editor Breakpoint Panel accordingly.",
+      "godotName": "set_breakpoint",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.SetBreakpoint(String,int,bool)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "ToggleProfiler",
+      "kind": "Method",
+      "signature": "public void ToggleProfiler(String profiler, bool enable, Array data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "profiler",
+          "type": "String"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "data",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Toggle the given [param profiler] on the attached remote instance, optionally passing additionally [param data]. See [EngineProfiler] for more details.",
+      "godotName": "toggle_profiler",
+      "xmlDocId": "M:Godot.EditorDebuggerSession.ToggleProfiler(String,bool,Array)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Breaked",
+      "kind": "Signal",
+      "signature": "public event BreakedHandler Breaked",
+      "parameters": [
+        {
+          "name": "can_debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the attached remote instance enters a break state. If [param can_debug] is [code]true[/code], the remote instance will enter the debug loop.",
+      "godotName": "breaked",
+      "xmlDocId": "E:Godot.EditorDebuggerSession.Breaked(bool)",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "Continued",
+      "kind": "Signal",
+      "signature": "public event ContinuedHandler Continued",
+      "parameters": [],
+      "summary": "Emitted when the attached remote instance exits a break state.",
+      "godotName": "continued",
+      "xmlDocId": "E:Godot.EditorDebuggerSession.Continued",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "Started",
+      "kind": "Signal",
+      "signature": "public event StartedHandler Started",
+      "parameters": [],
+      "summary": "Emitted when a remote instance is attached to this session (i.e. the session becomes active).",
+      "godotName": "started",
+      "xmlDocId": "E:Godot.EditorDebuggerSession.Started",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    },
+    {
+      "name": "Stopped",
+      "kind": "Signal",
+      "signature": "public event StoppedHandler Stopped",
+      "parameters": [],
+      "summary": "Emitted when a remote instance is detached from this session (i.e. the session becomes inactive).",
+      "godotName": "stopped",
+      "xmlDocId": "E:Godot.EditorDebuggerSession.Stopped",
+      "sourcePath": "doc/classes/EditorDebuggerSession.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorDebuggerSession.xml",
+      "sha256": "5d590710bb9fcadf46c090c75a93e0ec6a1c057d3a984b5b2b80ea3ce79d7d9d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

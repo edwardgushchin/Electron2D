@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMouseButton",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventMouseButton",
+    "kind": "class",
+    "baseType": "InputEventMouse",
+    "interfaces": [],
+    "godotReference": "InputEventMouseButton",
+    "documentationPath": "doc/classes/InputEventMouseButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventmousebutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ButtonIndex",
+      "kind": "Property",
+      "signature": "public int ButtonIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The mouse button identifier, one of the [enum MouseButton] button or button wheel constants.",
+      "defaultValue": "0",
+      "godotName": "button_index",
+      "xmlDocId": "P:Godot.InputEventMouseButton.ButtonIndex",
+      "sourcePath": "doc/classes/InputEventMouseButton.xml"
+    },
+    {
+      "name": "Canceled",
+      "kind": "Property",
+      "signature": "public bool Canceled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the mouse button event has been canceled.",
+      "defaultValue": "false",
+      "godotName": "canceled",
+      "xmlDocId": "P:Godot.InputEventMouseButton.Canceled",
+      "sourcePath": "doc/classes/InputEventMouseButton.xml"
+    },
+    {
+      "name": "DoubleClick",
+      "kind": "Property",
+      "signature": "public bool DoubleClick { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the mouse button\u0027s state is a double-click.",
+      "defaultValue": "false",
+      "godotName": "double_click",
+      "xmlDocId": "P:Godot.InputEventMouseButton.DoubleClick",
+      "sourcePath": "doc/classes/InputEventMouseButton.xml"
+    },
+    {
+      "name": "Factor",
+      "kind": "Property",
+      "signature": "public float Factor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount (or delta) of the event. When used for high-precision scroll events, this indicates the scroll amount (vertical or horizontal). This is only supported on some platforms; the reported sensitivity varies depending on the platform. May be [code]0[/code] if not supported.",
+      "defaultValue": "1.0",
+      "godotName": "factor",
+      "xmlDocId": "P:Godot.InputEventMouseButton.Factor",
+      "sourcePath": "doc/classes/InputEventMouseButton.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public bool Pressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the mouse button\u0027s state is pressed. If [code]false[/code], the mouse button\u0027s state is released.",
+      "defaultValue": "false",
+      "godotName": "pressed",
+      "xmlDocId": "P:Godot.InputEventMouseButton.Pressed",
+      "sourcePath": "doc/classes/InputEventMouseButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventMouseButton.xml",
+      "sha256": "0057de54aeddaa1936af4970c89c17c2899e26ae051e1bfa7ea85982e5cf9637"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

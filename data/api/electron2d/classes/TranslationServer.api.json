@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TranslationServer",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TranslationServer",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "TranslationServer",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddTranslation",
+      "kind": "Method",
+      "signature": "public static System.Void AddTranslation(Electron2D.Translation translation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Electron2D.Translation"
+        }
+      ],
+      "summary": "Registers a translation resource for lookup.",
+      "xmlDocId": "M:Electron2D.TranslationServer.AddTranslation(Electron2D.Translation)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public static System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all registered translation resources.",
+      "xmlDocId": "M:Electron2D.TranslationServer.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLoadedLocales",
+      "kind": "Method",
+      "signature": "public static System.String[] GetLoadedLocales()",
+      "returnType": "System.String[]",
+      "parameters": [],
+      "summary": "Gets the locales currently provided by registered translations.",
+      "xmlDocId": "M:Electron2D.TranslationServer.GetLoadedLocales",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetLocale",
+      "kind": "Method",
+      "signature": "public static System.String GetLocale()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets the current locale.",
+      "xmlDocId": "M:Electron2D.TranslationServer.GetLocale",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveTranslation",
+      "kind": "Method",
+      "signature": "public static System.Void RemoveTranslation(Electron2D.Translation translation)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Electron2D.Translation"
+        }
+      ],
+      "summary": "Removes a translation resource from lookup.",
+      "xmlDocId": "M:Electron2D.TranslationServer.RemoveTranslation(Electron2D.Translation)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetLocale",
+      "kind": "Method",
+      "signature": "public static System.Void SetLocale(System.String locale)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets the current locale used for translation lookup.",
+      "xmlDocId": "M:Electron2D.TranslationServer.SetLocale(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Translate",
+      "kind": "Method",
+      "signature": "public static System.String Translate(System.String message, System.String context)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "System.String"
+        },
+        {
+          "name": "context",
+          "type": "System.String",
+          "defaultValue": ""
+        }
+      ],
+      "summary": "Translates a message for the current locale.",
+      "xmlDocId": "M:Electron2D.TranslationServer.Translate(System.String,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGSphere3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGSphere3D",
+    "kind": "class",
+    "baseType": "CSGPrimitive3D",
+    "interfaces": [],
+    "godotReference": "CSGSphere3D",
+    "documentationPath": "modules/csg/doc_classes/CSGSphere3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgsphere3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The material used to render the sphere.",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CSGSphere3D.Material",
+      "sourcePath": "modules/csg/doc_classes/CSGSphere3D.xml"
+    },
+    {
+      "name": "RadialSegments",
+      "kind": "Property",
+      "signature": "public int RadialSegments { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of vertical slices for the sphere.",
+      "defaultValue": "12",
+      "godotName": "radial_segments",
+      "xmlDocId": "P:Godot.CSGSphere3D.RadialSegments",
+      "sourcePath": "modules/csg/doc_classes/CSGSphere3D.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Radius of the sphere.",
+      "defaultValue": "0.5",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.CSGSphere3D.Radius",
+      "sourcePath": "modules/csg/doc_classes/CSGSphere3D.xml"
+    },
+    {
+      "name": "Rings",
+      "kind": "Property",
+      "signature": "public int Rings { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of horizontal slices for the sphere.",
+      "defaultValue": "6",
+      "godotName": "rings",
+      "xmlDocId": "P:Godot.CSGSphere3D.Rings",
+      "sourcePath": "modules/csg/doc_classes/CSGSphere3D.xml"
+    },
+    {
+      "name": "SmoothFaces",
+      "kind": "Property",
+      "signature": "public bool SmoothFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] the normals of the sphere are set to give a smooth effect making the sphere seem rounded. If [code]false[/code] the sphere will have a flat shaded look.",
+      "defaultValue": "true",
+      "godotName": "smooth_faces",
+      "xmlDocId": "P:Godot.CSGSphere3D.SmoothFaces",
+      "sourcePath": "modules/csg/doc_classes/CSGSphere3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGSphere3D.xml",
+      "sha256": "9a4471b262826ddc20134a1c823068361a7645e486458cfddb3923143b3fe8d9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

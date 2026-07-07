@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeUIntOp",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeUIntOp",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeUIntOp",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeuintop.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Operator",
+      "kind": "Property",
+      "signature": "public int Operator { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "An operator to be applied to the inputs.",
+      "defaultValue": "0",
+      "godotName": "operator",
+      "xmlDocId": "P:Godot.VisualShaderNodeUIntOp.Operator",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Operator",
+      "values": [
+        {
+          "name": "OP_ADD",
+          "value": "0",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Sums two numbers using [code]a \u002B b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_BITWISE_AND",
+          "value": "7",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise [code]AND[/code] operation on the integer. Translates to [code]a \u0026 b[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_BITWISE_LEFT_SHIFT",
+          "value": "10",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise left shift operation on the integer. Translates to [code]a \u003C\u003C b[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_BITWISE_OR",
+          "value": "8",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise [code]OR[/code] operation for two integers. Translates to [code]a | b[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_BITWISE_RIGHT_SHIFT",
+          "value": "11",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise right shift operation on the integer. Translates to [code]a \u003E\u003E b[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_BITWISE_XOR",
+          "value": "9",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the result of bitwise [code]XOR[/code] operation for two integers. Translates to [code]a ^ b[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_DIV",
+          "value": "3",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Divides two numbers using [code]a / b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_ENUM_SIZE",
+          "value": "12",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Operator] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_MAX",
+          "value": "5",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the greater of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_MIN",
+          "value": "6",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Returns the lesser of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_MOD",
+          "value": "4",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Calculates the remainder of two numbers using [code]a % b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_MUL",
+          "value": "2",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Multiplies two numbers using [code]a * b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        },
+        {
+          "name": "OP_SUB",
+          "value": "1",
+          "enum": "Operator",
+          "kind": "EnumValue",
+          "summary": "Subtracts two numbers using [code]a - b[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_ADD",
+      "value": "0",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Sums two numbers using [code]a \u002B b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_SUB",
+      "value": "1",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Subtracts two numbers using [code]a - b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_MUL",
+      "value": "2",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Multiplies two numbers using [code]a * b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_DIV",
+      "value": "3",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Divides two numbers using [code]a / b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_MOD",
+      "value": "4",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Calculates the remainder of two numbers using [code]a % b[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_MAX",
+      "value": "5",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the greater of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_MIN",
+      "value": "6",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the lesser of two numbers. Translates to [code]max(a, b)[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_BITWISE_AND",
+      "value": "7",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise [code]AND[/code] operation on the integer. Translates to [code]a \u0026 b[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_BITWISE_OR",
+      "value": "8",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise [code]OR[/code] operation for two integers. Translates to [code]a | b[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_BITWISE_XOR",
+      "value": "9",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise [code]XOR[/code] operation for two integers. Translates to [code]a ^ b[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_BITWISE_LEFT_SHIFT",
+      "value": "10",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise left shift operation on the integer. Translates to [code]a \u003C\u003C b[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_BITWISE_RIGHT_SHIFT",
+      "value": "11",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Returns the result of bitwise right shift operation on the integer. Translates to [code]a \u003E\u003E b[/code] in the Godot Shader Language.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    },
+    {
+      "name": "OP_ENUM_SIZE",
+      "value": "12",
+      "enum": "Operator",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Operator] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeUIntOp.xml",
+      "sha256": "d524b868b5271fe39837ff5d1b56b175c227739793b3ca6b3e5e83ed13d2b8cc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

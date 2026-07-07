@@ -1,0 +1,500 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Node",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Node",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "Node",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Node",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Node()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Node type.",
+      "xmlDocId": "M:Electron2D.Node.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Node",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Node()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Node type.",
+      "xmlDocId": "M:Electron2D.Node.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddChild",
+      "kind": "Method",
+      "signature": "public System.Void AddChild(Electron2D.Node child)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "child",
+          "type": "Electron2D.Node"
+        }
+      ],
+      "summary": "Adds the child value.",
+      "xmlDocId": "M:Electron2D.Node.AddChild(Electron2D.Node)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AddToGroup",
+      "kind": "Method",
+      "signature": "public System.Void AddToGroup(System.String group, System.Boolean persistent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        },
+        {
+          "name": "persistent",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds the to group value.",
+      "xmlDocId": "M:Electron2D.Node.AddToGroup(System.String,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateTween",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween CreateTween()",
+      "returnType": "Electron2D.Tween",
+      "parameters": [],
+      "summary": "Creates a tween bound to this node.",
+      "xmlDocId": "M:Electron2D.Node.CreateTween",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EnterTree",
+      "kind": "Method",
+      "signature": "public System.Void EnterTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node enters a scene tree.",
+      "xmlDocId": "M:Electron2D.Node._EnterTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExitTree",
+      "kind": "Method",
+      "signature": "public System.Void ExitTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node exits a scene tree.",
+      "xmlDocId": "M:Electron2D.Node._ExitTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetChild",
+      "kind": "Method",
+      "signature": "public Electron2D.Node GetChild(System.Int32 index)",
+      "returnType": "Electron2D.Node",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the child value.",
+      "xmlDocId": "M:Electron2D.Node.GetChild(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetChildCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetChildCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the child count value.",
+      "xmlDocId": "M:Electron2D.Node.GetChildCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetGroups",
+      "kind": "Method",
+      "signature": "public System.String[] GetGroups()",
+      "returnType": "System.String[]",
+      "parameters": [],
+      "summary": "Gets the groups value.",
+      "xmlDocId": "M:Electron2D.Node.GetGroups",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetIndex",
+      "kind": "Method",
+      "signature": "public System.Int32 GetIndex()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the index value.",
+      "xmlDocId": "M:Electron2D.Node.GetIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNode",
+      "kind": "Method",
+      "signature": "public Electron2D.Node GetNode(Electron2D.NodePath path)",
+      "returnType": "Electron2D.Node",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "Electron2D.NodePath"
+        }
+      ],
+      "summary": "Gets the node value.",
+      "xmlDocId": "M:Electron2D.Node.GetNode(Electron2D.NodePath)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetNodeOrNull",
+      "kind": "Method",
+      "signature": "public Electron2D.Node GetNodeOrNull(Electron2D.NodePath path)",
+      "returnType": "Electron2D.Node",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "Electron2D.NodePath"
+        }
+      ],
+      "summary": "Gets the node or null value.",
+      "xmlDocId": "M:Electron2D.Node.GetNodeOrNull(Electron2D.NodePath)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetParent",
+      "kind": "Method",
+      "signature": "public Electron2D.Node GetParent()",
+      "returnType": "Electron2D.Node",
+      "parameters": [],
+      "summary": "Gets the parent value.",
+      "xmlDocId": "M:Electron2D.Node.GetParent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTree",
+      "kind": "Method",
+      "signature": "public Electron2D.SceneTree GetTree()",
+      "returnType": "Electron2D.SceneTree",
+      "parameters": [],
+      "summary": "Gets the tree value.",
+      "xmlDocId": "M:Electron2D.Node.GetTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetViewport",
+      "kind": "Method",
+      "signature": "public Electron2D.Viewport GetViewport()",
+      "returnType": "Electron2D.Viewport",
+      "parameters": [],
+      "summary": "Gets the nearest viewport that contains this node.",
+      "xmlDocId": "M:Electron2D.Node.GetViewport",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Input",
+      "kind": "Method",
+      "signature": "public System.Void Input(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Called when an input event is delivered to this node.",
+      "xmlDocId": "M:Electron2D.Node._Input(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsAncestorOf",
+      "kind": "Method",
+      "signature": "public System.Boolean IsAncestorOf(Electron2D.Node node)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Electron2D.Node"
+        }
+      ],
+      "summary": "Checks whether ancestor of is true.",
+      "xmlDocId": "M:Electron2D.Node.IsAncestorOf(Electron2D.Node)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsInGroup",
+      "kind": "Method",
+      "signature": "public System.Boolean IsInGroup(System.String group)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Checks whether in group is true.",
+      "xmlDocId": "M:Electron2D.Node.IsInGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsInsideTree",
+      "kind": "Method",
+      "signature": "public System.Boolean IsInsideTree()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether inside tree is true.",
+      "xmlDocId": "M:Electron2D.Node.IsInsideTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MoveChild",
+      "kind": "Method",
+      "signature": "public System.Void MoveChild(Electron2D.Node childNode, System.Int32 toIndex)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "childNode",
+          "type": "Electron2D.Node"
+        },
+        {
+          "name": "toIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Executes the move child operation.",
+      "xmlDocId": "M:Electron2D.Node.MoveChild(Electron2D.Node,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PhysicsProcess",
+      "kind": "Method",
+      "signature": "public System.Void PhysicsProcess(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called during a fixed physics update.",
+      "xmlDocId": "M:Electron2D.Node._PhysicsProcess(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called during an idle frame update.",
+      "xmlDocId": "M:Electron2D.Node._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "QueueFree",
+      "kind": "Method",
+      "signature": "public System.Void QueueFree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Executes the queue free operation.",
+      "xmlDocId": "M:Electron2D.Node.QueueFree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ready",
+      "kind": "Method",
+      "signature": "public System.Void Ready()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node and its children are ready.",
+      "xmlDocId": "M:Electron2D.Node._Ready",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveChild",
+      "kind": "Method",
+      "signature": "public System.Void RemoveChild(Electron2D.Node child)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "child",
+          "type": "Electron2D.Node"
+        }
+      ],
+      "summary": "Removes the child value.",
+      "xmlDocId": "M:Electron2D.Node.RemoveChild(Electron2D.Node)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RemoveFromGroup",
+      "kind": "Method",
+      "signature": "public System.Void RemoveFromGroup(System.String group)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "group",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Removes the from group value.",
+      "xmlDocId": "M:Electron2D.Node.RemoveFromGroup(System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Reparent",
+      "kind": "Method",
+      "signature": "public System.Void Reparent(Electron2D.Node newParent, System.Boolean keepGlobalTransform)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "newParent",
+          "type": "Electron2D.Node"
+        },
+        {
+          "name": "keepGlobalTransform",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Executes the reparent operation.",
+      "xmlDocId": "M:Electron2D.Node.Reparent(Electron2D.Node,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Name",
+      "kind": "Property",
+      "signature": "public System.String Name { get; set; }",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Gets or sets the name value.",
+      "xmlDocId": "P:Electron2D.Node.Name",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Owner",
+      "kind": "Property",
+      "signature": "public Electron2D.Node Owner { get; set; }",
+      "returnType": "Electron2D.Node",
+      "parameters": [],
+      "summary": "Gets or sets the owner value.",
+      "xmlDocId": "P:Electron2D.Node.Owner",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ProcessMode",
+      "kind": "Property",
+      "signature": "public Electron2D.ProcessMode ProcessMode { get; set; }",
+      "returnType": "Electron2D.ProcessMode",
+      "parameters": [],
+      "summary": "Gets or sets how this node participates in process, physics-process and input callbacks while its scene tree is paused.",
+      "xmlDocId": "P:Electron2D.Node.ProcessMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "EnterTree",
+      "kind": "Method",
+      "signature": "public System.Void EnterTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node enters a scene tree.",
+      "xmlDocId": "M:Electron2D.Node._EnterTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExitTree",
+      "kind": "Method",
+      "signature": "public System.Void ExitTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node exits a scene tree.",
+      "xmlDocId": "M:Electron2D.Node._ExitTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Input",
+      "kind": "Method",
+      "signature": "public System.Void Input(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Called when an input event is delivered to this node.",
+      "xmlDocId": "M:Electron2D.Node._Input(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PhysicsProcess",
+      "kind": "Method",
+      "signature": "public System.Void PhysicsProcess(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called during a fixed physics update.",
+      "xmlDocId": "M:Electron2D.Node._PhysicsProcess(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Process",
+      "kind": "Method",
+      "signature": "public System.Void Process(System.Double delta)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Called during an idle frame update.",
+      "xmlDocId": "M:Electron2D.Node._Process(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ready",
+      "kind": "Method",
+      "signature": "public System.Void Ready()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node and its children are ready.",
+      "xmlDocId": "M:Electron2D.Node._Ready",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

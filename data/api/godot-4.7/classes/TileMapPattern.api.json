@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileMapPattern",
+    "namespace": "Godot",
+    "fullName": "Godot.TileMapPattern",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "TileMapPattern",
+    "documentationPath": "doc/classes/TileMapPattern.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tilemappattern.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCellAlternativeTile",
+      "kind": "Method",
+      "signature": "public int GetCellAlternativeTile(Vector2i coords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the tile alternative ID of the cell at [param coords].",
+      "godotName": "get_cell_alternative_tile",
+      "xmlDocId": "M:Godot.TileMapPattern.GetCellAlternativeTile(Vector2i)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "GetCellAtlasCoords",
+      "kind": "Method",
+      "signature": "public Vector2i GetCellAtlasCoords(Vector2i coords)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the tile atlas coordinates ID of the cell at [param coords].",
+      "godotName": "get_cell_atlas_coords",
+      "xmlDocId": "M:Godot.TileMapPattern.GetCellAtlasCoords(Vector2i)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "GetCellSourceId",
+      "kind": "Method",
+      "signature": "public int GetCellSourceId(Vector2i coords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the tile source ID of the cell at [param coords].",
+      "godotName": "get_cell_source_id",
+      "xmlDocId": "M:Godot.TileMapPattern.GetCellSourceId(Vector2i)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2i GetSize()",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Returns the size, in cells, of the pattern.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.TileMapPattern.GetSize",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "GetUsedCells",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetUsedCells()",
+      "returnType": "Vector2i[]",
+      "parameters": [],
+      "summary": "Returns the list of used cell coordinates in the pattern.",
+      "godotName": "get_used_cells",
+      "xmlDocId": "M:Godot.TileMapPattern.GetUsedCells",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "HasCell",
+      "kind": "Method",
+      "signature": "public bool HasCell(Vector2i coords)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns whether the pattern has a tile at the given coordinates.",
+      "godotName": "has_cell",
+      "xmlDocId": "M:Godot.TileMapPattern.HasCell(Vector2i)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the pattern is empty or not.",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.TileMapPattern.IsEmpty",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "RemoveCell",
+      "kind": "Method",
+      "signature": "public void RemoveCell(Vector2i coords, bool updateSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "update_size",
+          "type": "bool"
+        }
+      ],
+      "summary": "Remove the cell at the given coordinates.",
+      "godotName": "remove_cell",
+      "xmlDocId": "M:Godot.TileMapPattern.RemoveCell(Vector2i,bool)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "SetCell",
+      "kind": "Method",
+      "signature": "public void SetCell(Vector2i coords, int sourceId, Vector2i atlasCoords, int alternativeTile)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "Vector2i"
+        },
+        {
+          "name": "source_id",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "atlas_coords",
+          "type": "Vector2i",
+          "defaultValue": "Vector2i(-1, -1)"
+        },
+        {
+          "name": "alternative_tile",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Sets the tile identifiers for the cell at coordinates [param coords]. See [method TileMap.set_cell].",
+      "godotName": "set_cell",
+      "xmlDocId": "M:Godot.TileMapPattern.SetCell(Vector2i,int,Vector2i,int)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    },
+    {
+      "name": "SetSize",
+      "kind": "Method",
+      "signature": "public void SetSize(Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Sets the size of the pattern.",
+      "godotName": "set_size",
+      "xmlDocId": "M:Godot.TileMapPattern.SetSize(Vector2i)",
+      "sourcePath": "doc/classes/TileMapPattern.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileMapPattern.xml",
+      "sha256": "bfb49e73e471af24316f5fd48de94702550b13e8ad0e01e21a49cc8c95b906f2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

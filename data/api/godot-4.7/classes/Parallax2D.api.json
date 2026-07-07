@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Parallax2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Parallax2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "Parallax2D",
+    "documentationPath": "doc/classes/Parallax2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_parallax2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Autoscroll",
+      "kind": "Property",
+      "signature": "public Vector2 Autoscroll { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Velocity at which the offset scrolls automatically, in pixels per second.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "autoscroll",
+      "xmlDocId": "P:Godot.Parallax2D.Autoscroll",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "FollowViewport",
+      "kind": "Property",
+      "signature": "public bool FollowViewport { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this [Parallax2D] is offset by the current camera\u0027s position. If the [Parallax2D] is in a [CanvasLayer] separate from the current camera, it may be desired to match the value with [member CanvasLayer.follow_viewport_enabled].",
+      "defaultValue": "true",
+      "godotName": "follow_viewport",
+      "xmlDocId": "P:Godot.Parallax2D.FollowViewport",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "IgnoreCameraScroll",
+      "kind": "Property",
+      "signature": "public bool IgnoreCameraScroll { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [Parallax2D]\u0027s position is not affected by the position of the camera.",
+      "defaultValue": "false",
+      "godotName": "ignore_camera_scroll",
+      "xmlDocId": "P:Godot.Parallax2D.IgnoreCameraScroll",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "LimitBegin",
+      "kind": "Property",
+      "signature": "public Vector2 LimitBegin { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Top-left limits for scrolling to begin. If the camera is outside of this limit, the [Parallax2D] stops scrolling. Must be lower than [member limit_end] minus the viewport size to work.",
+      "defaultValue": "Vector2(-10000000, -10000000)",
+      "godotName": "limit_begin",
+      "xmlDocId": "P:Godot.Parallax2D.LimitBegin",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "LimitEnd",
+      "kind": "Property",
+      "signature": "public Vector2 LimitEnd { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Bottom-right limits for scrolling to end. If the camera is outside of this limit, the [Parallax2D] will stop scrolling. Must be higher than [member limit_begin] and the viewport size combined to work.",
+      "defaultValue": "Vector2(10000000, 10000000)",
+      "godotName": "limit_end",
+      "xmlDocId": "P:Godot.Parallax2D.LimitEnd",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.Parallax2D.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "RepeatSize",
+      "kind": "Property",
+      "signature": "public Vector2 RepeatSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Repeats the [Texture2D] of each of this node\u0027s children and offsets them by this value. When scrolling, the node\u0027s position loops, giving the illusion of an infinite scrolling background if the values are larger than the screen size. If an axis is set to [code]0[/code], the [Texture2D] will not be repeated.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "repeat_size",
+      "xmlDocId": "P:Godot.Parallax2D.RepeatSize",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "RepeatTimes",
+      "kind": "Property",
+      "signature": "public int RepeatTimes { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Overrides the amount of times the texture repeats. Each texture copy spreads evenly from the original by [member repeat_size]. Useful for when zooming out with a camera.",
+      "defaultValue": "1",
+      "godotName": "repeat_times",
+      "xmlDocId": "P:Godot.Parallax2D.RepeatTimes",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "ScreenOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ScreenOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Offset used to scroll this [Parallax2D]. This value is updated automatically unless [member ignore_camera_scroll] is [code]true[/code].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "screen_offset",
+      "xmlDocId": "P:Godot.Parallax2D.ScreenOffset",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "ScrollOffset",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The [Parallax2D]\u0027s offset. Similar to [member screen_offset] and [member Node2D.position], but will not be overridden. [b]Note:[/b] Values will loop if [member repeat_size] is set higher than [code]0[/code].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "scroll_offset",
+      "xmlDocId": "P:Godot.Parallax2D.ScrollOffset",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    },
+    {
+      "name": "ScrollScale",
+      "kind": "Property",
+      "signature": "public Vector2 ScrollScale { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Multiplier to the final [Parallax2D]\u0027s offset. Can be used to simulate distance from the camera. For example, a value of [code]1[/code] scrolls at the same speed as the camera. A value greater than [code]1[/code] scrolls faster, making objects appear closer. Less than [code]1[/code] scrolls slower, making objects appear further, and a value of [code]0[/code] stops the objects completely.",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "scroll_scale",
+      "xmlDocId": "P:Godot.Parallax2D.ScrollScale",
+      "sourcePath": "doc/classes/Parallax2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Parallax2D.xml",
+      "sha256": "d9d152aca78fb17b5300b7525caafdf07b3e798f62aca694769d4a51d1909fe7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

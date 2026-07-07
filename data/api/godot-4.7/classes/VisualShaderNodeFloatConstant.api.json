@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeFloatConstant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeFloatConstant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeFloatConstant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatConstant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodefloatconstant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public float Constant { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A floating-point constant which represents a state of this node.",
+      "defaultValue": "0.0",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeFloatConstant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeFloatConstant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeFloatConstant.xml",
+      "sha256": "8b19facf1cdc659cc795b93038b7fc1a6607683f1155529ae339b0311010c786"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

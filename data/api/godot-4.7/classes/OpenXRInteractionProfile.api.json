@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRInteractionProfile",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRInteractionProfile",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRInteractionProfile",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrinteractionprofile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBinding",
+      "kind": "Method",
+      "signature": "public OpenXRIPBinding GetBinding(int index)",
+      "returnType": "OpenXRIPBinding",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Retrieve the binding at this index.",
+      "godotName": "get_binding",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfile.GetBinding(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "GetBindingCount",
+      "kind": "Method",
+      "signature": "public int GetBindingCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Get the number of bindings in this interaction profile.",
+      "godotName": "get_binding_count",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfile.GetBindingCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "GetBindingModifier",
+      "kind": "Method",
+      "signature": "public OpenXRIPBindingModifier GetBindingModifier(int index)",
+      "returnType": "OpenXRIPBindingModifier",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Get the [OpenXRBindingModifier] at this index.",
+      "godotName": "get_binding_modifier",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfile.GetBindingModifier(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "GetBindingModifierCount",
+      "kind": "Method",
+      "signature": "public int GetBindingModifierCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Get the number of binding modifiers in this interaction profile.",
+      "godotName": "get_binding_modifier_count",
+      "xmlDocId": "M:Godot.OpenXRInteractionProfile.GetBindingModifierCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "BindingModifiers",
+      "kind": "Property",
+      "signature": "public Array BindingModifiers { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Binding modifiers for this interaction profile.",
+      "defaultValue": "[]",
+      "godotName": "binding_modifiers",
+      "xmlDocId": "P:Godot.OpenXRInteractionProfile.BindingModifiers",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "Bindings",
+      "kind": "Property",
+      "signature": "public Array Bindings { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Action bindings for this interaction profile.",
+      "defaultValue": "[]",
+      "godotName": "bindings",
+      "xmlDocId": "P:Godot.OpenXRInteractionProfile.Bindings",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    },
+    {
+      "name": "InteractionProfilePath",
+      "kind": "Property",
+      "signature": "public String InteractionProfilePath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The interaction profile path identifying the XR device.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "interaction_profile_path",
+      "xmlDocId": "P:Godot.OpenXRInteractionProfile.InteractionProfilePath",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRInteractionProfile.xml",
+      "sha256": "5a94ccdc73ac0ba098652fb9460a43ffb16d67f5a5dd995fbf5c2f6757a6b793"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CheckButton",
+    "namespace": "Godot",
+    "fullName": "Godot.CheckButton",
+    "kind": "class",
+    "baseType": "Button",
+    "interfaces": [],
+    "godotReference": "CheckButton",
+    "documentationPath": "doc/classes/CheckButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_checkbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.CheckButton.Alignment",
+      "sourcePath": "doc/classes/CheckButton.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.CheckButton.ToggleMode",
+      "sourcePath": "doc/classes/CheckButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CheckButton.xml",
+      "sha256": "4fb2d3e027782d9d22bed6e4f1d1a7c7d66d9199bcf59b7ca0e1baba4dd3064a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

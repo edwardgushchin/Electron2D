@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Mutex",
+    "namespace": "Godot",
+    "fullName": "Godot.Mutex",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Mutex",
+    "documentationPath": "doc/classes/Mutex.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_mutex.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Lock",
+      "kind": "Method",
+      "signature": "public void Lock()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Locks this [Mutex], blocks until it is unlocked by the current owner. [b]Note:[/b] This function returns without blocking if the thread already has ownership of the mutex.",
+      "godotName": "lock",
+      "xmlDocId": "M:Godot.Mutex.Lock",
+      "sourcePath": "doc/classes/Mutex.xml"
+    },
+    {
+      "name": "TryLock",
+      "kind": "Method",
+      "signature": "public bool TryLock()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Tries locking this [Mutex], but does not block. Returns [code]true[/code] on success, [code]false[/code] otherwise. [b]Note:[/b] This function returns [code]true[/code] if the thread already has ownership of the mutex.",
+      "godotName": "try_lock",
+      "xmlDocId": "M:Godot.Mutex.TryLock",
+      "sourcePath": "doc/classes/Mutex.xml"
+    },
+    {
+      "name": "Unlock",
+      "kind": "Method",
+      "signature": "public void Unlock()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Unlocks this [Mutex], leaving it to other threads. [b]Note:[/b] If a thread called [method lock] or [method try_lock] multiple times while already having ownership of the mutex, it must also call [method unlock] the same number of times in order to unlock it correctly. [b]Warning:[/b] Calling [method unlock] more times than [method lock] on a given thread, thus ending up trying to unlock a non-locked mutex, is wrong and may causes crashes or deadlocks.",
+      "godotName": "unlock",
+      "xmlDocId": "M:Godot.Mutex.Unlock",
+      "sourcePath": "doc/classes/Mutex.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Mutex.xml",
+      "sha256": "4877709d0faeb8a2b0931abf5ccd028870bec81d4265240f8d2034b901e02e68"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

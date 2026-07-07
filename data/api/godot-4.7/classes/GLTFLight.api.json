@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFLight",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFLight",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFLight",
+    "documentationPath": "modules/gltf/doc_classes/GLTFLight.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltflight.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFLight FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFLight",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFLight instance by parsing the given [Dictionary].",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFLight.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "FromNode",
+      "kind": "Method",
+      "signature": "public GLTFLight FromNode(Light3D lightNode)",
+      "returnType": "GLTFLight",
+      "parameters": [
+        {
+          "name": "light_node",
+          "type": "Light3D"
+        }
+      ],
+      "summary": "Create a new GLTFLight instance from the given Godot [Light3D] node.",
+      "godotName": "from_node",
+      "xmlDocId": "M:Godot.GLTFLight.FromNode(Light3D)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "GetAdditionalData",
+      "kind": "Method",
+      "signature": "public Variant GetAdditionalData(StringName extensionName)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_additional_data",
+      "xmlDocId": "M:Godot.GLTFLight.GetAdditionalData(StringName)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "SetAdditionalData",
+      "kind": "Method",
+      "signature": "public void SetAdditionalData(StringName extensionName, Variant additionalData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "extension_name",
+          "type": "StringName"
+        },
+        {
+          "name": "additional_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_additional_data",
+      "xmlDocId": "M:Godot.GLTFLight.SetAdditionalData(StringName,Variant)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFLight instance into a [Dictionary].",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFLight.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "ToNode",
+      "kind": "Method",
+      "signature": "public Light3D ToNode()",
+      "returnType": "Light3D",
+      "parameters": [],
+      "summary": "Converts this GLTFLight instance into a Godot [Light3D] node.",
+      "godotName": "to_node",
+      "xmlDocId": "M:Godot.GLTFLight.ToNode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The [Color] of the light in linear space. Defaults to white. A black color causes the light to have no effect. This value is linear to match glTF, but will be converted to nonlinear sRGB when creating a Godot [Light3D] node upon import, or converted to linear when exporting a Godot [Light3D] to glTF.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.GLTFLight.Color",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "InnerConeAngle",
+      "kind": "Property",
+      "signature": "public float InnerConeAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The inner angle of the cone in a spotlight. Must be less than or equal to the outer cone angle. Within this angle, the light is at full brightness. Between the inner and outer cone angles, there is a transition from full brightness to zero brightness. When creating a Godot [SpotLight3D], the ratio between the inner and outer cone angles is used to calculate the attenuation of the light.",
+      "defaultValue": "0.0",
+      "godotName": "inner_cone_angle",
+      "xmlDocId": "P:Godot.GLTFLight.InnerConeAngle",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "Intensity",
+      "kind": "Property",
+      "signature": "public float Intensity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The intensity of the light. This is expressed in candelas (lumens per steradian) for point and spot lights, and lux (lumens per m\u00B2) for directional lights. When creating a Godot light, this value is converted to a unitless multiplier.",
+      "defaultValue": "1.0",
+      "godotName": "intensity",
+      "xmlDocId": "P:Godot.GLTFLight.Intensity",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "LightType",
+      "kind": "Property",
+      "signature": "public String LightType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The type of the light. The values accepted by Godot are \u0022point\u0022, \u0022spot\u0022, and \u0022directional\u0022, which correspond to Godot\u0027s [OmniLight3D], [SpotLight3D], and [DirectionalLight3D] respectively.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "light_type",
+      "xmlDocId": "P:Godot.GLTFLight.LightType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "OuterConeAngle",
+      "kind": "Property",
+      "signature": "public float OuterConeAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The outer angle of the cone in a spotlight. Must be greater than or equal to the inner angle. At this angle, the light drops off to zero brightness. Between the inner and outer cone angles, there is a transition from full brightness to zero brightness. If this angle is a half turn, then the spotlight emits in all directions. When creating a Godot [SpotLight3D], the outer cone angle is used as the angle of the spotlight.",
+      "defaultValue": "0.7853982",
+      "godotName": "outer_cone_angle",
+      "xmlDocId": "P:Godot.GLTFLight.OuterConeAngle",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    },
+    {
+      "name": "Range",
+      "kind": "Property",
+      "signature": "public float Range { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The range of the light, beyond which the light has no effect. glTF lights with no range defined behave like physical lights (which have infinite range). When creating a Godot light, the range is clamped to [code]4096.0[/code].",
+      "defaultValue": "inf",
+      "godotName": "range",
+      "xmlDocId": "P:Godot.GLTFLight.Range",
+      "sourcePath": "modules/gltf/doc_classes/GLTFLight.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFLight.xml",
+      "sha256": "fff2e40178104c30032abb9131631d46106b6ab8e16e69a8b10b1495fb7c2695"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

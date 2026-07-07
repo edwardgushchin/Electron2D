@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VirtualJoystick",
+    "namespace": "Godot",
+    "fullName": "Godot.VirtualJoystick",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "VirtualJoystick",
+    "documentationPath": "doc/classes/VirtualJoystick.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_virtualjoystick.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionDown",
+      "kind": "Property",
+      "signature": "public StringName ActionDown { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The action to trigger when the joystick is moved down.",
+      "defaultValue": "\u0026\u0022ui_down\u0022",
+      "godotName": "action_down",
+      "xmlDocId": "P:Godot.VirtualJoystick.ActionDown",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "ActionLeft",
+      "kind": "Property",
+      "signature": "public StringName ActionLeft { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The action to trigger when the joystick is moved left.",
+      "defaultValue": "\u0026\u0022ui_left\u0022",
+      "godotName": "action_left",
+      "xmlDocId": "P:Godot.VirtualJoystick.ActionLeft",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "ActionRight",
+      "kind": "Property",
+      "signature": "public StringName ActionRight { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The action to trigger when the joystick is moved right.",
+      "defaultValue": "\u0026\u0022ui_right\u0022",
+      "godotName": "action_right",
+      "xmlDocId": "P:Godot.VirtualJoystick.ActionRight",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "ActionUp",
+      "kind": "Property",
+      "signature": "public StringName ActionUp { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The action to trigger when the joystick is moved up.",
+      "defaultValue": "\u0026\u0022ui_up\u0022",
+      "godotName": "action_up",
+      "xmlDocId": "P:Godot.VirtualJoystick.ActionUp",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "ClampzoneRatio",
+      "kind": "Property",
+      "signature": "public float ClampzoneRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The multiplier applied to the joystick\u0027s radius that defines the clamp zone. This zone limits how far the joystick tip can move from its center before being clamped. A value of [code]1.0[/code] means the tip can move up to the edge of the joystick\u0027s visual size. In [constant JOYSTICK_FOLLOWING] mode, this radius also determines how far the finger can move before the joystick base starts following the touch input.",
+      "defaultValue": "1.0",
+      "godotName": "clampzone_ratio",
+      "xmlDocId": "P:Godot.VirtualJoystick.ClampzoneRatio",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "DeadzoneRatio",
+      "kind": "Property",
+      "signature": "public float DeadzoneRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The ratio of the joystick size that defines the joystick deadzone. The joystick tip must move beyond this ratio before being considered active. This deadzone is applied before triggering input actions and affects the joystick\u0027s input vector and all related signals. Note that input actions may also define their own deadzones in the InputMap. If both are set, the joystick deadzone is applied first, followed by the action\u0027s deadzone. By default, this value is [code]0.0[/code], meaning the joystick does not apply its own deadzone and relies entirely on the InputMap action deadzones.",
+      "defaultValue": "0.0",
+      "godotName": "deadzone_ratio",
+      "xmlDocId": "P:Godot.VirtualJoystick.DeadzoneRatio",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "InitialOffsetRatio",
+      "kind": "Property",
+      "signature": "public Vector2 InitialOffsetRatio { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The initial position of the joystick as a ratio of the control\u0027s size. [code](0, 0)[/code] is top-left and [code](1, 1)[/code] is bottom-right.",
+      "defaultValue": "Vector2(0.5, 0.5)",
+      "godotName": "initial_offset_ratio",
+      "xmlDocId": "P:Godot.VirtualJoystick.InitialOffsetRatio",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "JoystickMode",
+      "kind": "Property",
+      "signature": "public int JoystickMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The joystick mode to use.",
+      "defaultValue": "0",
+      "godotName": "joystick_mode",
+      "xmlDocId": "P:Godot.VirtualJoystick.JoystickMode",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "JoystickSize",
+      "kind": "Property",
+      "signature": "public float JoystickSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of the joystick in pixels.",
+      "defaultValue": "100.0",
+      "godotName": "joystick_size",
+      "xmlDocId": "P:Godot.VirtualJoystick.JoystickSize",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "TipSize",
+      "kind": "Property",
+      "signature": "public float TipSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of the joystick tip in pixels.",
+      "defaultValue": "50.0",
+      "godotName": "tip_size",
+      "xmlDocId": "P:Godot.VirtualJoystick.TipSize",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "VisibilityMode",
+      "kind": "Property",
+      "signature": "public int VisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The visibility mode to use.",
+      "defaultValue": "0",
+      "godotName": "visibility_mode",
+      "xmlDocId": "P:Godot.VirtualJoystick.VisibilityMode",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FlickCanceled",
+      "kind": "Signal",
+      "signature": "public event FlickCanceledHandler FlickCanceled",
+      "parameters": [],
+      "summary": "Emitted when the tip enters the deadzone after being outside of it.",
+      "godotName": "flick_canceled",
+      "xmlDocId": "E:Godot.VirtualJoystick.FlickCanceled",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "Flicked",
+      "kind": "Signal",
+      "signature": "public event FlickedHandler Flicked",
+      "parameters": [
+        {
+          "name": "input_vector",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when the tip moved outside the deadzone and the joystick is released. The [param input_vector] contains the last input direction and strength before release. Its length is between [code]0.0[/code] and [code]1.0[/code].",
+      "godotName": "flicked",
+      "xmlDocId": "E:Godot.VirtualJoystick.Flicked(Vector2)",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Signal",
+      "signature": "public event PressedHandler Pressed",
+      "parameters": [],
+      "summary": "Emitted when the joystick is pressed.",
+      "godotName": "pressed",
+      "xmlDocId": "E:Godot.VirtualJoystick.Pressed",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "Released",
+      "kind": "Signal",
+      "signature": "public event ReleasedHandler Released",
+      "parameters": [
+        {
+          "name": "input_vector",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Emitted when the joystick is released. The [param input_vector] is the final input direction and strength, with a length between [code]0.0[/code] and [code]1.0[/code].",
+      "godotName": "released",
+      "xmlDocId": "E:Godot.VirtualJoystick.Released(Vector2)",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "Tapped",
+      "kind": "Signal",
+      "signature": "public event TappedHandler Tapped",
+      "parameters": [],
+      "summary": "Emitted when the joystick is released without moving the tip.",
+      "godotName": "tapped",
+      "xmlDocId": "E:Godot.VirtualJoystick.Tapped",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "JoystickMode",
+      "values": [
+        {
+          "name": "JOYSTICK_DYNAMIC",
+          "value": "1",
+          "enum": "JoystickMode",
+          "kind": "EnumValue",
+          "summary": "The joystick is moved to the initial touch position as long as it\u0027s within the joystick\u0027s bounds. It moves back to its original position when released.",
+          "sourcePath": "doc/classes/VirtualJoystick.xml"
+        },
+        {
+          "name": "JOYSTICK_FIXED",
+          "value": "0",
+          "enum": "JoystickMode",
+          "kind": "EnumValue",
+          "summary": "The joystick doesn\u0027t move.",
+          "sourcePath": "doc/classes/VirtualJoystick.xml"
+        },
+        {
+          "name": "JOYSTICK_FOLLOWING",
+          "value": "2",
+          "enum": "JoystickMode",
+          "kind": "EnumValue",
+          "summary": "The joystick is moved to the initial touch position as long as it\u0027s within the joystick\u0027s bounds. It will follow the touch input if it goes outside the joystick\u0027s range. It moves back to its original position when released.",
+          "sourcePath": "doc/classes/VirtualJoystick.xml"
+        }
+      ]
+    },
+    {
+      "name": "VisibilityMode",
+      "values": [
+        {
+          "name": "VISIBILITY_ALWAYS",
+          "value": "0",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "The joystick is always visible.",
+          "sourcePath": "doc/classes/VirtualJoystick.xml"
+        },
+        {
+          "name": "VISIBILITY_WHEN_TOUCHED",
+          "value": "1",
+          "enum": "VisibilityMode",
+          "kind": "EnumValue",
+          "summary": "The joystick is only visible when being touched.",
+          "sourcePath": "doc/classes/VirtualJoystick.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "JOYSTICK_FIXED",
+      "value": "0",
+      "enum": "JoystickMode",
+      "kind": "EnumValue",
+      "summary": "The joystick doesn\u0027t move.",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "JOYSTICK_DYNAMIC",
+      "value": "1",
+      "enum": "JoystickMode",
+      "kind": "EnumValue",
+      "summary": "The joystick is moved to the initial touch position as long as it\u0027s within the joystick\u0027s bounds. It moves back to its original position when released.",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "JOYSTICK_FOLLOWING",
+      "value": "2",
+      "enum": "JoystickMode",
+      "kind": "EnumValue",
+      "summary": "The joystick is moved to the initial touch position as long as it\u0027s within the joystick\u0027s bounds. It will follow the touch input if it goes outside the joystick\u0027s range. It moves back to its original position when released.",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "VISIBILITY_ALWAYS",
+      "value": "0",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "The joystick is always visible.",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    },
+    {
+      "name": "VISIBILITY_WHEN_TOUCHED",
+      "value": "1",
+      "enum": "VisibilityMode",
+      "kind": "EnumValue",
+      "summary": "The joystick is only visible when being touched.",
+      "sourcePath": "doc/classes/VirtualJoystick.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VirtualJoystick.xml",
+      "sha256": "bbb6bce8ebb7b496401802929bb5d79bd7b1c4f1eb55ef542269f8aa9124b41a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

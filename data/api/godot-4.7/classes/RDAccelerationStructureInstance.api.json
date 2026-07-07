@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDAccelerationStructureInstance",
+    "namespace": "Godot",
+    "fullName": "Godot.RDAccelerationStructureInstance",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDAccelerationStructureInstance",
+    "documentationPath": "doc/classes/RDAccelerationStructureInstance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdaccelerationstructureinstance.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Blas",
+      "kind": "Property",
+      "signature": "public RID Blas { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The BLAS referenced by this instance. If [code]null[/code], the instance is treated as a placeholder but still contributes to [code]gl_InstanceIndex[/code] in GLSL.",
+      "defaultValue": "RID()",
+      "godotName": "blas",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.Blas",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    },
+    {
+      "name": "Flags",
+      "kind": "Property",
+      "signature": "public int Flags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Flags for the instance.",
+      "defaultValue": "0",
+      "godotName": "flags",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.Flags",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    },
+    {
+      "name": "HitSbtRange",
+      "kind": "Property",
+      "signature": "public int HitSbtRange { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Hit shader binding table range used for this instance, allocated using the [method RenderingDevice.hit_sbt_range_alloc] method.",
+      "defaultValue": "0",
+      "godotName": "hit_sbt_range",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.HitSbtRange",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    },
+    {
+      "name": "Id",
+      "kind": "Property",
+      "signature": "public int Id { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Custom instance ID that can be accessed in GLSL using [code]gl_InstanceCustomIndexEXT[/code].",
+      "defaultValue": "0",
+      "godotName": "id",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.Id",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    },
+    {
+      "name": "Mask",
+      "kind": "Property",
+      "signature": "public int Mask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Visibility mask used to control which rays can intersect this instance.",
+      "defaultValue": "255",
+      "godotName": "mask",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.Mask",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    },
+    {
+      "name": "Transform",
+      "kind": "Property",
+      "signature": "public Transform3D Transform { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Transform applied to the referenced BLAS for this instance.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "transform",
+      "xmlDocId": "P:Godot.RDAccelerationStructureInstance.Transform",
+      "sourcePath": "doc/classes/RDAccelerationStructureInstance.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDAccelerationStructureInstance.xml",
+      "sha256": "6b3f93a0fe63b920006b56eb1651d5fa9a8c5368fec47b3d84e3dd89c436d80a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

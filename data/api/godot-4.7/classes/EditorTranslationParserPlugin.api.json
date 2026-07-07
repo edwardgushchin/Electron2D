@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorTranslationParserPlugin",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorTranslationParserPlugin",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorTranslationParserPlugin",
+    "documentationPath": "doc/classes/EditorTranslationParserPlugin.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editortranslationparserplugin.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_CustomizeStrings",
+      "kind": "Method",
+      "signature": "public PackedStringArray[] _CustomizeStrings(PackedStringArray[] strings)",
+      "returnType": "PackedStringArray[]",
+      "parameters": [
+        {
+          "name": "strings",
+          "type": "PackedStringArray[]"
+        }
+      ],
+      "summary": "Called after parsing all files. You can modify the [param strings] array to add or remove entries from the final list of strings, then return it after modifications. Each entry is a [PackedStringArray] like explained in the [EditorTranslationParserPlugin]\u0027s description. [codeblock] @tool extends EditorTranslationParserPlugin func _customize_strings(strings): # Add new string. strings.append([\u0022Test 1\u0022, \u0022context\u0022, \u0022test 1 plurals\u0022, \u0022test 1 comment\u0022]) # Remove all strings that begin with $. strings = strings.filter(func(s): return not s[0].begins_with(\u0022$\u0022)) return strings [/codeblock]",
+      "godotName": "_customize_strings",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._CustomizeStrings(PackedStringArray[])",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of file extensions to associate with this parser, e.g. [code][\u0022csv\u0022][/code].",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    },
+    {
+      "name": "_ParseFile",
+      "kind": "Method",
+      "signature": "public PackedStringArray[] _ParseFile(String path)",
+      "returnType": "PackedStringArray[]",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to define a custom parsing logic to extract the translatable strings.",
+      "godotName": "_parse_file",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._ParseFile(String)",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_CustomizeStrings",
+      "kind": "Method",
+      "signature": "public PackedStringArray[] _CustomizeStrings(PackedStringArray[] strings)",
+      "returnType": "PackedStringArray[]",
+      "parameters": [
+        {
+          "name": "strings",
+          "type": "PackedStringArray[]"
+        }
+      ],
+      "summary": "Called after parsing all files. You can modify the [param strings] array to add or remove entries from the final list of strings, then return it after modifications. Each entry is a [PackedStringArray] like explained in the [EditorTranslationParserPlugin]\u0027s description. [codeblock] @tool extends EditorTranslationParserPlugin func _customize_strings(strings): # Add new string. strings.append([\u0022Test 1\u0022, \u0022context\u0022, \u0022test 1 plurals\u0022, \u0022test 1 comment\u0022]) # Remove all strings that begin with $. strings = strings.filter(func(s): return not s[0].begins_with(\u0022$\u0022)) return strings [/codeblock]",
+      "godotName": "_customize_strings",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._CustomizeStrings(PackedStringArray[])",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of file extensions to associate with this parser, e.g. [code][\u0022csv\u0022][/code].",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    },
+    {
+      "name": "_ParseFile",
+      "kind": "Method",
+      "signature": "public PackedStringArray[] _ParseFile(String path)",
+      "returnType": "PackedStringArray[]",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to define a custom parsing logic to extract the translatable strings.",
+      "godotName": "_parse_file",
+      "xmlDocId": "M:Godot.EditorTranslationParserPlugin._ParseFile(String)",
+      "sourcePath": "doc/classes/EditorTranslationParserPlugin.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorTranslationParserPlugin.xml",
+      "sha256": "3831ebb27e3b740d87b8480e43f59562af1087e94dc3014a781ca0e4ecd8fbdd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

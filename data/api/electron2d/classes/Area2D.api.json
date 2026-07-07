@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Area2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Area2D",
+    "kind": "class",
+    "baseType": "Electron2D.CollisionObject2D",
+    "interfaces": [],
+    "godotReference": "Area2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Area2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Area2D()",
+      "parameters": [],
+      "summary": "Creates an area and registers its Electron2D built-in overlap signals.",
+      "xmlDocId": "M:Electron2D.Area2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Area2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Area2D()",
+      "parameters": [],
+      "summary": "Creates an area and registers its Electron2D built-in overlap signals.",
+      "xmlDocId": "M:Electron2D.Area2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetOverlappingAreas",
+      "kind": "Method",
+      "signature": "public Electron2D.Area2D[] GetOverlappingAreas()",
+      "returnType": "Electron2D.Area2D[]",
+      "parameters": [],
+      "summary": "Returns a snapshot of areas currently overlapping this area.",
+      "xmlDocId": "M:Electron2D.Area2D.GetOverlappingAreas",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetOverlappingBodies",
+      "kind": "Method",
+      "signature": "public Electron2D.Node2D[] GetOverlappingBodies()",
+      "returnType": "Electron2D.Node2D[]",
+      "parameters": [],
+      "summary": "Returns a snapshot of physics bodies currently overlapping this area.",
+      "xmlDocId": "M:Electron2D.Area2D.GetOverlappingBodies",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasOverlappingAreas",
+      "kind": "Method",
+      "signature": "public System.Boolean HasOverlappingAreas()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this area currently overlaps at least one other area.",
+      "xmlDocId": "M:Electron2D.Area2D.HasOverlappingAreas",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasOverlappingBodies",
+      "kind": "Method",
+      "signature": "public System.Boolean HasOverlappingBodies()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this area currently overlaps at least one body.",
+      "xmlDocId": "M:Electron2D.Area2D.HasOverlappingBodies",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OverlapsArea",
+      "kind": "Method",
+      "signature": "public System.Boolean OverlapsArea(Electron2D.Area2D area)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "Electron2D.Area2D"
+        }
+      ],
+      "summary": "Checks whether a specific area currently overlaps this area.",
+      "xmlDocId": "M:Electron2D.Area2D.OverlapsArea(Electron2D.Area2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OverlapsBody",
+      "kind": "Method",
+      "signature": "public System.Boolean OverlapsBody(Electron2D.Node2D body)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Electron2D.Node2D"
+        }
+      ],
+      "summary": "Checks whether a specific body currently overlaps this area.",
+      "xmlDocId": "M:Electron2D.Area2D.OverlapsBody(Electron2D.Node2D)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Monitorable",
+      "kind": "Property",
+      "signature": "public System.Boolean Monitorable { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether other areas can monitor this area.",
+      "xmlDocId": "P:Electron2D.Area2D.Monitorable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Monitoring",
+      "kind": "Property",
+      "signature": "public System.Boolean Monitoring { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this area monitors overlapping bodies and areas.",
+      "xmlDocId": "P:Electron2D.Area2D.Monitoring",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Priority",
+      "kind": "Property",
+      "signature": "public System.Int32 Priority { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the processing priority for this area.",
+      "xmlDocId": "P:Electron2D.Area2D.Priority",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

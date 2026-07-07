@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextureLayered",
+    "namespace": "Godot",
+    "fullName": "Godot.TextureLayered",
+    "kind": "class",
+    "baseType": "Texture",
+    "interfaces": [],
+    "godotReference": "TextureLayered",
+    "documentationPath": "doc/classes/TextureLayered.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texturelayered.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s format is queried.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.TextureLayered._GetFormat",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.TextureLayered._GetHeight",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayerData",
+      "kind": "Method",
+      "signature": "public Image _GetLayerData(int layerIndex)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the data for a layer in the [TextureLayered] is queried.",
+      "godotName": "_get_layer_data",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayerData(int)",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayeredType",
+      "kind": "Method",
+      "signature": "public int _GetLayeredType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the layers\u0027 type in the [TextureLayered] is queried.",
+      "godotName": "_get_layered_type",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayeredType",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayers",
+      "kind": "Method",
+      "signature": "public int _GetLayers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the number of layers in the [TextureLayered] is queried.",
+      "godotName": "_get_layers",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayers",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s width queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.TextureLayered._GetWidth",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of mipmaps in the [TextureLayered] is queried.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.TextureLayered._HasMipmaps",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetFormat",
+      "kind": "Method",
+      "signature": "public int GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current format being used by this texture.",
+      "godotName": "get_format",
+      "xmlDocId": "M:Godot.TextureLayered.GetFormat",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public int GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the height of the texture in pixels. Height is typically represented by the Y axis.",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.TextureLayered.GetHeight",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetLayerData",
+      "kind": "Method",
+      "signature": "public Image GetLayerData(int layer)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an [Image] resource with the data from specified [param layer].",
+      "godotName": "get_layer_data",
+      "xmlDocId": "M:Godot.TextureLayered.GetLayerData(int)",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetLayeredType",
+      "kind": "Method",
+      "signature": "public int GetLayeredType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [TextureLayered]\u0027s type. The type determines how the data is accessed, with cubemaps having special types.",
+      "godotName": "get_layered_type",
+      "xmlDocId": "M:Godot.TextureLayered.GetLayeredType",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetLayers",
+      "kind": "Method",
+      "signature": "public int GetLayers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of referenced [Image]s.",
+      "godotName": "get_layers",
+      "xmlDocId": "M:Godot.TextureLayered.GetLayers",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public int GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the width of the texture in pixels. Width is typically represented by the X axis.",
+      "godotName": "get_width",
+      "xmlDocId": "M:Godot.TextureLayered.GetWidth",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the layers have generated mipmaps.",
+      "godotName": "has_mipmaps",
+      "xmlDocId": "M:Godot.TextureLayered.HasMipmaps",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "LayeredType",
+      "values": [
+        {
+          "name": "LAYERED_TYPE_2D_ARRAY",
+          "value": "0",
+          "enum": "LayeredType",
+          "kind": "EnumValue",
+          "summary": "Texture is a generic [Texture2DArray].",
+          "sourcePath": "doc/classes/TextureLayered.xml"
+        },
+        {
+          "name": "LAYERED_TYPE_CUBEMAP",
+          "value": "1",
+          "enum": "LayeredType",
+          "kind": "EnumValue",
+          "summary": "Texture is a [Cubemap], with each side in its own layer (6 in total).",
+          "sourcePath": "doc/classes/TextureLayered.xml"
+        },
+        {
+          "name": "LAYERED_TYPE_CUBEMAP_ARRAY",
+          "value": "2",
+          "enum": "LayeredType",
+          "kind": "EnumValue",
+          "summary": "Texture is a [CubemapArray], with each cubemap being made of 6 layers.",
+          "sourcePath": "doc/classes/TextureLayered.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "LAYERED_TYPE_2D_ARRAY",
+      "value": "0",
+      "enum": "LayeredType",
+      "kind": "EnumValue",
+      "summary": "Texture is a generic [Texture2DArray].",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "LAYERED_TYPE_CUBEMAP",
+      "value": "1",
+      "enum": "LayeredType",
+      "kind": "EnumValue",
+      "summary": "Texture is a [Cubemap], with each side in its own layer (6 in total).",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "LAYERED_TYPE_CUBEMAP_ARRAY",
+      "value": "2",
+      "enum": "LayeredType",
+      "kind": "EnumValue",
+      "summary": "Texture is a [CubemapArray], with each cubemap being made of 6 layers.",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s format is queried.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.TextureLayered._GetFormat",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.TextureLayered._GetHeight",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayerData",
+      "kind": "Method",
+      "signature": "public Image _GetLayerData(int layerIndex)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "layer_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Called when the data for a layer in the [TextureLayered] is queried.",
+      "godotName": "_get_layer_data",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayerData(int)",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayeredType",
+      "kind": "Method",
+      "signature": "public int _GetLayeredType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the layers\u0027 type in the [TextureLayered] is queried.",
+      "godotName": "_get_layered_type",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayeredType",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetLayers",
+      "kind": "Method",
+      "signature": "public int _GetLayers()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the number of layers in the [TextureLayered] is queried.",
+      "godotName": "_get_layers",
+      "xmlDocId": "M:Godot.TextureLayered._GetLayers",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [TextureLayered]\u0027s width queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.TextureLayered._GetWidth",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of mipmaps in the [TextureLayered] is queried.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.TextureLayered._HasMipmaps",
+      "sourcePath": "doc/classes/TextureLayered.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextureLayered.xml",
+      "sha256": "63dbaa5051959e957273c93cf6929f43088739e976c44ef67641ed5012b1d4a3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

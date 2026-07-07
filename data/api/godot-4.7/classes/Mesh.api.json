@@ -1,0 +1,1594 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Mesh",
+    "namespace": "Godot",
+    "fullName": "Godot.Mesh",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Mesh",
+    "documentationPath": "doc/classes/Mesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_mesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAabb",
+      "kind": "Method",
+      "signature": "public AABB _GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Virtual method to override the [AABB] for a custom class extending [Mesh].",
+      "godotName": "_get_aabb",
+      "xmlDocId": "M:Godot.Mesh._GetAabb",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetBlendShapeCount",
+      "kind": "Method",
+      "signature": "public int _GetBlendShapeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Virtual method to override the number of blend shapes for a custom class extending [Mesh].",
+      "godotName": "_get_blend_shape_count",
+      "xmlDocId": "M:Godot.Mesh._GetBlendShapeCount",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetBlendShapeName",
+      "kind": "Method",
+      "signature": "public StringName _GetBlendShapeName(int index)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the retrieval of blend shape names for a custom class extending [Mesh].",
+      "godotName": "_get_blend_shape_name",
+      "xmlDocId": "M:Godot.Mesh._GetBlendShapeName(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetSurfaceCount",
+      "kind": "Method",
+      "signature": "public int _GetSurfaceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Virtual method to override the surface count for a custom class extending [Mesh].",
+      "godotName": "_get_surface_count",
+      "xmlDocId": "M:Godot.Mesh._GetSurfaceCount",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SetBlendShapeName",
+      "kind": "Method",
+      "signature": "public void _SetBlendShapeName(int index, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override the names of blend shapes for a custom class extending [Mesh].",
+      "godotName": "_set_blend_shape_name",
+      "xmlDocId": "M:Godot.Mesh._SetBlendShapeName(int,StringName)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrayIndexLen",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetArrayIndexLen(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface array index length for a custom class extending [Mesh].",
+      "godotName": "_surface_get_array_index_len",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrayIndexLen(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrayLen",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetArrayLen(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface array length for a custom class extending [Mesh].",
+      "godotName": "_surface_get_array_len",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrayLen(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrays",
+      "kind": "Method",
+      "signature": "public Array _SurfaceGetArrays(int index)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface arrays for a custom class extending [Mesh].",
+      "godotName": "_surface_get_arrays",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetBlendShapeArrays",
+      "kind": "Method",
+      "signature": "public Array[] _SurfaceGetBlendShapeArrays(int index)",
+      "returnType": "Array[]",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the blend shape arrays for a custom class extending [Mesh].",
+      "godotName": "_surface_get_blend_shape_arrays",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetBlendShapeArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetFormat",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetFormat(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface format for a custom class extending [Mesh].",
+      "godotName": "_surface_get_format",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetFormat(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetLods",
+      "kind": "Method",
+      "signature": "public Dictionary _SurfaceGetLods(int index)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface LODs for a custom class extending [Mesh].",
+      "godotName": "_surface_get_lods",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetLods(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetMaterial",
+      "kind": "Method",
+      "signature": "public Material _SurfaceGetMaterial(int index)",
+      "returnType": "Material",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface material for a custom class extending [Mesh].",
+      "godotName": "_surface_get_material",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetMaterial(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetPrimitiveType",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetPrimitiveType(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface primitive type for a custom class extending [Mesh].",
+      "godotName": "_surface_get_primitive_type",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetPrimitiveType(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceSetMaterial",
+      "kind": "Method",
+      "signature": "public void _SurfaceSetMaterial(int index, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        }
+      ],
+      "summary": "Virtual method to override the setting of a [param material] at the given [param index] for a custom class extending [Mesh].",
+      "godotName": "_surface_set_material",
+      "xmlDocId": "M:Godot.Mesh._SurfaceSetMaterial(int,Material)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "CreateConvexShape",
+      "kind": "Method",
+      "signature": "public ConvexPolygonShape3D CreateConvexShape(bool clean, bool simplify)",
+      "returnType": "ConvexPolygonShape3D",
+      "parameters": [
+        {
+          "name": "clean",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "simplify",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Calculate a [ConvexPolygonShape3D] from the mesh. If [param clean] is [code]true[/code] (default), duplicate and interior vertices are removed automatically. You can set it to [code]false[/code] to make the process faster if not needed. If [param simplify] is [code]true[/code], the geometry can be further simplified to reduce the number of vertices. Disabled by default.",
+      "godotName": "create_convex_shape",
+      "xmlDocId": "M:Godot.Mesh.CreateConvexShape(bool,bool)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "CreateOutline",
+      "kind": "Method",
+      "signature": "public Mesh CreateOutline(float margin)",
+      "returnType": "Mesh",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "float"
+        }
+      ],
+      "summary": "Calculate an outline mesh at a defined offset (margin) from the original mesh. [b]Note:[/b] This method typically returns the vertices in reverse order (e.g. clockwise to counterclockwise).",
+      "godotName": "create_outline",
+      "xmlDocId": "M:Godot.Mesh.CreateOutline(float)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "CreatePlaceholder",
+      "kind": "Method",
+      "signature": "public Resource CreatePlaceholder()",
+      "returnType": "Resource",
+      "parameters": [],
+      "summary": "Creates a placeholder version of this resource ([PlaceholderMesh]).",
+      "godotName": "create_placeholder",
+      "xmlDocId": "M:Godot.Mesh.CreatePlaceholder",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "CreateTrimeshShape",
+      "kind": "Method",
+      "signature": "public ConcavePolygonShape3D CreateTrimeshShape()",
+      "returnType": "ConcavePolygonShape3D",
+      "parameters": [],
+      "summary": "Calculate a [ConcavePolygonShape3D] from the mesh.",
+      "godotName": "create_trimesh_shape",
+      "xmlDocId": "M:Godot.Mesh.CreateTrimeshShape",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "GenerateTriangleMesh",
+      "kind": "Method",
+      "signature": "public TriangleMesh GenerateTriangleMesh()",
+      "returnType": "TriangleMesh",
+      "parameters": [],
+      "summary": "Generate a [TriangleMesh] from the mesh. Considers only surfaces using one of these primitive types: [constant PRIMITIVE_TRIANGLES], [constant PRIMITIVE_TRIANGLE_STRIP].",
+      "godotName": "generate_triangle_mesh",
+      "xmlDocId": "M:Godot.Mesh.GenerateTriangleMesh",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "GetAabb",
+      "kind": "Method",
+      "signature": "public AABB GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the smallest [AABB] enclosing this mesh in local space. Not affected by [code]custom_aabb[/code]. [b]Note:[/b] This is only implemented for [ArrayMesh] and [PrimitiveMesh].",
+      "godotName": "get_aabb",
+      "xmlDocId": "M:Godot.Mesh.GetAabb",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "GetFaces",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetFaces()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns all the vertices that make up the faces of the mesh. Each three vertices represent one triangle.",
+      "godotName": "get_faces",
+      "xmlDocId": "M:Godot.Mesh.GetFaces",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "GetSurfaceCount",
+      "kind": "Method",
+      "signature": "public int GetSurfaceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of surfaces that the [Mesh] holds. This is equivalent to [method MeshInstance3D.get_surface_override_material_count].",
+      "godotName": "get_surface_count",
+      "xmlDocId": "M:Godot.Mesh.GetSurfaceCount",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "SurfaceGetArrays",
+      "kind": "Method",
+      "signature": "public Array SurfaceGetArrays(int surfIdx)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the arrays for the vertices, normals, UVs, etc. that make up the requested surface (see [method ArrayMesh.add_surface_from_arrays]).",
+      "godotName": "surface_get_arrays",
+      "xmlDocId": "M:Godot.Mesh.SurfaceGetArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "SurfaceGetBlendShapeArrays",
+      "kind": "Method",
+      "signature": "public Array[] SurfaceGetBlendShapeArrays(int surfIdx)",
+      "returnType": "Array[]",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the blend shape arrays for the requested surface.",
+      "godotName": "surface_get_blend_shape_arrays",
+      "xmlDocId": "M:Godot.Mesh.SurfaceGetBlendShapeArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "SurfaceGetMaterial",
+      "kind": "Method",
+      "signature": "public Material SurfaceGetMaterial(int surfIdx)",
+      "returnType": "Material",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [Material] in a given surface. Surface is rendered using this material. [b]Note:[/b] This returns the material within the [Mesh] resource, not the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties. To get the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties, use [method MeshInstance3D.get_surface_override_material] instead.",
+      "godotName": "surface_get_material",
+      "xmlDocId": "M:Godot.Mesh.SurfaceGetMaterial(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "SurfaceSetMaterial",
+      "kind": "Method",
+      "signature": "public void SurfaceSetMaterial(int surfIdx, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surf_idx",
+          "type": "int"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        }
+      ],
+      "summary": "Sets a [Material] for a given surface. Surface will be rendered using this material. [b]Note:[/b] This assigns the material within the [Mesh] resource, not the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties. To set the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties, use [method MeshInstance3D.set_surface_override_material] instead.",
+      "godotName": "surface_set_material",
+      "xmlDocId": "M:Godot.Mesh.SurfaceSetMaterial(int,Material)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "LightmapSizeHint",
+      "kind": "Property",
+      "signature": "public Vector2i LightmapSizeHint { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Sets a hint to be used for lightmap resolution.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "lightmap_size_hint",
+      "xmlDocId": "P:Godot.Mesh.LightmapSizeHint",
+      "sourcePath": "doc/classes/Mesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ArrayCustomFormat",
+      "values": [
+        {
+          "name": "ARRAY_CUSTOM_MAX",
+          "value": "8",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ArrayCustomFormat] enum.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RGBA8_SNORM",
+          "value": "1",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains signed normalized byte colors from -1 to 1, encoded as [PackedByteArray].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RGBA8_UNORM",
+          "value": "0",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains unsigned normalized byte colors from 0 to 1, encoded as [PackedByteArray].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RGBA_FLOAT",
+          "value": "7",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RGBA_HALF",
+          "value": "3",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains half precision float colors, encoded as [PackedByteArray].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RGB_FLOAT",
+          "value": "6",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only red, green and blue channels are used.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RG_FLOAT",
+          "value": "5",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only red and green channels are used.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_RG_HALF",
+          "value": "2",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains half precision float colors, encoded as [PackedByteArray]. Only red and green channels are used.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM_R_FLOAT",
+          "value": "4",
+          "enum": "ArrayCustomFormat",
+          "kind": "EnumValue",
+          "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only the red channel is used.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "ArrayFormat",
+      "values": [
+        {
+          "name": "ARRAY_COMPRESS_FLAGS_BASE",
+          "value": "25",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Shift of first compress flag. Compress flags should be passed to [method ArrayMesh.add_surface_from_arrays] and [method SurfaceTool.commit].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+          "value": "536870912",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Flag used to mark that a mesh is using compressed attributes (vertices, normals, tangents, UVs). When this form of compression is enabled, vertex positions will be packed into an RGBA16UNORM attribute and scaled in the vertex shader. The normal and tangent will be packed into an RG16UNORM representing an axis, and a 16-bit float stored in the A-channel of the vertex. UVs will use 16-bit normalized floats instead of full 32-bit signed floats. When using this compression mode you must use either vertices, normals, and tangents or only vertices. You cannot use normals without tangents. Importers will automatically enable this compression if they can.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY",
+          "value": "268435456",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Flag used to mark that the mesh intentionally contains no vertex array.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FLAG_USE_2D_VERTICES",
+          "value": "33554432",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Flag used to mark that the array contains 2D vertices.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+          "value": "134217728",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Flag used to mark that the mesh contains up to 8 bone influences per vertex. This flag indicates that [constant ARRAY_BONES] and [constant ARRAY_WEIGHTS] elements will have double length.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+          "value": "67108864",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Flag used to mark that the mesh data will use [code]GL_DYNAMIC_DRAW[/code] on GLES. Unused on Vulkan.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_BLEND_SHAPE_MASK",
+          "value": "7",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mask of mesh channels permitted in blend shapes.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_BONES",
+          "value": "1024",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains bones.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_COLOR",
+          "value": "8",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains colors.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM0",
+          "value": "64",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains custom channel index 0.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM0_SHIFT",
+          "value": "13",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 0.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM1",
+          "value": "128",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains custom channel index 1.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM1_SHIFT",
+          "value": "16",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 1.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM2",
+          "value": "256",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains custom channel index 2.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM2_SHIFT",
+          "value": "19",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 2.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM3",
+          "value": "512",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains custom channel index 3.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM3_SHIFT",
+          "value": "22",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 3.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM_BASE",
+          "value": "13",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Shift of first custom channel.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM_BITS",
+          "value": "3",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Number of format bits per custom channel. See [enum ArrayCustomFormat].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_CUSTOM_MASK",
+          "value": "7",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mask of custom format bits per custom channel. Must be shifted by one of the SHIFT constants. See [enum ArrayCustomFormat].",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_INDEX",
+          "value": "4096",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array uses indices.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_NORMAL",
+          "value": "2",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains normals.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_TANGENT",
+          "value": "4",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains tangents.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_TEX_UV",
+          "value": "16",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains UVs.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_TEX_UV2",
+          "value": "32",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains second UV.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_VERTEX",
+          "value": "1",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains vertices. All meshes require a vertex array so this should always be present.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_FORMAT_WEIGHTS",
+          "value": "2048",
+          "enum": "ArrayFormat",
+          "kind": "EnumValue",
+          "summary": "Mesh array contains bone weights.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "ArrayType",
+      "values": [
+        {
+          "name": "ARRAY_BONES",
+          "value": "10",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedFloat32Array] or [PackedInt32Array] of bone indices. Contains either 4 or 8 numbers per vertex depending on the presence of the [constant ARRAY_FLAG_USE_8_BONE_WEIGHTS] flag.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_COLOR",
+          "value": "3",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedColorArray] of vertex colors.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM0",
+          "value": "6",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "Contains custom color channel 0. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM1",
+          "value": "7",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "Contains custom color channel 1. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM2",
+          "value": "8",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "Contains custom color channel 2. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_CUSTOM3",
+          "value": "9",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "Contains custom color channel 3. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_INDEX",
+          "value": "12",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedInt32Array] of integers used as indices referencing vertices, colors, normals, tangents, and textures. All of those arrays must have the same number of elements as the vertex array. No index can be beyond the vertex array size. When this index array is present, it puts the function into \u0022index mode,\u0022 where the index selects the [i]i[/i]\u0027th vertex, normal, tangent, color, UV, etc. This means if you want to have different normals or colors along an edge, you have to duplicate the vertices. For triangles, the index array is interpreted as triples, referring to the vertices of each triangle. For lines, the index array is in pairs indicating the start and end of each line.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_MAX",
+          "value": "13",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ArrayType] enum.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_NORMAL",
+          "value": "1",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedVector3Array] of vertex normals. [b]Note:[/b] The array has to consist of normal vectors, otherwise they will be normalized by the engine, potentially causing visual discrepancies.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_TANGENT",
+          "value": "2",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedFloat32Array] of vertex tangents. Each element in groups of 4 floats, first 3 floats determine the tangent, and the last the binormal direction as -1 or 1.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_TEX_UV",
+          "value": "4",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedVector2Array] for UV coordinates.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_TEX_UV2",
+          "value": "5",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedVector2Array] for second UV coordinates.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_VERTEX",
+          "value": "0",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedVector3Array], [PackedVector2Array], or [Array] of vertex positions.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "ARRAY_WEIGHTS",
+          "value": "11",
+          "enum": "ArrayType",
+          "kind": "EnumValue",
+          "summary": "[PackedFloat32Array] or [PackedFloat64Array] of bone weights in the range [code]0.0[/code] to [code]1.0[/code] (inclusive). Contains either 4 or 8 numbers per vertex depending on the presence of the [constant ARRAY_FLAG_USE_8_BONE_WEIGHTS] flag.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "BlendShapeMode",
+      "values": [
+        {
+          "name": "BLEND_SHAPE_MODE_NORMALIZED",
+          "value": "0",
+          "enum": "BlendShapeMode",
+          "kind": "EnumValue",
+          "summary": "Blend shapes are normalized.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "BLEND_SHAPE_MODE_RELATIVE",
+          "value": "1",
+          "enum": "BlendShapeMode",
+          "kind": "EnumValue",
+          "summary": "Blend shapes are relative to base weight.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "PrimitiveType",
+      "values": [
+        {
+          "name": "PRIMITIVE_LINES",
+          "value": "1",
+          "enum": "PrimitiveType",
+          "kind": "EnumValue",
+          "summary": "Render array as lines (every two vertices a line is created).",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "PRIMITIVE_LINE_STRIP",
+          "value": "2",
+          "enum": "PrimitiveType",
+          "kind": "EnumValue",
+          "summary": "Render array as line strip.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "PRIMITIVE_POINTS",
+          "value": "0",
+          "enum": "PrimitiveType",
+          "kind": "EnumValue",
+          "summary": "Render array as points (one vertex equals one point).",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "PRIMITIVE_TRIANGLES",
+          "value": "3",
+          "enum": "PrimitiveType",
+          "kind": "EnumValue",
+          "summary": "Render array as triangles (every three vertices a triangle is created).",
+          "sourcePath": "doc/classes/Mesh.xml"
+        },
+        {
+          "name": "PRIMITIVE_TRIANGLE_STRIP",
+          "value": "4",
+          "enum": "PrimitiveType",
+          "kind": "EnumValue",
+          "summary": "Render array as triangle strips.",
+          "sourcePath": "doc/classes/Mesh.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PRIMITIVE_POINTS",
+      "value": "0",
+      "enum": "PrimitiveType",
+      "kind": "EnumValue",
+      "summary": "Render array as points (one vertex equals one point).",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "PRIMITIVE_LINES",
+      "value": "1",
+      "enum": "PrimitiveType",
+      "kind": "EnumValue",
+      "summary": "Render array as lines (every two vertices a line is created).",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "PRIMITIVE_LINE_STRIP",
+      "value": "2",
+      "enum": "PrimitiveType",
+      "kind": "EnumValue",
+      "summary": "Render array as line strip.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "PRIMITIVE_TRIANGLES",
+      "value": "3",
+      "enum": "PrimitiveType",
+      "kind": "EnumValue",
+      "summary": "Render array as triangles (every three vertices a triangle is created).",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "PRIMITIVE_TRIANGLE_STRIP",
+      "value": "4",
+      "enum": "PrimitiveType",
+      "kind": "EnumValue",
+      "summary": "Render array as triangle strips.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_VERTEX",
+      "value": "0",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedVector3Array], [PackedVector2Array], or [Array] of vertex positions.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_NORMAL",
+      "value": "1",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedVector3Array] of vertex normals. [b]Note:[/b] The array has to consist of normal vectors, otherwise they will be normalized by the engine, potentially causing visual discrepancies.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_TANGENT",
+      "value": "2",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedFloat32Array] of vertex tangents. Each element in groups of 4 floats, first 3 floats determine the tangent, and the last the binormal direction as -1 or 1.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_COLOR",
+      "value": "3",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedColorArray] of vertex colors.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_TEX_UV",
+      "value": "4",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedVector2Array] for UV coordinates.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_TEX_UV2",
+      "value": "5",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedVector2Array] for second UV coordinates.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM0",
+      "value": "6",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "Contains custom color channel 0. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM1",
+      "value": "7",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "Contains custom color channel 1. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM2",
+      "value": "8",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "Contains custom color channel 2. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM3",
+      "value": "9",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "Contains custom color channel 3. [PackedByteArray] if [code](format \u003E\u003E Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT) \u0026 Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_BONES",
+      "value": "10",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedFloat32Array] or [PackedInt32Array] of bone indices. Contains either 4 or 8 numbers per vertex depending on the presence of the [constant ARRAY_FLAG_USE_8_BONE_WEIGHTS] flag.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_WEIGHTS",
+      "value": "11",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedFloat32Array] or [PackedFloat64Array] of bone weights in the range [code]0.0[/code] to [code]1.0[/code] (inclusive). Contains either 4 or 8 numbers per vertex depending on the presence of the [constant ARRAY_FLAG_USE_8_BONE_WEIGHTS] flag.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_INDEX",
+      "value": "12",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "[PackedInt32Array] of integers used as indices referencing vertices, colors, normals, tangents, and textures. All of those arrays must have the same number of elements as the vertex array. No index can be beyond the vertex array size. When this index array is present, it puts the function into \u0022index mode,\u0022 where the index selects the [i]i[/i]\u0027th vertex, normal, tangent, color, UV, etc. This means if you want to have different normals or colors along an edge, you have to duplicate the vertices. For triangles, the index array is interpreted as triples, referring to the vertices of each triangle. For lines, the index array is in pairs indicating the start and end of each line.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_MAX",
+      "value": "13",
+      "enum": "ArrayType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ArrayType] enum.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RGBA8_UNORM",
+      "value": "0",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains unsigned normalized byte colors from 0 to 1, encoded as [PackedByteArray].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RGBA8_SNORM",
+      "value": "1",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains signed normalized byte colors from -1 to 1, encoded as [PackedByteArray].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RG_HALF",
+      "value": "2",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains half precision float colors, encoded as [PackedByteArray]. Only red and green channels are used.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RGBA_HALF",
+      "value": "3",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains half precision float colors, encoded as [PackedByteArray].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_R_FLOAT",
+      "value": "4",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only the red channel is used.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RG_FLOAT",
+      "value": "5",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only red and green channels are used.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RGB_FLOAT",
+      "value": "6",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array]. Only red, green and blue channels are used.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_RGBA_FLOAT",
+      "value": "7",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Indicates this custom channel contains full float colors, in a [PackedFloat32Array].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_CUSTOM_MAX",
+      "value": "8",
+      "enum": "ArrayCustomFormat",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ArrayCustomFormat] enum.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_VERTEX",
+      "value": "1",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains vertices. All meshes require a vertex array so this should always be present.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_NORMAL",
+      "value": "2",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains normals.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_TANGENT",
+      "value": "4",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains tangents.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_COLOR",
+      "value": "8",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains colors.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_TEX_UV",
+      "value": "16",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains UVs.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_TEX_UV2",
+      "value": "32",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains second UV.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM0",
+      "value": "64",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains custom channel index 0.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM1",
+      "value": "128",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains custom channel index 1.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM2",
+      "value": "256",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains custom channel index 2.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM3",
+      "value": "512",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains custom channel index 3.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_BONES",
+      "value": "1024",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains bones.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_WEIGHTS",
+      "value": "2048",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array contains bone weights.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_INDEX",
+      "value": "4096",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mesh array uses indices.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_BLEND_SHAPE_MASK",
+      "value": "7",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mask of mesh channels permitted in blend shapes.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM_BASE",
+      "value": "13",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Shift of first custom channel.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM_BITS",
+      "value": "3",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Number of format bits per custom channel. See [enum ArrayCustomFormat].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM0_SHIFT",
+      "value": "13",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 0.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM1_SHIFT",
+      "value": "16",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 1.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM2_SHIFT",
+      "value": "19",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 2.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM3_SHIFT",
+      "value": "22",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Amount to shift [enum ArrayCustomFormat] for custom channel index 3.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FORMAT_CUSTOM_MASK",
+      "value": "7",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Mask of custom format bits per custom channel. Must be shifted by one of the SHIFT constants. See [enum ArrayCustomFormat].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_COMPRESS_FLAGS_BASE",
+      "value": "25",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Shift of first compress flag. Compress flags should be passed to [method ArrayMesh.add_surface_from_arrays] and [method SurfaceTool.commit].",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FLAG_USE_2D_VERTICES",
+      "value": "33554432",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Flag used to mark that the array contains 2D vertices.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+      "value": "67108864",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Flag used to mark that the mesh data will use [code]GL_DYNAMIC_DRAW[/code] on GLES. Unused on Vulkan.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+      "value": "134217728",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Flag used to mark that the mesh contains up to 8 bone influences per vertex. This flag indicates that [constant ARRAY_BONES] and [constant ARRAY_WEIGHTS] elements will have double length.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY",
+      "value": "268435456",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Flag used to mark that the mesh intentionally contains no vertex array.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+      "value": "536870912",
+      "enum": "ArrayFormat",
+      "kind": "EnumValue",
+      "summary": "Flag used to mark that a mesh is using compressed attributes (vertices, normals, tangents, UVs). When this form of compression is enabled, vertex positions will be packed into an RGBA16UNORM attribute and scaled in the vertex shader. The normal and tangent will be packed into an RG16UNORM representing an axis, and a 16-bit float stored in the A-channel of the vertex. UVs will use 16-bit normalized floats instead of full 32-bit signed floats. When using this compression mode you must use either vertices, normals, and tangents or only vertices. You cannot use normals without tangents. Importers will automatically enable this compression if they can.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "BLEND_SHAPE_MODE_NORMALIZED",
+      "value": "0",
+      "enum": "BlendShapeMode",
+      "kind": "EnumValue",
+      "summary": "Blend shapes are normalized.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "BLEND_SHAPE_MODE_RELATIVE",
+      "value": "1",
+      "enum": "BlendShapeMode",
+      "kind": "EnumValue",
+      "summary": "Blend shapes are relative to base weight.",
+      "sourcePath": "doc/classes/Mesh.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAabb",
+      "kind": "Method",
+      "signature": "public AABB _GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Virtual method to override the [AABB] for a custom class extending [Mesh].",
+      "godotName": "_get_aabb",
+      "xmlDocId": "M:Godot.Mesh._GetAabb",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetBlendShapeCount",
+      "kind": "Method",
+      "signature": "public int _GetBlendShapeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Virtual method to override the number of blend shapes for a custom class extending [Mesh].",
+      "godotName": "_get_blend_shape_count",
+      "xmlDocId": "M:Godot.Mesh._GetBlendShapeCount",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetBlendShapeName",
+      "kind": "Method",
+      "signature": "public StringName _GetBlendShapeName(int index)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the retrieval of blend shape names for a custom class extending [Mesh].",
+      "godotName": "_get_blend_shape_name",
+      "xmlDocId": "M:Godot.Mesh._GetBlendShapeName(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_GetSurfaceCount",
+      "kind": "Method",
+      "signature": "public int _GetSurfaceCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Virtual method to override the surface count for a custom class extending [Mesh].",
+      "godotName": "_get_surface_count",
+      "xmlDocId": "M:Godot.Mesh._GetSurfaceCount",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SetBlendShapeName",
+      "kind": "Method",
+      "signature": "public void _SetBlendShapeName(int index, StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Virtual method to override the names of blend shapes for a custom class extending [Mesh].",
+      "godotName": "_set_blend_shape_name",
+      "xmlDocId": "M:Godot.Mesh._SetBlendShapeName(int,StringName)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrayIndexLen",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetArrayIndexLen(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface array index length for a custom class extending [Mesh].",
+      "godotName": "_surface_get_array_index_len",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrayIndexLen(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrayLen",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetArrayLen(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface array length for a custom class extending [Mesh].",
+      "godotName": "_surface_get_array_len",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrayLen(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetArrays",
+      "kind": "Method",
+      "signature": "public Array _SurfaceGetArrays(int index)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface arrays for a custom class extending [Mesh].",
+      "godotName": "_surface_get_arrays",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetBlendShapeArrays",
+      "kind": "Method",
+      "signature": "public Array[] _SurfaceGetBlendShapeArrays(int index)",
+      "returnType": "Array[]",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the blend shape arrays for a custom class extending [Mesh].",
+      "godotName": "_surface_get_blend_shape_arrays",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetBlendShapeArrays(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetFormat",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetFormat(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface format for a custom class extending [Mesh].",
+      "godotName": "_surface_get_format",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetFormat(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetLods",
+      "kind": "Method",
+      "signature": "public Dictionary _SurfaceGetLods(int index)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface LODs for a custom class extending [Mesh].",
+      "godotName": "_surface_get_lods",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetLods(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetMaterial",
+      "kind": "Method",
+      "signature": "public Material _SurfaceGetMaterial(int index)",
+      "returnType": "Material",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface material for a custom class extending [Mesh].",
+      "godotName": "_surface_get_material",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetMaterial(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceGetPrimitiveType",
+      "kind": "Method",
+      "signature": "public int _SurfaceGetPrimitiveType(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Virtual method to override the surface primitive type for a custom class extending [Mesh].",
+      "godotName": "_surface_get_primitive_type",
+      "xmlDocId": "M:Godot.Mesh._SurfaceGetPrimitiveType(int)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    },
+    {
+      "name": "_SurfaceSetMaterial",
+      "kind": "Method",
+      "signature": "public void _SurfaceSetMaterial(int index, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        }
+      ],
+      "summary": "Virtual method to override the setting of a [param material] at the given [param index] for a custom class extending [Mesh].",
+      "godotName": "_surface_set_material",
+      "xmlDocId": "M:Godot.Mesh._SurfaceSetMaterial(int,Material)",
+      "sourcePath": "doc/classes/Mesh.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Mesh.xml",
+      "sha256": "0bfaeba1ce400aadf5f9b204f5e64c9881c6c564807f15c04667dbdd59bc5274"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

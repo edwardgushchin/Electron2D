@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Animation.LoopMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Animation.LoopMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Animation.LoopMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Linear",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.LoopMode Linear",
+      "returnType": "Electron2D.Animation.LoopMode",
+      "parameters": [],
+      "summary": "Playback wraps from \u0060Electron2D.Animation.Length\u0060 back to the beginning.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Animation.LoopModeEnum.Linear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.LoopMode None",
+      "returnType": "Electron2D.Animation.LoopMode",
+      "parameters": [],
+      "summary": "Playback stops when it reaches \u0060Electron2D.Animation.Length\u0060.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Animation.LoopModeEnum.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Linear",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Playback wraps from \u0060Electron2D.Animation.Length\u0060 back to the beginning.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Playback stops when it reaches \u0060Electron2D.Animation.Length\u0060.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

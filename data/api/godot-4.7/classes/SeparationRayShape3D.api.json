@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SeparationRayShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SeparationRayShape3D",
+    "kind": "class",
+    "baseType": "Shape3D",
+    "interfaces": [],
+    "godotReference": "SeparationRayShape3D",
+    "documentationPath": "doc/classes/SeparationRayShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_separationrayshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Length",
+      "kind": "Property",
+      "signature": "public float Length { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The ray\u0027s length.",
+      "defaultValue": "1.0",
+      "godotName": "length",
+      "xmlDocId": "P:Godot.SeparationRayShape3D.Length",
+      "sourcePath": "doc/classes/SeparationRayShape3D.xml"
+    },
+    {
+      "name": "SlideOnSlope",
+      "kind": "Property",
+      "signature": "public bool SlideOnSlope { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code] (default), the shape always separates and returns a normal along its own direction. If [code]true[/code], the shape can return the correct normal and separate in any direction, allowing sliding motion on slopes.",
+      "defaultValue": "false",
+      "godotName": "slide_on_slope",
+      "xmlDocId": "P:Godot.SeparationRayShape3D.SlideOnSlope",
+      "sourcePath": "doc/classes/SeparationRayShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SeparationRayShape3D.xml",
+      "sha256": "530a8f76d91ded024423b6f0e7468a1b6c911a9ec50a9cc802e0a286a6a28440"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

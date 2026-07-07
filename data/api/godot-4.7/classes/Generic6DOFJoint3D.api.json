@@ -1,0 +1,1585 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Generic6DOFJoint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Generic6DOFJoint3D",
+    "kind": "class",
+    "baseType": "Joint3D",
+    "interfaces": [],
+    "godotReference": "Generic6DOFJoint3D",
+    "documentationPath": "doc/classes/Generic6DOFJoint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_generic6dofjoint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetFlagX",
+      "kind": "Method",
+      "signature": "public bool GetFlagX(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_flag_x",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetFlagX(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "GetFlagY",
+      "kind": "Method",
+      "signature": "public bool GetFlagY(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_flag_y",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetFlagY(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "GetFlagZ",
+      "kind": "Method",
+      "signature": "public bool GetFlagZ(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_flag_z",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetFlagZ(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "GetParamX",
+      "kind": "Method",
+      "signature": "public float GetParamX(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_param_x",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetParamX(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "GetParamY",
+      "kind": "Method",
+      "signature": "public float GetParamY(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_param_y",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetParamY(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "GetParamZ",
+      "kind": "Method",
+      "signature": "public float GetParamZ(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_param_z",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.GetParamZ(int)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetFlagX",
+      "kind": "Method",
+      "signature": "public void SetFlagX(int flag, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_flag_x",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetFlagX(int,bool)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetFlagY",
+      "kind": "Method",
+      "signature": "public void SetFlagY(int flag, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_flag_y",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetFlagY(int,bool)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetFlagZ",
+      "kind": "Method",
+      "signature": "public void SetFlagZ(int flag, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_flag_z",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetFlagZ(int,bool)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetParamX",
+      "kind": "Method",
+      "signature": "public void SetParamX(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_param_x",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetParamX(int,float)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetParamY",
+      "kind": "Method",
+      "signature": "public void SetParamY(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_param_y",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetParamY(int,float)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "SetParamZ",
+      "kind": "Method",
+      "signature": "public void SetParamZ(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_param_z",
+      "xmlDocId": "M:Godot.Generic6DOFJoint3D.SetParamZ(int,float)",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "angular_limit_x/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational damping across the X axis. The lower, the longer an impulse from one side takes to travel to the other side.",
+      "defaultValue": "1.0",
+      "godotName": "angular_limit_x/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], rotation across the X axis is limited.",
+      "defaultValue": "true",
+      "godotName": "angular_limit_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/erp",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When rotating across the X axis, this error tolerance factor defines how much the correction gets slowed down. The lower, the slower.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_x/erp",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum amount of force that can occur, when rotating around the X axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_x/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/lower_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in negative direction to break loose and rotate around the X axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_x/lower_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational restitution across the X axis. The lower, the more restitution occurs.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_x/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed of all rotations across the X axis.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_x/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_x/upper_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in positive direction to break loose and rotate around the X axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_x/upper_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational damping across the Y axis. The lower, the more damping occurs.",
+      "defaultValue": "1.0",
+      "godotName": "angular_limit_y/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], rotation across the Y axis is limited.",
+      "defaultValue": "true",
+      "godotName": "angular_limit_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/erp",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When rotating across the Y axis, this error tolerance factor defines how much the correction gets slowed down. The lower, the slower.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_y/erp",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum amount of force that can occur, when rotating around the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_y/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/lower_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in negative direction to break loose and rotate around the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_y/lower_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational restitution across the Y axis. The lower, the more restitution occurs.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_y/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed of all rotations across the Y axis.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_y/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_y/upper_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in positive direction to break loose and rotate around the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_y/upper_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational damping across the Z axis. The lower, the more damping occurs.",
+      "defaultValue": "1.0",
+      "godotName": "angular_limit_z/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], rotation across the Z axis is limited.",
+      "defaultValue": "true",
+      "godotName": "angular_limit_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/erp",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When rotating across the Z axis, this error tolerance factor defines how much the correction gets slowed down. The lower, the slower.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_z/erp",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum amount of force that can occur, when rotating around the Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_z/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/lower_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in negative direction to break loose and rotate around the Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_z/lower_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of rotational restitution across the Z axis. The lower, the more restitution occurs.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_z/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed of all rotations across the Z axis.",
+      "defaultValue": "0.5",
+      "godotName": "angular_limit_z/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_limit_z/upper_angle",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum rotation in positive direction to break loose and rotate around the Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_limit_z/upper_angle",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a rotating motor at the X axis is enabled.",
+      "defaultValue": "false",
+      "godotName": "angular_motor_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_x/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum acceleration for the motor at the X axis.",
+      "defaultValue": "300.0",
+      "godotName": "angular_motor_x/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_x/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Target speed for the motor at the X axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_motor_x/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a rotating motor at the Y axis is enabled.",
+      "defaultValue": "false",
+      "godotName": "angular_motor_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_y/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum acceleration for the motor at the Y axis.",
+      "defaultValue": "300.0",
+      "godotName": "angular_motor_y/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_y/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Target speed for the motor at the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_motor_y/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a rotating motor at the Z axis is enabled.",
+      "defaultValue": "false",
+      "godotName": "angular_motor_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_z/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Maximum acceleration for the motor at the Z axis.",
+      "defaultValue": "300.0",
+      "godotName": "angular_motor_z/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_motor_z/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Target speed for the motor at the Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "angular_motor_z/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_x/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_x/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "angular_spring_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_x/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_x/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_x/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_x/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_y/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_y/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "angular_spring_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_y/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_y/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_y/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_y/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_z/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_z/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "angular_spring_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_z/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_z/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "angular_spring_z/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "angular_spring_z/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping that happens at the X motion.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit_x/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the linear motion across the X axis is limited.",
+      "defaultValue": "true",
+      "godotName": "linear_limit_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/lower_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum difference between the pivot points\u0027 X axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_x/lower_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution on the X axis movement. The lower, the more momentum gets lost.",
+      "defaultValue": "0.5",
+      "godotName": "linear_limit_x/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across the X axis. The lower, the slower the movement.",
+      "defaultValue": "0.7",
+      "godotName": "linear_limit_x/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_x/upper_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum difference between the pivot points\u0027 X axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_x/upper_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping that happens at the Y motion.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit_y/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the linear motion across the Y axis is limited.",
+      "defaultValue": "true",
+      "godotName": "linear_limit_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/lower_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum difference between the pivot points\u0027 Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_y/lower_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution on the Y axis movement. The lower, the more momentum gets lost.",
+      "defaultValue": "0.5",
+      "godotName": "linear_limit_y/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across the Y axis. The lower, the slower the movement.",
+      "defaultValue": "0.7",
+      "godotName": "linear_limit_y/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_y/upper_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum difference between the pivot points\u0027 Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_y/upper_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of damping that happens at the Z motion.",
+      "defaultValue": "1.0",
+      "godotName": "linear_limit_z/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the linear motion across the Z axis is limited.",
+      "defaultValue": "true",
+      "godotName": "linear_limit_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/lower_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum difference between the pivot points\u0027 Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_z/lower_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/restitution",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount of restitution on the Z axis movement. The lower, the more momentum gets lost.",
+      "defaultValue": "0.5",
+      "godotName": "linear_limit_z/restitution",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/softness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A factor applied to the movement across the Z axis. The lower, the slower the movement.",
+      "defaultValue": "0.7",
+      "godotName": "linear_limit_z/softness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_limit_z/upper_distance",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum difference between the pivot points\u0027 Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_limit_z/upper_distance",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], then there is a linear motor on the X axis. It will attempt to reach the target velocity while staying within the force limits.",
+      "defaultValue": "false",
+      "godotName": "linear_motor_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_x/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum force the linear motor can apply on the X axis while trying to reach the target velocity.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_x/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_x/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed that the linear motor will attempt to reach on the X axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_x/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], then there is a linear motor on the Y axis. It will attempt to reach the target velocity while staying within the force limits.",
+      "defaultValue": "false",
+      "godotName": "linear_motor_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_y/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum force the linear motor can apply on the Y axis while trying to reach the target velocity.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_y/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_y/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed that the linear motor will attempt to reach on the Y axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_y/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], then there is a linear motor on the Z axis. It will attempt to reach the target velocity while staying within the force limits.",
+      "defaultValue": "false",
+      "godotName": "linear_motor_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_z/force_limit",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum force the linear motor can apply on the Z axis while trying to reach the target velocity.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_z/force_limit",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_motor_z/target_velocity",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed that the linear motor will attempt to reach on the Z axis.",
+      "defaultValue": "0.0",
+      "godotName": "linear_motor_z/target_velocity",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_x/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_x/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_x/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "linear_spring_x/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_x/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "linear_spring_x/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_x/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_x/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_y/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_y/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_y/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "linear_spring_y/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_y/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "linear_spring_y/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_y/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_y/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_z/damping",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_z/damping",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_z/enabled",
+      "kind": "RawProperty",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "linear_spring_z/enabled",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_z/equilibrium_point",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.0",
+      "godotName": "linear_spring_z/equilibrium_point",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "linear_spring_z/stiffness",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0.01",
+      "godotName": "linear_spring_z/stiffness",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    }
+  ],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Flag",
+      "values": [
+        {
+          "name": "FLAG_ENABLE_ANGULAR_LIMIT",
+          "value": "1",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "If enabled, rotational motion is possible within the given limits.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_ENABLE_ANGULAR_SPRING",
+          "value": "2",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_ENABLE_LINEAR_LIMIT",
+          "value": "0",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "If enabled, linear motion is possible within the given limits.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_ENABLE_LINEAR_MOTOR",
+          "value": "5",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "If enabled, there is a linear motor across these axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_ENABLE_LINEAR_SPRING",
+          "value": "3",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_ENABLE_MOTOR",
+          "value": "4",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "If enabled, there is a rotational motor across these axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "FLAG_MAX",
+          "value": "6",
+          "enum": "Flag",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Flag] enum.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "Param",
+      "values": [
+        {
+          "name": "PARAM_ANGULAR_DAMPING",
+          "value": "13",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The amount of rotational damping across the axes. The lower, the more damping occurs.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_ERP",
+          "value": "16",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "When rotating across the axes, this error tolerance factor defines how much the correction gets slowed down. The lower, the slower.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_FORCE_LIMIT",
+          "value": "15",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The maximum amount of force that can occur, when rotating around the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LIMIT_SOFTNESS",
+          "value": "12",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The speed of all rotations across the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_LOWER_LIMIT",
+          "value": "10",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The minimum rotation in negative direction to break loose and rotate around the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_MOTOR_FORCE_LIMIT",
+          "value": "18",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Maximum acceleration for the motor at the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_MOTOR_TARGET_VELOCITY",
+          "value": "17",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Target speed for the motor at the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_RESTITUTION",
+          "value": "14",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The amount of rotational restitution across the axes. The lower, the more restitution occurs.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_SPRING_DAMPING",
+          "value": "20",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT",
+          "value": "21",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_SPRING_STIFFNESS",
+          "value": "19",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_ANGULAR_UPPER_LIMIT",
+          "value": "11",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The minimum rotation in positive direction to break loose and rotate around the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_DAMPING",
+          "value": "4",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The amount of damping that happens at the linear motion across the axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LIMIT_SOFTNESS",
+          "value": "2",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "A factor applied to the movement across the axes. The lower, the slower the movement.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_LOWER_LIMIT",
+          "value": "0",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The minimum difference between the pivot points\u0027 axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_MOTOR_FORCE_LIMIT",
+          "value": "6",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The maximum force the linear motor will apply while trying to reach the velocity target.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_MOTOR_TARGET_VELOCITY",
+          "value": "5",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The velocity the linear motor will try to reach.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_RESTITUTION",
+          "value": "3",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The amount of restitution on the axes\u0027 movement. The lower, the more momentum gets lost.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_SPRING_DAMPING",
+          "value": "8",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT",
+          "value": "9",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_SPRING_STIFFNESS",
+          "value": "7",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_LINEAR_UPPER_LIMIT",
+          "value": "1",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The maximum difference between the pivot points\u0027 axes.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "22",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Param] enum.",
+          "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_LINEAR_LOWER_LIMIT",
+      "value": "0",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The minimum difference between the pivot points\u0027 axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_UPPER_LIMIT",
+      "value": "1",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The maximum difference between the pivot points\u0027 axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_LIMIT_SOFTNESS",
+      "value": "2",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "A factor applied to the movement across the axes. The lower, the slower the movement.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_RESTITUTION",
+      "value": "3",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The amount of restitution on the axes\u0027 movement. The lower, the more momentum gets lost.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_DAMPING",
+      "value": "4",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The amount of damping that happens at the linear motion across the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_MOTOR_TARGET_VELOCITY",
+      "value": "5",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The velocity the linear motor will try to reach.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_MOTOR_FORCE_LIMIT",
+      "value": "6",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The maximum force the linear motor will apply while trying to reach the velocity target.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_SPRING_STIFFNESS",
+      "value": "7",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_SPRING_DAMPING",
+      "value": "8",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT",
+      "value": "9",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LOWER_LIMIT",
+      "value": "10",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The minimum rotation in negative direction to break loose and rotate around the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_UPPER_LIMIT",
+      "value": "11",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The minimum rotation in positive direction to break loose and rotate around the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_LIMIT_SOFTNESS",
+      "value": "12",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The speed of all rotations across the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_DAMPING",
+      "value": "13",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The amount of rotational damping across the axes. The lower, the more damping occurs.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_RESTITUTION",
+      "value": "14",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The amount of rotational restitution across the axes. The lower, the more restitution occurs.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_FORCE_LIMIT",
+      "value": "15",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The maximum amount of force that can occur, when rotating around the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_ERP",
+      "value": "16",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "When rotating across the axes, this error tolerance factor defines how much the correction gets slowed down. The lower, the slower.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_MOTOR_TARGET_VELOCITY",
+      "value": "17",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Target speed for the motor at the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_MOTOR_FORCE_LIMIT",
+      "value": "18",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Maximum acceleration for the motor at the axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_SPRING_STIFFNESS",
+      "value": "19",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_SPRING_DAMPING",
+      "value": "20",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT",
+      "value": "21",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "22",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Param] enum.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_LINEAR_LIMIT",
+      "value": "0",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "If enabled, linear motion is possible within the given limits.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_ANGULAR_LIMIT",
+      "value": "1",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "If enabled, rotational motion is possible within the given limits.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_LINEAR_SPRING",
+      "value": "3",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_ANGULAR_SPRING",
+      "value": "2",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_MOTOR",
+      "value": "4",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "If enabled, there is a rotational motor across these axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_ENABLE_LINEAR_MOTOR",
+      "value": "5",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "If enabled, there is a linear motor across these axes.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    },
+    {
+      "name": "FLAG_MAX",
+      "value": "6",
+      "enum": "Flag",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Flag] enum.",
+      "sourcePath": "doc/classes/Generic6DOFJoint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Generic6DOFJoint3D.xml",
+      "sha256": "4ddb54ca08764e8126954cd51c402661e9792a9a39608ab56e4f8203db487db8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

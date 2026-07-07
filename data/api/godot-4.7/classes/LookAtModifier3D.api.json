@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LookAtModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.LookAtModifier3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "LookAtModifier3D",
+    "documentationPath": "doc/classes/LookAtModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_lookatmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetInterpolationRemaining",
+      "kind": "Method",
+      "signature": "public float GetInterpolationRemaining()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the remaining seconds of the time-based interpolation.",
+      "godotName": "get_interpolation_remaining",
+      "xmlDocId": "M:Godot.LookAtModifier3D.GetInterpolationRemaining",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "IsInterpolating",
+      "kind": "Method",
+      "signature": "public bool IsInterpolating()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if time-based interpolation is running. If [code]true[/code], it is equivalent to [method get_interpolation_remaining] returning [code]0.0[/code]. This is useful to determine whether a [LookAtModifier3D] can be removed safely.",
+      "godotName": "is_interpolating",
+      "xmlDocId": "M:Godot.LookAtModifier3D.IsInterpolating",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "IsTargetWithinLimitation",
+      "kind": "Method",
+      "signature": "public bool IsTargetWithinLimitation()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns whether the target is within the angle limitations. It is useful for unsetting the [member target_node] when the target is outside of the angle limitations. [b]Note:[/b] The value is updated after [method SkeletonModifier3D._process_modification]. To retrieve this value correctly, we recommend using the signal [signal SkeletonModifier3D.modification_processed].",
+      "godotName": "is_target_within_limitation",
+      "xmlDocId": "M:Godot.LookAtModifier3D.IsTargetWithinLimitation",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "Bone",
+      "kind": "Property",
+      "signature": "public int Bone { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Index of the [member bone_name] in the parent [Skeleton3D].",
+      "defaultValue": "-1",
+      "godotName": "bone",
+      "xmlDocId": "P:Godot.LookAtModifier3D.Bone",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "BoneName",
+      "kind": "Property",
+      "signature": "public String BoneName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The bone name of the [Skeleton3D] that the modification will operate on.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "bone_name",
+      "xmlDocId": "P:Godot.LookAtModifier3D.BoneName",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "Duration",
+      "kind": "Property",
+      "signature": "public float Duration { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The duration of the time-based interpolation. Interpolation is triggered at the following cases: - When the target node is changed - When an axis is flipped due to angle limitation [b]Note:[/b] The flipping occurs when the target is outside the angle limitation and the internally computed secondary rotation axis of the forward vector is flipped. Visually, it occurs when the target is outside the angle limitation and crosses the plane of the [member forward_axis] and [member primary_rotation_axis].",
+      "defaultValue": "0.0",
+      "godotName": "duration",
+      "xmlDocId": "P:Godot.LookAtModifier3D.Duration",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "EaseType",
+      "kind": "Property",
+      "signature": "public int EaseType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The ease type of the time-based interpolation. See also [enum Tween.EaseType].",
+      "defaultValue": "0",
+      "godotName": "ease_type",
+      "xmlDocId": "P:Godot.LookAtModifier3D.EaseType",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "ForwardAxis",
+      "kind": "Property",
+      "signature": "public int ForwardAxis { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The forward axis of the bone. This [SkeletonModifier3D] modifies the bone so that this axis points toward the [member target_node].",
+      "defaultValue": "4",
+      "godotName": "forward_axis",
+      "xmlDocId": "P:Godot.LookAtModifier3D.ForwardAxis",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginBone",
+      "kind": "Property",
+      "signature": "public int OriginBone { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Index of the [member origin_bone_name] in the parent [Skeleton3D].",
+      "godotName": "origin_bone",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginBone",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginBoneName",
+      "kind": "Property",
+      "signature": "public String OriginBoneName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "If [member origin_from] is [constant ORIGIN_FROM_SPECIFIC_BONE], the bone global pose position specified for this is used as origin.",
+      "godotName": "origin_bone_name",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginBoneName",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginExternalNode",
+      "kind": "Property",
+      "signature": "public NodePath OriginExternalNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "If [member origin_from] is [constant ORIGIN_FROM_EXTERNAL_NODE], the global position of the [Node3D] specified for this is used as origin.",
+      "godotName": "origin_external_node",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginExternalNode",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginFrom",
+      "kind": "Property",
+      "signature": "public int OriginFrom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "This value determines from what origin is retrieved for use in the calculation of the forward vector.",
+      "defaultValue": "0",
+      "godotName": "origin_from",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginFrom",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginOffset",
+      "kind": "Property",
+      "signature": "public Vector3 OriginOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The offset of the bone pose origin. Matching the origins by offset is useful for cases where multiple bones must always face the same direction, such as the eyes. [b]Note:[/b] This value indicates the local position of the object set in [member origin_from].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "origin_offset",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginOffset",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "OriginSafeMargin",
+      "kind": "Property",
+      "signature": "public float OriginSafeMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If the target passes through too close to the origin than this value, time-based interpolation is used even if the target is within the angular limitations, to prevent the angular velocity from becoming too high.",
+      "defaultValue": "0.1",
+      "godotName": "origin_safe_margin",
+      "xmlDocId": "P:Godot.LookAtModifier3D.OriginSafeMargin",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryDampThreshold",
+      "kind": "Property",
+      "signature": "public float PrimaryDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member primary_limit_angle]. It provides non-linear (b-spline) interpolation, let it feel more resistance the more it rotate to the edge limit. This is useful for simulating the limits of human motion. If [code]1.0[/code], no damping is performed. If [code]0.0[/code], damping is always performed.",
+      "godotName": "primary_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryLimitAngle",
+      "kind": "Property",
+      "signature": "public float PrimaryLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of the primary rotation when [member symmetry_limitation] is [code]true[/code], in radians.",
+      "godotName": "primary_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryNegativeDampThreshold",
+      "kind": "Property",
+      "signature": "public float PrimaryNegativeDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member primary_negative_limit_angle].",
+      "godotName": "primary_negative_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryNegativeDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryNegativeLimitAngle",
+      "kind": "Property",
+      "signature": "public float PrimaryNegativeLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of negative side of the primary rotation when [member symmetry_limitation] is [code]false[/code], in radians.",
+      "godotName": "primary_negative_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryNegativeLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryPositiveDampThreshold",
+      "kind": "Property",
+      "signature": "public float PrimaryPositiveDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member primary_positive_limit_angle].",
+      "godotName": "primary_positive_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryPositiveDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryPositiveLimitAngle",
+      "kind": "Property",
+      "signature": "public float PrimaryPositiveLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of positive side of the primary rotation when [member symmetry_limitation] is [code]false[/code], in radians.",
+      "godotName": "primary_positive_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryPositiveLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "PrimaryRotationAxis",
+      "kind": "Property",
+      "signature": "public int PrimaryRotationAxis { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The axis of the first rotation. This [SkeletonModifier3D] works by compositing the rotation by Euler angles to prevent to rotate the [member forward_axis].",
+      "defaultValue": "1",
+      "godotName": "primary_rotation_axis",
+      "xmlDocId": "P:Godot.LookAtModifier3D.PrimaryRotationAxis",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "Relative",
+      "kind": "Property",
+      "signature": "public bool Relative { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "The relative option. If [code]true[/code], the rotation is applied relative to the pose. If [code]false[/code], the rotation is applied relative to the rest. It means to replace the current pose with the [LookAtModifier3D]\u0027s result. [b]Note:[/b] This option affects the base angle for [member use_angle_limitation]. Since the [LookAtModifier3D] relies strongly on Euler rotation, the axis that determines the limitation and the actual rotation are strongly tied together.",
+      "defaultValue": "false",
+      "godotName": "relative",
+      "xmlDocId": "P:Godot.LookAtModifier3D.Relative",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryDampThreshold",
+      "kind": "Property",
+      "signature": "public float SecondaryDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member secondary_limit_angle].",
+      "godotName": "secondary_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryLimitAngle",
+      "kind": "Property",
+      "signature": "public float SecondaryLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of the secondary rotation when [member symmetry_limitation] is [code]true[/code], in radians.",
+      "godotName": "secondary_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryNegativeDampThreshold",
+      "kind": "Property",
+      "signature": "public float SecondaryNegativeDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member secondary_negative_limit_angle].",
+      "godotName": "secondary_negative_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryNegativeDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryNegativeLimitAngle",
+      "kind": "Property",
+      "signature": "public float SecondaryNegativeLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of negative side of the secondary rotation when [member symmetry_limitation] is [code]false[/code], in radians.",
+      "godotName": "secondary_negative_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryNegativeLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryPositiveDampThreshold",
+      "kind": "Property",
+      "signature": "public float SecondaryPositiveDampThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The threshold to start damping for [member secondary_positive_limit_angle].",
+      "godotName": "secondary_positive_damp_threshold",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryPositiveDampThreshold",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SecondaryPositiveLimitAngle",
+      "kind": "Property",
+      "signature": "public float SecondaryPositiveLimitAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The limit angle of positive side of the secondary rotation when [member symmetry_limitation] is [code]false[/code], in radians.",
+      "godotName": "secondary_positive_limit_angle",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SecondaryPositiveLimitAngle",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "SymmetryLimitation",
+      "kind": "Property",
+      "signature": "public bool SymmetryLimitation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the limitations are spread from the bone symmetrically. If [code]false[/code], the limitation can be specified separately for each side of the bone rest.",
+      "godotName": "symmetry_limitation",
+      "xmlDocId": "P:Godot.LookAtModifier3D.SymmetryLimitation",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "TargetNode",
+      "kind": "Property",
+      "signature": "public NodePath TargetNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [NodePath] to the node that is the target for the look at modification. This node is what the modification will rotate the bone to.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "target_node",
+      "xmlDocId": "P:Godot.LookAtModifier3D.TargetNode",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "TransitionType",
+      "kind": "Property",
+      "signature": "public int TransitionType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The transition type of the time-based interpolation. See also [enum Tween.TransitionType].",
+      "defaultValue": "0",
+      "godotName": "transition_type",
+      "xmlDocId": "P:Godot.LookAtModifier3D.TransitionType",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "UseAngleLimitation",
+      "kind": "Property",
+      "signature": "public bool UseAngleLimitation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], limits the amount of rotation. For example, this helps to prevent a character\u0027s neck from rotating 360 degrees. [b]Note:[/b] As with [AnimationTree] blending, interpolation is provided that favors [method Skeleton3D.get_bone_rest] or [method Skeleton3D.get_bone_pose] depends on the [member relative] option. This means that interpolation does not select the shortest path in some cases. [b]Note:[/b] Some values for [member transition_type] (such as [constant Tween.TRANS_BACK], [constant Tween.TRANS_ELASTIC], and [constant Tween.TRANS_SPRING]) may exceed the limitations. If interpolation occurs while overshooting the limitations, the result might not respect the bone rest.",
+      "defaultValue": "false",
+      "godotName": "use_angle_limitation",
+      "xmlDocId": "P:Godot.LookAtModifier3D.UseAngleLimitation",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "UseSecondaryRotation",
+      "kind": "Property",
+      "signature": "public bool UseSecondaryRotation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], provides rotation by two axes.",
+      "defaultValue": "true",
+      "godotName": "use_secondary_rotation",
+      "xmlDocId": "P:Godot.LookAtModifier3D.UseSecondaryRotation",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OriginFrom",
+      "values": [
+        {
+          "name": "ORIGIN_FROM_EXTERNAL_NODE",
+          "value": "2",
+          "enum": "OriginFrom",
+          "kind": "EnumValue",
+          "summary": "The global position of the [Node3D] specified in [member origin_external_node] is used as origin. [b]Note:[/b] Same as [constant ORIGIN_FROM_SPECIFIC_BONE], when specifying a [BoneAttachment3D] with a child bone assigned, the rendered result and direction will not match.",
+          "sourcePath": "doc/classes/LookAtModifier3D.xml"
+        },
+        {
+          "name": "ORIGIN_FROM_SELF",
+          "value": "0",
+          "enum": "OriginFrom",
+          "kind": "EnumValue",
+          "summary": "The bone rest position of the bone specified in [member bone] is used as origin.",
+          "sourcePath": "doc/classes/LookAtModifier3D.xml"
+        },
+        {
+          "name": "ORIGIN_FROM_SPECIFIC_BONE",
+          "value": "1",
+          "enum": "OriginFrom",
+          "kind": "EnumValue",
+          "summary": "The bone global pose position of the bone specified in [member origin_bone] is used as origin. [b]Note:[/b] It is recommended that you select only the parent bone unless you are familiar with the bone processing process. The specified bone pose at the time the [LookAtModifier3D] is processed is used as a reference. In other words, if you specify a child bone and the [LookAtModifier3D] causes the child bone to move, the rendered result and direction will not match.",
+          "sourcePath": "doc/classes/LookAtModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ORIGIN_FROM_SELF",
+      "value": "0",
+      "enum": "OriginFrom",
+      "kind": "EnumValue",
+      "summary": "The bone rest position of the bone specified in [member bone] is used as origin.",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "ORIGIN_FROM_SPECIFIC_BONE",
+      "value": "1",
+      "enum": "OriginFrom",
+      "kind": "EnumValue",
+      "summary": "The bone global pose position of the bone specified in [member origin_bone] is used as origin. [b]Note:[/b] It is recommended that you select only the parent bone unless you are familiar with the bone processing process. The specified bone pose at the time the [LookAtModifier3D] is processed is used as a reference. In other words, if you specify a child bone and the [LookAtModifier3D] causes the child bone to move, the rendered result and direction will not match.",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    },
+    {
+      "name": "ORIGIN_FROM_EXTERNAL_NODE",
+      "value": "2",
+      "enum": "OriginFrom",
+      "kind": "EnumValue",
+      "summary": "The global position of the [Node3D] specified in [member origin_external_node] is used as origin. [b]Note:[/b] Same as [constant ORIGIN_FROM_SPECIFIC_BONE], when specifying a [BoneAttachment3D] with a child bone assigned, the rendered result and direction will not match.",
+      "sourcePath": "doc/classes/LookAtModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LookAtModifier3D.xml",
+      "sha256": "62fc9c4849fbe9baf4fb3c64d0805e71fd33a21b5cd43c655bc9d2b1f0589dac"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

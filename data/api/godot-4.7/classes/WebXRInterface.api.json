@@ -1,0 +1,461 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WebXRInterface",
+    "namespace": "Godot",
+    "fullName": "Godot.WebXRInterface",
+    "kind": "class",
+    "baseType": "XRInterface",
+    "interfaces": [],
+    "godotReference": "WebXRInterface",
+    "documentationPath": "modules/webxr/doc_classes/WebXRInterface.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_webxrinterface.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAvailableDisplayRefreshRates",
+      "kind": "Method",
+      "signature": "public Array GetAvailableDisplayRefreshRates()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns display refresh rates supported by the current HMD. Only returned if this feature is supported by the web browser and after the interface has been initialized.",
+      "godotName": "get_available_display_refresh_rates",
+      "xmlDocId": "M:Godot.WebXRInterface.GetAvailableDisplayRefreshRates",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "GetDisplayRefreshRate",
+      "kind": "Method",
+      "signature": "public float GetDisplayRefreshRate()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the display refresh rate for the current HMD. Not supported on all HMDs and browsers. It may not report an accurate value until after using [method set_display_refresh_rate].",
+      "godotName": "get_display_refresh_rate",
+      "xmlDocId": "M:Godot.WebXRInterface.GetDisplayRefreshRate",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "GetInputSourceTargetRayMode",
+      "kind": "Method",
+      "signature": "public int GetInputSourceTargetRayMode(int inputSourceId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the target ray mode for the given [param input_source_id]. This can help interpret the input coming from that input source. See [url=https://developer.mozilla.org/en-US/docs/Web/API/XRInputSource/targetRayMode]XRInputSource.targetRayMode[/url] for more information.",
+      "godotName": "get_input_source_target_ray_mode",
+      "xmlDocId": "M:Godot.WebXRInterface.GetInputSourceTargetRayMode(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "GetInputSourceTracker",
+      "kind": "Method",
+      "signature": "public XRControllerTracker GetInputSourceTracker(int inputSourceId)",
+      "returnType": "XRControllerTracker",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets an [XRControllerTracker] for the given [param input_source_id]. In the context of WebXR, an input source can be an advanced VR controller like the Oculus Touch or Index controllers, or even a tap on the screen, a spoken voice command or a button press on the device itself. When a non-traditional input source is used, interpret the position and orientation of the [XRPositionalTracker] as a ray pointing at the object the user wishes to interact with. Use this method to get information about the input source that triggered one of these signals: - [signal selectstart] - [signal select] - [signal selectend] - [signal squeezestart] - [signal squeeze] - [signal squeezestart]",
+      "godotName": "get_input_source_tracker",
+      "xmlDocId": "M:Godot.WebXRInterface.GetInputSourceTracker(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "IsInputSourceActive",
+      "kind": "Method",
+      "signature": "public bool IsInputSourceActive(int inputSourceId)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if there is an active input source with the given [param input_source_id].",
+      "godotName": "is_input_source_active",
+      "xmlDocId": "M:Godot.WebXRInterface.IsInputSourceActive(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "IsSessionSupported",
+      "kind": "Method",
+      "signature": "public void IsSessionSupported(String sessionMode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "session_mode",
+          "type": "String"
+        }
+      ],
+      "summary": "Checks if the given [param session_mode] is supported by the user\u0027s browser. Possible values come from [url=https://developer.mozilla.org/en-US/docs/Web/API/XRSessionMode]WebXR\u0027s XRSessionMode[/url], including: [code]\u0022immersive-vr\u0022[/code], [code]\u0022immersive-ar\u0022[/code], and [code]\u0022inline\u0022[/code]. This method returns nothing, instead it emits the [signal session_supported] signal with the result.",
+      "godotName": "is_session_supported",
+      "xmlDocId": "M:Godot.WebXRInterface.IsSessionSupported(String)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SetDisplayRefreshRate",
+      "kind": "Method",
+      "signature": "public void SetDisplayRefreshRate(float refreshRate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "refresh_rate",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the display refresh rate for the current HMD. Not supported on all HMDs and browsers. It won\u0027t take effect right away until after [signal display_refresh_rate_changed] is emitted.",
+      "godotName": "set_display_refresh_rate",
+      "xmlDocId": "M:Godot.WebXRInterface.SetDisplayRefreshRate(float)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "EnabledFeatures",
+      "kind": "Property",
+      "signature": "public String EnabledFeatures { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "A comma-separated list of features that were successfully enabled by [method XRInterface.initialize] when setting up the WebXR session. This may include features requested by setting [member required_features] and [member optional_features], and will only be available after [signal session_started] has been emitted. [b]Note:[/b] This may not be support by all web browsers, in which case it will be an empty string.",
+      "godotName": "enabled_features",
+      "xmlDocId": "P:Godot.WebXRInterface.EnabledFeatures",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "OptionalFeatures",
+      "kind": "Property",
+      "signature": "public String OptionalFeatures { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "A comma-seperated list of optional features used by [method XRInterface.initialize] when setting up the WebXR session. If a user\u0027s browser or device doesn\u0027t support one of the given features, initialization will continue, but you won\u0027t be able to use the requested feature. This doesn\u0027t have any effect on the interface when already initialized. See the MDN documentation on [url=https://developer.mozilla.org/en-US/docs/Web/API/XRSystem/requestSession#session_features]WebXR\u0027s session features[/url] for a list of possible values.",
+      "godotName": "optional_features",
+      "xmlDocId": "P:Godot.WebXRInterface.OptionalFeatures",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "ReferenceSpaceType",
+      "kind": "Property",
+      "signature": "public String ReferenceSpaceType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The reference space type (from the list of requested types set in the [member requested_reference_space_types] property), that was ultimately used by [method XRInterface.initialize] when setting up the WebXR session. Possible values come from [url=https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpaceType]WebXR\u0027s XRReferenceSpaceType[/url]. If you want to use a particular reference space type, it must be listed in either [member required_features] or [member optional_features].",
+      "godotName": "reference_space_type",
+      "xmlDocId": "P:Godot.WebXRInterface.ReferenceSpaceType",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "RequestedReferenceSpaceTypes",
+      "kind": "Property",
+      "signature": "public String RequestedReferenceSpaceTypes { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "A comma-seperated list of reference space types used by [method XRInterface.initialize] when setting up the WebXR session. The reference space types are requested in order, and the first one supported by the user\u0027s device or browser will be used. The [member reference_space_type] property contains the reference space type that was ultimately selected. This doesn\u0027t have any effect on the interface when already initialized. Possible values come from [url=https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpaceType]WebXR\u0027s XRReferenceSpaceType[/url]. If you want to use a particular reference space type, it must be listed in either [member required_features] or [member optional_features].",
+      "godotName": "requested_reference_space_types",
+      "xmlDocId": "P:Godot.WebXRInterface.RequestedReferenceSpaceTypes",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "RequiredFeatures",
+      "kind": "Property",
+      "signature": "public String RequiredFeatures { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "A comma-seperated list of required features used by [method XRInterface.initialize] when setting up the WebXR session. If a user\u0027s browser or device doesn\u0027t support one of the given features, initialization will fail and [signal session_failed] will be emitted. This doesn\u0027t have any effect on the interface when already initialized. See the MDN documentation on [url=https://developer.mozilla.org/en-US/docs/Web/API/XRSystem/requestSession#session_features]WebXR\u0027s session features[/url] for a list of possible values.",
+      "godotName": "required_features",
+      "xmlDocId": "P:Godot.WebXRInterface.RequiredFeatures",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SessionMode",
+      "kind": "Property",
+      "signature": "public String SessionMode { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The session mode used by [method XRInterface.initialize] when setting up the WebXR session. This doesn\u0027t have any effect on the interface when already initialized. Possible values come from [url=https://developer.mozilla.org/en-US/docs/Web/API/XRSessionMode]WebXR\u0027s XRSessionMode[/url], including: [code]\u0022immersive-vr\u0022[/code], [code]\u0022immersive-ar\u0022[/code], and [code]\u0022inline\u0022[/code].",
+      "godotName": "session_mode",
+      "xmlDocId": "P:Godot.WebXRInterface.SessionMode",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "VisibilityState",
+      "kind": "Property",
+      "signature": "public String VisibilityState { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Indicates if the WebXR session\u0027s imagery is visible to the user. Possible values come from [url=https://developer.mozilla.org/en-US/docs/Web/API/XRVisibilityState]WebXR\u0027s XRVisibilityState[/url], including [code]\u0022hidden\u0022[/code], [code]\u0022visible\u0022[/code], and [code]\u0022visible-blurred\u0022[/code].",
+      "godotName": "visibility_state",
+      "xmlDocId": "P:Godot.WebXRInterface.VisibilityState",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "DisplayRefreshRateChanged",
+      "kind": "Signal",
+      "signature": "public event DisplayRefreshRateChangedHandler DisplayRefreshRateChanged",
+      "parameters": [],
+      "summary": "Emitted after the display\u0027s refresh rate has changed.",
+      "godotName": "display_refresh_rate_changed",
+      "xmlDocId": "E:Godot.WebXRInterface.DisplayRefreshRateChanged",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "ReferenceSpaceReset",
+      "kind": "Signal",
+      "signature": "public event ReferenceSpaceResetHandler ReferenceSpaceReset",
+      "parameters": [],
+      "summary": "Emitted to indicate that the reference space has been reset or reconfigured. When (or whether) this is emitted depends on the user\u0027s browser or device, but may include when the user has changed the dimensions of their play space (which you may be able to access via [method XRInterface.get_play_area]) or pressed/held a button to recenter their position. See [url=https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpace/reset_event]WebXR\u0027s XRReferenceSpace reset event[/url] for more information.",
+      "godotName": "reference_space_reset",
+      "xmlDocId": "E:Godot.WebXRInterface.ReferenceSpaceReset",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Select",
+      "kind": "Signal",
+      "signature": "public event SelectHandler Select",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted after one of the input sources has finished its \u0022primary action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "select",
+      "xmlDocId": "E:Godot.WebXRInterface.Select(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Selectend",
+      "kind": "Signal",
+      "signature": "public event SelectendHandler Selectend",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one of the input sources has finished its \u0022primary action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "selectend",
+      "xmlDocId": "E:Godot.WebXRInterface.Selectend(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Selectstart",
+      "kind": "Signal",
+      "signature": "public event SelectstartHandler Selectstart",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one of the input source has started its \u0022primary action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "selectstart",
+      "xmlDocId": "E:Godot.WebXRInterface.Selectstart(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SessionEnded",
+      "kind": "Signal",
+      "signature": "public event SessionEndedHandler SessionEnded",
+      "parameters": [],
+      "summary": "Emitted when the user ends the WebXR session (which can be done using UI from the browser or device). At this point, you should do [code]get_viewport().use_xr = false[/code] to instruct Godot to resume rendering to the screen.",
+      "godotName": "session_ended",
+      "xmlDocId": "E:Godot.WebXRInterface.SessionEnded",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SessionFailed",
+      "kind": "Signal",
+      "signature": "public event SessionFailedHandler SessionFailed",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted by [method XRInterface.initialize] if the session fails to start. [param message] may optionally contain an error message from WebXR, or an empty string if no message is available.",
+      "godotName": "session_failed",
+      "xmlDocId": "E:Godot.WebXRInterface.SessionFailed(String)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SessionStarted",
+      "kind": "Signal",
+      "signature": "public event SessionStartedHandler SessionStarted",
+      "parameters": [],
+      "summary": "Emitted by [method XRInterface.initialize] if the session is successfully started. At this point, it\u0027s safe to do [code]get_viewport().use_xr = true[/code] to instruct Godot to start rendering to the XR device.",
+      "godotName": "session_started",
+      "xmlDocId": "E:Godot.WebXRInterface.SessionStarted",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "SessionSupported",
+      "kind": "Signal",
+      "signature": "public event SessionSupportedHandler SessionSupported",
+      "parameters": [
+        {
+          "name": "session_mode",
+          "type": "String"
+        },
+        {
+          "name": "supported",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted by [method is_session_supported] to indicate if the given [param session_mode] is supported or not.",
+      "godotName": "session_supported",
+      "xmlDocId": "E:Godot.WebXRInterface.SessionSupported(String,bool)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Squeeze",
+      "kind": "Signal",
+      "signature": "public event SqueezeHandler Squeeze",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted after one of the input sources has finished its \u0022primary squeeze action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "squeeze",
+      "xmlDocId": "E:Godot.WebXRInterface.Squeeze(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Squeezeend",
+      "kind": "Signal",
+      "signature": "public event SqueezeendHandler Squeezeend",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one of the input sources has finished its \u0022primary squeeze action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "squeezeend",
+      "xmlDocId": "E:Godot.WebXRInterface.Squeezeend(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "Squeezestart",
+      "kind": "Signal",
+      "signature": "public event SqueezestartHandler Squeezestart",
+      "parameters": [
+        {
+          "name": "input_source_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when one of the input sources has started its \u0022primary squeeze action\u0022. Use [method get_input_source_tracker] and [method get_input_source_target_ray_mode] to get more information about the input source.",
+      "godotName": "squeezestart",
+      "xmlDocId": "E:Godot.WebXRInterface.Squeezestart(int)",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "VisibilityStateChanged",
+      "kind": "Signal",
+      "signature": "public event VisibilityStateChangedHandler VisibilityStateChanged",
+      "parameters": [],
+      "summary": "Emitted when [member visibility_state] has changed.",
+      "godotName": "visibility_state_changed",
+      "xmlDocId": "E:Godot.WebXRInterface.VisibilityStateChanged",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TargetRayMode",
+      "values": [
+        {
+          "name": "TARGET_RAY_MODE_GAZE",
+          "value": "1",
+          "enum": "TargetRayMode",
+          "kind": "EnumValue",
+          "summary": "Target ray originates at the viewer\u0027s eyes and points in the direction they are looking.",
+          "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+        },
+        {
+          "name": "TARGET_RAY_MODE_SCREEN",
+          "value": "3",
+          "enum": "TargetRayMode",
+          "kind": "EnumValue",
+          "summary": "Target ray from touch screen, mouse or other tactile input device.",
+          "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+        },
+        {
+          "name": "TARGET_RAY_MODE_TRACKED_POINTER",
+          "value": "2",
+          "enum": "TargetRayMode",
+          "kind": "EnumValue",
+          "summary": "Target ray from a handheld pointer, most likely a VR touch controller.",
+          "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+        },
+        {
+          "name": "TARGET_RAY_MODE_UNKNOWN",
+          "value": "0",
+          "enum": "TargetRayMode",
+          "kind": "EnumValue",
+          "summary": "We don\u0027t know the target ray mode.",
+          "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TARGET_RAY_MODE_UNKNOWN",
+      "value": "0",
+      "enum": "TargetRayMode",
+      "kind": "EnumValue",
+      "summary": "We don\u0027t know the target ray mode.",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "TARGET_RAY_MODE_GAZE",
+      "value": "1",
+      "enum": "TargetRayMode",
+      "kind": "EnumValue",
+      "summary": "Target ray originates at the viewer\u0027s eyes and points in the direction they are looking.",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "TARGET_RAY_MODE_TRACKED_POINTER",
+      "value": "2",
+      "enum": "TargetRayMode",
+      "kind": "EnumValue",
+      "summary": "Target ray from a handheld pointer, most likely a VR touch controller.",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    },
+    {
+      "name": "TARGET_RAY_MODE_SCREEN",
+      "value": "3",
+      "enum": "TargetRayMode",
+      "kind": "EnumValue",
+      "summary": "Target ray from touch screen, mouse or other tactile input device.",
+      "sourcePath": "modules/webxr/doc_classes/WebXRInterface.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/webxr/doc_classes/WebXRInterface.xml",
+      "sha256": "b25d9566554d2f5dfdec89625fb1799b318cdba714102fd4c157ae64ec047534"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

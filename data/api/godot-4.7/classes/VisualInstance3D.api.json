@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualInstance3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualInstance3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "VisualInstance3D",
+    "documentationPath": "doc/classes/VisualInstance3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualinstance3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAabb",
+      "kind": "Method",
+      "signature": "public AABB _GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_aabb",
+      "xmlDocId": "M:Godot.VisualInstance3D._GetAabb",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "GetAabb",
+      "kind": "Method",
+      "signature": "public AABB GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "Returns the [AABB] (also known as the bounding box) for this [VisualInstance3D].",
+      "godotName": "get_aabb",
+      "xmlDocId": "M:Godot.VisualInstance3D.GetAabb",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "GetBase",
+      "kind": "Method",
+      "signature": "public RID GetBase()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the RID of the resource associated with this [VisualInstance3D]. For example, if the Node is a [MeshInstance3D], this will return the RID of the associated [Mesh].",
+      "godotName": "get_base",
+      "xmlDocId": "M:Godot.VisualInstance3D.GetBase",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "GetInstance",
+      "kind": "Method",
+      "signature": "public RID GetInstance()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the RID of this instance. This RID is the same as the RID returned by [method RenderingServer.instance_create]. This RID is needed if you want to call [RenderingServer] functions directly on this [VisualInstance3D].",
+      "godotName": "get_instance",
+      "xmlDocId": "M:Godot.VisualInstance3D.GetInstance",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "GetLayerMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetLayerMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member layers] is enabled, given a [param layer_number] between 1 and 20.",
+      "godotName": "get_layer_mask_value",
+      "xmlDocId": "M:Godot.VisualInstance3D.GetLayerMaskValue(int)",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "SetBase",
+      "kind": "Method",
+      "signature": "public void SetBase(RID @base)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "base",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the resource that is instantiated by this [VisualInstance3D], which changes how the engine handles the [VisualInstance3D] under the hood. Equivalent to [method RenderingServer.instance_set_base].",
+      "godotName": "set_base",
+      "xmlDocId": "M:Godot.VisualInstance3D.SetBase(RID)",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "SetLayerMaskValue",
+      "kind": "Method",
+      "signature": "public void SetLayerMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member layers], given a [param layer_number] between 1 and 20.",
+      "godotName": "set_layer_mask_value",
+      "xmlDocId": "M:Godot.VisualInstance3D.SetLayerMaskValue(int,bool)",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "Layers",
+      "kind": "Property",
+      "signature": "public int Layers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The render layer(s) this [VisualInstance3D] is drawn on. This object will only be visible for [Camera3D]s whose cull mask includes any of the render layers this [VisualInstance3D] is set to. For [Light3D]s, this can be used to control which [VisualInstance3D]s are affected by a specific light. For [GPUParticles3D], this can be used to control which particles are effected by a specific attractor. For [Decal]s, this can be used to control which [VisualInstance3D]s are affected by a specific decal. To adjust [member layers] more easily using a script, use [method get_layer_mask_value] and [method set_layer_mask_value]. [b]Note:[/b] [VoxelGI], SDFGI and [LightmapGI] will always take all layers into account to determine what contributes to global illumination. If this is an issue, set [member GeometryInstance3D.gi_mode] to [constant GeometryInstance3D.GI_MODE_DISABLED] for meshes and [member Light3D.light_bake_mode] to [constant Light3D.BAKE_DISABLED] for lights to exclude them from global illumination.",
+      "defaultValue": "1",
+      "godotName": "layers",
+      "xmlDocId": "P:Godot.VisualInstance3D.Layers",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "SortingOffset",
+      "kind": "Property",
+      "signature": "public float SortingOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The amount by which the depth of this [VisualInstance3D] will be adjusted when sorting by depth. Uses the same units as the engine (which are typically meters). Adjusting it to a higher value will make the [VisualInstance3D] reliably draw on top of other [VisualInstance3D]s that are otherwise positioned at the same spot. To ensure it always draws on top of other objects around it (not positioned at the same spot), set the value to be greater than the distance between this [VisualInstance3D] and the other nearby [VisualInstance3D]s.",
+      "defaultValue": "0.0",
+      "godotName": "sorting_offset",
+      "xmlDocId": "P:Godot.VisualInstance3D.SortingOffset",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    },
+    {
+      "name": "SortingUseAabbCenter",
+      "kind": "Property",
+      "signature": "public bool SortingUseAabbCenter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the object is sorted based on the [AABB] center. The object will be sorted based on the global position otherwise. The [AABB] center based sorting is generally more accurate for 3D models. The position based sorting instead allows to better control the drawing order when working with [GPUParticles3D] and [CPUParticles3D].",
+      "godotName": "sorting_use_aabb_center",
+      "xmlDocId": "P:Godot.VisualInstance3D.SortingUseAabbCenter",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAabb",
+      "kind": "Method",
+      "signature": "public AABB _GetAabb()",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_aabb",
+      "xmlDocId": "M:Godot.VisualInstance3D._GetAabb",
+      "sourcePath": "doc/classes/VisualInstance3D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VisualInstance3D.xml",
+      "sha256": "f4c5aeae17174b9385037163c2e0cc08c785692b1bdd0657d4096a4999430098"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

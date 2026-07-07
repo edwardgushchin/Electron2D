@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsBody2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsBody2D",
+    "kind": "class",
+    "baseType": "CollisionObject2D",
+    "interfaces": [],
+    "godotReference": "PhysicsBody2D",
+    "documentationPath": "doc/classes/PhysicsBody2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsbody2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void AddCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Adds a body to the list of bodies that this body can\u0027t collide with.",
+      "godotName": "add_collision_exception_with",
+      "xmlDocId": "M:Godot.PhysicsBody2D.AddCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "GetCollisionExceptions",
+      "kind": "Method",
+      "signature": "public PhysicsBody2D[] GetCollisionExceptions()",
+      "returnType": "PhysicsBody2D[]",
+      "parameters": [],
+      "summary": "Returns an array of nodes that were added as collision exceptions for this body.",
+      "godotName": "get_collision_exceptions",
+      "xmlDocId": "M:Godot.PhysicsBody2D.GetCollisionExceptions",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "GetGravity",
+      "kind": "Method",
+      "signature": "public Vector2 GetGravity()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the gravity vector computed from all sources that can affect the body, including all gravity overrides from [Area2D] nodes and the global world gravity.",
+      "godotName": "get_gravity",
+      "xmlDocId": "M:Godot.PhysicsBody2D.GetGravity",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "MoveAndCollide",
+      "kind": "Method",
+      "signature": "public KinematicCollision2D MoveAndCollide(Vector2 motion, bool testOnly, float safeMargin, bool recoveryAsCollision)",
+      "returnType": "KinematicCollision2D",
+      "parameters": [
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "test_only",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "safe_margin",
+          "type": "float",
+          "defaultValue": "0.08"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Moves the body along the vector [param motion]. In order to be frame rate independent in [method Node._physics_process] or [method Node._process], [param motion] should be computed using [code]delta[/code]. Returns a [KinematicCollision2D], which contains information about the collision when stopped, or when touching another body along the motion. If [param test_only] is [code]true[/code], the body does not move but the would-be collision information is given. [param safe_margin] is the extra margin used for collision recovery (see [member CharacterBody2D.safe_margin] for more details). If [param recovery_as_collision] is [code]true[/code], any depenetration from the recovery phase is also reported as a collision; this is used e.g. by [CharacterBody2D] for improving floor detection during floor snapping.",
+      "godotName": "move_and_collide",
+      "xmlDocId": "M:Godot.PhysicsBody2D.MoveAndCollide(Vector2,bool,float,bool)",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "RemoveCollisionExceptionWith",
+      "kind": "Method",
+      "signature": "public void RemoveCollisionExceptionWith(Node body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Removes a body from the list of bodies that this body can\u0027t collide with.",
+      "godotName": "remove_collision_exception_with",
+      "xmlDocId": "M:Godot.PhysicsBody2D.RemoveCollisionExceptionWith(Node)",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "TestMove",
+      "kind": "Method",
+      "signature": "public bool TestMove(Transform2D from, Vector2 motion, KinematicCollision2D collision, float safeMargin, bool recoveryAsCollision)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Transform2D"
+        },
+        {
+          "name": "motion",
+          "type": "Vector2"
+        },
+        {
+          "name": "collision",
+          "type": "KinematicCollision2D",
+          "defaultValue": "null"
+        },
+        {
+          "name": "safe_margin",
+          "type": "float",
+          "defaultValue": "0.08"
+        },
+        {
+          "name": "recovery_as_collision",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Checks for collisions without moving the body. In order to be frame rate independent in [method Node._physics_process] or [method Node._process], [param motion] should be computed using [code]delta[/code]. Virtually sets the node\u0027s position, scale and rotation to that of the given [Transform2D], then tries to move the body along the vector [param motion]. Returns [code]true[/code] if a collision would stop the body from moving along the whole path. [param collision] is an optional object of type [KinematicCollision2D], which contains additional information about the collision when stopped, or when touching another body along the motion. [param safe_margin] is the extra margin used for collision recovery (see [member CharacterBody2D.safe_margin] for more details). If [param recovery_as_collision] is [code]true[/code], any depenetration from the recovery phase is also reported as a collision; this is useful for checking whether the body would [i]touch[/i] any other bodies.",
+      "godotName": "test_move",
+      "xmlDocId": "M:Godot.PhysicsBody2D.TestMove(Transform2D,Vector2,KinematicCollision2D,float,bool)",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    },
+    {
+      "name": "InputPickable",
+      "kind": "Property",
+      "signature": "public bool InputPickable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "input_pickable",
+      "xmlDocId": "P:Godot.PhysicsBody2D.InputPickable",
+      "sourcePath": "doc/classes/PhysicsBody2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsBody2D.xml",
+      "sha256": "d66a95738be6265c4921ee0f1646812b122d23587e761db8984211b2a80ae6df"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

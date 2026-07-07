@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeResizableBase",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeResizableBase",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeResizableBase",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeResizableBase.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernoderesizablebase.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The size of the node in the visual shader graph.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.VisualShaderNodeResizableBase.Size",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeResizableBase.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeResizableBase.xml",
+      "sha256": "c924f66d7b09b32190599131ea388db911831866e7972bff3af6d22be8026976"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

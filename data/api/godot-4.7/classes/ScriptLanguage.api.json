@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptLanguage",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptLanguage",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "ScriptLanguage",
+    "documentationPath": "doc/classes/ScriptLanguage.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scriptlanguage.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ScriptNameCasing",
+      "values": [
+        {
+          "name": "SCRIPT_NAME_CASING_AUTO",
+          "value": "0",
+          "enum": "ScriptNameCasing",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguage.xml"
+        },
+        {
+          "name": "SCRIPT_NAME_CASING_CAMEL_CASE",
+          "value": "4",
+          "enum": "ScriptNameCasing",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguage.xml"
+        },
+        {
+          "name": "SCRIPT_NAME_CASING_KEBAB_CASE",
+          "value": "3",
+          "enum": "ScriptNameCasing",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguage.xml"
+        },
+        {
+          "name": "SCRIPT_NAME_CASING_PASCAL_CASE",
+          "value": "1",
+          "enum": "ScriptNameCasing",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguage.xml"
+        },
+        {
+          "name": "SCRIPT_NAME_CASING_SNAKE_CASE",
+          "value": "2",
+          "enum": "ScriptNameCasing",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguage.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SCRIPT_NAME_CASING_AUTO",
+      "value": "0",
+      "enum": "ScriptNameCasing",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguage.xml"
+    },
+    {
+      "name": "SCRIPT_NAME_CASING_PASCAL_CASE",
+      "value": "1",
+      "enum": "ScriptNameCasing",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguage.xml"
+    },
+    {
+      "name": "SCRIPT_NAME_CASING_SNAKE_CASE",
+      "value": "2",
+      "enum": "ScriptNameCasing",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguage.xml"
+    },
+    {
+      "name": "SCRIPT_NAME_CASING_KEBAB_CASE",
+      "value": "3",
+      "enum": "ScriptNameCasing",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguage.xml"
+    },
+    {
+      "name": "SCRIPT_NAME_CASING_CAMEL_CASE",
+      "value": "4",
+      "enum": "ScriptNameCasing",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguage.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptLanguage.xml",
+      "sha256": "e95f99745f8a08a49a7181837766d2690a9c90ae75639a95d692947f505f842d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

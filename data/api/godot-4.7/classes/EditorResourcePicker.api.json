@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorResourcePicker",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorResourcePicker",
+    "kind": "class",
+    "baseType": "HBoxContainer",
+    "interfaces": [],
+    "godotReference": "EditorResourcePicker",
+    "documentationPath": "doc/classes/EditorResourcePicker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorresourcepicker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_HandleMenuSelected",
+      "kind": "Method",
+      "signature": "public bool _HandleMenuSelected(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "This virtual method can be implemented to handle context menu items not handled by default. See [method _set_create_options].",
+      "godotName": "_handle_menu_selected",
+      "xmlDocId": "M:Godot.EditorResourcePicker._HandleMenuSelected(int)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "_SetCreateOptions",
+      "kind": "Method",
+      "signature": "public void _SetCreateOptions(Object menuNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu_node",
+          "type": "Object"
+        }
+      ],
+      "summary": "This virtual method is called when updating the context menu of an [member editable] [EditorResourcePicker]. Implement this method to override the \u0022New\u0022 items section with your own options. [param menu_node] is a reference to the [PopupMenu] node. [b]Note:[/b] Implement [method _handle_menu_selected] to handle these custom items. [b]Note:[/b] Relevant built-in options (\u0022Load\u0022, \u0022Copy\u0022, \u0022Paste\u0022, etc.) are automatically added to the [param menu_node] afterwards, using their hard-coded IDs starting from [code]0[/code]. Custom options need to use non-colliding IDs to be handled properly. Using [code]id = 100 \u002B custom_option_index[/code] is safe (this is what the default items in the \u0022New\u0022 section use).",
+      "godotName": "_set_create_options",
+      "xmlDocId": "M:Godot.EditorResourcePicker._SetCreateOptions(Object)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "GetAllowedTypes",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAllowedTypes()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all allowed types and subtypes corresponding to the [member base_type]. If the [member base_type] is empty, an empty list is returned.",
+      "godotName": "get_allowed_types",
+      "xmlDocId": "M:Godot.EditorResourcePicker.GetAllowedTypes",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "SetTogglePressed",
+      "kind": "Method",
+      "signature": "public void SetTogglePressed(bool pressed)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "pressed",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the toggle mode state for the main button. Works only if [member toggle_mode] is set to [code]true[/code].",
+      "godotName": "set_toggle_pressed",
+      "xmlDocId": "M:Godot.EditorResourcePicker.SetTogglePressed(bool)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "BaseType",
+      "kind": "Property",
+      "signature": "public String BaseType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The base type of allowed resource types. Can be a comma-separated list of several options.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "base_type",
+      "xmlDocId": "P:Godot.EditorResourcePicker.BaseType",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public bool Editable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the value can be selected and edited.",
+      "defaultValue": "true",
+      "godotName": "editable",
+      "xmlDocId": "P:Godot.EditorResourcePicker.Editable",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "EditedResource",
+      "kind": "Property",
+      "signature": "public Resource EditedResource { get; set; }",
+      "returnType": "Resource",
+      "parameters": [],
+      "summary": "The edited resource value.",
+      "godotName": "edited_resource",
+      "xmlDocId": "P:Godot.EditorResourcePicker.EditedResource",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "ToggleMode",
+      "kind": "Property",
+      "signature": "public bool ToggleMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the main button with the resource preview works in the toggle mode. Use [method set_toggle_pressed] to manually set the state.",
+      "defaultValue": "false",
+      "godotName": "toggle_mode",
+      "xmlDocId": "P:Godot.EditorResourcePicker.ToggleMode",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ResourceChanged",
+      "kind": "Signal",
+      "signature": "public event ResourceChangedHandler ResourceChanged",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Emitted when the value of the edited resource was changed.",
+      "godotName": "resource_changed",
+      "xmlDocId": "E:Godot.EditorResourcePicker.ResourceChanged(Resource)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "ResourceSelected",
+      "kind": "Signal",
+      "signature": "public event ResourceSelectedHandler ResourceSelected",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "inspect",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the resource value was set and user clicked to edit it. When [param inspect] is [code]true[/code], the signal was caused by the context menu \u0022Edit\u0022 or \u0022Inspect\u0022 option.",
+      "godotName": "resource_selected",
+      "xmlDocId": "E:Godot.EditorResourcePicker.ResourceSelected(Resource,bool)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_HandleMenuSelected",
+      "kind": "Method",
+      "signature": "public bool _HandleMenuSelected(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "This virtual method can be implemented to handle context menu items not handled by default. See [method _set_create_options].",
+      "godotName": "_handle_menu_selected",
+      "xmlDocId": "M:Godot.EditorResourcePicker._HandleMenuSelected(int)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    },
+    {
+      "name": "_SetCreateOptions",
+      "kind": "Method",
+      "signature": "public void _SetCreateOptions(Object menuNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu_node",
+          "type": "Object"
+        }
+      ],
+      "summary": "This virtual method is called when updating the context menu of an [member editable] [EditorResourcePicker]. Implement this method to override the \u0022New\u0022 items section with your own options. [param menu_node] is a reference to the [PopupMenu] node. [b]Note:[/b] Implement [method _handle_menu_selected] to handle these custom items. [b]Note:[/b] Relevant built-in options (\u0022Load\u0022, \u0022Copy\u0022, \u0022Paste\u0022, etc.) are automatically added to the [param menu_node] afterwards, using their hard-coded IDs starting from [code]0[/code]. Custom options need to use non-colliding IDs to be handled properly. Using [code]id = 100 \u002B custom_option_index[/code] is safe (this is what the default items in the \u0022New\u0022 section use).",
+      "godotName": "_set_create_options",
+      "xmlDocId": "M:Godot.EditorResourcePicker._SetCreateOptions(Object)",
+      "sourcePath": "doc/classes/EditorResourcePicker.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorResourcePicker.xml",
+      "sha256": "4e9dcb14f949c435d857ae1076bb0abf4092ea774cd09fa9d10f522745fa320b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

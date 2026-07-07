@@ -1,0 +1,574 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Curve",
+    "namespace": "Godot",
+    "fullName": "Godot.Curve",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Curve",
+    "documentationPath": "doc/classes/Curve.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_curve.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPoint",
+      "kind": "Method",
+      "signature": "public int AddPoint(Vector2 position, float leftTangent, float rightTangent, int leftMode, int rightMode)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "left_tangent",
+          "type": "float",
+          "defaultValue": "0"
+        },
+        {
+          "name": "right_tangent",
+          "type": "float",
+          "defaultValue": "0"
+        },
+        {
+          "name": "left_mode",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "right_mode",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adds a point to the curve. For each side, if the [code]*_mode[/code] is [constant TANGENT_LINEAR], the [code]*_tangent[/code] angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows custom assignments to the [code]*_tangent[/code] angle if [code]*_mode[/code] is set to [constant TANGENT_FREE].",
+      "godotName": "add_point",
+      "xmlDocId": "M:Godot.Curve.AddPoint(Vector2,float,float,int,int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "Bake",
+      "kind": "Method",
+      "signature": "public void Bake()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Recomputes the baked cache of points for the curve.",
+      "godotName": "bake",
+      "xmlDocId": "M:Godot.Curve.Bake",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "CleanDupes",
+      "kind": "Method",
+      "signature": "public void CleanDupes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes duplicate points, i.e. points that are less than 0.00001 units (engine epsilon value) away from their neighbor on the curve.",
+      "godotName": "clean_dupes",
+      "xmlDocId": "M:Godot.Curve.CleanDupes",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "ClearPoints",
+      "kind": "Method",
+      "signature": "public void ClearPoints()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all points from the curve.",
+      "godotName": "clear_points",
+      "xmlDocId": "M:Godot.Curve.ClearPoints",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetDomainRange",
+      "kind": "Method",
+      "signature": "public float GetDomainRange()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the difference between [member min_domain] and [member max_domain].",
+      "godotName": "get_domain_range",
+      "xmlDocId": "M:Godot.Curve.GetDomainRange",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetPointLeftMode",
+      "kind": "Method",
+      "signature": "public int GetPointLeftMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left [enum TangentMode] for the point at [param index].",
+      "godotName": "get_point_left_mode",
+      "xmlDocId": "M:Godot.Curve.GetPointLeftMode(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetPointLeftTangent",
+      "kind": "Method",
+      "signature": "public float GetPointLeftTangent(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the left tangent angle (in degrees) for the point at [param index].",
+      "godotName": "get_point_left_tangent",
+      "xmlDocId": "M:Godot.Curve.GetPointLeftTangent(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetPointPosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetPointPosition(int index)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the curve coordinates for the point at [param index].",
+      "godotName": "get_point_position",
+      "xmlDocId": "M:Godot.Curve.GetPointPosition(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetPointRightMode",
+      "kind": "Method",
+      "signature": "public int GetPointRightMode(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right [enum TangentMode] for the point at [param index].",
+      "godotName": "get_point_right_mode",
+      "xmlDocId": "M:Godot.Curve.GetPointRightMode(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetPointRightTangent",
+      "kind": "Method",
+      "signature": "public float GetPointRightTangent(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the right tangent angle (in degrees) for the point at [param index].",
+      "godotName": "get_point_right_tangent",
+      "xmlDocId": "M:Godot.Curve.GetPointRightTangent(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "GetValueRange",
+      "kind": "Method",
+      "signature": "public float GetValueRange()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the difference between [member min_value] and [member max_value].",
+      "godotName": "get_value_range",
+      "xmlDocId": "M:Godot.Curve.GetValueRange",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "RemovePoint",
+      "kind": "Method",
+      "signature": "public void RemovePoint(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the point at [param index] from the curve.",
+      "godotName": "remove_point",
+      "xmlDocId": "M:Godot.Curve.RemovePoint(int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "Sample",
+      "kind": "Method",
+      "signature": "public float Sample(float offset)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the Y value for the point that would exist at the X position [param offset] along the curve.",
+      "godotName": "sample",
+      "xmlDocId": "M:Godot.Curve.Sample(float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SampleBaked",
+      "kind": "Method",
+      "signature": "public float SampleBaked(float offset)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the Y value for the point that would exist at the X position [param offset] along the curve using the baked cache. Bakes the curve\u0027s points if not already baked.",
+      "godotName": "sample_baked",
+      "xmlDocId": "M:Godot.Curve.SampleBaked(float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointLeftMode",
+      "kind": "Method",
+      "signature": "public void SetPointLeftMode(int index, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the left [enum TangentMode] for the point at [param index] to [param mode].",
+      "godotName": "set_point_left_mode",
+      "xmlDocId": "M:Godot.Curve.SetPointLeftMode(int,int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointLeftTangent",
+      "kind": "Method",
+      "signature": "public void SetPointLeftTangent(int index, float tangent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "tangent",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the left tangent angle for the point at [param index] to [param tangent].",
+      "godotName": "set_point_left_tangent",
+      "xmlDocId": "M:Godot.Curve.SetPointLeftTangent(int,float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointOffset",
+      "kind": "Method",
+      "signature": "public int SetPointOffset(int index, float offset)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Assigns the horizontal position [param offset] to the point at [param index].",
+      "godotName": "set_point_offset",
+      "xmlDocId": "M:Godot.Curve.SetPointOffset(int,float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointRightMode",
+      "kind": "Method",
+      "signature": "public void SetPointRightMode(int index, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the right [enum TangentMode] for the point at [param index] to [param mode].",
+      "godotName": "set_point_right_mode",
+      "xmlDocId": "M:Godot.Curve.SetPointRightMode(int,int)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointRightTangent",
+      "kind": "Method",
+      "signature": "public void SetPointRightTangent(int index, float tangent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "tangent",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the right tangent angle for the point at [param index] to [param tangent].",
+      "godotName": "set_point_right_tangent",
+      "xmlDocId": "M:Godot.Curve.SetPointRightTangent(int,float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "SetPointValue",
+      "kind": "Method",
+      "signature": "public void SetPointValue(int index, float y)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "float"
+        }
+      ],
+      "summary": "Assigns the vertical position [param y] to the point at [param index].",
+      "godotName": "set_point_value",
+      "xmlDocId": "M:Godot.Curve.SetPointValue(int,float)",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "BakeResolution",
+      "kind": "Property",
+      "signature": "public int BakeResolution { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of points to include in the baked (i.e. cached) curve data.",
+      "defaultValue": "100",
+      "godotName": "bake_resolution",
+      "xmlDocId": "P:Godot.Curve.BakeResolution",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "MaxDomain",
+      "kind": "Property",
+      "signature": "public float MaxDomain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum domain (x-coordinate) that points can have.",
+      "defaultValue": "1.0",
+      "godotName": "max_domain",
+      "xmlDocId": "P:Godot.Curve.MaxDomain",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "MaxValue",
+      "kind": "Property",
+      "signature": "public float MaxValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum value (y-coordinate) that points can have. Tangents can cause higher values between points.",
+      "defaultValue": "1.0",
+      "godotName": "max_value",
+      "xmlDocId": "P:Godot.Curve.MaxValue",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "MinDomain",
+      "kind": "Property",
+      "signature": "public float MinDomain { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum domain (x-coordinate) that points can have.",
+      "defaultValue": "0.0",
+      "godotName": "min_domain",
+      "xmlDocId": "P:Godot.Curve.MinDomain",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "MinValue",
+      "kind": "Property",
+      "signature": "public float MinValue { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum value (y-coordinate) that points can have. Tangents can cause lower values between points.",
+      "defaultValue": "0.0",
+      "godotName": "min_value",
+      "xmlDocId": "P:Godot.Curve.MinValue",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "PointCount",
+      "kind": "Property",
+      "signature": "public int PointCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of points describing the curve.",
+      "defaultValue": "0",
+      "godotName": "point_count",
+      "xmlDocId": "P:Godot.Curve.PointCount",
+      "sourcePath": "doc/classes/Curve.xml"
+    }
+  ],
+  "rawMembers": [
+    {
+      "name": "point_{index}/left_mode",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The left [enum TangentMode] for the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "point_{index}/left_mode",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "point_{index}/left_tangent",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The left tangent angle (in degrees) for the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "0.0",
+      "godotName": "point_{index}/left_tangent",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "point_{index}/position",
+      "kind": "RawProperty",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The position of the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "point_{index}/position",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "point_{index}/right_mode",
+      "kind": "RawProperty",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The right [enum TangentMode] for the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "0",
+      "godotName": "point_{index}/right_mode",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "point_{index}/right_tangent",
+      "kind": "RawProperty",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The right tangent angle (in degrees) for the point at [code]index[/code]. [b]Note:[/b] [code]index[/code] is a value in the [code]0 .. point_count - 1[/code] range.",
+      "defaultValue": "0.0",
+      "godotName": "point_{index}/right_tangent",
+      "sourcePath": "doc/classes/Curve.xml"
+    }
+  ],
+  "signals": [
+    {
+      "name": "DomainChanged",
+      "kind": "Signal",
+      "signature": "public event DomainChangedHandler DomainChanged",
+      "parameters": [],
+      "summary": "Emitted when [member max_domain] or [member min_domain] is changed.",
+      "godotName": "domain_changed",
+      "xmlDocId": "E:Godot.Curve.DomainChanged",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "RangeChanged",
+      "kind": "Signal",
+      "signature": "public event RangeChangedHandler RangeChanged",
+      "parameters": [],
+      "summary": "Emitted when [member max_value] or [member min_value] is changed.",
+      "godotName": "range_changed",
+      "xmlDocId": "E:Godot.Curve.RangeChanged",
+      "sourcePath": "doc/classes/Curve.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TangentMode",
+      "values": [
+        {
+          "name": "TANGENT_FREE",
+          "value": "0",
+          "enum": "TangentMode",
+          "kind": "EnumValue",
+          "summary": "The tangent on this side of the point is user-defined.",
+          "sourcePath": "doc/classes/Curve.xml"
+        },
+        {
+          "name": "TANGENT_LINEAR",
+          "value": "1",
+          "enum": "TangentMode",
+          "kind": "EnumValue",
+          "summary": "The curve calculates the tangent on this side of the point as the slope halfway towards the adjacent point.",
+          "sourcePath": "doc/classes/Curve.xml"
+        },
+        {
+          "name": "TANGENT_MODE_COUNT",
+          "value": "2",
+          "enum": "TangentMode",
+          "kind": "EnumValue",
+          "summary": "The total number of available tangent modes.",
+          "sourcePath": "doc/classes/Curve.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TANGENT_FREE",
+      "value": "0",
+      "enum": "TangentMode",
+      "kind": "EnumValue",
+      "summary": "The tangent on this side of the point is user-defined.",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "TANGENT_LINEAR",
+      "value": "1",
+      "enum": "TangentMode",
+      "kind": "EnumValue",
+      "summary": "The curve calculates the tangent on this side of the point as the slope halfway towards the adjacent point.",
+      "sourcePath": "doc/classes/Curve.xml"
+    },
+    {
+      "name": "TANGENT_MODE_COUNT",
+      "value": "2",
+      "enum": "TangentMode",
+      "kind": "EnumValue",
+      "summary": "The total number of available tangent modes.",
+      "sourcePath": "doc/classes/Curve.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Curve.xml",
+      "sha256": "898b3ffbb72429c19cfc0155a315e1130f254b3fa0b781bf69743a18cea5e653"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

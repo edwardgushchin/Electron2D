@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CollisionShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CollisionShape3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "CollisionShape3D",
+    "documentationPath": "doc/classes/CollisionShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_collisionshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "MakeConvexFromSiblings",
+      "kind": "Method",
+      "signature": "public void MakeConvexFromSiblings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sets the collision shape\u0027s shape to the addition of all its convexed [MeshInstance3D] siblings geometry.",
+      "godotName": "make_convex_from_siblings",
+      "xmlDocId": "M:Godot.CollisionShape3D.MakeConvexFromSiblings",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    },
+    {
+      "name": "ResourceChanged",
+      "kind": "Method",
+      "signature": "public void ResourceChanged(Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "This method does nothing.",
+      "godotName": "resource_changed",
+      "xmlDocId": "M:Godot.CollisionShape3D.ResourceChanged(Resource)",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    },
+    {
+      "name": "DebugColor",
+      "kind": "Property",
+      "signature": "public Color DebugColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The collision shape color that is displayed in the editor, or in the running project if [b]Debug \u003E Visible Collision Shapes[/b] is checked at the top of the editor. [b]Note:[/b] The default value is [member ProjectSettings.debug/shapes/collision/shape_color]. The [code]Color(0, 0, 0, 0)[/code] value documented here is a placeholder, and not the actual default debug color.",
+      "defaultValue": "Color(0, 0, 0, 0)",
+      "godotName": "debug_color",
+      "xmlDocId": "P:Godot.CollisionShape3D.DebugColor",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    },
+    {
+      "name": "DebugFill",
+      "kind": "Property",
+      "signature": "public bool DebugFill { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], when the shape is displayed, it will show a solid fill color in addition to its wireframe.",
+      "defaultValue": "true",
+      "godotName": "debug_fill",
+      "xmlDocId": "P:Godot.CollisionShape3D.DebugFill",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    },
+    {
+      "name": "Disabled",
+      "kind": "Property",
+      "signature": "public bool Disabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "A disabled collision shape has no effect in the world. This property should be changed with [method Object.set_deferred].",
+      "defaultValue": "false",
+      "godotName": "disabled",
+      "xmlDocId": "P:Godot.CollisionShape3D.Disabled",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    },
+    {
+      "name": "Shape",
+      "kind": "Property",
+      "signature": "public Shape3D Shape { get; set; }",
+      "returnType": "Shape3D",
+      "parameters": [],
+      "summary": "The actual shape owned by this collision shape.",
+      "godotName": "shape",
+      "xmlDocId": "P:Godot.CollisionShape3D.Shape",
+      "sourcePath": "doc/classes/CollisionShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CollisionShape3D.xml",
+      "sha256": "e280aa0486aa1ac92af3c502eb7ef87877420cc693177302b3cf42109f4361ec"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

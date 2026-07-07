@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GridContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.GridContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "GridContainer",
+    "documentationPath": "doc/classes/GridContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gridcontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Columns",
+      "kind": "Property",
+      "signature": "public int Columns { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of columns in the [GridContainer]. If modified, [GridContainer] reorders its Control-derived children to accommodate the new layout.",
+      "defaultValue": "1",
+      "godotName": "columns",
+      "xmlDocId": "P:Godot.GridContainer.Columns",
+      "sourcePath": "doc/classes/GridContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GridContainer.xml",
+      "sha256": "32e17297e35a922ace1b0c8be94badf753b31ab8e35db4c53f65a87a647b52af"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

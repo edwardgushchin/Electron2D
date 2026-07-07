@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectBandLimitFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectBandLimitFilter",
+    "kind": "class",
+    "baseType": "AudioEffectFilter",
+    "interfaces": [],
+    "godotReference": "AudioEffectBandLimitFilter",
+    "documentationPath": "doc/classes/AudioEffectBandLimitFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectbandlimitfilter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectBandLimitFilter.xml",
+      "sha256": "775b0706ead94f19c5da02b69851ced20e556464017f28b48a88c70fe1d8b363"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

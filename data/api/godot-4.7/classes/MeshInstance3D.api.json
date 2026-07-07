@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MeshInstance3D",
+    "namespace": "Godot",
+    "fullName": "Godot.MeshInstance3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "MeshInstance3D",
+    "documentationPath": "doc/classes/MeshInstance3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_meshinstance3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BakeMeshFromCurrentBlendShapeMix",
+      "kind": "Method",
+      "signature": "public ArrayMesh BakeMeshFromCurrentBlendShapeMix(ArrayMesh existing)",
+      "returnType": "ArrayMesh",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "ArrayMesh",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Takes a snapshot from the current [ArrayMesh] with all blend shapes applied according to their current weights and bakes it to the provided [param existing] mesh. If no [param existing] mesh is provided a new [ArrayMesh] is created, baked and returned. Mesh surface materials are not copied. [b]Performance:[/b] [Mesh] data needs to be received from the GPU, stalling the [RenderingServer] in the process.",
+      "godotName": "bake_mesh_from_current_blend_shape_mix",
+      "xmlDocId": "M:Godot.MeshInstance3D.BakeMeshFromCurrentBlendShapeMix(ArrayMesh)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "BakeMeshFromCurrentSkeletonPose",
+      "kind": "Method",
+      "signature": "public ArrayMesh BakeMeshFromCurrentSkeletonPose(ArrayMesh existing)",
+      "returnType": "ArrayMesh",
+      "parameters": [
+        {
+          "name": "existing",
+          "type": "ArrayMesh",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Takes a snapshot of the current animated skeleton pose of the skinned mesh and bakes it to the provided [param existing] mesh. If no [param existing] mesh is provided a new [ArrayMesh] is created, baked, and returned. Requires a skeleton with a registered skin to work. Blendshapes are ignored. Mesh surface materials are not copied. [b]Performance:[/b] [Mesh] data needs to be retrieved from the GPU, stalling the [RenderingServer] in the process.",
+      "godotName": "bake_mesh_from_current_skeleton_pose",
+      "xmlDocId": "M:Godot.MeshInstance3D.BakeMeshFromCurrentSkeletonPose(ArrayMesh)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "CreateConvexCollision",
+      "kind": "Method",
+      "signature": "public void CreateConvexCollision(bool clean, bool simplify)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "clean",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "simplify",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "This helper creates a [StaticBody3D] child node with a [ConvexPolygonShape3D] collision shape calculated from the mesh geometry. It\u0027s mainly used for testing. If [param clean] is [code]true[/code] (default), duplicate and interior vertices are removed automatically. You can set it to [code]false[/code] to make the process faster if not needed. If [param simplify] is [code]true[/code], the geometry can be further simplified to reduce the number of vertices. Disabled by default.",
+      "godotName": "create_convex_collision",
+      "xmlDocId": "M:Godot.MeshInstance3D.CreateConvexCollision(bool,bool)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "CreateDebugTangents",
+      "kind": "Method",
+      "signature": "public void CreateDebugTangents()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "This helper creates a [MeshInstance3D] child node with gizmos at every vertex calculated from the mesh geometry. It\u0027s mainly used for testing.",
+      "godotName": "create_debug_tangents",
+      "xmlDocId": "M:Godot.MeshInstance3D.CreateDebugTangents",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "CreateMultipleConvexCollisions",
+      "kind": "Method",
+      "signature": "public void CreateMultipleConvexCollisions(MeshConvexDecompositionSettings settings)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "settings",
+          "type": "MeshConvexDecompositionSettings",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "This helper creates a [StaticBody3D] child node with multiple [ConvexPolygonShape3D] collision shapes calculated from the mesh geometry via convex decomposition. The convex decomposition operation can be controlled with parameters from the optional [param settings].",
+      "godotName": "create_multiple_convex_collisions",
+      "xmlDocId": "M:Godot.MeshInstance3D.CreateMultipleConvexCollisions(MeshConvexDecompositionSettings)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "CreateTrimeshCollision",
+      "kind": "Method",
+      "signature": "public void CreateTrimeshCollision()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "This helper creates a [StaticBody3D] child node with a [ConcavePolygonShape3D] collision shape calculated from the mesh geometry. It\u0027s mainly used for testing.",
+      "godotName": "create_trimesh_collision",
+      "xmlDocId": "M:Godot.MeshInstance3D.CreateTrimeshCollision",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "FindBlendShapeByName",
+      "kind": "Method",
+      "signature": "public int FindBlendShapeByName(StringName name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the index of the blend shape with the given [param name]. Returns [code]-1[/code] if no blend shape with this name exists, including when [member mesh] is [code]null[/code].",
+      "godotName": "find_blend_shape_by_name",
+      "xmlDocId": "M:Godot.MeshInstance3D.FindBlendShapeByName(StringName)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetActiveMaterial",
+      "kind": "Method",
+      "signature": "public Material GetActiveMaterial(int surface)",
+      "returnType": "Material",
+      "parameters": [
+        {
+          "name": "surface",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [Material] that will be used by the [Mesh] when drawing. This can return the [member GeometryInstance3D.material_override], the surface override [Material] defined in this [MeshInstance3D], or the surface [Material] defined in the [member mesh]. For example, if [member GeometryInstance3D.material_override] is used, all surfaces will return the override material. Returns [code]null[/code] if no material is active, including when [member mesh] is [code]null[/code].",
+      "godotName": "get_active_material",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetActiveMaterial(int)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetBlendShapeCount",
+      "kind": "Method",
+      "signature": "public int GetBlendShapeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of blend shapes available. Produces an error if [member mesh] is [code]null[/code].",
+      "godotName": "get_blend_shape_count",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetBlendShapeCount",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetBlendShapeValue",
+      "kind": "Method",
+      "signature": "public float GetBlendShapeValue(int blendShapeIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "blend_shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the blend shape at the given [param blend_shape_idx]. Returns [code]0.0[/code] and produces an error if [member mesh] is [code]null[/code] or doesn\u0027t have a blend shape at that index.",
+      "godotName": "get_blend_shape_value",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetBlendShapeValue(int)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetSkinReference",
+      "kind": "Method",
+      "signature": "public SkinReference GetSkinReference()",
+      "returnType": "SkinReference",
+      "parameters": [],
+      "summary": "Returns the internal [SkinReference] containing the skeleton\u0027s [RID] attached to this RID. See also [method Resource.get_rid], [method SkinReference.get_skeleton], and [method RenderingServer.instance_attach_skeleton].",
+      "godotName": "get_skin_reference",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetSkinReference",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetSurfaceOverrideMaterial",
+      "kind": "Method",
+      "signature": "public Material GetSurfaceOverrideMaterial(int surface)",
+      "returnType": "Material",
+      "parameters": [
+        {
+          "name": "surface",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the override [Material] for the specified [param surface] of the [Mesh] resource. See also [method get_surface_override_material_count]. [b]Note:[/b] This returns the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties, not the material within the [Mesh] resource. To get the material within the [Mesh] resource, use [method Mesh.surface_get_material] instead.",
+      "godotName": "get_surface_override_material",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetSurfaceOverrideMaterial(int)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "GetSurfaceOverrideMaterialCount",
+      "kind": "Method",
+      "signature": "public int GetSurfaceOverrideMaterialCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of surface override materials. This is equivalent to [method Mesh.get_surface_count]. See also [method get_surface_override_material].",
+      "godotName": "get_surface_override_material_count",
+      "xmlDocId": "M:Godot.MeshInstance3D.GetSurfaceOverrideMaterialCount",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "SetBlendShapeValue",
+      "kind": "Method",
+      "signature": "public void SetBlendShapeValue(int blendShapeIdx, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "blend_shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the blend shape at [param blend_shape_idx] to [param value]. Produces an error if [member mesh] is [code]null[/code] or doesn\u0027t have a blend shape at that index.",
+      "godotName": "set_blend_shape_value",
+      "xmlDocId": "M:Godot.MeshInstance3D.SetBlendShapeValue(int,float)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "SetSurfaceOverrideMaterial",
+      "kind": "Method",
+      "signature": "public void SetSurfaceOverrideMaterial(int surface, Material material)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "surface",
+          "type": "int"
+        },
+        {
+          "name": "material",
+          "type": "Material"
+        }
+      ],
+      "summary": "Sets the override [param material] for the specified [param surface] of the [Mesh] resource. This material is associated with this [MeshInstance3D] rather than with [member mesh]. [b]Note:[/b] This assigns the [Material] associated to the [MeshInstance3D]\u0027s Surface Material Override properties, not the material within the [Mesh] resource. To set the material within the [Mesh] resource, use [method Mesh.surface_set_material] instead.",
+      "godotName": "set_surface_override_material",
+      "xmlDocId": "M:Godot.MeshInstance3D.SetSurfaceOverrideMaterial(int,Material)",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "The [Mesh] resource for the instance.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.MeshInstance3D.Mesh",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "Skeleton",
+      "kind": "Property",
+      "signature": "public NodePath Skeleton { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "[NodePath] to the [Skeleton3D] associated with the instance. [b]Note:[/b] The default value of this property has changed in Godot 4.6. Enable [member ProjectSettings.animation/compatibility/default_parent_skeleton_in_mesh_instance_3d] if the old behavior is needed for compatibility.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "skeleton",
+      "xmlDocId": "P:Godot.MeshInstance3D.Skeleton",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    },
+    {
+      "name": "Skin",
+      "kind": "Property",
+      "signature": "public Skin Skin { get; set; }",
+      "returnType": "Skin",
+      "parameters": [],
+      "summary": "The [Skin] to be used by this instance.",
+      "godotName": "skin",
+      "xmlDocId": "P:Godot.MeshInstance3D.Skin",
+      "sourcePath": "doc/classes/MeshInstance3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MeshInstance3D.xml",
+      "sha256": "2d2c5f6739efe2c888ed5a7bf5045d4c150f8adc6b1f8a15026a5fe44fd7a32a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

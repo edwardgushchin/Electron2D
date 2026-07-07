@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentAnchorList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentAnchorList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentAnchorList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentAnchorList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentanchorlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEntityPose",
+      "kind": "Method",
+      "signature": "public Transform3D GetEntityPose(int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for the entity at this [param index].",
+      "godotName": "get_entity_pose",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentAnchorList.GetEntityPose(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentAnchorList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentAnchorList.xml",
+      "sha256": "7885dfe767bb8fdcc6e8c28bc55551d909351b9f245d6dd71b9abde86b497d57"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

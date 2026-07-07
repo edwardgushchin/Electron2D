@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MovieWriter",
+    "namespace": "Godot",
+    "fullName": "Godot.MovieWriter",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "MovieWriter",
+    "documentationPath": "doc/classes/MovieWriter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_moviewriter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAudioMixRate",
+      "kind": "Method",
+      "signature": "public int _GetAudioMixRate()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the audio sample rate used for recording the audio is requested by the engine. The value returned must be specified in Hz. Defaults to 48000 Hz if [method _get_audio_mix_rate] is not overridden.",
+      "godotName": "_get_audio_mix_rate",
+      "xmlDocId": "M:Godot.MovieWriter._GetAudioMixRate",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_GetAudioSpeakerMode",
+      "kind": "Method",
+      "signature": "public int _GetAudioSpeakerMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the audio speaker mode used for recording the audio is requested by the engine. This can affect the number of output channels in the resulting audio file/stream. Defaults to [constant AudioServer.SPEAKER_MODE_STEREO] if [method _get_audio_speaker_mode] is not overridden.",
+      "godotName": "_get_audio_speaker_mode",
+      "xmlDocId": "M:Godot.MovieWriter._GetAudioSpeakerMode",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_GetSupportedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of supported filename extensions for movies written with this [MovieWriter].",
+      "godotName": "_get_supported_extensions",
+      "xmlDocId": "M:Godot.MovieWriter._GetSupportedExtensions",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_HandlesFile",
+      "kind": "Method",
+      "signature": "public bool _HandlesFile(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Called when the engine determines whether this [MovieWriter] is able to handle the file at [param path]. Must return [code]true[/code] if this [MovieWriter] is able to handle the given file path, [code]false[/code] otherwise. Typically, [method _handles_file] is overridden as follows to allow the user to record a file at any path with a given file extension: [codeblock] func _handles_file(path): # Allows specifying an output file with a \u0060.mkv\u0060 file extension (case-insensitive), # either in the Project Settings or with the \u0060--write-movie \u003Cpath\u003E\u0060 command line argument. return path.get_extension().to_lower() == \u0022mkv\u0022 [/codeblock]",
+      "godotName": "_handles_file",
+      "xmlDocId": "M:Godot.MovieWriter._HandlesFile(String)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteBegin",
+      "kind": "Method",
+      "signature": "public int _WriteBegin(Vector2i movieSize, int fps, String basePath)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "movie_size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "fps",
+          "type": "int"
+        },
+        {
+          "name": "base_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Called once before the engine starts writing video and audio data. [param movie_size] is the width and height of the video to save. [param fps] is the number of frames per second specified in the project settings or using the [code]--fixed-fps \u003Cfps\u003E[/code] [url=$DOCS_URL/tutorials/editor/command_line_tutorial.html]command line argument[/url].",
+      "godotName": "_write_begin",
+      "xmlDocId": "M:Godot.MovieWriter._WriteBegin(Vector2i,int,String)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteEnd",
+      "kind": "Method",
+      "signature": "public void _WriteEnd()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the engine finishes writing. This occurs when the engine quits by pressing the window manager\u0027s close button, or when [method SceneTree.quit] is called. [b]Note:[/b] Pressing [kbd]Ctrl \u002B C[/kbd] on the terminal running the editor/project does [i]not[/i] result in [method _write_end] being called.",
+      "godotName": "_write_end",
+      "xmlDocId": "M:Godot.MovieWriter._WriteEnd",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteFrame",
+      "kind": "Method",
+      "signature": "public int _WriteFrame(Image frameImage, const void* audioFrameBlock)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "frame_image",
+          "type": "Image"
+        },
+        {
+          "name": "audio_frame_block",
+          "type": "const void*"
+        }
+      ],
+      "summary": "Called at the end of every rendered frame. The [param frame_image] and [param audio_frame_block] function arguments should be written to.",
+      "godotName": "_write_frame",
+      "xmlDocId": "M:Godot.MovieWriter._WriteFrame(Image,const void*)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "AddWriter",
+      "kind": "Method",
+      "signature": "public void AddWriter(MovieWriter writer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "writer",
+          "type": "MovieWriter"
+        }
+      ],
+      "summary": "Adds a writer to be usable by the engine. The supported file extensions can be set by overriding [method _handles_file]. [b]Note:[/b] [method add_writer] must be called early enough in the engine initialization to work, as movie writing is designed to start at the same time as the rest of the engine.",
+      "godotName": "add_writer",
+      "xmlDocId": "M:Godot.MovieWriter.AddWriter(MovieWriter)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAudioMixRate",
+      "kind": "Method",
+      "signature": "public int _GetAudioMixRate()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the audio sample rate used for recording the audio is requested by the engine. The value returned must be specified in Hz. Defaults to 48000 Hz if [method _get_audio_mix_rate] is not overridden.",
+      "godotName": "_get_audio_mix_rate",
+      "xmlDocId": "M:Godot.MovieWriter._GetAudioMixRate",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_GetAudioSpeakerMode",
+      "kind": "Method",
+      "signature": "public int _GetAudioSpeakerMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the audio speaker mode used for recording the audio is requested by the engine. This can affect the number of output channels in the resulting audio file/stream. Defaults to [constant AudioServer.SPEAKER_MODE_STEREO] if [method _get_audio_speaker_mode] is not overridden.",
+      "godotName": "_get_audio_speaker_mode",
+      "xmlDocId": "M:Godot.MovieWriter._GetAudioSpeakerMode",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_GetSupportedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetSupportedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of supported filename extensions for movies written with this [MovieWriter].",
+      "godotName": "_get_supported_extensions",
+      "xmlDocId": "M:Godot.MovieWriter._GetSupportedExtensions",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_HandlesFile",
+      "kind": "Method",
+      "signature": "public bool _HandlesFile(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Called when the engine determines whether this [MovieWriter] is able to handle the file at [param path]. Must return [code]true[/code] if this [MovieWriter] is able to handle the given file path, [code]false[/code] otherwise. Typically, [method _handles_file] is overridden as follows to allow the user to record a file at any path with a given file extension: [codeblock] func _handles_file(path): # Allows specifying an output file with a \u0060.mkv\u0060 file extension (case-insensitive), # either in the Project Settings or with the \u0060--write-movie \u003Cpath\u003E\u0060 command line argument. return path.get_extension().to_lower() == \u0022mkv\u0022 [/codeblock]",
+      "godotName": "_handles_file",
+      "xmlDocId": "M:Godot.MovieWriter._HandlesFile(String)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteBegin",
+      "kind": "Method",
+      "signature": "public int _WriteBegin(Vector2i movieSize, int fps, String basePath)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "movie_size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "fps",
+          "type": "int"
+        },
+        {
+          "name": "base_path",
+          "type": "String"
+        }
+      ],
+      "summary": "Called once before the engine starts writing video and audio data. [param movie_size] is the width and height of the video to save. [param fps] is the number of frames per second specified in the project settings or using the [code]--fixed-fps \u003Cfps\u003E[/code] [url=$DOCS_URL/tutorials/editor/command_line_tutorial.html]command line argument[/url].",
+      "godotName": "_write_begin",
+      "xmlDocId": "M:Godot.MovieWriter._WriteBegin(Vector2i,int,String)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteEnd",
+      "kind": "Method",
+      "signature": "public void _WriteEnd()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when the engine finishes writing. This occurs when the engine quits by pressing the window manager\u0027s close button, or when [method SceneTree.quit] is called. [b]Note:[/b] Pressing [kbd]Ctrl \u002B C[/kbd] on the terminal running the editor/project does [i]not[/i] result in [method _write_end] being called.",
+      "godotName": "_write_end",
+      "xmlDocId": "M:Godot.MovieWriter._WriteEnd",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    },
+    {
+      "name": "_WriteFrame",
+      "kind": "Method",
+      "signature": "public int _WriteFrame(Image frameImage, const void* audioFrameBlock)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "frame_image",
+          "type": "Image"
+        },
+        {
+          "name": "audio_frame_block",
+          "type": "const void*"
+        }
+      ],
+      "summary": "Called at the end of every rendered frame. The [param frame_image] and [param audio_frame_block] function arguments should be written to.",
+      "godotName": "_write_frame",
+      "xmlDocId": "M:Godot.MovieWriter._WriteFrame(Image,const void*)",
+      "sourcePath": "doc/classes/MovieWriter.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MovieWriter.xml",
+      "sha256": "9a088d121117dce9024d41284f046b9fee3d76050e7e56bf5d85d70fed9201f2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

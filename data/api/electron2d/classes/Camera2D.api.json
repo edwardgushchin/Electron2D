@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Camera2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Camera2D",
+    "kind": "class",
+    "baseType": "Electron2D.Node2D",
+    "interfaces": [],
+    "godotReference": "Camera2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Camera2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Camera2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Camera2D type.",
+      "xmlDocId": "M:Electron2D.Camera2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Camera2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Camera2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Camera2D type.",
+      "xmlDocId": "M:Electron2D.Camera2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Align",
+      "kind": "Method",
+      "signature": "public System.Void Align()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Aligns the camera to the tracked position.",
+      "xmlDocId": "M:Electron2D.Camera2D.Align",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ClearCurrent",
+      "kind": "Method",
+      "signature": "public System.Void ClearCurrent(System.Boolean enableNext)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "enableNext",
+          "type": "System.Boolean",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Clears this camera as the current camera on its viewport.",
+      "xmlDocId": "M:Electron2D.Camera2D.ClearCurrent(System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EnterTree",
+      "kind": "Method",
+      "signature": "public System.Void EnterTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node enters a scene tree.",
+      "xmlDocId": "M:Electron2D.Camera2D._EnterTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExitTree",
+      "kind": "Method",
+      "signature": "public System.Void ExitTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node exits a scene tree.",
+      "xmlDocId": "M:Electron2D.Camera2D._ExitTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ForceUpdateScroll",
+      "kind": "Method",
+      "signature": "public System.Void ForceUpdateScroll()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Forces the camera scroll state to update immediately.",
+      "xmlDocId": "M:Electron2D.Camera2D.ForceUpdateScroll",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetScreenCenterPosition",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetScreenCenterPosition()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the screen center position in global coordinates.",
+      "xmlDocId": "M:Electron2D.Camera2D.GetScreenCenterPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetScreenRotation",
+      "kind": "Method",
+      "signature": "public System.Single GetScreenRotation()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets the camera screen rotation in radians.",
+      "xmlDocId": "M:Electron2D.Camera2D.GetScreenRotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTargetPosition",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetTargetPosition()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the camera target position in global coordinates.",
+      "xmlDocId": "M:Electron2D.Camera2D.GetTargetPosition",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsCurrent",
+      "kind": "Method",
+      "signature": "public System.Boolean IsCurrent()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this camera is current on its viewport.",
+      "xmlDocId": "M:Electron2D.Camera2D.IsCurrent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MakeCurrent",
+      "kind": "Method",
+      "signature": "public System.Void MakeCurrent()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Makes this camera current on the nearest ancestor viewport.",
+      "xmlDocId": "M:Electron2D.Camera2D.MakeCurrent",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ResetSmoothing",
+      "kind": "Method",
+      "signature": "public System.Void ResetSmoothing()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Resets camera smoothing state.",
+      "xmlDocId": "M:Electron2D.Camera2D.ResetSmoothing",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public System.Boolean Enabled { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this camera can become current.",
+      "xmlDocId": "P:Electron2D.Camera2D.Enabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IgnoreRotation",
+      "kind": "Property",
+      "signature": "public System.Boolean IgnoreRotation { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the camera ignores its node rotation.",
+      "xmlDocId": "P:Electron2D.Camera2D.IgnoreRotation",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Offset { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the camera target offset.",
+      "xmlDocId": "P:Electron2D.Camera2D.Offset",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Zoom",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 Zoom { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the camera zoom.",
+      "xmlDocId": "P:Electron2D.Camera2D.Zoom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "EnterTree",
+      "kind": "Method",
+      "signature": "public System.Void EnterTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node enters a scene tree.",
+      "xmlDocId": "M:Electron2D.Camera2D._EnterTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ExitTree",
+      "kind": "Method",
+      "signature": "public System.Void ExitTree()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Called when this node exits a scene tree.",
+      "xmlDocId": "M:Electron2D.Camera2D._ExitTree",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CSGPrimitive3D",
+    "namespace": "Godot",
+    "fullName": "Godot.CSGPrimitive3D",
+    "kind": "class",
+    "baseType": "CSGShape3D",
+    "interfaces": [],
+    "godotReference": "CSGPrimitive3D",
+    "documentationPath": "modules/csg/doc_classes/CSGPrimitive3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_csgprimitive3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FlipFaces",
+      "kind": "Property",
+      "signature": "public bool FlipFaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.",
+      "defaultValue": "false",
+      "godotName": "flip_faces",
+      "xmlDocId": "P:Godot.CSGPrimitive3D.FlipFaces",
+      "sourcePath": "modules/csg/doc_classes/CSGPrimitive3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/csg/doc_classes/CSGPrimitive3D.xml",
+      "sha256": "e2c6b6f7f6a7366e2c65bf42f413c7d68fea25b688934f436bb594afa38ba4b0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

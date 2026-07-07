@@ -1,0 +1,4410 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextEdit",
+    "namespace": "Godot",
+    "fullName": "Godot.TextEdit",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "TextEdit",
+    "documentationPath": "doc/classes/TextEdit.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textedit.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Backspace",
+      "kind": "Method",
+      "signature": "public void _Backspace(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user presses the backspace key.",
+      "godotName": "_backspace",
+      "xmlDocId": "M:Godot.TextEdit._Backspace(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Copy",
+      "kind": "Method",
+      "signature": "public void _Copy(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a copy operation.",
+      "godotName": "_copy",
+      "xmlDocId": "M:Godot.TextEdit._Copy(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Cut",
+      "kind": "Method",
+      "signature": "public void _Cut(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a cut operation.",
+      "godotName": "_cut",
+      "xmlDocId": "M:Godot.TextEdit._Cut(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_HandleUnicodeInput",
+      "kind": "Method",
+      "signature": "public void _HandleUnicodeInput(int unicodeChar, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "unicode_char",
+          "type": "int"
+        },
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user types in the provided key [param unicode_char].",
+      "godotName": "_handle_unicode_input",
+      "xmlDocId": "M:Godot.TextEdit._HandleUnicodeInput(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Paste",
+      "kind": "Method",
+      "signature": "public void _Paste(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a paste operation.",
+      "godotName": "_paste",
+      "xmlDocId": "M:Godot.TextEdit._Paste(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_PastePrimaryClipboard",
+      "kind": "Method",
+      "signature": "public void _PastePrimaryClipboard(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a paste operation with middle mouse button. [b]Note:[/b] This method is only implemented on Linux.",
+      "godotName": "_paste_primary_clipboard",
+      "xmlDocId": "M:Godot.TextEdit._PastePrimaryClipboard(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AddCaret",
+      "kind": "Method",
+      "signature": "public int AddCaret(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Adds a new caret at the given location. Returns the index of the new caret, or [code]-1[/code] if the location is invalid.",
+      "godotName": "add_caret",
+      "xmlDocId": "M:Godot.TextEdit.AddCaret(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AddCaretAtCarets",
+      "kind": "Method",
+      "signature": "public void AddCaretAtCarets(bool below)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "below",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds an additional caret above or below every caret. If [param below] is [code]true[/code] the new caret will be added below and above otherwise.",
+      "godotName": "add_caret_at_carets",
+      "xmlDocId": "M:Godot.TextEdit.AddCaretAtCarets(bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AddGutter",
+      "kind": "Method",
+      "signature": "public void AddGutter(int at)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "at",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Register a new gutter to this [TextEdit]. Use [param at] to have a specific gutter order. A value of [code]-1[/code] appends the gutter to the right.",
+      "godotName": "add_gutter",
+      "xmlDocId": "M:Godot.TextEdit.AddGutter(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AddSelectionForNextOccurrence",
+      "kind": "Method",
+      "signature": "public void AddSelectionForNextOccurrence()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Adds a selection and a caret for the next occurrence of the current selection. If there is no active selection, selects word under caret.",
+      "godotName": "add_selection_for_next_occurrence",
+      "xmlDocId": "M:Godot.TextEdit.AddSelectionForNextOccurrence",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AdjustCaretsAfterEdit",
+      "kind": "Method",
+      "signature": "public void AdjustCaretsAfterEdit(int caret, int fromLine, int fromCol, int toLine, int toCol)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret",
+          "type": "int"
+        },
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "from_col",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        },
+        {
+          "name": "to_col",
+          "type": "int"
+        }
+      ],
+      "summary": "This method does nothing.",
+      "godotName": "adjust_carets_after_edit",
+      "xmlDocId": "M:Godot.TextEdit.AdjustCaretsAfterEdit(int,int,int,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AdjustViewportToCaret",
+      "kind": "Method",
+      "signature": "public void AdjustViewportToCaret(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Adjust the viewport so the caret is visible.",
+      "godotName": "adjust_viewport_to_caret",
+      "xmlDocId": "M:Godot.TextEdit.AdjustViewportToCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ApplyIme",
+      "kind": "Method",
+      "signature": "public void ApplyIme()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Applies text from the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME) to each caret and closes the IME if it is open.",
+      "godotName": "apply_ime",
+      "xmlDocId": "M:Godot.TextEdit.ApplyIme",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Backspace",
+      "kind": "Method",
+      "signature": "public void Backspace(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Called when the user presses the backspace key. Can be overridden with [method _backspace].",
+      "godotName": "backspace",
+      "xmlDocId": "M:Godot.TextEdit.Backspace(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "BeginComplexOperation",
+      "kind": "Method",
+      "signature": "public void BeginComplexOperation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Starts a multipart edit. All edits will be treated as one action until [method end_complex_operation] is called.",
+      "godotName": "begin_complex_operation",
+      "xmlDocId": "M:Godot.TextEdit.BeginComplexOperation",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "BeginMulticaretEdit",
+      "kind": "Method",
+      "signature": "public void BeginMulticaretEdit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Starts an edit for multiple carets. The edit must be ended with [method end_multicaret_edit]. Multicaret edits can be used to edit text at multiple carets and delay merging the carets until the end, so the caret indexes aren\u0027t affected immediately. [method begin_multicaret_edit] and [method end_multicaret_edit] can be nested, and the merge will happen at the last [method end_multicaret_edit]. [codeblock] begin_complex_operation() begin_multicaret_edit() for i in range(get_caret_count()): if multicaret_edit_ignore_caret(i): continue # Logic here. end_multicaret_edit() end_complex_operation() [/codeblock]",
+      "godotName": "begin_multicaret_edit",
+      "xmlDocId": "M:Godot.TextEdit.BeginMulticaretEdit",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CancelIme",
+      "kind": "Method",
+      "signature": "public void CancelIme()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Closes the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME) if it is open. Any text in the IME will be lost.",
+      "godotName": "cancel_ime",
+      "xmlDocId": "M:Godot.TextEdit.CancelIme",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CenterViewportToCaret",
+      "kind": "Method",
+      "signature": "public void CenterViewportToCaret(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Centers the viewport on the line the editing caret is at. This also resets the [member scroll_horizontal] value to [code]0[/code].",
+      "godotName": "center_viewport_to_caret",
+      "xmlDocId": "M:Godot.TextEdit.CenterViewportToCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Performs a full reset of [TextEdit], including undo history.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TextEdit.Clear",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ClearUndoHistory",
+      "kind": "Method",
+      "signature": "public void ClearUndoHistory()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the undo history.",
+      "godotName": "clear_undo_history",
+      "xmlDocId": "M:Godot.TextEdit.ClearUndoHistory",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CollapseCarets",
+      "kind": "Method",
+      "signature": "public void CollapseCarets(int fromLine, int fromColumn, int toLine, int toColumn, bool inclusive)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "from_column",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        },
+        {
+          "name": "to_column",
+          "type": "int"
+        },
+        {
+          "name": "inclusive",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Collapse all carets in the given range to the [param from_line] and [param from_column] position. [param inclusive] applies to both ends. If [method is_in_mulitcaret_edit] is [code]true[/code], carets that are collapsed will be [code]true[/code] for [method multicaret_edit_ignore_caret]. [method merge_overlapping_carets] will be called if any carets were collapsed.",
+      "godotName": "collapse_carets",
+      "xmlDocId": "M:Godot.TextEdit.CollapseCarets(int,int,int,int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Copy",
+      "kind": "Method",
+      "signature": "public void Copy(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Copies the current text selection. Can be overridden with [method _copy].",
+      "godotName": "copy",
+      "xmlDocId": "M:Godot.TextEdit.Copy(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Cut",
+      "kind": "Method",
+      "signature": "public void Cut(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Cut\u0027s the current selection. Can be overridden with [method _cut].",
+      "godotName": "cut",
+      "xmlDocId": "M:Godot.TextEdit.Cut(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DeleteSelection",
+      "kind": "Method",
+      "signature": "public void DeleteSelection(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Deletes the selected text.",
+      "godotName": "delete_selection",
+      "xmlDocId": "M:Godot.TextEdit.DeleteSelection(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Deselect",
+      "kind": "Method",
+      "signature": "public void Deselect(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Deselects the current selection.",
+      "godotName": "deselect",
+      "xmlDocId": "M:Godot.TextEdit.Deselect(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "EndAction",
+      "kind": "Method",
+      "signature": "public void EndAction()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Marks the end of steps in the current action started with [method start_action].",
+      "godotName": "end_action",
+      "xmlDocId": "M:Godot.TextEdit.EndAction",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "EndComplexOperation",
+      "kind": "Method",
+      "signature": "public void EndComplexOperation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Ends a multipart edit, started with [method begin_complex_operation]. If called outside a complex operation, the current operation is pushed onto the undo/redo stack.",
+      "godotName": "end_complex_operation",
+      "xmlDocId": "M:Godot.TextEdit.EndComplexOperation",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "EndMulticaretEdit",
+      "kind": "Method",
+      "signature": "public void EndMulticaretEdit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Ends an edit for multiple carets, that was started with [method begin_multicaret_edit]. If this was the last [method end_multicaret_edit] and [method merge_overlapping_carets] was called, carets will be merged.",
+      "godotName": "end_multicaret_edit",
+      "xmlDocId": "M:Godot.TextEdit.EndMulticaretEdit",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretColumn",
+      "kind": "Method",
+      "signature": "public int GetCaretColumn(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the column the editing caret is at.",
+      "godotName": "get_caret_column",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretCount",
+      "kind": "Method",
+      "signature": "public int GetCaretCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of carets in this [TextEdit].",
+      "godotName": "get_caret_count",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretCount",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretDrawPos",
+      "kind": "Method",
+      "signature": "public Vector2 GetCaretDrawPos(int caretIndex)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the caret pixel draw position.",
+      "godotName": "get_caret_draw_pos",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretDrawPos(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretIndexEditOrder",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetCaretIndexEditOrder()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns a list of caret indexes in their edit order, this done from bottom to top. Edit order refers to the way actions such as [method insert_text_at_caret] are applied.",
+      "godotName": "get_caret_index_edit_order",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretIndexEditOrder",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretLine",
+      "kind": "Method",
+      "signature": "public int GetCaretLine(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the line the editing caret is on.",
+      "godotName": "get_caret_line",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetCaretWrapIndex",
+      "kind": "Method",
+      "signature": "public int GetCaretWrapIndex(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the wrap index the editing caret is on.",
+      "godotName": "get_caret_wrap_index",
+      "xmlDocId": "M:Godot.TextEdit.GetCaretWrapIndex(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetFirstNonWhitespaceColumn",
+      "kind": "Method",
+      "signature": "public int GetFirstNonWhitespaceColumn(int line)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the first column containing a non-whitespace character on the given line. If there is only whitespace, returns the number of characters.",
+      "godotName": "get_first_non_whitespace_column",
+      "xmlDocId": "M:Godot.TextEdit.GetFirstNonWhitespaceColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetFirstVisibleLine",
+      "kind": "Method",
+      "signature": "public int GetFirstVisibleLine()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the first visible line.",
+      "godotName": "get_first_visible_line",
+      "xmlDocId": "M:Godot.TextEdit.GetFirstVisibleLine",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetGutterCount",
+      "kind": "Method",
+      "signature": "public int GetGutterCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of gutters registered.",
+      "godotName": "get_gutter_count",
+      "xmlDocId": "M:Godot.TextEdit.GetGutterCount",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetGutterName",
+      "kind": "Method",
+      "signature": "public String GetGutterName(int gutter)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the gutter at the given index.",
+      "godotName": "get_gutter_name",
+      "xmlDocId": "M:Godot.TextEdit.GetGutterName(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetGutterType",
+      "kind": "Method",
+      "signature": "public int GetGutterType(int gutter)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type of the gutter at the given index. Gutters can contain icons, text, or custom visuals.",
+      "godotName": "get_gutter_type",
+      "xmlDocId": "M:Godot.TextEdit.GetGutterType(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetGutterWidth",
+      "kind": "Method",
+      "signature": "public int GetGutterWidth(int gutter)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the width of the gutter at the given index.",
+      "godotName": "get_gutter_width",
+      "xmlDocId": "M:Godot.TextEdit.GetGutterWidth(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetHScrollBar",
+      "kind": "Method",
+      "signature": "public HScrollBar GetHScrollBar()",
+      "returnType": "HScrollBar",
+      "parameters": [],
+      "summary": "Returns the [HScrollBar] used by [TextEdit].",
+      "godotName": "get_h_scroll_bar",
+      "xmlDocId": "M:Godot.TextEdit.GetHScrollBar",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetIndentLevel",
+      "kind": "Method",
+      "signature": "public int GetIndentLevel(int line)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the indent level of the given line. This is the number of spaces and tabs at the beginning of the line, with the tabs taking the tab size into account (see [method get_tab_size]).",
+      "godotName": "get_indent_level",
+      "xmlDocId": "M:Godot.TextEdit.GetIndentLevel(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLastFullVisibleLine",
+      "kind": "Method",
+      "signature": "public int GetLastFullVisibleLine()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the last visible line. Use [method get_last_full_visible_line_wrap_index] for the wrap index.",
+      "godotName": "get_last_full_visible_line",
+      "xmlDocId": "M:Godot.TextEdit.GetLastFullVisibleLine",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLastFullVisibleLineWrapIndex",
+      "kind": "Method",
+      "signature": "public int GetLastFullVisibleLineWrapIndex()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the last visible wrap index of the last visible line.",
+      "godotName": "get_last_full_visible_line_wrap_index",
+      "xmlDocId": "M:Godot.TextEdit.GetLastFullVisibleLineWrapIndex",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLastUnhiddenLine",
+      "kind": "Method",
+      "signature": "public int GetLastUnhiddenLine()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the last unhidden line in the entire [TextEdit].",
+      "godotName": "get_last_unhidden_line",
+      "xmlDocId": "M:Godot.TextEdit.GetLastUnhiddenLine",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLine",
+      "kind": "Method",
+      "signature": "public String GetLine(int line)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text of a specific line.",
+      "godotName": "get_line",
+      "xmlDocId": "M:Godot.TextEdit.GetLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineBackgroundColor",
+      "kind": "Method",
+      "signature": "public Color GetLineBackgroundColor(int line)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the custom background color of the given line. If no color is set, returns [code]Color(0, 0, 0, 0)[/code].",
+      "godotName": "get_line_background_color",
+      "xmlDocId": "M:Godot.TextEdit.GetLineBackgroundColor(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineColumnAtPos",
+      "kind": "Method",
+      "signature": "public Vector2i GetLineColumnAtPos(Vector2i position, bool clampLine, bool clampColumn)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2i"
+        },
+        {
+          "name": "clamp_line",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "clamp_column",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the line and column at the given position. In the returned vector, [code]x[/code] is the column and [code]y[/code] is the line. If [param clamp_line] is [code]false[/code] and [param position] is below the last line, [code]Vector2i(-1, -1)[/code] is returned. If [param clamp_column] is [code]false[/code] and [param position] is outside the column range of the line, [code]Vector2i(-1, -1)[/code] is returned.",
+      "godotName": "get_line_column_at_pos",
+      "xmlDocId": "M:Godot.TextEdit.GetLineColumnAtPos(Vector2i,bool,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineCount",
+      "kind": "Method",
+      "signature": "public int GetLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines in the text.",
+      "godotName": "get_line_count",
+      "xmlDocId": "M:Godot.TextEdit.GetLineCount",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineGutterIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetLineGutterIcon(int line, int gutter)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the icon currently in [param gutter] at [param line]. This only works when the gutter type is [constant GUTTER_TYPE_ICON] (see [method set_gutter_type]).",
+      "godotName": "get_line_gutter_icon",
+      "xmlDocId": "M:Godot.TextEdit.GetLineGutterIcon(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineGutterItemColor",
+      "kind": "Method",
+      "signature": "public Color GetLineGutterItemColor(int line, int gutter)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the color currently in [param gutter] at [param line].",
+      "godotName": "get_line_gutter_item_color",
+      "xmlDocId": "M:Godot.TextEdit.GetLineGutterItemColor(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineGutterMetadata",
+      "kind": "Method",
+      "signature": "public Variant GetLineGutterMetadata(int line, int gutter)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the metadata currently in [param gutter] at [param line].",
+      "godotName": "get_line_gutter_metadata",
+      "xmlDocId": "M:Godot.TextEdit.GetLineGutterMetadata(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineGutterText",
+      "kind": "Method",
+      "signature": "public String GetLineGutterText(int line, int gutter)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text currently in [param gutter] at [param line]. This only works when the gutter type is [constant GUTTER_TYPE_STRING] (see [method set_gutter_type]).",
+      "godotName": "get_line_gutter_text",
+      "xmlDocId": "M:Godot.TextEdit.GetLineGutterText(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineHeight",
+      "kind": "Method",
+      "signature": "public int GetLineHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the maximum value of the line height among all lines. [b]Note:[/b] The return value is influenced by [theme_item line_spacing] and [theme_item font_size]. And it will not be less than [code]1[/code].",
+      "godotName": "get_line_height",
+      "xmlDocId": "M:Godot.TextEdit.GetLineHeight",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineRangesFromCarets",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetLineRangesFromCarets(bool onlySelections, bool mergeAdjacent)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "only_selections",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "merge_adjacent",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns an [Array] of line ranges where [code]x[/code] is the first line and [code]y[/code] is the last line. All lines within these ranges will have a caret on them or be part of a selection. Each line will only be part of one line range, even if it has multiple carets on it. If a selection\u0027s end column ([method get_selection_to_column]) is at column [code]0[/code], that line will not be included. If a selection begins on the line after another selection ends and [param merge_adjacent] is [code]true[/code], or they begin and end on the same line, one line range will include both selections.",
+      "godotName": "get_line_ranges_from_carets",
+      "xmlDocId": "M:Godot.TextEdit.GetLineRangesFromCarets(bool,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineWidth",
+      "kind": "Method",
+      "signature": "public int GetLineWidth(int line, int wrapIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the width in pixels of the [param wrap_index] on [param line].",
+      "godotName": "get_line_width",
+      "xmlDocId": "M:Godot.TextEdit.GetLineWidth(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineWithIme",
+      "kind": "Method",
+      "signature": "public String GetLineWithIme(int line)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns line text as it is currently displayed, including IME composition string.",
+      "godotName": "get_line_with_ime",
+      "xmlDocId": "M:Godot.TextEdit.GetLineWithIme(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineWrapCount",
+      "kind": "Method",
+      "signature": "public int GetLineWrapCount(int line)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the number of times the given line is wrapped.",
+      "godotName": "get_line_wrap_count",
+      "xmlDocId": "M:Godot.TextEdit.GetLineWrapCount(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineWrapIndexAtColumn",
+      "kind": "Method",
+      "signature": "public int GetLineWrapIndexAtColumn(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the wrap index of the given column on the given line. This ranges from [code]0[/code] to [method get_line_wrap_count].",
+      "godotName": "get_line_wrap_index_at_column",
+      "xmlDocId": "M:Godot.TextEdit.GetLineWrapIndexAtColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLineWrappedText",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetLineWrappedText(int line)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of [String]s representing each wrapped index.",
+      "godotName": "get_line_wrapped_text",
+      "xmlDocId": "M:Godot.TextEdit.GetLineWrappedText(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetLocalMousePos",
+      "kind": "Method",
+      "signature": "public Vector2 GetLocalMousePos()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the local mouse position adjusted for the text direction.",
+      "godotName": "get_local_mouse_pos",
+      "xmlDocId": "M:Godot.TextEdit.GetLocalMousePos",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetMenu",
+      "kind": "Method",
+      "signature": "public PopupMenu GetMenu()",
+      "returnType": "PopupMenu",
+      "parameters": [],
+      "summary": "Returns the [PopupMenu] of this [TextEdit]. By default, this menu is displayed when right-clicking on the [TextEdit]. You can add custom menu items or remove standard ones. Make sure your IDs don\u0027t conflict with the standard ones (see [enum MenuItems]). For example: [codeblocks] [gdscript] func _ready(): var menu = get_menu() # Remove all items after \u0022Redo\u0022. menu.item_count = menu.get_item_index(MENU_REDO) \u002B 1 # Add custom items. menu.add_separator() menu.add_item(\u0022Insert Date\u0022, MENU_MAX \u002B 1) # Connect callback. menu.id_pressed.connect(_on_item_pressed) func _on_item_pressed(id): if id == MENU_MAX \u002B 1: insert_text_at_caret(Time.get_date_string_from_system()) [/gdscript] [csharp] public override void _Ready() { var menu = GetMenu(); // Remove all items after \u0022Redo\u0022. menu.ItemCount = menu.GetItemIndex(TextEdit.MenuItems.Redo) \u002B 1; // Add custom items. menu.AddSeparator(); menu.AddItem(\u0022Insert Date\u0022, TextEdit.MenuItems.Max \u002B 1); // Add event handler. menu.IdPressed \u002B= OnItemPressed; } public void OnItemPressed(int id) { if (id == TextEdit.MenuItems.Max \u002B 1) { InsertTextAtCaret(Time.GetDateStringFromSystem()); } } [/csharp] [/codeblocks] [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.",
+      "godotName": "get_menu",
+      "xmlDocId": "M:Godot.TextEdit.GetMenu",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetMinimapLineAtPos",
+      "kind": "Method",
+      "signature": "public int GetMinimapLineAtPos(Vector2i position)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns the equivalent minimap line at [param position].",
+      "godotName": "get_minimap_line_at_pos",
+      "xmlDocId": "M:Godot.TextEdit.GetMinimapLineAtPos(Vector2i)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetMinimapVisibleLines",
+      "kind": "Method",
+      "signature": "public int GetMinimapVisibleLines()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines that may be drawn on the minimap.",
+      "godotName": "get_minimap_visible_lines",
+      "xmlDocId": "M:Godot.TextEdit.GetMinimapVisibleLines",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetNextCompositeCharacterColumn",
+      "kind": "Method",
+      "signature": "public int GetNextCompositeCharacterColumn(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the correct column at the end of a composite character like \u2764\uFE0F\u200D\uD83E\uDE79 (mending heart; Unicode: [code]U\u002B2764 U\u002BFE0F U\u002B200D U\u002B1FA79[/code]) which is comprised of more than one Unicode code point, if the caret is at the start of the composite character. Also returns the correct column with the caret at mid grapheme and for non-composite characters. [b]Note:[/b] To check at caret location use [code]get_next_composite_character_column(get_caret_line(), get_caret_column())[/code]",
+      "godotName": "get_next_composite_character_column",
+      "xmlDocId": "M:Godot.TextEdit.GetNextCompositeCharacterColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetNextVisibleLineIndexOffsetFrom",
+      "kind": "Method",
+      "signature": "public Vector2i GetNextVisibleLineIndexOffsetFrom(int line, int wrapIndex, int visibleAmount)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int"
+        },
+        {
+          "name": "visible_amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Similar to [method get_next_visible_line_offset_from], but takes into account the line wrap indexes. In the returned vector, [code]x[/code] is the line, [code]y[/code] is the wrap index.",
+      "godotName": "get_next_visible_line_index_offset_from",
+      "xmlDocId": "M:Godot.TextEdit.GetNextVisibleLineIndexOffsetFrom(int,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetNextVisibleLineOffsetFrom",
+      "kind": "Method",
+      "signature": "public int GetNextVisibleLineOffsetFrom(int line, int visibleAmount)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "visible_amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the count to the next visible line from [param line] to [code]line \u002B visible_amount[/code]. Can also count backwards. For example if a [TextEdit] has 5 lines with lines 2 and 3 hidden, calling this with [code]line = 1, visible_amount = 1[/code] would return 3.",
+      "godotName": "get_next_visible_line_offset_from",
+      "xmlDocId": "M:Godot.TextEdit.GetNextVisibleLineOffsetFrom(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetPosAtLineColumn",
+      "kind": "Method",
+      "signature": "public Vector2i GetPosAtLineColumn(int line, int column)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local position for the given [param line] and [param column]. If [code]x[/code] or [code]y[/code] of the returned vector equal [code]-1[/code], the position is outside of the viewable area of the control. [b]Note:[/b] The Y position corresponds to the bottom side of the line. Use [method get_rect_at_line_column] to get the top side position.",
+      "godotName": "get_pos_at_line_column",
+      "xmlDocId": "M:Godot.TextEdit.GetPosAtLineColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetPreviousCompositeCharacterColumn",
+      "kind": "Method",
+      "signature": "public int GetPreviousCompositeCharacterColumn(int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the correct column at the start of a composite character like \u2764\uFE0F\u200D\uD83E\uDE79 (mending heart; Unicode: [code]U\u002B2764 U\u002BFE0F U\u002B200D U\u002B1FA79[/code]) which is comprised of more than one Unicode code point, if the caret is at the end of the composite character. Also returns the correct column with the caret at mid grapheme and for non-composite characters. [b]Note:[/b] To check at caret location use [code]get_previous_composite_character_column(get_caret_line(), get_caret_column())[/code]",
+      "godotName": "get_previous_composite_character_column",
+      "xmlDocId": "M:Godot.TextEdit.GetPreviousCompositeCharacterColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetRectAtLineColumn",
+      "kind": "Method",
+      "signature": "public Rect2i GetRectAtLineColumn(int line, int column)",
+      "returnType": "Rect2i",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local position and size for the grapheme at the given [param line] and [param column]. If [code]x[/code] or [code]y[/code] position of the returned rect equal [code]-1[/code], the position is outside of the viewable area of the control. [b]Note:[/b] The Y position of the returned rect corresponds to the top side of the line, unlike [method get_pos_at_line_column] which returns the bottom side.",
+      "godotName": "get_rect_at_line_column",
+      "xmlDocId": "M:Godot.TextEdit.GetRectAtLineColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSavedVersion",
+      "kind": "Method",
+      "signature": "public int GetSavedVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the last tagged saved version from [method tag_saved_version].",
+      "godotName": "get_saved_version",
+      "xmlDocId": "M:Godot.TextEdit.GetSavedVersion",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetScrollPosForLine",
+      "kind": "Method",
+      "signature": "public float GetScrollPosForLine(int line, int wrapIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the scroll position for [param wrap_index] of [param line].",
+      "godotName": "get_scroll_pos_for_line",
+      "xmlDocId": "M:Godot.TextEdit.GetScrollPosForLine(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectedText",
+      "kind": "Method",
+      "signature": "public String GetSelectedText(int caretIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns the text inside the selection of a caret, or all the carets if [param caret_index] is its default value [code]-1[/code].",
+      "godotName": "get_selected_text",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectedText(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionAtLineColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionAtLineColumn(int line, int column, bool includeEdges, bool onlySelections)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        },
+        {
+          "name": "include_edges",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "only_selections",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the caret index of the selection at the given [param line] and [param column], or [code]-1[/code] if there is none. If [param include_edges] is [code]false[/code], the position must be inside the selection and not at either end. If [param only_selections] is [code]false[/code], carets without a selection will also be considered.",
+      "godotName": "get_selection_at_line_column",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionAtLineColumn(int,int,bool,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionColumn(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the original start column of the selection.",
+      "godotName": "get_selection_column",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionFromColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionFromColumn(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the selection begin column. Returns the caret column if there is no selection.",
+      "godotName": "get_selection_from_column",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionFromColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionFromLine",
+      "kind": "Method",
+      "signature": "public int GetSelectionFromLine(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the selection begin line. Returns the caret line if there is no selection.",
+      "godotName": "get_selection_from_line",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionFromLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionLine",
+      "kind": "Method",
+      "signature": "public int GetSelectionLine(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the original start line of the selection.",
+      "godotName": "get_selection_line",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionMode",
+      "kind": "Method",
+      "signature": "public int GetSelectionMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current selection mode.",
+      "godotName": "get_selection_mode",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionMode",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionOriginColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionOriginColumn(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the origin column of the selection. This is the opposite end from the caret.",
+      "godotName": "get_selection_origin_column",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionOriginColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionOriginLine",
+      "kind": "Method",
+      "signature": "public int GetSelectionOriginLine(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the origin line of the selection. This is the opposite end from the caret.",
+      "godotName": "get_selection_origin_line",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionOriginLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionToColumn",
+      "kind": "Method",
+      "signature": "public int GetSelectionToColumn(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the selection end column. Returns the caret column if there is no selection.",
+      "godotName": "get_selection_to_column",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionToColumn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSelectionToLine",
+      "kind": "Method",
+      "signature": "public int GetSelectionToLine(int caretIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the selection end line. Returns the caret line if there is no selection.",
+      "godotName": "get_selection_to_line",
+      "xmlDocId": "M:Godot.TextEdit.GetSelectionToLine(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetSortedCarets",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetSortedCarets(bool includeIgnoredCarets)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "include_ignored_carets",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the carets sorted by selection beginning from lowest line and column to highest (from top to bottom of text). If [param include_ignored_carets] is [code]false[/code], carets from [method multicaret_edit_ignore_caret] will be ignored.",
+      "godotName": "get_sorted_carets",
+      "xmlDocId": "M:Godot.TextEdit.GetSortedCarets(bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetTabSize",
+      "kind": "Method",
+      "signature": "public int GetTabSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [TextEdit]\u0027s\u0027 tab size.",
+      "godotName": "get_tab_size",
+      "xmlDocId": "M:Godot.TextEdit.GetTabSize",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetTotalGutterWidth",
+      "kind": "Method",
+      "signature": "public int GetTotalGutterWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the total width of all gutters and internal padding.",
+      "godotName": "get_total_gutter_width",
+      "xmlDocId": "M:Godot.TextEdit.GetTotalGutterWidth",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetTotalVisibleLineCount",
+      "kind": "Method",
+      "signature": "public int GetTotalVisibleLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the total number of lines in the text. This includes wrapped lines and excludes folded lines. If [member wrap_mode] is set to [constant LINE_WRAPPING_NONE] and no lines are folded (see [method CodeEdit.is_line_folded]) then this is equivalent to [method get_line_count]. See [method get_visible_line_count_in_range] for a limited range of lines.",
+      "godotName": "get_total_visible_line_count",
+      "xmlDocId": "M:Godot.TextEdit.GetTotalVisibleLineCount",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetVScrollBar",
+      "kind": "Method",
+      "signature": "public VScrollBar GetVScrollBar()",
+      "returnType": "VScrollBar",
+      "parameters": [],
+      "summary": "Returns the [VScrollBar] of the [TextEdit].",
+      "godotName": "get_v_scroll_bar",
+      "xmlDocId": "M:Godot.TextEdit.GetVScrollBar",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetVersion",
+      "kind": "Method",
+      "signature": "public int GetVersion()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current version of the [TextEdit]. The version is a count of recorded operations by the undo/redo history.",
+      "godotName": "get_version",
+      "xmlDocId": "M:Godot.TextEdit.GetVersion",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetVisibleLineCount",
+      "kind": "Method",
+      "signature": "public int GetVisibleLineCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of lines that can visually fit, rounded down, based on this control\u0027s height.",
+      "godotName": "get_visible_line_count",
+      "xmlDocId": "M:Godot.TextEdit.GetVisibleLineCount",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetVisibleLineCountInRange",
+      "kind": "Method",
+      "signature": "public int GetVisibleLineCountInRange(int fromLine, int toLine)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the total number of lines between [param from_line] and [param to_line] (inclusive) in the text. This includes wrapped lines and excludes folded lines. If the range covers all lines it is equivalent to [method get_total_visible_line_count].",
+      "godotName": "get_visible_line_count_in_range",
+      "xmlDocId": "M:Godot.TextEdit.GetVisibleLineCountInRange(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetWordAtPos",
+      "kind": "Method",
+      "signature": "public String GetWordAtPos(Vector2 position)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns the word at [param position].",
+      "godotName": "get_word_at_pos",
+      "xmlDocId": "M:Godot.TextEdit.GetWordAtPos(Vector2)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GetWordUnderCaret",
+      "kind": "Method",
+      "signature": "public String GetWordUnderCaret(int caretIndex)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns a [String] text with the word under the caret\u0027s location.",
+      "godotName": "get_word_under_caret",
+      "xmlDocId": "M:Godot.TextEdit.GetWordUnderCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HasImeText",
+      "kind": "Method",
+      "signature": "public bool HasImeText()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the user has text in the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] (IME).",
+      "godotName": "has_ime_text",
+      "xmlDocId": "M:Godot.TextEdit.HasImeText",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HasRedo",
+      "kind": "Method",
+      "signature": "public bool HasRedo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a \u0022redo\u0022 action is available.",
+      "godotName": "has_redo",
+      "xmlDocId": "M:Godot.TextEdit.HasRedo",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HasSelection",
+      "kind": "Method",
+      "signature": "public bool HasSelection(int caretIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the user has selected text.",
+      "godotName": "has_selection",
+      "xmlDocId": "M:Godot.TextEdit.HasSelection(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HasUndo",
+      "kind": "Method",
+      "signature": "public bool HasUndo()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an \u0022undo\u0022 action is available.",
+      "godotName": "has_undo",
+      "xmlDocId": "M:Godot.TextEdit.HasUndo",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "InsertLineAt",
+      "kind": "Method",
+      "signature": "public void InsertLineAt(int line, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Inserts a new line with [param text] at [param line].",
+      "godotName": "insert_line_at",
+      "xmlDocId": "M:Godot.TextEdit.InsertLineAt(int,String)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "InsertText",
+      "kind": "Method",
+      "signature": "public void InsertText(String text, int line, int column, bool beforeSelectionBegin, bool beforeSelectionEnd)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        },
+        {
+          "name": "before_selection_begin",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "before_selection_end",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Inserts the [param text] at [param line] and [param column]. If [param before_selection_begin] is [code]true[/code], carets and selections that begin at [param line] and [param column] will moved to the end of the inserted text, along with all carets after it. If [param before_selection_end] is [code]true[/code], selections that end at [param line] and [param column] will be extended to the end of the inserted text. These parameters can be used to insert text inside of or outside of selections.",
+      "godotName": "insert_text",
+      "xmlDocId": "M:Godot.TextEdit.InsertText(String,int,int,bool,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "InsertTextAtCaret",
+      "kind": "Method",
+      "signature": "public void InsertTextAtCaret(String text, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Insert the specified text at the caret position.",
+      "godotName": "insert_text_at_caret",
+      "xmlDocId": "M:Godot.TextEdit.InsertTextAtCaret(String,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsCaretAfterSelectionOrigin",
+      "kind": "Method",
+      "signature": "public bool IsCaretAfterSelectionOrigin(int caretIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the caret of the selection is after the selection origin. This can be used to determine the direction of the selection.",
+      "godotName": "is_caret_after_selection_origin",
+      "xmlDocId": "M:Godot.TextEdit.IsCaretAfterSelectionOrigin(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsCaretVisible",
+      "kind": "Method",
+      "signature": "public bool IsCaretVisible(int caretIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the caret is visible, [code]false[/code] otherwise. A caret will be considered hidden if it is outside the scrollable area when scrolling is enabled. [b]Note:[/b] [method is_caret_visible] does not account for a caret being off-screen if it is still within the scrollable area. It will return [code]true[/code] even if the caret is off-screen as long as it meets [TextEdit]\u0027s own conditions for being visible. This includes uses of [member scroll_fit_content_width] and [member scroll_fit_content_height] that cause the [TextEdit] to expand beyond the viewport\u0027s bounds. [b]Note:[/b] This method does [i]not[/i] guarantee an accurate visibility check immediately after setting the caret position. The correct value may only be available in the next frame after the [TextEdit] has finished drawing. This also applies to any operation that causes the [TextEdit] to change in size.",
+      "godotName": "is_caret_visible",
+      "xmlDocId": "M:Godot.TextEdit.IsCaretVisible(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsDraggingCursor",
+      "kind": "Method",
+      "signature": "public bool IsDraggingCursor()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the user is dragging their mouse for scrolling, selecting, or text dragging.",
+      "godotName": "is_dragging_cursor",
+      "xmlDocId": "M:Godot.TextEdit.IsDraggingCursor",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsGutterClickable",
+      "kind": "Method",
+      "signature": "public bool IsGutterClickable(int gutter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the gutter at the given index is clickable. See [method set_gutter_clickable].",
+      "godotName": "is_gutter_clickable",
+      "xmlDocId": "M:Godot.TextEdit.IsGutterClickable(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsGutterDrawn",
+      "kind": "Method",
+      "signature": "public bool IsGutterDrawn(int gutter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the gutter at the given index is currently drawn. See [method set_gutter_draw].",
+      "godotName": "is_gutter_drawn",
+      "xmlDocId": "M:Godot.TextEdit.IsGutterDrawn(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsGutterOverwritable",
+      "kind": "Method",
+      "signature": "public bool IsGutterOverwritable(int gutter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the gutter at the given index is overwritable. See [method set_gutter_overwritable].",
+      "godotName": "is_gutter_overwritable",
+      "xmlDocId": "M:Godot.TextEdit.IsGutterOverwritable(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsInMulitcaretEdit",
+      "kind": "Method",
+      "signature": "public bool IsInMulitcaretEdit()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a [method begin_multicaret_edit] has been called and [method end_multicaret_edit] has not yet been called.",
+      "godotName": "is_in_mulitcaret_edit",
+      "xmlDocId": "M:Godot.TextEdit.IsInMulitcaretEdit",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsLineGutterClickable",
+      "kind": "Method",
+      "signature": "public bool IsLineGutterClickable(int line, int gutter)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the gutter at the given index on the given line is clickable. See [method set_line_gutter_clickable].",
+      "godotName": "is_line_gutter_clickable",
+      "xmlDocId": "M:Godot.TextEdit.IsLineGutterClickable(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsLineInViewport",
+      "kind": "Method",
+      "signature": "public bool IsLineInViewport(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given line is within the scope of the scrollable area of the viewport.",
+      "godotName": "is_line_in_viewport",
+      "xmlDocId": "M:Godot.TextEdit.IsLineInViewport(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsLineWrapped",
+      "kind": "Method",
+      "signature": "public bool IsLineWrapped(int line)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns if the given line is wrapped.",
+      "godotName": "is_line_wrapped",
+      "xmlDocId": "M:Godot.TextEdit.IsLineWrapped(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsMenuVisible",
+      "kind": "Method",
+      "signature": "public bool IsMenuVisible()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the menu is visible. Use this instead of [code]get_menu().visible[/code] to improve performance (so the creation of the menu is avoided). See [method get_menu].",
+      "godotName": "is_menu_visible",
+      "xmlDocId": "M:Godot.TextEdit.IsMenuVisible",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsMouseOverSelection",
+      "kind": "Method",
+      "signature": "public bool IsMouseOverSelection(bool edges, int caretIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "edges",
+          "type": "bool"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the mouse is over a selection. If [param edges] is [code]true[/code], the edges are considered part of the selection.",
+      "godotName": "is_mouse_over_selection",
+      "xmlDocId": "M:Godot.TextEdit.IsMouseOverSelection(bool,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IsOvertypeModeEnabled",
+      "kind": "Method",
+      "signature": "public bool IsOvertypeModeEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if overtype mode is enabled. See [method set_overtype_mode_enabled].",
+      "godotName": "is_overtype_mode_enabled",
+      "xmlDocId": "M:Godot.TextEdit.IsOvertypeModeEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MenuOption",
+      "kind": "Method",
+      "signature": "public void MenuOption(int option)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "option",
+          "type": "int"
+        }
+      ],
+      "summary": "Executes a given action as defined in the [enum MenuItems] enum.",
+      "godotName": "menu_option",
+      "xmlDocId": "M:Godot.TextEdit.MenuOption(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MergeGutters",
+      "kind": "Method",
+      "signature": "public void MergeGutters(int fromLine, int toLine)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "Merge the gutters from [param from_line] into [param to_line]. Only overwritable gutters will be copied. See [method set_gutter_overwritable].",
+      "godotName": "merge_gutters",
+      "xmlDocId": "M:Godot.TextEdit.MergeGutters(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MergeOverlappingCarets",
+      "kind": "Method",
+      "signature": "public void MergeOverlappingCarets()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Merges any overlapping carets. Will favor the newest caret, or the caret with a selection. If [method is_in_mulitcaret_edit] is [code]true[/code], the merge will be queued to happen at the end of the multicaret edit. See [method begin_multicaret_edit] and [method end_multicaret_edit]. [b]Note:[/b] This is not called when a caret changes position but after certain actions, so it is possible to get into a state where carets overlap.",
+      "godotName": "merge_overlapping_carets",
+      "xmlDocId": "M:Godot.TextEdit.MergeOverlappingCarets",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MulticaretEditIgnoreCaret",
+      "kind": "Method",
+      "signature": "public bool MulticaretEditIgnoreCaret(int caretIndex)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param caret_index] should be ignored as part of a multicaret edit. See [method begin_multicaret_edit] and [method end_multicaret_edit]. Carets that should be ignored are ones that were part of removed text and will likely be merged at the end of the edit, or carets that were added during the edit. It is recommended to [code]continue[/code] within a loop iterating on multiple carets if a caret should be ignored.",
+      "godotName": "multicaret_edit_ignore_caret",
+      "xmlDocId": "M:Godot.TextEdit.MulticaretEditIgnoreCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Paste",
+      "kind": "Method",
+      "signature": "public void Paste(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Paste at the current location. Can be overridden with [method _paste].",
+      "godotName": "paste",
+      "xmlDocId": "M:Godot.TextEdit.Paste(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "PastePrimaryClipboard",
+      "kind": "Method",
+      "signature": "public void PastePrimaryClipboard(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Pastes the primary clipboard.",
+      "godotName": "paste_primary_clipboard",
+      "xmlDocId": "M:Godot.TextEdit.PastePrimaryClipboard(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Redo",
+      "kind": "Method",
+      "signature": "public void Redo()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Perform redo operation.",
+      "godotName": "redo",
+      "xmlDocId": "M:Godot.TextEdit.Redo",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "RemoveCaret",
+      "kind": "Method",
+      "signature": "public void RemoveCaret(int caret)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the given caret index. [b]Note:[/b] This can result in adjustment of all other caret indices.",
+      "godotName": "remove_caret",
+      "xmlDocId": "M:Godot.TextEdit.RemoveCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "RemoveGutter",
+      "kind": "Method",
+      "signature": "public void RemoveGutter(int gutter)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the gutter at the given index.",
+      "godotName": "remove_gutter",
+      "xmlDocId": "M:Godot.TextEdit.RemoveGutter(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "RemoveLineAt",
+      "kind": "Method",
+      "signature": "public void RemoveLineAt(int line, bool moveCaretsDown)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "move_carets_down",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Removes the line of text at [param line]. Carets on this line will attempt to match their previous visual x position. If [param move_carets_down] is [code]true[/code] carets will move to the next line down, otherwise carets will move up.",
+      "godotName": "remove_line_at",
+      "xmlDocId": "M:Godot.TextEdit.RemoveLineAt(int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "RemoveSecondaryCarets",
+      "kind": "Method",
+      "signature": "public void RemoveSecondaryCarets()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all additional carets.",
+      "godotName": "remove_secondary_carets",
+      "xmlDocId": "M:Godot.TextEdit.RemoveSecondaryCarets",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "RemoveText",
+      "kind": "Method",
+      "signature": "public void RemoveText(int fromLine, int fromColumn, int toLine, int toColumn)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "from_column",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        },
+        {
+          "name": "to_column",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes text between the given positions.",
+      "godotName": "remove_text",
+      "xmlDocId": "M:Godot.TextEdit.RemoveText(int,int,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Search",
+      "kind": "Method",
+      "signature": "public Vector2i Search(String text, int flags, int fromLine, int fromColumn)",
+      "returnType": "Vector2i",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "from_column",
+          "type": "int"
+        }
+      ],
+      "summary": "Perform a search inside the text. Search flags can be specified in the [enum SearchFlags] enum. In the returned vector, [code]x[/code] is the column, [code]y[/code] is the line. If no results are found, both are equal to [code]-1[/code]. [codeblocks] [gdscript] var result = search(\u0022print\u0022, SEARCH_WHOLE_WORDS, 0, 0) if result.x != -1: # Result found. var line_number = result.y var column_number = result.x [/gdscript] [csharp] Vector2I result = Search(\u0022print\u0022, (uint)TextEdit.SearchFlags.WholeWords, 0, 0); if (result.X != -1) { // Result found. int lineNumber = result.Y; int columnNumber = result.X; } [/csharp] [/codeblocks]",
+      "godotName": "search",
+      "xmlDocId": "M:Godot.TextEdit.Search(String,int,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Select",
+      "kind": "Method",
+      "signature": "public void Select(int originLine, int originColumn, int caretLine, int caretColumn, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "origin_line",
+          "type": "int"
+        },
+        {
+          "name": "origin_column",
+          "type": "int"
+        },
+        {
+          "name": "caret_line",
+          "type": "int"
+        },
+        {
+          "name": "caret_column",
+          "type": "int"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Selects text from [param origin_line] and [param origin_column] to [param caret_line] and [param caret_column] for the given [param caret_index]. This moves the selection origin and the caret. If the positions are the same, the selection will be deselected. If [member selecting_enabled] is [code]false[/code], no selection will occur. [b]Note:[/b] If supporting multiple carets this will not check for any overlap. See [method merge_overlapping_carets].",
+      "godotName": "select",
+      "xmlDocId": "M:Godot.TextEdit.Select(int,int,int,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SelectAll",
+      "kind": "Method",
+      "signature": "public void SelectAll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Select all the text. If [member selecting_enabled] is [code]false[/code], no selection will occur.",
+      "godotName": "select_all",
+      "xmlDocId": "M:Godot.TextEdit.SelectAll",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SelectWordUnderCaret",
+      "kind": "Method",
+      "signature": "public void SelectWordUnderCaret(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Selects the word under the caret.",
+      "godotName": "select_word_under_caret",
+      "xmlDocId": "M:Godot.TextEdit.SelectWordUnderCaret(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetCaretColumn",
+      "kind": "Method",
+      "signature": "public void SetCaretColumn(int column, bool adjustViewport, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "int"
+        },
+        {
+          "name": "adjust_viewport",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Moves the caret to the specified [param column] index. If [param adjust_viewport] is [code]true[/code], the viewport will center at the caret position after the move occurs. [b]Note:[/b] If supporting multiple carets this will not check for any overlap. See [method merge_overlapping_carets].",
+      "godotName": "set_caret_column",
+      "xmlDocId": "M:Godot.TextEdit.SetCaretColumn(int,bool,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetCaretLine",
+      "kind": "Method",
+      "signature": "public void SetCaretLine(int line, bool adjustViewport, bool canBeHidden, int wrapIndex, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "adjust_viewport",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "can_be_hidden",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Moves the caret to the specified [param line] index. The caret column will be moved to the same visual position it was at the last time [method set_caret_column] was called, or clamped to the end of the line. If [param adjust_viewport] is [code]true[/code], the viewport will center at the caret position after the move occurs. If [param can_be_hidden] is [code]true[/code], the specified [param line] can be hidden. If [param wrap_index] is [code]-1[/code], the caret column will be clamped to the [param line]\u0027s length. If [param wrap_index] is greater than [code]-1[/code], the column will be moved to attempt to match the visual x position on the line\u0027s [param wrap_index] to the position from the last time [method set_caret_column] was called. [b]Note:[/b] If supporting multiple carets this will not check for any overlap. See [method merge_overlapping_carets].",
+      "godotName": "set_caret_line",
+      "xmlDocId": "M:Godot.TextEdit.SetCaretLine(int,bool,bool,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterClickable",
+      "kind": "Method",
+      "signature": "public void SetGutterClickable(int gutter, bool clickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "clickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the mouse cursor will change to a pointing hand ([constant Control.CURSOR_POINTING_HAND]) when hovering over the gutter at the given index. See [method is_gutter_clickable] and [method set_line_gutter_clickable].",
+      "godotName": "set_gutter_clickable",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterClickable(int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterCustomDraw",
+      "kind": "Method",
+      "signature": "public void SetGutterCustomDraw(int column, Callable drawCallback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "int"
+        },
+        {
+          "name": "draw_callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Set a custom draw callback for the gutter at the given index. [param draw_callback] must take the following arguments: A line index [int], a gutter index [int], and an area [Rect2]. This callback only works when the gutter type is [constant GUTTER_TYPE_CUSTOM] (see [method set_gutter_type]).",
+      "godotName": "set_gutter_custom_draw",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterCustomDraw(int,Callable)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterDraw",
+      "kind": "Method",
+      "signature": "public void SetGutterDraw(int gutter, bool draw)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "draw",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the gutter at the given index is drawn. The gutter type ([method set_gutter_type]) determines how it is drawn. See [method is_gutter_drawn].",
+      "godotName": "set_gutter_draw",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterDraw(int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterName",
+      "kind": "Method",
+      "signature": "public void SetGutterName(int gutter, String name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the name of the gutter at the given index.",
+      "godotName": "set_gutter_name",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterName(int,String)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterOverwritable",
+      "kind": "Method",
+      "signature": "public void SetGutterOverwritable(int gutter, bool overwritable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "overwritable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the line data of the gutter at the given index can be overridden when using [method merge_gutters]. See [method is_gutter_overwritable].",
+      "godotName": "set_gutter_overwritable",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterOverwritable(int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterType",
+      "kind": "Method",
+      "signature": "public void SetGutterType(int gutter, int type)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the type of gutter at the given index. Gutters can contain icons, text, or custom visuals.",
+      "godotName": "set_gutter_type",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterType(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetGutterWidth",
+      "kind": "Method",
+      "signature": "public void SetGutterWidth(int gutter, int width)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "type": "int"
+        }
+      ],
+      "summary": "Set the width of the gutter at the given index.",
+      "godotName": "set_gutter_width",
+      "xmlDocId": "M:Godot.TextEdit.SetGutterWidth(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLine",
+      "kind": "Method",
+      "signature": "public void SetLine(int line, String newText)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "new_text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text for a specific [param line]. Carets on the line will attempt to keep their visual x position.",
+      "godotName": "set_line",
+      "xmlDocId": "M:Godot.TextEdit.SetLine(int,String)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineAsCenterVisible",
+      "kind": "Method",
+      "signature": "public void SetLineAsCenterVisible(int line, int wrapIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Positions the [param wrap_index] of [param line] at the center of the viewport.",
+      "godotName": "set_line_as_center_visible",
+      "xmlDocId": "M:Godot.TextEdit.SetLineAsCenterVisible(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineAsFirstVisible",
+      "kind": "Method",
+      "signature": "public void SetLineAsFirstVisible(int line, int wrapIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Positions the [param wrap_index] of [param line] at the top of the viewport.",
+      "godotName": "set_line_as_first_visible",
+      "xmlDocId": "M:Godot.TextEdit.SetLineAsFirstVisible(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineAsLastVisible",
+      "kind": "Method",
+      "signature": "public void SetLineAsLastVisible(int line, int wrapIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Positions the [param wrap_index] of [param line] at the bottom of the viewport.",
+      "godotName": "set_line_as_last_visible",
+      "xmlDocId": "M:Godot.TextEdit.SetLineAsLastVisible(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineBackgroundColor",
+      "kind": "Method",
+      "signature": "public void SetLineBackgroundColor(int line, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the custom background color of the given line. If transparent, this color is applied on top of the default background color (See [theme_item background_color]). If set to [code]Color(0, 0, 0, 0)[/code], no additional color is applied.",
+      "godotName": "set_line_background_color",
+      "xmlDocId": "M:Godot.TextEdit.SetLineBackgroundColor(int,Color)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineGutterClickable",
+      "kind": "Method",
+      "signature": "public void SetLineGutterClickable(int line, int gutter, bool clickable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "clickable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param clickable] is [code]true[/code], makes the [param gutter] on the given [param line] clickable. This is like [method set_gutter_clickable], but for a single line. If [method is_gutter_clickable] is [code]true[/code], this will not have any effect. See [method is_line_gutter_clickable] and [signal gutter_clicked].",
+      "godotName": "set_line_gutter_clickable",
+      "xmlDocId": "M:Godot.TextEdit.SetLineGutterClickable(int,int,bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineGutterIcon",
+      "kind": "Method",
+      "signature": "public void SetLineGutterIcon(int line, int gutter, Texture2D icon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "icon",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Sets the icon for [param gutter] on [param line] to [param icon]. This only works when the gutter type is [constant GUTTER_TYPE_ICON] (see [method set_gutter_type]).",
+      "godotName": "set_line_gutter_icon",
+      "xmlDocId": "M:Godot.TextEdit.SetLineGutterIcon(int,int,Texture2D)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineGutterItemColor",
+      "kind": "Method",
+      "signature": "public void SetLineGutterItemColor(int line, int gutter, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color for [param gutter] on [param line] to [param color].",
+      "godotName": "set_line_gutter_item_color",
+      "xmlDocId": "M:Godot.TextEdit.SetLineGutterItemColor(int,int,Color)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineGutterMetadata",
+      "kind": "Method",
+      "signature": "public void SetLineGutterMetadata(int line, int gutter, Variant metadata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "metadata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the metadata for [param gutter] on [param line] to [param metadata].",
+      "godotName": "set_line_gutter_metadata",
+      "xmlDocId": "M:Godot.TextEdit.SetLineGutterMetadata(int,int,Variant)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetLineGutterText",
+      "kind": "Method",
+      "signature": "public void SetLineGutterText(int line, int gutter, String text)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the text for [param gutter] on [param line] to [param text]. This only works when the gutter type is [constant GUTTER_TYPE_STRING] (see [method set_gutter_type]).",
+      "godotName": "set_line_gutter_text",
+      "xmlDocId": "M:Godot.TextEdit.SetLineGutterText(int,int,String)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetOvertypeModeEnabled",
+      "kind": "Method",
+      "signature": "public void SetOvertypeModeEnabled(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], enables overtype mode. In this mode, typing overrides existing text instead of inserting text. The [member ProjectSettings.input/ui_text_toggle_insert_mode] action toggles overtype mode. See [method is_overtype_mode_enabled].",
+      "godotName": "set_overtype_mode_enabled",
+      "xmlDocId": "M:Godot.TextEdit.SetOvertypeModeEnabled(bool)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetSearchFlags",
+      "kind": "Method",
+      "signature": "public void SetSearchFlags(int flags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the search [param flags]. This is used with [method set_search_text] to highlight occurrences of the searched text. Search flags can be specified from the [enum SearchFlags] enum.",
+      "godotName": "set_search_flags",
+      "xmlDocId": "M:Godot.TextEdit.SetSearchFlags(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetSearchText",
+      "kind": "Method",
+      "signature": "public void SetSearchText(String searchText)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "search_text",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the search text. See [method set_search_flags].",
+      "godotName": "set_search_text",
+      "xmlDocId": "M:Godot.TextEdit.SetSearchText(String)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetSelectionMode",
+      "kind": "Method",
+      "signature": "public void SetSelectionMode(int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the current selection mode.",
+      "godotName": "set_selection_mode",
+      "xmlDocId": "M:Godot.TextEdit.SetSelectionMode(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetSelectionOriginColumn",
+      "kind": "Method",
+      "signature": "public void SetSelectionOriginColumn(int column, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "int"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the selection origin column to the [param column] for the given [param caret_index]. If the selection origin is moved to the caret position, the selection will deselect.",
+      "godotName": "set_selection_origin_column",
+      "xmlDocId": "M:Godot.TextEdit.SetSelectionOriginColumn(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetSelectionOriginLine",
+      "kind": "Method",
+      "signature": "public void SetSelectionOriginLine(int line, bool canBeHidden, int wrapIndex, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "can_be_hidden",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "wrap_index",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "caret_index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the selection origin line to the [param line] for the given [param caret_index]. If the selection origin is moved to the caret position, the selection will deselect. If [param can_be_hidden] is [code]false[/code], The line will be set to the nearest unhidden line below or above. If [param wrap_index] is [code]-1[/code], the selection origin column will be clamped to the [param line]\u0027s length. If [param wrap_index] is greater than [code]-1[/code], the column will be moved to attempt to match the visual x position on the line\u0027s [param wrap_index] to the position from the last time [method set_selection_origin_column] or [method select] was called.",
+      "godotName": "set_selection_origin_line",
+      "xmlDocId": "M:Godot.TextEdit.SetSelectionOriginLine(int,bool,int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetTabSize",
+      "kind": "Method",
+      "signature": "public void SetTabSize(int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the tab size for the [TextEdit] to use.",
+      "godotName": "set_tab_size",
+      "xmlDocId": "M:Godot.TextEdit.SetTabSize(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SetTooltipRequestFunc",
+      "kind": "Method",
+      "signature": "public void SetTooltipRequestFunc(Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Provide custom tooltip text. The callback method must take the following args: [code]hovered_word: String[/code].",
+      "godotName": "set_tooltip_request_func",
+      "xmlDocId": "M:Godot.TextEdit.SetTooltipRequestFunc(Callable)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SkipSelectionForNextOccurrence",
+      "kind": "Method",
+      "signature": "public void SkipSelectionForNextOccurrence()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Moves a selection and a caret for the next occurrence of the current selection. If there is no active selection, moves to the next occurrence of the word under caret.",
+      "godotName": "skip_selection_for_next_occurrence",
+      "xmlDocId": "M:Godot.TextEdit.SkipSelectionForNextOccurrence",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "StartAction",
+      "kind": "Method",
+      "signature": "public void StartAction(int action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "int"
+        }
+      ],
+      "summary": "Starts an action, will end the current action if [param action] is different. An action will also end after a call to [method end_action], after [member ProjectSettings.gui/timers/text_edit_idle_detect_sec] is triggered or a new undoable step outside the [method start_action] and [method end_action] calls.",
+      "godotName": "start_action",
+      "xmlDocId": "M:Godot.TextEdit.StartAction(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SwapLines",
+      "kind": "Method",
+      "signature": "public void SwapLines(int fromLine, int toLine)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "Swaps the two lines. Carets will be swapped with the lines.",
+      "godotName": "swap_lines",
+      "xmlDocId": "M:Godot.TextEdit.SwapLines(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "TagSavedVersion",
+      "kind": "Method",
+      "signature": "public void TagSavedVersion()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Tag the current version as saved.",
+      "godotName": "tag_saved_version",
+      "xmlDocId": "M:Godot.TextEdit.TagSavedVersion",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Undo",
+      "kind": "Method",
+      "signature": "public void Undo()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Perform undo operation.",
+      "godotName": "undo",
+      "xmlDocId": "M:Godot.TextEdit.Undo",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "AutowrapMode",
+      "kind": "Property",
+      "signature": "public int AutowrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If [member wrap_mode] is set to [constant LINE_WRAPPING_BOUNDARY], sets text wrapping mode.",
+      "defaultValue": "3",
+      "godotName": "autowrap_mode",
+      "xmlDocId": "P:Godot.TextEdit.AutowrapMode",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "BackspaceDeletesCompositeCharacterEnabled",
+      "kind": "Property",
+      "signature": "public bool BackspaceDeletesCompositeCharacterEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] and [member caret_mid_grapheme] is [code]false[/code], backspace deletes an entire composite character such as \u2764\uFE0F\u200D\uD83E\uDE79, instead of deleting part of the composite character.",
+      "defaultValue": "false",
+      "godotName": "backspace_deletes_composite_character_enabled",
+      "xmlDocId": "P:Godot.TextEdit.BackspaceDeletesCompositeCharacterEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretBlink",
+      "kind": "Property",
+      "signature": "public bool CaretBlink { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], makes the caret blink.",
+      "defaultValue": "false",
+      "godotName": "caret_blink",
+      "xmlDocId": "P:Godot.TextEdit.CaretBlink",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretBlinkInterval",
+      "kind": "Property",
+      "signature": "public float CaretBlinkInterval { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The interval at which the caret blinks (in seconds).",
+      "defaultValue": "0.65",
+      "godotName": "caret_blink_interval",
+      "xmlDocId": "P:Godot.TextEdit.CaretBlinkInterval",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretDrawWhenEditableDisabled",
+      "kind": "Property",
+      "signature": "public bool CaretDrawWhenEditableDisabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], caret will be visible when [member editable] is disabled.",
+      "defaultValue": "false",
+      "godotName": "caret_draw_when_editable_disabled",
+      "xmlDocId": "P:Godot.TextEdit.CaretDrawWhenEditableDisabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretMidGrapheme",
+      "kind": "Property",
+      "signature": "public bool CaretMidGrapheme { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Allow moving caret, selecting and removing the individual composite character components. [b]Note:[/b] [kbd]Backspace[/kbd] is always removing individual composite character components.",
+      "defaultValue": "false",
+      "godotName": "caret_mid_grapheme",
+      "xmlDocId": "P:Godot.TextEdit.CaretMidGrapheme",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretMoveOnRightClick",
+      "kind": "Property",
+      "signature": "public bool CaretMoveOnRightClick { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a right-click moves the caret at the mouse position before displaying the context menu. If [code]false[/code], the context menu ignores mouse location.",
+      "defaultValue": "true",
+      "godotName": "caret_move_on_right_click",
+      "xmlDocId": "P:Godot.TextEdit.CaretMoveOnRightClick",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretMultiple",
+      "kind": "Property",
+      "signature": "public bool CaretMultiple { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], multiple carets are allowed. Left-clicking with [kbd]Alt[/kbd] adds a new caret. See [method add_caret] and [method get_caret_count].",
+      "defaultValue": "true",
+      "godotName": "caret_multiple",
+      "xmlDocId": "P:Godot.TextEdit.CaretMultiple",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CaretType",
+      "kind": "Property",
+      "signature": "public int CaretType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set the type of caret to draw.",
+      "defaultValue": "0",
+      "godotName": "caret_type",
+      "xmlDocId": "P:Godot.TextEdit.CaretType",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ContextMenuEnabled",
+      "kind": "Property",
+      "signature": "public bool ContextMenuEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a right-click displays the context menu.",
+      "defaultValue": "true",
+      "godotName": "context_menu_enabled",
+      "xmlDocId": "P:Godot.TextEdit.ContextMenuEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CustomWordSeparators",
+      "kind": "Property",
+      "signature": "public String CustomWordSeparators { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The characters to consider as word delimiters if [member use_custom_word_separators] is [code]true[/code]. The characters should be defined without separation, for example [code]#_![/code].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "custom_word_separators",
+      "xmlDocId": "P:Godot.TextEdit.CustomWordSeparators",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DeselectOnFocusLossEnabled",
+      "kind": "Property",
+      "signature": "public bool DeselectOnFocusLossEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the selected text will be deselected when focus is lost.",
+      "defaultValue": "true",
+      "godotName": "deselect_on_focus_loss_enabled",
+      "xmlDocId": "P:Godot.TextEdit.DeselectOnFocusLossEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DragAndDropSelectionEnabled",
+      "kind": "Property",
+      "signature": "public bool DragAndDropSelectionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allow drag and drop of selected text. Text can still be dropped from other sources.",
+      "defaultValue": "true",
+      "godotName": "drag_and_drop_selection_enabled",
+      "xmlDocId": "P:Godot.TextEdit.DragAndDropSelectionEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DrawControlChars",
+      "kind": "Property",
+      "signature": "public bool DrawControlChars { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], control characters are displayed.",
+      "defaultValue": "false",
+      "godotName": "draw_control_chars",
+      "xmlDocId": "P:Godot.TextEdit.DrawControlChars",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DrawSpaces",
+      "kind": "Property",
+      "signature": "public bool DrawSpaces { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the \u0022space\u0022 character will have a visible representation.",
+      "defaultValue": "false",
+      "godotName": "draw_spaces",
+      "xmlDocId": "P:Godot.TextEdit.DrawSpaces",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "DrawTabs",
+      "kind": "Property",
+      "signature": "public bool DrawTabs { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the \u0022tab\u0022 character will have a visible representation.",
+      "defaultValue": "false",
+      "godotName": "draw_tabs",
+      "xmlDocId": "P:Godot.TextEdit.DrawTabs",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public bool Editable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], existing text cannot be modified and new text cannot be added.",
+      "defaultValue": "true",
+      "godotName": "editable",
+      "xmlDocId": "P:Godot.TextEdit.Editable",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "EmojiMenuEnabled",
+      "kind": "Property",
+      "signature": "public bool EmojiMenuEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], \u0022Emoji and Symbols\u0022 menu is enabled.",
+      "defaultValue": "true",
+      "godotName": "emoji_menu_enabled",
+      "xmlDocId": "P:Godot.TextEdit.EmojiMenuEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "EmptySelectionClipboardEnabled",
+      "kind": "Property",
+      "signature": "public bool EmptySelectionClipboardEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], copying or cutting without a selection is performed on all lines with a caret. Otherwise, copy and cut require a selection.",
+      "defaultValue": "true",
+      "godotName": "empty_selection_clipboard_enabled",
+      "xmlDocId": "P:Godot.TextEdit.EmptySelectionClipboardEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.TextEdit.FocusMode",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HighlightAllOccurrences",
+      "kind": "Property",
+      "signature": "public bool HighlightAllOccurrences { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all occurrences of the selected text will be highlighted.",
+      "defaultValue": "false",
+      "godotName": "highlight_all_occurrences",
+      "xmlDocId": "P:Godot.TextEdit.HighlightAllOccurrences",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "HighlightCurrentLine",
+      "kind": "Property",
+      "signature": "public bool HighlightCurrentLine { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the line containing the cursor is highlighted.",
+      "defaultValue": "false",
+      "godotName": "highlight_current_line",
+      "xmlDocId": "P:Godot.TextEdit.HighlightCurrentLine",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "IndentWrappedLines",
+      "kind": "Property",
+      "signature": "public bool IndentWrappedLines { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all wrapped lines are indented to the same amount as the unwrapped line.",
+      "defaultValue": "false",
+      "godotName": "indent_wrapped_lines",
+      "xmlDocId": "P:Godot.TextEdit.IndentWrappedLines",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.TextEdit.Language",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MiddleMousePasteEnabled",
+      "kind": "Property",
+      "signature": "public bool MiddleMousePasteEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], using middle mouse button to paste clipboard will be disabled. [b]Note:[/b] This method is only implemented on Linux.",
+      "defaultValue": "true",
+      "godotName": "middle_mouse_paste_enabled",
+      "xmlDocId": "P:Godot.TextEdit.MiddleMousePasteEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MinimapDraw",
+      "kind": "Property",
+      "signature": "public bool MinimapDraw { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], a minimap is shown, providing an outline of your source code. The minimap uses a fixed-width text size.",
+      "defaultValue": "false",
+      "godotName": "minimap_draw",
+      "xmlDocId": "P:Godot.TextEdit.MinimapDraw",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MinimapWidth",
+      "kind": "Property",
+      "signature": "public int MinimapWidth { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width, in pixels, of the minimap.",
+      "defaultValue": "80",
+      "godotName": "minimap_width",
+      "xmlDocId": "P:Godot.TextEdit.MinimapWidth",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MouseDefaultCursorShape",
+      "kind": "Property",
+      "signature": "public int MouseDefaultCursorShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1",
+      "godotName": "mouse_default_cursor_shape",
+      "xmlDocId": "P:Godot.TextEdit.MouseDefaultCursorShape",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "PlaceholderText",
+      "kind": "Property",
+      "signature": "public String PlaceholderText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Text shown when the [TextEdit] is empty. It is [b]not[/b] the [TextEdit]\u0027s default value (see [member text]).",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "placeholder_text",
+      "xmlDocId": "P:Godot.TextEdit.PlaceholderText",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollFitContentHeight",
+      "kind": "Property",
+      "signature": "public bool ScrollFitContentHeight { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [TextEdit] fits its minimum height to the number of visible lines instead of scrolling vertically. If a maximum height is set (for example via [member Control.custom_maximum_size]) and content exceeds it, a vertical scrollbar is shown.",
+      "defaultValue": "false",
+      "godotName": "scroll_fit_content_height",
+      "xmlDocId": "P:Godot.TextEdit.ScrollFitContentHeight",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollFitContentWidth",
+      "kind": "Property",
+      "signature": "public bool ScrollFitContentWidth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [TextEdit] fits its minimum width to the widest line instead of scrolling horizontally. If a maximum width is set (for example via [member Control.custom_maximum_size]) and content exceeds it, a horizontal scrollbar is shown.",
+      "defaultValue": "false",
+      "godotName": "scroll_fit_content_width",
+      "xmlDocId": "P:Godot.TextEdit.ScrollFitContentWidth",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollHorizontal",
+      "kind": "Property",
+      "signature": "public int ScrollHorizontal { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If there is a horizontal scrollbar, this determines the current horizontal scroll value in pixels.",
+      "defaultValue": "0",
+      "godotName": "scroll_horizontal",
+      "xmlDocId": "P:Godot.TextEdit.ScrollHorizontal",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollPastEndOfFile",
+      "kind": "Property",
+      "signature": "public bool ScrollPastEndOfFile { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Allow scrolling past the last line into \u0022virtual\u0022 space.",
+      "defaultValue": "false",
+      "godotName": "scroll_past_end_of_file",
+      "xmlDocId": "P:Godot.TextEdit.ScrollPastEndOfFile",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollSmooth",
+      "kind": "Property",
+      "signature": "public bool ScrollSmooth { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Scroll smoothly over the text rather than jumping to the next location.",
+      "defaultValue": "false",
+      "godotName": "scroll_smooth",
+      "xmlDocId": "P:Godot.TextEdit.ScrollSmooth",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollVScrollSpeed",
+      "kind": "Property",
+      "signature": "public float ScrollVScrollSpeed { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the scroll speed with the minimap or when [member scroll_smooth] is enabled.",
+      "defaultValue": "80.0",
+      "godotName": "scroll_v_scroll_speed",
+      "xmlDocId": "P:Godot.TextEdit.ScrollVScrollSpeed",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ScrollVertical",
+      "kind": "Property",
+      "signature": "public float ScrollVertical { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.",
+      "defaultValue": "0.0",
+      "godotName": "scroll_vertical",
+      "xmlDocId": "P:Godot.TextEdit.ScrollVertical",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SelectingEnabled",
+      "kind": "Property",
+      "signature": "public bool SelectingEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], text can be selected. If [code]false[/code], text can not be selected by the user or by the [method select] or [method select_all] methods.",
+      "defaultValue": "true",
+      "godotName": "selecting_enabled",
+      "xmlDocId": "P:Godot.TextEdit.SelectingEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ShortcutKeysEnabled",
+      "kind": "Property",
+      "signature": "public bool ShortcutKeysEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], shortcut keys for context menu items are enabled, even if the context menu is disabled.",
+      "defaultValue": "true",
+      "godotName": "shortcut_keys_enabled",
+      "xmlDocId": "P:Godot.TextEdit.ShortcutKeysEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.TextEdit.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.TextEdit.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SyntaxHighlighter",
+      "kind": "Property",
+      "signature": "public SyntaxHighlighter SyntaxHighlighter { get; set; }",
+      "returnType": "SyntaxHighlighter",
+      "parameters": [],
+      "summary": "The syntax highlighter to use. [b]Note:[/b] A [SyntaxHighlighter] instance should not be used across multiple [TextEdit] nodes.",
+      "godotName": "syntax_highlighter",
+      "xmlDocId": "P:Godot.TextEdit.SyntaxHighlighter",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "TabInputMode",
+      "kind": "Property",
+      "signature": "public bool TabInputMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [member ProjectSettings.input/ui_text_indent] input [code]Tab[/code] character, otherwise it moves keyboard focus to the next [Control] in the scene.",
+      "defaultValue": "true",
+      "godotName": "tab_input_mode",
+      "xmlDocId": "P:Godot.TextEdit.TabInputMode",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "String value of the [TextEdit].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.TextEdit.Text",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.TextEdit.TextDirection",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "UseCustomWordSeparators",
+      "kind": "Property",
+      "signature": "public bool UseCustomWordSeparators { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], using [kbd]Ctrl \u002B Left[/kbd] or [kbd]Ctrl \u002B Right[/kbd] ([kbd]Cmd \u002B Left[/kbd] or [kbd]Cmd \u002B Right[/kbd] on macOS) bindings will use the behavior of [member use_default_word_separators]. If [code]true[/code], it will also stop the caret if a character within [member custom_word_separators] is detected. Useful for subword moving. This behavior also will be applied to the behavior of text selection.",
+      "defaultValue": "false",
+      "godotName": "use_custom_word_separators",
+      "xmlDocId": "P:Godot.TextEdit.UseCustomWordSeparators",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "UseDefaultWordSeparators",
+      "kind": "Property",
+      "signature": "public bool UseDefaultWordSeparators { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], using [kbd]Ctrl \u002B Left[/kbd] or [kbd]Ctrl \u002B Right[/kbd] ([kbd]Cmd \u002B Left[/kbd] or [kbd]Cmd \u002B Right[/kbd] on macOS) bindings will stop moving caret only if a space or punctuation is detected. If [code]true[/code], it will also stop the caret if a character is part of [code]!\u0022#$%\u0026\u0027()*\u002B,-./:;\u003C=\u003E?@[\\]^\u0060{|}~[/code], the Unicode General Punctuation table, or the Unicode CJK Punctuation table. Useful for subword moving. This behavior also will be applied to the behavior of text selection.",
+      "defaultValue": "true",
+      "godotName": "use_default_word_separators",
+      "xmlDocId": "P:Godot.TextEdit.UseDefaultWordSeparators",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "VirtualKeyboardEnabled",
+      "kind": "Property",
+      "signature": "public bool VirtualKeyboardEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the native virtual keyboard is enabled on platforms that support it.",
+      "defaultValue": "true",
+      "godotName": "virtual_keyboard_enabled",
+      "xmlDocId": "P:Godot.TextEdit.VirtualKeyboardEnabled",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "VirtualKeyboardShowOnFocus",
+      "kind": "Property",
+      "signature": "public bool VirtualKeyboardShowOnFocus { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the native virtual keyboard is shown on focus events on platforms that support it.",
+      "defaultValue": "true",
+      "godotName": "virtual_keyboard_show_on_focus",
+      "xmlDocId": "P:Godot.TextEdit.VirtualKeyboardShowOnFocus",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "WrapMode",
+      "kind": "Property",
+      "signature": "public int WrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the line wrapping mode to use.",
+      "defaultValue": "0",
+      "godotName": "wrap_mode",
+      "xmlDocId": "P:Godot.TextEdit.WrapMode",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "CaretChanged",
+      "kind": "Signal",
+      "signature": "public event CaretChangedHandler CaretChanged",
+      "parameters": [],
+      "summary": "Emitted when any caret changes position.",
+      "godotName": "caret_changed",
+      "xmlDocId": "E:Godot.TextEdit.CaretChanged",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GutterAdded",
+      "kind": "Signal",
+      "signature": "public event GutterAddedHandler GutterAdded",
+      "parameters": [],
+      "summary": "Emitted when a gutter is added.",
+      "godotName": "gutter_added",
+      "xmlDocId": "E:Godot.TextEdit.GutterAdded",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GutterClicked",
+      "kind": "Signal",
+      "signature": "public event GutterClickedHandler GutterClicked",
+      "parameters": [
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "gutter",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a gutter is clicked.",
+      "godotName": "gutter_clicked",
+      "xmlDocId": "E:Godot.TextEdit.GutterClicked(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GutterRemoved",
+      "kind": "Signal",
+      "signature": "public event GutterRemovedHandler GutterRemoved",
+      "parameters": [],
+      "summary": "Emitted when a gutter is removed.",
+      "godotName": "gutter_removed",
+      "xmlDocId": "E:Godot.TextEdit.GutterRemoved",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "LinesEditedFrom",
+      "kind": "Signal",
+      "signature": "public event LinesEditedFromHandler LinesEditedFrom",
+      "parameters": [
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted immediately when the text changes. When text is added [param from_line] will be less than [param to_line]. On a remove [param to_line] will be less than [param from_line].",
+      "godotName": "lines_edited_from",
+      "xmlDocId": "E:Godot.TextEdit.LinesEditedFrom(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "TextChanged",
+      "kind": "Signal",
+      "signature": "public event TextChangedHandler TextChanged",
+      "parameters": [],
+      "summary": "Emitted when the text changes.",
+      "godotName": "text_changed",
+      "xmlDocId": "E:Godot.TextEdit.TextChanged",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "TextSet",
+      "kind": "Signal",
+      "signature": "public event TextSetHandler TextSet",
+      "parameters": [],
+      "summary": "Emitted when [method clear] is called or [member text] is set.",
+      "godotName": "text_set",
+      "xmlDocId": "E:Godot.TextEdit.TextSet",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CaretType",
+      "values": [
+        {
+          "name": "CARET_TYPE_BLOCK",
+          "value": "1",
+          "enum": "CaretType",
+          "kind": "EnumValue",
+          "summary": "Block caret.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "CARET_TYPE_LINE",
+          "value": "0",
+          "enum": "CaretType",
+          "kind": "EnumValue",
+          "summary": "Vertical line caret.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "EditAction",
+      "values": [
+        {
+          "name": "ACTION_BACKSPACE",
+          "value": "2",
+          "enum": "EditAction",
+          "kind": "EnumValue",
+          "summary": "A backwards delete action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "ACTION_DELETE",
+          "value": "3",
+          "enum": "EditAction",
+          "kind": "EnumValue",
+          "summary": "A forward delete action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "ACTION_NONE",
+          "value": "0",
+          "enum": "EditAction",
+          "kind": "EnumValue",
+          "summary": "No current action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "ACTION_TYPING",
+          "value": "1",
+          "enum": "EditAction",
+          "kind": "EnumValue",
+          "summary": "A typing action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "GutterType",
+      "values": [
+        {
+          "name": "GUTTER_TYPE_CUSTOM",
+          "value": "2",
+          "enum": "GutterType",
+          "kind": "EnumValue",
+          "summary": "When a gutter is set to custom using [method set_gutter_type], it is used to contain custom visuals controlled by a callback method set via the [method set_gutter_custom_draw] method.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "GUTTER_TYPE_ICON",
+          "value": "1",
+          "enum": "GutterType",
+          "kind": "EnumValue",
+          "summary": "When a gutter is set to icon using [method set_gutter_type], it is used to contain an icon set via the [method set_line_gutter_icon] method.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "GUTTER_TYPE_STRING",
+          "value": "0",
+          "enum": "GutterType",
+          "kind": "EnumValue",
+          "summary": "When a gutter is set to string using [method set_gutter_type], it is used to contain text set via the [method set_line_gutter_text] method.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "LineWrappingMode",
+      "values": [
+        {
+          "name": "LINE_WRAPPING_BOUNDARY",
+          "value": "1",
+          "enum": "LineWrappingMode",
+          "kind": "EnumValue",
+          "summary": "Line wrapping occurs at the control boundary, beyond what would normally be visible.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "LINE_WRAPPING_NONE",
+          "value": "0",
+          "enum": "LineWrappingMode",
+          "kind": "EnumValue",
+          "summary": "Line wrapping is disabled.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "MenuItems",
+      "values": [
+        {
+          "name": "MENU_CLEAR",
+          "value": "3",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Erases the whole [TextEdit] text.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_COPY",
+          "value": "1",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Copies the selected text.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_CUT",
+          "value": "0",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Cuts (copies and clears) the selected text.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_AUTO",
+          "value": "9",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to automatic.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_INHERITED",
+          "value": "8",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to inherited.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_LTR",
+          "value": "10",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to left-to-right.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_DIR_RTL",
+          "value": "11",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Sets text direction to right-to-left.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_DISPLAY_UCC",
+          "value": "12",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Toggles control character display.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_EMOJI_AND_SYMBOL",
+          "value": "30",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Opens system emoji and symbol picker.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ALM",
+          "value": "21",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts Arabic letter mark (ALM) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_FSI",
+          "value": "24",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts first strong isolate (FSI) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRE",
+          "value": "16",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of left-to-right embedding (LRE) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRI",
+          "value": "22",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts left-to-right isolate (LRI) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRM",
+          "value": "14",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts left-to-right mark (LRM) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_LRO",
+          "value": "18",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of left-to-right override (LRO) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_PDF",
+          "value": "20",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts pop direction formatting (PDF) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_PDI",
+          "value": "25",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts pop direction isolate (PDI) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLE",
+          "value": "17",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of right-to-left embedding (RLE) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLI",
+          "value": "23",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts right-to-left isolate (RLI) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLM",
+          "value": "15",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts right-to-left mark (RLM) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_RLO",
+          "value": "19",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts start of right-to-left override (RLO) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_SHY",
+          "value": "29",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts soft hyphen (SHY) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_WJ",
+          "value": "28",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts word joiner (WJ) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ZWJ",
+          "value": "26",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts zero width joiner (ZWJ) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_INSERT_ZWNJ",
+          "value": "27",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Inserts zero width non-joiner (ZWNJ) character.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_MAX",
+          "value": "31",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum MenuItems] enum.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_PASTE",
+          "value": "2",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Pastes the clipboard text over the selected text (or at the cursor\u0027s position).",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_REDO",
+          "value": "6",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Redoes the previous action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_SELECT_ALL",
+          "value": "4",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Selects the whole [TextEdit] text.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_SUBMENU_INSERT_UCC",
+          "value": "13",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "ID of \u0022Insert Control Character\u0022 submenu.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_SUBMENU_TEXT_DIR",
+          "value": "7",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "ID of \u0022Text Writing Direction\u0022 submenu.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "MENU_UNDO",
+          "value": "5",
+          "enum": "MenuItems",
+          "kind": "EnumValue",
+          "summary": "Undoes the previous action.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "SearchFlags",
+      "values": [
+        {
+          "name": "SEARCH_BACKWARDS",
+          "value": "4",
+          "enum": "SearchFlags",
+          "kind": "EnumValue",
+          "summary": "Search from end to beginning.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SEARCH_MATCH_CASE",
+          "value": "1",
+          "enum": "SearchFlags",
+          "kind": "EnumValue",
+          "summary": "Match case when searching.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SEARCH_WHOLE_WORDS",
+          "value": "2",
+          "enum": "SearchFlags",
+          "kind": "EnumValue",
+          "summary": "Match whole words when searching.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    },
+    {
+      "name": "SelectionMode",
+      "values": [
+        {
+          "name": "SELECTION_MODE_LINE",
+          "value": "4",
+          "enum": "SelectionMode",
+          "kind": "EnumValue",
+          "summary": "Select whole lines as if the user triple clicked.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SELECTION_MODE_NONE",
+          "value": "0",
+          "enum": "SelectionMode",
+          "kind": "EnumValue",
+          "summary": "Not selecting.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SELECTION_MODE_POINTER",
+          "value": "2",
+          "enum": "SelectionMode",
+          "kind": "EnumValue",
+          "summary": "Select single characters as if the user single clicked.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SELECTION_MODE_SHIFT",
+          "value": "1",
+          "enum": "SelectionMode",
+          "kind": "EnumValue",
+          "summary": "Select as if [code]shift[/code] is pressed.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        },
+        {
+          "name": "SELECTION_MODE_WORD",
+          "value": "3",
+          "enum": "SelectionMode",
+          "kind": "EnumValue",
+          "summary": "Select whole words as if the user double clicked.",
+          "sourcePath": "doc/classes/TextEdit.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MENU_CUT",
+      "value": "0",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Cuts (copies and clears) the selected text.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_COPY",
+      "value": "1",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Copies the selected text.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_PASTE",
+      "value": "2",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Pastes the clipboard text over the selected text (or at the cursor\u0027s position).",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_CLEAR",
+      "value": "3",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Erases the whole [TextEdit] text.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_SELECT_ALL",
+      "value": "4",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Selects the whole [TextEdit] text.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_UNDO",
+      "value": "5",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Undoes the previous action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_REDO",
+      "value": "6",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Redoes the previous action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_SUBMENU_TEXT_DIR",
+      "value": "7",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "ID of \u0022Text Writing Direction\u0022 submenu.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_INHERITED",
+      "value": "8",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to inherited.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_AUTO",
+      "value": "9",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to automatic.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_LTR",
+      "value": "10",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to left-to-right.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_DIR_RTL",
+      "value": "11",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Sets text direction to right-to-left.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_DISPLAY_UCC",
+      "value": "12",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Toggles control character display.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_SUBMENU_INSERT_UCC",
+      "value": "13",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "ID of \u0022Insert Control Character\u0022 submenu.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRM",
+      "value": "14",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts left-to-right mark (LRM) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLM",
+      "value": "15",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts right-to-left mark (RLM) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRE",
+      "value": "16",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of left-to-right embedding (LRE) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLE",
+      "value": "17",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of right-to-left embedding (RLE) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRO",
+      "value": "18",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of left-to-right override (LRO) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLO",
+      "value": "19",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts start of right-to-left override (RLO) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_PDF",
+      "value": "20",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts pop direction formatting (PDF) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ALM",
+      "value": "21",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts Arabic letter mark (ALM) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_LRI",
+      "value": "22",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts left-to-right isolate (LRI) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_RLI",
+      "value": "23",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts right-to-left isolate (RLI) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_FSI",
+      "value": "24",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts first strong isolate (FSI) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_PDI",
+      "value": "25",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts pop direction isolate (PDI) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ZWJ",
+      "value": "26",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts zero width joiner (ZWJ) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_ZWNJ",
+      "value": "27",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts zero width non-joiner (ZWNJ) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_WJ",
+      "value": "28",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts word joiner (WJ) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_INSERT_SHY",
+      "value": "29",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Inserts soft hyphen (SHY) character.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_EMOJI_AND_SYMBOL",
+      "value": "30",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Opens system emoji and symbol picker.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "MENU_MAX",
+      "value": "31",
+      "enum": "MenuItems",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum MenuItems] enum.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ACTION_NONE",
+      "value": "0",
+      "enum": "EditAction",
+      "kind": "EnumValue",
+      "summary": "No current action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ACTION_TYPING",
+      "value": "1",
+      "enum": "EditAction",
+      "kind": "EnumValue",
+      "summary": "A typing action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ACTION_BACKSPACE",
+      "value": "2",
+      "enum": "EditAction",
+      "kind": "EnumValue",
+      "summary": "A backwards delete action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "ACTION_DELETE",
+      "value": "3",
+      "enum": "EditAction",
+      "kind": "EnumValue",
+      "summary": "A forward delete action.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SEARCH_MATCH_CASE",
+      "value": "1",
+      "enum": "SearchFlags",
+      "kind": "EnumValue",
+      "summary": "Match case when searching.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SEARCH_WHOLE_WORDS",
+      "value": "2",
+      "enum": "SearchFlags",
+      "kind": "EnumValue",
+      "summary": "Match whole words when searching.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SEARCH_BACKWARDS",
+      "value": "4",
+      "enum": "SearchFlags",
+      "kind": "EnumValue",
+      "summary": "Search from end to beginning.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CARET_TYPE_LINE",
+      "value": "0",
+      "enum": "CaretType",
+      "kind": "EnumValue",
+      "summary": "Vertical line caret.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "CARET_TYPE_BLOCK",
+      "value": "1",
+      "enum": "CaretType",
+      "kind": "EnumValue",
+      "summary": "Block caret.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SELECTION_MODE_NONE",
+      "value": "0",
+      "enum": "SelectionMode",
+      "kind": "EnumValue",
+      "summary": "Not selecting.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SELECTION_MODE_SHIFT",
+      "value": "1",
+      "enum": "SelectionMode",
+      "kind": "EnumValue",
+      "summary": "Select as if [code]shift[/code] is pressed.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SELECTION_MODE_POINTER",
+      "value": "2",
+      "enum": "SelectionMode",
+      "kind": "EnumValue",
+      "summary": "Select single characters as if the user single clicked.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SELECTION_MODE_WORD",
+      "value": "3",
+      "enum": "SelectionMode",
+      "kind": "EnumValue",
+      "summary": "Select whole words as if the user double clicked.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "SELECTION_MODE_LINE",
+      "value": "4",
+      "enum": "SelectionMode",
+      "kind": "EnumValue",
+      "summary": "Select whole lines as if the user triple clicked.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "LINE_WRAPPING_NONE",
+      "value": "0",
+      "enum": "LineWrappingMode",
+      "kind": "EnumValue",
+      "summary": "Line wrapping is disabled.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "LINE_WRAPPING_BOUNDARY",
+      "value": "1",
+      "enum": "LineWrappingMode",
+      "kind": "EnumValue",
+      "summary": "Line wrapping occurs at the control boundary, beyond what would normally be visible.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GUTTER_TYPE_STRING",
+      "value": "0",
+      "enum": "GutterType",
+      "kind": "EnumValue",
+      "summary": "When a gutter is set to string using [method set_gutter_type], it is used to contain text set via the [method set_line_gutter_text] method.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GUTTER_TYPE_ICON",
+      "value": "1",
+      "enum": "GutterType",
+      "kind": "EnumValue",
+      "summary": "When a gutter is set to icon using [method set_gutter_type], it is used to contain an icon set via the [method set_line_gutter_icon] method.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "GUTTER_TYPE_CUSTOM",
+      "value": "2",
+      "enum": "GutterType",
+      "kind": "EnumValue",
+      "summary": "When a gutter is set to custom using [method set_gutter_type], it is used to contain custom visuals controlled by a callback method set via the [method set_gutter_custom_draw] method.",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Backspace",
+      "kind": "Method",
+      "signature": "public void _Backspace(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user presses the backspace key.",
+      "godotName": "_backspace",
+      "xmlDocId": "M:Godot.TextEdit._Backspace(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Copy",
+      "kind": "Method",
+      "signature": "public void _Copy(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a copy operation.",
+      "godotName": "_copy",
+      "xmlDocId": "M:Godot.TextEdit._Copy(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Cut",
+      "kind": "Method",
+      "signature": "public void _Cut(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a cut operation.",
+      "godotName": "_cut",
+      "xmlDocId": "M:Godot.TextEdit._Cut(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_HandleUnicodeInput",
+      "kind": "Method",
+      "signature": "public void _HandleUnicodeInput(int unicodeChar, int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "unicode_char",
+          "type": "int"
+        },
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user types in the provided key [param unicode_char].",
+      "godotName": "_handle_unicode_input",
+      "xmlDocId": "M:Godot.TextEdit._HandleUnicodeInput(int,int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_Paste",
+      "kind": "Method",
+      "signature": "public void _Paste(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a paste operation.",
+      "godotName": "_paste",
+      "xmlDocId": "M:Godot.TextEdit._Paste(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    },
+    {
+      "name": "_PastePrimaryClipboard",
+      "kind": "Method",
+      "signature": "public void _PastePrimaryClipboard(int caretIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "caret_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Override this method to define what happens when the user performs a paste operation with middle mouse button. [b]Note:[/b] This method is only implemented on Linux.",
+      "godotName": "_paste_primary_clipboard",
+      "xmlDocId": "M:Godot.TextEdit._PastePrimaryClipboard(int)",
+      "sourcePath": "doc/classes/TextEdit.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextEdit.xml",
+      "sha256": "b5a3fd2f65899aa7c32074ffa4f4947a4c677f5aa147790b5115c1a8c3ea471c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

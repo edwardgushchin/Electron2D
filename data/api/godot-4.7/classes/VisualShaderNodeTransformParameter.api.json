@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTransformParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTransformParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTransformParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetransformparameter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "DefaultValue",
+      "kind": "Property",
+      "signature": "public Transform3D DefaultValue { get; set; }",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "A default value to be assigned within the shader.",
+      "defaultValue": "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)",
+      "godotName": "default_value",
+      "xmlDocId": "P:Godot.VisualShaderNodeTransformParameter.DefaultValue",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformParameter.xml"
+    },
+    {
+      "name": "DefaultValueEnabled",
+      "kind": "Property",
+      "signature": "public bool DefaultValueEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables usage of the [member default_value].",
+      "defaultValue": "false",
+      "godotName": "default_value_enabled",
+      "xmlDocId": "P:Godot.VisualShaderNodeTransformParameter.DefaultValueEnabled",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTransformParameter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTransformParameter.xml",
+      "sha256": "3fd76e830962e984c87b187dc4eee2ab9e2a2b66455302e16c91ea5166810a9c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

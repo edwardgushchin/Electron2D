@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextLine",
+    "namespace": "Godot",
+    "fullName": "Godot.TextLine",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "TextLine",
+    "documentationPath": "doc/classes/TextLine.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textline.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddObject",
+      "kind": "Method",
+      "signature": "public bool AddObject(Variant key, Vector2 size, int inlineAlign, int length, float baseline)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "size",
+          "type": "Vector2"
+        },
+        {
+          "name": "inline_align",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "length",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "baseline",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Adds inline object to the text buffer, [param key] must be unique. In the text, object is represented as [param length] object replacement characters.",
+      "godotName": "add_object",
+      "xmlDocId": "M:Godot.TextLine.AddObject(Variant,Vector2,int,int,float)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "AddString",
+      "kind": "Method",
+      "signature": "public bool AddString(String text, Font font, int fontSize, String language, Variant meta)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        },
+        {
+          "name": "language",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "meta",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Adds text span and font to draw it.",
+      "godotName": "add_string",
+      "xmlDocId": "M:Godot.TextLine.AddString(String,Font,int,String,Variant)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears text line (removes text and inline objects).",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TextLine.Clear",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public void Draw(RID canvas, Vector2 pos, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw text into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw",
+      "xmlDocId": "M:Godot.TextLine.Draw(RID,Vector2,Color,float)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "DrawOutline",
+      "kind": "Method",
+      "signature": "public void DrawOutline(RID canvas, Vector2 pos, int outlineSize, Color color, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "RID"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "outline_size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "color",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draw text into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_outline",
+      "xmlDocId": "M:Godot.TextLine.DrawOutline(RID,Vector2,int,Color,float)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public TextLine Duplicate()",
+      "returnType": "TextLine",
+      "parameters": [],
+      "summary": "Duplicates this [TextLine].",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.TextLine.Duplicate",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetInferredDirection",
+      "kind": "Method",
+      "signature": "public int GetInferredDirection()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the text writing direction inferred by the BiDi algorithm.",
+      "godotName": "get_inferred_direction",
+      "xmlDocId": "M:Godot.TextLine.GetInferredDirection",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetLineAscent",
+      "kind": "Method",
+      "signature": "public float GetLineAscent()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the text ascent (number of pixels above the baseline for horizontal layout or to the left of baseline for vertical).",
+      "godotName": "get_line_ascent",
+      "xmlDocId": "M:Godot.TextLine.GetLineAscent",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetLineDescent",
+      "kind": "Method",
+      "signature": "public float GetLineDescent()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the text descent (number of pixels below the baseline for horizontal layout or to the right of baseline for vertical).",
+      "godotName": "get_line_descent",
+      "xmlDocId": "M:Godot.TextLine.GetLineDescent",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetLineUnderlinePosition",
+      "kind": "Method",
+      "signature": "public float GetLineUnderlinePosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns pixel offset of the underline below the baseline.",
+      "godotName": "get_line_underline_position",
+      "xmlDocId": "M:Godot.TextLine.GetLineUnderlinePosition",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetLineUnderlineThickness",
+      "kind": "Method",
+      "signature": "public float GetLineUnderlineThickness()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns thickness of the underline.",
+      "godotName": "get_line_underline_thickness",
+      "xmlDocId": "M:Godot.TextLine.GetLineUnderlineThickness",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetLineWidth",
+      "kind": "Method",
+      "signature": "public float GetLineWidth()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns width (for horizontal layout) or height (for vertical) of the text.",
+      "godotName": "get_line_width",
+      "xmlDocId": "M:Godot.TextLine.GetLineWidth",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetObjectRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetObjectRect(Variant key)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns bounding rectangle of the inline object.",
+      "godotName": "get_object_rect",
+      "xmlDocId": "M:Godot.TextLine.GetObjectRect(Variant)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetObjects",
+      "kind": "Method",
+      "signature": "public Array GetObjects()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns array of inline objects.",
+      "godotName": "get_objects",
+      "xmlDocId": "M:Godot.TextLine.GetObjects",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns TextServer buffer RID.",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.TextLine.GetRid",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns size of the bounding box of the text.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.TextLine.GetSize",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "HasObject",
+      "kind": "Method",
+      "signature": "public bool HasObject(Variant key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if an object with [param key] is embedded in this line.",
+      "godotName": "has_object",
+      "xmlDocId": "M:Godot.TextLine.HasObject(Variant)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "HitTest",
+      "kind": "Method",
+      "signature": "public int HitTest(float coords)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "coords",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns caret character offset at the specified pixel offset at the baseline. This function always returns a valid position.",
+      "godotName": "hit_test",
+      "xmlDocId": "M:Godot.TextLine.HitTest(float)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "ResizeObject",
+      "kind": "Method",
+      "signature": "public bool ResizeObject(Variant key, Vector2 size, int inlineAlign, float baseline)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "size",
+          "type": "Vector2"
+        },
+        {
+          "name": "inline_align",
+          "type": "int",
+          "defaultValue": "5"
+        },
+        {
+          "name": "baseline",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Sets new size and alignment of embedded object.",
+      "godotName": "resize_object",
+      "xmlDocId": "M:Godot.TextLine.ResizeObject(Variant,Vector2,int,float)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "SetBidiOverride",
+      "kind": "Method",
+      "signature": "public void SetBidiOverride(Array @override)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "override",
+          "type": "Array"
+        }
+      ],
+      "summary": "Overrides BiDi for the structured text. Override ranges should cover full source text without overlaps. BiDi algorithm will be used on each range separately.",
+      "godotName": "set_bidi_override",
+      "xmlDocId": "M:Godot.TextLine.SetBidiOverride(Array)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "TabAlign",
+      "kind": "Method",
+      "signature": "public void TabAlign(PackedFloat32Array tabStops)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "tab_stops",
+          "type": "PackedFloat32Array"
+        }
+      ],
+      "summary": "Aligns text to the given tab-stops.",
+      "godotName": "tab_align",
+      "xmlDocId": "M:Godot.TextLine.TabAlign(PackedFloat32Array)",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Alignment",
+      "kind": "Property",
+      "signature": "public int Alignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets text alignment within the line as if the line was horizontal.",
+      "defaultValue": "0",
+      "godotName": "alignment",
+      "xmlDocId": "P:Godot.TextLine.Alignment",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Direction",
+      "kind": "Property",
+      "signature": "public int Direction { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text writing direction.",
+      "defaultValue": "0",
+      "godotName": "direction",
+      "xmlDocId": "P:Godot.TextLine.Direction",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "EllipsisChar",
+      "kind": "Property",
+      "signature": "public String EllipsisChar { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Ellipsis character used for text clipping.",
+      "defaultValue": "\u0022\u2026\u0022",
+      "godotName": "ellipsis_char",
+      "xmlDocId": "P:Godot.TextLine.EllipsisChar",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Flags",
+      "kind": "Property",
+      "signature": "public int Flags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line alignment rules. For more info see [TextServer].",
+      "defaultValue": "3",
+      "godotName": "flags",
+      "xmlDocId": "P:Godot.TextLine.Flags",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Orientation",
+      "kind": "Property",
+      "signature": "public int Orientation { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text orientation.",
+      "defaultValue": "0",
+      "godotName": "orientation",
+      "xmlDocId": "P:Godot.TextLine.Orientation",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "PreserveControl",
+      "kind": "Property",
+      "signature": "public bool PreserveControl { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code] text will display control characters.",
+      "defaultValue": "false",
+      "godotName": "preserve_control",
+      "xmlDocId": "P:Godot.TextLine.PreserveControl",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "PreserveInvalid",
+      "kind": "Property",
+      "signature": "public bool PreserveInvalid { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code] text will display invalid characters.",
+      "defaultValue": "true",
+      "godotName": "preserve_invalid",
+      "xmlDocId": "P:Godot.TextLine.PreserveInvalid",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The clipping behavior when the text exceeds the text line\u0027s set width.",
+      "defaultValue": "3",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.TextLine.TextOverrunBehavior",
+      "sourcePath": "doc/classes/TextLine.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public float Width { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Text line width.",
+      "defaultValue": "-1.0",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.TextLine.Width",
+      "sourcePath": "doc/classes/TextLine.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextLine.xml",
+      "sha256": "dfe8d0ac72d875cf2ebd2fb606f78c2253b2f1bff26a4d89fc2df933b31cd624"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventWithModifiers",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventWithModifiers",
+    "kind": "class",
+    "baseType": "Electron2D.InputEventFromWindow",
+    "interfaces": [],
+    "godotReference": "InputEventWithModifiers",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventWithModifiers",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventWithModifiers()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventWithModifiers type.",
+      "xmlDocId": "M:Electron2D.InputEventWithModifiers.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventWithModifiers",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventWithModifiers()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventWithModifiers type.",
+      "xmlDocId": "M:Electron2D.InputEventWithModifiers.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AltPressed",
+      "kind": "Property",
+      "signature": "public System.Boolean AltPressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether Alt or Option was pressed when the event was generated.",
+      "xmlDocId": "P:Electron2D.InputEventWithModifiers.AltPressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CtrlPressed",
+      "kind": "Property",
+      "signature": "public System.Boolean CtrlPressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether Control was pressed when the event was generated.",
+      "xmlDocId": "P:Electron2D.InputEventWithModifiers.CtrlPressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MetaPressed",
+      "kind": "Property",
+      "signature": "public System.Boolean MetaPressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether Meta, Command, or Windows was pressed when the event was generated.",
+      "xmlDocId": "P:Electron2D.InputEventWithModifiers.MetaPressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShiftPressed",
+      "kind": "Property",
+      "signature": "public System.Boolean ShiftPressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether Shift was pressed when the event was generated.",
+      "xmlDocId": "P:Electron2D.InputEventWithModifiers.ShiftPressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

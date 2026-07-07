@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScrollMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ScrollMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "ScrollContainer.ScrollMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Auto",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode Auto",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Allows scrolling when content is larger than the container.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.ScrollMode.Auto",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode Disabled",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Disables scrolling on the axis.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.ScrollMode.Disabled",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaximizeFirst",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode MaximizeFirst",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Prefers maximizing the content area before showing scroll affordances.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.ScrollMode.MaximizeFirst",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Reserve",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode Reserve",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Reserves room for future visual scrollbar presentation.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.ScrollMode.Reserve",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShowAlways",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode ShowAlways",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Keeps the axis available even when content currently fits.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.ScrollMode.ShowAlways",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShowNever",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ScrollMode ShowNever",
+      "returnType": "Electron2D.ScrollMode",
+      "parameters": [],
+      "summary": "Keeps the axis hidden while preserving programmatic policy state.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.ScrollMode.ShowNever",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Auto",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Allows scrolling when content is larger than the container.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Disabled",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Disables scrolling on the axis.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MaximizeFirst",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Prefers maximizing the content area before showing scroll affordances.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Reserve",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Reserves room for future visual scrollbar presentation.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShowAlways",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Keeps the axis available even when content currently fits.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShowNever",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Keeps the axis hidden while preserving programmatic policy state.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

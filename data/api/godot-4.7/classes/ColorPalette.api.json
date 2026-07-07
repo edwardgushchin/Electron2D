@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ColorPalette",
+    "namespace": "Godot",
+    "fullName": "Godot.ColorPalette",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "ColorPalette",
+    "documentationPath": "doc/classes/ColorPalette.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_colorpalette.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Colors",
+      "kind": "Property",
+      "signature": "public PackedColorArray Colors { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "A [PackedColorArray] containing the colors in the palette.",
+      "defaultValue": "PackedColorArray()",
+      "godotName": "colors",
+      "xmlDocId": "P:Godot.ColorPalette.Colors",
+      "sourcePath": "doc/classes/ColorPalette.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ColorPalette.xml",
+      "sha256": "a4c13cad2f1c9dd40dfc62a848608768606204d0d352488980a4ed50b97e6c7e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

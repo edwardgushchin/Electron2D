@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectReverb",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectReverb",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectReverb",
+    "documentationPath": "doc/classes/AudioEffectReverb.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectreverb.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Damping",
+      "kind": "Property",
+      "signature": "public float Damping { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Defines how reflective the imaginary room\u0027s walls are. The more reflective, the more high frequency content the reverb has. Value can range from 0 to 1.",
+      "defaultValue": "0.5",
+      "godotName": "damping",
+      "xmlDocId": "P:Godot.AudioEffectReverb.Damping",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "Dry",
+      "kind": "Property",
+      "signature": "public float Dry { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of the original audio. At 0, only the modified audio is outputted. Value can range from 0 to 1.",
+      "defaultValue": "1.0",
+      "godotName": "dry",
+      "xmlDocId": "P:Godot.AudioEffectReverb.Dry",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "Hipass",
+      "kind": "Property",
+      "signature": "public float Hipass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "High-pass filter allows frequencies higher than a certain cutoff threshold and attenuates frequencies lower than the cutoff threshold. Value can range from 0 to 1.",
+      "defaultValue": "0.0",
+      "godotName": "hipass",
+      "xmlDocId": "P:Godot.AudioEffectReverb.Hipass",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "PredelayFeedback",
+      "kind": "Property",
+      "signature": "public float PredelayFeedback { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Gain of early reflection copies. At higher values, early reflection copies are louder and ring out for longer. Value can range from 0 to 1.",
+      "defaultValue": "0.4",
+      "godotName": "predelay_feedback",
+      "xmlDocId": "P:Godot.AudioEffectReverb.PredelayFeedback",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "PredelayMsec",
+      "kind": "Property",
+      "signature": "public float PredelayMsec { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time between the original audio and the early reflections of the reverb signal, in milliseconds. Value can range from 20 to 500.",
+      "defaultValue": "150.0",
+      "godotName": "predelay_msec",
+      "xmlDocId": "P:Godot.AudioEffectReverb.PredelayMsec",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "RoomSize",
+      "kind": "Property",
+      "signature": "public float RoomSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Dimensions of simulated room. Bigger means more echoes. Value can range from 0 to 1.",
+      "defaultValue": "0.8",
+      "godotName": "room_size",
+      "xmlDocId": "P:Godot.AudioEffectReverb.RoomSize",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "Spread",
+      "kind": "Property",
+      "signature": "public float Spread { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Widens or narrows the stereo image of the reverb tail. At 1, it fully widens. Value can range from 0 to 1.",
+      "defaultValue": "1.0",
+      "godotName": "spread",
+      "xmlDocId": "P:Godot.AudioEffectReverb.Spread",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    },
+    {
+      "name": "Wet",
+      "kind": "Property",
+      "signature": "public float Wet { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The volume ratio of the modified audio. At 0, only the original audio is outputted. Value can range from 0 to 1.",
+      "defaultValue": "0.5",
+      "godotName": "wet",
+      "xmlDocId": "P:Godot.AudioEffectReverb.Wet",
+      "sourcePath": "doc/classes/AudioEffectReverb.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectReverb.xml",
+      "sha256": "6c08740f2b1ede850838320f5efa40920d378fc3b9bb262af89a6d25716af965"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

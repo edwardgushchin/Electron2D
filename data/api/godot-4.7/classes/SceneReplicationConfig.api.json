@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SceneReplicationConfig",
+    "namespace": "Godot",
+    "fullName": "Godot.SceneReplicationConfig",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "SceneReplicationConfig",
+    "documentationPath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scenereplicationconfig.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddProperty",
+      "kind": "Method",
+      "signature": "public void AddProperty(NodePath path, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Adds the property identified by the given [param path] to the list of the properties being synchronized, optionally passing an [param index]. [b]Note:[/b] For details on restrictions and limitations on property synchronization, see [MultiplayerSynchronizer].",
+      "godotName": "add_property",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.AddProperty(NodePath,int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "GetProperties",
+      "kind": "Method",
+      "signature": "public NodePath[] GetProperties()",
+      "returnType": "NodePath[]",
+      "parameters": [],
+      "summary": "Returns a list of synchronized property [NodePath]s.",
+      "godotName": "get_properties",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.GetProperties",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "HasProperty",
+      "kind": "Method",
+      "signature": "public bool HasProperty(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [param path] is configured for synchronization.",
+      "godotName": "has_property",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.HasProperty(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertyGetIndex",
+      "kind": "Method",
+      "signature": "public int PropertyGetIndex(NodePath path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Finds the index of the given [param path].",
+      "godotName": "property_get_index",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertyGetIndex(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertyGetReplicationMode",
+      "kind": "Method",
+      "signature": "public int PropertyGetReplicationMode(NodePath path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns the replication mode for the property identified by the given [param path].",
+      "godotName": "property_get_replication_mode",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertyGetReplicationMode(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertyGetSpawn",
+      "kind": "Method",
+      "signature": "public bool PropertyGetSpawn(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the property identified by the given [param path] is configured to be synchronized on spawn.",
+      "godotName": "property_get_spawn",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertyGetSpawn(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertyGetSync",
+      "kind": "Method",
+      "signature": "public bool PropertyGetSync(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the property identified by the given [param path] is configured to be synchronized on process.",
+      "godotName": "property_get_sync",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertyGetSync(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertyGetWatch",
+      "kind": "Method",
+      "signature": "public bool PropertyGetWatch(NodePath path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the property identified by the given [param path] is configured to be reliably synchronized when changes are detected on process.",
+      "godotName": "property_get_watch",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertyGetWatch(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertySetReplicationMode",
+      "kind": "Method",
+      "signature": "public void PropertySetReplicationMode(NodePath path, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the synchronization mode for the property identified by the given [param path].",
+      "godotName": "property_set_replication_mode",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertySetReplicationMode(NodePath,int)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertySetSpawn",
+      "kind": "Method",
+      "signature": "public void PropertySetSpawn(NodePath path, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the property identified by the given [param path] is configured to be synchronized on spawn.",
+      "godotName": "property_set_spawn",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertySetSpawn(NodePath,bool)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertySetSync",
+      "kind": "Method",
+      "signature": "public void PropertySetSync(NodePath path, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the property identified by the given [param path] is configured to be synchronized on process.",
+      "godotName": "property_set_sync",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertySetSync(NodePath,bool)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "PropertySetWatch",
+      "kind": "Method",
+      "signature": "public void PropertySetWatch(NodePath path, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the property identified by the given [param path] is configured to be reliably synchronized when changes are detected on process.",
+      "godotName": "property_set_watch",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.PropertySetWatch(NodePath,bool)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "RemoveProperty",
+      "kind": "Method",
+      "signature": "public void RemoveProperty(NodePath path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Removes the property identified by the given [param path] from the configuration.",
+      "godotName": "remove_property",
+      "xmlDocId": "M:Godot.SceneReplicationConfig.RemoveProperty(NodePath)",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ReplicationMode",
+      "values": [
+        {
+          "name": "REPLICATION_MODE_ALWAYS",
+          "value": "1",
+          "enum": "ReplicationMode",
+          "kind": "EnumValue",
+          "summary": "Replicate the given property on process by constantly sending updates using unreliable transfer mode.",
+          "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+        },
+        {
+          "name": "REPLICATION_MODE_NEVER",
+          "value": "0",
+          "enum": "ReplicationMode",
+          "kind": "EnumValue",
+          "summary": "Do not keep the given property synchronized.",
+          "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+        },
+        {
+          "name": "REPLICATION_MODE_ON_CHANGE",
+          "value": "2",
+          "enum": "ReplicationMode",
+          "kind": "EnumValue",
+          "summary": "Replicate the given property on process by sending updates using reliable transfer mode when its value changes.",
+          "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "REPLICATION_MODE_NEVER",
+      "value": "0",
+      "enum": "ReplicationMode",
+      "kind": "EnumValue",
+      "summary": "Do not keep the given property synchronized.",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "REPLICATION_MODE_ALWAYS",
+      "value": "1",
+      "enum": "ReplicationMode",
+      "kind": "EnumValue",
+      "summary": "Replicate the given property on process by constantly sending updates using unreliable transfer mode.",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    },
+    {
+      "name": "REPLICATION_MODE_ON_CHANGE",
+      "value": "2",
+      "enum": "ReplicationMode",
+      "kind": "EnumValue",
+      "summary": "Replicate the given property on process by sending updates using reliable transfer mode when its value changes.",
+      "sourcePath": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/multiplayer/doc_classes/SceneReplicationConfig.xml",
+      "sha256": "2c452bc34320d9de2d7da6380a31b4474efaa98ede40f78f2ce3b358530f2248"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

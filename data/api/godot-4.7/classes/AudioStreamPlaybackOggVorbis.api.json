@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPlaybackOggVorbis",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPlaybackOggVorbis",
+    "kind": "class",
+    "baseType": "AudioStreamPlaybackResampled",
+    "interfaces": [],
+    "godotReference": "AudioStreamPlaybackOggVorbis",
+    "documentationPath": "modules/vorbis/doc_classes/AudioStreamPlaybackOggVorbis.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamplaybackoggvorbis.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/vorbis/doc_classes/AudioStreamPlaybackOggVorbis.xml",
+      "sha256": "a697e3913ca91c8a186deba33dc824150460346ad8b02cbd684f637c7c419a67"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

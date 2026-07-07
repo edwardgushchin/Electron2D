@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "WorldBoundaryShape3D",
+    "namespace": "Godot",
+    "fullName": "Godot.WorldBoundaryShape3D",
+    "kind": "class",
+    "baseType": "Shape3D",
+    "interfaces": [],
+    "godotReference": "WorldBoundaryShape3D",
+    "documentationPath": "doc/classes/WorldBoundaryShape3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_worldboundaryshape3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Plane",
+      "kind": "Property",
+      "signature": "public Plane Plane { get; set; }",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "The [Plane] used by the [WorldBoundaryShape3D] for collision.",
+      "defaultValue": "Plane(0, 1, 0, 0)",
+      "godotName": "plane",
+      "xmlDocId": "P:Godot.WorldBoundaryShape3D.Plane",
+      "sourcePath": "doc/classes/WorldBoundaryShape3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/WorldBoundaryShape3D.xml",
+      "sha256": "9e0af017cae69fd47d697b7fc90d46f9a70d4becc8067c4f714c46d4961f8d0a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

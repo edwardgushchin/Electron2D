@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileSetScenesCollectionSource",
+    "namespace": "Godot",
+    "fullName": "Godot.TileSetScenesCollectionSource",
+    "kind": "class",
+    "baseType": "TileSetSource",
+    "interfaces": [],
+    "godotReference": "TileSetScenesCollectionSource",
+    "documentationPath": "doc/classes/TileSetScenesCollectionSource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_tilesetscenescollectionsource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateSceneTile",
+      "kind": "Method",
+      "signature": "public int CreateSceneTile(PackedScene packedScene, int idOverride)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "packed_scene",
+          "type": "PackedScene"
+        },
+        {
+          "name": "id_override",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Creates a scene-based tile out of the given scene. Returns a newly generated unique ID.",
+      "godotName": "create_scene_tile",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.CreateSceneTile(PackedScene,int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "GetNextSceneTileId",
+      "kind": "Method",
+      "signature": "public int GetNextSceneTileId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the scene ID a following call to [method create_scene_tile] would return.",
+      "godotName": "get_next_scene_tile_id",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.GetNextSceneTileId",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "GetSceneTileDisplayPlaceholder",
+      "kind": "Method",
+      "signature": "public bool GetSceneTileDisplayPlaceholder(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the scene tile with [param id] displays a placeholder in the editor.",
+      "godotName": "get_scene_tile_display_placeholder",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.GetSceneTileDisplayPlaceholder(int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "GetSceneTileId",
+      "kind": "Method",
+      "signature": "public int GetSceneTileId(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the scene tile ID of the scene tile at [param index].",
+      "godotName": "get_scene_tile_id",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.GetSceneTileId(int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "GetSceneTileScene",
+      "kind": "Method",
+      "signature": "public PackedScene GetSceneTileScene(int id)",
+      "returnType": "PackedScene",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [PackedScene] resource of scene tile with [param id].",
+      "godotName": "get_scene_tile_scene",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.GetSceneTileScene(int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "GetSceneTilesCount",
+      "kind": "Method",
+      "signature": "public int GetSceneTilesCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number or scene tiles this TileSet source has.",
+      "godotName": "get_scene_tiles_count",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.GetSceneTilesCount",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "HasSceneTileId",
+      "kind": "Method",
+      "signature": "public bool HasSceneTileId(int id)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether this TileSet source has a scene tile with [param id].",
+      "godotName": "has_scene_tile_id",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.HasSceneTileId(int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "RemoveSceneTile",
+      "kind": "Method",
+      "signature": "public void RemoveSceneTile(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Remove the scene tile with [param id].",
+      "godotName": "remove_scene_tile",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.RemoveSceneTile(int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "SetSceneTileDisplayPlaceholder",
+      "kind": "Method",
+      "signature": "public void SetSceneTileDisplayPlaceholder(int id, bool displayPlaceholder)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "display_placeholder",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether or not the scene tile with [param id] should display a placeholder in the editor. This might be useful for scenes that are not visible.",
+      "godotName": "set_scene_tile_display_placeholder",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.SetSceneTileDisplayPlaceholder(int,bool)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "SetSceneTileId",
+      "kind": "Method",
+      "signature": "public void SetSceneTileId(int id, int newId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "new_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Changes a scene tile\u0027s ID from [param id] to [param new_id]. This will fail if there is already a tile with an ID equal to [param new_id].",
+      "godotName": "set_scene_tile_id",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.SetSceneTileId(int,int)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    },
+    {
+      "name": "SetSceneTileScene",
+      "kind": "Method",
+      "signature": "public void SetSceneTileScene(int id, PackedScene packedScene)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "packed_scene",
+          "type": "PackedScene"
+        }
+      ],
+      "summary": "Assigns a [PackedScene] resource to the scene tile with [param id]. This will fail if the scene does not extend [CanvasItem], as positioning properties are needed to place the scene on the [TileMapLayer].",
+      "godotName": "set_scene_tile_scene",
+      "xmlDocId": "M:Godot.TileSetScenesCollectionSource.SetSceneTileScene(int,PackedScene)",
+      "sourcePath": "doc/classes/TileSetScenesCollectionSource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TileSetScenesCollectionSource.xml",
+      "sha256": "4d521ee0ba40a78b1db5221b7f6bba5a4d533feba44ac51f317fa935db514fa7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

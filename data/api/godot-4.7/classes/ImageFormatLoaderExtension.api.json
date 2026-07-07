@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ImageFormatLoaderExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.ImageFormatLoaderExtension",
+    "kind": "class",
+    "baseType": "ImageFormatLoader",
+    "interfaces": [],
+    "godotReference": "ImageFormatLoaderExtension",
+    "documentationPath": "doc/classes/ImageFormatLoaderExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_imageformatloaderextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of file extensions for this image format. Files with the given extensions will be treated as image file and loaded using this class.",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    },
+    {
+      "name": "_LoadImage",
+      "kind": "Method",
+      "signature": "public int _LoadImage(Image image, FileAccess fileaccess, int flags, float scale)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "fileaccess",
+          "type": "FileAccess"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Loads the content of [param fileaccess] into the provided [param image].",
+      "godotName": "_load_image",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension._LoadImage(Image,FileAccess,int,float)",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    },
+    {
+      "name": "AddFormatLoader",
+      "kind": "Method",
+      "signature": "public void AddFormatLoader()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Add this format loader to the engine, allowing it to recognize the file extensions returned by [method _get_recognized_extensions].",
+      "godotName": "add_format_loader",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension.AddFormatLoader",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    },
+    {
+      "name": "RemoveFormatLoader",
+      "kind": "Method",
+      "signature": "public void RemoveFormatLoader()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Remove this format loader from the engine.",
+      "godotName": "remove_format_loader",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension.RemoveFormatLoader",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of file extensions for this image format. Files with the given extensions will be treated as image file and loaded using this class.",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    },
+    {
+      "name": "_LoadImage",
+      "kind": "Method",
+      "signature": "public int _LoadImage(Image image, FileAccess fileaccess, int flags, float scale)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "image",
+          "type": "Image"
+        },
+        {
+          "name": "fileaccess",
+          "type": "FileAccess"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Loads the content of [param fileaccess] into the provided [param image].",
+      "godotName": "_load_image",
+      "xmlDocId": "M:Godot.ImageFormatLoaderExtension._LoadImage(Image,FileAccess,int,float)",
+      "sourcePath": "doc/classes/ImageFormatLoaderExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ImageFormatLoaderExtension.xml",
+      "sha256": "b5191730aec87216a7b176d6d96d4b0b4c8b8b7e5e680d7d6a202d89bdaa6bd1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConnectFlags",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ConnectFlags",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "ConnectFlags",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AppendSourceObject",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags AppendSourceObject",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the append source object value.",
+      "value": "16",
+      "xmlDocId": "F:Electron2D.ConnectFlags.AppendSourceObject",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Deferred",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags Deferred",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the deferred value.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.ConnectFlags.Deferred",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags None",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the none value.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.ConnectFlags.None",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OneShot",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags OneShot",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the one shot value.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.ConnectFlags.OneShot",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Persist",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags Persist",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the persist value.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.ConnectFlags.Persist",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReferenceCounted",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ConnectFlags ReferenceCounted",
+      "returnType": "Electron2D.ConnectFlags",
+      "parameters": [],
+      "summary": "Identifies the reference counted value.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.ConnectFlags.ReferenceCounted",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "AppendSourceObject",
+      "value": "16",
+      "kind": "EnumValue",
+      "summary": "Identifies the append source object value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Deferred",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Identifies the deferred value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "None",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Identifies the none value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "OneShot",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Identifies the one shot value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Persist",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Identifies the persist value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ReferenceCounted",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Identifies the reference counted value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RootMotionView",
+    "namespace": "Godot",
+    "fullName": "Godot.RootMotionView",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "RootMotionView",
+    "documentationPath": "doc/classes/RootMotionView.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rootmotionview.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AnimationPath",
+      "kind": "Property",
+      "signature": "public NodePath AnimationPath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "Path to an [AnimationMixer] node to use as a basis for root motion.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "animation_path",
+      "xmlDocId": "P:Godot.RootMotionView.AnimationPath",
+      "sourcePath": "doc/classes/RootMotionView.xml"
+    },
+    {
+      "name": "CellSize",
+      "kind": "Property",
+      "signature": "public float CellSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The grid\u0027s cell size in 3D units.",
+      "defaultValue": "1.0",
+      "godotName": "cell_size",
+      "xmlDocId": "P:Godot.RootMotionView.CellSize",
+      "sourcePath": "doc/classes/RootMotionView.xml"
+    },
+    {
+      "name": "Color",
+      "kind": "Property",
+      "signature": "public Color Color { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The grid\u0027s color.",
+      "defaultValue": "Color(0.5, 0.5, 1, 1)",
+      "godotName": "color",
+      "xmlDocId": "P:Godot.RootMotionView.Color",
+      "sourcePath": "doc/classes/RootMotionView.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The grid\u0027s radius in 3D units. The grid\u0027s opacity will fade gradually as the distance from the origin increases until this [member radius] is reached.",
+      "defaultValue": "10.0",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.RootMotionView.Radius",
+      "sourcePath": "doc/classes/RootMotionView.xml"
+    },
+    {
+      "name": "ZeroY",
+      "kind": "Property",
+      "signature": "public bool ZeroY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the grid\u0027s points will all be on the same Y coordinate ([i]local[/i] Y = 0). If [code]false[/code], the points\u0027 original Y coordinate is preserved.",
+      "defaultValue": "true",
+      "godotName": "zero_y",
+      "xmlDocId": "P:Godot.RootMotionView.ZeroY",
+      "sourcePath": "doc/classes/RootMotionView.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RootMotionView.xml",
+      "sha256": "9a216cfde56c452e421953f89623e18a18f15d023a1b53cca8084e36e94a0221"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

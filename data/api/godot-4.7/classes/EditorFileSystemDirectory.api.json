@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorFileSystemDirectory",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorFileSystemDirectory",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "EditorFileSystemDirectory",
+    "documentationPath": "doc/classes/EditorFileSystemDirectory.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorfilesystemdirectory.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FindDirIndex",
+      "kind": "Method",
+      "signature": "public int FindDirIndex(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the index of the directory with name [param name] or [code]-1[/code] if not found.",
+      "godotName": "find_dir_index",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.FindDirIndex(String)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "FindFileIndex",
+      "kind": "Method",
+      "signature": "public int FindFileIndex(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the index of the file with name [param name] or [code]-1[/code] if not found.",
+      "godotName": "find_file_index",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.FindFileIndex(String)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFile",
+      "kind": "Method",
+      "signature": "public String GetFile(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the file at index [param idx].",
+      "godotName": "get_file",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFile(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFileCount",
+      "kind": "Method",
+      "signature": "public int GetFileCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of files in this directory.",
+      "godotName": "get_file_count",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFileCount",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFileImportIsValid",
+      "kind": "Method",
+      "signature": "public bool GetFileImportIsValid(int idx)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the file at index [param idx] imported properly.",
+      "godotName": "get_file_import_is_valid",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFileImportIsValid(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFilePath",
+      "kind": "Method",
+      "signature": "public String GetFilePath(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the path to the file at index [param idx].",
+      "godotName": "get_file_path",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFilePath(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFileScriptClassExtends",
+      "kind": "Method",
+      "signature": "public String GetFileScriptClassExtends(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the base class of the script class defined in the file at index [param idx]. If the file doesn\u0027t define a script class using the [code]class_name[/code] syntax, this will return an empty string.",
+      "godotName": "get_file_script_class_extends",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFileScriptClassExtends(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFileScriptClassName",
+      "kind": "Method",
+      "signature": "public String GetFileScriptClassName(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of the script class defined in the file at index [param idx]. If the file doesn\u0027t define a script class using the [code]class_name[/code] syntax, this will return an empty string.",
+      "godotName": "get_file_script_class_name",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFileScriptClassName(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetFileType",
+      "kind": "Method",
+      "signature": "public StringName GetFileType(int idx)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the resource type of the file at index [param idx]. This returns a string such as [code]\u0022Resource\u0022[/code] or [code]\u0022GDScript\u0022[/code], [i]not[/i] a file extension such as [code]\u0022.gd\u0022[/code].",
+      "godotName": "get_file_type",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetFileType(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetName",
+      "kind": "Method",
+      "signature": "public String GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of this directory.",
+      "godotName": "get_name",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetName",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetParent",
+      "kind": "Method",
+      "signature": "public EditorFileSystemDirectory GetParent()",
+      "returnType": "EditorFileSystemDirectory",
+      "parameters": [],
+      "summary": "Returns the parent directory for this directory or [code]null[/code] if called on a directory at [code]res://[/code] or [code]user://[/code].",
+      "godotName": "get_parent",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetParent",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetPath",
+      "kind": "Method",
+      "signature": "public String GetPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the path to this directory.",
+      "godotName": "get_path",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetPath",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetSubdir",
+      "kind": "Method",
+      "signature": "public EditorFileSystemDirectory GetSubdir(int idx)",
+      "returnType": "EditorFileSystemDirectory",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the subdirectory at index [param idx].",
+      "godotName": "get_subdir",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetSubdir(int)",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    },
+    {
+      "name": "GetSubdirCount",
+      "kind": "Method",
+      "signature": "public int GetSubdirCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of subdirectories in this directory.",
+      "godotName": "get_subdir_count",
+      "xmlDocId": "M:Godot.EditorFileSystemDirectory.GetSubdirCount",
+      "sourcePath": "doc/classes/EditorFileSystemDirectory.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorFileSystemDirectory.xml",
+      "sha256": "c0f6617313d63fb07ccedac005d66d43327efa0459cbd0af967f0824a9b8a808"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

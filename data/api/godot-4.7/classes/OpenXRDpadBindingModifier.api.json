@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRDpadBindingModifier",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRDpadBindingModifier",
+    "kind": "class",
+    "baseType": "OpenXRIPBindingModifier",
+    "interfaces": [],
+    "godotReference": "OpenXRDpadBindingModifier",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrdpadbindingmodifier.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionSet",
+      "kind": "Property",
+      "signature": "public OpenXRActionSet ActionSet { get; set; }",
+      "returnType": "OpenXRActionSet",
+      "parameters": [],
+      "summary": "Action set for which this dpad binding modifier is active.",
+      "godotName": "action_set",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.ActionSet",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "CenterRegion",
+      "kind": "Property",
+      "signature": "public float CenterRegion { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Center region in which our center position of our dpad return [code]true[/code].",
+      "defaultValue": "0.1",
+      "godotName": "center_region",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.CenterRegion",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "InputPath",
+      "kind": "Property",
+      "signature": "public String InputPath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Input path for this dpad binding modifier.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "input_path",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.InputPath",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "IsSticky",
+      "kind": "Property",
+      "signature": "public bool IsSticky { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]false[/code], when the joystick enters a new dpad zone this becomes [code]true[/code]. If [code]true[/code], when the joystick remains in active dpad zone, this remains [code]true[/code] even if we overlap with another zone.",
+      "defaultValue": "false",
+      "godotName": "is_sticky",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.IsSticky",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "OffHaptic",
+      "kind": "Property",
+      "signature": "public OpenXRHapticBase OffHaptic { get; set; }",
+      "returnType": "OpenXRHapticBase",
+      "parameters": [],
+      "summary": "Haptic pulse to emit when the user releases the input.",
+      "godotName": "off_haptic",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.OffHaptic",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "OnHaptic",
+      "kind": "Property",
+      "signature": "public OpenXRHapticBase OnHaptic { get; set; }",
+      "returnType": "OpenXRHapticBase",
+      "parameters": [],
+      "summary": "Haptic pulse to emit when the user presses the input.",
+      "godotName": "on_haptic",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.OnHaptic",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "Threshold",
+      "kind": "Property",
+      "signature": "public float Threshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When our input value is equal or larger than this value, our dpad in that direction becomes [code]true[/code]. It stays [code]true[/code] until it falls under the [member threshold_released] value.",
+      "defaultValue": "0.6",
+      "godotName": "threshold",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.Threshold",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "ThresholdReleased",
+      "kind": "Property",
+      "signature": "public float ThresholdReleased { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When our input value falls below this, our output becomes [code]false[/code].",
+      "defaultValue": "0.4",
+      "godotName": "threshold_released",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.ThresholdReleased",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    },
+    {
+      "name": "WedgeAngle",
+      "kind": "Property",
+      "signature": "public float WedgeAngle { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The angle of each wedge that identifies the 4 directions of the emulated dpad.",
+      "defaultValue": "1.5707964",
+      "godotName": "wedge_angle",
+      "xmlDocId": "P:Godot.OpenXRDpadBindingModifier.WedgeAngle",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRDpadBindingModifier.xml",
+      "sha256": "19cdb9ae25e566ea285636777268d54523eff8207c6bd0ce194aae91742be628"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

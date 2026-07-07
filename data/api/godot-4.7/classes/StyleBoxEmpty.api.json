@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBoxEmpty",
+    "namespace": "Godot",
+    "fullName": "Godot.StyleBoxEmpty",
+    "kind": "class",
+    "baseType": "StyleBox",
+    "interfaces": [],
+    "godotReference": "StyleBoxEmpty",
+    "documentationPath": "doc/classes/StyleBoxEmpty.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_styleboxempty.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StyleBoxEmpty.xml",
+      "sha256": "7cf98529aa08d5c8f73882842d853ce7325c4656773359380b24242c6331ae0b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

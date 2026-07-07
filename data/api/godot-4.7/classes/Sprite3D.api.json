@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Sprite3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Sprite3D",
+    "kind": "class",
+    "baseType": "SpriteBase3D",
+    "interfaces": [],
+    "godotReference": "Sprite3D",
+    "documentationPath": "doc/classes/Sprite3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_sprite3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Frame",
+      "kind": "Property",
+      "signature": "public int Frame { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Current frame to display from sprite sheet. [member hframes] or [member vframes] must be greater than 1. This property is automatically adjusted when [member hframes] or [member vframes] are changed to keep pointing to the same visual frame (same column and row). If that\u0027s impossible, this value is reset to [code]0[/code].",
+      "defaultValue": "0",
+      "godotName": "frame",
+      "xmlDocId": "P:Godot.Sprite3D.Frame",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "FrameCoords",
+      "kind": "Property",
+      "signature": "public Vector2i FrameCoords { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "Coordinates of the frame to display from sprite sheet. This is as an alias for the [member frame] property. [member hframes] or [member vframes] must be greater than 1.",
+      "defaultValue": "Vector2i(0, 0)",
+      "godotName": "frame_coords",
+      "xmlDocId": "P:Godot.Sprite3D.FrameCoords",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "Hframes",
+      "kind": "Property",
+      "signature": "public int Hframes { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of columns in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that\u0027s impossible, [member frame] is reset to [code]0[/code].",
+      "defaultValue": "1",
+      "godotName": "hframes",
+      "xmlDocId": "P:Godot.Sprite3D.Hframes",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "RegionEnabled",
+      "kind": "Property",
+      "signature": "public bool RegionEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the sprite will use [member region_rect] and display only the specified part of its texture.",
+      "defaultValue": "false",
+      "godotName": "region_enabled",
+      "xmlDocId": "P:Godot.Sprite3D.RegionEnabled",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "RegionRect",
+      "kind": "Property",
+      "signature": "public Rect2 RegionRect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The region of the atlas texture to display. [member region_enabled] must be [code]true[/code].",
+      "defaultValue": "Rect2(0, 0, 0, 0)",
+      "godotName": "region_rect",
+      "xmlDocId": "P:Godot.Sprite3D.RegionRect",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "[Texture2D] object to draw. If [member GeometryInstance3D.material_override] is used, this will be overridden. The size information is still used.",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.Sprite3D.Texture",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "Vframes",
+      "kind": "Property",
+      "signature": "public int Vframes { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of rows in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that\u0027s impossible, [member frame] is reset to [code]0[/code].",
+      "defaultValue": "1",
+      "godotName": "vframes",
+      "xmlDocId": "P:Godot.Sprite3D.Vframes",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FrameChanged",
+      "kind": "Signal",
+      "signature": "public event FrameChangedHandler FrameChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member frame] changes.",
+      "godotName": "frame_changed",
+      "xmlDocId": "E:Godot.Sprite3D.FrameChanged",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    },
+    {
+      "name": "TextureChanged",
+      "kind": "Signal",
+      "signature": "public event TextureChangedHandler TextureChanged",
+      "parameters": [],
+      "summary": "Emitted when the [member texture] changes.",
+      "godotName": "texture_changed",
+      "xmlDocId": "E:Godot.Sprite3D.TextureChanged",
+      "sourcePath": "doc/classes/Sprite3D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Sprite3D.xml",
+      "sha256": "6a89684956de1d3824476726ddeb04d270cba5fa67588b0c64af2df9c225027c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

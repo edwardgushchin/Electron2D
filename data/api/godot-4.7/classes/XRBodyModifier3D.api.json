@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRBodyModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRBodyModifier3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "XRBodyModifier3D",
+    "documentationPath": "doc/classes/XRBodyModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrbodymodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BodyTracker",
+      "kind": "Property",
+      "signature": "public StringName BodyTracker { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the [XRBodyTracker] registered with [XRServer] to obtain the body tracking data from.",
+      "defaultValue": "\u0026\u0022/user/body_tracker\u0022",
+      "godotName": "body_tracker",
+      "xmlDocId": "P:Godot.XRBodyModifier3D.BodyTracker",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BodyUpdate",
+      "kind": "Property",
+      "signature": "public int BodyUpdate { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the body parts to update.",
+      "defaultValue": "7",
+      "godotName": "body_update",
+      "xmlDocId": "P:Godot.XRBodyModifier3D.BodyUpdate",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BoneUpdate",
+      "kind": "Property",
+      "signature": "public int BoneUpdate { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the type of updates to perform on the bones.",
+      "defaultValue": "0",
+      "godotName": "bone_update",
+      "xmlDocId": "P:Godot.XRBodyModifier3D.BoneUpdate",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BodyUpdate",
+      "values": [
+        {
+          "name": "BODY_UPDATE_HANDS",
+          "value": "4",
+          "enum": "BodyUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s hand joints are updated.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        },
+        {
+          "name": "BODY_UPDATE_LOWER_BODY",
+          "value": "2",
+          "enum": "BodyUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s lower body joints are updated.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        },
+        {
+          "name": "BODY_UPDATE_UPPER_BODY",
+          "value": "1",
+          "enum": "BodyUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s upper body joints are updated.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BoneUpdate",
+      "values": [
+        {
+          "name": "BONE_UPDATE_FULL",
+          "value": "0",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s bones are fully updated (both position and rotation) to match the tracked bones.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        },
+        {
+          "name": "BONE_UPDATE_MAX",
+          "value": "2",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BoneUpdate] enum.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        },
+        {
+          "name": "BONE_UPDATE_ROTATION_ONLY",
+          "value": "1",
+          "enum": "BoneUpdate",
+          "kind": "EnumValue",
+          "summary": "The skeleton\u0027s bones are only rotated to align with the tracked bones, preserving bone length.",
+          "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BODY_UPDATE_UPPER_BODY",
+      "value": "1",
+      "enum": "BodyUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s upper body joints are updated.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BODY_UPDATE_LOWER_BODY",
+      "value": "2",
+      "enum": "BodyUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s lower body joints are updated.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BODY_UPDATE_HANDS",
+      "value": "4",
+      "enum": "BodyUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s hand joints are updated.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BONE_UPDATE_FULL",
+      "value": "0",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s bones are fully updated (both position and rotation) to match the tracked bones.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BONE_UPDATE_ROTATION_ONLY",
+      "value": "1",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "The skeleton\u0027s bones are only rotated to align with the tracked bones, preserving bone length.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    },
+    {
+      "name": "BONE_UPDATE_MAX",
+      "value": "2",
+      "enum": "BoneUpdate",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BoneUpdate] enum.",
+      "sourcePath": "doc/classes/XRBodyModifier3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRBodyModifier3D.xml",
+      "sha256": "c69d06f3f496085ba2b1a414f6541cc9abe1b2591737474fe2d8f2bddf079e75"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,677 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationMesh",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationMesh",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "NavigationMesh",
+    "documentationPath": "doc/classes/NavigationMesh.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationmesh.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPolygon",
+      "kind": "Method",
+      "signature": "public void AddPolygon(PackedInt32Array polygon)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "polygon",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Adds a polygon using the indices of the vertices you get when calling [method get_vertices].",
+      "godotName": "add_polygon",
+      "xmlDocId": "M:Godot.NavigationMesh.AddPolygon(PackedInt32Array)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the internal arrays for vertices and polygon indices.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.NavigationMesh.Clear",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "ClearPolygons",
+      "kind": "Method",
+      "signature": "public void ClearPolygons()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the array of polygons, but it doesn\u0027t clear the array of vertices.",
+      "godotName": "clear_polygons",
+      "xmlDocId": "M:Godot.NavigationMesh.ClearPolygons",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "CreateFromMesh",
+      "kind": "Method",
+      "signature": "public void CreateFromMesh(Mesh mesh)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        }
+      ],
+      "summary": "Initializes the navigation mesh by setting the vertices and indices according to a [Mesh]. [b]Note:[/b] The given [param mesh] must be of type [constant Mesh.PRIMITIVE_TRIANGLES] and have an index array.",
+      "godotName": "create_from_mesh",
+      "xmlDocId": "M:Godot.NavigationMesh.CreateFromMesh(Mesh)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member geometry_collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.NavigationMesh.GetCollisionMaskValue(int)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GetPolygon",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetPolygon(int idx)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a [PackedInt32Array] containing the indices of the vertices of a created polygon.",
+      "godotName": "get_polygon",
+      "xmlDocId": "M:Godot.NavigationMesh.GetPolygon(int)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GetPolygonCount",
+      "kind": "Method",
+      "signature": "public int GetPolygonCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of polygons in the navigation mesh.",
+      "godotName": "get_polygon_count",
+      "xmlDocId": "M:Godot.NavigationMesh.GetPolygonCount",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector3Array GetVertices()",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "Returns a [PackedVector3Array] containing all the vertices being used to create the polygons.",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.NavigationMesh.GetVertices",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member geometry_collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.NavigationMesh.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SetVertices",
+      "kind": "Method",
+      "signature": "public void SetVertices(PackedVector3Array vertices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "vertices",
+          "type": "PackedVector3Array"
+        }
+      ],
+      "summary": "Sets the vertices that can be then indexed to create polygons with the [method add_polygon] method.",
+      "godotName": "set_vertices",
+      "xmlDocId": "M:Godot.NavigationMesh.SetVertices(PackedVector3Array)",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "AgentHeight",
+      "kind": "Property",
+      "signature": "public float AgentHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum floor to ceiling height that will still allow the floor area to be considered walkable. [b]Note:[/b] While baking, this value will be rounded up to the nearest multiple of [member cell_height].",
+      "defaultValue": "1.5",
+      "godotName": "agent_height",
+      "xmlDocId": "P:Godot.NavigationMesh.AgentHeight",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "AgentMaxClimb",
+      "kind": "Property",
+      "signature": "public float AgentMaxClimb { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum ledge height that is considered to still be traversable. [b]Note:[/b] While baking, this value will be rounded down to the nearest multiple of [member cell_height].",
+      "defaultValue": "0.25",
+      "godotName": "agent_max_climb",
+      "xmlDocId": "P:Godot.NavigationMesh.AgentMaxClimb",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "AgentMaxSlope",
+      "kind": "Property",
+      "signature": "public float AgentMaxSlope { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum slope that is considered walkable, in degrees.",
+      "defaultValue": "45.0",
+      "godotName": "agent_max_slope",
+      "xmlDocId": "P:Godot.NavigationMesh.AgentMaxSlope",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "AgentRadius",
+      "kind": "Property",
+      "signature": "public float AgentRadius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance to erode/shrink the walkable area of the heightfield away from obstructions. [b]Note:[/b] While baking, this value will be rounded up to the nearest multiple of [member cell_size]. [b]Note:[/b] The radius must be equal or higher than [code]0.0[/code]. If the radius is [code]0.0[/code], it won\u0027t be possible to fix invalid outline overlaps and other precision errors during the baking process. As a result, some obstacles may be excluded incorrectly from the final navigation mesh, or may delete the navigation mesh\u0027s polygons.",
+      "defaultValue": "0.5",
+      "godotName": "agent_radius",
+      "xmlDocId": "P:Godot.NavigationMesh.AgentRadius",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "BorderSize",
+      "kind": "Property",
+      "signature": "public float BorderSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of the non-navigable border around the bake bounding area. In conjunction with the [member filter_baking_aabb] and a [member edge_max_error] value at [code]1.0[/code] or below the border size can be used to bake tile aligned navigation meshes without the tile edges being shrunk by [member agent_radius]. [b]Note:[/b] If this value is not [code]0.0[/code], it will be rounded up to the nearest multiple of [member cell_size] during baking.",
+      "defaultValue": "0.0",
+      "godotName": "border_size",
+      "xmlDocId": "P:Godot.NavigationMesh.BorderSize",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "CellHeight",
+      "kind": "Property",
+      "signature": "public float CellHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The cell height used to rasterize the navigation mesh vertices on the Y axis. Must match with the cell height on the navigation map.",
+      "defaultValue": "0.25",
+      "godotName": "cell_height",
+      "xmlDocId": "P:Godot.NavigationMesh.CellHeight",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "CellSize",
+      "kind": "Property",
+      "signature": "public float CellSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The cell size used to rasterize the navigation mesh vertices on the XZ plane. Must match with the cell size on the navigation map.",
+      "defaultValue": "0.25",
+      "godotName": "cell_size",
+      "xmlDocId": "P:Godot.NavigationMesh.CellSize",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "DetailSampleDistance",
+      "kind": "Property",
+      "signature": "public float DetailSampleDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The sampling distance to use when generating the detail mesh, in cell unit.",
+      "defaultValue": "6.0",
+      "godotName": "detail_sample_distance",
+      "xmlDocId": "P:Godot.NavigationMesh.DetailSampleDistance",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "DetailSampleMaxError",
+      "kind": "Property",
+      "signature": "public float DetailSampleMaxError { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance the detail mesh surface should deviate from heightfield, in cell unit.",
+      "defaultValue": "1.0",
+      "godotName": "detail_sample_max_error",
+      "xmlDocId": "P:Godot.NavigationMesh.DetailSampleMaxError",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "EdgeMaxError",
+      "kind": "Property",
+      "signature": "public float EdgeMaxError { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum distance a simplified contour\u0027s border edges should deviate the original raw contour.",
+      "defaultValue": "1.3",
+      "godotName": "edge_max_error",
+      "xmlDocId": "P:Godot.NavigationMesh.EdgeMaxError",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "EdgeMaxLength",
+      "kind": "Property",
+      "signature": "public float EdgeMaxLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum allowed length for contour edges along the border of the mesh. A value of [code]0.0[/code] disables this feature. [b]Note:[/b] While baking, this value will be rounded up to the nearest multiple of [member cell_size].",
+      "defaultValue": "0.0",
+      "godotName": "edge_max_length",
+      "xmlDocId": "P:Godot.NavigationMesh.EdgeMaxLength",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "FilterBakingAabb",
+      "kind": "Property",
+      "signature": "public AABB FilterBakingAabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "If the baking [AABB] has a volume the navigation mesh baking will be restricted to its enclosing area.",
+      "defaultValue": "AABB(0, 0, 0, 0, 0, 0)",
+      "godotName": "filter_baking_aabb",
+      "xmlDocId": "P:Godot.NavigationMesh.FilterBakingAabb",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "FilterBakingAabbOffset",
+      "kind": "Property",
+      "signature": "public Vector3 FilterBakingAabbOffset { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The position offset applied to the [member filter_baking_aabb] [AABB].",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "filter_baking_aabb_offset",
+      "xmlDocId": "P:Godot.NavigationMesh.FilterBakingAabbOffset",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "FilterLedgeSpans",
+      "kind": "Property",
+      "signature": "public bool FilterLedgeSpans { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], marks spans that are ledges as non-walkable.",
+      "defaultValue": "false",
+      "godotName": "filter_ledge_spans",
+      "xmlDocId": "P:Godot.NavigationMesh.FilterLedgeSpans",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "FilterLowHangingObstacles",
+      "kind": "Property",
+      "signature": "public bool FilterLowHangingObstacles { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], marks non-walkable spans as walkable if their maximum is within [member agent_max_climb] of a walkable neighbor.",
+      "defaultValue": "false",
+      "godotName": "filter_low_hanging_obstacles",
+      "xmlDocId": "P:Godot.NavigationMesh.FilterLowHangingObstacles",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "FilterWalkableLowHeightSpans",
+      "kind": "Property",
+      "signature": "public bool FilterWalkableLowHeightSpans { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], marks walkable spans as not walkable if the clearance above the span is less than [member agent_height].",
+      "defaultValue": "false",
+      "godotName": "filter_walkable_low_height_spans",
+      "xmlDocId": "P:Godot.NavigationMesh.FilterWalkableLowHeightSpans",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GeometryCollisionMask",
+      "kind": "Property",
+      "signature": "public int GeometryCollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers to scan for static colliders. Only used when [member geometry_parsed_geometry_type] is [constant PARSED_GEOMETRY_STATIC_COLLIDERS] or [constant PARSED_GEOMETRY_BOTH].",
+      "defaultValue": "4294967295",
+      "godotName": "geometry_collision_mask",
+      "xmlDocId": "P:Godot.NavigationMesh.GeometryCollisionMask",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GeometryParsedGeometryType",
+      "kind": "Property",
+      "signature": "public int GeometryParsedGeometryType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines which type of nodes will be parsed as geometry.",
+      "defaultValue": "2",
+      "godotName": "geometry_parsed_geometry_type",
+      "xmlDocId": "P:Godot.NavigationMesh.GeometryParsedGeometryType",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GeometrySourceGeometryMode",
+      "kind": "Property",
+      "signature": "public int GeometrySourceGeometryMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The source of the geometry used when baking.",
+      "defaultValue": "0",
+      "godotName": "geometry_source_geometry_mode",
+      "xmlDocId": "P:Godot.NavigationMesh.GeometrySourceGeometryMode",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "GeometrySourceGroupName",
+      "kind": "Property",
+      "signature": "public StringName GeometrySourceGroupName { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the group to scan for geometry. Only used when [member geometry_source_geometry_mode] is [constant SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN] or [constant SOURCE_GEOMETRY_GROUPS_EXPLICIT].",
+      "defaultValue": "\u0026\u0022navigation_mesh_source_group\u0022",
+      "godotName": "geometry_source_group_name",
+      "xmlDocId": "P:Godot.NavigationMesh.GeometrySourceGroupName",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "RegionMergeSize",
+      "kind": "Property",
+      "signature": "public float RegionMergeSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Any regions with a size smaller than this will be merged with larger regions if possible. [b]Note:[/b] This value will be squared to calculate the number of cells. For example, a value of 20 will set the number of cells to 400.",
+      "defaultValue": "20.0",
+      "godotName": "region_merge_size",
+      "xmlDocId": "P:Godot.NavigationMesh.RegionMergeSize",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "RegionMinSize",
+      "kind": "Property",
+      "signature": "public float RegionMinSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The minimum size of a region for it to be created. [b]Note:[/b] This value will be squared to calculate the minimum number of cells allowed to form isolated island areas. For example, a value of 8 will set the number of cells to 64.",
+      "defaultValue": "2.0",
+      "godotName": "region_min_size",
+      "xmlDocId": "P:Godot.NavigationMesh.RegionMinSize",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SamplePartitionType",
+      "kind": "Property",
+      "signature": "public int SamplePartitionType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Partitioning algorithm for creating the navigation mesh polys.",
+      "defaultValue": "0",
+      "godotName": "sample_partition_type",
+      "xmlDocId": "P:Godot.NavigationMesh.SamplePartitionType",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "VerticesPerPolygon",
+      "kind": "Property",
+      "signature": "public float VerticesPerPolygon { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The maximum number of vertices allowed for polygons generated during the contour to polygon conversion process.",
+      "defaultValue": "6.0",
+      "godotName": "vertices_per_polygon",
+      "xmlDocId": "P:Godot.NavigationMesh.VerticesPerPolygon",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ParsedGeometryType",
+      "values": [
+        {
+          "name": "PARSED_GEOMETRY_BOTH",
+          "value": "2",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Both [constant PARSED_GEOMETRY_MESH_INSTANCES] and [constant PARSED_GEOMETRY_STATIC_COLLIDERS].",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_MAX",
+          "value": "3",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ParsedGeometryType] enum.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_MESH_INSTANCES",
+          "value": "0",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Parses mesh instances as geometry. This includes [MeshInstance3D], [CSGShape3D], and [GridMap] nodes.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "PARSED_GEOMETRY_STATIC_COLLIDERS",
+          "value": "1",
+          "enum": "ParsedGeometryType",
+          "kind": "EnumValue",
+          "summary": "Parses [StaticBody3D] colliders as geometry. The collider should be in any of the layers specified by [member geometry_collision_mask].",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "SamplePartitionType",
+      "values": [
+        {
+          "name": "SAMPLE_PARTITION_LAYERS",
+          "value": "2",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Layer partitioning. Good choice to use for tiled navigation mesh with medium and small sized tiles.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SAMPLE_PARTITION_MAX",
+          "value": "3",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum SamplePartitionType] enum.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SAMPLE_PARTITION_MONOTONE",
+          "value": "1",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Monotone partitioning. Use this if you want fast navigation mesh generation.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SAMPLE_PARTITION_WATERSHED",
+          "value": "0",
+          "enum": "SamplePartitionType",
+          "kind": "EnumValue",
+          "summary": "Watershed partitioning. Generally the best choice if you precompute the navigation mesh, use this if you have large open areas.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        }
+      ]
+    },
+    {
+      "name": "SourceGeometryMode",
+      "values": [
+        {
+          "name": "SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+          "value": "2",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Uses nodes in a group for geometry. The group is specified by [member geometry_source_group_name].",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+          "value": "1",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Scans nodes in a group and their child nodes recursively for geometry. The group is specified by [member geometry_source_group_name].",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_MAX",
+          "value": "3",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum SourceGeometryMode] enum.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        },
+        {
+          "name": "SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+          "value": "0",
+          "enum": "SourceGeometryMode",
+          "kind": "EnumValue",
+          "summary": "Scans the child nodes of the root node recursively for geometry.",
+          "sourcePath": "doc/classes/NavigationMesh.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SAMPLE_PARTITION_WATERSHED",
+      "value": "0",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Watershed partitioning. Generally the best choice if you precompute the navigation mesh, use this if you have large open areas.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SAMPLE_PARTITION_MONOTONE",
+      "value": "1",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Monotone partitioning. Use this if you want fast navigation mesh generation.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SAMPLE_PARTITION_LAYERS",
+      "value": "2",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Layer partitioning. Good choice to use for tiled navigation mesh with medium and small sized tiles.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SAMPLE_PARTITION_MAX",
+      "value": "3",
+      "enum": "SamplePartitionType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum SamplePartitionType] enum.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_MESH_INSTANCES",
+      "value": "0",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Parses mesh instances as geometry. This includes [MeshInstance3D], [CSGShape3D], and [GridMap] nodes.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_STATIC_COLLIDERS",
+      "value": "1",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Parses [StaticBody3D] colliders as geometry. The collider should be in any of the layers specified by [member geometry_collision_mask].",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_BOTH",
+      "value": "2",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Both [constant PARSED_GEOMETRY_MESH_INSTANCES] and [constant PARSED_GEOMETRY_STATIC_COLLIDERS].",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "PARSED_GEOMETRY_MAX",
+      "value": "3",
+      "enum": "ParsedGeometryType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ParsedGeometryType] enum.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+      "value": "0",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Scans the child nodes of the root node recursively for geometry.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+      "value": "1",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Scans nodes in a group and their child nodes recursively for geometry. The group is specified by [member geometry_source_group_name].",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+      "value": "2",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Uses nodes in a group for geometry. The group is specified by [member geometry_source_group_name].",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    },
+    {
+      "name": "SOURCE_GEOMETRY_MAX",
+      "value": "3",
+      "enum": "SourceGeometryMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum SourceGeometryMode] enum.",
+      "sourcePath": "doc/classes/NavigationMesh.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationMesh.xml",
+      "sha256": "d2a9e46fe2793965c909e6fc7f1a69c537e3d651581b8637459748f5ef6bdbcf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConfirmationDialog",
+    "namespace": "Godot",
+    "fullName": "Godot.ConfirmationDialog",
+    "kind": "class",
+    "baseType": "AcceptDialog",
+    "interfaces": [],
+    "godotReference": "ConfirmationDialog",
+    "documentationPath": "doc/classes/ConfirmationDialog.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_confirmationdialog.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCancelButton",
+      "kind": "Method",
+      "signature": "public Button GetCancelButton()",
+      "returnType": "Button",
+      "parameters": [],
+      "summary": "Returns the cancel button. [b]Warning:[/b] This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.",
+      "godotName": "get_cancel_button",
+      "xmlDocId": "M:Godot.ConfirmationDialog.GetCancelButton",
+      "sourcePath": "doc/classes/ConfirmationDialog.xml"
+    },
+    {
+      "name": "CancelButtonText",
+      "kind": "Property",
+      "signature": "public String CancelButtonText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text displayed by the cancel button (see [method get_cancel_button]).",
+      "defaultValue": "\u0022Cancel\u0022",
+      "godotName": "cancel_button_text",
+      "xmlDocId": "P:Godot.ConfirmationDialog.CancelButtonText",
+      "sourcePath": "doc/classes/ConfirmationDialog.xml"
+    },
+    {
+      "name": "MinSize",
+      "kind": "Property",
+      "signature": "public Vector2i MinSize { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "Vector2i(200, 70)",
+      "godotName": "min_size",
+      "xmlDocId": "P:Godot.ConfirmationDialog.MinSize",
+      "sourcePath": "doc/classes/ConfirmationDialog.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2i Size { get; set; }",
+      "returnType": "Vector2i",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "Vector2i(200, 100)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.ConfirmationDialog.Size",
+      "sourcePath": "doc/classes/ConfirmationDialog.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0022Please Confirm...\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.ConfirmationDialog.Title",
+      "sourcePath": "doc/classes/ConfirmationDialog.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConfirmationDialog.xml",
+      "sha256": "c97ae13aa7f44b6fed86138d9fd60f26959186e4c7c8e9b88aaf28d9a489b519"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

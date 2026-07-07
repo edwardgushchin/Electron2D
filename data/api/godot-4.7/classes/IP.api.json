@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "IP",
+    "namespace": "Godot",
+    "fullName": "Godot.IP",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "IP",
+    "documentationPath": "doc/classes/IP.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_ip.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearCache",
+      "kind": "Method",
+      "signature": "public void ClearCache(String hostname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "hostname",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        }
+      ],
+      "summary": "Removes all of a [param hostname]\u0027s cached references. If no [param hostname] is given, all cached IP addresses are removed.",
+      "godotName": "clear_cache",
+      "xmlDocId": "M:Godot.IP.ClearCache(String)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "EraseResolveItem",
+      "kind": "Method",
+      "signature": "public void EraseResolveItem(int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes a given item [param id] from the queue. This should be used to free a queue after it has completed to enable more queries to happen.",
+      "godotName": "erase_resolve_item",
+      "xmlDocId": "M:Godot.IP.EraseResolveItem(int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "GetLocalAddresses",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetLocalAddresses()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns all the user\u0027s current IPv4 and IPv6 addresses as an array.",
+      "godotName": "get_local_addresses",
+      "xmlDocId": "M:Godot.IP.GetLocalAddresses",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "GetLocalInterfaces",
+      "kind": "Method",
+      "signature": "public Dictionary[] GetLocalInterfaces()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "Returns all network adapters as an array. Each adapter is a dictionary of the form: [codeblock] { \u0022index\u0022: \u00221\u0022, # Interface index. \u0022name\u0022: \u0022eth0\u0022, # Interface name. \u0022friendly\u0022: \u0022Ethernet One\u0022, # A friendly name (might be empty). \u0022addresses\u0022: [\u0022192.168.1.101\u0022], # An array of IP addresses associated to this interface. } [/codeblock]",
+      "godotName": "get_local_interfaces",
+      "xmlDocId": "M:Godot.IP.GetLocalInterfaces",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "GetResolveItemAddress",
+      "kind": "Method",
+      "signature": "public String GetResolveItemAddress(int id)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a queued hostname\u0027s IP address, given its queue [param id]. Returns an empty string on error or if resolution hasn\u0027t happened yet (see [method get_resolve_item_status]).",
+      "godotName": "get_resolve_item_address",
+      "xmlDocId": "M:Godot.IP.GetResolveItemAddress(int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "GetResolveItemAddresses",
+      "kind": "Method",
+      "signature": "public Array GetResolveItemAddresses(int id)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns resolved addresses, or an empty array if an error happened or resolution didn\u0027t happen yet (see [method get_resolve_item_status]).",
+      "godotName": "get_resolve_item_addresses",
+      "xmlDocId": "M:Godot.IP.GetResolveItemAddresses(int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "GetResolveItemStatus",
+      "kind": "Method",
+      "signature": "public int GetResolveItemStatus(int id)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a queued hostname\u0027s status as a [enum ResolverStatus] constant, given its queue [param id].",
+      "godotName": "get_resolve_item_status",
+      "xmlDocId": "M:Godot.IP.GetResolveItemStatus(int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "ResolveHostname",
+      "kind": "Method",
+      "signature": "public String ResolveHostname(String host, int ipType)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "ip_type",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Returns a given hostname\u0027s IPv4 or IPv6 address when resolved (blocking-type method). The address type returned depends on the [enum Type] constant given as [param ip_type].",
+      "godotName": "resolve_hostname",
+      "xmlDocId": "M:Godot.IP.ResolveHostname(String,int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "ResolveHostnameAddresses",
+      "kind": "Method",
+      "signature": "public PackedStringArray ResolveHostnameAddresses(String host, int ipType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "ip_type",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Resolves a given hostname in a blocking way. Addresses are returned as an [Array] of IPv4 or IPv6 addresses depending on [param ip_type].",
+      "godotName": "resolve_hostname_addresses",
+      "xmlDocId": "M:Godot.IP.ResolveHostnameAddresses(String,int)",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "ResolveHostnameQueueItem",
+      "kind": "Method",
+      "signature": "public int ResolveHostnameQueueItem(String host, int ipType)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "ip_type",
+          "type": "int",
+          "defaultValue": "3"
+        }
+      ],
+      "summary": "Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the [enum Type] constant given as [param ip_type]. Returns the queue ID if successful, or [constant RESOLVER_INVALID_ID] on error.",
+      "godotName": "resolve_hostname_queue_item",
+      "xmlDocId": "M:Godot.IP.ResolveHostnameQueueItem(String,int)",
+      "sourcePath": "doc/classes/IP.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ResolverStatus",
+      "values": [
+        {
+          "name": "RESOLVER_STATUS_DONE",
+          "value": "2",
+          "enum": "ResolverStatus",
+          "kind": "EnumValue",
+          "summary": "DNS hostname resolver status: Done.",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "RESOLVER_STATUS_ERROR",
+          "value": "3",
+          "enum": "ResolverStatus",
+          "kind": "EnumValue",
+          "summary": "DNS hostname resolver status: Error.",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "RESOLVER_STATUS_NONE",
+          "value": "0",
+          "enum": "ResolverStatus",
+          "kind": "EnumValue",
+          "summary": "DNS hostname resolver status: No status.",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "RESOLVER_STATUS_WAITING",
+          "value": "1",
+          "enum": "ResolverStatus",
+          "kind": "EnumValue",
+          "summary": "DNS hostname resolver status: Waiting.",
+          "sourcePath": "doc/classes/IP.xml"
+        }
+      ]
+    },
+    {
+      "name": "Type",
+      "values": [
+        {
+          "name": "TYPE_ANY",
+          "value": "3",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "Address type: Any.",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "TYPE_IPV4",
+          "value": "1",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "Address type: Internet protocol version 4 (IPv4).",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "TYPE_IPV6",
+          "value": "2",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "Address type: Internet protocol version 6 (IPv6).",
+          "sourcePath": "doc/classes/IP.xml"
+        },
+        {
+          "name": "TYPE_NONE",
+          "value": "0",
+          "enum": "Type",
+          "kind": "EnumValue",
+          "summary": "Address type: None.",
+          "sourcePath": "doc/classes/IP.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RESOLVER_STATUS_NONE",
+      "value": "0",
+      "enum": "ResolverStatus",
+      "kind": "EnumValue",
+      "summary": "DNS hostname resolver status: No status.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "RESOLVER_STATUS_WAITING",
+      "value": "1",
+      "enum": "ResolverStatus",
+      "kind": "EnumValue",
+      "summary": "DNS hostname resolver status: Waiting.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "RESOLVER_STATUS_DONE",
+      "value": "2",
+      "enum": "ResolverStatus",
+      "kind": "EnumValue",
+      "summary": "DNS hostname resolver status: Done.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "RESOLVER_STATUS_ERROR",
+      "value": "3",
+      "enum": "ResolverStatus",
+      "kind": "EnumValue",
+      "summary": "DNS hostname resolver status: Error.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "RESOLVER_MAX_QUERIES",
+      "value": "256",
+      "kind": "Constant",
+      "summary": "Maximum number of concurrent DNS resolver queries allowed, [constant RESOLVER_INVALID_ID] is returned if exceeded.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "RESOLVER_INVALID_ID",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Invalid ID constant. Returned if [constant RESOLVER_MAX_QUERIES] is exceeded.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "TYPE_NONE",
+      "value": "0",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "Address type: None.",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "TYPE_IPV4",
+      "value": "1",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "Address type: Internet protocol version 4 (IPv4).",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "TYPE_IPV6",
+      "value": "2",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "Address type: Internet protocol version 6 (IPv6).",
+      "sourcePath": "doc/classes/IP.xml"
+    },
+    {
+      "name": "TYPE_ANY",
+      "value": "3",
+      "enum": "Type",
+      "kind": "EnumValue",
+      "summary": "Address type: Any.",
+      "sourcePath": "doc/classes/IP.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/IP.xml",
+      "sha256": "cec48e446dfb82c927f06fc21e2bf0bac7c1cf7f9baec4b09604236e6113732d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

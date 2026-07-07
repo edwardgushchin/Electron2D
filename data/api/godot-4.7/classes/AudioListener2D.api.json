@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioListener2D",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioListener2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "AudioListener2D",
+    "documentationPath": "doc/classes/AudioListener2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiolistener2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearCurrent",
+      "kind": "Method",
+      "signature": "public void ClearCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disables the [AudioListener2D]. If it\u0027s not set as current, this method will have no effect.",
+      "godotName": "clear_current",
+      "xmlDocId": "M:Godot.AudioListener2D.ClearCurrent",
+      "sourcePath": "doc/classes/AudioListener2D.xml"
+    },
+    {
+      "name": "IsCurrent",
+      "kind": "Method",
+      "signature": "public bool IsCurrent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this [AudioListener2D] is currently active.",
+      "godotName": "is_current",
+      "xmlDocId": "M:Godot.AudioListener2D.IsCurrent",
+      "sourcePath": "doc/classes/AudioListener2D.xml"
+    },
+    {
+      "name": "MakeCurrent",
+      "kind": "Method",
+      "signature": "public void MakeCurrent()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes the [AudioListener2D] active, setting it as the hearing point for the sounds. If there is already another active [AudioListener2D], it will be disabled. This method will have no effect if the [AudioListener2D] is not added to [SceneTree].",
+      "godotName": "make_current",
+      "xmlDocId": "M:Godot.AudioListener2D.MakeCurrent",
+      "sourcePath": "doc/classes/AudioListener2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioListener2D.xml",
+      "sha256": "77bd13b3f1ef11de93859b0d0c3ebcc99edbbb31a416bc53f5d638a52061269b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeRotationByAxis",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeRotationByAxis",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeRotationByAxis",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeRotationByAxis.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernoderotationbyaxis.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeRotationByAxis.xml",
+      "sha256": "b61f9e6d1e792bdab01e840804c7ff949b38b3a0d2cb81d2c4d2640e6af0bf0a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

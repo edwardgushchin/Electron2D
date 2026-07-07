@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GPUParticlesCollision3D",
+    "namespace": "Godot",
+    "fullName": "Godot.GPUParticlesCollision3D",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "GPUParticlesCollision3D",
+    "documentationPath": "doc/classes/GPUParticlesCollision3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gpuparticlescollision3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CullMask",
+      "kind": "Property",
+      "signature": "public int CullMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The particle rendering layers ([member VisualInstance3D.layers]) that will be affected by the collision shape. By default, all particles that have [member ParticleProcessMaterial.collision_mode] set to [constant ParticleProcessMaterial.COLLISION_RIGID] or [constant ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT] will be affected by a collision shape. After configuring particle nodes accordingly, specific layers can be unchecked to prevent certain particles from being affected by colliders. For example, this can be used if you\u0027re using a collider as part of a spell effect but don\u0027t want the collider to affect unrelated weather particles at the same position. Particle collision can also be disabled on a per-process material basis by setting [member ParticleProcessMaterial.collision_mode] on the [GPUParticles3D] node.",
+      "defaultValue": "4294967295",
+      "godotName": "cull_mask",
+      "xmlDocId": "P:Godot.GPUParticlesCollision3D.CullMask",
+      "sourcePath": "doc/classes/GPUParticlesCollision3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GPUParticlesCollision3D.xml",
+      "sha256": "26c93fbe5aa2f6025db8b2498df8abf8646b4a51326590f741ad0d5be34ab92f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

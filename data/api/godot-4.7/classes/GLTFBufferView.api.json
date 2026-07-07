@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFBufferView",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFBufferView",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFBufferView",
+    "documentationPath": "modules/gltf/doc_classes/GLTFBufferView.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfbufferview.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFBufferView FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFBufferView",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFBufferView instance by parsing the given [Dictionary].",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFBufferView.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "LoadBufferViewData",
+      "kind": "Method",
+      "signature": "public PackedByteArray LoadBufferViewData(GLTFState state)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "GLTFState"
+        }
+      ],
+      "summary": "Loads the buffer view data from the buffer referenced by this buffer view in the given [GLTFState]. Interleaved data with a byte stride is not yet supported by this method. The data is returned as a [PackedByteArray].",
+      "godotName": "load_buffer_view_data",
+      "xmlDocId": "M:Godot.GLTFBufferView.LoadBufferViewData(GLTFState)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFBufferView instance into a [Dictionary].",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFBufferView.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "Buffer",
+      "kind": "Property",
+      "signature": "public int Buffer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the buffer this buffer view is referencing. If [code]-1[/code], this buffer view is not referencing any buffer.",
+      "defaultValue": "-1",
+      "godotName": "buffer",
+      "xmlDocId": "P:Godot.GLTFBufferView.Buffer",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "ByteLength",
+      "kind": "Property",
+      "signature": "public int ByteLength { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The length, in bytes, of this buffer view. If [code]0[/code], this buffer view is empty.",
+      "defaultValue": "0",
+      "godotName": "byte_length",
+      "xmlDocId": "P:Godot.GLTFBufferView.ByteLength",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "ByteOffset",
+      "kind": "Property",
+      "signature": "public int ByteOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The offset, in bytes, from the start of the buffer to the start of this buffer view.",
+      "defaultValue": "0",
+      "godotName": "byte_offset",
+      "xmlDocId": "P:Godot.GLTFBufferView.ByteOffset",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "ByteStride",
+      "kind": "Property",
+      "signature": "public int ByteStride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The stride, in bytes, between interleaved data. If [code]-1[/code], this buffer view is not interleaved.",
+      "defaultValue": "-1",
+      "godotName": "byte_stride",
+      "xmlDocId": "P:Godot.GLTFBufferView.ByteStride",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "Indices",
+      "kind": "Property",
+      "signature": "public bool Indices { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "[code]true[/code] if the GLTFBufferView\u0027s OpenGL GPU buffer type is an [code]ELEMENT_ARRAY_BUFFER[/code] used for vertex indices (integer constant [code]34963[/code]). [code]false[/code] if the buffer type is any other value. See [url=https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md]Buffers, BufferViews, and Accessors[/url] for possible values. This property is set on import and used on export.",
+      "defaultValue": "false",
+      "godotName": "indices",
+      "xmlDocId": "P:Godot.GLTFBufferView.Indices",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    },
+    {
+      "name": "VertexAttributes",
+      "kind": "Property",
+      "signature": "public bool VertexAttributes { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "[code]true[/code] if the GLTFBufferView\u0027s OpenGL GPU buffer type is an [code]ARRAY_BUFFER[/code] used for vertex attributes (integer constant [code]34962[/code]). [code]false[/code] if the buffer type is any other value. See [url=https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md]Buffers, BufferViews, and Accessors[/url] for possible values. This property is set on import and used on export.",
+      "defaultValue": "false",
+      "godotName": "vertex_attributes",
+      "xmlDocId": "P:Godot.GLTFBufferView.VertexAttributes",
+      "sourcePath": "modules/gltf/doc_classes/GLTFBufferView.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFBufferView.xml",
+      "sha256": "f3683293726e6a0b7be6ab38798eba4be3cd0e2ea20d413903306545efe2c166"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

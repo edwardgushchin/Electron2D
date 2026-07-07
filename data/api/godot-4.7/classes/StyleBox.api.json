@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StyleBox",
+    "namespace": "Godot",
+    "fullName": "Godot.StyleBox",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "StyleBox",
+    "documentationPath": "doc/classes/StyleBox.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_stylebox.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw(RID toCanvasItem, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.StyleBox._Draw(RID,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_GetDrawRect",
+      "kind": "Method",
+      "signature": "public Rect2 _GetDrawRect(Rect2 rect)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_draw_rect",
+      "xmlDocId": "M:Godot.StyleBox._GetDrawRect(Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_GetMinimumSize",
+      "kind": "Method",
+      "signature": "public Vector2 _GetMinimumSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Virtual method to be implemented by the user. Returns a custom minimum size that the stylebox must respect when drawing. By default [method get_minimum_size] only takes content margins into account. This method can be overridden to add another size restriction. A combination of the default behavior and the output of this method will be used, to account for both sizes.",
+      "godotName": "_get_minimum_size",
+      "xmlDocId": "M:Godot.StyleBox._GetMinimumSize",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_TestMask",
+      "kind": "Method",
+      "signature": "public bool _TestMask(Vector2 point, Rect2 rect)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_test_mask",
+      "xmlDocId": "M:Godot.StyleBox._TestMask(Vector2,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public void Draw(RID canvasItem, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Draws this stylebox using a canvas item identified by the given [RID]. The [RID] value can either be the result of [method CanvasItem.get_canvas_item] called on an existing [CanvasItem]-derived node, or directly from creating a canvas item in the [RenderingServer] with [method RenderingServer.canvas_item_create].",
+      "godotName": "draw",
+      "xmlDocId": "M:Godot.StyleBox.Draw(RID,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "GetContentMargin",
+      "kind": "Method",
+      "signature": "public float GetContentMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the default margin of the specified [enum Side].",
+      "godotName": "get_content_margin",
+      "xmlDocId": "M:Godot.StyleBox.GetContentMargin(int)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "GetCurrentItemDrawn",
+      "kind": "Method",
+      "signature": "public CanvasItem GetCurrentItemDrawn()",
+      "returnType": "CanvasItem",
+      "parameters": [],
+      "summary": "Returns the [CanvasItem] that handles its [constant CanvasItem.NOTIFICATION_DRAW] or [method CanvasItem._draw] callback at this moment.",
+      "godotName": "get_current_item_drawn",
+      "xmlDocId": "M:Godot.StyleBox.GetCurrentItemDrawn",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "GetMargin",
+      "kind": "Method",
+      "signature": "public float GetMargin(int margin)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the content margin offset for the specified [enum Side]. Positive values reduce size inwards, unlike [Control]\u0027s margin values.",
+      "godotName": "get_margin",
+      "xmlDocId": "M:Godot.StyleBox.GetMargin(int)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "GetMinimumSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetMinimumSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the minimum size that this stylebox can be shrunk to.",
+      "godotName": "get_minimum_size",
+      "xmlDocId": "M:Godot.StyleBox.GetMinimumSize",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "GetOffset",
+      "kind": "Method",
+      "signature": "public Vector2 GetOffset()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the \u0022offset\u0022 of a stylebox. This helper function returns a value equivalent to [code]Vector2(style.get_margin(MARGIN_LEFT), style.get_margin(MARGIN_TOP))[/code].",
+      "godotName": "get_offset",
+      "xmlDocId": "M:Godot.StyleBox.GetOffset",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "SetContentMargin",
+      "kind": "Method",
+      "signature": "public void SetContentMargin(int margin, float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the default value of the specified [enum Side] to [param offset] pixels.",
+      "godotName": "set_content_margin",
+      "xmlDocId": "M:Godot.StyleBox.SetContentMargin(int,float)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "SetContentMarginAll",
+      "kind": "Method",
+      "signature": "public void SetContentMarginAll(float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the default margin to [param offset] pixels for all sides.",
+      "godotName": "set_content_margin_all",
+      "xmlDocId": "M:Godot.StyleBox.SetContentMarginAll(float)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "TestMask",
+      "kind": "Method",
+      "signature": "public bool TestMask(Vector2 point, Rect2 rect)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Test a position in a rectangle, return whether it passes the mask test.",
+      "godotName": "test_mask",
+      "xmlDocId": "M:Godot.StyleBox.TestMask(Vector2,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "ContentMarginBottom",
+      "kind": "Property",
+      "signature": "public float ContentMarginBottom { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The bottom margin for the contents of this style box. Increasing this value reduces the space available to the contents from the bottom. If this value is negative, it is ignored and a child-specific margin is used instead. For example, for [StyleBoxFlat], the border thickness (if any) is used instead. It is up to the code using this style box to decide what these contents are: for example, a [Button] respects this content margin for the textual contents of the button. [method get_margin] should be used to fetch this value as consumer instead of reading these properties directly. This is because it correctly respects negative values and the fallback mentioned above.",
+      "defaultValue": "-1.0",
+      "godotName": "content_margin_bottom",
+      "xmlDocId": "P:Godot.StyleBox.ContentMarginBottom",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "ContentMarginLeft",
+      "kind": "Property",
+      "signature": "public float ContentMarginLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The left margin for the contents of this style box. Increasing this value reduces the space available to the contents from the left. Refer to [member content_margin_bottom] for extra considerations.",
+      "defaultValue": "-1.0",
+      "godotName": "content_margin_left",
+      "xmlDocId": "P:Godot.StyleBox.ContentMarginLeft",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "ContentMarginRight",
+      "kind": "Property",
+      "signature": "public float ContentMarginRight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The right margin for the contents of this style box. Increasing this value reduces the space available to the contents from the right. Refer to [member content_margin_bottom] for extra considerations.",
+      "defaultValue": "-1.0",
+      "godotName": "content_margin_right",
+      "xmlDocId": "P:Godot.StyleBox.ContentMarginRight",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "ContentMarginTop",
+      "kind": "Property",
+      "signature": "public float ContentMarginTop { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The top margin for the contents of this style box. Increasing this value reduces the space available to the contents from the top. Refer to [member content_margin_bottom] for extra considerations.",
+      "defaultValue": "-1.0",
+      "godotName": "content_margin_top",
+      "xmlDocId": "P:Godot.StyleBox.ContentMarginTop",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw(RID toCanvasItem, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_canvas_item",
+          "type": "RID"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.StyleBox._Draw(RID,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_GetDrawRect",
+      "kind": "Method",
+      "signature": "public Rect2 _GetDrawRect(Rect2 rect)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_draw_rect",
+      "xmlDocId": "M:Godot.StyleBox._GetDrawRect(Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_GetMinimumSize",
+      "kind": "Method",
+      "signature": "public Vector2 _GetMinimumSize()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Virtual method to be implemented by the user. Returns a custom minimum size that the stylebox must respect when drawing. By default [method get_minimum_size] only takes content margins into account. This method can be overridden to add another size restriction. A combination of the default behavior and the output of this method will be used, to account for both sizes.",
+      "godotName": "_get_minimum_size",
+      "xmlDocId": "M:Godot.StyleBox._GetMinimumSize",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    },
+    {
+      "name": "_TestMask",
+      "kind": "Method",
+      "signature": "public bool _TestMask(Vector2 point, Rect2 rect)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "",
+      "godotName": "_test_mask",
+      "xmlDocId": "M:Godot.StyleBox._TestMask(Vector2,Rect2)",
+      "sourcePath": "doc/classes/StyleBox.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StyleBox.xml",
+      "sha256": "55129bafa8b88ccffd10b52de18d75c241773cd9a5f6c8a1560bfc64a24b6b36"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

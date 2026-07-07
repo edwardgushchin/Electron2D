@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "DisplayServer.VirtualKeyboardType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.DisplayServer.VirtualKeyboardType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "DisplayServer.VirtualKeyboardType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Default",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Default",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a default text keyboard.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Default",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EmailAddress",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType EmailAddress",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents an email-address keyboard.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.EmailAddress",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Multiline",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Multiline",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a multiline text keyboard.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Multiline",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Number",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Number",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a numeric keyboard.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Number",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NumberDecimal",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType NumberDecimal",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a numeric keyboard that allows decimal separators.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.NumberDecimal",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Password",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Password",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a password keyboard.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Password",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Phone",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Phone",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a phone-number keyboard.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Phone",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Url",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.DisplayServer.VirtualKeyboardType Url",
+      "returnType": "Electron2D.DisplayServer.VirtualKeyboardType",
+      "parameters": [],
+      "summary": "Represents a URL keyboard.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.DisplayServer.VirtualKeyboardType.Url",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Default",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Represents a default text keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "EmailAddress",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Represents an email-address keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Multiline",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Represents a multiline text keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Number",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Represents a numeric keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "NumberDecimal",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Represents a numeric keyboard that allows decimal separators.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Password",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Represents a password keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Phone",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Represents a phone-number keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Url",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Represents a URL keyboard.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

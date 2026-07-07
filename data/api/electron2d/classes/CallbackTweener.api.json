@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CallbackTweener",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.CallbackTweener",
+    "kind": "class",
+    "baseType": "Electron2D.Tweener",
+    "interfaces": [],
+    "godotReference": "CallbackTweener",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetDelay",
+      "kind": "Method",
+      "signature": "public Electron2D.CallbackTweener SetDelay(System.Double delay)",
+      "returnType": "Electron2D.CallbackTweener",
+      "parameters": [
+        {
+          "name": "delay",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Sets a delay before this callback tweener runs.",
+      "xmlDocId": "M:Electron2D.CallbackTweener.SetDelay(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

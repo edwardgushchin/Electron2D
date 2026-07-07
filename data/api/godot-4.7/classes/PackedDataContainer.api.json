@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PackedDataContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.PackedDataContainer",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "PackedDataContainer",
+    "documentationPath": "doc/classes/PackedDataContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packeddatacontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Pack",
+      "kind": "Method",
+      "signature": "public int Pack(Variant value)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Packs the given container into a binary representation. The [param value] must be either [Array] or [Dictionary], any other type will result in invalid data error. [b]Note:[/b] Subsequent calls to this method will overwrite the existing data.",
+      "godotName": "pack",
+      "xmlDocId": "M:Godot.PackedDataContainer.Pack(Variant)",
+      "sourcePath": "doc/classes/PackedDataContainer.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the size of the packed container (see [method Array.size] and [method Dictionary.size]).",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.PackedDataContainer.Size",
+      "sourcePath": "doc/classes/PackedDataContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PackedDataContainer.xml",
+      "sha256": "4beb6aecc662c090f7184b65a7bc100b70a439324e138e1c959c643c30df74f7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

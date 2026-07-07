@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Texture3D",
+    "kind": "class",
+    "baseType": "Texture",
+    "interfaces": [],
+    "godotReference": "Texture3D",
+    "documentationPath": "doc/classes/Texture3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texture3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetData",
+      "kind": "Method",
+      "signature": "public Image[] _GetData()",
+      "returnType": "Image[]",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s data is queried.",
+      "godotName": "_get_data",
+      "xmlDocId": "M:Godot.Texture3D._GetData",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetDepth",
+      "kind": "Method",
+      "signature": "public int _GetDepth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s depth is queried.",
+      "godotName": "_get_depth",
+      "xmlDocId": "M:Godot.Texture3D._GetDepth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s format is queried.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.Texture3D._GetFormat",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.Texture3D._GetHeight",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s width is queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.Texture3D._GetWidth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of mipmaps in the [Texture3D] is queried.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.Texture3D._HasMipmaps",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "CreatePlaceholder",
+      "kind": "Method",
+      "signature": "public Resource CreatePlaceholder()",
+      "returnType": "Resource",
+      "parameters": [],
+      "summary": "Creates a placeholder version of this resource ([PlaceholderTexture3D]).",
+      "godotName": "create_placeholder",
+      "xmlDocId": "M:Godot.Texture3D.CreatePlaceholder",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "GetData",
+      "kind": "Method",
+      "signature": "public Image[] GetData()",
+      "returnType": "Image[]",
+      "parameters": [],
+      "summary": "Returns the [Texture3D]\u0027s data as an array of [Image]s. Each [Image] represents a [i]slice[/i] of the [Texture3D], with different slices mapping to different depth (Z axis) levels.",
+      "godotName": "get_data",
+      "xmlDocId": "M:Godot.Texture3D.GetData",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "GetDepth",
+      "kind": "Method",
+      "signature": "public int GetDepth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [Texture3D]\u0027s depth in pixels. Depth is typically represented by the Z axis (a dimension not present in [Texture2D]).",
+      "godotName": "get_depth",
+      "xmlDocId": "M:Godot.Texture3D.GetDepth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "GetFormat",
+      "kind": "Method",
+      "signature": "public int GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current format being used by this texture.",
+      "godotName": "get_format",
+      "xmlDocId": "M:Godot.Texture3D.GetFormat",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public int GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [Texture3D]\u0027s height in pixels. Width is typically represented by the Y axis.",
+      "godotName": "get_height",
+      "xmlDocId": "M:Godot.Texture3D.GetHeight",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public int GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the [Texture3D]\u0027s width in pixels. Width is typically represented by the X axis.",
+      "godotName": "get_width",
+      "xmlDocId": "M:Godot.Texture3D.GetWidth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [Texture3D] has generated mipmaps.",
+      "godotName": "has_mipmaps",
+      "xmlDocId": "M:Godot.Texture3D.HasMipmaps",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetData",
+      "kind": "Method",
+      "signature": "public Image[] _GetData()",
+      "returnType": "Image[]",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s data is queried.",
+      "godotName": "_get_data",
+      "xmlDocId": "M:Godot.Texture3D._GetData",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetDepth",
+      "kind": "Method",
+      "signature": "public int _GetDepth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s depth is queried.",
+      "godotName": "_get_depth",
+      "xmlDocId": "M:Godot.Texture3D._GetDepth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetFormat",
+      "kind": "Method",
+      "signature": "public int _GetFormat()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s format is queried.",
+      "godotName": "_get_format",
+      "xmlDocId": "M:Godot.Texture3D._GetFormat",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetHeight",
+      "kind": "Method",
+      "signature": "public int _GetHeight()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s height is queried.",
+      "godotName": "_get_height",
+      "xmlDocId": "M:Godot.Texture3D._GetHeight",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_GetWidth",
+      "kind": "Method",
+      "signature": "public int _GetWidth()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Called when the [Texture3D]\u0027s width is queried.",
+      "godotName": "_get_width",
+      "xmlDocId": "M:Godot.Texture3D._GetWidth",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    },
+    {
+      "name": "_HasMipmaps",
+      "kind": "Method",
+      "signature": "public bool _HasMipmaps()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Called when the presence of mipmaps in the [Texture3D] is queried.",
+      "godotName": "_has_mipmaps",
+      "xmlDocId": "M:Godot.Texture3D._HasMipmaps",
+      "sourcePath": "doc/classes/Texture3D.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Texture3D.xml",
+      "sha256": "41118e0212c0ba98e4d5961c9b35b04a4231f6681964fec142de79d8eec58193"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasItemMaterial",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasItemMaterial",
+    "kind": "class",
+    "baseType": "Material",
+    "interfaces": [],
+    "godotReference": "CanvasItemMaterial",
+    "documentationPath": "doc/classes/CanvasItemMaterial.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvasitemmaterial.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BlendMode",
+      "kind": "Property",
+      "signature": "public int BlendMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The manner in which a material\u0027s rendering is applied to underlying textures.",
+      "defaultValue": "0",
+      "godotName": "blend_mode",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.BlendMode",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "LightMode",
+      "kind": "Property",
+      "signature": "public int LightMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The manner in which material reacts to lighting.",
+      "defaultValue": "0",
+      "godotName": "light_mode",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.LightMode",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "ParticlesAnimHFrames",
+      "kind": "Property",
+      "signature": "public int ParticlesAnimHFrames { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of columns in the spritesheet assigned as [Texture2D] for a [GPUParticles2D] or [CPUParticles2D]. [b]Note:[/b] This property is only used and visible in the editor if [member particles_animation] is [code]true[/code].",
+      "godotName": "particles_anim_h_frames",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.ParticlesAnimHFrames",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "ParticlesAnimLoop",
+      "kind": "Property",
+      "signature": "public bool ParticlesAnimLoop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the particles animation will loop. [b]Note:[/b] This property is only used and visible in the editor if [member particles_animation] is [code]true[/code].",
+      "godotName": "particles_anim_loop",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.ParticlesAnimLoop",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "ParticlesAnimVFrames",
+      "kind": "Property",
+      "signature": "public int ParticlesAnimVFrames { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of rows in the spritesheet assigned as [Texture2D] for a [GPUParticles2D] or [CPUParticles2D]. [b]Note:[/b] This property is only used and visible in the editor if [member particles_animation] is [code]true[/code].",
+      "godotName": "particles_anim_v_frames",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.ParticlesAnimVFrames",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "ParticlesAnimation",
+      "kind": "Property",
+      "signature": "public bool ParticlesAnimation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enable spritesheet-based animation features when assigned to [GPUParticles2D] and [CPUParticles2D] nodes. The [member ParticleProcessMaterial.anim_speed_max] or [member CPUParticles2D.anim_speed_max] should also be set to a positive value for the animation to play. This property (and other [code]particles_anim_*[/code] properties that depend on it) has no effect on other types of nodes.",
+      "defaultValue": "false",
+      "godotName": "particles_animation",
+      "xmlDocId": "P:Godot.CanvasItemMaterial.ParticlesAnimation",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "BlendMode",
+      "values": [
+        {
+          "name": "BLEND_MODE_ADD",
+          "value": "1",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Additive blending mode.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_MIX",
+          "value": "0",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_MUL",
+          "value": "3",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Multiplicative blending mode.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_PREMULT_ALPHA",
+          "value": "4",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Mix blending mode. Colors are assumed to be premultiplied by the alpha (opacity) value.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "BLEND_MODE_SUB",
+          "value": "2",
+          "enum": "BlendMode",
+          "kind": "EnumValue",
+          "summary": "Subtractive blending mode.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        }
+      ]
+    },
+    {
+      "name": "LightMode",
+      "values": [
+        {
+          "name": "LIGHT_MODE_LIGHT_ONLY",
+          "value": "2",
+          "enum": "LightMode",
+          "kind": "EnumValue",
+          "summary": "Render the material as if there were only light.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "LIGHT_MODE_NORMAL",
+          "value": "0",
+          "enum": "LightMode",
+          "kind": "EnumValue",
+          "summary": "Render the material using both light and non-light sensitive material properties.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        },
+        {
+          "name": "LIGHT_MODE_UNSHADED",
+          "value": "1",
+          "enum": "LightMode",
+          "kind": "EnumValue",
+          "summary": "Render the material as if there were no light.",
+          "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "BLEND_MODE_MIX",
+      "value": "0",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_ADD",
+      "value": "1",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Additive blending mode.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_SUB",
+      "value": "2",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Subtractive blending mode.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_MUL",
+      "value": "3",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Multiplicative blending mode.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "BLEND_MODE_PREMULT_ALPHA",
+      "value": "4",
+      "enum": "BlendMode",
+      "kind": "EnumValue",
+      "summary": "Mix blending mode. Colors are assumed to be premultiplied by the alpha (opacity) value.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "LIGHT_MODE_NORMAL",
+      "value": "0",
+      "enum": "LightMode",
+      "kind": "EnumValue",
+      "summary": "Render the material using both light and non-light sensitive material properties.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "LIGHT_MODE_UNSHADED",
+      "value": "1",
+      "enum": "LightMode",
+      "kind": "EnumValue",
+      "summary": "Render the material as if there were no light.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    },
+    {
+      "name": "LIGHT_MODE_LIGHT_ONLY",
+      "value": "2",
+      "enum": "LightMode",
+      "kind": "EnumValue",
+      "summary": "Render the material as if there were only light.",
+      "sourcePath": "doc/classes/CanvasItemMaterial.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasItemMaterial.xml",
+      "sha256": "0f5da59de4bce9dda4de50d1696a438f885274793e2fb140f6895db5eaeddd76"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

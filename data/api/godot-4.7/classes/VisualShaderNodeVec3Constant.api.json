@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVec3Constant",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVec3Constant",
+    "kind": "class",
+    "baseType": "VisualShaderNodeConstant",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVec3Constant",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVec3Constant.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevec3constant.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Constant",
+      "kind": "Property",
+      "signature": "public Vector3 Constant { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "A [Vector3] constant which represents the state of this node.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "constant",
+      "xmlDocId": "P:Godot.VisualShaderNodeVec3Constant.Constant",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVec3Constant.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVec3Constant.xml",
+      "sha256": "13763d7918d18c8155f96a218b0240545240f37b370afdfdee8065e3ef4ddbf7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

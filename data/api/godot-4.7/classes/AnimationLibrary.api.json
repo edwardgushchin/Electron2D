@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationLibrary",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationLibrary",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "AnimationLibrary",
+    "documentationPath": "doc/classes/AnimationLibrary.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationlibrary.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddAnimation",
+      "kind": "Method",
+      "signature": "public int AddAnimation(StringName name, Animation animation)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "animation",
+          "type": "Animation"
+        }
+      ],
+      "summary": "Adds the [param animation] to the library, accessible by the key [param name].",
+      "godotName": "add_animation",
+      "xmlDocId": "M:Godot.AnimationLibrary.AddAnimation(StringName,Animation)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "GetAnimation",
+      "kind": "Method",
+      "signature": "public Animation GetAnimation(StringName name)",
+      "returnType": "Animation",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [Animation] with the key [param name]. If the animation does not exist, [code]null[/code] is returned and an error is logged.",
+      "godotName": "get_animation",
+      "xmlDocId": "M:Godot.AnimationLibrary.GetAnimation(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "GetAnimationList",
+      "kind": "Method",
+      "signature": "public StringName[] GetAnimationList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns the keys for the [Animation]s stored in the library.",
+      "godotName": "get_animation_list",
+      "xmlDocId": "M:Godot.AnimationLibrary.GetAnimationList",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "GetAnimationListSize",
+      "kind": "Method",
+      "signature": "public int GetAnimationListSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the key count for the [Animation]s stored in the library.",
+      "godotName": "get_animation_list_size",
+      "xmlDocId": "M:Godot.AnimationLibrary.GetAnimationListSize",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public bool HasAnimation(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the library stores an [Animation] with [param name] as the key.",
+      "godotName": "has_animation",
+      "xmlDocId": "M:Godot.AnimationLibrary.HasAnimation(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "RemoveAnimation",
+      "kind": "Method",
+      "signature": "public void RemoveAnimation(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [Animation] with the key [param name].",
+      "godotName": "remove_animation",
+      "xmlDocId": "M:Godot.AnimationLibrary.RemoveAnimation(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "RenameAnimation",
+      "kind": "Method",
+      "signature": "public void RenameAnimation(StringName name, StringName newname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "newname",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Changes the key of the [Animation] associated with the key [param name] to [param newname].",
+      "godotName": "rename_animation",
+      "xmlDocId": "M:Godot.AnimationLibrary.RenameAnimation(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationAdded",
+      "kind": "Signal",
+      "signature": "public event AnimationAddedHandler AnimationAdded",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when an [Animation] is added, under the key [param anim_name].",
+      "godotName": "animation_added",
+      "xmlDocId": "E:Godot.AnimationLibrary.AnimationAdded(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "AnimationChanged",
+      "kind": "Signal",
+      "signature": "public event AnimationChangedHandler AnimationChanged",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when there\u0027s a change in one of the animations, e.g. tracks are added, moved or have changed paths. [param anim_name] is the key of the animation that was changed. See also [signal Resource.changed], which this acts as a relay for.",
+      "godotName": "animation_changed",
+      "xmlDocId": "E:Godot.AnimationLibrary.AnimationChanged(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "AnimationRemoved",
+      "kind": "Signal",
+      "signature": "public event AnimationRemovedHandler AnimationRemoved",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when an [Animation] stored with the key [param anim_name] is removed.",
+      "godotName": "animation_removed",
+      "xmlDocId": "E:Godot.AnimationLibrary.AnimationRemoved(StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    },
+    {
+      "name": "AnimationRenamed",
+      "kind": "Signal",
+      "signature": "public event AnimationRenamedHandler AnimationRenamed",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "new_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when the key for an [Animation] is changed, from [param old_name] to [param new_name].",
+      "godotName": "animation_renamed",
+      "xmlDocId": "E:Godot.AnimationLibrary.AnimationRenamed(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationLibrary.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationLibrary.xml",
+      "sha256": "f48c580607e518c58dd06186276326b292509e791ed19c7f18c4a213fe116226"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

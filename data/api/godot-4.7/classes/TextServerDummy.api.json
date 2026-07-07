@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TextServerDummy",
+    "namespace": "Godot",
+    "fullName": "Godot.TextServerDummy",
+    "kind": "class",
+    "baseType": "TextServerExtension",
+    "interfaces": [],
+    "godotReference": "TextServerDummy",
+    "documentationPath": "doc/classes/TextServerDummy.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_textserverdummy.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TextServerDummy.xml",
+      "sha256": "3b5649fa5d0d894bccd7e7d3a6e0f282c62da6dfc9d9642746278808d85fe12d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorResourcePreview",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorResourcePreview",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "EditorResourcePreview",
+    "documentationPath": "doc/classes/EditorResourcePreview.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorresourcepreview.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPreviewGenerator",
+      "kind": "Method",
+      "signature": "public void AddPreviewGenerator(EditorResourcePreviewGenerator generator)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "generator",
+          "type": "EditorResourcePreviewGenerator"
+        }
+      ],
+      "summary": "Create an own, custom preview generator.",
+      "godotName": "add_preview_generator",
+      "xmlDocId": "M:Godot.EditorResourcePreview.AddPreviewGenerator(EditorResourcePreviewGenerator)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    },
+    {
+      "name": "CheckForInvalidation",
+      "kind": "Method",
+      "signature": "public void CheckForInvalidation(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Check if the resource changed, if so, it will be invalidated and the corresponding signal emitted.",
+      "godotName": "check_for_invalidation",
+      "xmlDocId": "M:Godot.EditorResourcePreview.CheckForInvalidation(String)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    },
+    {
+      "name": "QueueEditedResourcePreview",
+      "kind": "Method",
+      "signature": "public void QueueEditedResourcePreview(Resource resource, Object receiver, StringName receiverFunc, Variant userdata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        },
+        {
+          "name": "receiver",
+          "type": "Object"
+        },
+        {
+          "name": "receiver_func",
+          "type": "StringName"
+        },
+        {
+          "name": "userdata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Queue the [param resource] being edited for preview. Once the preview is ready, the [param receiver]\u0027s [param receiver_func] will be called. The [param receiver_func] must take the following four arguments: [String] path, [Texture2D] preview, [Texture2D] thumbnail_preview, [Variant] userdata. [param userdata] can be anything, and will be returned when [param receiver_func] is called. [b]Note:[/b] If it was not possible to create the preview the [param receiver_func] will still be called, but the preview will be [code]null[/code].",
+      "godotName": "queue_edited_resource_preview",
+      "xmlDocId": "M:Godot.EditorResourcePreview.QueueEditedResourcePreview(Resource,Object,StringName,Variant)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    },
+    {
+      "name": "QueueResourcePreview",
+      "kind": "Method",
+      "signature": "public void QueueResourcePreview(String path, Object receiver, StringName receiverFunc, Variant userdata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "receiver",
+          "type": "Object"
+        },
+        {
+          "name": "receiver_func",
+          "type": "StringName"
+        },
+        {
+          "name": "userdata",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Queue a resource file located at [param path] for preview. Once the preview is ready, the [param receiver]\u0027s [param receiver_func] will be called. The [param receiver_func] must take the following four arguments: [String] path, [Texture2D] preview, [Texture2D] thumbnail_preview, [Variant] userdata. [param userdata] can be anything, and will be returned when [param receiver_func] is called. [b]Note:[/b] If it was not possible to create the preview the [param receiver_func] will still be called, but the preview will be [code]null[/code].",
+      "godotName": "queue_resource_preview",
+      "xmlDocId": "M:Godot.EditorResourcePreview.QueueResourcePreview(String,Object,StringName,Variant)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    },
+    {
+      "name": "RemovePreviewGenerator",
+      "kind": "Method",
+      "signature": "public void RemovePreviewGenerator(EditorResourcePreviewGenerator generator)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "generator",
+          "type": "EditorResourcePreviewGenerator"
+        }
+      ],
+      "summary": "Removes a custom preview generator.",
+      "godotName": "remove_preview_generator",
+      "xmlDocId": "M:Godot.EditorResourcePreview.RemovePreviewGenerator(EditorResourcePreviewGenerator)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "PreviewInvalidated",
+      "kind": "Signal",
+      "signature": "public event PreviewInvalidatedHandler PreviewInvalidated",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Emitted if a preview was invalidated (changed). [param path] corresponds to the path of the preview.",
+      "godotName": "preview_invalidated",
+      "xmlDocId": "E:Godot.EditorResourcePreview.PreviewInvalidated(String)",
+      "sourcePath": "doc/classes/EditorResourcePreview.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorResourcePreview.xml",
+      "sha256": "17ffe6644e9b94e40c4dcbaf48c0431e5b53d34b8b459416dafbccd8e25eedcf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

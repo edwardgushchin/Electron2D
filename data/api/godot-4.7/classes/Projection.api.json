@@ -1,0 +1,869 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Projection",
+    "namespace": "Godot",
+    "fullName": "Godot.Projection",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Projection",
+    "documentationPath": "doc/classes/Projection.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_projection.html"
+  },
+  "constructors": [
+    {
+      "name": "Projection",
+      "kind": "Constructor",
+      "signature": "public Projection()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Constructs a default-initialized [Projection] identical to [constant IDENTITY]. [b]Note:[/b] In C#, this constructs a [Projection] identical to [constant ZERO].",
+      "godotName": "Projection",
+      "xmlDocId": "M:Godot.Projection.#ctor",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Projection",
+      "kind": "Constructor",
+      "signature": "public Projection(Projection from)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Constructs a [Projection] as a copy of the given [Projection].",
+      "godotName": "Projection",
+      "xmlDocId": "M:Godot.Projection.#ctor(Projection)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Projection",
+      "kind": "Constructor",
+      "signature": "public Projection(Transform3D from)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "Constructs a Projection as a copy of the given [Transform3D].",
+      "godotName": "Projection",
+      "xmlDocId": "M:Godot.Projection.#ctor(Transform3D)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Projection",
+      "kind": "Constructor",
+      "signature": "public Projection(Vector4 xAxis, Vector4 yAxis, Vector4 zAxis, Vector4 wAxis)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "x_axis",
+          "type": "Vector4"
+        },
+        {
+          "name": "y_axis",
+          "type": "Vector4"
+        },
+        {
+          "name": "z_axis",
+          "type": "Vector4"
+        },
+        {
+          "name": "w_axis",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Constructs a Projection from four [Vector4] values (matrix columns).",
+      "godotName": "Projection",
+      "xmlDocId": "M:Godot.Projection.#ctor(Vector4,Vector4,Vector4,Vector4)",
+      "sourcePath": "doc/classes/Projection.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "CreateDepthCorrection",
+      "kind": "Method",
+      "signature": "public Projection CreateDepthCorrection(bool flipY)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "flip_y",
+          "type": "bool"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions from a depth range of [code]-1[/code] to [code]1[/code] to one that ranges from [code]0[/code] to [code]1[/code], and flips the projected positions vertically, according to [param flip_y].",
+      "godotName": "create_depth_correction",
+      "xmlDocId": "M:Godot.Projection.CreateDepthCorrection(bool)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateFitAabb",
+      "kind": "Method",
+      "signature": "public Projection CreateFitAabb(AABB aabb)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "aabb",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Creates a new [Projection] that scales a given projection to fit around a given [AABB] in projection space.",
+      "godotName": "create_fit_aabb",
+      "xmlDocId": "M:Godot.Projection.CreateFitAabb(AABB)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateForHmd",
+      "kind": "Method",
+      "signature": "public Projection CreateForHmd(int eye, float aspect, float intraocularDist, float displayWidth, float displayToLens, float oversample, float zNear, float zFar)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "eye",
+          "type": "int"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "intraocular_dist",
+          "type": "float"
+        },
+        {
+          "name": "display_width",
+          "type": "float"
+        },
+        {
+          "name": "display_to_lens",
+          "type": "float"
+        },
+        {
+          "name": "oversample",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a new [Projection] for projecting positions onto a head-mounted display with the given X:Y aspect ratio, distance between eyes, display width, distance to lens, oversampling factor, and depth clipping planes. [param eye] creates the projection for the left eye when set to 1, or the right eye when set to 2.",
+      "godotName": "create_for_hmd",
+      "xmlDocId": "M:Godot.Projection.CreateForHmd(int,float,float,float,float,float,float,float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateFrustum",
+      "kind": "Method",
+      "signature": "public Projection CreateFrustum(float left, float right, float bottom, float top, float zNear, float zFar)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "float"
+        },
+        {
+          "name": "right",
+          "type": "float"
+        },
+        {
+          "name": "bottom",
+          "type": "float"
+        },
+        {
+          "name": "top",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions in a frustum with the given clipping planes.",
+      "godotName": "create_frustum",
+      "xmlDocId": "M:Godot.Projection.CreateFrustum(float,float,float,float,float,float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateFrustumAspect",
+      "kind": "Method",
+      "signature": "public Projection CreateFrustumAspect(float size, float aspect, Vector2 offset, float zNear, float zFar, bool flipFov)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "offset",
+          "type": "Vector2"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        },
+        {
+          "name": "flip_fov",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions in a frustum with the given size, X:Y aspect ratio, offset, and clipping planes. [param flip_fov] determines whether the projection\u0027s field of view is flipped over its diagonal.",
+      "godotName": "create_frustum_aspect",
+      "xmlDocId": "M:Godot.Projection.CreateFrustumAspect(float,float,Vector2,float,float,bool)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateLightAtlasRect",
+      "kind": "Method",
+      "signature": "public Projection CreateLightAtlasRect(Rect2 rect)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions into the given [Rect2].",
+      "godotName": "create_light_atlas_rect",
+      "xmlDocId": "M:Godot.Projection.CreateLightAtlasRect(Rect2)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateOrthogonal",
+      "kind": "Method",
+      "signature": "public Projection CreateOrthogonal(float left, float right, float bottom, float top, float zNear, float zFar)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "float"
+        },
+        {
+          "name": "right",
+          "type": "float"
+        },
+        {
+          "name": "bottom",
+          "type": "float"
+        },
+        {
+          "name": "top",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions using an orthogonal projection with the given clipping planes.",
+      "godotName": "create_orthogonal",
+      "xmlDocId": "M:Godot.Projection.CreateOrthogonal(float,float,float,float,float,float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreateOrthogonalAspect",
+      "kind": "Method",
+      "signature": "public Projection CreateOrthogonalAspect(float size, float aspect, float zNear, float zFar, bool flipFov)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "float"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        },
+        {
+          "name": "flip_fov",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions using an orthogonal projection with the given size, X:Y aspect ratio, and clipping planes. [param flip_fov] determines whether the projection\u0027s field of view is flipped over its diagonal.",
+      "godotName": "create_orthogonal_aspect",
+      "xmlDocId": "M:Godot.Projection.CreateOrthogonalAspect(float,float,float,float,bool)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreatePerspective",
+      "kind": "Method",
+      "signature": "public Projection CreatePerspective(float fovy, float aspect, float zNear, float zFar, bool flipFov)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "fovy",
+          "type": "float"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        },
+        {
+          "name": "flip_fov",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions using a perspective projection with the given Y-axis field of view (in degrees), X:Y aspect ratio, and clipping planes. [param flip_fov] determines whether the projection\u0027s field of view is flipped over its diagonal.",
+      "godotName": "create_perspective",
+      "xmlDocId": "M:Godot.Projection.CreatePerspective(float,float,float,float,bool)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "CreatePerspectiveHmd",
+      "kind": "Method",
+      "signature": "public Projection CreatePerspectiveHmd(float fovy, float aspect, float zNear, float zFar, bool flipFov, int eye, float intraocularDist, float convergenceDist)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "fovy",
+          "type": "float"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        },
+        {
+          "name": "z_near",
+          "type": "float"
+        },
+        {
+          "name": "z_far",
+          "type": "float"
+        },
+        {
+          "name": "flip_fov",
+          "type": "bool"
+        },
+        {
+          "name": "eye",
+          "type": "int"
+        },
+        {
+          "name": "intraocular_dist",
+          "type": "float"
+        },
+        {
+          "name": "convergence_dist",
+          "type": "float"
+        }
+      ],
+      "summary": "Creates a new [Projection] that projects positions using a perspective projection with the given Y-axis field of view (in degrees), X:Y aspect ratio, and clipping distances. The projection is adjusted for a head-mounted display with the given distance between eyes and distance to a point that can be focused on. [param eye] creates the projection for the left eye when set to 1, or the right eye when set to 2. [param flip_fov] determines whether the projection\u0027s field of view is flipped over its diagonal.",
+      "godotName": "create_perspective_hmd",
+      "xmlDocId": "M:Godot.Projection.CreatePerspectiveHmd(float,float,float,float,bool,int,float,float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Determinant",
+      "kind": "Method",
+      "signature": "public float Determinant()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns a scalar value that is the signed factor by which areas are scaled by this matrix. If the sign is negative, the matrix flips the orientation of the area. The determinant can be used to calculate the invertibility of a matrix or solve linear systems of equations involving the matrix, among other applications.",
+      "godotName": "determinant",
+      "xmlDocId": "M:Godot.Projection.Determinant",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "FlippedY",
+      "kind": "Method",
+      "signature": "public Projection FlippedY()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Returns a copy of this [Projection] with the signs of the values of the Y column flipped.",
+      "godotName": "flipped_y",
+      "xmlDocId": "M:Godot.Projection.FlippedY",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetAspect",
+      "kind": "Method",
+      "signature": "public float GetAspect()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the X:Y aspect ratio of this [Projection]\u0027s viewport.",
+      "godotName": "get_aspect",
+      "xmlDocId": "M:Godot.Projection.GetAspect",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetFarPlaneHalfExtents",
+      "kind": "Method",
+      "signature": "public Vector2 GetFarPlaneHalfExtents()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the dimensions of the far clipping plane of the projection, divided by two.",
+      "godotName": "get_far_plane_half_extents",
+      "xmlDocId": "M:Godot.Projection.GetFarPlaneHalfExtents",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetFov",
+      "kind": "Method",
+      "signature": "public float GetFov()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the horizontal field of view of the projection (in degrees).",
+      "godotName": "get_fov",
+      "xmlDocId": "M:Godot.Projection.GetFov",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetFovy",
+      "kind": "Method",
+      "signature": "public float GetFovy(float fovx, float aspect)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "fovx",
+          "type": "float"
+        },
+        {
+          "name": "aspect",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the vertical field of view of the projection (in degrees) associated with the given horizontal field of view (in degrees) and aspect ratio. [b]Note:[/b] Unlike most methods of [Projection], [param aspect] is expected to be 1 divided by the X:Y aspect ratio.",
+      "godotName": "get_fovy",
+      "xmlDocId": "M:Godot.Projection.GetFovy(float,float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetLodMultiplier",
+      "kind": "Method",
+      "signature": "public float GetLodMultiplier()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the factor by which the visible level of detail is scaled by this [Projection].",
+      "godotName": "get_lod_multiplier",
+      "xmlDocId": "M:Godot.Projection.GetLodMultiplier",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetPixelsPerMeter",
+      "kind": "Method",
+      "signature": "public int GetPixelsPerMeter(int forPixelWidth)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "for_pixel_width",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [param for_pixel_width] divided by the viewport\u0027s width measured in meters on the near plane, after this [Projection] is applied.",
+      "godotName": "get_pixels_per_meter",
+      "xmlDocId": "M:Godot.Projection.GetPixelsPerMeter(int)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetProjectionPlane",
+      "kind": "Method",
+      "signature": "public Plane GetProjectionPlane(int plane)",
+      "returnType": "Plane",
+      "parameters": [
+        {
+          "name": "plane",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the clipping plane of this [Projection] whose index is given by [param plane]. [param plane] should be equal to one of [constant PLANE_NEAR], [constant PLANE_FAR], [constant PLANE_LEFT], [constant PLANE_TOP], [constant PLANE_RIGHT], or [constant PLANE_BOTTOM].",
+      "godotName": "get_projection_plane",
+      "xmlDocId": "M:Godot.Projection.GetProjectionPlane(int)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetViewportHalfExtents",
+      "kind": "Method",
+      "signature": "public Vector2 GetViewportHalfExtents()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the dimensions of the viewport plane that this [Projection] projects positions onto, divided by two.",
+      "godotName": "get_viewport_half_extents",
+      "xmlDocId": "M:Godot.Projection.GetViewportHalfExtents",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetZFar",
+      "kind": "Method",
+      "signature": "public float GetZFar()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the distance for this [Projection] beyond which positions are clipped.",
+      "godotName": "get_z_far",
+      "xmlDocId": "M:Godot.Projection.GetZFar",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "GetZNear",
+      "kind": "Method",
+      "signature": "public float GetZNear()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the distance for this [Projection] before which positions are clipped.",
+      "godotName": "get_z_near",
+      "xmlDocId": "M:Godot.Projection.GetZNear",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Inverse",
+      "kind": "Method",
+      "signature": "public Projection Inverse()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Returns a [Projection] that performs the inverse of this [Projection]\u0027s projective transformation.",
+      "godotName": "inverse",
+      "xmlDocId": "M:Godot.Projection.Inverse",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "IsOrthogonal",
+      "kind": "Method",
+      "signature": "public bool IsOrthogonal()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this [Projection] performs an orthogonal projection.",
+      "godotName": "is_orthogonal",
+      "xmlDocId": "M:Godot.Projection.IsOrthogonal",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "JitterOffseted",
+      "kind": "Method",
+      "signature": "public Projection JitterOffseted(Vector2 offset)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns a [Projection] with the X and Y values from the given [Vector2] added to the first and second values of the final column respectively.",
+      "godotName": "jitter_offseted",
+      "xmlDocId": "M:Godot.Projection.JitterOffseted(Vector2)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PerspectiveZnearAdjusted",
+      "kind": "Method",
+      "signature": "public Projection PerspectiveZnearAdjusted(float newZnear)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "new_znear",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns a [Projection] with the near clipping distance adjusted to be [param new_znear]. [b]Note:[/b] The original [Projection] must be a perspective projection.",
+      "godotName": "perspective_znear_adjusted",
+      "xmlDocId": "M:Godot.Projection.PerspectiveZnearAdjusted(float)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "W",
+      "kind": "Property",
+      "signature": "public Vector4 W { get; set; }",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "The projection matrix\u0027s W vector (column 3). Equivalent to array index [code]3[/code].",
+      "defaultValue": "Vector4(0, 0, 0, 1)",
+      "godotName": "w",
+      "xmlDocId": "P:Godot.Projection.W",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public Vector4 X { get; set; }",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "The projection matrix\u0027s X vector (column 0). Equivalent to array index [code]0[/code].",
+      "defaultValue": "Vector4(1, 0, 0, 0)",
+      "godotName": "x",
+      "xmlDocId": "P:Godot.Projection.X",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public Vector4 Y { get; set; }",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "The projection matrix\u0027s Y vector (column 1). Equivalent to array index [code]1[/code].",
+      "defaultValue": "Vector4(0, 1, 0, 0)",
+      "godotName": "y",
+      "xmlDocId": "P:Godot.Projection.Y",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "Z",
+      "kind": "Property",
+      "signature": "public Vector4 Z { get; set; }",
+      "returnType": "Vector4",
+      "parameters": [],
+      "summary": "The projection matrix\u0027s Z vector (column 2). Equivalent to array index [code]2[/code].",
+      "defaultValue": "Vector4(0, 0, 1, 0)",
+      "godotName": "z",
+      "xmlDocId": "P:Godot.Projection.Z",
+      "sourcePath": "doc/classes/Projection.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Planes",
+      "values": [
+        {
+          "name": "PLANE_BOTTOM",
+          "value": "5",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection bottom clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        },
+        {
+          "name": "PLANE_FAR",
+          "value": "1",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection\u0027s far clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        },
+        {
+          "name": "PLANE_LEFT",
+          "value": "2",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection\u0027s left clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        },
+        {
+          "name": "PLANE_NEAR",
+          "value": "0",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection\u0027s near clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        },
+        {
+          "name": "PLANE_RIGHT",
+          "value": "4",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection\u0027s right clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        },
+        {
+          "name": "PLANE_TOP",
+          "value": "3",
+          "enum": "Planes",
+          "kind": "EnumValue",
+          "summary": "The index value of the projection\u0027s top clipping plane.",
+          "sourcePath": "doc/classes/Projection.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PLANE_NEAR",
+      "value": "0",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection\u0027s near clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PLANE_FAR",
+      "value": "1",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection\u0027s far clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PLANE_LEFT",
+      "value": "2",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection\u0027s left clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PLANE_TOP",
+      "value": "3",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection\u0027s top clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PLANE_RIGHT",
+      "value": "4",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection\u0027s right clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "PLANE_BOTTOM",
+      "value": "5",
+      "enum": "Planes",
+      "kind": "EnumValue",
+      "summary": "The index value of the projection bottom clipping plane.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "IDENTITY",
+      "value": "Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)",
+      "kind": "Constant",
+      "summary": "A [Projection] with no transformation defined. When applied to other data structures, no transformation is performed.",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "ZERO",
+      "value": "Projection(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)",
+      "kind": "Constant",
+      "summary": "A [Projection] with all values initialized to 0. When applied to other data structures, they will be zeroed.",
+      "sourcePath": "doc/classes/Projection.xml"
+    }
+  ],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Projection right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the projections are not equal. [b]Note:[/b] Due to floating-point precision errors, this may return [code]true[/code], even if the projections are virtually equal. An [code]is_equal_approx[/code] method may be added in a future version of Godot.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Projection.operator !=(Projection)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Projection operator *(Projection right)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Returns a [Projection] that applies the combined transformations of this [Projection] and [param right].",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Projection.operator *(Projection)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "operator *",
+      "kind": "Operator",
+      "signature": "public Vector4 operator *(Vector4 right)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Vector4"
+        }
+      ],
+      "summary": "Projects (multiplies) the given [Vector4] by this [Projection] matrix.",
+      "godotName": "operator *",
+      "xmlDocId": "M:Godot.Projection.operator *(Vector4)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Projection right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Projection"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the projections are equal. [b]Note:[/b] Due to floating-point precision errors, this may return [code]false[/code], even if the projections are virtually equal. An [code]is_equal_approx[/code] method may be added in a future version of Godot.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Projection.operator ==(Projection)",
+      "sourcePath": "doc/classes/Projection.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Vector4 operator [](int index)",
+      "returnType": "Vector4",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the column of the [Projection] with the given index. Indices are in the following order: x, y, z, w.",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Projection.operator [](int)",
+      "sourcePath": "doc/classes/Projection.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Projection.xml",
+      "sha256": "75031f534755879c9d24c971c9c48c3c71da1a1405e82df74319498102483c02"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

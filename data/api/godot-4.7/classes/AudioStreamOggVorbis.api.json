@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamOggVorbis",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamOggVorbis",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamOggVorbis",
+    "documentationPath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamoggvorbis.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "LoadFromBuffer",
+      "kind": "Method",
+      "signature": "public AudioStreamOggVorbis LoadFromBuffer(PackedByteArray streamData)",
+      "returnType": "AudioStreamOggVorbis",
+      "parameters": [
+        {
+          "name": "stream_data",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamOggVorbis] instance from the given buffer. The buffer must contain Ogg Vorbis data.",
+      "godotName": "load_from_buffer",
+      "xmlDocId": "M:Godot.AudioStreamOggVorbis.LoadFromBuffer(PackedByteArray)",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "LoadFromFile",
+      "kind": "Method",
+      "signature": "public AudioStreamOggVorbis LoadFromFile(String path)",
+      "returnType": "AudioStreamOggVorbis",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Creates a new [AudioStreamOggVorbis] instance from the given file path. The file must be in Ogg Vorbis format.",
+      "godotName": "load_from_file",
+      "xmlDocId": "M:Godot.AudioStreamOggVorbis.LoadFromFile(String)",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "BarBeats",
+      "kind": "Property",
+      "signature": "public int BarBeats { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of beats within a single bar in the audio track.",
+      "defaultValue": "4",
+      "godotName": "bar_beats",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.BarBeats",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "BeatCount",
+      "kind": "Property",
+      "signature": "public int BeatCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The length of the audio track, in beats. The actual duration of the audio file might be longer than what is indicated by this property. It defines the end of the audio for looping, [AudioStreamPlaylist], and [AudioStreamInteractive].",
+      "defaultValue": "0",
+      "godotName": "beat_count",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.BeatCount",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "Bpm",
+      "kind": "Property",
+      "signature": "public float Bpm { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The tempo of the audio track, measured in beats per minute.",
+      "defaultValue": "0.0",
+      "godotName": "bpm",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.Bpm",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "Loop",
+      "kind": "Property",
+      "signature": "public bool Loop { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the stream will play again from the specified [member loop_offset] once it reaches the end of the audio track, or once it reaches the end of the last beat according to the amount specified in [member beat_count]. Useful for ambient sounds and background music.",
+      "defaultValue": "false",
+      "godotName": "loop",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.Loop",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "LoopOffset",
+      "kind": "Property",
+      "signature": "public float LoopOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Time in seconds at which the stream starts after being looped.",
+      "defaultValue": "0.0",
+      "godotName": "loop_offset",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.LoopOffset",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "PacketSequence",
+      "kind": "Property",
+      "signature": "public OggPacketSequence PacketSequence { get; set; }",
+      "returnType": "OggPacketSequence",
+      "parameters": [],
+      "summary": "Contains the raw Ogg data for this stream.",
+      "godotName": "packet_sequence",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.PacketSequence",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    },
+    {
+      "name": "Tags",
+      "kind": "Property",
+      "signature": "public Dictionary Tags { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Contains user-defined tags if found in the Ogg Vorbis data. Commonly used tags include [code]title[/code], [code]artist[/code], [code]album[/code], [code]tracknumber[/code], and [code]date[/code] ([code]date[/code] does not have a standard date format). [b]Note:[/b] No tag is [i]guaranteed[/i] to be present in every file, so make sure to account for the keys not always existing.",
+      "defaultValue": "{}",
+      "godotName": "tags",
+      "xmlDocId": "P:Godot.AudioStreamOggVorbis.Tags",
+      "sourcePath": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/vorbis/doc_classes/AudioStreamOggVorbis.xml",
+      "sha256": "06fa22be245bc26c8119c456c4931e150fae537a2cceead676ba04f819d4ad99"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

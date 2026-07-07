@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDAttachmentFormat",
+    "namespace": "Godot",
+    "fullName": "Godot.RDAttachmentFormat",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDAttachmentFormat",
+    "documentationPath": "doc/classes/RDAttachmentFormat.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdattachmentformat.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Format",
+      "kind": "Property",
+      "signature": "public int Format { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The attachment\u0027s data format.",
+      "defaultValue": "36",
+      "godotName": "format",
+      "xmlDocId": "P:Godot.RDAttachmentFormat.Format",
+      "sourcePath": "doc/classes/RDAttachmentFormat.xml"
+    },
+    {
+      "name": "Samples",
+      "kind": "Property",
+      "signature": "public int Samples { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of samples used when sampling the attachment.",
+      "defaultValue": "0",
+      "godotName": "samples",
+      "xmlDocId": "P:Godot.RDAttachmentFormat.Samples",
+      "sourcePath": "doc/classes/RDAttachmentFormat.xml"
+    },
+    {
+      "name": "UsageFlags",
+      "kind": "Property",
+      "signature": "public int UsageFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The attachment\u0027s usage flags, which determine what can be done with it.",
+      "defaultValue": "0",
+      "godotName": "usage_flags",
+      "xmlDocId": "P:Godot.RDAttachmentFormat.UsageFlags",
+      "sourcePath": "doc/classes/RDAttachmentFormat.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDAttachmentFormat.xml",
+      "sha256": "ed9a5404179df11a0fe14f56c4fdc3263c07757679455b7e876044245f98d7bc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTexture3DParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTexture3DParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeTextureParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTexture3DParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture3DParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetexture3dparameter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTexture3DParameter.xml",
+      "sha256": "bc9623e6c6bae787a4ac368abf9cba0d4f301085371b84446efd77bd4bcba83f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

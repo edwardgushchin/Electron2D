@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture2DRD",
+    "namespace": "Godot",
+    "fullName": "Godot.Texture2DRD",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "Texture2DRD",
+    "documentationPath": "doc/classes/Texture2DRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texture2drd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.Texture2DRD.ResourceLocalToScene",
+      "sourcePath": "doc/classes/Texture2DRD.xml"
+    },
+    {
+      "name": "TextureRdRid",
+      "kind": "Property",
+      "signature": "public RID TextureRdRid { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The RID of the texture object created on the [RenderingDevice].",
+      "godotName": "texture_rd_rid",
+      "xmlDocId": "P:Godot.Texture2DRD.TextureRdRid",
+      "sourcePath": "doc/classes/Texture2DRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Texture2DRD.xml",
+      "sha256": "ab945822a5a0a694d3706ef5c74f07954e18b611eafbe66880137548cbea8c9a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

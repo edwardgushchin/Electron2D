@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialEntityTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialEntityTracker",
+    "kind": "class",
+    "baseType": "XRPositionalTracker",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialEntityTracker",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialentitytracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddNext",
+      "kind": "Method",
+      "signature": "public void AddNext(OpenXRStructureBase next)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "OpenXRStructureBase"
+        }
+      ],
+      "summary": "Adds a new [OpenXRStructureBase] to the next-chain. [method get_next] will return this [param next] until either [method add_next] is called again or it\u0027s removed in [method remove_next].",
+      "godotName": "add_next",
+      "xmlDocId": "M:Godot.OpenXRSpatialEntityTracker.AddNext(OpenXRStructureBase)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "GetNext",
+      "kind": "Method",
+      "signature": "public OpenXRStructureBase GetNext()",
+      "returnType": "OpenXRStructureBase",
+      "parameters": [],
+      "summary": "Gets the head [OpenXRStructureBase] in the next-chain. See also [method add_next] and [method remove_next].",
+      "godotName": "get_next",
+      "xmlDocId": "M:Godot.OpenXRSpatialEntityTracker.GetNext",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "GetSpatialContext",
+      "kind": "Method",
+      "signature": "public RID GetSpatialContext()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Gets the spatial context used to create this [OpenXRSpatialEntityTracker].",
+      "godotName": "get_spatial_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialEntityTracker.GetSpatialContext",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "RemoveNext",
+      "kind": "Method",
+      "signature": "public void RemoveNext(OpenXRStructureBase next)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "OpenXRStructureBase"
+        }
+      ],
+      "summary": "Removes a [param next] object previously added in [method add_next] from the next-chain.",
+      "godotName": "remove_next",
+      "xmlDocId": "M:Godot.OpenXRSpatialEntityTracker.RemoveNext(OpenXRStructureBase)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "SetSpatialContext",
+      "kind": "Method",
+      "signature": "public void SetSpatialContext(RID spatialContext)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "spatial_context",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the spatial context used to create this tracker.",
+      "godotName": "set_spatial_context",
+      "xmlDocId": "M:Godot.OpenXRSpatialEntityTracker.SetSpatialContext(RID)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "Entity",
+      "kind": "Property",
+      "signature": "public RID Entity { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The spatial entity associated with this tracker.",
+      "defaultValue": "RID()",
+      "godotName": "entity",
+      "xmlDocId": "P:Godot.OpenXRSpatialEntityTracker.Entity",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "SpatialTrackingState",
+      "kind": "Property",
+      "signature": "public int SpatialTrackingState { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The spatial tracking state for this tracker.",
+      "defaultValue": "2",
+      "godotName": "spatial_tracking_state",
+      "xmlDocId": "P:Godot.OpenXRSpatialEntityTracker.SpatialTrackingState",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "8",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.OpenXRSpatialEntityTracker.Type",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "NextChanged",
+      "kind": "Signal",
+      "signature": "public event NextChangedHandler NextChanged",
+      "parameters": [],
+      "summary": "Emitted when the next-chain changes, from either [method add_next] or [method remove_next].",
+      "godotName": "next_changed",
+      "xmlDocId": "E:Godot.OpenXRSpatialEntityTracker.NextChanged",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "SpatialTrackingStateChanged",
+      "kind": "Signal",
+      "signature": "public event SpatialTrackingStateChangedHandler SpatialTrackingStateChanged",
+      "parameters": [
+        {
+          "name": "spatial_tracking_state",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "spatial_tracking_state_changed",
+      "xmlDocId": "E:Godot.OpenXRSpatialEntityTracker.SpatialTrackingStateChanged(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "EntityTrackingState",
+      "values": [
+        {
+          "name": "ENTITY_TRACKING_STATE_PAUSED",
+          "value": "2",
+          "enum": "EntityTrackingState",
+          "kind": "EnumValue",
+          "summary": "Tracking is currently paused.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+        },
+        {
+          "name": "ENTITY_TRACKING_STATE_STOPPED",
+          "value": "1",
+          "enum": "EntityTrackingState",
+          "kind": "EnumValue",
+          "summary": "This anchor has stopped tracking.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+        },
+        {
+          "name": "ENTITY_TRACKING_STATE_TRACKING",
+          "value": "3",
+          "enum": "EntityTrackingState",
+          "kind": "EnumValue",
+          "summary": "This anchor is currently being tracked.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ENTITY_TRACKING_STATE_STOPPED",
+      "value": "1",
+      "enum": "EntityTrackingState",
+      "kind": "EnumValue",
+      "summary": "This anchor has stopped tracking.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "ENTITY_TRACKING_STATE_PAUSED",
+      "value": "2",
+      "enum": "EntityTrackingState",
+      "kind": "EnumValue",
+      "summary": "Tracking is currently paused.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    },
+    {
+      "name": "ENTITY_TRACKING_STATE_TRACKING",
+      "value": "3",
+      "enum": "EntityTrackingState",
+      "kind": "EnumValue",
+      "summary": "This anchor is currently being tracked.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialEntityTracker.xml",
+      "sha256": "6e5938a61faeb3ce9b8f15bf32729bd72492fd1b97490255d62b02c6a9cab1af"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

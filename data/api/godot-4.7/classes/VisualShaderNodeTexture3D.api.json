@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTexture3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTexture3D",
+    "kind": "class",
+    "baseType": "VisualShaderNodeSample3D",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTexture3D",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetexture3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture3D Texture { get; set; }",
+      "returnType": "Texture3D",
+      "parameters": [],
+      "summary": "A source texture. Used if [member VisualShaderNodeSample3D.source] is set to [constant VisualShaderNodeSample3D.SOURCE_TEXTURE].",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.VisualShaderNodeTexture3D.Texture",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTexture3D.xml",
+      "sha256": "0ceda18bb4ffa66b666c1f651a630cd1b1a61e8a2d0adcd9571549deebc5c5a9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

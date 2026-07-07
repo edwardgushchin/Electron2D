@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ReferenceRect",
+    "namespace": "Godot",
+    "fullName": "Godot.ReferenceRect",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "ReferenceRect",
+    "documentationPath": "doc/classes/ReferenceRect.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_referencerect.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BorderColor",
+      "kind": "Property",
+      "signature": "public Color BorderColor { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Sets the border color of the [ReferenceRect].",
+      "defaultValue": "Color(1, 0, 0, 1)",
+      "godotName": "border_color",
+      "xmlDocId": "P:Godot.ReferenceRect.BorderColor",
+      "sourcePath": "doc/classes/ReferenceRect.xml"
+    },
+    {
+      "name": "BorderWidth",
+      "kind": "Property",
+      "signature": "public float BorderWidth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the border width of the [ReferenceRect]. The border grows both inwards and outwards with respect to the rectangle box.",
+      "defaultValue": "1.0",
+      "godotName": "border_width",
+      "xmlDocId": "P:Godot.ReferenceRect.BorderWidth",
+      "sourcePath": "doc/classes/ReferenceRect.xml"
+    },
+    {
+      "name": "EditorOnly",
+      "kind": "Property",
+      "signature": "public bool EditorOnly { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [ReferenceRect] will only be visible while in editor. Otherwise, [ReferenceRect] will be visible in the running project.",
+      "defaultValue": "true",
+      "godotName": "editor_only",
+      "xmlDocId": "P:Godot.ReferenceRect.EditorOnly",
+      "sourcePath": "doc/classes/ReferenceRect.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ReferenceRect.xml",
+      "sha256": "00005f109dfa558f6ba4999d615d78ab3dcc2569a24ec37ff634888861ed65a0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

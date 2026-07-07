@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventMouse",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventMouse",
+    "kind": "class",
+    "baseType": "InputEventWithModifiers",
+    "interfaces": [],
+    "godotReference": "InputEventMouse",
+    "documentationPath": "doc/classes/InputEventMouse.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventmouse.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ButtonMask",
+      "kind": "Property",
+      "signature": "public int ButtonMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The mouse button mask identifier, one of or a bitwise combination of the [enum MouseButton] button masks.",
+      "defaultValue": "0",
+      "godotName": "button_mask",
+      "xmlDocId": "P:Godot.InputEventMouse.ButtonMask",
+      "sourcePath": "doc/classes/InputEventMouse.xml"
+    },
+    {
+      "name": "Device",
+      "kind": "Property",
+      "signature": "public int Device { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "32",
+      "godotName": "device",
+      "xmlDocId": "P:Godot.InputEventMouse.Device",
+      "sourcePath": "doc/classes/InputEventMouse.xml"
+    },
+    {
+      "name": "GlobalPosition",
+      "kind": "Property",
+      "signature": "public Vector2 GlobalPosition { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "When received in [method Node._input] or [method Node._unhandled_input], returns the mouse\u0027s position in the root [Viewport] using the coordinate system of the root [Viewport]. When received in [method Control._gui_input], returns the mouse\u0027s position in the [CanvasLayer] that the [Control] is in using the coordinate system of the [CanvasLayer].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "global_position",
+      "xmlDocId": "P:Godot.InputEventMouse.GlobalPosition",
+      "sourcePath": "doc/classes/InputEventMouse.xml"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Vector2 Position { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "When received in [method Node._input] or [method Node._unhandled_input], returns the mouse\u0027s position in the [Viewport] this [Node] is in using the coordinate system of this [Viewport]. When received in [method Control._gui_input], returns the mouse\u0027s position in the [Control] using the local coordinate system of the [Control].",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "position",
+      "xmlDocId": "P:Godot.InputEventMouse.Position",
+      "sourcePath": "doc/classes/InputEventMouse.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventMouse.xml",
+      "sha256": "5791539952604bc0c8720ff77254f249fb1f4fed5463bd22f3564d04cf21cd6e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

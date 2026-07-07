@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Texture2D",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Texture2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Texture2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Texture2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Texture2D type.",
+      "xmlDocId": "M:Electron2D.Texture2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Texture2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Texture2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Texture2D type.",
+      "xmlDocId": "M:Electron2D.Texture2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHeight()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the texture height in pixels.",
+      "xmlDocId": "M:Electron2D.Texture2D.GetHeight",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetMipmapCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetMipmapCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the number of mipmap levels available on this texture.",
+      "xmlDocId": "M:Electron2D.Texture2D.GetMipmapCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the texture size in pixels.",
+      "xmlDocId": "M:Electron2D.Texture2D.GetSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetWidth",
+      "kind": "Method",
+      "signature": "public System.Int32 GetWidth()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the texture width in pixels.",
+      "xmlDocId": "M:Electron2D.Texture2D.GetWidth",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasAlpha",
+      "kind": "Method",
+      "signature": "public System.Boolean HasAlpha()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the texture contains an alpha channel.",
+      "xmlDocId": "M:Electron2D.Texture2D.HasAlpha",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasMipmaps",
+      "kind": "Method",
+      "signature": "public System.Boolean HasMipmaps()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether the texture contains mipmaps.",
+      "xmlDocId": "M:Electron2D.Texture2D.HasMipmaps",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsPixelOpaque",
+      "kind": "Method",
+      "signature": "public System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Int32"
+        },
+        {
+          "name": "y",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a texture pixel is fully opaque.",
+      "xmlDocId": "M:Electron2D.Texture2D.IsPixelOpaque(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

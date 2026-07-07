@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeClamp",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeClamp",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeClamp",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeclamp.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OpType",
+      "kind": "Property",
+      "signature": "public int OpType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A type of operands and returned value.",
+      "defaultValue": "0",
+      "godotName": "op_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeClamp.OpType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "OpType",
+      "values": [
+        {
+          "name": "OP_TYPE_FLOAT",
+          "value": "0",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_INT",
+          "value": "1",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "An integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_MAX",
+          "value": "6",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OpType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_UINT",
+          "value": "2",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "An unsigned integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_2D",
+          "value": "3",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_3D",
+          "value": "4",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        },
+        {
+          "name": "OP_TYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "OpType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OP_TYPE_FLOAT",
+      "value": "0",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_INT",
+      "value": "1",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "An integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_UINT",
+      "value": "2",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "An unsigned integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_2D",
+      "value": "3",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_3D",
+      "value": "4",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    },
+    {
+      "name": "OP_TYPE_MAX",
+      "value": "6",
+      "enum": "OpType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OpType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeClamp.xml",
+      "sha256": "4bffe972f93482add54615e9f57855a4574b5fe877b09f18779c7d4d6ad5dbfe"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

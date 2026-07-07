@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PlaceholderTexture2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PlaceholderTexture2D",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "PlaceholderTexture2D",
+    "documentationPath": "doc/classes/PlaceholderTexture2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_placeholdertexture2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.PlaceholderTexture2D.ResourceLocalToScene",
+      "sourcePath": "doc/classes/PlaceholderTexture2D.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Vector2 Size { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The texture\u0027s size (in pixels).",
+      "defaultValue": "Vector2(1, 1)",
+      "godotName": "size",
+      "xmlDocId": "P:Godot.PlaceholderTexture2D.Size",
+      "sourcePath": "doc/classes/PlaceholderTexture2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PlaceholderTexture2D.xml",
+      "sha256": "1c03e1db4d7df00a9ce5213feb9aaf6419a4288c3b0784cb2785da15efa4d816"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

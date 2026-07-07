@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SegmentShape2D",
+    "namespace": "Godot",
+    "fullName": "Godot.SegmentShape2D",
+    "kind": "class",
+    "baseType": "Shape2D",
+    "interfaces": [],
+    "godotReference": "SegmentShape2D",
+    "documentationPath": "doc/classes/SegmentShape2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_segmentshape2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "A",
+      "kind": "Property",
+      "signature": "public Vector2 A { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The segment\u0027s first point position.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "a",
+      "xmlDocId": "P:Godot.SegmentShape2D.A",
+      "sourcePath": "doc/classes/SegmentShape2D.xml"
+    },
+    {
+      "name": "B",
+      "kind": "Property",
+      "signature": "public Vector2 B { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The segment\u0027s second point position.",
+      "defaultValue": "Vector2(0, 10)",
+      "godotName": "b",
+      "xmlDocId": "P:Godot.SegmentShape2D.B",
+      "sourcePath": "doc/classes/SegmentShape2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SegmentShape2D.xml",
+      "sha256": "8f51e85131c9984b8a4f4344d8a29db05286fcdd9821416e0bf5e33322856779"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

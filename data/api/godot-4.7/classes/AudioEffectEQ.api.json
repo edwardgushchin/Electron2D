@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectEQ",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectEQ",
+    "kind": "class",
+    "baseType": "AudioEffect",
+    "interfaces": [],
+    "godotReference": "AudioEffectEQ",
+    "documentationPath": "doc/classes/AudioEffectEQ.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffecteq.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetBandCount",
+      "kind": "Method",
+      "signature": "public int GetBandCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of bands of the equalizer.",
+      "godotName": "get_band_count",
+      "xmlDocId": "M:Godot.AudioEffectEQ.GetBandCount",
+      "sourcePath": "doc/classes/AudioEffectEQ.xml"
+    },
+    {
+      "name": "GetBandGainDb",
+      "kind": "Method",
+      "signature": "public float GetBandGainDb(int bandIdx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "band_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the band\u0027s gain at the specified index, in dB.",
+      "godotName": "get_band_gain_db",
+      "xmlDocId": "M:Godot.AudioEffectEQ.GetBandGainDb(int)",
+      "sourcePath": "doc/classes/AudioEffectEQ.xml"
+    },
+    {
+      "name": "SetBandGainDb",
+      "kind": "Method",
+      "signature": "public void SetBandGainDb(int bandIdx, float volumeDb)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "band_idx",
+          "type": "int"
+        },
+        {
+          "name": "volume_db",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets band\u0027s gain at the specified index, in dB.",
+      "godotName": "set_band_gain_db",
+      "xmlDocId": "M:Godot.AudioEffectEQ.SetBandGainDb(int,float)",
+      "sourcePath": "doc/classes/AudioEffectEQ.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectEQ.xml",
+      "sha256": "a1153e4e997cc8e8925115b257e665332c7403eb9258b2beda6e1db3db51060d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

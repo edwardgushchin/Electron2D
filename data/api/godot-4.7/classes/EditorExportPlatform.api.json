@@ -1,0 +1,792 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorExportPlatform",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorExportPlatform",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorExportPlatform",
+    "documentationPath": "doc/classes/EditorExportPlatform.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorexportplatform.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddMessage",
+      "kind": "Method",
+      "signature": "public void AddMessage(int type, String category, String message)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "category",
+          "type": "String"
+        },
+        {
+          "name": "message",
+          "type": "String"
+        }
+      ],
+      "summary": "Adds a message to the export log that will be displayed when exporting ends.",
+      "godotName": "add_message",
+      "xmlDocId": "M:Godot.EditorExportPlatform.AddMessage(int,String,String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ClearMessages",
+      "kind": "Method",
+      "signature": "public void ClearMessages()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the export log.",
+      "godotName": "clear_messages",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ClearMessages",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "CreatePreset",
+      "kind": "Method",
+      "signature": "public EditorExportPreset CreatePreset()",
+      "returnType": "EditorExportPreset",
+      "parameters": [],
+      "summary": "Create a new preset for this platform.",
+      "godotName": "create_preset",
+      "xmlDocId": "M:Godot.EditorExportPlatform.CreatePreset",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportPack",
+      "kind": "Method",
+      "signature": "public int ExportPack(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Creates a PCK archive at [param path] for the specified [param preset].",
+      "godotName": "export_pack",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportPack(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportPackPatch",
+      "kind": "Method",
+      "signature": "public int ExportPackPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Creates a patch PCK archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. [b]Note:[/b] [param patches] is an optional override of the set of patches defined in the export preset. When empty the patches defined in the export preset will be used instead.",
+      "godotName": "export_pack_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportPackPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportProject",
+      "kind": "Method",
+      "signature": "public int ExportProject(EditorExportPreset preset, bool debug, String path, int flags, bool notify)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "notify",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Creates a full project at [param path] for the specified [param preset]. If [param notify] is [code]true[/code], plugins using [method EditorExportPlugin._export_begin] will be called during the process.",
+      "godotName": "export_project",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportProject(EditorExportPreset,bool,String,int,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportProjectFiles",
+      "kind": "Method",
+      "signature": "public int ExportProjectFiles(EditorExportPreset preset, bool debug, Callable saveCb, Callable sharedCb)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "save_cb",
+          "type": "Callable"
+        },
+        {
+          "name": "shared_cb",
+          "type": "Callable",
+          "defaultValue": "Callable()"
+        }
+      ],
+      "summary": "Exports project files for the specified preset. This method can be used to implement custom export format, other than PCK and ZIP. One of the callbacks is called for each exported file. [param save_cb] is called for all exported files and have the following arguments: [code]file_path: String[/code], [code]file_data: PackedByteArray[/code], [code]file_index: int[/code], [code]file_count: int[/code], [code]encryption_include_filters: PackedStringArray[/code], [code]encryption_exclude_filters: PackedStringArray[/code], [code]encryption_key: PackedByteArray[/code]. [param shared_cb] is called for exported native shared/static libraries and have the following arguments: [code]file_path: String[/code], [code]tags: PackedStringArray[/code], [code]target_folder: String[/code]. [b]Note:[/b] [code]file_index[/code] and [code]file_count[/code] are intended for progress tracking only and aren\u0027t necessarily unique and precise.",
+      "godotName": "export_project_files",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportProjectFiles(EditorExportPreset,bool,Callable,Callable)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportZip",
+      "kind": "Method",
+      "signature": "public int ExportZip(EditorExportPreset preset, bool debug, String path, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Create a ZIP archive at [param path] for the specified [param preset].",
+      "godotName": "export_zip",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportZip(EditorExportPreset,bool,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "ExportZipPatch",
+      "kind": "Method",
+      "signature": "public int ExportZipPatch(EditorExportPreset preset, bool debug, String path, PackedStringArray patches, int flags)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "patches",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        },
+        {
+          "name": "flags",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Create a patch ZIP archive at [param path] for the specified [param preset], containing only the files that have changed since the last patch. [b]Note:[/b] [param patches] is an optional override of the set of patches defined in the export preset. When empty the patches defined in the export preset will be used instead.",
+      "godotName": "export_zip_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatform.ExportZipPatch(EditorExportPreset,bool,String,PackedStringArray,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "FindExportTemplate",
+      "kind": "Method",
+      "signature": "public Dictionary FindExportTemplate(String templateFileName)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "template_file_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Locates export template for the platform, and returns [Dictionary] with the following keys: [code]path: String[/code] and [code]error: String[/code]. This method is provided for convenience and custom export platforms aren\u0027t required to use it or keep export templates stored in the same way official templates are.",
+      "godotName": "find_export_template",
+      "xmlDocId": "M:Godot.EditorExportPlatform.FindExportTemplate(String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GenExportFlags",
+      "kind": "Method",
+      "signature": "public PackedStringArray GenExportFlags(int flags)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "flags",
+          "type": "int"
+        }
+      ],
+      "summary": "Generates array of command line arguments for the default export templates for the debug flags and editor settings.",
+      "godotName": "gen_export_flags",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GenExportFlags(int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetCurrentPresets",
+      "kind": "Method",
+      "signature": "public Array GetCurrentPresets()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns array of [EditorExportPreset]s for this platform.",
+      "godotName": "get_current_presets",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetCurrentPresets",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetForcedExportFiles",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetForcedExportFiles(EditorExportPreset preset)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Returns array of core file names that always should be exported regardless of preset config.",
+      "godotName": "get_forced_export_files",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetForcedExportFiles(EditorExportPreset)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetInternalExportFiles",
+      "kind": "Method",
+      "signature": "public Dictionary GetInternalExportFiles(EditorExportPreset preset, bool debug)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns additional files that should always be exported regardless of preset configuration, and are not part of the project source. The returned [Dictionary] contains filename keys ([String]) and their corresponding raw data ([PackedByteArray]).",
+      "godotName": "get_internal_export_files",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetInternalExportFiles(EditorExportPreset,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetMessageCategory",
+      "kind": "Method",
+      "signature": "public String GetMessageCategory(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the message category for the message with the given [param index].",
+      "godotName": "get_message_category",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetMessageCategory(int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetMessageCount",
+      "kind": "Method",
+      "signature": "public int GetMessageCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of messages in the export log.",
+      "godotName": "get_message_count",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetMessageCount",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetMessageText",
+      "kind": "Method",
+      "signature": "public String GetMessageText(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the text for the message with the given [param index].",
+      "godotName": "get_message_text",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetMessageText(int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetMessageType",
+      "kind": "Method",
+      "signature": "public int GetMessageType(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the type for the message with the given [param index].",
+      "godotName": "get_message_type",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetMessageType(int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetOsName",
+      "kind": "Method",
+      "signature": "public String GetOsName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the export operating system handled by this [EditorExportPlatform] class, as a friendly string. Possible return values are [code]Windows[/code], [code]Linux[/code], [code]macOS[/code], [code]Android[/code], [code]iOS[/code], and [code]Web[/code].",
+      "godotName": "get_os_name",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetOsName",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "GetWorstMessageType",
+      "kind": "Method",
+      "signature": "public int GetWorstMessageType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns most severe message type currently present in the export log.",
+      "godotName": "get_worst_message_type",
+      "xmlDocId": "M:Godot.EditorExportPlatform.GetWorstMessageType",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SavePack",
+      "kind": "Method",
+      "signature": "public Dictionary SavePack(EditorExportPreset preset, bool debug, String path, bool embed)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "embed",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Saves PCK archive and returns [Dictionary] with the following keys: [code]result: Error[/code], [code]so_files: Array[/code] (array of the shared/static objects which contains dictionaries with the following keys: [code]path: String[/code], [code]tags: PackedStringArray[/code], and [code]target_folder: String[/code]). If [param embed] is [code]true[/code], PCK content is appended to the end of [param path] file and return [Dictionary] additionally include following keys: [code]embedded_start: int[/code] (embedded PCK offset) and [code]embedded_size: int[/code] (embedded PCK size).",
+      "godotName": "save_pack",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SavePack(EditorExportPreset,bool,String,bool)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SavePackPatch",
+      "kind": "Method",
+      "signature": "public Dictionary SavePackPatch(EditorExportPreset preset, bool debug, String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves patch PCK archive and returns [Dictionary] with the following keys: [code]result: Error[/code], [code]so_files: Array[/code] (array of the shared/static objects which contains dictionaries with the following keys: [code]path: String[/code], [code]tags: PackedStringArray[/code], and [code]target_folder: String[/code]).",
+      "godotName": "save_pack_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SavePackPatch(EditorExportPreset,bool,String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SaveZip",
+      "kind": "Method",
+      "signature": "public Dictionary SaveZip(EditorExportPreset preset, bool debug, String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves ZIP archive and returns [Dictionary] with the following keys: [code]result: Error[/code], [code]so_files: Array[/code] (array of the shared/static objects which contains dictionaries with the following keys: [code]path: String[/code], [code]tags: PackedStringArray[/code], and [code]target_folder: String[/code]).",
+      "godotName": "save_zip",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SaveZip(EditorExportPreset,bool,String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SaveZipPatch",
+      "kind": "Method",
+      "signature": "public Dictionary SaveZipPatch(EditorExportPreset preset, bool debug, String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "preset",
+          "type": "EditorExportPreset"
+        },
+        {
+          "name": "debug",
+          "type": "bool"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Saves patch ZIP archive and returns [Dictionary] with the following keys: [code]result: Error[/code], [code]so_files: Array[/code] (array of the shared/static objects which contains dictionaries with the following keys: [code]path: String[/code], [code]tags: PackedStringArray[/code], and [code]target_folder: String[/code]).",
+      "godotName": "save_zip_patch",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SaveZipPatch(EditorExportPreset,bool,String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SshPushToRemote",
+      "kind": "Method",
+      "signature": "public int SshPushToRemote(String host, String port, PackedStringArray scpArgs, String srcFile, String dstFile)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "String"
+        },
+        {
+          "name": "scp_args",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "src_file",
+          "type": "String"
+        },
+        {
+          "name": "dst_file",
+          "type": "String"
+        }
+      ],
+      "summary": "Uploads specified file over SCP protocol to the remote host.",
+      "godotName": "ssh_push_to_remote",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SshPushToRemote(String,String,PackedStringArray,String,String)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SshRunOnRemote",
+      "kind": "Method",
+      "signature": "public int SshRunOnRemote(String host, String port, PackedStringArray sshArg, String cmdArgs, Array output, int portFwd)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "String"
+        },
+        {
+          "name": "ssh_arg",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "cmd_args",
+          "type": "String"
+        },
+        {
+          "name": "output",
+          "type": "Array",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "port_fwd",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Executes specified command on the remote host via SSH protocol and returns command output in the [param output].",
+      "godotName": "ssh_run_on_remote",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SshRunOnRemote(String,String,PackedStringArray,String,Array,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "SshRunOnRemoteNoWait",
+      "kind": "Method",
+      "signature": "public int SshRunOnRemoteNoWait(String host, String port, PackedStringArray sshArgs, String cmdArgs, int portFwd)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "host",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "String"
+        },
+        {
+          "name": "ssh_args",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "cmd_args",
+          "type": "String"
+        },
+        {
+          "name": "port_fwd",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Executes specified command on the remote host via SSH protocol and returns process ID (on the remote host) without waiting for command to finish.",
+      "godotName": "ssh_run_on_remote_no_wait",
+      "xmlDocId": "M:Godot.EditorExportPlatform.SshRunOnRemoteNoWait(String,String,PackedStringArray,String,int)",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DebugFlags",
+      "values": [
+        {
+          "name": "DEBUG_FLAG_DUMB_CLIENT",
+          "value": "1",
+          "enum": "DebugFlags",
+          "kind": "EnumValue",
+          "summary": "Flag is set if the remotely debugged project is expected to use the remote file system. If set, [method gen_export_flags] will append [code]--remote-fs[/code] and [code]--remote-fs-password[/code] (if [member EditorSettings.filesystem/file_server/password] is defined) command line arguments to the returned list.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "DEBUG_FLAG_REMOTE_DEBUG",
+          "value": "2",
+          "enum": "DebugFlags",
+          "kind": "EnumValue",
+          "summary": "Flag is set if remote debug is enabled. If set, [method gen_export_flags] will append [code]--remote-debug[/code] and [code]--breakpoints[/code] (if breakpoints are selected in the script editor or added by the plugin) command line arguments to the returned list.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "DEBUG_FLAG_REMOTE_DEBUG_LOCALHOST",
+          "value": "4",
+          "enum": "DebugFlags",
+          "kind": "EnumValue",
+          "summary": "Flag is set if remotely debugged project is running on the localhost. If set, [method gen_export_flags] will use [code]localhost[/code] instead of [member EditorSettings.network/debug/remote_host] as remote debugger host.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "DEBUG_FLAG_VIEW_COLLISIONS",
+          "value": "8",
+          "enum": "DebugFlags",
+          "kind": "EnumValue",
+          "summary": "Flag is set if the \u0022Visible Collision Shapes\u0022 remote debug option is enabled. If set, [method gen_export_flags] will append the [code]--debug-collisions[/code] command line argument to the returned list.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "DEBUG_FLAG_VIEW_NAVIGATION",
+          "value": "16",
+          "enum": "DebugFlags",
+          "kind": "EnumValue",
+          "summary": "Flag is set if the \u0022Visible Navigation\u0022 remote debug option is enabled. If set, [method gen_export_flags] will append the [code]--debug-navigation[/code] command line argument to the returned list.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        }
+      ]
+    },
+    {
+      "name": "ExportMessageType",
+      "values": [
+        {
+          "name": "EXPORT_MESSAGE_ERROR",
+          "value": "3",
+          "enum": "ExportMessageType",
+          "kind": "EnumValue",
+          "summary": "Message type for error messages that must be addressed and fail the export.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "EXPORT_MESSAGE_INFO",
+          "value": "1",
+          "enum": "ExportMessageType",
+          "kind": "EnumValue",
+          "summary": "Message type for informational messages that have no effect on the export.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "EXPORT_MESSAGE_NONE",
+          "value": "0",
+          "enum": "ExportMessageType",
+          "kind": "EnumValue",
+          "summary": "Invalid message type used as the default value when no type is specified.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        },
+        {
+          "name": "EXPORT_MESSAGE_WARNING",
+          "value": "2",
+          "enum": "ExportMessageType",
+          "kind": "EnumValue",
+          "summary": "Message type for warning messages that should be addressed but still allow to complete the export.",
+          "sourcePath": "doc/classes/EditorExportPlatform.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "EXPORT_MESSAGE_NONE",
+      "value": "0",
+      "enum": "ExportMessageType",
+      "kind": "EnumValue",
+      "summary": "Invalid message type used as the default value when no type is specified.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "EXPORT_MESSAGE_INFO",
+      "value": "1",
+      "enum": "ExportMessageType",
+      "kind": "EnumValue",
+      "summary": "Message type for informational messages that have no effect on the export.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "EXPORT_MESSAGE_WARNING",
+      "value": "2",
+      "enum": "ExportMessageType",
+      "kind": "EnumValue",
+      "summary": "Message type for warning messages that should be addressed but still allow to complete the export.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "EXPORT_MESSAGE_ERROR",
+      "value": "3",
+      "enum": "ExportMessageType",
+      "kind": "EnumValue",
+      "summary": "Message type for error messages that must be addressed and fail the export.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "DEBUG_FLAG_DUMB_CLIENT",
+      "value": "1",
+      "enum": "DebugFlags",
+      "kind": "EnumValue",
+      "summary": "Flag is set if the remotely debugged project is expected to use the remote file system. If set, [method gen_export_flags] will append [code]--remote-fs[/code] and [code]--remote-fs-password[/code] (if [member EditorSettings.filesystem/file_server/password] is defined) command line arguments to the returned list.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "DEBUG_FLAG_REMOTE_DEBUG",
+      "value": "2",
+      "enum": "DebugFlags",
+      "kind": "EnumValue",
+      "summary": "Flag is set if remote debug is enabled. If set, [method gen_export_flags] will append [code]--remote-debug[/code] and [code]--breakpoints[/code] (if breakpoints are selected in the script editor or added by the plugin) command line arguments to the returned list.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "DEBUG_FLAG_REMOTE_DEBUG_LOCALHOST",
+      "value": "4",
+      "enum": "DebugFlags",
+      "kind": "EnumValue",
+      "summary": "Flag is set if remotely debugged project is running on the localhost. If set, [method gen_export_flags] will use [code]localhost[/code] instead of [member EditorSettings.network/debug/remote_host] as remote debugger host.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "DEBUG_FLAG_VIEW_COLLISIONS",
+      "value": "8",
+      "enum": "DebugFlags",
+      "kind": "EnumValue",
+      "summary": "Flag is set if the \u0022Visible Collision Shapes\u0022 remote debug option is enabled. If set, [method gen_export_flags] will append the [code]--debug-collisions[/code] command line argument to the returned list.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    },
+    {
+      "name": "DEBUG_FLAG_VIEW_NAVIGATION",
+      "value": "16",
+      "enum": "DebugFlags",
+      "kind": "EnumValue",
+      "summary": "Flag is set if the \u0022Visible Navigation\u0022 remote debug option is enabled. If set, [method gen_export_flags] will append the [code]--debug-navigation[/code] command line argument to the returned list.",
+      "sourcePath": "doc/classes/EditorExportPlatform.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorExportPlatform.xml",
+      "sha256": "ec311c0df994fe33fb4a880e7b94edf062009de780e56b44767e8f26fb369d77"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

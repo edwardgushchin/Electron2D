@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamGeneratorPlayback",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamGeneratorPlayback",
+    "kind": "class",
+    "baseType": "AudioStreamPlaybackResampled",
+    "interfaces": [],
+    "godotReference": "AudioStreamGeneratorPlayback",
+    "documentationPath": "doc/classes/AudioStreamGeneratorPlayback.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreamgeneratorplayback.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CanPushBuffer",
+      "kind": "Method",
+      "signature": "public bool CanPushBuffer(int amount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a buffer of the size [param amount] can be pushed to the audio sample data buffer without overflowing it, [code]false[/code] otherwise.",
+      "godotName": "can_push_buffer",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.CanPushBuffer(int)",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    },
+    {
+      "name": "ClearBuffer",
+      "kind": "Method",
+      "signature": "public void ClearBuffer()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the audio sample data buffer.",
+      "godotName": "clear_buffer",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.ClearBuffer",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    },
+    {
+      "name": "GetFramesAvailable",
+      "kind": "Method",
+      "signature": "public int GetFramesAvailable()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of frames that can be pushed to the audio sample data buffer without overflowing it. If the result is [code]0[/code], the buffer is full.",
+      "godotName": "get_frames_available",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.GetFramesAvailable",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    },
+    {
+      "name": "GetSkips",
+      "kind": "Method",
+      "signature": "public int GetSkips()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of times the playback skipped due to a buffer underrun in the audio sample data. This value is reset at the start of the playback.",
+      "godotName": "get_skips",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.GetSkips",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    },
+    {
+      "name": "PushBuffer",
+      "kind": "Method",
+      "signature": "public bool PushBuffer(PackedVector2Array frames)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "frames",
+          "type": "PackedVector2Array"
+        }
+      ],
+      "summary": "Pushes several audio data frames to the buffer. This is usually more efficient than [method push_frame] in C# and compiled languages via GDExtension, but [method push_buffer] may be [i]less[/i] efficient in GDScript.",
+      "godotName": "push_buffer",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.PushBuffer(PackedVector2Array)",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    },
+    {
+      "name": "PushFrame",
+      "kind": "Method",
+      "signature": "public bool PushFrame(Vector2 frame)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "frame",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Pushes a single audio data frame to the buffer. This is usually less efficient than [method push_buffer] in C# and compiled languages via GDExtension, but [method push_frame] may be [i]more[/i] efficient in GDScript.",
+      "godotName": "push_frame",
+      "xmlDocId": "M:Godot.AudioStreamGeneratorPlayback.PushFrame(Vector2)",
+      "sourcePath": "doc/classes/AudioStreamGeneratorPlayback.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamGeneratorPlayback.xml",
+      "sha256": "0307ebe416e1a642c268cdc5ded996ea06565307300f140f783e0a1069199e2c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

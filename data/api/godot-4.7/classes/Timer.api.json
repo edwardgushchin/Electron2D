@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Timer",
+    "namespace": "Godot",
+    "fullName": "Godot.Timer",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "Timer",
+    "documentationPath": "doc/classes/Timer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_timer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsStopped",
+      "kind": "Method",
+      "signature": "public bool IsStopped()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the timer is stopped or has not started.",
+      "godotName": "is_stopped",
+      "xmlDocId": "M:Godot.Timer.IsStopped",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public void Start(float timeSec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "time_sec",
+          "type": "float",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Starts the timer, or resets the timer if it was started already. Fails if the timer is not inside the scene tree. If [param time_sec] is greater than [code]0[/code], this value is used for the [member wait_time]. [b]Note:[/b] This method does not resume a paused timer. See [member paused].",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.Timer.Start(float)",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the timer. See also [member paused]. Unlike [method start], this can safely be called if the timer is not inside the scene tree. [b]Note:[/b] Calling [method stop] does not emit the [signal timeout] signal, as the timer is not considered to have timed out. If this is desired, use [code]$Timer.timeout.emit()[/code] after calling [method stop] to manually emit the signal.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.Timer.Stop",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "Autostart",
+      "kind": "Property",
+      "signature": "public bool Autostart { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the timer will start immediately when it enters the scene tree. [b]Note:[/b] After the timer enters the tree, this property is automatically set to [code]false[/code]. [b]Note:[/b] This property does nothing when the timer is running in the editor.",
+      "defaultValue": "false",
+      "godotName": "autostart",
+      "xmlDocId": "P:Godot.Timer.Autostart",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "IgnoreTimeScale",
+      "kind": "Property",
+      "signature": "public bool IgnoreTimeScale { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the timer will ignore [member Engine.time_scale] and update with the real, elapsed time.",
+      "defaultValue": "false",
+      "godotName": "ignore_time_scale",
+      "xmlDocId": "P:Godot.Timer.IgnoreTimeScale",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "OneShot",
+      "kind": "Property",
+      "signature": "public bool OneShot { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the timer will stop after reaching the end. Otherwise, as by default, the timer will automatically restart.",
+      "defaultValue": "false",
+      "godotName": "one_shot",
+      "xmlDocId": "P:Godot.Timer.OneShot",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "Paused",
+      "kind": "Property",
+      "signature": "public bool Paused { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the timer is paused. A paused timer does not process until this property is set back to [code]false[/code], even when [method start] is called. See also [method stop].",
+      "godotName": "paused",
+      "xmlDocId": "P:Godot.Timer.Paused",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "ProcessCallback",
+      "kind": "Property",
+      "signature": "public int ProcessCallback { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies when the timer is updated during the main loop.",
+      "defaultValue": "1",
+      "godotName": "process_callback",
+      "xmlDocId": "P:Godot.Timer.ProcessCallback",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "TimeLeft",
+      "kind": "Property",
+      "signature": "public float TimeLeft { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The timer\u0027s remaining time in seconds. This is always [code]0[/code] if the timer is stopped. [b]Note:[/b] This property is read-only and cannot be modified. It is based on [member wait_time].",
+      "godotName": "time_left",
+      "xmlDocId": "P:Godot.Timer.TimeLeft",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "WaitTime",
+      "kind": "Property",
+      "signature": "public float WaitTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The time required for the timer to end, in seconds. This property can also be set every time [method start] is called. [b]Note:[/b] Timers can only process once per physics or process frame (depending on the [member process_callback]). An unstable framerate may cause the timer to end inconsistently, which is especially noticeable if the wait time is lower than roughly [code]0.05[/code] seconds. For very short timers, it is recommended to write your own code instead of using a [Timer] node. Timers are also affected by [member Engine.time_scale].",
+      "defaultValue": "1.0",
+      "godotName": "wait_time",
+      "xmlDocId": "P:Godot.Timer.WaitTime",
+      "sourcePath": "doc/classes/Timer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Timeout",
+      "kind": "Signal",
+      "signature": "public event TimeoutHandler Timeout",
+      "parameters": [],
+      "summary": "Emitted when the timer reaches the end.",
+      "godotName": "timeout",
+      "xmlDocId": "E:Godot.Timer.Timeout",
+      "sourcePath": "doc/classes/Timer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TimerProcessCallback",
+      "values": [
+        {
+          "name": "TIMER_PROCESS_IDLE",
+          "value": "1",
+          "enum": "TimerProcessCallback",
+          "kind": "EnumValue",
+          "summary": "Update the timer every process (rendered) frame (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+          "sourcePath": "doc/classes/Timer.xml"
+        },
+        {
+          "name": "TIMER_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "TimerProcessCallback",
+          "kind": "EnumValue",
+          "summary": "Update the timer every physics process frame (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+          "sourcePath": "doc/classes/Timer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TIMER_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "TimerProcessCallback",
+      "kind": "EnumValue",
+      "summary": "Update the timer every physics process frame (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]).",
+      "sourcePath": "doc/classes/Timer.xml"
+    },
+    {
+      "name": "TIMER_PROCESS_IDLE",
+      "value": "1",
+      "enum": "TimerProcessCallback",
+      "kind": "EnumValue",
+      "summary": "Update the timer every process (rendered) frame (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+      "sourcePath": "doc/classes/Timer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Timer.xml",
+      "sha256": "0df65fc4f36d3fbd91527fd98aaa278c93ea80996da221497b8d5dc387bd1837"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

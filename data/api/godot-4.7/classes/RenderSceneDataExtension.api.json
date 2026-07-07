@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneDataExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneDataExtension",
+    "kind": "class",
+    "baseType": "RenderSceneData",
+    "interfaces": [],
+    "godotReference": "RenderSceneDataExtension",
+    "documentationPath": "doc/classes/RenderSceneDataExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenedataextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetCamProjection",
+      "kind": "Method",
+      "signature": "public Projection _GetCamProjection()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the camera [Projection].",
+      "godotName": "_get_cam_projection",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetCamProjection",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetCamTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetCamTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the camera [Transform3D].",
+      "godotName": "_get_cam_transform",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetCamTransform",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetUniformBuffer",
+      "kind": "Method",
+      "signature": "public RID _GetUniformBuffer()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] of the uniform buffer containing the scene data as a UBO.",
+      "godotName": "_get_uniform_buffer",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetUniformBuffer",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewCount",
+      "kind": "Method",
+      "signature": "public int _GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the view count.",
+      "godotName": "_get_view_count",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewCount",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewEyeOffset",
+      "kind": "Method",
+      "signature": "public Vector3 _GetViewEyeOffset(int view)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to return the eye offset for the given [param view].",
+      "godotName": "_get_view_eye_offset",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewEyeOffset(int)",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewProjection",
+      "kind": "Method",
+      "signature": "public Projection _GetViewProjection(int view)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to return the view [Projection] for the given [param view].",
+      "godotName": "_get_view_projection",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewProjection(int)",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetCamProjection",
+      "kind": "Method",
+      "signature": "public Projection _GetCamProjection()",
+      "returnType": "Projection",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the camera [Projection].",
+      "godotName": "_get_cam_projection",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetCamProjection",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetCamTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetCamTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the camera [Transform3D].",
+      "godotName": "_get_cam_transform",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetCamTransform",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetUniformBuffer",
+      "kind": "Method",
+      "signature": "public RID _GetUniformBuffer()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the [RID] of the uniform buffer containing the scene data as a UBO.",
+      "godotName": "_get_uniform_buffer",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetUniformBuffer",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewCount",
+      "kind": "Method",
+      "signature": "public int _GetViewCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Implement this in GDExtension to return the view count.",
+      "godotName": "_get_view_count",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewCount",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewEyeOffset",
+      "kind": "Method",
+      "signature": "public Vector3 _GetViewEyeOffset(int view)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to return the eye offset for the given [param view].",
+      "godotName": "_get_view_eye_offset",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewEyeOffset(int)",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    },
+    {
+      "name": "_GetViewProjection",
+      "kind": "Method",
+      "signature": "public Projection _GetViewProjection(int view)",
+      "returnType": "Projection",
+      "parameters": [
+        {
+          "name": "view",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to return the view [Projection] for the given [param view].",
+      "godotName": "_get_view_projection",
+      "xmlDocId": "M:Godot.RenderSceneDataExtension._GetViewProjection(int)",
+      "sourcePath": "doc/classes/RenderSceneDataExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneDataExtension.xml",
+      "sha256": "d55fb232a88aeec65da335f8f32be6ea59d6cf1532d1a391e5a5c4746e607423"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

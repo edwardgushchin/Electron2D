@@ -1,0 +1,750 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GridMap",
+    "namespace": "Godot",
+    "fullName": "Godot.GridMap",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "GridMap",
+    "documentationPath": "modules/gridmap/doc_classes/GridMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gridmap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clear all cells.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.GridMap.Clear",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "ClearBakedMeshes",
+      "kind": "Method",
+      "signature": "public void ClearBakedMeshes()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all baked meshes. See [method make_baked_meshes].",
+      "godotName": "clear_baked_meshes",
+      "xmlDocId": "M:Godot.GridMap.ClearBakedMeshes",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetBakeMeshInstance",
+      "kind": "Method",
+      "signature": "public RID GetBakeMeshInstance(int idx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [RID] of a baked mesh with the given [param idx].",
+      "godotName": "get_bake_mesh_instance",
+      "xmlDocId": "M:Godot.GridMap.GetBakeMeshInstance(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetBakeMeshes",
+      "kind": "Method",
+      "signature": "public Array GetBakeMeshes()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array of [ArrayMesh]es and [Transform3D] references of all bake meshes that exist within the current GridMap. Even indices contain [ArrayMesh]es, while odd indices contain [Transform3D]s that are always equal to [constant Transform3D.IDENTITY]. This method relies on the output of [method make_baked_meshes], which will be called with [code]gen_lightmap_uv[/code] set to [code]true[/code] and [code]lightmap_uv_texel_size[/code] set to [code]0.1[/code] if it hasn\u0027t been called yet.",
+      "godotName": "get_bake_meshes",
+      "xmlDocId": "M:Godot.GridMap.GetBakeMeshes",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetBasisWithOrthogonalIndex",
+      "kind": "Method",
+      "signature": "public Basis GetBasisWithOrthogonalIndex(int index)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns one of 24 possible rotations that lie along the vectors (x,y,z) with each component being either -1, 0, or 1. For further details, refer to the Godot source code.",
+      "godotName": "get_basis_with_orthogonal_index",
+      "xmlDocId": "M:Godot.GridMap.GetBasisWithOrthogonalIndex(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetCellItem",
+      "kind": "Method",
+      "signature": "public int GetCellItem(Vector3i position)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "The [MeshLibrary] item index located at the given grid coordinates. If the cell is empty, [constant INVALID_CELL_ITEM] will be returned.",
+      "godotName": "get_cell_item",
+      "xmlDocId": "M:Godot.GridMap.GetCellItem(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetCellItemBasis",
+      "kind": "Method",
+      "signature": "public Basis GetCellItemBasis(Vector3i position)",
+      "returnType": "Basis",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Returns the basis that gives the specified cell its orientation.",
+      "godotName": "get_cell_item_basis",
+      "xmlDocId": "M:Godot.GridMap.GetCellItemBasis(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetCellItemOrientation",
+      "kind": "Method",
+      "signature": "public int GetCellItemOrientation(Vector3i position)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "The orientation of the cell at the given grid coordinates. [code]-1[/code] is returned if the cell is empty.",
+      "godotName": "get_cell_item_orientation",
+      "xmlDocId": "M:Godot.GridMap.GetCellItemOrientation(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_layer] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_layer_value",
+      "xmlDocId": "M:Godot.GridMap.GetCollisionLayerValue(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public bool GetCollisionMaskValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member collision_mask] is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_collision_mask_value",
+      "xmlDocId": "M:Godot.GridMap.GetCollisionMaskValue(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetMeshes",
+      "kind": "Method",
+      "signature": "public Array GetMeshes()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns an array of [Transform3D] and [Mesh] references corresponding to the non-empty cells in the grid. The transforms are specified in local space. Even indices contain [Transform3D]s, while odd indices contain [Mesh]es related to the [Transform3D] in the index preceding it.",
+      "godotName": "get_meshes",
+      "xmlDocId": "M:Godot.GridMap.GetMeshes",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetNavigationMap()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the navigation map this GridMap node uses for its cell baked navigation meshes. This function returns always the map set on the GridMap node and not the map on the NavigationServer. If the map is changed directly with the NavigationServer API the GridMap node will not be aware of the map change.",
+      "godotName": "get_navigation_map",
+      "xmlDocId": "M:Godot.GridMap.GetNavigationMap",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetOctantCoordsFromCellCoords",
+      "kind": "Method",
+      "signature": "public Vector3i GetOctantCoordsFromCellCoords(Vector3i cellCoords)",
+      "returnType": "Vector3i",
+      "parameters": [
+        {
+          "name": "cell_coords",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Returns the [Vector3i] octant coordinates of the octant that the cell at [param cell_coords] belongs to.",
+      "godotName": "get_octant_coords_from_cell_coords",
+      "xmlDocId": "M:Godot.GridMap.GetOctantCoordsFromCellCoords(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetOctantsInBounds",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetOctantsInBounds(AABB bounds)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "bounds",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns an array of [Vector3i] octant coordinates that are inside the given [param bounds], including octants that have no cells in use.",
+      "godotName": "get_octants_in_bounds",
+      "xmlDocId": "M:Godot.GridMap.GetOctantsInBounds(AABB)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetOrthogonalIndexFromBasis",
+      "kind": "Method",
+      "signature": "public int GetOrthogonalIndexFromBasis(Basis basis)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "basis",
+          "type": "Basis"
+        }
+      ],
+      "summary": "This function considers a discretization of rotations into 24 points on unit sphere, lying along the vectors (x,y,z) with each component being either -1, 0, or 1, and returns the index (in the range from 0 to 23) of the point best representing the orientation of the object. For further details, refer to the Godot source code.",
+      "godotName": "get_orthogonal_index_from_basis",
+      "xmlDocId": "M:Godot.GridMap.GetOrthogonalIndexFromBasis(Basis)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedCells",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedCells()",
+      "returnType": "Vector3i[]",
+      "parameters": [],
+      "summary": "Returns an array of [Vector3] with the non-empty cell coordinates in the grid map.",
+      "godotName": "get_used_cells",
+      "xmlDocId": "M:Godot.GridMap.GetUsedCells",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedCellsByItem",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedCellsByItem(int item)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "item",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of all cells with the given item index specified in [param item].",
+      "godotName": "get_used_cells_by_item",
+      "xmlDocId": "M:Godot.GridMap.GetUsedCellsByItem(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedCellsInOctant",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedCellsInOctant(Vector3i octantCoords)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "octant_coords",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Returns an array of [Vector3i]s with the cell coordinates of non-empty cells inside the octant at [param octant_coords].",
+      "godotName": "get_used_cells_in_octant",
+      "xmlDocId": "M:Godot.GridMap.GetUsedCellsInOctant(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedCellsInOctantByItem",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedCellsInOctantByItem(Vector3i octantCoords, int item)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "octant_coords",
+          "type": "Vector3i"
+        },
+        {
+          "name": "item",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of [Vector3i]s with the cell coordinates of cells inside the octant at [param octant_coords] that use the specified cell [param item].",
+      "godotName": "get_used_cells_in_octant_by_item",
+      "xmlDocId": "M:Godot.GridMap.GetUsedCellsInOctantByItem(Vector3i,int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedOctants",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedOctants()",
+      "returnType": "Vector3i[]",
+      "parameters": [],
+      "summary": "Returns an array of [Vector3i]s with the octant coordinates of the non-empty octants in the grid map.",
+      "godotName": "get_used_octants",
+      "xmlDocId": "M:Godot.GridMap.GetUsedOctants",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedOctantsByItem",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedOctantsByItem(int item)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "item",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an array of [Vector3i]s with the octant coordinates of the octants that use the specified [param item] in the grid map.",
+      "godotName": "get_used_octants_by_item",
+      "xmlDocId": "M:Godot.GridMap.GetUsedOctantsByItem(int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "GetUsedOctantsInBounds",
+      "kind": "Method",
+      "signature": "public Vector3i[] GetUsedOctantsInBounds(AABB bounds)",
+      "returnType": "Vector3i[]",
+      "parameters": [
+        {
+          "name": "bounds",
+          "type": "AABB"
+        }
+      ],
+      "summary": "Returns an array of [Vector3i]s with the octant coordinates of non-empty octants that are inside the local [param bounds].",
+      "godotName": "get_used_octants_in_bounds",
+      "xmlDocId": "M:Godot.GridMap.GetUsedOctantsInBounds(AABB)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "LocalToMap",
+      "kind": "Method",
+      "signature": "public Vector3i LocalToMap(Vector3 localPosition)",
+      "returnType": "Vector3i",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Returns the map coordinates of the cell containing the given [param local_position]. If [param local_position] is in global coordinates, consider using [method Node3D.to_local] before passing it to this method. See also [method map_to_local].",
+      "godotName": "local_to_map",
+      "xmlDocId": "M:Godot.GridMap.LocalToMap(Vector3)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "MakeBakedMeshes",
+      "kind": "Method",
+      "signature": "public void MakeBakedMeshes(bool genLightmapUv, float lightmapUvTexelSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "gen_lightmap_uv",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "lightmap_uv_texel_size",
+          "type": "float",
+          "defaultValue": "0.1"
+        }
+      ],
+      "summary": "Generates a baked mesh that represents all meshes in the assigned [MeshLibrary] for use with [LightmapGI]. If [param gen_lightmap_uv] is [code]true[/code], UV2 data will be generated for each mesh currently used in the [GridMap]. Otherwise, only meshes that already have UV2 data present will be able to use baked lightmaps. When generating UV2, [param lightmap_uv_texel_size] controls the texel density for lightmaps, with lower values resulting in more detailed lightmaps. [param lightmap_uv_texel_size] is ignored if [param gen_lightmap_uv] is [code]false[/code]. See also [method get_bake_meshes], which relies on the output of this method. [b]Note:[/b] Calling this method will not actually bake lightmaps, as lightmap baking is performed using the [LightmapGI] node.",
+      "godotName": "make_baked_meshes",
+      "xmlDocId": "M:Godot.GridMap.MakeBakedMeshes(bool,float)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "MapToLocal",
+      "kind": "Method",
+      "signature": "public Vector3 MapToLocal(Vector3i mapPosition)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "map_position",
+          "type": "Vector3i"
+        }
+      ],
+      "summary": "Returns the position of a grid cell in the GridMap\u0027s local coordinate space. To convert the returned value into global coordinates, use [method Node3D.to_global]. See also [method local_to_map].",
+      "godotName": "map_to_local",
+      "xmlDocId": "M:Godot.GridMap.MapToLocal(Vector3i)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "ResourceChanged",
+      "kind": "Method",
+      "signature": "public void ResourceChanged(Resource resource)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "This method does nothing.",
+      "godotName": "resource_changed",
+      "xmlDocId": "M:Godot.GridMap.ResourceChanged(Resource)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "SetCellItem",
+      "kind": "Method",
+      "signature": "public void SetCellItem(Vector3i position, int item, int orientation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector3i"
+        },
+        {
+          "name": "item",
+          "type": "int"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the mesh index for the cell referenced by its grid coordinates. A negative item index such as [constant INVALID_CELL_ITEM] will clear the cell. Optionally, the item\u0027s orientation can be passed. For valid orientation values, see [method get_orthogonal_index_from_basis].",
+      "godotName": "set_cell_item",
+      "xmlDocId": "M:Godot.GridMap.SetCellItem(Vector3i,int,int)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "SetCollisionLayerValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_layer], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_layer_value",
+      "xmlDocId": "M:Godot.GridMap.SetCollisionLayerValue(int,bool)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "SetCollisionMaskValue",
+      "kind": "Method",
+      "signature": "public void SetCollisionMaskValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member collision_mask], given a [param layer_number] between 1 and 32.",
+      "godotName": "set_collision_mask_value",
+      "xmlDocId": "M:Godot.GridMap.SetCollisionMaskValue(int,bool)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "SetNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetNavigationMap(RID navigationMap)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the [RID] of the navigation map this GridMap node should use for its cell baked navigation meshes.",
+      "godotName": "set_navigation_map",
+      "xmlDocId": "M:Godot.GridMap.SetNavigationMap(RID)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "BakeNavigation",
+      "kind": "Property",
+      "signature": "public bool BakeNavigation { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this GridMap creates a navigation region for each cell that uses a [member mesh_library] item with a navigation mesh. The created navigation region will use the navigation layers bitmask assigned to the [MeshLibrary]\u0027s item.",
+      "defaultValue": "false",
+      "godotName": "bake_navigation",
+      "xmlDocId": "P:Godot.GridMap.BakeNavigation",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellCenterX",
+      "kind": "Property",
+      "signature": "public bool CellCenterX { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], grid items are centered on the X axis.",
+      "defaultValue": "true",
+      "godotName": "cell_center_x",
+      "xmlDocId": "P:Godot.GridMap.CellCenterX",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellCenterY",
+      "kind": "Property",
+      "signature": "public bool CellCenterY { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], grid items are centered on the Y axis.",
+      "defaultValue": "true",
+      "godotName": "cell_center_y",
+      "xmlDocId": "P:Godot.GridMap.CellCenterY",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellCenterZ",
+      "kind": "Property",
+      "signature": "public bool CellCenterZ { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], grid items are centered on the Z axis.",
+      "defaultValue": "true",
+      "godotName": "cell_center_z",
+      "xmlDocId": "P:Godot.GridMap.CellCenterZ",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellOctantSize",
+      "kind": "Property",
+      "signature": "public int CellOctantSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The size of each octant measured in number of cells. This applies to all three axis.",
+      "defaultValue": "8",
+      "godotName": "cell_octant_size",
+      "xmlDocId": "P:Godot.GridMap.CellOctantSize",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellScale",
+      "kind": "Property",
+      "signature": "public float CellScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The scale of the cell items. This does not affect the size of the grid cells themselves, only the items in them. This can be used to make cell items overlap their neighbors.",
+      "defaultValue": "1.0",
+      "godotName": "cell_scale",
+      "xmlDocId": "P:Godot.GridMap.CellScale",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CellSize",
+      "kind": "Property",
+      "signature": "public Vector3 CellSize { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The dimensions of the grid\u0027s cells. This does not affect the size of the meshes. See [member cell_scale].",
+      "defaultValue": "Vector3(2, 2, 2)",
+      "godotName": "cell_size",
+      "xmlDocId": "P:Godot.GridMap.CellSize",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CollisionLayer",
+      "kind": "Property",
+      "signature": "public int CollisionLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this GridMap is in. GridMaps act as static bodies, meaning they aren\u0027t affected by gravity or other forces. They only affect other physics bodies that collide with them.",
+      "defaultValue": "1",
+      "godotName": "collision_layer",
+      "xmlDocId": "P:Godot.GridMap.CollisionLayer",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CollisionMask",
+      "kind": "Property",
+      "signature": "public int CollisionMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The physics layers this GridMap detects collisions in. See [url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks]Collision layers and masks[/url] in the documentation for more information.",
+      "defaultValue": "1",
+      "godotName": "collision_mask",
+      "xmlDocId": "P:Godot.GridMap.CollisionMask",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CollisionPriority",
+      "kind": "Property",
+      "signature": "public float CollisionPriority { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The priority used to solve colliding when occurring penetration. The higher the priority is, the lower the penetration into the object will be. This can for example be used to prevent the player from breaking through the boundaries of a level.",
+      "defaultValue": "1.0",
+      "godotName": "collision_priority",
+      "xmlDocId": "P:Godot.GridMap.CollisionPriority",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "CollisionVisibilityMode",
+      "kind": "Property",
+      "signature": "public int CollisionVisibilityMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Show or hide the [GridMap]\u0027s collision shapes. If set to [constant DEBUG_VISIBILITY_MODE_DEFAULT], this depends on the show collision debug settings.",
+      "defaultValue": "0",
+      "godotName": "collision_visibility_mode",
+      "xmlDocId": "P:Godot.GridMap.CollisionVisibilityMode",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "MeshLibrary",
+      "kind": "Property",
+      "signature": "public MeshLibrary MeshLibrary { get; set; }",
+      "returnType": "MeshLibrary",
+      "parameters": [],
+      "summary": "The assigned [MeshLibrary].",
+      "godotName": "mesh_library",
+      "xmlDocId": "P:Godot.GridMap.MeshLibrary",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "PhysicsMaterial",
+      "kind": "Property",
+      "signature": "public PhysicsMaterial PhysicsMaterial { get; set; }",
+      "returnType": "PhysicsMaterial",
+      "parameters": [],
+      "summary": "Overrides the default friction and bounce physics properties for the whole [GridMap].",
+      "godotName": "physics_material",
+      "xmlDocId": "P:Godot.GridMap.PhysicsMaterial",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "CellSizeChanged",
+      "kind": "Signal",
+      "signature": "public event CellSizeChangedHandler CellSizeChanged",
+      "parameters": [
+        {
+          "name": "cell_size",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Emitted when [member cell_size] changes.",
+      "godotName": "cell_size_changed",
+      "xmlDocId": "E:Godot.GridMap.CellSizeChanged(Vector3)",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "Changed",
+      "kind": "Signal",
+      "signature": "public event ChangedHandler Changed",
+      "parameters": [],
+      "summary": "Emitted when the [MeshLibrary] of this GridMap changes.",
+      "godotName": "changed",
+      "xmlDocId": "E:Godot.GridMap.Changed",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DebugVisibilityMode",
+      "values": [
+        {
+          "name": "DEBUG_VISIBILITY_MODE_DEFAULT",
+          "value": "0",
+          "enum": "DebugVisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Hide the collisions debug shapes in the editor, and use the debug settings to determine their visibility in game (i.e. [member SceneTree.debug_collisions_hint] or [member SceneTree.debug_navigation_hint]).",
+          "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+        },
+        {
+          "name": "DEBUG_VISIBILITY_MODE_FORCE_HIDE",
+          "value": "2",
+          "enum": "DebugVisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Always hide the collisions debug shapes.",
+          "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+        },
+        {
+          "name": "DEBUG_VISIBILITY_MODE_FORCE_SHOW",
+          "value": "1",
+          "enum": "DebugVisibilityMode",
+          "kind": "EnumValue",
+          "summary": "Always show the collisions debug shapes.",
+          "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "INVALID_CELL_ITEM",
+      "value": "-1",
+      "kind": "Constant",
+      "summary": "Invalid cell item that can be used in [method set_cell_item] to clear cells (or represent an empty cell in [method get_cell_item]).",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "DEBUG_VISIBILITY_MODE_DEFAULT",
+      "value": "0",
+      "enum": "DebugVisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Hide the collisions debug shapes in the editor, and use the debug settings to determine their visibility in game (i.e. [member SceneTree.debug_collisions_hint] or [member SceneTree.debug_navigation_hint]).",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "DEBUG_VISIBILITY_MODE_FORCE_SHOW",
+      "value": "1",
+      "enum": "DebugVisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Always show the collisions debug shapes.",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    },
+    {
+      "name": "DEBUG_VISIBILITY_MODE_FORCE_HIDE",
+      "value": "2",
+      "enum": "DebugVisibilityMode",
+      "kind": "EnumValue",
+      "summary": "Always hide the collisions debug shapes.",
+      "sourcePath": "modules/gridmap/doc_classes/GridMap.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gridmap/doc_classes/GridMap.xml",
+      "sha256": "1fc4093774abcbf210dd830810e151b227f495726daeef1caf5b7dfe76e42f5b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

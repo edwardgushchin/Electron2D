@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpringBoneCollisionCapsule3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SpringBoneCollisionCapsule3D",
+    "kind": "class",
+    "baseType": "SpringBoneCollision3D",
+    "interfaces": [],
+    "godotReference": "SpringBoneCollisionCapsule3D",
+    "documentationPath": "doc/classes/SpringBoneCollisionCapsule3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_springbonecollisioncapsule3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The capsule\u0027s full height, including the hemispheres. [b]Note:[/b] The [member height] of a capsule must be at least twice its [member radius]. Otherwise, the capsule becomes a sphere. If the [member height] is less than twice the [member radius], the properties adjust to a valid value.",
+      "defaultValue": "0.5",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.SpringBoneCollisionCapsule3D.Height",
+      "sourcePath": "doc/classes/SpringBoneCollisionCapsule3D.xml"
+    },
+    {
+      "name": "Inside",
+      "kind": "Property",
+      "signature": "public bool Inside { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the collision acts to trap the joint within the collision.",
+      "defaultValue": "false",
+      "godotName": "inside",
+      "xmlDocId": "P:Godot.SpringBoneCollisionCapsule3D.Inside",
+      "sourcePath": "doc/classes/SpringBoneCollisionCapsule3D.xml"
+    },
+    {
+      "name": "MidHeight",
+      "kind": "Property",
+      "signature": "public float MidHeight { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The capsule\u0027s height, excluding the hemispheres. This is the height of the central cylindrical part in the middle of the capsule, and is the distance between the centers of the two hemispheres. This is a wrapper for [member height].",
+      "godotName": "mid_height",
+      "xmlDocId": "P:Godot.SpringBoneCollisionCapsule3D.MidHeight",
+      "sourcePath": "doc/classes/SpringBoneCollisionCapsule3D.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The capsule\u0027s radius. [b]Note:[/b] The [member radius] of a capsule cannot be greater than half of its [member height]. Otherwise, the capsule becomes a sphere. If the [member radius] is greater than half of the [member height], the properties adjust to a valid value.",
+      "defaultValue": "0.1",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.SpringBoneCollisionCapsule3D.Radius",
+      "sourcePath": "doc/classes/SpringBoneCollisionCapsule3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpringBoneCollisionCapsule3D.xml",
+      "sha256": "8a147ff8da16136c01101c16e4be82b1452097e4a2ff438bdebd1f495da093c8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

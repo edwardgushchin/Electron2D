@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicalBone2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicalBone2D",
+    "kind": "class",
+    "baseType": "RigidBody2D",
+    "interfaces": [],
+    "godotReference": "PhysicalBone2D",
+    "documentationPath": "doc/classes/PhysicalBone2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicalbone2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetJoint",
+      "kind": "Method",
+      "signature": "public Joint2D GetJoint()",
+      "returnType": "Joint2D",
+      "parameters": [],
+      "summary": "Returns the first [Joint2D] child node, if one exists. This is mainly a helper function to make it easier to get the [Joint2D] that the [PhysicalBone2D] is autoconfiguring.",
+      "godotName": "get_joint",
+      "xmlDocId": "M:Godot.PhysicalBone2D.GetJoint",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "IsSimulatingPhysics",
+      "kind": "Method",
+      "signature": "public bool IsSimulatingPhysics()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns a boolean that indicates whether the [PhysicalBone2D] is running and simulating using the Godot 2D physics engine. When [code]true[/code], the PhysicalBone2D node is using physics.",
+      "godotName": "is_simulating_physics",
+      "xmlDocId": "M:Godot.PhysicalBone2D.IsSimulatingPhysics",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "AutoConfigureJoint",
+      "kind": "Property",
+      "signature": "public bool AutoConfigureJoint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [PhysicalBone2D] will automatically configure the first [Joint2D] child node. The automatic configuration is limited to setting up the node properties and positioning the [Joint2D].",
+      "defaultValue": "true",
+      "godotName": "auto_configure_joint",
+      "xmlDocId": "P:Godot.PhysicalBone2D.AutoConfigureJoint",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "Bone2dIndex",
+      "kind": "Property",
+      "signature": "public int Bone2dIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the [Bone2D] that this [PhysicalBone2D] should simulate.",
+      "defaultValue": "-1",
+      "godotName": "bone2d_index",
+      "xmlDocId": "P:Godot.PhysicalBone2D.Bone2dIndex",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "Bone2dNodepath",
+      "kind": "Property",
+      "signature": "public NodePath Bone2dNodepath { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The [NodePath] to the [Bone2D] that this [PhysicalBone2D] should simulate.",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "bone2d_nodepath",
+      "xmlDocId": "P:Godot.PhysicalBone2D.Bone2dNodepath",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "FollowBoneWhenSimulating",
+      "kind": "Property",
+      "signature": "public bool FollowBoneWhenSimulating { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [PhysicalBone2D] will keep the transform of the bone it is bound to when simulating physics.",
+      "defaultValue": "false",
+      "godotName": "follow_bone_when_simulating",
+      "xmlDocId": "P:Godot.PhysicalBone2D.FollowBoneWhenSimulating",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    },
+    {
+      "name": "SimulatePhysics",
+      "kind": "Property",
+      "signature": "public bool SimulatePhysics { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [PhysicalBone2D] will start simulating using physics. If [code]false[/code], the [PhysicalBone2D] will follow the transform of the [Bone2D] node. [b]Note:[/b] To have the [Bone2D]s visually follow the [PhysicalBone2D], use a [SkeletonModification2DPhysicalBones] modification on the [Skeleton2D] node with the [Bone2D] nodes.",
+      "defaultValue": "false",
+      "godotName": "simulate_physics",
+      "xmlDocId": "P:Godot.PhysicalBone2D.SimulatePhysics",
+      "sourcePath": "doc/classes/PhysicalBone2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicalBone2D.xml",
+      "sha256": "741069bd4915b0a3c18548f0a6564a544f6d962e1cff6bc58c96d196731374cb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationRegion2D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationRegion2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "NavigationRegion2D",
+    "documentationPath": "doc/classes/NavigationRegion2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationregion2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BakeNavigationPolygon",
+      "kind": "Method",
+      "signature": "public void BakeNavigationPolygon(bool onThread)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "on_thread",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Bakes the [NavigationPolygon]. If [param on_thread] is set to [code]true[/code] (default), the baking is done on a separate thread.",
+      "godotName": "bake_navigation_polygon",
+      "xmlDocId": "M:Godot.NavigationRegion2D.BakeNavigationPolygon(bool)",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "GetBounds",
+      "kind": "Method",
+      "signature": "public Rect2 GetBounds()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns the axis-aligned rectangle for the region\u0027s transformed navigation mesh.",
+      "godotName": "get_bounds",
+      "xmlDocId": "M:Godot.NavigationRegion2D.GetBounds",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "GetNavigationLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetNavigationLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member navigation_layers] bitmask is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_navigation_layer_value",
+      "xmlDocId": "M:Godot.NavigationRegion2D.GetNavigationLayerValue(int)",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "GetNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetNavigationMap()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the current navigation map [RID] used by this region.",
+      "godotName": "get_navigation_map",
+      "xmlDocId": "M:Godot.NavigationRegion2D.GetNavigationMap",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "GetRegionRid",
+      "kind": "Method",
+      "signature": "public RID GetRegionRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of this region on the [NavigationServer2D].",
+      "godotName": "get_region_rid",
+      "xmlDocId": "M:Godot.NavigationRegion2D.GetRegionRid",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of this region on the [NavigationServer2D]. Combined with [method NavigationServer2D.map_get_closest_point_owner] can be used to identify the [NavigationRegion2D] closest to a point on the merged navigation map.",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.NavigationRegion2D.GetRid",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "IsBaking",
+      "kind": "Method",
+      "signature": "public bool IsBaking()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] when the [NavigationPolygon] is being baked on a background thread.",
+      "godotName": "is_baking",
+      "xmlDocId": "M:Godot.NavigationRegion2D.IsBaking",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "SetNavigationLayerValue",
+      "kind": "Method",
+      "signature": "public void SetNavigationLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member navigation_layers] bitmask, given a [param layer_number] between 1 and 32.",
+      "godotName": "set_navigation_layer_value",
+      "xmlDocId": "M:Godot.NavigationRegion2D.SetNavigationLayerValue(int,bool)",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "SetNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetNavigationMap(RID navigationMap)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the [RID] of the navigation map this region should use. By default the region will automatically join the [World2D] default navigation map so this function is only required to override the default map.",
+      "godotName": "set_navigation_map",
+      "xmlDocId": "M:Godot.NavigationRegion2D.SetNavigationMap(RID)",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Determines if the [NavigationRegion2D] is enabled or disabled.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.NavigationRegion2D.Enabled",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "EnterCost",
+      "kind": "Property",
+      "signature": "public float EnterCost { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When pathfinding enters this region\u0027s navigation mesh from another regions navigation mesh the [member enter_cost] value is added to the path distance for determining the shortest path.",
+      "defaultValue": "0.0",
+      "godotName": "enter_cost",
+      "xmlDocId": "P:Godot.NavigationRegion2D.EnterCost",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "NavigationLayers",
+      "kind": "Property",
+      "signature": "public int NavigationLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A bitfield determining all navigation layers the region belongs to. These navigation layers can be checked upon when requesting a path with [method NavigationServer2D.map_get_path].",
+      "defaultValue": "1",
+      "godotName": "navigation_layers",
+      "xmlDocId": "P:Godot.NavigationRegion2D.NavigationLayers",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "NavigationPolygon",
+      "kind": "Property",
+      "signature": "public NavigationPolygon NavigationPolygon { get; set; }",
+      "returnType": "NavigationPolygon",
+      "parameters": [],
+      "summary": "The [NavigationPolygon] resource to use.",
+      "godotName": "navigation_polygon",
+      "xmlDocId": "P:Godot.NavigationRegion2D.NavigationPolygon",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "TravelCost",
+      "kind": "Property",
+      "signature": "public float TravelCost { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When pathfinding moves inside this region\u0027s navigation mesh the traveled distances are multiplied with [member travel_cost] for determining the shortest path.",
+      "defaultValue": "1.0",
+      "godotName": "travel_cost",
+      "xmlDocId": "P:Godot.NavigationRegion2D.TravelCost",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "UseEdgeConnections",
+      "kind": "Property",
+      "signature": "public bool UseEdgeConnections { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled the navigation region will use edge connections to connect with other navigation regions within proximity of the navigation map edge connection margin.",
+      "defaultValue": "true",
+      "godotName": "use_edge_connections",
+      "xmlDocId": "P:Godot.NavigationRegion2D.UseEdgeConnections",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "BakeFinished",
+      "kind": "Signal",
+      "signature": "public event BakeFinishedHandler BakeFinished",
+      "parameters": [],
+      "summary": "Emitted when a navigation polygon bake operation is completed.",
+      "godotName": "bake_finished",
+      "xmlDocId": "E:Godot.NavigationRegion2D.BakeFinished",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    },
+    {
+      "name": "NavigationPolygonChanged",
+      "kind": "Signal",
+      "signature": "public event NavigationPolygonChangedHandler NavigationPolygonChanged",
+      "parameters": [],
+      "summary": "Emitted when the used navigation polygon is replaced or changes to the internals of the current navigation polygon are committed.",
+      "godotName": "navigation_polygon_changed",
+      "xmlDocId": "E:Godot.NavigationRegion2D.NavigationPolygonChanged",
+      "sourcePath": "doc/classes/NavigationRegion2D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationRegion2D.xml",
+      "sha256": "5427fe212eaf5634ec7a4e0a3203a675210050a13a57da84d7f1141011446727"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

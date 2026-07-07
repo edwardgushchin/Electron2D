@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialCapabilityConfigurationAprilTag",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialCapabilityConfigurationAprilTag",
+    "kind": "class",
+    "baseType": "OpenXRSpatialCapabilityConfigurationBaseHeader",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialCapabilityConfigurationAprilTag",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcapabilityconfigurationapriltag.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEnabledComponents",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetEnabledComponents()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns the components enabled by this configuration. [b]Note:[/b] Only valid after this configuration was used to create a spatial context.",
+      "godotName": "get_enabled_components",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationAprilTag.GetEnabledComponents",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    },
+    {
+      "name": "AprilDict",
+      "kind": "Property",
+      "signature": "public int AprilDict { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Dictionary to use to decode April tags. [b]Note:[/b] Must be set before using this configuration to create a spatial context.",
+      "defaultValue": "4",
+      "godotName": "april_dict",
+      "xmlDocId": "P:Godot.OpenXRSpatialCapabilityConfigurationAprilTag.AprilDict",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AprilTagDict",
+      "values": [
+        {
+          "name": "APRIL_TAG_DICT_16H5",
+          "value": "1",
+          "enum": "AprilTagDict",
+          "kind": "EnumValue",
+          "summary": "4 by 4 bits, minimum Hamming distance between any two codes = 5, 30 codes.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+        },
+        {
+          "name": "APRIL_TAG_DICT_25H9",
+          "value": "2",
+          "enum": "AprilTagDict",
+          "kind": "EnumValue",
+          "summary": "5 by 5 bits, minimum Hamming distance between any two codes = 9, 35 codes.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+        },
+        {
+          "name": "APRIL_TAG_DICT_36H10",
+          "value": "3",
+          "enum": "AprilTagDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 bits, minimum Hamming distance between any two codes = 10, 2320 codes.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+        },
+        {
+          "name": "APRIL_TAG_DICT_36H11",
+          "value": "4",
+          "enum": "AprilTagDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 bits, minimum Hamming distance between any two codes = 11, 587 codes.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "APRIL_TAG_DICT_16H5",
+      "value": "1",
+      "enum": "AprilTagDict",
+      "kind": "EnumValue",
+      "summary": "4 by 4 bits, minimum Hamming distance between any two codes = 5, 30 codes.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    },
+    {
+      "name": "APRIL_TAG_DICT_25H9",
+      "value": "2",
+      "enum": "AprilTagDict",
+      "kind": "EnumValue",
+      "summary": "5 by 5 bits, minimum Hamming distance between any two codes = 9, 35 codes.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    },
+    {
+      "name": "APRIL_TAG_DICT_36H10",
+      "value": "3",
+      "enum": "AprilTagDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 bits, minimum Hamming distance between any two codes = 10, 2320 codes.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    },
+    {
+      "name": "APRIL_TAG_DICT_36H11",
+      "value": "4",
+      "enum": "AprilTagDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 bits, minimum Hamming distance between any two codes = 11, 587 codes.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAprilTag.xml",
+      "sha256": "16b1eced5a26c86353a871097c68f41abf5b90b710aaf46323934f95931c5647"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

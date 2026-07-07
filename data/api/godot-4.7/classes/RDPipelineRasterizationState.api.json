@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDPipelineRasterizationState",
+    "namespace": "Godot",
+    "fullName": "Godot.RDPipelineRasterizationState",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDPipelineRasterizationState",
+    "documentationPath": "doc/classes/RDPipelineRasterizationState.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdpipelinerasterizationstate.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CullMode",
+      "kind": "Property",
+      "signature": "public int CullMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The cull mode to use when drawing polygons, which determines whether front faces or backfaces are hidden.",
+      "defaultValue": "0",
+      "godotName": "cull_mode",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.CullMode",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "DepthBiasClamp",
+      "kind": "Property",
+      "signature": "public float DepthBiasClamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A limit for how much each depth value can be offset. If negative, it serves as a minimum value, but if positive, it serves as a maximum value.",
+      "defaultValue": "0.0",
+      "godotName": "depth_bias_clamp",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.DepthBiasClamp",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "DepthBiasConstantFactor",
+      "kind": "Property",
+      "signature": "public float DepthBiasConstantFactor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A constant offset added to each depth value. Applied after [member depth_bias_slope_factor].",
+      "defaultValue": "0.0",
+      "godotName": "depth_bias_constant_factor",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.DepthBiasConstantFactor",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "DepthBiasEnabled",
+      "kind": "Property",
+      "signature": "public bool DepthBiasEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], each generated depth value will by offset by some amount. The specific amount is generated per polygon based on the values of [member depth_bias_slope_factor] and [member depth_bias_constant_factor].",
+      "defaultValue": "false",
+      "godotName": "depth_bias_enabled",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.DepthBiasEnabled",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "DepthBiasSlopeFactor",
+      "kind": "Property",
+      "signature": "public float DepthBiasSlopeFactor { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "A constant scale applied to the slope of each polygons\u0027 depth. Applied before [member depth_bias_constant_factor].",
+      "defaultValue": "0.0",
+      "godotName": "depth_bias_slope_factor",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.DepthBiasSlopeFactor",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "DiscardPrimitives",
+      "kind": "Property",
+      "signature": "public bool DiscardPrimitives { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], primitives are discarded immediately before the rasterization stage.",
+      "defaultValue": "false",
+      "godotName": "discard_primitives",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.DiscardPrimitives",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "EnableDepthClamp",
+      "kind": "Property",
+      "signature": "public bool EnableDepthClamp { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], clamps depth values according to the minimum and maximum depth of the associated viewport.",
+      "defaultValue": "false",
+      "godotName": "enable_depth_clamp",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.EnableDepthClamp",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "FrontFace",
+      "kind": "Property",
+      "signature": "public int FrontFace { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The winding order to use to determine which face of a triangle is considered its front face.",
+      "defaultValue": "0",
+      "godotName": "front_face",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.FrontFace",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "LineWidth",
+      "kind": "Property",
+      "signature": "public float LineWidth { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The line width to use when drawing lines (in pixels). Thick lines may not be supported on all hardware.",
+      "defaultValue": "1.0",
+      "godotName": "line_width",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.LineWidth",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "PatchControlPoints",
+      "kind": "Property",
+      "signature": "public int PatchControlPoints { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of control points to use when drawing a patch with tessellation enabled. Higher values result in higher quality at the cost of performance.",
+      "defaultValue": "1",
+      "godotName": "patch_control_points",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.PatchControlPoints",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    },
+    {
+      "name": "Wireframe",
+      "kind": "Property",
+      "signature": "public bool Wireframe { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], performs wireframe rendering for triangles instead of flat or textured rendering.",
+      "defaultValue": "false",
+      "godotName": "wireframe",
+      "xmlDocId": "P:Godot.RDPipelineRasterizationState.Wireframe",
+      "sourcePath": "doc/classes/RDPipelineRasterizationState.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDPipelineRasterizationState.xml",
+      "sha256": "790acbf14e5ca1b8e38005bf35dead2fe4767cd584ba3fb327e74143cce54eb0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

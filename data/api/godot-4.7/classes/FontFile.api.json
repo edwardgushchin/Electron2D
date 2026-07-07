@@ -1,0 +1,1696 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FontFile",
+    "namespace": "Godot",
+    "fullName": "Godot.FontFile",
+    "kind": "class",
+    "baseType": "Font",
+    "interfaces": [],
+    "godotReference": "FontFile",
+    "documentationPath": "doc/classes/FontFile.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fontfile.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearCache",
+      "kind": "Method",
+      "signature": "public void ClearCache()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all font cache entries.",
+      "godotName": "clear_cache",
+      "xmlDocId": "M:Godot.FontFile.ClearCache",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ClearGlyphs",
+      "kind": "Method",
+      "signature": "public void ClearGlyphs(int cacheIndex, Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Removes all rendered glyph information from the cache entry. [b]Note:[/b] This function will not remove textures associated with the glyphs, use [method remove_texture] to remove them manually.",
+      "godotName": "clear_glyphs",
+      "xmlDocId": "M:Godot.FontFile.ClearGlyphs(int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ClearKerningMap",
+      "kind": "Method",
+      "signature": "public void ClearKerningMap(int cacheIndex, int size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes all kerning overrides.",
+      "godotName": "clear_kerning_map",
+      "xmlDocId": "M:Godot.FontFile.ClearKerningMap(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ClearSizeCache",
+      "kind": "Method",
+      "signature": "public void ClearSizeCache(int cacheIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes all font sizes from the cache entry.",
+      "godotName": "clear_size_cache",
+      "xmlDocId": "M:Godot.FontFile.ClearSizeCache(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ClearTextures",
+      "kind": "Method",
+      "signature": "public void ClearTextures(int cacheIndex, Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Removes all textures from font cache entry. [b]Note:[/b] This function will not remove glyphs associated with the texture, use [method remove_glyph] to remove them manually.",
+      "godotName": "clear_textures",
+      "xmlDocId": "M:Godot.FontFile.ClearTextures(int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheAscent",
+      "kind": "Method",
+      "signature": "public float GetCacheAscent(int cacheIndex, int size)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the font ascent (number of pixels above the baseline).",
+      "godotName": "get_cache_ascent",
+      "xmlDocId": "M:Godot.FontFile.GetCacheAscent(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheCount",
+      "kind": "Method",
+      "signature": "public int GetCacheCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns number of the font cache entries.",
+      "godotName": "get_cache_count",
+      "xmlDocId": "M:Godot.FontFile.GetCacheCount",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheDescent",
+      "kind": "Method",
+      "signature": "public float GetCacheDescent(int cacheIndex, int size)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the font descent (number of pixels below the baseline).",
+      "godotName": "get_cache_descent",
+      "xmlDocId": "M:Godot.FontFile.GetCacheDescent(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheScale",
+      "kind": "Method",
+      "signature": "public float GetCacheScale(int cacheIndex, int size)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns scaling factor of the color bitmap font.",
+      "godotName": "get_cache_scale",
+      "xmlDocId": "M:Godot.FontFile.GetCacheScale(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheUnderlinePosition",
+      "kind": "Method",
+      "signature": "public float GetCacheUnderlinePosition(int cacheIndex, int size)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns pixel offset of the underline below the baseline.",
+      "godotName": "get_cache_underline_position",
+      "xmlDocId": "M:Godot.FontFile.GetCacheUnderlinePosition(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCacheUnderlineThickness",
+      "kind": "Method",
+      "signature": "public float GetCacheUnderlineThickness(int cacheIndex, int size)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns thickness of the underline in pixels.",
+      "godotName": "get_cache_underline_thickness",
+      "xmlDocId": "M:Godot.FontFile.GetCacheUnderlineThickness(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetCharFromGlyphIndex",
+      "kind": "Method",
+      "signature": "public int GetCharFromGlyphIndex(int size, int glyphIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns character code associated with [param glyph_index], or [code]0[/code] if [param glyph_index] is invalid. See [method get_glyph_index].",
+      "godotName": "get_char_from_glyph_index",
+      "xmlDocId": "M:Godot.FontFile.GetCharFromGlyphIndex(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetEmbolden",
+      "kind": "Method",
+      "signature": "public float GetEmbolden(int cacheIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns embolden strength, if is not equal to zero, emboldens the font outlines. Negative values reduce the outline thickness.",
+      "godotName": "get_embolden",
+      "xmlDocId": "M:Godot.FontFile.GetEmbolden(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetExtraBaselineOffset",
+      "kind": "Method",
+      "signature": "public float GetExtraBaselineOffset(int cacheIndex)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns extra baseline offset (as a fraction of font height).",
+      "godotName": "get_extra_baseline_offset",
+      "xmlDocId": "M:Godot.FontFile.GetExtraBaselineOffset(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetExtraSpacing",
+      "kind": "Method",
+      "signature": "public int GetExtraSpacing(int cacheIndex, int spacing)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "spacing",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns spacing for [param spacing] in pixels (not relative to the font size).",
+      "godotName": "get_extra_spacing",
+      "xmlDocId": "M:Godot.FontFile.GetExtraSpacing(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetFaceIndex",
+      "kind": "Method",
+      "signature": "public int GetFaceIndex(int cacheIndex)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns an active face index in the TrueType / OpenType collection.",
+      "godotName": "get_face_index",
+      "xmlDocId": "M:Godot.FontFile.GetFaceIndex(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphAdvance",
+      "kind": "Method",
+      "signature": "public Vector2 GetGlyphAdvance(int cacheIndex, int size, int glyph)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns glyph advance (offset of the next glyph). [b]Note:[/b] Advance for glyphs outlines is the same as the base glyph advance and is not saved.",
+      "godotName": "get_glyph_advance",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphAdvance(int,int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphIndex",
+      "kind": "Method",
+      "signature": "public int GetGlyphIndex(int size, int @char, int variationSelector)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "char",
+          "type": "int"
+        },
+        {
+          "name": "variation_selector",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the glyph index of a [param char], optionally modified by the [param variation_selector].",
+      "godotName": "get_glyph_index",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphIndex(int,int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphList",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetGlyphList(int cacheIndex, Vector2i size)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns list of rendered glyphs in the cache entry.",
+      "godotName": "get_glyph_list",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphList(int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphOffset",
+      "kind": "Method",
+      "signature": "public Vector2 GetGlyphOffset(int cacheIndex, Vector2i size, int glyph)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns glyph offset from the baseline.",
+      "godotName": "get_glyph_offset",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphOffset(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphSize",
+      "kind": "Method",
+      "signature": "public Vector2 GetGlyphSize(int cacheIndex, Vector2i size, int glyph)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns glyph size.",
+      "godotName": "get_glyph_size",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphSize(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphTextureIdx",
+      "kind": "Method",
+      "signature": "public int GetGlyphTextureIdx(int cacheIndex, Vector2i size, int glyph)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns index of the cache texture containing the glyph.",
+      "godotName": "get_glyph_texture_idx",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphTextureIdx(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetGlyphUvRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetGlyphUvRect(int cacheIndex, Vector2i size, int glyph)",
+      "returnType": "Rect2",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns rectangle in the cache texture containing the glyph.",
+      "godotName": "get_glyph_uv_rect",
+      "xmlDocId": "M:Godot.FontFile.GetGlyphUvRect(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetKerning",
+      "kind": "Method",
+      "signature": "public Vector2 GetKerning(int cacheIndex, int size, Vector2i glyphPair)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph_pair",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns kerning for the pair of glyphs.",
+      "godotName": "get_kerning",
+      "xmlDocId": "M:Godot.FontFile.GetKerning(int,int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetKerningList",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetKerningList(int cacheIndex, int size)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns list of the kerning overrides.",
+      "godotName": "get_kerning_list",
+      "xmlDocId": "M:Godot.FontFile.GetKerningList(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetLanguageSupportOverride",
+      "kind": "Method",
+      "signature": "public bool GetLanguageSupportOverride(String language)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if support override is enabled for the [param language].",
+      "godotName": "get_language_support_override",
+      "xmlDocId": "M:Godot.FontFile.GetLanguageSupportOverride(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetLanguageSupportOverrides",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetLanguageSupportOverrides()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns list of language support overrides.",
+      "godotName": "get_language_support_overrides",
+      "xmlDocId": "M:Godot.FontFile.GetLanguageSupportOverrides",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetScriptSupportOverride",
+      "kind": "Method",
+      "signature": "public bool GetScriptSupportOverride(String script)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if support override is enabled for the [param script].",
+      "godotName": "get_script_support_override",
+      "xmlDocId": "M:Godot.FontFile.GetScriptSupportOverride(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetScriptSupportOverrides",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetScriptSupportOverrides()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns list of script support overrides.",
+      "godotName": "get_script_support_overrides",
+      "xmlDocId": "M:Godot.FontFile.GetScriptSupportOverrides",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetSizeCacheList",
+      "kind": "Method",
+      "signature": "public Vector2i[] GetSizeCacheList(int cacheIndex)",
+      "returnType": "Vector2i[]",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns list of the font sizes in the cache. Each size is [Vector2i] with font size and outline size.",
+      "godotName": "get_size_cache_list",
+      "xmlDocId": "M:Godot.FontFile.GetSizeCacheList(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetTextureCount",
+      "kind": "Method",
+      "signature": "public int GetTextureCount(int cacheIndex, Vector2i size)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Returns number of textures used by font cache entry.",
+      "godotName": "get_texture_count",
+      "xmlDocId": "M:Godot.FontFile.GetTextureCount(int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetTextureImage",
+      "kind": "Method",
+      "signature": "public Image GetTextureImage(int cacheIndex, Vector2i size, int textureIndex)",
+      "returnType": "Image",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a copy of the font cache texture image.",
+      "godotName": "get_texture_image",
+      "xmlDocId": "M:Godot.FontFile.GetTextureImage(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetTextureOffsets",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a copy of the array containing glyph packing data.",
+      "godotName": "get_texture_offsets",
+      "xmlDocId": "M:Godot.FontFile.GetTextureOffsets(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetTransform(int cacheIndex)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns 2D transform, applied to the font outlines, can be used for slanting, flipping and rotating glyphs.",
+      "godotName": "get_transform",
+      "xmlDocId": "M:Godot.FontFile.GetTransform(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GetVariationCoordinates",
+      "kind": "Method",
+      "signature": "public Dictionary GetVariationCoordinates(int cacheIndex)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns variation coordinates for the specified font cache entry. See [method Font.get_supported_variation_list] for more info.",
+      "godotName": "get_variation_coordinates",
+      "xmlDocId": "M:Godot.FontFile.GetVariationCoordinates(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "LoadBitmapFont",
+      "kind": "Method",
+      "signature": "public int LoadBitmapFont(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads an AngelCode BMFont (.fnt, .font) bitmap font from file [param path]. [b]Warning:[/b] This method should only be used in the editor or in cases when you need to load external fonts at run-time, such as fonts located at the [code]user://[/code] directory.",
+      "godotName": "load_bitmap_font",
+      "xmlDocId": "M:Godot.FontFile.LoadBitmapFont(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "LoadDynamicFont",
+      "kind": "Method",
+      "signature": "public int LoadDynamicFont(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Loads a TrueType (.ttf), OpenType (.otf), WOFF (.woff), WOFF2 (.woff2) or Type 1 (.pfb, .pfm) dynamic font from file [param path]. [b]Warning:[/b] This method should only be used in the editor or in cases when you need to load external fonts at run-time, such as fonts located at the [code]user://[/code] directory.",
+      "godotName": "load_dynamic_font",
+      "xmlDocId": "M:Godot.FontFile.LoadDynamicFont(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveCache",
+      "kind": "Method",
+      "signature": "public void RemoveCache(int cacheIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes specified font cache entry.",
+      "godotName": "remove_cache",
+      "xmlDocId": "M:Godot.FontFile.RemoveCache(int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveGlyph",
+      "kind": "Method",
+      "signature": "public void RemoveGlyph(int cacheIndex, Vector2i size, int glyph)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes specified rendered glyph information from the cache entry. [b]Note:[/b] This function will not remove textures associated with the glyphs, use [method remove_texture] to remove them manually.",
+      "godotName": "remove_glyph",
+      "xmlDocId": "M:Godot.FontFile.RemoveGlyph(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveKerning",
+      "kind": "Method",
+      "signature": "public void RemoveKerning(int cacheIndex, int size, Vector2i glyphPair)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph_pair",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Removes kerning override for the pair of glyphs.",
+      "godotName": "remove_kerning",
+      "xmlDocId": "M:Godot.FontFile.RemoveKerning(int,int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveLanguageSupportOverride",
+      "kind": "Method",
+      "signature": "public void RemoveLanguageSupportOverride(String language)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "String"
+        }
+      ],
+      "summary": "Remove language support override.",
+      "godotName": "remove_language_support_override",
+      "xmlDocId": "M:Godot.FontFile.RemoveLanguageSupportOverride(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveScriptSupportOverride",
+      "kind": "Method",
+      "signature": "public void RemoveScriptSupportOverride(String script)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes script support override.",
+      "godotName": "remove_script_support_override",
+      "xmlDocId": "M:Godot.FontFile.RemoveScriptSupportOverride(String)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveSizeCache",
+      "kind": "Method",
+      "signature": "public void RemoveSizeCache(int cacheIndex, Vector2i size)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        }
+      ],
+      "summary": "Removes specified font size from the cache entry.",
+      "godotName": "remove_size_cache",
+      "xmlDocId": "M:Godot.FontFile.RemoveSizeCache(int,Vector2i)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RemoveTexture",
+      "kind": "Method",
+      "signature": "public void RemoveTexture(int cacheIndex, Vector2i size, int textureIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes specified texture from the cache entry. [b]Note:[/b] This function will not remove glyphs associated with the texture. Remove them manually using [method remove_glyph].",
+      "godotName": "remove_texture",
+      "xmlDocId": "M:Godot.FontFile.RemoveTexture(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RenderGlyph",
+      "kind": "Method",
+      "signature": "public void RenderGlyph(int cacheIndex, Vector2i size, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Renders specified glyph to the font cache texture.",
+      "godotName": "render_glyph",
+      "xmlDocId": "M:Godot.FontFile.RenderGlyph(int,Vector2i,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "RenderRange",
+      "kind": "Method",
+      "signature": "public void RenderRange(int cacheIndex, Vector2i size, int start, int end)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "start",
+          "type": "int"
+        },
+        {
+          "name": "end",
+          "type": "int"
+        }
+      ],
+      "summary": "Renders the range of characters to the font cache texture.",
+      "godotName": "render_range",
+      "xmlDocId": "M:Godot.FontFile.RenderRange(int,Vector2i,int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetCacheAscent",
+      "kind": "Method",
+      "signature": "public void SetCacheAscent(int cacheIndex, int size, float ascent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "ascent",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the font ascent (number of pixels above the baseline).",
+      "godotName": "set_cache_ascent",
+      "xmlDocId": "M:Godot.FontFile.SetCacheAscent(int,int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetCacheDescent",
+      "kind": "Method",
+      "signature": "public void SetCacheDescent(int cacheIndex, int size, float descent)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "descent",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the font descent (number of pixels below the baseline).",
+      "godotName": "set_cache_descent",
+      "xmlDocId": "M:Godot.FontFile.SetCacheDescent(int,int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetCacheScale",
+      "kind": "Method",
+      "signature": "public void SetCacheScale(int cacheIndex, int size, float scale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "scale",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets scaling factor of the color bitmap font.",
+      "godotName": "set_cache_scale",
+      "xmlDocId": "M:Godot.FontFile.SetCacheScale(int,int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetCacheUnderlinePosition",
+      "kind": "Method",
+      "signature": "public void SetCacheUnderlinePosition(int cacheIndex, int size, float underlinePosition)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "underline_position",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets pixel offset of the underline below the baseline.",
+      "godotName": "set_cache_underline_position",
+      "xmlDocId": "M:Godot.FontFile.SetCacheUnderlinePosition(int,int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetCacheUnderlineThickness",
+      "kind": "Method",
+      "signature": "public void SetCacheUnderlineThickness(int cacheIndex, int size, float underlineThickness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "underline_thickness",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets thickness of the underline in pixels.",
+      "godotName": "set_cache_underline_thickness",
+      "xmlDocId": "M:Godot.FontFile.SetCacheUnderlineThickness(int,int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetEmbolden",
+      "kind": "Method",
+      "signature": "public void SetEmbolden(int cacheIndex, float strength)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "strength",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets embolden strength, if is not equal to zero, emboldens the font outlines. Negative values reduce the outline thickness.",
+      "godotName": "set_embolden",
+      "xmlDocId": "M:Godot.FontFile.SetEmbolden(int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetExtraBaselineOffset",
+      "kind": "Method",
+      "signature": "public void SetExtraBaselineOffset(int cacheIndex, float baselineOffset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "baseline_offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets extra baseline offset (as a fraction of font height).",
+      "godotName": "set_extra_baseline_offset",
+      "xmlDocId": "M:Godot.FontFile.SetExtraBaselineOffset(int,float)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetExtraSpacing",
+      "kind": "Method",
+      "signature": "public void SetExtraSpacing(int cacheIndex, int spacing, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "spacing",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the spacing for [param spacing] to [param value] in pixels (not relative to the font size).",
+      "godotName": "set_extra_spacing",
+      "xmlDocId": "M:Godot.FontFile.SetExtraSpacing(int,int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetFaceIndex",
+      "kind": "Method",
+      "signature": "public void SetFaceIndex(int cacheIndex, int faceIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "face_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets an active face index in the TrueType / OpenType collection.",
+      "godotName": "set_face_index",
+      "xmlDocId": "M:Godot.FontFile.SetFaceIndex(int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetGlyphAdvance",
+      "kind": "Method",
+      "signature": "public void SetGlyphAdvance(int cacheIndex, int size, int glyph, Vector2 advance)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        },
+        {
+          "name": "advance",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets glyph advance (offset of the next glyph). [b]Note:[/b] Advance for glyphs outlines is the same as the base glyph advance and is not saved.",
+      "godotName": "set_glyph_advance",
+      "xmlDocId": "M:Godot.FontFile.SetGlyphAdvance(int,int,int,Vector2)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetGlyphOffset",
+      "kind": "Method",
+      "signature": "public void SetGlyphOffset(int cacheIndex, Vector2i size, int glyph, Vector2 offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets glyph offset from the baseline.",
+      "godotName": "set_glyph_offset",
+      "xmlDocId": "M:Godot.FontFile.SetGlyphOffset(int,Vector2i,int,Vector2)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetGlyphSize",
+      "kind": "Method",
+      "signature": "public void SetGlyphSize(int cacheIndex, Vector2i size, int glyph, Vector2 glSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        },
+        {
+          "name": "gl_size",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets glyph size.",
+      "godotName": "set_glyph_size",
+      "xmlDocId": "M:Godot.FontFile.SetGlyphSize(int,Vector2i,int,Vector2)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetGlyphTextureIdx",
+      "kind": "Method",
+      "signature": "public void SetGlyphTextureIdx(int cacheIndex, Vector2i size, int glyph, int textureIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        },
+        {
+          "name": "texture_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets index of the cache texture containing the glyph.",
+      "godotName": "set_glyph_texture_idx",
+      "xmlDocId": "M:Godot.FontFile.SetGlyphTextureIdx(int,Vector2i,int,int)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetGlyphUvRect",
+      "kind": "Method",
+      "signature": "public void SetGlyphUvRect(int cacheIndex, Vector2i size, int glyph, Rect2 uvRect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "glyph",
+          "type": "int"
+        },
+        {
+          "name": "uv_rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Sets rectangle in the cache texture containing the glyph.",
+      "godotName": "set_glyph_uv_rect",
+      "xmlDocId": "M:Godot.FontFile.SetGlyphUvRect(int,Vector2i,int,Rect2)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetKerning",
+      "kind": "Method",
+      "signature": "public void SetKerning(int cacheIndex, int size, Vector2i glyphPair, Vector2 kerning)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "name": "glyph_pair",
+          "type": "Vector2i"
+        },
+        {
+          "name": "kerning",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets kerning for the pair of glyphs.",
+      "godotName": "set_kerning",
+      "xmlDocId": "M:Godot.FontFile.SetKerning(int,int,Vector2i,Vector2)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetLanguageSupportOverride",
+      "kind": "Method",
+      "signature": "public void SetLanguageSupportOverride(String language, bool supported)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "language",
+          "type": "String"
+        },
+        {
+          "name": "supported",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds override for [method Font.is_language_supported].",
+      "godotName": "set_language_support_override",
+      "xmlDocId": "M:Godot.FontFile.SetLanguageSupportOverride(String,bool)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetScriptSupportOverride",
+      "kind": "Method",
+      "signature": "public void SetScriptSupportOverride(String script, bool supported)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        },
+        {
+          "name": "supported",
+          "type": "bool"
+        }
+      ],
+      "summary": "Adds override for [method Font.is_script_supported].",
+      "godotName": "set_script_support_override",
+      "xmlDocId": "M:Godot.FontFile.SetScriptSupportOverride(String,bool)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetTextureImage",
+      "kind": "Method",
+      "signature": "public void SetTextureImage(int cacheIndex, Vector2i size, int textureIndex, Image image)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_index",
+          "type": "int"
+        },
+        {
+          "name": "image",
+          "type": "Image"
+        }
+      ],
+      "summary": "Sets font cache texture image.",
+      "godotName": "set_texture_image",
+      "xmlDocId": "M:Godot.FontFile.SetTextureImage(int,Vector2i,int,Image)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetTextureOffsets",
+      "kind": "Method",
+      "signature": "public void SetTextureOffsets(int cacheIndex, Vector2i size, int textureIndex, PackedInt32Array offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "size",
+          "type": "Vector2i"
+        },
+        {
+          "name": "texture_index",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Sets array containing glyph packing data.",
+      "godotName": "set_texture_offsets",
+      "xmlDocId": "M:Godot.FontFile.SetTextureOffsets(int,Vector2i,int,PackedInt32Array)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetTransform",
+      "kind": "Method",
+      "signature": "public void SetTransform(int cacheIndex, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets 2D transform, applied to the font outlines, can be used for slanting, flipping, and rotating glyphs.",
+      "godotName": "set_transform",
+      "xmlDocId": "M:Godot.FontFile.SetTransform(int,Transform2D)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SetVariationCoordinates",
+      "kind": "Method",
+      "signature": "public void SetVariationCoordinates(int cacheIndex, Dictionary variationCoordinates)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "cache_index",
+          "type": "int"
+        },
+        {
+          "name": "variation_coordinates",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Sets variation coordinates for the specified font cache entry. See [method Font.get_supported_variation_list] for more info.",
+      "godotName": "set_variation_coordinates",
+      "xmlDocId": "M:Godot.FontFile.SetVariationCoordinates(int,Dictionary)",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "AllowSystemFallback",
+      "kind": "Property",
+      "signature": "public bool AllowSystemFallback { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], system fonts can be automatically used as fallbacks.",
+      "defaultValue": "true",
+      "godotName": "allow_system_fallback",
+      "xmlDocId": "P:Godot.FontFile.AllowSystemFallback",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "Antialiasing",
+      "kind": "Property",
+      "signature": "public int Antialiasing { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font anti-aliasing mode.",
+      "defaultValue": "1",
+      "godotName": "antialiasing",
+      "xmlDocId": "P:Godot.FontFile.Antialiasing",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "Data",
+      "kind": "Property",
+      "signature": "public PackedByteArray Data { get; set; }",
+      "returnType": "PackedByteArray",
+      "parameters": [],
+      "summary": "Contents of the dynamic font source file.",
+      "defaultValue": "PackedByteArray()",
+      "godotName": "data",
+      "xmlDocId": "P:Godot.FontFile.Data",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "DisableEmbeddedBitmaps",
+      "kind": "Property",
+      "signature": "public bool DisableEmbeddedBitmaps { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], embedded font bitmap loading is disabled (bitmap-only and color fonts ignore this property).",
+      "defaultValue": "true",
+      "godotName": "disable_embedded_bitmaps",
+      "xmlDocId": "P:Godot.FontFile.DisableEmbeddedBitmaps",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FixedSize",
+      "kind": "Property",
+      "signature": "public int FixedSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font size, used only for the bitmap fonts.",
+      "defaultValue": "0",
+      "godotName": "fixed_size",
+      "xmlDocId": "P:Godot.FontFile.FixedSize",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FixedSizeScaleMode",
+      "kind": "Property",
+      "signature": "public int FixedSizeScaleMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Scaling mode, used only for the bitmap fonts with [member fixed_size] greater than zero.",
+      "defaultValue": "0",
+      "godotName": "fixed_size_scale_mode",
+      "xmlDocId": "P:Godot.FontFile.FixedSizeScaleMode",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FontName",
+      "kind": "Property",
+      "signature": "public String FontName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Font family name.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "font_name",
+      "xmlDocId": "P:Godot.FontFile.FontName",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FontStretch",
+      "kind": "Property",
+      "signature": "public int FontStretch { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font stretch amount, compared to a normal width. A percentage value between [code]50%[/code] and [code]200%[/code].",
+      "defaultValue": "100",
+      "godotName": "font_stretch",
+      "xmlDocId": "P:Godot.FontFile.FontStretch",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FontStyle",
+      "kind": "Property",
+      "signature": "public int FontStyle { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font style flags.",
+      "defaultValue": "0",
+      "godotName": "font_style",
+      "xmlDocId": "P:Godot.FontFile.FontStyle",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "FontWeight",
+      "kind": "Property",
+      "signature": "public int FontWeight { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Weight (boldness) of the font. A value in the [code]100...999[/code] range, normal font weight is [code]400[/code], bold font weight is [code]700[/code].",
+      "defaultValue": "400",
+      "godotName": "font_weight",
+      "xmlDocId": "P:Godot.FontFile.FontWeight",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ForceAutohinter",
+      "kind": "Property",
+      "signature": "public bool ForceAutohinter { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], auto-hinting is supported and preferred over font built-in hinting. Used by dynamic fonts only (MSDF fonts don\u0027t support hinting).",
+      "defaultValue": "false",
+      "godotName": "force_autohinter",
+      "xmlDocId": "P:Godot.FontFile.ForceAutohinter",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "GenerateMipmaps",
+      "kind": "Property",
+      "signature": "public bool GenerateMipmaps { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], generate mipmaps for the font textures.",
+      "defaultValue": "false",
+      "godotName": "generate_mipmaps",
+      "xmlDocId": "P:Godot.FontFile.GenerateMipmaps",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "Hinting",
+      "kind": "Property",
+      "signature": "public int Hinting { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font hinting mode. Used by dynamic fonts only.",
+      "defaultValue": "1",
+      "godotName": "hinting",
+      "xmlDocId": "P:Godot.FontFile.Hinting",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "KeepRoundingRemainders",
+      "kind": "Property",
+      "signature": "public bool KeepRoundingRemainders { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], when aligning glyphs to the pixel boundaries rounding remainders are accumulated to ensure more uniform glyph distribution. This setting has no effect if subpixel positioning is enabled.",
+      "defaultValue": "true",
+      "godotName": "keep_rounding_remainders",
+      "xmlDocId": "P:Godot.FontFile.KeepRoundingRemainders",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "ModulateColorGlyphs",
+      "kind": "Property",
+      "signature": "public bool ModulateColorGlyphs { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], color modulation is applied when drawing colored glyphs, otherwise it\u0027s applied to the monochrome glyphs only.",
+      "defaultValue": "false",
+      "godotName": "modulate_color_glyphs",
+      "xmlDocId": "P:Godot.FontFile.ModulateColorGlyphs",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "MsdfPixelRange",
+      "kind": "Property",
+      "signature": "public int MsdfPixelRange { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The width of the range around the shape between the minimum and maximum representable signed distance. If using font outlines, [member msdf_pixel_range] must be set to at least [i]twice[/i] the size of the largest font outline. The default [member msdf_pixel_range] value of [code]16[/code] allows outline sizes up to [code]8[/code] to look correct.",
+      "defaultValue": "16",
+      "godotName": "msdf_pixel_range",
+      "xmlDocId": "P:Godot.FontFile.MsdfPixelRange",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "MsdfSize",
+      "kind": "Property",
+      "signature": "public int MsdfSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Source font size used to generate MSDF textures. Higher values allow for more precision, but are slower to render and require more memory. Only increase this value if you notice a visible lack of precision in glyph rendering.",
+      "defaultValue": "48",
+      "godotName": "msdf_size",
+      "xmlDocId": "P:Godot.FontFile.MsdfSize",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "MultichannelSignedDistanceField",
+      "kind": "Property",
+      "signature": "public bool MultichannelSignedDistanceField { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field (MSDF) generated from the dynamic font vector data. Since this approach does not rely on rasterizing the font every time its size changes, this allows for resizing the font in real-time without any performance penalty. Text will also not look grainy for [Control]s that are scaled down (or for [Label3D]s viewed from a long distance). As a downside, font hinting is not available with MSDF. The lack of font hinting may result in less crisp and less readable fonts at small sizes. [b]Note:[/b] If using font outlines, [member msdf_pixel_range] must be set to at least [i]twice[/i] the size of the largest font outline. [b]Note:[/b] MSDF font rendering does not render glyphs with overlapping shapes correctly. Overlapping shapes are not valid per the OpenType standard, but are still commonly found in many font files, especially those converted by Google Fonts. To avoid issues with overlapping glyphs, consider downloading the font file directly from the type foundry instead of relying on Google Fonts.",
+      "defaultValue": "false",
+      "godotName": "multichannel_signed_distance_field",
+      "xmlDocId": "P:Godot.FontFile.MultichannelSignedDistanceField",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "OpentypeFeatureOverrides",
+      "kind": "Property",
+      "signature": "public Dictionary OpentypeFeatureOverrides { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Font OpenType feature set override.",
+      "defaultValue": "{}",
+      "godotName": "opentype_feature_overrides",
+      "xmlDocId": "P:Godot.FontFile.OpentypeFeatureOverrides",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "Oversampling",
+      "kind": "Property",
+      "signature": "public float Oversampling { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If set to a positive value, overrides the oversampling factor of the viewport this font is used in. See [member Viewport.oversampling]. This value doesn\u0027t override the [code skip-lint]oversampling[/code] parameter of [code skip-lint]draw_*[/code] methods.",
+      "defaultValue": "0.0",
+      "godotName": "oversampling",
+      "xmlDocId": "P:Godot.FontFile.Oversampling",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "StyleName",
+      "kind": "Property",
+      "signature": "public String StyleName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Font style name.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "style_name",
+      "xmlDocId": "P:Godot.FontFile.StyleName",
+      "sourcePath": "doc/classes/FontFile.xml"
+    },
+    {
+      "name": "SubpixelPositioning",
+      "kind": "Property",
+      "signature": "public int SubpixelPositioning { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better kerning for smaller font sizes, at the cost of higher memory usage and lower font rasterization speed. Use [constant TextServer.SUBPIXEL_POSITIONING_AUTO] to automatically enable it based on the font size.",
+      "defaultValue": "1",
+      "godotName": "subpixel_positioning",
+      "xmlDocId": "P:Godot.FontFile.SubpixelPositioning",
+      "sourcePath": "doc/classes/FontFile.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FontFile.xml",
+      "sha256": "d9ec206a2defe307377a354b209020f6fb45291efcac9029d9166dd9b3bf2f68"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

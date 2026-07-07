@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ENetMultiplayerPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.ENetMultiplayerPeer",
+    "kind": "class",
+    "baseType": "MultiplayerPeer",
+    "interfaces": [],
+    "godotReference": "ENetMultiplayerPeer",
+    "documentationPath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_enetmultiplayerpeer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddMeshPeer",
+      "kind": "Method",
+      "signature": "public int AddMeshPeer(int peerId, ENetConnection host)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peer_id",
+          "type": "int"
+        },
+        {
+          "name": "host",
+          "type": "ENetConnection"
+        }
+      ],
+      "summary": "Add a new remote peer with the given [param peer_id] connected to the given [param host]. [b]Note:[/b] The [param host] must have exactly one peer in the [constant ENetPacketPeer.STATE_CONNECTED] state.",
+      "godotName": "add_mesh_peer",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.AddMeshPeer(int,ENetConnection)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "CreateClient",
+      "kind": "Method",
+      "signature": "public int CreateClient(String address, int port, int channelCount, int inBandwidth, int outBandwidth, int localPort)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "address",
+          "type": "String"
+        },
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "channel_count",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "in_bandwidth",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "out_bandwidth",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "local_port",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Create client that connects to a server at [param address] using specified [param port]. The given address needs to be either a fully qualified domain name (e.g. [code]\u0022www.example.com\u0022[/code]) or an IP address in IPv4 or IPv6 format (e.g. [code]\u0022192.168.1.1\u0022[/code]). The [param port] is the port the server is listening on. The [param channel_count] parameter can be used to specify the number of ENet channels allocated for the connection. The [param in_bandwidth] and [param out_bandwidth] parameters can be used to limit the incoming and outgoing bandwidth to the given number of bytes per second. The default of 0 means unlimited bandwidth. Note that ENet will strategically drop packets on specific sides of a connection between peers to ensure the peer\u0027s bandwidth is not overwhelmed. The bandwidth parameters also determine the window size of a connection which limits the amount of reliable packets that may be in transit at any given time. Returns [constant OK] if a client was created, [constant ERR_ALREADY_IN_USE] if this ENetMultiplayerPeer instance already has an open connection (in which case you need to call [method MultiplayerPeer.close] first) or [constant ERR_CANT_CREATE] if the client could not be created. If [param local_port] is specified, the client will also listen to the given port; this is useful for some NAT traversal techniques.",
+      "godotName": "create_client",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.CreateClient(String,int,int,int,int,int)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "CreateMesh",
+      "kind": "Method",
+      "signature": "public int CreateMesh(int uniqueId)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "unique_id",
+          "type": "int"
+        }
+      ],
+      "summary": "Initialize this [MultiplayerPeer] in mesh mode. The provided [param unique_id] will be used as the local peer network unique ID once assigned as the [member MultiplayerAPI.multiplayer_peer]. In the mesh configuration you will need to set up each new peer manually using [ENetConnection] before calling [method add_mesh_peer]. While this technique is more advanced, it allows for better control over the connection process (e.g. when dealing with NAT punch-through) and for better distribution of the network load (which would otherwise be more taxing on the server).",
+      "godotName": "create_mesh",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.CreateMesh(int)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "CreateServer",
+      "kind": "Method",
+      "signature": "public int CreateServer(int port, int maxClients, int maxChannels, int inBandwidth, int outBandwidth)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "port",
+          "type": "int"
+        },
+        {
+          "name": "max_clients",
+          "type": "int",
+          "defaultValue": "32"
+        },
+        {
+          "name": "max_channels",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "in_bandwidth",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "out_bandwidth",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Create server that listens to connections via [param port]. The port needs to be an available, unused port between 0 and 65535. Note that ports below 1024 are privileged and may require elevated permissions depending on the platform. To change the interface the server listens on, use [method set_bind_ip]. The default IP is the wildcard [code]\u0022*\u0022[/code], which listens on all available interfaces. [param max_clients] is the maximum number of clients that are allowed at once, any number up to 4095 may be used, although the achievable number of simultaneous clients may be far lower and depends on the application. For additional details on the bandwidth parameters, see [method create_client]. Returns [constant OK] if a server was created, [constant ERR_ALREADY_IN_USE] if this ENetMultiplayerPeer instance already has an open connection (in which case you need to call [method MultiplayerPeer.close] first) or [constant ERR_CANT_CREATE] if the server could not be created.",
+      "godotName": "create_server",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.CreateServer(int,int,int,int,int)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "GetPeer",
+      "kind": "Method",
+      "signature": "public ENetPacketPeer GetPeer(int id)",
+      "returnType": "ENetPacketPeer",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [ENetPacketPeer] associated to the given [param id].",
+      "godotName": "get_peer",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.GetPeer(int)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "SetBindIp",
+      "kind": "Method",
+      "signature": "public void SetBindIp(String ip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "ip",
+          "type": "String"
+        }
+      ],
+      "summary": "The IP used when creating a server. This is set to the wildcard [code]\u0022*\u0022[/code] by default, which binds to all available interfaces. The given IP needs to be in IPv4 or IPv6 address format, for example: [code]\u0022192.168.1.1\u0022[/code].",
+      "godotName": "set_bind_ip",
+      "xmlDocId": "M:Godot.ENetMultiplayerPeer.SetBindIp(String)",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    },
+    {
+      "name": "Host",
+      "kind": "Property",
+      "signature": "public ENetConnection Host { get; set; }",
+      "returnType": "ENetConnection",
+      "parameters": [],
+      "summary": "The underlying [ENetConnection] created after [method create_client] and [method create_server].",
+      "godotName": "host",
+      "xmlDocId": "P:Godot.ENetMultiplayerPeer.Host",
+      "sourcePath": "modules/enet/doc_classes/ENetMultiplayerPeer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/enet/doc_classes/ENetMultiplayerPeer.xml",
+      "sha256": "37d52bf8cd578374c9973f09441141af2be88f5bb311c6a760f033d5d0113d47"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

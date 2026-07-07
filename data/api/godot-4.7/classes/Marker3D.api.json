@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Marker3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Marker3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "Marker3D",
+    "documentationPath": "doc/classes/Marker3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_marker3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GizmoExtents",
+      "kind": "Property",
+      "signature": "public float GizmoExtents { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Size of the gizmo cross that appears in the editor.",
+      "defaultValue": "0.25",
+      "godotName": "gizmo_extents",
+      "xmlDocId": "P:Godot.Marker3D.GizmoExtents",
+      "sourcePath": "doc/classes/Marker3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Marker3D.xml",
+      "sha256": "9b84dca0f12d9a1e6f9aaaa512bff6ca83224cb700dd3bb46298e1c161d34e36"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

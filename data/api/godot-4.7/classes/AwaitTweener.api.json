@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AwaitTweener",
+    "namespace": "Godot",
+    "fullName": "Godot.AwaitTweener",
+    "kind": "class",
+    "baseType": "Tweener",
+    "interfaces": [],
+    "godotReference": "AwaitTweener",
+    "documentationPath": "doc/classes/AwaitTweener.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_awaittweener.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetTimeout",
+      "kind": "Method",
+      "signature": "public AwaitTweener SetTimeout(float timeout)",
+      "returnType": "AwaitTweener",
+      "parameters": [
+        {
+          "name": "timeout",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the maximum time an [AwaitTweener] can wait for the signal. Can be used as a safeguard for signals that may never be emitted. If not specified, the tweener will wait indefinitely.",
+      "godotName": "set_timeout",
+      "xmlDocId": "M:Godot.AwaitTweener.SetTimeout(float)",
+      "sourcePath": "doc/classes/AwaitTweener.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AwaitTweener.xml",
+      "sha256": "f9e476ae1866731fdef5a91c822a52c9efcc640e64f70beba3dd800d3e1e2267"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

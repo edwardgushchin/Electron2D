@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RDTextureView",
+    "namespace": "Godot",
+    "fullName": "Godot.RDTextureView",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RDTextureView",
+    "documentationPath": "doc/classes/RDTextureView.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_rdtextureview.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FormatOverride",
+      "kind": "Property",
+      "signature": "public int FormatOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Optional override for the data format to return sampled values in. The corresponding [RDTextureFormat] must have had this added as a shareable format. The default value of [constant RenderingDevice.DATA_FORMAT_MAX] does not override the format.",
+      "defaultValue": "232",
+      "godotName": "format_override",
+      "xmlDocId": "P:Godot.RDTextureView.FormatOverride",
+      "sourcePath": "doc/classes/RDTextureView.xml"
+    },
+    {
+      "name": "SwizzleA",
+      "kind": "Property",
+      "signature": "public int SwizzleA { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The channel to sample when sampling the alpha channel.",
+      "defaultValue": "6",
+      "godotName": "swizzle_a",
+      "xmlDocId": "P:Godot.RDTextureView.SwizzleA",
+      "sourcePath": "doc/classes/RDTextureView.xml"
+    },
+    {
+      "name": "SwizzleB",
+      "kind": "Property",
+      "signature": "public int SwizzleB { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The channel to sample when sampling the blue color channel.",
+      "defaultValue": "5",
+      "godotName": "swizzle_b",
+      "xmlDocId": "P:Godot.RDTextureView.SwizzleB",
+      "sourcePath": "doc/classes/RDTextureView.xml"
+    },
+    {
+      "name": "SwizzleG",
+      "kind": "Property",
+      "signature": "public int SwizzleG { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The channel to sample when sampling the green color channel.",
+      "defaultValue": "4",
+      "godotName": "swizzle_g",
+      "xmlDocId": "P:Godot.RDTextureView.SwizzleG",
+      "sourcePath": "doc/classes/RDTextureView.xml"
+    },
+    {
+      "name": "SwizzleR",
+      "kind": "Property",
+      "signature": "public int SwizzleR { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The channel to sample when sampling the red color channel.",
+      "defaultValue": "3",
+      "godotName": "swizzle_r",
+      "xmlDocId": "P:Godot.RDTextureView.SwizzleR",
+      "sourcePath": "doc/classes/RDTextureView.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RDTextureView.xml",
+      "sha256": "26e45a3cd3a20fcb5322630394933a12de46192a8a0a08b1319ffe8310ad95fa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

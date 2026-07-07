@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TranslationDomain",
+    "namespace": "Godot",
+    "fullName": "Godot.TranslationDomain",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "TranslationDomain",
+    "documentationPath": "doc/classes/TranslationDomain.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_translationdomain.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddTranslation",
+      "kind": "Method",
+      "signature": "public void AddTranslation(Translation translation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Adds a translation.",
+      "godotName": "add_translation",
+      "xmlDocId": "M:Godot.TranslationDomain.AddTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all translations.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.TranslationDomain.Clear",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "FindTranslations",
+      "kind": "Method",
+      "signature": "public Translation[] FindTranslations(String locale, bool exact)",
+      "returnType": "Translation[]",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        },
+        {
+          "name": "exact",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns the [Translation] instances that match [param locale] (see [method TranslationServer.compare_locales]). If [param exact] is [code]true[/code], only instances whose locale exactly equals [param locale] will be returned.",
+      "godotName": "find_translations",
+      "xmlDocId": "M:Godot.TranslationDomain.FindTranslations(String,bool)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "GetLocaleOverride",
+      "kind": "Method",
+      "signature": "public String GetLocaleOverride()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the locale override of the domain. Returns an empty string if locale override is disabled.",
+      "godotName": "get_locale_override",
+      "xmlDocId": "M:Godot.TranslationDomain.GetLocaleOverride",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "GetTranslationObject",
+      "kind": "Method",
+      "signature": "public Translation GetTranslationObject(String locale)",
+      "returnType": "Translation",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the [Translation] instance that best matches [param locale]. Returns [code]null[/code] if there are no matches.",
+      "godotName": "get_translation_object",
+      "xmlDocId": "M:Godot.TranslationDomain.GetTranslationObject(String)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "GetTranslations",
+      "kind": "Method",
+      "signature": "public Translation[] GetTranslations()",
+      "returnType": "Translation[]",
+      "parameters": [],
+      "summary": "Returns all available [Translation] instances as added by [method add_translation].",
+      "godotName": "get_translations",
+      "xmlDocId": "M:Godot.TranslationDomain.GetTranslations",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "HasTranslation",
+      "kind": "Method",
+      "signature": "public bool HasTranslation(Translation translation)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if this translation domain contains the given [param translation].",
+      "godotName": "has_translation",
+      "xmlDocId": "M:Godot.TranslationDomain.HasTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "HasTranslationForLocale",
+      "kind": "Method",
+      "signature": "public bool HasTranslationForLocale(String locale, bool exact)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        },
+        {
+          "name": "exact",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if there are any [Translation] instances that match [param locale] (see [method TranslationServer.compare_locales]). If [param exact] is [code]true[/code], only instances whose locale exactly equals [param locale] are considered.",
+      "godotName": "has_translation_for_locale",
+      "xmlDocId": "M:Godot.TranslationDomain.HasTranslationForLocale(String,bool)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "Pseudolocalize",
+      "kind": "Method",
+      "signature": "public StringName Pseudolocalize(StringName message)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the pseudolocalized string based on the [param message] passed in.",
+      "godotName": "pseudolocalize",
+      "xmlDocId": "M:Godot.TranslationDomain.Pseudolocalize(StringName)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "RemoveTranslation",
+      "kind": "Method",
+      "signature": "public void RemoveTranslation(Translation translation)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "translation",
+          "type": "Translation"
+        }
+      ],
+      "summary": "Removes the given translation.",
+      "godotName": "remove_translation",
+      "xmlDocId": "M:Godot.TranslationDomain.RemoveTranslation(Translation)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "SetLocaleOverride",
+      "kind": "Method",
+      "signature": "public void SetLocaleOverride(String locale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "locale",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the locale override of the domain. If [param locale] is an empty string, locale override is disabled. Otherwise, [param locale] will be standardized to match known locales (e.g. [code]en-US[/code] would be matched to [code]en_US[/code]). [b]Note:[/b] Calling this method does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] signal manually.",
+      "godotName": "set_locale_override",
+      "xmlDocId": "M:Godot.TranslationDomain.SetLocaleOverride(String)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "Translate",
+      "kind": "Method",
+      "signature": "public StringName Translate(StringName message, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns the current locale\u0027s translation for the given message and context.",
+      "godotName": "translate",
+      "xmlDocId": "M:Godot.TranslationDomain.Translate(StringName,StringName)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "TranslatePlural",
+      "kind": "Method",
+      "signature": "public StringName TranslatePlural(StringName message, StringName messagePlural, int n, StringName context)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "StringName"
+        },
+        {
+          "name": "message_plural",
+          "type": "StringName"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "context",
+          "type": "StringName",
+          "defaultValue": "\u0026\u0022\u0022"
+        }
+      ],
+      "summary": "Returns the current locale\u0027s translation for the given message, plural message and context. The number [param n] is the number or quantity of the plural object. It will be used to guide the translation system to fetch the correct plural form for the selected language.",
+      "godotName": "translate_plural",
+      "xmlDocId": "M:Godot.TranslationDomain.TranslatePlural(StringName,StringName,int,StringName)",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "Enabled",
+      "kind": "Property",
+      "signature": "public bool Enabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], translation is enabled. Otherwise, [method translate] and [method translate_plural] will return the input message unchanged regardless of the current locale.",
+      "defaultValue": "true",
+      "godotName": "enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.Enabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationAccentsEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationAccentsEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Replace all characters with their accented variants during pseudolocalization. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "true",
+      "godotName": "pseudolocalization_accents_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationAccentsEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationDoubleVowelsEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationDoubleVowelsEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Double vowels in strings during pseudolocalization to simulate the lengthening of text due to localization. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "false",
+      "godotName": "pseudolocalization_double_vowels_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationDoubleVowelsEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables pseudolocalization for the project. This can be used to spot untranslatable strings or layout issues that may occur once the project is localized to languages that have longer strings than the source language. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "false",
+      "godotName": "pseudolocalization_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationExpansionRatio",
+      "kind": "Property",
+      "signature": "public float PseudolocalizationExpansionRatio { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The expansion ratio to use during pseudolocalization. A value of [code]0.3[/code] is sufficient for most practical purposes, and will increase the length of each string by 30%. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "0.0",
+      "godotName": "pseudolocalization_expansion_ratio",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationExpansionRatio",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationFakeBidiEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationFakeBidiEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], emulate bidirectional (right-to-left) text when pseudolocalization is enabled. This can be used to spot issues with RTL layout and UI mirroring that will crop up if the project is localized to RTL languages such as Arabic or Hebrew. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "false",
+      "godotName": "pseudolocalization_fake_bidi_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationFakeBidiEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationOverrideEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationOverrideEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Replace all characters in the string with [code]*[/code]. Useful for finding non-localizable strings. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "false",
+      "godotName": "pseudolocalization_override_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationOverrideEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationPrefix",
+      "kind": "Property",
+      "signature": "public String PseudolocalizationPrefix { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Prefix that will be prepended to the pseudolocalized string. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "\u0022[\u0022",
+      "godotName": "pseudolocalization_prefix",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationPrefix",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationSkipPlaceholdersEnabled",
+      "kind": "Property",
+      "signature": "public bool PseudolocalizationSkipPlaceholdersEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Skip placeholders for string formatting like [code]%s[/code] or [code]%f[/code] during pseudolocalization. Useful to identify strings which need additional control characters to display correctly. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "true",
+      "godotName": "pseudolocalization_skip_placeholders_enabled",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationSkipPlaceholdersEnabled",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    },
+    {
+      "name": "PseudolocalizationSuffix",
+      "kind": "Property",
+      "signature": "public String PseudolocalizationSuffix { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Suffix that will be appended to the pseudolocalized string. [b]Note:[/b] Updating this property does not automatically update texts in the scene tree. Please propagate the [constant MainLoop.NOTIFICATION_TRANSLATION_CHANGED] notification manually after you have finished modifying pseudolocalization related options.",
+      "defaultValue": "\u0022]\u0022",
+      "godotName": "pseudolocalization_suffix",
+      "xmlDocId": "P:Godot.TranslationDomain.PseudolocalizationSuffix",
+      "sourcePath": "doc/classes/TranslationDomain.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/TranslationDomain.xml",
+      "sha256": "cd04d9a2e4882614be336c7226991a073f8ef663801d17795ef78a7c62d9a9ef"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

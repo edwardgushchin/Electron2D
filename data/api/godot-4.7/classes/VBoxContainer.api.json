@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VBoxContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.VBoxContainer",
+    "kind": "class",
+    "baseType": "BoxContainer",
+    "interfaces": [],
+    "godotReference": "VBoxContainer",
+    "documentationPath": "doc/classes/VBoxContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_vboxcontainer.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VBoxContainer.xml",
+      "sha256": "341f1c7ce69a0afd045f755fef648c4cd13234421f66f60475928a6f17d9efea"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

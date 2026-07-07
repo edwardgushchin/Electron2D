@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDScriptTextDocument",
+    "namespace": "Godot",
+    "fullName": "Godot.GDScriptTextDocument",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "GDScriptTextDocument",
+    "documentationPath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdscripttextdocument.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CodeLens",
+      "kind": "Method",
+      "signature": "public Array CodeLens(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "codeLens",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.CodeLens(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "ColorPresentation",
+      "kind": "Method",
+      "signature": "public Array ColorPresentation(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "colorPresentation",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.ColorPresentation(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Completion",
+      "kind": "Method",
+      "signature": "public Array Completion(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "completion",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Completion(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Declaration",
+      "kind": "Method",
+      "signature": "public Variant Declaration(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "declaration",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Declaration(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Definition",
+      "kind": "Method",
+      "signature": "public Array Definition(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "definition",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Definition(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DidChange",
+      "kind": "Method",
+      "signature": "public void DidChange(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "didChange",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DidChange(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DidClose",
+      "kind": "Method",
+      "signature": "public void DidClose(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "didClose",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DidClose(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DidOpen",
+      "kind": "Method",
+      "signature": "public void DidOpen(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "didOpen",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DidOpen(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DidSave",
+      "kind": "Method",
+      "signature": "public void DidSave(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "didSave",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DidSave(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DocumentLink",
+      "kind": "Method",
+      "signature": "public Array DocumentLink(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "documentLink",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DocumentLink(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "DocumentSymbol",
+      "kind": "Method",
+      "signature": "public Array DocumentSymbol(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "documentSymbol",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.DocumentSymbol(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "FoldingRange",
+      "kind": "Method",
+      "signature": "public Array FoldingRange(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "foldingRange",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.FoldingRange(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Hover",
+      "kind": "Method",
+      "signature": "public Variant Hover(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "hover",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Hover(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "NativeSymbol",
+      "kind": "Method",
+      "signature": "public Variant NativeSymbol(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "nativeSymbol",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.NativeSymbol(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "PrepareRename",
+      "kind": "Method",
+      "signature": "public Variant PrepareRename(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "prepareRename",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.PrepareRename(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "References",
+      "kind": "Method",
+      "signature": "public Array References(Dictionary @params)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "references",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.References(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Rename",
+      "kind": "Method",
+      "signature": "public Dictionary Rename(Dictionary @params)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "rename",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Rename(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "Resolve",
+      "kind": "Method",
+      "signature": "public Dictionary Resolve(Dictionary @params)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "resolve",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.Resolve(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "ShowNativeSymbolInEditor",
+      "kind": "Method",
+      "signature": "public void ShowNativeSymbolInEditor(String symbolId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "symbol_id",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "show_native_symbol_in_editor",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.ShowNativeSymbolInEditor(String)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "SignatureHelp",
+      "kind": "Method",
+      "signature": "public Variant SignatureHelp(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "signatureHelp",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.SignatureHelp(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    },
+    {
+      "name": "WillSaveWaitUntil",
+      "kind": "Method",
+      "signature": "public void WillSaveWaitUntil(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "willSaveWaitUntil",
+      "xmlDocId": "M:Godot.GDScriptTextDocument.WillSaveWaitUntil(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptTextDocument.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gdscript/doc_classes/GDScriptTextDocument.xml",
+      "sha256": "ae916307b8362ef7bf1cb8637a3394d81c0d0e4e385ecc41db0a9118cb2a9522"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

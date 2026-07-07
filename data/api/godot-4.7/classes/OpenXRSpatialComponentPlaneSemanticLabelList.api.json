@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentPlaneSemanticLabelList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentPlaneSemanticLabelList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentPlaneSemanticLabelList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentplanesemanticlabellist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPlaneSemanticLabel",
+      "kind": "Method",
+      "signature": "public int GetPlaneSemanticLabel(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the plane semantic label for the parent entity at this [param index].",
+      "godotName": "get_plane_semantic_label",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentPlaneSemanticLabelList.GetPlaneSemanticLabel(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PlaneSemanticLabel",
+      "values": [
+        {
+          "name": "PLANE_SEMANTIC_LABEL_CEILING",
+          "value": "4",
+          "enum": "PlaneSemanticLabel",
+          "kind": "EnumValue",
+          "summary": "Plane represents a ceiling.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+        },
+        {
+          "name": "PLANE_SEMANTIC_LABEL_FLOOR",
+          "value": "2",
+          "enum": "PlaneSemanticLabel",
+          "kind": "EnumValue",
+          "summary": "Plane represents a floor.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+        },
+        {
+          "name": "PLANE_SEMANTIC_LABEL_TABLE",
+          "value": "5",
+          "enum": "PlaneSemanticLabel",
+          "kind": "EnumValue",
+          "summary": "Plane represents the surface of a table.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+        },
+        {
+          "name": "PLANE_SEMANTIC_LABEL_UNCATEGORIZED",
+          "value": "1",
+          "enum": "PlaneSemanticLabel",
+          "kind": "EnumValue",
+          "summary": "Uncategorized plane.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+        },
+        {
+          "name": "PLANE_SEMANTIC_LABEL_WALL",
+          "value": "3",
+          "enum": "PlaneSemanticLabel",
+          "kind": "EnumValue",
+          "summary": "Plane represents a wall.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PLANE_SEMANTIC_LABEL_UNCATEGORIZED",
+      "value": "1",
+      "enum": "PlaneSemanticLabel",
+      "kind": "EnumValue",
+      "summary": "Uncategorized plane.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    },
+    {
+      "name": "PLANE_SEMANTIC_LABEL_FLOOR",
+      "value": "2",
+      "enum": "PlaneSemanticLabel",
+      "kind": "EnumValue",
+      "summary": "Plane represents a floor.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    },
+    {
+      "name": "PLANE_SEMANTIC_LABEL_WALL",
+      "value": "3",
+      "enum": "PlaneSemanticLabel",
+      "kind": "EnumValue",
+      "summary": "Plane represents a wall.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    },
+    {
+      "name": "PLANE_SEMANTIC_LABEL_CEILING",
+      "value": "4",
+      "enum": "PlaneSemanticLabel",
+      "kind": "EnumValue",
+      "summary": "Plane represents a ceiling.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    },
+    {
+      "name": "PLANE_SEMANTIC_LABEL_TABLE",
+      "value": "5",
+      "enum": "PlaneSemanticLabel",
+      "kind": "EnumValue",
+      "summary": "Plane represents the surface of a table.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentPlaneSemanticLabelList.xml",
+      "sha256": "d9e64f4758420032a5a156aa6fa9ff558f8b8375b4c62861576db1df9687f61b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

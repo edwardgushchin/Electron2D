@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTexture2DParameter",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTexture2DParameter",
+    "kind": "class",
+    "baseType": "VisualShaderNodeTextureParameter",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTexture2DParameter",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture2DParameter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetexture2dparameter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTexture2DParameter.xml",
+      "sha256": "a15a23b64764cadd2372f5605febf37c423998f35c5186d13dbc7f968bdc633f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

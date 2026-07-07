@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasGroup",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasGroup",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "CanvasGroup",
+    "documentationPath": "doc/classes/CanvasGroup.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvasgroup.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearMargin",
+      "kind": "Property",
+      "signature": "public float ClearMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the size of the margin used to expand the clearing rect of this [CanvasGroup]. This expands the area of the backbuffer that will be used by the [CanvasGroup]. A smaller margin will reduce the area of the backbuffer used which can increase performance, however if [member use_mipmaps] is enabled, a small margin may result in mipmap errors at the edge of the [CanvasGroup]. Accordingly, this should be left as small as possible, but should be increased if artifacts appear along the edges of the canvas group.",
+      "defaultValue": "10.0",
+      "godotName": "clear_margin",
+      "xmlDocId": "P:Godot.CanvasGroup.ClearMargin",
+      "sourcePath": "doc/classes/CanvasGroup.xml"
+    },
+    {
+      "name": "FitMargin",
+      "kind": "Property",
+      "signature": "public float FitMargin { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the size of a margin used to expand the drawable rect of this [CanvasGroup]. The size of the [CanvasGroup] is determined by fitting a rect around its children then expanding that rect by [member fit_margin]. This increases both the backbuffer area used and the area covered by the [CanvasGroup] both of which can reduce performance. This should be kept as small as possible and should only be expanded when an increased size is needed (e.g. for custom shader effects).",
+      "defaultValue": "10.0",
+      "godotName": "fit_margin",
+      "xmlDocId": "P:Godot.CanvasGroup.FitMargin",
+      "sourcePath": "doc/classes/CanvasGroup.xml"
+    },
+    {
+      "name": "UseMipmaps",
+      "kind": "Property",
+      "signature": "public bool UseMipmaps { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], calculates mipmaps for the backbuffer before drawing the [CanvasGroup] so that mipmaps can be used in a custom [ShaderMaterial] attached to the [CanvasGroup]. Generating mipmaps has a performance cost so this should not be enabled unless required.",
+      "defaultValue": "false",
+      "godotName": "use_mipmaps",
+      "xmlDocId": "P:Godot.CanvasGroup.UseMipmaps",
+      "sourcePath": "doc/classes/CanvasGroup.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasGroup.xml",
+      "sha256": "ab9b87a744c3e9fd76a49836b6788ce84170b5dbd47f15f6e4612f0e005e940e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

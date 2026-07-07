@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationPathQueryResult3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationPathQueryResult3D",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "NavigationPathQueryResult3D",
+    "documentationPath": "doc/classes/NavigationPathQueryResult3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationpathqueryresult3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Reset",
+      "kind": "Method",
+      "signature": "public void Reset()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reset the result object to its initial state. This is useful to reuse the object across multiple queries.",
+      "godotName": "reset",
+      "xmlDocId": "M:Godot.NavigationPathQueryResult3D.Reset",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "Path",
+      "kind": "Property",
+      "signature": "public PackedVector3Array Path { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "The resulting path array from the navigation query. All path array positions are in global coordinates. Without customized query parameters this is the same path as returned by [method NavigationServer3D.map_get_path].",
+      "defaultValue": "PackedVector3Array()",
+      "godotName": "path",
+      "xmlDocId": "P:Godot.NavigationPathQueryResult3D.Path",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "PathLength",
+      "kind": "Property",
+      "signature": "public float PathLength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the length of the path.",
+      "defaultValue": "0.0",
+      "godotName": "path_length",
+      "xmlDocId": "P:Godot.NavigationPathQueryResult3D.PathLength",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "PathOwnerIds",
+      "kind": "Property",
+      "signature": "public PackedInt64Array PathOwnerIds { get; set; }",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "The [code]ObjectID[/code]s of the [Object]s which manage the regions and links each point of the path goes through.",
+      "defaultValue": "PackedInt64Array()",
+      "godotName": "path_owner_ids",
+      "xmlDocId": "P:Godot.NavigationPathQueryResult3D.PathOwnerIds",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "PathRids",
+      "kind": "Property",
+      "signature": "public RID[] PathRids { get; set; }",
+      "returnType": "RID[]",
+      "parameters": [],
+      "summary": "The [RID]s of the regions and links that each point of the path goes through.",
+      "defaultValue": "[]",
+      "godotName": "path_rids",
+      "xmlDocId": "P:Godot.NavigationPathQueryResult3D.PathRids",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "PathTypes",
+      "kind": "Property",
+      "signature": "public PackedInt32Array PathTypes { get; set; }",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "The type of navigation primitive (region or link) that each point of the path goes through.",
+      "defaultValue": "PackedInt32Array()",
+      "godotName": "path_types",
+      "xmlDocId": "P:Godot.NavigationPathQueryResult3D.PathTypes",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "PathSegmentType",
+      "values": [
+        {
+          "name": "PATH_SEGMENT_TYPE_LINK",
+          "value": "1",
+          "enum": "PathSegmentType",
+          "kind": "EnumValue",
+          "summary": "This segment of the path goes through a link.",
+          "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+        },
+        {
+          "name": "PATH_SEGMENT_TYPE_REGION",
+          "value": "0",
+          "enum": "PathSegmentType",
+          "kind": "EnumValue",
+          "summary": "This segment of the path goes through a region.",
+          "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PATH_SEGMENT_TYPE_REGION",
+      "value": "0",
+      "enum": "PathSegmentType",
+      "kind": "EnumValue",
+      "summary": "This segment of the path goes through a region.",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    },
+    {
+      "name": "PATH_SEGMENT_TYPE_LINK",
+      "value": "1",
+      "enum": "PathSegmentType",
+      "kind": "EnumValue",
+      "summary": "This segment of the path goes through a link.",
+      "sourcePath": "doc/classes/NavigationPathQueryResult3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationPathQueryResult3D.xml",
+      "sha256": "ad4d3be606c038d22f858fc92332c7a112d52745c2f78f324ec94d6460028577"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

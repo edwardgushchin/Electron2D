@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRPlaneTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRPlaneTracker",
+    "kind": "class",
+    "baseType": "OpenXRSpatialEntityTracker",
+    "interfaces": [],
+    "godotReference": "OpenXRPlaneTracker",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrplanetracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ClearMeshData",
+      "kind": "Method",
+      "signature": "public void ClearMeshData()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the mesh data for this tracker. You should only call this if you are handling your own discovery logic.",
+      "godotName": "clear_mesh_data",
+      "xmlDocId": "M:Godot.OpenXRPlaneTracker.ClearMeshData",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "GetMesh",
+      "kind": "Method",
+      "signature": "public Mesh GetMesh()",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "Gets a mesh created from either the mesh data or from our bounding size for this plane.",
+      "godotName": "get_mesh",
+      "xmlDocId": "M:Godot.OpenXRPlaneTracker.GetMesh",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "GetMeshOffset",
+      "kind": "Method",
+      "signature": "public Transform3D GetMeshOffset()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "Gets the transform by which to offset the mesh and collision shape from our pose to display these correctly.",
+      "godotName": "get_mesh_offset",
+      "xmlDocId": "M:Godot.OpenXRPlaneTracker.GetMeshOffset",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "GetShape",
+      "kind": "Method",
+      "signature": "public Shape3D GetShape(float thickness)",
+      "returnType": "Shape3D",
+      "parameters": [
+        {
+          "name": "thickness",
+          "type": "float",
+          "defaultValue": "0.01"
+        }
+      ],
+      "summary": "Gets a collision shape built either from the mesh data or from our bounding size for this plane.",
+      "godotName": "get_shape",
+      "xmlDocId": "M:Godot.OpenXRPlaneTracker.GetShape(float)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "SetMeshData",
+      "kind": "Method",
+      "signature": "public void SetMeshData(Transform3D origin, PackedVector2Array vertices, PackedInt32Array indices)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "Transform3D"
+        },
+        {
+          "name": "vertices",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "indices",
+          "type": "PackedInt32Array",
+          "defaultValue": "PackedInt32Array()"
+        }
+      ],
+      "summary": "Sets the mesh data for this plane. You should only call this if you are handling your own discovery logic.",
+      "godotName": "set_mesh_data",
+      "xmlDocId": "M:Godot.OpenXRPlaneTracker.SetMeshData(Transform3D,PackedVector2Array,PackedInt32Array)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "BoundsSize",
+      "kind": "Property",
+      "signature": "public Vector2 BoundsSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The bounding size of the plane. This is a 2D size.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "bounds_size",
+      "xmlDocId": "P:Godot.OpenXRPlaneTracker.BoundsSize",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "PlaneAlignment",
+      "kind": "Property",
+      "signature": "public int PlaneAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The main alignment in space of this plane.",
+      "defaultValue": "0",
+      "godotName": "plane_alignment",
+      "xmlDocId": "P:Godot.OpenXRPlaneTracker.PlaneAlignment",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    },
+    {
+      "name": "PlaneLabel",
+      "kind": "Property",
+      "signature": "public String PlaneLabel { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The semantic label for this plane.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "plane_label",
+      "xmlDocId": "P:Godot.OpenXRPlaneTracker.PlaneLabel",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "MeshChanged",
+      "kind": "Signal",
+      "signature": "public event MeshChangedHandler MeshChanged",
+      "parameters": [],
+      "summary": "Emitted when our mesh data has changed the mesh instance and collision needs to be updated.",
+      "godotName": "mesh_changed",
+      "xmlDocId": "E:Godot.OpenXRPlaneTracker.MeshChanged",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRPlaneTracker.xml",
+      "sha256": "fbace82965941a9e3e90f3a6bf33d76e86a55c54f109c5dc73829eb7936b3470"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventAction",
+    "namespace": "Godot",
+    "fullName": "Godot.InputEventAction",
+    "kind": "class",
+    "baseType": "InputEvent",
+    "interfaces": [],
+    "godotReference": "InputEventAction",
+    "documentationPath": "doc/classes/InputEventAction.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputeventaction.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Action",
+      "kind": "Property",
+      "signature": "public StringName Action { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The action\u0027s name. This is usually the name of an existing action in the [InputMap] which you want this custom event to match.",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "action",
+      "xmlDocId": "P:Godot.InputEventAction.Action",
+      "sourcePath": "doc/classes/InputEventAction.xml"
+    },
+    {
+      "name": "EventIndex",
+      "kind": "Property",
+      "signature": "public int EventIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The real event index in action this event corresponds to (from events defined for this action in the [InputMap]). If [code]-1[/code], a unique ID will be used and actions pressed with this ID will need to be released with another [InputEventAction].",
+      "defaultValue": "-1",
+      "godotName": "event_index",
+      "xmlDocId": "P:Godot.InputEventAction.EventIndex",
+      "sourcePath": "doc/classes/InputEventAction.xml"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public bool Pressed { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the action\u0027s state is pressed. If [code]false[/code], the action\u0027s state is released.",
+      "defaultValue": "false",
+      "godotName": "pressed",
+      "xmlDocId": "P:Godot.InputEventAction.Pressed",
+      "sourcePath": "doc/classes/InputEventAction.xml"
+    },
+    {
+      "name": "Strength",
+      "kind": "Property",
+      "signature": "public float Strength { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The action\u0027s strength between 0 and 1. This value is considered as equal to 0 if pressed is [code]false[/code]. The event strength allows faking analog joypad motion events, by specifying how strongly the joypad axis is bent or pressed.",
+      "defaultValue": "1.0",
+      "godotName": "strength",
+      "xmlDocId": "P:Godot.InputEventAction.Strength",
+      "sourcePath": "doc/classes/InputEventAction.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputEventAction.xml",
+      "sha256": "26205cde825bf2b6683678b3d9ca839f4c2c9b861dcbb39bd2f1a8a36b45246b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

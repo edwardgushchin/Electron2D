@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ItemList.SelectMode",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ItemList.SelectMode",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "ItemList.SelectMode",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Multi",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ItemList.SelectMode Multi",
+      "returnType": "Electron2D.ItemList.SelectMode",
+      "parameters": [],
+      "summary": "Allows multiple selected items.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.ItemList.SelectModeEnum.Multi",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Single",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.ItemList.SelectMode Single",
+      "returnType": "Electron2D.ItemList.SelectMode",
+      "parameters": [],
+      "summary": "Allows at most one selected item.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.ItemList.SelectModeEnum.Single",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Multi",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Allows multiple selected items.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Single",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Allows at most one selected item.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

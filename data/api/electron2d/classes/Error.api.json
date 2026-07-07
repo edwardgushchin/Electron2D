@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Error",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Error",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Error",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AlreadyExists",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Error AlreadyExists",
+      "returnType": "Electron2D.Error",
+      "parameters": [],
+      "summary": "Identifies the already exists value.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.Error.AlreadyExists",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Failed",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Error Failed",
+      "returnType": "Electron2D.Error",
+      "parameters": [],
+      "summary": "Identifies the failed value.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Error.Failed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InvalidParameter",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Error InvalidParameter",
+      "returnType": "Electron2D.Error",
+      "parameters": [],
+      "summary": "Identifies the invalid parameter value.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.Error.InvalidParameter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ok",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Error Ok",
+      "returnType": "Electron2D.Error",
+      "parameters": [],
+      "summary": "Identifies the ok value.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Error.Ok",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unavailable",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Error Unavailable",
+      "returnType": "Electron2D.Error",
+      "parameters": [],
+      "summary": "Identifies the unavailable value.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.Error.Unavailable",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "AlreadyExists",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Identifies the already exists value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Failed",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Identifies the failed value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InvalidParameter",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Identifies the invalid parameter value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ok",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Identifies the ok value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unavailable",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Identifies the unavailable value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

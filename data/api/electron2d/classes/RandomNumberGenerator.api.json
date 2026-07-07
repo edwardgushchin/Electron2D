@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RandomNumberGenerator",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RandomNumberGenerator",
+    "kind": "class",
+    "baseType": "Electron2D.RefCounted",
+    "interfaces": [],
+    "godotReference": "RandomNumberGenerator",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "RandomNumberGenerator",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RandomNumberGenerator()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RandomNumberGenerator type.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "RandomNumberGenerator",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RandomNumberGenerator()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RandomNumberGenerator type.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Randf",
+      "kind": "Method",
+      "signature": "public System.Single Randf()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Executes the randf operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.Randf",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RandfRange",
+      "kind": "Method",
+      "signature": "public System.Single RandfRange(System.Single from, System.Single to)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "System.Single"
+        },
+        {
+          "name": "to",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the randf range operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.RandfRange(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Randfn",
+      "kind": "Method",
+      "signature": "public System.Single Randfn(System.Single mean, System.Single deviation)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "mean",
+          "type": "System.Single",
+          "defaultValue": "0"
+        },
+        {
+          "name": "deviation",
+          "type": "System.Single",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Executes the randfn operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.Randfn(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Randi",
+      "kind": "Method",
+      "signature": "public System.UInt32 Randi()",
+      "returnType": "System.UInt32",
+      "parameters": [],
+      "summary": "Executes the randi operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.Randi",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "RandiRange",
+      "kind": "Method",
+      "signature": "public System.Int32 RandiRange(System.Int32 from, System.Int32 to)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "System.Int32"
+        },
+        {
+          "name": "to",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Executes the randi range operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.RandiRange(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Randomize",
+      "kind": "Method",
+      "signature": "public System.Void Randomize()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Executes the randomize operation.",
+      "xmlDocId": "M:Electron2D.RandomNumberGenerator.Randomize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Seed",
+      "kind": "Property",
+      "signature": "public System.UInt64 Seed { get; set; }",
+      "returnType": "System.UInt64",
+      "parameters": [],
+      "summary": "Gets or sets the seed value.",
+      "xmlDocId": "P:Electron2D.RandomNumberGenerator.Seed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "State",
+      "kind": "Property",
+      "signature": "public System.UInt64 State { get; set; }",
+      "returnType": "System.UInt64",
+      "parameters": [],
+      "summary": "Gets or sets the state value.",
+      "xmlDocId": "P:Electron2D.RandomNumberGenerator.State",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

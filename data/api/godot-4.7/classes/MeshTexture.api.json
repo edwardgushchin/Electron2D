@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MeshTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.MeshTexture",
+    "kind": "class",
+    "baseType": "Texture2D",
+    "interfaces": [],
+    "godotReference": "MeshTexture",
+    "documentationPath": "doc/classes/MeshTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_meshtexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BaseTexture",
+      "kind": "Property",
+      "signature": "public Texture2D BaseTexture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "Sets the base texture that the Mesh will use to draw.",
+      "godotName": "base_texture",
+      "xmlDocId": "P:Godot.MeshTexture.BaseTexture",
+      "sourcePath": "doc/classes/MeshTexture.xml"
+    },
+    {
+      "name": "ImageSize",
+      "kind": "Property",
+      "signature": "public Vector2 ImageSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Sets the size of the image, needed for reference.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "image_size",
+      "xmlDocId": "P:Godot.MeshTexture.ImageSize",
+      "sourcePath": "doc/classes/MeshTexture.xml"
+    },
+    {
+      "name": "Mesh",
+      "kind": "Property",
+      "signature": "public Mesh Mesh { get; set; }",
+      "returnType": "Mesh",
+      "parameters": [],
+      "summary": "Sets the mesh used to draw. It must be a mesh using 2D vertices.",
+      "godotName": "mesh",
+      "xmlDocId": "P:Godot.MeshTexture.Mesh",
+      "sourcePath": "doc/classes/MeshTexture.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.MeshTexture.ResourceLocalToScene",
+      "sourcePath": "doc/classes/MeshTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MeshTexture.xml",
+      "sha256": "827149d2288af9d84c317b46b23d9d8abe5e4e03ab2c2e01e35716bf9560bb53"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

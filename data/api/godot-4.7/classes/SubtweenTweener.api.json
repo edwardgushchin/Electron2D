@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SubtweenTweener",
+    "namespace": "Godot",
+    "fullName": "Godot.SubtweenTweener",
+    "kind": "class",
+    "baseType": "Tweener",
+    "interfaces": [],
+    "godotReference": "SubtweenTweener",
+    "documentationPath": "doc/classes/SubtweenTweener.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_subtweentweener.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetDelay",
+      "kind": "Method",
+      "signature": "public SubtweenTweener SetDelay(float delay)",
+      "returnType": "SubtweenTweener",
+      "parameters": [
+        {
+          "name": "delay",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the time in seconds after which the [SubtweenTweener] will start running the subtween. By default there\u0027s no delay.",
+      "godotName": "set_delay",
+      "xmlDocId": "M:Godot.SubtweenTweener.SetDelay(float)",
+      "sourcePath": "doc/classes/SubtweenTweener.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SubtweenTweener.xml",
+      "sha256": "7342c363de749ca253e46e77254e827e04e7c53aa842550ba31ef9e90f869ed3"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

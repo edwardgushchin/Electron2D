@@ -100,6 +100,61 @@ public sealed class ApiManifestTests
         Assert.Equal("supported", profile.GetProperty("status").GetString());
         Assert.Equal("parity_verified", profile.GetProperty("parity").GetString());
         Assert.False(profile.GetProperty("outOfProfile").GetBoolean());
+
+        var textureRect = FindType(rootElement, "Electron2D.TextureRect");
+        var textureRectMembers = textureRect.GetProperty("members").EnumerateArray().ToArray();
+        var stretchMode = textureRectMembers.Single(member =>
+            member.GetProperty("kind").GetString() == "Property" &&
+            member.GetProperty("name").GetString() == "StretchMode");
+        Assert.Equal("Electron2D.TextureRect.StretchMode", stretchMode.GetProperty("returnType").GetString());
+        Assert.DoesNotContain("StretchModeEnum", stretchMode.GetProperty("signature").GetString(), StringComparison.Ordinal);
+
+        var draw = textureRectMembers.Single(member =>
+            member.GetProperty("kind").GetString() == "Method" &&
+            member.GetProperty("xmlDocId").GetString() == "M:Electron2D.TextureRect._Draw");
+        Assert.Equal("Draw", draw.GetProperty("name").GetString());
+        Assert.Equal("public System.Void Draw()", draw.GetProperty("signature").GetString());
+        Assert.DoesNotContain(textureRectMembers, member => member.GetProperty("name").GetString() == "_Draw");
+
+        var stretchModeType = FindType(rootElement, "Electron2D.TextureRect.StretchMode");
+        Assert.Equal("TextureRect.StretchMode", stretchModeType.GetProperty("name").GetString());
+        Assert.DoesNotContain(rootElement.GetProperty("types").EnumerateArray(), type =>
+            type.GetProperty("fullName").GetString() == "Electron2D.TextureRect.StretchModeEnum");
+        Assert.DoesNotContain(stretchModeType.GetProperty("members").EnumerateArray(), member =>
+            member.GetProperty("name").GetString() == "value__");
+
+        var vector2 = FindType(rootElement, "Electron2D.Vector2");
+        var vector2Members = vector2.GetProperty("members").EnumerateArray().ToArray();
+        Assert.Contains(vector2Members, member =>
+            member.GetProperty("kind").GetString() == "Operator" &&
+            member.GetProperty("xmlDocId").GetString() == "M:Electron2D.Vector2.op_Addition(Electron2D.Vector2,Electron2D.Vector2)");
+        AssertMemberValue(vector2Members, "Field", "Zero", "(0, 0)");
+        AssertMemberValue(vector2Members, "Field", "One", "(1, 1)");
+
+        var color = FindType(rootElement, "Electron2D.Color");
+        var colorMembers = color.GetProperty("members").EnumerateArray().ToArray();
+        AssertMemberValue(colorMembers, "Field", "White", "(1, 1, 1, 1)");
+
+        var math = FindType(rootElement, "Electron2D.Mathf");
+        var mathMembers = math.GetProperty("members").EnumerateArray().ToArray();
+        AssertMemberValue(mathMembers, "Constant", "Epsilon", "1E-05");
+        AssertMemberValue(mathMembers, "Constant", "Pi", "3.1415927");
+        AssertMemberValue(mathMembers, "Constant", "Tau", "6.2831855");
+
+        var resourceUid = FindType(rootElement, "Electron2D.ResourceUid");
+        AssertMemberValue(resourceUid.GetProperty("members").EnumerateArray().ToArray(), "Constant", "InvalidId", "-1");
+
+        var popupMenu = FindType(rootElement, "Electron2D.PopupMenu");
+        var setItemChecked = popupMenu.GetProperty("members").EnumerateArray()
+            .Single(member => member.GetProperty("name").GetString() == "SetItemChecked");
+        Assert.Contains("System.Boolean @checked", setItemChecked.GetProperty("signature").GetString(), StringComparison.Ordinal);
+
+        var tween = FindType(rootElement, "Electron2D.Tween");
+        var tweenProperty = tween.GetProperty("members").EnumerateArray()
+            .Single(member => member.GetProperty("name").GetString() == "TweenProperty");
+        Assert.Contains("Electron2D.Object @object", tweenProperty.GetProperty("signature").GetString(), StringComparison.Ordinal);
+
+        AssertMemberValue(stretchModeType.GetProperty("members").EnumerateArray().ToArray(), "EnumValue", "Keep", "2");
     }
 
     private static JsonElement FindType(JsonElement rootElement, string fullName)
@@ -115,7 +170,33 @@ public sealed class ApiManifestTests
         throw new InvalidOperationException($"API manifest does not contain type {fullName}.");
     }
 
-    private static string DisplayName(Type type) => (type.FullName ?? type.Name).Replace('+', '.');
+    private static void AssertMemberValue(JsonElement[] members, string kind, string name, string expectedValue)
+    {
+        var member = members.Single(item =>
+            item.GetProperty("kind").GetString() == kind &&
+            item.GetProperty("name").GetString() == name);
+        Assert.True(member.TryGetProperty("value", out var value), $"{kind} {name} must include a value.");
+        Assert.Equal(expectedValue, value.GetString());
+    }
+
+    private static string DisplayName(Type type) => ProjectTypeDisplayName((type.FullName ?? type.Name).Replace('+', '.'), type.IsEnum);
+
+    private static string ProjectTypeDisplayName(string displayName, bool isEnum)
+    {
+        const string rootNamespace = "Electron2D.";
+        if (!isEnum || !displayName.StartsWith(rootNamespace, StringComparison.Ordinal))
+        {
+            return displayName;
+        }
+
+        const string suffix = "Enum";
+        var lastDot = displayName.LastIndexOf('.');
+        var nameStart = lastDot < 0 ? 0 : lastDot + 1;
+        return displayName.EndsWith(suffix, StringComparison.Ordinal) &&
+            displayName.Length > nameStart + suffix.Length
+            ? displayName[..^suffix.Length]
+            : displayName;
+    }
 
     private static string FindRepositoryRoot()
     {

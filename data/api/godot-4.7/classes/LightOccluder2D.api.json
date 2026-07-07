@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LightOccluder2D",
+    "namespace": "Godot",
+    "fullName": "Godot.LightOccluder2D",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "LightOccluder2D",
+    "documentationPath": "doc/classes/LightOccluder2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_lightoccluder2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Occluder",
+      "kind": "Property",
+      "signature": "public OccluderPolygon2D Occluder { get; set; }",
+      "returnType": "OccluderPolygon2D",
+      "parameters": [],
+      "summary": "The [OccluderPolygon2D] used to compute the shadow.",
+      "godotName": "occluder",
+      "xmlDocId": "P:Godot.LightOccluder2D.Occluder",
+      "sourcePath": "doc/classes/LightOccluder2D.xml"
+    },
+    {
+      "name": "OccluderLightMask",
+      "kind": "Property",
+      "signature": "public int OccluderLightMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The LightOccluder2D\u0027s occluder light mask. The LightOccluder2D will cast shadows only from Light2D(s) that have the same light mask(s).",
+      "defaultValue": "1",
+      "godotName": "occluder_light_mask",
+      "xmlDocId": "P:Godot.LightOccluder2D.OccluderLightMask",
+      "sourcePath": "doc/classes/LightOccluder2D.xml"
+    },
+    {
+      "name": "SdfCollision",
+      "kind": "Property",
+      "signature": "public bool SdfCollision { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled, the occluder will be part of a real-time generated signed distance field that can be used in custom shaders.",
+      "defaultValue": "true",
+      "godotName": "sdf_collision",
+      "xmlDocId": "P:Godot.LightOccluder2D.SdfCollision",
+      "sourcePath": "doc/classes/LightOccluder2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LightOccluder2D.xml",
+      "sha256": "1b928c0c8438b4d957cb3e4e92dfaaff639e5b8df9e5f4e7e1808c082e4bd30c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CenterContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.CenterContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "CenterContainer",
+    "documentationPath": "doc/classes/CenterContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_centercontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "UseTopLeft",
+      "kind": "Property",
+      "signature": "public bool UseTopLeft { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], centers children relative to the [CenterContainer]\u0027s top left corner.",
+      "defaultValue": "false",
+      "godotName": "use_top_left",
+      "xmlDocId": "P:Godot.CenterContainer.UseTopLeft",
+      "sourcePath": "doc/classes/CenterContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CenterContainer.xml",
+      "sha256": "06f0322bdabc7059f39d1f8bff393d7ce5dbfaae20ceb4309107490601d69343"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

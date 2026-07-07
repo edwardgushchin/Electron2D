@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisibleOnScreenNotifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.VisibleOnScreenNotifier3D",
+    "kind": "class",
+    "baseType": "VisualInstance3D",
+    "interfaces": [],
+    "godotReference": "VisibleOnScreenNotifier3D",
+    "documentationPath": "doc/classes/VisibleOnScreenNotifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visibleonscreennotifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsOnScreen",
+      "kind": "Method",
+      "signature": "public bool IsOnScreen()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the bounding box is on the screen. [b]Note:[/b] It takes one frame for the [VisibleOnScreenNotifier3D]\u0027s visibility to be assessed once added to the scene tree, so this method will always return [code]false[/code] right after it is instantiated.",
+      "godotName": "is_on_screen",
+      "xmlDocId": "M:Godot.VisibleOnScreenNotifier3D.IsOnScreen",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier3D.xml"
+    },
+    {
+      "name": "Aabb",
+      "kind": "Property",
+      "signature": "public AABB Aabb { get; set; }",
+      "returnType": "AABB",
+      "parameters": [],
+      "summary": "The [VisibleOnScreenNotifier3D]\u0027s bounding box.",
+      "defaultValue": "AABB(-1, -1, -1, 2, 2, 2)",
+      "godotName": "aabb",
+      "xmlDocId": "P:Godot.VisibleOnScreenNotifier3D.Aabb",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ScreenEntered",
+      "kind": "Signal",
+      "signature": "public event ScreenEnteredHandler ScreenEntered",
+      "parameters": [],
+      "summary": "Emitted when the [VisibleOnScreenNotifier3D] enters the screen.",
+      "godotName": "screen_entered",
+      "xmlDocId": "E:Godot.VisibleOnScreenNotifier3D.ScreenEntered",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier3D.xml"
+    },
+    {
+      "name": "ScreenExited",
+      "kind": "Signal",
+      "signature": "public event ScreenExitedHandler ScreenExited",
+      "parameters": [],
+      "summary": "Emitted when the [VisibleOnScreenNotifier3D] exits the screen.",
+      "godotName": "screen_exited",
+      "xmlDocId": "E:Godot.VisibleOnScreenNotifier3D.ScreenExited",
+      "sourcePath": "doc/classes/VisibleOnScreenNotifier3D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/VisibleOnScreenNotifier3D.xml",
+      "sha256": "79ec29da2bcf7bbeb72c8007f6b8a86344b37f33715fdee96de0261a5a3fdeb1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

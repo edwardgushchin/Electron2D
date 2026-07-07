@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectHighShelfFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectHighShelfFilter",
+    "kind": "class",
+    "baseType": "AudioEffectFilter",
+    "interfaces": [],
+    "godotReference": "AudioEffectHighShelfFilter",
+    "documentationPath": "doc/classes/AudioEffectHighShelfFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffecthighshelffilter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectHighShelfFilter.xml",
+      "sha256": "294c7bc2e359a65e49557401bb42013ef3c8249d20756f339727de06ff809de2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

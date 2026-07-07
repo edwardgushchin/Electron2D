@@ -1,0 +1,1375 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Theme",
+    "namespace": "Godot",
+    "fullName": "Godot.Theme",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Theme",
+    "documentationPath": "doc/classes/Theme.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_theme.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddType",
+      "kind": "Method",
+      "signature": "public void AddType(StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Adds an empty theme type for every valid data type. [b]Note:[/b] Empty types are not saved with the theme. This method only exists to perform in-memory changes to the resource. Use available [code]set_*[/code] methods to add theme items.",
+      "godotName": "add_type",
+      "xmlDocId": "M:Godot.Theme.AddType(StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Removes all the theme properties defined on the theme resource.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.Theme.Clear",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearColor",
+      "kind": "Method",
+      "signature": "public void ClearColor(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [Color] property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_color] to check for existence.",
+      "godotName": "clear_color",
+      "xmlDocId": "M:Godot.Theme.ClearColor(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearConstant",
+      "kind": "Method",
+      "signature": "public void ClearConstant(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the constant property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_constant] to check for existence.",
+      "godotName": "clear_constant",
+      "xmlDocId": "M:Godot.Theme.ClearConstant(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearFont",
+      "kind": "Method",
+      "signature": "public void ClearFont(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [Font] property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_font] to check for existence.",
+      "godotName": "clear_font",
+      "xmlDocId": "M:Godot.Theme.ClearFont(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearFontSize",
+      "kind": "Method",
+      "signature": "public void ClearFontSize(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the font size property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_font_size] to check for existence.",
+      "godotName": "clear_font_size",
+      "xmlDocId": "M:Godot.Theme.ClearFontSize(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearIcon",
+      "kind": "Method",
+      "signature": "public void ClearIcon(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the icon property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_icon] to check for existence.",
+      "godotName": "clear_icon",
+      "xmlDocId": "M:Godot.Theme.ClearIcon(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearStylebox",
+      "kind": "Method",
+      "signature": "public void ClearStylebox(StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [StyleBox] property defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_stylebox] to check for existence.",
+      "godotName": "clear_stylebox",
+      "xmlDocId": "M:Godot.Theme.ClearStylebox(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearThemeItem",
+      "kind": "Method",
+      "signature": "public void ClearThemeItem(int dataType, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists. Fails if it doesn\u0027t exist. Use [method has_theme_item] to check for existence. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "clear_theme_item",
+      "xmlDocId": "M:Godot.Theme.ClearThemeItem(int,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "ClearTypeVariation",
+      "kind": "Method",
+      "signature": "public void ClearTypeVariation(StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Unmarks [param theme_type] as being a variation of another theme type. See [method set_type_variation].",
+      "godotName": "clear_type_variation",
+      "xmlDocId": "M:Godot.Theme.ClearTypeVariation(StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetColor",
+      "kind": "Method",
+      "signature": "public Color GetColor(StringName name, StringName themeType)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [Color] property defined by [param name] and [param theme_type], if it exists. Returns the default color value if the property doesn\u0027t exist. Use [method has_color] to check for existence.",
+      "godotName": "get_color",
+      "xmlDocId": "M:Godot.Theme.GetColor(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetColorList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetColorList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for [Color] properties defined with [param theme_type]. Use [method get_color_type_list] to get a list of possible theme type names.",
+      "godotName": "get_color_list",
+      "xmlDocId": "M:Godot.Theme.GetColorList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetColorTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetColorTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for [Color] properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_color_type_list",
+      "xmlDocId": "M:Godot.Theme.GetColorTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetConstant",
+      "kind": "Method",
+      "signature": "public int GetConstant(StringName name, StringName themeType)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the constant property defined by [param name] and [param theme_type], if it exists. Returns [code]0[/code] if the property doesn\u0027t exist. Use [method has_constant] to check for existence.",
+      "godotName": "get_constant",
+      "xmlDocId": "M:Godot.Theme.GetConstant(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetConstantList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetConstantList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for constant properties defined with [param theme_type]. Use [method get_constant_type_list] to get a list of possible theme type names.",
+      "godotName": "get_constant_list",
+      "xmlDocId": "M:Godot.Theme.GetConstantList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetConstantTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetConstantTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for constant properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_constant_type_list",
+      "xmlDocId": "M:Godot.Theme.GetConstantTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFont",
+      "kind": "Method",
+      "signature": "public Font GetFont(StringName name, StringName themeType)",
+      "returnType": "Font",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [Font] property defined by [param name] and [param theme_type], if it exists. Returns the default theme font if the property doesn\u0027t exist and the default theme font is set up (see [member default_font]). Use [method has_font] to check for existence of the property and [method has_default_font] to check for existence of the default theme font. Returns the engine fallback font value, if neither exist (see [member ThemeDB.fallback_font]).",
+      "godotName": "get_font",
+      "xmlDocId": "M:Godot.Theme.GetFont(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFontList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFontList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for [Font] properties defined with [param theme_type]. Use [method get_font_type_list] to get a list of possible theme type names.",
+      "godotName": "get_font_list",
+      "xmlDocId": "M:Godot.Theme.GetFontList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFontSize",
+      "kind": "Method",
+      "signature": "public int GetFontSize(StringName name, StringName themeType)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the font size property defined by [param name] and [param theme_type], if it exists. Returns the default theme font size if the property doesn\u0027t exist and the default theme font size is set up (see [member default_font_size]). Use [method has_font_size] to check for existence of the property and [method has_default_font_size] to check for existence of the default theme font. Returns the engine fallback font size value, if neither exist (see [member ThemeDB.fallback_font_size]).",
+      "godotName": "get_font_size",
+      "xmlDocId": "M:Godot.Theme.GetFontSize(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFontSizeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFontSizeList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for font size properties defined with [param theme_type]. Use [method get_font_size_type_list] to get a list of possible theme type names.",
+      "godotName": "get_font_size_list",
+      "xmlDocId": "M:Godot.Theme.GetFontSizeList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFontSizeTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFontSizeTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for font size properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_font_size_type_list",
+      "xmlDocId": "M:Godot.Theme.GetFontSizeTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetFontTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFontTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for [Font] properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_font_type_list",
+      "xmlDocId": "M:Godot.Theme.GetFontTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetIcon",
+      "kind": "Method",
+      "signature": "public Texture2D GetIcon(StringName name, StringName themeType)",
+      "returnType": "Texture2D",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the icon property defined by [param name] and [param theme_type], if it exists. Returns the engine fallback icon value if the property doesn\u0027t exist (see [member ThemeDB.fallback_icon]). Use [method has_icon] to check for existence.",
+      "godotName": "get_icon",
+      "xmlDocId": "M:Godot.Theme.GetIcon(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetIconList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetIconList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for icon properties defined with [param theme_type]. Use [method get_icon_type_list] to get a list of possible theme type names.",
+      "godotName": "get_icon_list",
+      "xmlDocId": "M:Godot.Theme.GetIconList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetIconTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetIconTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for icon properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_icon_type_list",
+      "xmlDocId": "M:Godot.Theme.GetIconTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetStylebox",
+      "kind": "Method",
+      "signature": "public StyleBox GetStylebox(StringName name, StringName themeType)",
+      "returnType": "StyleBox",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [StyleBox] property defined by [param name] and [param theme_type], if it exists. Returns the engine fallback stylebox value if the property doesn\u0027t exist (see [member ThemeDB.fallback_stylebox]). Use [method has_stylebox] to check for existence.",
+      "godotName": "get_stylebox",
+      "xmlDocId": "M:Godot.Theme.GetStylebox(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetStyleboxList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetStyleboxList(String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for [StyleBox] properties defined with [param theme_type]. Use [method get_stylebox_type_list] to get a list of possible theme type names.",
+      "godotName": "get_stylebox_list",
+      "xmlDocId": "M:Godot.Theme.GetStyleboxList(String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetStyleboxTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetStyleboxTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names for [StyleBox] properties. Use [method get_type_list] to get a list of all unique theme types.",
+      "godotName": "get_stylebox_type_list",
+      "xmlDocId": "M:Godot.Theme.GetStyleboxTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetThemeItem",
+      "kind": "Method",
+      "signature": "public Variant GetThemeItem(int dataType, StringName name, StringName themeType)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists. Returns the engine fallback value if the property doesn\u0027t exist (see [ThemeDB]). Use [method has_theme_item] to check for existence. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "get_theme_item",
+      "xmlDocId": "M:Godot.Theme.GetThemeItem(int,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetThemeItemList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetThemeItemList(int dataType, String themeType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "theme_type",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns a list of names for properties of [param data_type] defined with [param theme_type]. Use [method get_theme_item_type_list] to get a list of possible theme type names. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "get_theme_item_list",
+      "xmlDocId": "M:Godot.Theme.GetThemeItemList(int,String)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetThemeItemTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetThemeItemTypeList(int dataType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns a list of all unique theme type names for [param data_type] properties. Use [method get_type_list] to get a list of all unique theme types. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "get_theme_item_type_list",
+      "xmlDocId": "M:Godot.Theme.GetThemeItemTypeList(int)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetTypeList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetTypeList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns a list of all unique theme type names. Use the appropriate [code]get_*_type_list[/code] method to get a list of unique theme types for a single data type.",
+      "godotName": "get_type_list",
+      "xmlDocId": "M:Godot.Theme.GetTypeList",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetTypeVariationBase",
+      "kind": "Method",
+      "signature": "public StringName GetTypeVariationBase(StringName themeType)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the name of the base theme type if [param theme_type] is a valid variation type. Returns an empty string otherwise.",
+      "godotName": "get_type_variation_base",
+      "xmlDocId": "M:Godot.Theme.GetTypeVariationBase(StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "GetTypeVariationList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetTypeVariationList(StringName baseType)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "base_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a list of all type variations for the given [param base_type].",
+      "godotName": "get_type_variation_list",
+      "xmlDocId": "M:Godot.Theme.GetTypeVariationList(StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasColor",
+      "kind": "Method",
+      "signature": "public bool HasColor(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [Color] property defined by [param name] and [param theme_type] exists. Returns [code]false[/code] if it doesn\u0027t exist. Use [method set_color] to define it.",
+      "godotName": "has_color",
+      "xmlDocId": "M:Godot.Theme.HasColor(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasConstant",
+      "kind": "Method",
+      "signature": "public bool HasConstant(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the constant property defined by [param name] and [param theme_type] exists. Returns [code]false[/code] if it doesn\u0027t exist. Use [method set_constant] to define it.",
+      "godotName": "has_constant",
+      "xmlDocId": "M:Godot.Theme.HasConstant(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasDefaultBaseScale",
+      "kind": "Method",
+      "signature": "public bool HasDefaultBaseScale()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member default_base_scale] has a valid value. Returns [code]false[/code] if it doesn\u0027t. The value must be greater than [code]0.0[/code] to be considered valid.",
+      "godotName": "has_default_base_scale",
+      "xmlDocId": "M:Godot.Theme.HasDefaultBaseScale",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasDefaultFont",
+      "kind": "Method",
+      "signature": "public bool HasDefaultFont()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member default_font] has a valid value. Returns [code]false[/code] if it doesn\u0027t.",
+      "godotName": "has_default_font",
+      "xmlDocId": "M:Godot.Theme.HasDefaultFont",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasDefaultFontSize",
+      "kind": "Method",
+      "signature": "public bool HasDefaultFontSize()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if [member default_font_size] has a valid value. Returns [code]false[/code] if it doesn\u0027t. The value must be greater than [code]0[/code] to be considered valid.",
+      "godotName": "has_default_font_size",
+      "xmlDocId": "M:Godot.Theme.HasDefaultFontSize",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasFont",
+      "kind": "Method",
+      "signature": "public bool HasFont(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [Font] property defined by [param name] and [param theme_type] exists, or if the default theme font is set up (see [method has_default_font]). Returns [code]false[/code] if neither exist. Use [method set_font] to define the property.",
+      "godotName": "has_font",
+      "xmlDocId": "M:Godot.Theme.HasFont(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasFontSize",
+      "kind": "Method",
+      "signature": "public bool HasFontSize(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the font size property defined by [param name] and [param theme_type] exists, or if the default theme font size is set up (see [method has_default_font_size]). Returns [code]false[/code] if neither exist. Use [method set_font_size] to define the property.",
+      "godotName": "has_font_size",
+      "xmlDocId": "M:Godot.Theme.HasFontSize(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasIcon",
+      "kind": "Method",
+      "signature": "public bool HasIcon(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the icon property defined by [param name] and [param theme_type] exists. Returns [code]false[/code] if it doesn\u0027t exist. Use [method set_icon] to define it.",
+      "godotName": "has_icon",
+      "xmlDocId": "M:Godot.Theme.HasIcon(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasStylebox",
+      "kind": "Method",
+      "signature": "public bool HasStylebox(StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [StyleBox] property defined by [param name] and [param theme_type] exists. Returns [code]false[/code] if it doesn\u0027t exist. Use [method set_stylebox] to define it.",
+      "godotName": "has_stylebox",
+      "xmlDocId": "M:Godot.Theme.HasStylebox(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "HasThemeItem",
+      "kind": "Method",
+      "signature": "public bool HasThemeItem(int dataType, StringName name, StringName themeType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the theme property of [param data_type] defined by [param name] and [param theme_type] exists. Returns [code]false[/code] if it doesn\u0027t exist. Use [method set_theme_item] to define it. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "has_theme_item",
+      "xmlDocId": "M:Godot.Theme.HasThemeItem(int,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "IsTypeVariation",
+      "kind": "Method",
+      "signature": "public bool IsTypeVariation(StringName themeType, StringName baseType)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "base_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param theme_type] is marked as a variation of [param base_type].",
+      "godotName": "is_type_variation",
+      "xmlDocId": "M:Godot.Theme.IsTypeVariation(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "MergeWith",
+      "kind": "Method",
+      "signature": "public void MergeWith(Theme other)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Theme"
+        }
+      ],
+      "summary": "Adds missing and overrides existing definitions with values from the [param other] theme resource. [b]Note:[/b] This modifies the current theme. If you want to merge two themes together without modifying either one, create a new empty theme and merge the other two into it one after another.",
+      "godotName": "merge_with",
+      "xmlDocId": "M:Godot.Theme.MergeWith(Theme)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RemoveType",
+      "kind": "Method",
+      "signature": "public void RemoveType(StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the theme type, gracefully discarding defined theme items. If the type is a variation, this information is also erased. If the type is a base for type variations, those variations lose their base.",
+      "godotName": "remove_type",
+      "xmlDocId": "M:Godot.Theme.RemoveType(StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameColor",
+      "kind": "Method",
+      "signature": "public void RenameColor(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the [Color] property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_color] to check for existence, and [method clear_color] to remove the existing property.",
+      "godotName": "rename_color",
+      "xmlDocId": "M:Godot.Theme.RenameColor(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameConstant",
+      "kind": "Method",
+      "signature": "public void RenameConstant(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the constant property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_constant] to check for existence, and [method clear_constant] to remove the existing property.",
+      "godotName": "rename_constant",
+      "xmlDocId": "M:Godot.Theme.RenameConstant(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameFont",
+      "kind": "Method",
+      "signature": "public void RenameFont(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the [Font] property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_font] to check for existence, and [method clear_font] to remove the existing property.",
+      "godotName": "rename_font",
+      "xmlDocId": "M:Godot.Theme.RenameFont(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameFontSize",
+      "kind": "Method",
+      "signature": "public void RenameFontSize(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the font size property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_font_size] to check for existence, and [method clear_font_size] to remove the existing property.",
+      "godotName": "rename_font_size",
+      "xmlDocId": "M:Godot.Theme.RenameFontSize(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameIcon",
+      "kind": "Method",
+      "signature": "public void RenameIcon(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the icon property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_icon] to check for existence, and [method clear_icon] to remove the existing property.",
+      "godotName": "rename_icon",
+      "xmlDocId": "M:Godot.Theme.RenameIcon(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameStylebox",
+      "kind": "Method",
+      "signature": "public void RenameStylebox(StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the [StyleBox] property defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_stylebox] to check for existence, and [method clear_stylebox] to remove the existing property.",
+      "godotName": "rename_stylebox",
+      "xmlDocId": "M:Godot.Theme.RenameStylebox(StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameThemeItem",
+      "kind": "Method",
+      "signature": "public void RenameThemeItem(int dataType, StringName oldName, StringName name, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "old_name",
+          "type": "StringName"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the theme property of [param data_type] defined by [param old_name] and [param theme_type] to [param name], if it exists. Fails if it doesn\u0027t exist, or if a similar property with the new name already exists. Use [method has_theme_item] to check for existence, and [method clear_theme_item] to remove the existing property. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "rename_theme_item",
+      "xmlDocId": "M:Godot.Theme.RenameThemeItem(int,StringName,StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "RenameType",
+      "kind": "Method",
+      "signature": "public void RenameType(StringName oldThemeType, StringName themeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "old_theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Renames the theme type [param old_theme_type] to [param theme_type], if the old type exists and the new one doesn\u0027t exist. [b]Note:[/b] Renaming a theme type to an empty name or a variation to a type associated with a built-in class removes type variation connections in a way that cannot be undone by reversing the rename alone.",
+      "godotName": "rename_type",
+      "xmlDocId": "M:Godot.Theme.RenameType(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetColor",
+      "kind": "Method",
+      "signature": "public void SetColor(StringName name, StringName themeType, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Creates or changes the value of the [Color] property defined by [param name] and [param theme_type]. Use [method clear_color] to remove the property.",
+      "godotName": "set_color",
+      "xmlDocId": "M:Godot.Theme.SetColor(StringName,StringName,Color)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetConstant",
+      "kind": "Method",
+      "signature": "public void SetConstant(StringName name, StringName themeType, int constant)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "constant",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates or changes the value of the constant property defined by [param name] and [param theme_type]. Use [method clear_constant] to remove the property.",
+      "godotName": "set_constant",
+      "xmlDocId": "M:Godot.Theme.SetConstant(StringName,StringName,int)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetFont",
+      "kind": "Method",
+      "signature": "public void SetFont(StringName name, StringName themeType, Font font)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "font",
+          "type": "Font"
+        }
+      ],
+      "summary": "Creates or changes the value of the [Font] property defined by [param name] and [param theme_type]. Use [method clear_font] to remove the property.",
+      "godotName": "set_font",
+      "xmlDocId": "M:Godot.Theme.SetFont(StringName,StringName,Font)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetFontSize",
+      "kind": "Method",
+      "signature": "public void SetFontSize(StringName name, StringName themeType, int fontSize)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "font_size",
+          "type": "int"
+        }
+      ],
+      "summary": "Creates or changes the value of the font size property defined by [param name] and [param theme_type]. Use [method clear_font_size] to remove the property.",
+      "godotName": "set_font_size",
+      "xmlDocId": "M:Godot.Theme.SetFontSize(StringName,StringName,int)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetIcon",
+      "kind": "Method",
+      "signature": "public void SetIcon(StringName name, StringName themeType, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Creates or changes the value of the icon property defined by [param name] and [param theme_type]. Use [method clear_icon] to remove the property.",
+      "godotName": "set_icon",
+      "xmlDocId": "M:Godot.Theme.SetIcon(StringName,StringName,Texture2D)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetStylebox",
+      "kind": "Method",
+      "signature": "public void SetStylebox(StringName name, StringName themeType, StyleBox texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "texture",
+          "type": "StyleBox"
+        }
+      ],
+      "summary": "Creates or changes the value of the [StyleBox] property defined by [param name] and [param theme_type]. Use [method clear_stylebox] to remove the property.",
+      "godotName": "set_stylebox",
+      "xmlDocId": "M:Godot.Theme.SetStylebox(StringName,StringName,StyleBox)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetThemeItem",
+      "kind": "Method",
+      "signature": "public void SetThemeItem(int dataType, StringName name, StringName themeType, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Creates or changes the value of the theme property of [param data_type] defined by [param name] and [param theme_type]. Use [method clear_theme_item] to remove the property. Fails if the [param value] type is not accepted by [param data_type]. [b]Note:[/b] This method is analogous to calling the corresponding data type specific method, but can be used for more generalized logic.",
+      "godotName": "set_theme_item",
+      "xmlDocId": "M:Godot.Theme.SetThemeItem(int,StringName,StringName,Variant)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "SetTypeVariation",
+      "kind": "Method",
+      "signature": "public void SetTypeVariation(StringName themeType, StringName baseType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "theme_type",
+          "type": "StringName"
+        },
+        {
+          "name": "base_type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Marks [param theme_type] as a variation of [param base_type]. This adds [param theme_type] as a suggested option for [member Control.theme_type_variation] on a [Control] that is of the [param base_type] class. Variations can also be nested, i.e. [param base_type] can be another variation. If a chain of variations ends with a [param base_type] matching the class of the [Control], the whole chain is going to be suggested as options. [b]Note:[/b] Suggestions only show up if this theme resource is set as the project default theme. See [member ProjectSettings.gui/theme/custom].",
+      "godotName": "set_type_variation",
+      "xmlDocId": "M:Godot.Theme.SetTypeVariation(StringName,StringName)",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DefaultBaseScale",
+      "kind": "Property",
+      "signature": "public float DefaultBaseScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The default base scale factor of this theme resource. Used by some controls to scale their visual properties based on the global scale factor. If this value is set to [code]0.0[/code], the global scale factor is used (see [member ThemeDB.fallback_base_scale]). Use [method has_default_base_scale] to check if this value is valid.",
+      "defaultValue": "0.0",
+      "godotName": "default_base_scale",
+      "xmlDocId": "P:Godot.Theme.DefaultBaseScale",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DefaultFont",
+      "kind": "Property",
+      "signature": "public Font DefaultFont { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "The default font of this theme resource. Used as the default value when trying to fetch a font resource that doesn\u0027t exist in this theme or is in invalid state. If the default font is also missing or invalid, the engine fallback value is used (see [member ThemeDB.fallback_font]). Use [method has_default_font] to check if this value is valid.",
+      "godotName": "default_font",
+      "xmlDocId": "P:Godot.Theme.DefaultFont",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DefaultFontSize",
+      "kind": "Property",
+      "signature": "public int DefaultFontSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The default font size of this theme resource. Used as the default value when trying to fetch a font size value that doesn\u0027t exist in this theme or is in invalid state. If the default font size is also missing or invalid, the engine fallback value is used (see [member ThemeDB.fallback_font_size]). Values below [code]1[/code] are invalid and can be used to unset the property. Use [method has_default_font_size] to check if this value is valid.",
+      "defaultValue": "-1",
+      "godotName": "default_font_size",
+      "xmlDocId": "P:Godot.Theme.DefaultFontSize",
+      "sourcePath": "doc/classes/Theme.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "DataType",
+      "values": [
+        {
+          "name": "DATA_TYPE_COLOR",
+          "value": "0",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s [Color] item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_CONSTANT",
+          "value": "1",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s constant item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_FONT",
+          "value": "2",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s [Font] item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_FONT_SIZE",
+          "value": "3",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s font size item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_ICON",
+          "value": "4",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s icon [Texture2D] item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_MAX",
+          "value": "6",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Maximum value for the DataType enum.",
+          "sourcePath": "doc/classes/Theme.xml"
+        },
+        {
+          "name": "DATA_TYPE_STYLEBOX",
+          "value": "5",
+          "enum": "DataType",
+          "kind": "EnumValue",
+          "summary": "Theme\u0027s [StyleBox] item type.",
+          "sourcePath": "doc/classes/Theme.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DATA_TYPE_COLOR",
+      "value": "0",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s [Color] item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_CONSTANT",
+      "value": "1",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s constant item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_FONT",
+      "value": "2",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s [Font] item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_FONT_SIZE",
+      "value": "3",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s font size item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_ICON",
+      "value": "4",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s icon [Texture2D] item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_STYLEBOX",
+      "value": "5",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Theme\u0027s [StyleBox] item type.",
+      "sourcePath": "doc/classes/Theme.xml"
+    },
+    {
+      "name": "DATA_TYPE_MAX",
+      "value": "6",
+      "enum": "DataType",
+      "kind": "EnumValue",
+      "summary": "Maximum value for the DataType enum.",
+      "sourcePath": "doc/classes/Theme.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Theme.xml",
+      "sha256": "a2d9936b3c8f83fd67f3650847623543cc3a7de69468dda4d176e76457a05c77"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

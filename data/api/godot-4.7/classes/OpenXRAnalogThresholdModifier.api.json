@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRAnalogThresholdModifier",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRAnalogThresholdModifier",
+    "kind": "class",
+    "baseType": "OpenXRActionBindingModifier",
+    "interfaces": [],
+    "godotReference": "OpenXRAnalogThresholdModifier",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxranalogthresholdmodifier.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "OffHaptic",
+      "kind": "Property",
+      "signature": "public OpenXRHapticBase OffHaptic { get; set; }",
+      "returnType": "OpenXRHapticBase",
+      "parameters": [],
+      "summary": "Haptic pulse to emit when the user releases the input.",
+      "godotName": "off_haptic",
+      "xmlDocId": "P:Godot.OpenXRAnalogThresholdModifier.OffHaptic",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml"
+    },
+    {
+      "name": "OffThreshold",
+      "kind": "Property",
+      "signature": "public float OffThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When our input value falls below this, our output becomes [code]false[/code].",
+      "defaultValue": "0.4",
+      "godotName": "off_threshold",
+      "xmlDocId": "P:Godot.OpenXRAnalogThresholdModifier.OffThreshold",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml"
+    },
+    {
+      "name": "OnHaptic",
+      "kind": "Property",
+      "signature": "public OpenXRHapticBase OnHaptic { get; set; }",
+      "returnType": "OpenXRHapticBase",
+      "parameters": [],
+      "summary": "Haptic pulse to emit when the user presses the input.",
+      "godotName": "on_haptic",
+      "xmlDocId": "P:Godot.OpenXRAnalogThresholdModifier.OnHaptic",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml"
+    },
+    {
+      "name": "OnThreshold",
+      "kind": "Property",
+      "signature": "public float OnThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "When our input value is equal or larger than this value, our output becomes [code]true[/code]. It stays [code]true[/code] until it falls under the [member off_threshold] value.",
+      "defaultValue": "0.6",
+      "godotName": "on_threshold",
+      "xmlDocId": "P:Godot.OpenXRAnalogThresholdModifier.OnThreshold",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRAnalogThresholdModifier.xml",
+      "sha256": "679d49781b45f97ac2f83cf3c77c155ceee8daa47489886753ebd057bda56545"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

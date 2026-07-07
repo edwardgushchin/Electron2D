@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture3DRD",
+    "namespace": "Godot",
+    "fullName": "Godot.Texture3DRD",
+    "kind": "class",
+    "baseType": "Texture3D",
+    "interfaces": [],
+    "godotReference": "Texture3DRD",
+    "documentationPath": "doc/classes/Texture3DRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texture3drd.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "TextureRdRid",
+      "kind": "Property",
+      "signature": "public RID TextureRdRid { get; set; }",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "The RID of the texture object created on the [RenderingDevice].",
+      "godotName": "texture_rd_rid",
+      "xmlDocId": "P:Godot.Texture3DRD.TextureRdRid",
+      "sourcePath": "doc/classes/Texture3DRD.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Texture3DRD.xml",
+      "sha256": "666bafc9f5dafe30de62b5bb8b2c67274d8a8992a4427425f89deb247d036456"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

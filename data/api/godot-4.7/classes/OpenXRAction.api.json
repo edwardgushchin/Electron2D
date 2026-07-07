@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRAction",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRAction",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRAction",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRAction.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxraction.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionType",
+      "kind": "Property",
+      "signature": "public int ActionType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of action.",
+      "defaultValue": "1",
+      "godotName": "action_type",
+      "xmlDocId": "P:Godot.OpenXRAction.ActionType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    },
+    {
+      "name": "LocalizedName",
+      "kind": "Property",
+      "signature": "public String LocalizedName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The localized description of this action.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "localized_name",
+      "xmlDocId": "P:Godot.OpenXRAction.LocalizedName",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    },
+    {
+      "name": "ToplevelPaths",
+      "kind": "Property",
+      "signature": "public PackedStringArray ToplevelPaths { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "A collections of toplevel paths to which this action can be bound.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "toplevel_paths",
+      "xmlDocId": "P:Godot.OpenXRAction.ToplevelPaths",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ActionType",
+      "values": [
+        {
+          "name": "OPENXR_ACTION_BOOL",
+          "value": "0",
+          "enum": "ActionType",
+          "kind": "EnumValue",
+          "summary": "This action provides a boolean value.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+        },
+        {
+          "name": "OPENXR_ACTION_FLOAT",
+          "value": "1",
+          "enum": "ActionType",
+          "kind": "EnumValue",
+          "summary": "This action provides a float value between [code]0.0[/code] and [code]1.0[/code] for any analog input such as triggers.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+        },
+        {
+          "name": "OPENXR_ACTION_POSE",
+          "value": "3",
+          "enum": "ActionType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+        },
+        {
+          "name": "OPENXR_ACTION_VECTOR2",
+          "value": "2",
+          "enum": "ActionType",
+          "kind": "EnumValue",
+          "summary": "This action provides a [Vector2] value and can be bound to embedded trackpads and joysticks.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "OPENXR_ACTION_BOOL",
+      "value": "0",
+      "enum": "ActionType",
+      "kind": "EnumValue",
+      "summary": "This action provides a boolean value.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    },
+    {
+      "name": "OPENXR_ACTION_FLOAT",
+      "value": "1",
+      "enum": "ActionType",
+      "kind": "EnumValue",
+      "summary": "This action provides a float value between [code]0.0[/code] and [code]1.0[/code] for any analog input such as triggers.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    },
+    {
+      "name": "OPENXR_ACTION_VECTOR2",
+      "value": "2",
+      "enum": "ActionType",
+      "kind": "EnumValue",
+      "summary": "This action provides a [Vector2] value and can be bound to embedded trackpads and joysticks.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    },
+    {
+      "name": "OPENXR_ACTION_POSE",
+      "value": "3",
+      "enum": "ActionType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAction.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRAction.xml",
+      "sha256": "2e844b1f95eb19242e5a6e7cac3983ff62acaf1bd78980c49e7b83de5158e208"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

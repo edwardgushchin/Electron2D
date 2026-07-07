@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "NavigationObstacle3D",
+    "namespace": "Godot",
+    "fullName": "Godot.NavigationObstacle3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "NavigationObstacle3D",
+    "documentationPath": "doc/classes/NavigationObstacle3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_navigationobstacle3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAvoidanceLayerValue",
+      "kind": "Method",
+      "signature": "public bool GetAvoidanceLayerValue(int layerNumber)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether or not the specified layer of the [member avoidance_layers] bitmask is enabled, given a [param layer_number] between 1 and 32.",
+      "godotName": "get_avoidance_layer_value",
+      "xmlDocId": "M:Godot.NavigationObstacle3D.GetAvoidanceLayerValue(int)",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "GetNavigationMap",
+      "kind": "Method",
+      "signature": "public RID GetNavigationMap()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the navigation map for this NavigationObstacle node. This function returns always the map set on the NavigationObstacle node and not the map of the abstract obstacle on the NavigationServer. If the obstacle map is changed directly with the NavigationServer API the NavigationObstacle node will not be aware of the map change. Use [method set_navigation_map] to change the navigation map for the NavigationObstacle and also update the obstacle on the NavigationServer.",
+      "godotName": "get_navigation_map",
+      "xmlDocId": "M:Godot.NavigationObstacle3D.GetNavigationMap",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of this obstacle on the [NavigationServer3D].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.NavigationObstacle3D.GetRid",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "SetAvoidanceLayerValue",
+      "kind": "Method",
+      "signature": "public void SetAvoidanceLayerValue(int layerNumber, bool value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer_number",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "summary": "Based on [param value], enables or disables the specified layer in the [member avoidance_layers] bitmask, given a [param layer_number] between 1 and 32.",
+      "godotName": "set_avoidance_layer_value",
+      "xmlDocId": "M:Godot.NavigationObstacle3D.SetAvoidanceLayerValue(int,bool)",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "SetNavigationMap",
+      "kind": "Method",
+      "signature": "public void SetNavigationMap(RID navigationMap)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "navigation_map",
+          "type": "RID"
+        }
+      ],
+      "summary": "Sets the [RID] of the navigation map this NavigationObstacle node should use and also updates the [code]obstacle[/code] on the NavigationServer.",
+      "godotName": "set_navigation_map",
+      "xmlDocId": "M:Godot.NavigationObstacle3D.SetNavigationMap(RID)",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "AffectNavigationMesh",
+      "kind": "Property",
+      "signature": "public bool AffectNavigationMesh { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled and parsed in a navigation mesh baking process the obstacle will discard source geometry inside its [member vertices] and [member height] defined shape.",
+      "defaultValue": "false",
+      "godotName": "affect_navigation_mesh",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.AffectNavigationMesh",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "AvoidanceEnabled",
+      "kind": "Property",
+      "signature": "public bool AvoidanceEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] the obstacle affects avoidance using agents.",
+      "defaultValue": "true",
+      "godotName": "avoidance_enabled",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.AvoidanceEnabled",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "AvoidanceLayers",
+      "kind": "Property",
+      "signature": "public int AvoidanceLayers { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A bitfield determining the avoidance layers for this obstacle. Agents with a matching bit on the their avoidance mask will avoid this obstacle.",
+      "defaultValue": "1",
+      "godotName": "avoidance_layers",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.AvoidanceLayers",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "CarveNavigationMesh",
+      "kind": "Property",
+      "signature": "public bool CarveNavigationMesh { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If enabled the obstacle vertices will carve into the baked navigation mesh with the shape unaffected by additional offsets (e.g. agent radius). It will still be affected by further postprocessing of the baking process, like edge and polygon simplification. Requires [member affect_navigation_mesh] to be enabled.",
+      "defaultValue": "false",
+      "godotName": "carve_navigation_mesh",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.CarveNavigationMesh",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "Height",
+      "kind": "Property",
+      "signature": "public float Height { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the obstacle height used in 2D avoidance. 2D avoidance using agent\u0027s ignore obstacles that are below or above them.",
+      "defaultValue": "1.0",
+      "godotName": "height",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.Height",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "Radius",
+      "kind": "Property",
+      "signature": "public float Radius { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sets the avoidance radius for the obstacle.",
+      "defaultValue": "0.0",
+      "godotName": "radius",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.Radius",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "Use3dAvoidance",
+      "kind": "Property",
+      "signature": "public bool Use3dAvoidance { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code] the obstacle affects 3D avoidance using agent\u0027s with obstacle [member radius]. If [code]false[/code] the obstacle affects 2D avoidance using agent\u0027s with both obstacle [member vertices] as well as obstacle [member radius].",
+      "defaultValue": "false",
+      "godotName": "use_3d_avoidance",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.Use3dAvoidance",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "Velocity",
+      "kind": "Property",
+      "signature": "public Vector3 Velocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Sets the wanted velocity for the obstacle so other agent\u0027s can better predict the obstacle if it is moved with a velocity regularly (every frame) instead of warped to a new position. Does only affect avoidance for the obstacles [member radius]. Does nothing for the obstacles static vertices.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "velocity",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.Velocity",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    },
+    {
+      "name": "Vertices",
+      "kind": "Property",
+      "signature": "public PackedVector3Array Vertices { get; set; }",
+      "returnType": "PackedVector3Array",
+      "parameters": [],
+      "summary": "The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or overlap. Should the vertices using obstacle be warped to a new position agent\u0027s can not predict this movement and may get trapped inside the obstacle.",
+      "defaultValue": "PackedVector3Array()",
+      "godotName": "vertices",
+      "xmlDocId": "P:Godot.NavigationObstacle3D.Vertices",
+      "sourcePath": "doc/classes/NavigationObstacle3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/NavigationObstacle3D.xml",
+      "sha256": "78dcba6cb0c76a9f82ddea3269562797560338838e5fa263599cafc54d37a8b5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

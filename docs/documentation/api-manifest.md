@@ -1,6 +1,6 @@
 # Machine-readable API manifest
 
-Обновлено: 2026-07-05.
+Обновлено: 2026-07-06.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,7 +13,7 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация для `T-0118`, уточнённая root contract `T-0241`.
-Обновлено: 2026-07-05.
+Обновлено: 2026-07-06.
 
 ## Назначение
 
@@ -30,6 +30,24 @@ data/api/electron2d-api-manifest.json
 ```
 
 Файл должен быть stable JSON: UTF-8 без BOM, LF line endings, отсортированные типы и members, deterministic property order. Любое изменение public API, XML documentation или compatibility status должно либо обновить этот файл, либо привести к падению проверки синхронизации.
+
+## Generated class packets
+
+`T-0242` использует manifest как Electron2D-side вход для class packets:
+
+```bash
+dotnet run --project eng/Electron2D.Build -- api generate-class-packets
+dotnet run --project eng/Electron2D.Build -- api generate-class-packets --check
+```
+
+Derived artifacts:
+
+- `data/api/electron2d/classes/<ClassName>.api.json`;
+- `data/api/electron2d/index/classes.json`.
+
+Per-class Markdown рядом с JSON не генерируется. `--check` должен падать при stale `*.api.md`, потому что единственный tracked packet format для этого slice - JSON.
+
+Manifest projection намеренно отличается от raw runtime symbol names там, где Electron2D показывает более чистую публичную C# surface: callback methods отображаются без ведущего Godot `_` (`Draw` вместо `_Draw`), enum-типы отображаются без внутреннего суффикса `Enum` (`TextureRect.StretchMode` вместо `TextureRect.StretchModeEnum`). Raw `xmlDocId` остаётся неизменным, чтобы документация и source lookup по-прежнему находили compiled symbols.
 
 ## Источники данных
 
@@ -74,6 +92,8 @@ Manifest должен содержать:
 - `xmlDocId`;
 - `summary`;
 - `profile` с тем же status/parity contract, что у declaring type, если member не имеет отдельного compatibility override.
+
+Member `kind` должен сохранять C# ABI/reflection форму публичной поверхности: public `const` fields записываются как `Constant`, C# operator overloads записываются как `Operator`, enum values остаются `EnumValue`, обычные public fields остаются `Field`, а static get-only properties остаются `Property`. Для `Constant` и `EnumValue` manifest обязан хранить строковое поле `value`, полученное из compiled constant value через invariant culture. Для predefined value singletons manifest сохраняет ABI `kind` как `Field` или `Property`, но также хранит строковое `value`, если значение является public static readonly/static get-only значением того же value-type declaring type и его можно безопасно прочитать через reflection. Это позволяет class packet generator заполнять секции `constants` и `operators`, а future matrix сможет сравнивать не только имена, но и значения констант, enum members и Godot-style value singletons.
 
 ## Статусы и parity
 

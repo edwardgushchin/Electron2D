@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsBody2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsBody2D",
+    "kind": "class",
+    "baseType": "Electron2D.CollisionObject2D",
+    "interfaces": [],
+    "godotReference": "PhysicsBody2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "PhysicsBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsBody2D type.",
+      "xmlDocId": "M:Electron2D.PhysicsBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "PhysicsBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.PhysicsBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the PhysicsBody2D type.",
+      "xmlDocId": "M:Electron2D.PhysicsBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "MoveAndCollide",
+      "kind": "Method",
+      "signature": "public Electron2D.KinematicCollision2D MoveAndCollide(Electron2D.Vector2 motion, System.Boolean testOnly, System.Single safeMargin, System.Boolean recoveryAsCollision)",
+      "returnType": "Electron2D.KinematicCollision2D",
+      "parameters": [
+        {
+          "name": "motion",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "testOnly",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        },
+        {
+          "name": "safeMargin",
+          "type": "System.Single",
+          "defaultValue": "0.08"
+        },
+        {
+          "name": "recoveryAsCollision",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Moves this body along a motion vector and stops when it hits another body.",
+      "xmlDocId": "M:Electron2D.PhysicsBody2D.MoveAndCollide(Electron2D.Vector2,System.Boolean,System.Single,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PhysicsMaterialOverride",
+      "kind": "Property",
+      "signature": "public Electron2D.PhysicsMaterial PhysicsMaterialOverride { get; set; }",
+      "returnType": "Electron2D.PhysicsMaterial",
+      "parameters": [],
+      "summary": "Gets or sets the physics material overriding this body\u0027s default collision material.",
+      "xmlDocId": "P:Electron2D.PhysicsBody2D.PhysicsMaterialOverride",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

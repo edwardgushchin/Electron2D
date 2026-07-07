@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tree",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Tree",
+    "kind": "class",
+    "baseType": "Electron2D.Control",
+    "interfaces": [],
+    "godotReference": "Tree",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Tree",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Tree()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Tree\u0060 class.",
+      "xmlDocId": "M:Electron2D.Tree.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Tree",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Tree()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.Tree\u0060 class.",
+      "xmlDocId": "M:Electron2D.Tree.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public System.Void Clear()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Removes all items and clears selection.",
+      "xmlDocId": "M:Electron2D.Tree.Clear",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this tree.",
+      "xmlDocId": "M:Electron2D.Tree._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CreateItem",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem CreateItem(Electron2D.TreeItem parent, System.Int32 index)",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [
+        {
+          "name": "parent",
+          "type": "Electron2D.TreeItem"
+        },
+        {
+          "name": "index",
+          "type": "System.Int32",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "Creates an item in this tree.",
+      "xmlDocId": "M:Electron2D.Tree.CreateItem(Electron2D.TreeItem,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DeselectAll",
+      "kind": "Method",
+      "signature": "public System.Void DeselectAll()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Clears every selected item.",
+      "xmlDocId": "M:Electron2D.Tree.DeselectAll",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the visible tree rows.",
+      "xmlDocId": "M:Electron2D.Tree._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetColumnTitle",
+      "kind": "Method",
+      "signature": "public System.String GetColumnTitle(System.Int32 column)",
+      "returnType": "System.String",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the title of one column.",
+      "xmlDocId": "M:Electron2D.Tree.GetColumnTitle(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetItemAtPosition",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetItemAtPosition(Electron2D.Vector2 position)",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Gets the visible item at a local position.",
+      "xmlDocId": "M:Electron2D.Tree.GetItemAtPosition(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetRoot",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetRoot()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the root item.",
+      "xmlDocId": "M:Electron2D.Tree.GetRoot",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSelected",
+      "kind": "Method",
+      "signature": "public Electron2D.TreeItem GetSelected()",
+      "returnType": "Electron2D.TreeItem",
+      "parameters": [],
+      "summary": "Gets the currently selected item.",
+      "xmlDocId": "M:Electron2D.Tree.GetSelected",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetSelectedColumn",
+      "kind": "Method",
+      "signature": "public System.Int32 GetSelectedColumn()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the selected column.",
+      "xmlDocId": "M:Electron2D.Tree.GetSelectedColumn",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this tree.",
+      "xmlDocId": "M:Electron2D.Tree._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetColumnTitle",
+      "kind": "Method",
+      "signature": "public System.Void SetColumnTitle(System.Int32 column, System.String title)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "column",
+          "type": "System.Int32"
+        },
+        {
+          "name": "title",
+          "type": "System.String"
+        }
+      ],
+      "summary": "Sets the title of one column.",
+      "xmlDocId": "M:Electron2D.Tree.SetColumnTitle(System.Int32,System.String)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowReselect",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowReselect { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether selecting the current item again emits signals.",
+      "xmlDocId": "P:Electron2D.Tree.AllowReselect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AllowRmbSelect",
+      "kind": "Property",
+      "signature": "public System.Boolean AllowRmbSelect { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether right mouse button input may select rows.",
+      "xmlDocId": "P:Electron2D.Tree.AllowRmbSelect",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AutoTooltip",
+      "kind": "Property",
+      "signature": "public System.Boolean AutoTooltip { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether automatic tooltip lookup is enabled.",
+      "xmlDocId": "P:Electron2D.Tree.AutoTooltip",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ColumnTitlesVisible",
+      "kind": "Property",
+      "signature": "public System.Boolean ColumnTitlesVisible { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether column title rows are visible.",
+      "xmlDocId": "P:Electron2D.Tree.ColumnTitlesVisible",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Columns",
+      "kind": "Property",
+      "signature": "public System.Int32 Columns { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the number of columns stored by the tree.",
+      "xmlDocId": "P:Electron2D.Tree.Columns",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HideFolding",
+      "kind": "Property",
+      "signature": "public System.Boolean HideFolding { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether folding arrows are hidden.",
+      "xmlDocId": "P:Electron2D.Tree.HideFolding",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HideRoot",
+      "kind": "Property",
+      "signature": "public System.Boolean HideRoot { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the root item is hidden from visible traversal.",
+      "xmlDocId": "P:Electron2D.Tree.HideRoot",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SelectMode",
+      "kind": "Property",
+      "signature": "public Electron2D.Tree.SelectMode SelectMode { get; set; }",
+      "returnType": "Electron2D.Tree.SelectMode",
+      "parameters": [],
+      "summary": "Gets or sets the current selection mode.",
+      "xmlDocId": "P:Electron2D.Tree.SelectMode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this tree.",
+      "xmlDocId": "M:Electron2D.Tree._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the visible tree rows.",
+      "xmlDocId": "M:Electron2D.Tree._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GuiInput",
+      "kind": "Method",
+      "signature": "public System.Void GuiInput(Electron2D.InputEvent inputEvent)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "inputEvent",
+          "type": "Electron2D.InputEvent"
+        }
+      ],
+      "summary": "Handles GUI input routed to this tree.",
+      "xmlDocId": "M:Electron2D.Tree._GuiInput(Electron2D.InputEvent)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRAnchor3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRAnchor3D",
+    "kind": "class",
+    "baseType": "XRNode3D",
+    "interfaces": [],
+    "godotReference": "XRAnchor3D",
+    "documentationPath": "doc/classes/XRAnchor3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xranchor3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetPlane",
+      "kind": "Method",
+      "signature": "public Plane GetPlane()",
+      "returnType": "Plane",
+      "parameters": [],
+      "summary": "Returns a plane aligned with our anchor; handy for intersection testing.",
+      "godotName": "get_plane",
+      "xmlDocId": "M:Godot.XRAnchor3D.GetPlane",
+      "sourcePath": "doc/classes/XRAnchor3D.xml"
+    },
+    {
+      "name": "GetSize",
+      "kind": "Method",
+      "signature": "public Vector3 GetSize()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Returns the estimated size of the plane that was detected. Say when the anchor relates to a table in the real world, this is the estimated size of the surface of that table.",
+      "godotName": "get_size",
+      "xmlDocId": "M:Godot.XRAnchor3D.GetSize",
+      "sourcePath": "doc/classes/XRAnchor3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRAnchor3D.xml",
+      "sha256": "2905f0c69a0f4e03c92e76b869e91ec9a0c3ff70864ab82794f3745097d350fa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

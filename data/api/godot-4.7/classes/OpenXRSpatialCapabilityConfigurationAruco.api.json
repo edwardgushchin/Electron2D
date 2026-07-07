@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialCapabilityConfigurationAruco",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialCapabilityConfigurationAruco",
+    "kind": "class",
+    "baseType": "OpenXRSpatialCapabilityConfigurationBaseHeader",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialCapabilityConfigurationAruco",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcapabilityconfigurationaruco.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEnabledComponents",
+      "kind": "Method",
+      "signature": "public PackedInt64Array GetEnabledComponents()",
+      "returnType": "PackedInt64Array",
+      "parameters": [],
+      "summary": "Returns the components enabled by this configuration. [b]Note:[/b] Only valid after this configuration was used to create a spatial context.",
+      "godotName": "get_enabled_components",
+      "xmlDocId": "M:Godot.OpenXRSpatialCapabilityConfigurationAruco.GetEnabledComponents",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ArucoDict",
+      "kind": "Property",
+      "signature": "public int ArucoDict { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Dictionary to use to decode Aruco markers. [b]Note:[/b] Must be set before using this configuration to create a spatial context.",
+      "defaultValue": "16",
+      "godotName": "aruco_dict",
+      "xmlDocId": "P:Godot.OpenXRSpatialCapabilityConfigurationAruco.ArucoDict",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ArucoDict",
+      "values": [
+        {
+          "name": "ARUCO_DICT_4X4_100",
+          "value": "2",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "4 by 4 pixel Aruco marker dictionary with 100 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_4X4_1000",
+          "value": "4",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "4 by 4 pixel Aruco marker dictionary with 1000 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_4X4_250",
+          "value": "3",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "4 by 4 pixel Aruco marker dictionary with 250 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_4X4_50",
+          "value": "1",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "4 by 4 pixel Aruco marker dictionary with 50 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_5X5_100",
+          "value": "6",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "5 by 5 pixel Aruco marker dictionary with 100 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_5X5_1000",
+          "value": "8",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "5 by 5 pixel Aruco marker dictionary with 1000 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_5X5_250",
+          "value": "7",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "5 by 5 pixel Aruco marker dictionary with 250 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_5X5_50",
+          "value": "5",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "5 by 5 pixel Aruco marker dictionary with 50 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_6X6_100",
+          "value": "10",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 pixel Aruco marker dictionary with 100 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_6X6_1000",
+          "value": "12",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 pixel Aruco marker dictionary with 1000 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_6X6_250",
+          "value": "11",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 pixel Aruco marker dictionary with 250 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_6X6_50",
+          "value": "9",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "6 by 6 pixel Aruco marker dictionary with 50 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_7X7_100",
+          "value": "14",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "7 by 7 pixel Aruco marker dictionary with 100 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_7X7_1000",
+          "value": "16",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "7 by 7 pixel Aruco marker dictionary with 1000 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_7X7_250",
+          "value": "15",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "7 by 7 pixel Aruco marker dictionary with 250 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        },
+        {
+          "name": "ARUCO_DICT_7X7_50",
+          "value": "13",
+          "enum": "ArucoDict",
+          "kind": "EnumValue",
+          "summary": "7 by 7 pixel Aruco marker dictionary with 50 IDs.",
+          "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ARUCO_DICT_4X4_50",
+      "value": "1",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "4 by 4 pixel Aruco marker dictionary with 50 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_4X4_100",
+      "value": "2",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "4 by 4 pixel Aruco marker dictionary with 100 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_4X4_250",
+      "value": "3",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "4 by 4 pixel Aruco marker dictionary with 250 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_4X4_1000",
+      "value": "4",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "4 by 4 pixel Aruco marker dictionary with 1000 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_5X5_50",
+      "value": "5",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "5 by 5 pixel Aruco marker dictionary with 50 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_5X5_100",
+      "value": "6",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "5 by 5 pixel Aruco marker dictionary with 100 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_5X5_250",
+      "value": "7",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "5 by 5 pixel Aruco marker dictionary with 250 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_5X5_1000",
+      "value": "8",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "5 by 5 pixel Aruco marker dictionary with 1000 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_6X6_50",
+      "value": "9",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 pixel Aruco marker dictionary with 50 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_6X6_100",
+      "value": "10",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 pixel Aruco marker dictionary with 100 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_6X6_250",
+      "value": "11",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 pixel Aruco marker dictionary with 250 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_6X6_1000",
+      "value": "12",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "6 by 6 pixel Aruco marker dictionary with 1000 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_7X7_50",
+      "value": "13",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "7 by 7 pixel Aruco marker dictionary with 50 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_7X7_100",
+      "value": "14",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "7 by 7 pixel Aruco marker dictionary with 100 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_7X7_250",
+      "value": "15",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "7 by 7 pixel Aruco marker dictionary with 250 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    },
+    {
+      "name": "ARUCO_DICT_7X7_1000",
+      "value": "16",
+      "enum": "ArucoDict",
+      "kind": "EnumValue",
+      "summary": "7 by 7 pixel Aruco marker dictionary with 1000 IDs.",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialCapabilityConfigurationAruco.xml",
+      "sha256": "8a944de35e0edeee81d4d9730cda6d95584c6be4ff07a13b60247a4a0af6a9b5"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

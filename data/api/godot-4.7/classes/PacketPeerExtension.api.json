@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PacketPeerExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.PacketPeerExtension",
+    "kind": "class",
+    "baseType": "PacketPeer",
+    "interfaces": [],
+    "godotReference": "PacketPeerExtension",
+    "documentationPath": "doc/classes/PacketPeerExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_packetpeerextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetAvailablePacketCount",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetMaxPacketSize",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.PacketPeerExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetAvailablePacketCount",
+      "kind": "Method",
+      "signature": "public int _GetAvailablePacketCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_available_packet_count",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetAvailablePacketCount",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_GetMaxPacketSize",
+      "kind": "Method",
+      "signature": "public int _GetMaxPacketSize()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_max_packet_size",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetMaxPacketSize",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_GetPacket",
+      "kind": "Method",
+      "signature": "public int _GetPacket(const uint8_t ** rBuffer, int32_t* rBufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "r_buffer",
+          "type": "const uint8_t **"
+        },
+        {
+          "name": "r_buffer_size",
+          "type": "int32_t*"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_packet",
+      "xmlDocId": "M:Godot.PacketPeerExtension._GetPacket(const uint8_t **,int32_t*)",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    },
+    {
+      "name": "_PutPacket",
+      "kind": "Method",
+      "signature": "public int _PutPacket(const uint8_t* buffer, int bufferSize)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "const uint8_t*"
+        },
+        {
+          "name": "buffer_size",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_put_packet",
+      "xmlDocId": "M:Godot.PacketPeerExtension._PutPacket(const uint8_t*,int)",
+      "sourcePath": "doc/classes/PacketPeerExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PacketPeerExtension.xml",
+      "sha256": "48c727fac51133e220be3b124a673d7368037c450c76beb00ffde71098d5e51f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

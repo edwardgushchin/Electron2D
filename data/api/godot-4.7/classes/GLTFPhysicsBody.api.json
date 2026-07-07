@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFPhysicsBody",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFPhysicsBody",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFPhysicsBody",
+    "documentationPath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfphysicsbody.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFPhysicsBody FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFPhysicsBody",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFPhysicsBody instance by parsing the given [Dictionary] in the [code]OMI_physics_body[/code] glTF extension format.",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFPhysicsBody.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "FromNode",
+      "kind": "Method",
+      "signature": "public GLTFPhysicsBody FromNode(CollisionObject3D bodyNode)",
+      "returnType": "GLTFPhysicsBody",
+      "parameters": [
+        {
+          "name": "body_node",
+          "type": "CollisionObject3D"
+        }
+      ],
+      "summary": "Creates a new GLTFPhysicsBody instance from the given Godot [CollisionObject3D] node.",
+      "godotName": "from_node",
+      "xmlDocId": "M:Godot.GLTFPhysicsBody.FromNode(CollisionObject3D)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFPhysicsBody instance into a [Dictionary]. It will be in the format expected by the [code]OMI_physics_body[/code] glTF extension.",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFPhysicsBody.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "ToNode",
+      "kind": "Method",
+      "signature": "public CollisionObject3D ToNode()",
+      "returnType": "CollisionObject3D",
+      "parameters": [],
+      "summary": "Converts this GLTFPhysicsBody instance into a Godot [CollisionObject3D] node.",
+      "godotName": "to_node",
+      "xmlDocId": "M:Godot.GLTFPhysicsBody.ToNode",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "AngularVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 AngularVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The angular velocity of the physics body, in radians per second. This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "angular_velocity",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.AngularVelocity",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "BodyType",
+      "kind": "Property",
+      "signature": "public String BodyType { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The type of the body. When importing, this controls what type of [CollisionObject3D] node Godot should generate. Valid values are [code]\u0022static\u0022[/code], [code]\u0022animatable\u0022[/code], [code]\u0022character\u0022[/code], [code]\u0022rigid\u0022[/code], [code]\u0022vehicle\u0022[/code], and [code]\u0022trigger\u0022[/code]. When exporting, this will be squashed down to one of [code]\u0022static\u0022[/code], [code]\u0022kinematic\u0022[/code], or [code]\u0022dynamic\u0022[/code] motion types, or the [code]\u0022trigger\u0022[/code] property.",
+      "defaultValue": "\u0022rigid\u0022",
+      "godotName": "body_type",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.BodyType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "CenterOfMass",
+      "kind": "Property",
+      "signature": "public Vector3 CenterOfMass { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The center of mass of the body, in meters. This is in local space relative to the body. By default, the center of the mass is the body\u0027s origin.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "center_of_mass",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.CenterOfMass",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "InertiaDiagonal",
+      "kind": "Property",
+      "signature": "public Vector3 InertiaDiagonal { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The inertia strength of the physics body, in kilogram meter squared (kg\u22C5m\u00B2). This represents the inertia around the principle axes, the diagonal of the inertia tensor matrix. This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022. When converted to a Godot [RigidBody3D] node, if this value is zero, then the inertia will be calculated automatically.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "inertia_diagonal",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.InertiaDiagonal",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "InertiaOrientation",
+      "kind": "Property",
+      "signature": "public Quaternion InertiaOrientation { get; set; }",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "The inertia orientation of the physics body. This defines the rotation of the inertia\u0027s principle axes relative to the object\u0027s local axes. This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022 and [member inertia_diagonal] is set to a non-zero value.",
+      "defaultValue": "Quaternion(0, 0, 0, 1)",
+      "godotName": "inertia_orientation",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.InertiaOrientation",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "InertiaTensor",
+      "kind": "Property",
+      "signature": "public Basis InertiaTensor { get; set; }",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "The inertia tensor of the physics body, in kilogram meter squared (kg\u22C5m\u00B2). This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022. When converted to a Godot [RigidBody3D] node, if this value is zero, then the inertia will be calculated automatically.",
+      "defaultValue": "Basis(0, 0, 0, 0, 0, 0, 0, 0, 0)",
+      "godotName": "inertia_tensor",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.InertiaTensor",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "LinearVelocity",
+      "kind": "Property",
+      "signature": "public Vector3 LinearVelocity { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The linear velocity of the physics body, in meters per second. This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "linear_velocity",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.LinearVelocity",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    },
+    {
+      "name": "Mass",
+      "kind": "Property",
+      "signature": "public float Mass { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The mass of the physics body, in kilograms. This is only used when the body type is \u0022rigid\u0022 or \u0022vehicle\u0022.",
+      "defaultValue": "1.0",
+      "godotName": "mass",
+      "xmlDocId": "P:Godot.GLTFPhysicsBody.Mass",
+      "sourcePath": "modules/gltf/doc_classes/GLTFPhysicsBody.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFPhysicsBody.xml",
+      "sha256": "c8ea885fe506a0e1f878d3efe2ab72ceaf87c3d2d95718b48b40b386e6e8311f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

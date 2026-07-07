@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "BackBufferCopy",
+    "namespace": "Godot",
+    "fullName": "Godot.BackBufferCopy",
+    "kind": "class",
+    "baseType": "Node2D",
+    "interfaces": [],
+    "godotReference": "BackBufferCopy",
+    "documentationPath": "doc/classes/BackBufferCopy.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_backbuffercopy.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CopyMode",
+      "kind": "Property",
+      "signature": "public int CopyMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Buffer mode.",
+      "defaultValue": "1",
+      "godotName": "copy_mode",
+      "xmlDocId": "P:Godot.BackBufferCopy.CopyMode",
+      "sourcePath": "doc/classes/BackBufferCopy.xml"
+    },
+    {
+      "name": "Rect",
+      "kind": "Property",
+      "signature": "public Rect2 Rect { get; set; }",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "The area covered by the [BackBufferCopy]. Only used if [member copy_mode] is [constant COPY_MODE_RECT].",
+      "defaultValue": "Rect2(-100, -100, 200, 200)",
+      "godotName": "rect",
+      "xmlDocId": "P:Godot.BackBufferCopy.Rect",
+      "sourcePath": "doc/classes/BackBufferCopy.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CopyMode",
+      "values": [
+        {
+          "name": "COPY_MODE_DISABLED",
+          "value": "0",
+          "enum": "CopyMode",
+          "kind": "EnumValue",
+          "summary": "Disables the buffering mode. This means the [BackBufferCopy] node will directly use the portion of screen it covers.",
+          "sourcePath": "doc/classes/BackBufferCopy.xml"
+        },
+        {
+          "name": "COPY_MODE_RECT",
+          "value": "1",
+          "enum": "CopyMode",
+          "kind": "EnumValue",
+          "summary": "[BackBufferCopy] buffers a rectangular region.",
+          "sourcePath": "doc/classes/BackBufferCopy.xml"
+        },
+        {
+          "name": "COPY_MODE_VIEWPORT",
+          "value": "2",
+          "enum": "CopyMode",
+          "kind": "EnumValue",
+          "summary": "[BackBufferCopy] buffers the entire screen.",
+          "sourcePath": "doc/classes/BackBufferCopy.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "COPY_MODE_DISABLED",
+      "value": "0",
+      "enum": "CopyMode",
+      "kind": "EnumValue",
+      "summary": "Disables the buffering mode. This means the [BackBufferCopy] node will directly use the portion of screen it covers.",
+      "sourcePath": "doc/classes/BackBufferCopy.xml"
+    },
+    {
+      "name": "COPY_MODE_RECT",
+      "value": "1",
+      "enum": "CopyMode",
+      "kind": "EnumValue",
+      "summary": "[BackBufferCopy] buffers a rectangular region.",
+      "sourcePath": "doc/classes/BackBufferCopy.xml"
+    },
+    {
+      "name": "COPY_MODE_VIEWPORT",
+      "value": "2",
+      "enum": "CopyMode",
+      "kind": "EnumValue",
+      "summary": "[BackBufferCopy] buffers the entire screen.",
+      "sourcePath": "doc/classes/BackBufferCopy.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/BackBufferCopy.xml",
+      "sha256": "398d9c6771bfff1372ca544dcbb406648a9a91141ecb40fb95eac1dae0a4c874"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

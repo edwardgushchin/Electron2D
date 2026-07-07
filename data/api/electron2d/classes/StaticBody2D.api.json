@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StaticBody2D",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.StaticBody2D",
+    "kind": "class",
+    "baseType": "Electron2D.PhysicsBody2D",
+    "interfaces": [],
+    "godotReference": "StaticBody2D",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "StaticBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StaticBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the StaticBody2D type.",
+      "xmlDocId": "M:Electron2D.StaticBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "StaticBody2D",
+      "kind": "Constructor",
+      "signature": "public Electron2D.StaticBody2D()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the StaticBody2D type.",
+      "xmlDocId": "M:Electron2D.StaticBody2D.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConstantAngularVelocity",
+      "kind": "Property",
+      "signature": "public System.Single ConstantAngularVelocity { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the constant angular velocity applied by this static body.",
+      "xmlDocId": "P:Electron2D.StaticBody2D.ConstantAngularVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConstantLinearVelocity",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 ConstantLinearVelocity { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the constant linear velocity applied by this static body.",
+      "xmlDocId": "P:Electron2D.StaticBody2D.ConstantLinearVelocity",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

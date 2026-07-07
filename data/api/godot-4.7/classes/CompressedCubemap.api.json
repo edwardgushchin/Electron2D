@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CompressedCubemap",
+    "namespace": "Godot",
+    "fullName": "Godot.CompressedCubemap",
+    "kind": "class",
+    "baseType": "CompressedTextureLayered",
+    "interfaces": [],
+    "godotReference": "CompressedCubemap",
+    "documentationPath": "doc/classes/CompressedCubemap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_compressedcubemap.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CompressedCubemap.xml",
+      "sha256": "c90e21a0aab7ce4d264dbc84b37e8cb3e1466e9aa467f468468c0fc871c442eb"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

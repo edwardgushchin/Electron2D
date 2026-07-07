@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Slider",
+    "namespace": "Godot",
+    "fullName": "Godot.Slider",
+    "kind": "class",
+    "baseType": "Range",
+    "interfaces": [],
+    "godotReference": "Slider",
+    "documentationPath": "doc/classes/Slider.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_slider.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Editable",
+      "kind": "Property",
+      "signature": "public bool Editable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the slider can be interacted with. If [code]false[/code], the value can be changed only by code.",
+      "defaultValue": "true",
+      "godotName": "editable",
+      "xmlDocId": "P:Godot.Slider.Editable",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.Slider.FocusMode",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "Scrollable",
+      "kind": "Property",
+      "signature": "public bool Scrollable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the value can be changed using the mouse wheel.",
+      "defaultValue": "true",
+      "godotName": "scrollable",
+      "xmlDocId": "P:Godot.Slider.Scrollable",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "Step",
+      "kind": "Property",
+      "signature": "public float Step { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "1.0",
+      "godotName": "step",
+      "xmlDocId": "P:Godot.Slider.Step",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TickCount",
+      "kind": "Property",
+      "signature": "public int TickCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of ticks displayed on the slider, including border ticks. Ticks are uniformly-distributed value markers.",
+      "defaultValue": "0",
+      "godotName": "tick_count",
+      "xmlDocId": "P:Godot.Slider.TickCount",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TicksOnBorders",
+      "kind": "Property",
+      "signature": "public bool TicksOnBorders { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the slider will display ticks for minimum and maximum values.",
+      "defaultValue": "false",
+      "godotName": "ticks_on_borders",
+      "xmlDocId": "P:Godot.Slider.TicksOnBorders",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TicksPosition",
+      "kind": "Property",
+      "signature": "public int TicksPosition { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the position of the ticks. See [enum TickPosition] for details.",
+      "defaultValue": "0",
+      "godotName": "ticks_position",
+      "xmlDocId": "P:Godot.Slider.TicksPosition",
+      "sourcePath": "doc/classes/Slider.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "DragEnded",
+      "kind": "Signal",
+      "signature": "public event DragEndedHandler DragEnded",
+      "parameters": [
+        {
+          "name": "value_changed",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the grabber stops being dragged. If [param value_changed] is [code]true[/code], [member Range.value] is different from the value when the dragging was started.",
+      "godotName": "drag_ended",
+      "xmlDocId": "E:Godot.Slider.DragEnded(bool)",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "DragStarted",
+      "kind": "Signal",
+      "signature": "public event DragStartedHandler DragStarted",
+      "parameters": [],
+      "summary": "Emitted when the grabber starts being dragged. This is emitted before the corresponding [signal Range.value_changed] signal.",
+      "godotName": "drag_started",
+      "xmlDocId": "E:Godot.Slider.DragStarted",
+      "sourcePath": "doc/classes/Slider.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TickPosition",
+      "values": [
+        {
+          "name": "TICK_POSITION_BOTH",
+          "value": "2",
+          "enum": "TickPosition",
+          "kind": "EnumValue",
+          "summary": "Places the ticks at the both sides of the slider.",
+          "sourcePath": "doc/classes/Slider.xml"
+        },
+        {
+          "name": "TICK_POSITION_BOTTOM_RIGHT",
+          "value": "0",
+          "enum": "TickPosition",
+          "kind": "EnumValue",
+          "summary": "Places the ticks at the bottom of the [HSlider], or right of the [VSlider].",
+          "sourcePath": "doc/classes/Slider.xml"
+        },
+        {
+          "name": "TICK_POSITION_CENTER",
+          "value": "3",
+          "enum": "TickPosition",
+          "kind": "EnumValue",
+          "summary": "Places the ticks at the center of the slider.",
+          "sourcePath": "doc/classes/Slider.xml"
+        },
+        {
+          "name": "TICK_POSITION_TOP_LEFT",
+          "value": "1",
+          "enum": "TickPosition",
+          "kind": "EnumValue",
+          "summary": "Places the ticks at the top of the [HSlider], or left of the [VSlider].",
+          "sourcePath": "doc/classes/Slider.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TICK_POSITION_BOTTOM_RIGHT",
+      "value": "0",
+      "enum": "TickPosition",
+      "kind": "EnumValue",
+      "summary": "Places the ticks at the bottom of the [HSlider], or right of the [VSlider].",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TICK_POSITION_TOP_LEFT",
+      "value": "1",
+      "enum": "TickPosition",
+      "kind": "EnumValue",
+      "summary": "Places the ticks at the top of the [HSlider], or left of the [VSlider].",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TICK_POSITION_BOTH",
+      "value": "2",
+      "enum": "TickPosition",
+      "kind": "EnumValue",
+      "summary": "Places the ticks at the both sides of the slider.",
+      "sourcePath": "doc/classes/Slider.xml"
+    },
+    {
+      "name": "TICK_POSITION_CENTER",
+      "value": "3",
+      "enum": "TickPosition",
+      "kind": "EnumValue",
+      "summary": "Places the ticks at the center of the slider.",
+      "sourcePath": "doc/classes/Slider.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Slider.xml",
+      "sha256": "e40360812190021d3adf270b58dd7d6f062c426ab8ba400a57e9ed16409af091"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

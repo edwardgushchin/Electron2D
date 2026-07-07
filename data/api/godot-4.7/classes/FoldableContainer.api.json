@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FoldableContainer",
+    "namespace": "Godot",
+    "fullName": "Godot.FoldableContainer",
+    "kind": "class",
+    "baseType": "Container",
+    "interfaces": [],
+    "godotReference": "FoldableContainer",
+    "documentationPath": "doc/classes/FoldableContainer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_foldablecontainer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddTitleBarControl",
+      "kind": "Method",
+      "signature": "public void AddTitleBarControl(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Adds a [Control] that will be placed next to the container\u0027s title, obscuring the clickable area. Prime usage is adding [Button] nodes, but it can be any [Control]. The control will be added as a child of this container and removed from previous parent if necessary. The controls will be placed aligned to the right, with the first added control being the leftmost one.",
+      "godotName": "add_title_bar_control",
+      "xmlDocId": "M:Godot.FoldableContainer.AddTitleBarControl(Control)",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "Expand",
+      "kind": "Method",
+      "signature": "public void Expand()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Expands the container and emits [signal folding_changed].",
+      "godotName": "expand",
+      "xmlDocId": "M:Godot.FoldableContainer.Expand",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "Fold",
+      "kind": "Method",
+      "signature": "public void Fold()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Folds the container and emits [signal folding_changed].",
+      "godotName": "fold",
+      "xmlDocId": "M:Godot.FoldableContainer.Fold",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "RemoveTitleBarControl",
+      "kind": "Method",
+      "signature": "public void RemoveTitleBarControl(Control control)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "control",
+          "type": "Control"
+        }
+      ],
+      "summary": "Removes a [Control] added with [method add_title_bar_control]. The node is not freed automatically, you need to use [method Node.queue_free].",
+      "godotName": "remove_title_bar_control",
+      "xmlDocId": "M:Godot.FoldableContainer.RemoveTitleBarControl(Control)",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.FoldableContainer.FocusMode",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "FoldableGroup",
+      "kind": "Property",
+      "signature": "public FoldableGroup FoldableGroup { get; set; }",
+      "returnType": "FoldableGroup",
+      "parameters": [],
+      "summary": "The [FoldableGroup] associated with the container. When multiple [FoldableContainer] nodes share the same group, only one of them is allowed to be unfolded.",
+      "godotName": "foldable_group",
+      "xmlDocId": "P:Godot.FoldableContainer.FoldableGroup",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "Folded",
+      "kind": "Property",
+      "signature": "public bool Folded { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the container will become folded and will hide all its children.",
+      "defaultValue": "false",
+      "godotName": "folded",
+      "xmlDocId": "P:Godot.FoldableContainer.Folded",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.FoldableContainer.Language",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "MouseFilter",
+      "kind": "Property",
+      "signature": "public int MouseFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "mouse_filter",
+      "xmlDocId": "P:Godot.FoldableContainer.MouseFilter",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The container\u0027s title text.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.FoldableContainer.Title",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "TitleAlignment",
+      "kind": "Property",
+      "signature": "public int TitleAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Title\u0027s horizontal text alignment.",
+      "defaultValue": "0",
+      "godotName": "title_alignment",
+      "xmlDocId": "P:Godot.FoldableContainer.TitleAlignment",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "TitlePosition",
+      "kind": "Property",
+      "signature": "public int TitlePosition { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Title\u0027s position.",
+      "defaultValue": "0",
+      "godotName": "title_position",
+      "xmlDocId": "P:Godot.FoldableContainer.TitlePosition",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "TitleTextDirection",
+      "kind": "Property",
+      "signature": "public int TitleTextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Title text writing direction.",
+      "defaultValue": "0",
+      "godotName": "title_text_direction",
+      "xmlDocId": "P:Godot.FoldableContainer.TitleTextDirection",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "TitleTextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TitleTextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Defines the behavior of the title when the text is longer than the available space.",
+      "defaultValue": "0",
+      "godotName": "title_text_overrun_behavior",
+      "xmlDocId": "P:Godot.FoldableContainer.TitleTextOverrunBehavior",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "FoldingChanged",
+      "kind": "Signal",
+      "signature": "public event FoldingChangedHandler FoldingChanged",
+      "parameters": [
+        {
+          "name": "is_folded",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the container is folded/expanded.",
+      "godotName": "folding_changed",
+      "xmlDocId": "E:Godot.FoldableContainer.FoldingChanged(bool)",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "TitlePosition",
+      "values": [
+        {
+          "name": "POSITION_BOTTOM",
+          "value": "1",
+          "enum": "TitlePosition",
+          "kind": "EnumValue",
+          "summary": "Makes the title appear at the bottom of the container. Also makes all StyleBoxes flipped vertically.",
+          "sourcePath": "doc/classes/FoldableContainer.xml"
+        },
+        {
+          "name": "POSITION_TOP",
+          "value": "0",
+          "enum": "TitlePosition",
+          "kind": "EnumValue",
+          "summary": "Makes the title appear at the top of the container.",
+          "sourcePath": "doc/classes/FoldableContainer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "POSITION_TOP",
+      "value": "0",
+      "enum": "TitlePosition",
+      "kind": "EnumValue",
+      "summary": "Makes the title appear at the top of the container.",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    },
+    {
+      "name": "POSITION_BOTTOM",
+      "value": "1",
+      "enum": "TitlePosition",
+      "kind": "EnumValue",
+      "summary": "Makes the title appear at the bottom of the container. Also makes all StyleBoxes flipped vertically.",
+      "sourcePath": "doc/classes/FoldableContainer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FoldableContainer.xml",
+      "sha256": "c01e3dc0b4f8caaae56840b191db91f67fd18266d8a42e4bda2b2a3bd289621c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFTexture",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFTexture",
+    "documentationPath": "modules/gltf/doc_classes/GLTFTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltftexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Sampler",
+      "kind": "Property",
+      "signature": "public int Sampler { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "ID of the texture sampler to use when sampling the image. If -1, then the default texture sampler is used (linear filtering, and repeat wrapping in both axes).",
+      "defaultValue": "-1",
+      "godotName": "sampler",
+      "xmlDocId": "P:Godot.GLTFTexture.Sampler",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTexture.xml"
+    },
+    {
+      "name": "SrcImage",
+      "kind": "Property",
+      "signature": "public int SrcImage { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the image associated with this texture, see [method GLTFState.get_images]. If -1, then this texture does not have an image assigned.",
+      "defaultValue": "-1",
+      "godotName": "src_image",
+      "xmlDocId": "P:Godot.GLTFTexture.SrcImage",
+      "sourcePath": "modules/gltf/doc_classes/GLTFTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFTexture.xml",
+      "sha256": "883f75011497fd51e669be973243201dc0a54ac1f51e62df4d80745245da9a0f"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

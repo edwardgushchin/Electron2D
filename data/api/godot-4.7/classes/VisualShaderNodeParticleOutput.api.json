@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeParticleOutput",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeParticleOutput",
+    "kind": "class",
+    "baseType": "VisualShaderNodeOutput",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeParticleOutput",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodeparticleoutput.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml",
+      "sha256": "47edd5c3de2792eab015ab069c7a12ff0f3510cbac4cfd1583dbf1af8c7aca1b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

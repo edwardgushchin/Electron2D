@@ -1,0 +1,1451 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectBodyState3DExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsDirectBodyState3DExtension",
+    "kind": "class",
+    "baseType": "PhysicsDirectBodyState3D",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectBodyState3DExtension",
+    "documentationPath": "doc/classes/PhysicsDirectBodyState3DExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsdirectbodystate3dextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_AddConstantForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _AddConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyCentralImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyForce",
+      "kind": "Method",
+      "signature": "public void _ApplyForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyImpulse(Vector3 impulse, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyImpulse(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorque",
+      "kind": "Method",
+      "signature": "public void _ApplyTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyTorqueImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyTorqueImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetAngularVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetAngularVelocity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetAngularVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMass",
+      "kind": "Method",
+      "signature": "public Vector3 _GetCenterOfMass()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_center_of_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCenterOfMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMassLocal",
+      "kind": "Method",
+      "signature": "public Vector3 _GetCenterOfMassLocal()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_center_of_mass_local",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCenterOfMassLocal",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _GetCollisionLayer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCollisionLayer",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _GetCollisionMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCollisionMask",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector3 _GetConstantForce()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetConstantForce",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetConstantTorque",
+      "kind": "Method",
+      "signature": "public Vector3 _GetConstantTorque()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetConstantTorque",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactCollider",
+      "kind": "Method",
+      "signature": "public RID _GetContactCollider(int contactIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactCollider(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderId",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderId(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_id",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderObject",
+      "kind": "Method",
+      "signature": "public Object _GetContactColliderObject(int contactIdx)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_object",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderObject(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactColliderPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderShape",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactColliderVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactCount",
+      "kind": "Method",
+      "signature": "public int _GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactCount",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactImpulse",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactImpulse(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactImpulse(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalNormal",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalNormal(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_normal",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalNormal(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalShape",
+      "kind": "Method",
+      "signature": "public int _GetContactLocalShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertia",
+      "kind": "Method",
+      "signature": "public Vector3 _GetInverseInertia()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_inertia",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseInertia",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertiaTensor",
+      "kind": "Method",
+      "signature": "public Basis _GetInverseInertiaTensor()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_inertia_tensor",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseInertiaTensor",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseMass",
+      "kind": "Method",
+      "signature": "public float _GetInverseMass()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetLinearVelocity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetLinearVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetPrincipalInertiaAxes",
+      "kind": "Method",
+      "signature": "public Basis _GetPrincipalInertiaAxes()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_principal_inertia_axes",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetPrincipalInertiaAxes",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetSpaceState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState3D _GetSpaceState()",
+      "returnType": "PhysicsDirectSpaceState3D",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_space_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetSpaceState",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetStep",
+      "kind": "Method",
+      "signature": "public float _GetStep()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_step",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetStep",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalAngularDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalAngularDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_angular_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalAngularDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalGravity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetTotalGravity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_gravity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalGravity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalLinearDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalLinearDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_linear_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalLinearDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTransform",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetVelocityAtLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetVelocityAtLocalPosition(Vector3 localPosition)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_velocity_at_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetVelocityAtLocalPosition(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._IntegrateForces",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_IsSleeping",
+      "kind": "Method",
+      "signature": "public bool _IsSleeping()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_sleeping",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._IsSleeping",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetAngularVelocity",
+      "kind": "Method",
+      "signature": "public void _SetAngularVelocity(Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetAngularVelocity(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _SetCollisionLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetCollisionLayer(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _SetCollisionMask(int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetCollisionMask(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetConstantForce",
+      "kind": "Method",
+      "signature": "public void _SetConstantForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetConstantForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _SetConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetLinearVelocity",
+      "kind": "Method",
+      "signature": "public void _SetLinearVelocity(Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetLinearVelocity(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetSleepState",
+      "kind": "Method",
+      "signature": "public void _SetSleepState(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_sleep_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetSleepState(bool)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetTransform",
+      "kind": "Method",
+      "signature": "public void _SetTransform(Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetTransform(Transform3D)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_AddConstantForce",
+      "kind": "Method",
+      "signature": "public void _AddConstantForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_AddConstantTorque",
+      "kind": "Method",
+      "signature": "public void _AddConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._AddConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyCentralForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyCentralImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyCentralImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyForce",
+      "kind": "Method",
+      "signature": "public void _ApplyForce(Vector3 force, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyForce(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyImpulse(Vector3 impulse, Vector3 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        },
+        {
+          "name": "position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyImpulse(Vector3,Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorque",
+      "kind": "Method",
+      "signature": "public void _ApplyTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_ApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void _ApplyTorqueImpulse(Vector3 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "impulse",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._ApplyTorqueImpulse(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetAngularVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetAngularVelocity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetAngularVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMass",
+      "kind": "Method",
+      "signature": "public Vector3 _GetCenterOfMass()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_center_of_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCenterOfMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCenterOfMassLocal",
+      "kind": "Method",
+      "signature": "public Vector3 _GetCenterOfMassLocal()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_center_of_mass_local",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCenterOfMassLocal",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int _GetCollisionLayer()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCollisionLayer",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetCollisionMask",
+      "kind": "Method",
+      "signature": "public int _GetCollisionMask()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetCollisionMask",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector3 _GetConstantForce()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetConstantForce",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetConstantTorque",
+      "kind": "Method",
+      "signature": "public Vector3 _GetConstantTorque()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetConstantTorque",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactCollider",
+      "kind": "Method",
+      "signature": "public RID _GetContactCollider(int contactIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactCollider(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderId",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderId(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_id",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderId(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderObject",
+      "kind": "Method",
+      "signature": "public Object _GetContactColliderObject(int contactIdx)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_object",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderObject(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactColliderPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderShape",
+      "kind": "Method",
+      "signature": "public int _GetContactColliderShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactColliderVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactColliderVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_collider_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactColliderVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactCount",
+      "kind": "Method",
+      "signature": "public int _GetContactCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_contact_count",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactCount",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactImpulse",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactImpulse(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_impulse",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactImpulse(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalNormal",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalNormal(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_normal",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalNormal(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalShape",
+      "kind": "Method",
+      "signature": "public int _GetContactLocalShape(int contactIdx)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalShape(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetContactLocalVelocityAtPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetContactLocalVelocityAtPosition(int contactIdx)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "contact_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_contact_local_velocity_at_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetContactLocalVelocityAtPosition(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertia",
+      "kind": "Method",
+      "signature": "public Vector3 _GetInverseInertia()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_inertia",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseInertia",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseInertiaTensor",
+      "kind": "Method",
+      "signature": "public Basis _GetInverseInertiaTensor()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_inertia_tensor",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseInertiaTensor",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetInverseMass",
+      "kind": "Method",
+      "signature": "public float _GetInverseMass()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_inverse_mass",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetInverseMass",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetLinearVelocity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetLinearVelocity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetLinearVelocity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetPrincipalInertiaAxes",
+      "kind": "Method",
+      "signature": "public Basis _GetPrincipalInertiaAxes()",
+      "returnType": "Basis",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_principal_inertia_axes",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetPrincipalInertiaAxes",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetSpaceState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState3D _GetSpaceState()",
+      "returnType": "PhysicsDirectSpaceState3D",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_space_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetSpaceState",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetStep",
+      "kind": "Method",
+      "signature": "public float _GetStep()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_step",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetStep",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalAngularDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalAngularDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_angular_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalAngularDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalGravity",
+      "kind": "Method",
+      "signature": "public Vector3 _GetTotalGravity()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_gravity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalGravity",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTotalLinearDamp",
+      "kind": "Method",
+      "signature": "public float _GetTotalLinearDamp()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_total_linear_damp",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTotalLinearDamp",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D _GetTransform()",
+      "returnType": "Transform3D",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetTransform",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_GetVelocityAtLocalPosition",
+      "kind": "Method",
+      "signature": "public Vector3 _GetVelocityAtLocalPosition(Vector3 localPosition)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "local_position",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_velocity_at_local_position",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._GetVelocityAtLocalPosition(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_IntegrateForces",
+      "kind": "Method",
+      "signature": "public void _IntegrateForces()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_integrate_forces",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._IntegrateForces",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_IsSleeping",
+      "kind": "Method",
+      "signature": "public bool _IsSleeping()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_sleeping",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._IsSleeping",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetAngularVelocity",
+      "kind": "Method",
+      "signature": "public void _SetAngularVelocity(Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_angular_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetAngularVelocity(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void _SetCollisionLayer(int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetCollisionLayer(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetCollisionMask",
+      "kind": "Method",
+      "signature": "public void _SetCollisionMask(int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetCollisionMask(int)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetConstantForce",
+      "kind": "Method",
+      "signature": "public void _SetConstantForce(Vector3 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "force",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetConstantForce(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetConstantTorque",
+      "kind": "Method",
+      "signature": "public void _SetConstantTorque(Vector3 torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "torque",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetConstantTorque(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetLinearVelocity",
+      "kind": "Method",
+      "signature": "public void _SetLinearVelocity(Vector3 velocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "velocity",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_linear_velocity",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetLinearVelocity(Vector3)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetSleepState",
+      "kind": "Method",
+      "signature": "public void _SetSleepState(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_sleep_state",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetSleepState(bool)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    },
+    {
+      "name": "_SetTransform",
+      "kind": "Method",
+      "signature": "public void _SetTransform(Transform3D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "transform",
+          "type": "Transform3D"
+        }
+      ],
+      "summary": "",
+      "godotName": "_set_transform",
+      "xmlDocId": "M:Godot.PhysicsDirectBodyState3DExtension._SetTransform(Transform3D)",
+      "sourcePath": "doc/classes/PhysicsDirectBodyState3DExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsDirectBodyState3DExtension.xml",
+      "sha256": "19bafa818770ccc0702bacb0e700d49d916ec8fadfac8b37f2b73310f1f57786"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

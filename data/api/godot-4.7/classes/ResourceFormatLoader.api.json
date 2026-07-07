@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceFormatLoader",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceFormatLoader",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ResourceFormatLoader",
+    "documentationPath": "doc/classes/ResourceFormatLoader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceformatloader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Exists",
+      "kind": "Method",
+      "signature": "public bool _Exists(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_exists",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._Exists(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetClassesUsed",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetClassesUsed(String path)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_classes_used",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetClassesUsed(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetDependencies",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetDependencies(String path, bool addTypes)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "add_types",
+          "type": "bool"
+        }
+      ],
+      "summary": "Should return the dependencies for the resource at the given [param path]. Each dependency is a string composed of one to three sections separated by [code]::[/code], with trailing empty sections omitted: - The first section should contain the UID if the resource has one. Otherwise, it should contain the file path. - The second section should contain the class name of the dependency if [param add_types] is [code]true[/code]. Otherwise, it should be empty. - The third section should contain the fallback path if the resource has a UID. Otherwise, it should be empty. [codeblock] func _get_dependencies(path, add_types): return [ \u0022uid://fqgvuwrkuixh::Script::res://script.gd\u0022, \u0022uid://fqgvuwrkuixh::::res://script.gd\u0022, \u0022res://script.gd::Script\u0022, \u0022res://script.gd\u0022, ] [/codeblock] [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so [code]\u0022Resource\u0022[/code] can be used for the class name.",
+      "godotName": "_get_dependencies",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetDependencies(String,bool)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of extensions for files this loader is able to read.",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceScriptClass",
+      "kind": "Method",
+      "signature": "public String _GetResourceScriptClass(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the script class name associated with the [Resource] under the given [param path]. If the resource has no script or the script isn\u0027t a named class, it should return [code]\u0022\u0022[/code].",
+      "godotName": "_get_resource_script_class",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceScriptClass(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceType",
+      "kind": "Method",
+      "signature": "public String _GetResourceType(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Gets the class name of the resource associated with the given path. If the loader cannot handle it, it should return [code]\u0022\u0022[/code]. [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so you might just return [code]\u0022Resource\u0022[/code] for them.",
+      "godotName": "_get_resource_type",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceType(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceUid",
+      "kind": "Method",
+      "signature": "public int _GetResourceUid(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return the unique ID for the resource associated with the given path. If this method is not overridden, a [code].uid[/code] file is generated along with the resource file, containing the unique ID.",
+      "godotName": "_get_resource_uid",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceUid(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_HandlesType",
+      "kind": "Method",
+      "signature": "public bool _HandlesType(StringName type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Tells which resource class this loader can load. [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so you might just handle [code]\u0022Resource\u0022[/code] for them.",
+      "godotName": "_handles_type",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._HandlesType(StringName)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_Load",
+      "kind": "Method",
+      "signature": "public Variant _Load(String path, String originalPath, bool useSubThreads, int cacheMode)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "original_path",
+          "type": "String"
+        },
+        {
+          "name": "use_sub_threads",
+          "type": "bool"
+        },
+        {
+          "name": "cache_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, [param original_path] will target the source file. Returns a [Resource] object on success, or an [enum Error] constant in case of failure. The [param cache_mode] property defines whether and how the cache should be used or updated when loading the resource. See [enum CacheMode] for details.",
+      "godotName": "_load",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._Load(String,String,bool,int)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_RecognizePath",
+      "kind": "Method",
+      "signature": "public bool _RecognizePath(String path, StringName type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Tells whether or not this loader should load a resource from its resource path for a given type. If it is not implemented, the default behavior returns whether the path\u0027s extension is within the ones provided by [method _get_recognized_extensions], and if the type is within the ones provided by [method _get_resource_type].",
+      "godotName": "_recognize_path",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._RecognizePath(String,StringName)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_RenameDependencies",
+      "kind": "Method",
+      "signature": "public int _RenameDependencies(String path, Dictionary renames)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "renames",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "If implemented, renames dependencies within the given resource and saves it. [param renames] is a dictionary [code]{ String =\u003E String }[/code] mapping old dependency paths to new paths. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_rename_dependencies",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._RenameDependencies(String,Dictionary)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CacheMode",
+      "values": [
+        {
+          "name": "CACHE_MODE_IGNORE",
+          "value": "0",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Neither the main resource (the one requested to be loaded) nor any of its subresources are retrieved from cache nor stored into it. Dependencies (external resources) are loaded with [constant CACHE_MODE_REUSE].",
+          "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_IGNORE_DEEP",
+          "value": "3",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_IGNORE], but propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REPLACE",
+          "value": "2",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_REUSE], but the cache is checked for the main resource (the one requested to be loaded) as well as for each of its subresources. Those already in the cache, as long as the loaded and cached types match, have their data refreshed from storage into the already existing instances. Otherwise, they are recreated as completely new objects.",
+          "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REPLACE_DEEP",
+          "value": "4",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "Like [constant CACHE_MODE_REPLACE], but propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+        },
+        {
+          "name": "CACHE_MODE_REUSE",
+          "value": "1",
+          "enum": "CacheMode",
+          "kind": "EnumValue",
+          "summary": "The main resource (the one requested to be loaded), its subresources, and its dependencies (external resources) are retrieved from cache if present, instead of loaded. Those not cached are loaded and then stored into the cache. The same rules are propagated recursively down the tree of dependencies (external resources).",
+          "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CACHE_MODE_IGNORE",
+      "value": "0",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Neither the main resource (the one requested to be loaded) nor any of its subresources are retrieved from cache nor stored into it. Dependencies (external resources) are loaded with [constant CACHE_MODE_REUSE].",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REUSE",
+      "value": "1",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "The main resource (the one requested to be loaded), its subresources, and its dependencies (external resources) are retrieved from cache if present, instead of loaded. Those not cached are loaded and then stored into the cache. The same rules are propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REPLACE",
+      "value": "2",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_REUSE], but the cache is checked for the main resource (the one requested to be loaded) as well as for each of its subresources. Those already in the cache, as long as the loaded and cached types match, have their data refreshed from storage into the already existing instances. Otherwise, they are recreated as completely new objects.",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_IGNORE_DEEP",
+      "value": "3",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_IGNORE], but propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "CACHE_MODE_REPLACE_DEEP",
+      "value": "4",
+      "enum": "CacheMode",
+      "kind": "EnumValue",
+      "summary": "Like [constant CACHE_MODE_REPLACE], but propagated recursively down the tree of dependencies (external resources).",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Exists",
+      "kind": "Method",
+      "signature": "public bool _Exists(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_exists",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._Exists(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetClassesUsed",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetClassesUsed(String path)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_classes_used",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetClassesUsed(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetDependencies",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetDependencies(String path, bool addTypes)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "add_types",
+          "type": "bool"
+        }
+      ],
+      "summary": "Should return the dependencies for the resource at the given [param path]. Each dependency is a string composed of one to three sections separated by [code]::[/code], with trailing empty sections omitted: - The first section should contain the UID if the resource has one. Otherwise, it should contain the file path. - The second section should contain the class name of the dependency if [param add_types] is [code]true[/code]. Otherwise, it should be empty. - The third section should contain the fallback path if the resource has a UID. Otherwise, it should be empty. [codeblock] func _get_dependencies(path, add_types): return [ \u0022uid://fqgvuwrkuixh::Script::res://script.gd\u0022, \u0022uid://fqgvuwrkuixh::::res://script.gd\u0022, \u0022res://script.gd::Script\u0022, \u0022res://script.gd\u0022, ] [/codeblock] [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so [code]\u0022Resource\u0022[/code] can be used for the class name.",
+      "godotName": "_get_dependencies",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetDependencies(String,bool)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Gets the list of extensions for files this loader is able to read.",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceScriptClass",
+      "kind": "Method",
+      "signature": "public String _GetResourceScriptClass(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the script class name associated with the [Resource] under the given [param path]. If the resource has no script or the script isn\u0027t a named class, it should return [code]\u0022\u0022[/code].",
+      "godotName": "_get_resource_script_class",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceScriptClass(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceType",
+      "kind": "Method",
+      "signature": "public String _GetResourceType(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Gets the class name of the resource associated with the given path. If the loader cannot handle it, it should return [code]\u0022\u0022[/code]. [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so you might just return [code]\u0022Resource\u0022[/code] for them.",
+      "godotName": "_get_resource_type",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceType(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_GetResourceUid",
+      "kind": "Method",
+      "signature": "public int _GetResourceUid(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return the unique ID for the resource associated with the given path. If this method is not overridden, a [code].uid[/code] file is generated along with the resource file, containing the unique ID.",
+      "godotName": "_get_resource_uid",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._GetResourceUid(String)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_HandlesType",
+      "kind": "Method",
+      "signature": "public bool _HandlesType(StringName type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Tells which resource class this loader can load. [b]Note:[/b] Custom resource types defined by scripts aren\u0027t known by the [ClassDB], so you might just handle [code]\u0022Resource\u0022[/code] for them.",
+      "godotName": "_handles_type",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._HandlesType(StringName)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_Load",
+      "kind": "Method",
+      "signature": "public Variant _Load(String path, String originalPath, bool useSubThreads, int cacheMode)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "original_path",
+          "type": "String"
+        },
+        {
+          "name": "use_sub_threads",
+          "type": "bool"
+        },
+        {
+          "name": "cache_mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, [param original_path] will target the source file. Returns a [Resource] object on success, or an [enum Error] constant in case of failure. The [param cache_mode] property defines whether and how the cache should be used or updated when loading the resource. See [enum CacheMode] for details.",
+      "godotName": "_load",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._Load(String,String,bool,int)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_RecognizePath",
+      "kind": "Method",
+      "signature": "public bool _RecognizePath(String path, StringName type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Tells whether or not this loader should load a resource from its resource path for a given type. If it is not implemented, the default behavior returns whether the path\u0027s extension is within the ones provided by [method _get_recognized_extensions], and if the type is within the ones provided by [method _get_resource_type].",
+      "godotName": "_recognize_path",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._RecognizePath(String,StringName)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    },
+    {
+      "name": "_RenameDependencies",
+      "kind": "Method",
+      "signature": "public int _RenameDependencies(String path, Dictionary renames)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "renames",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "If implemented, renames dependencies within the given resource and saves it. [param renames] is a dictionary [code]{ String =\u003E String }[/code] mapping old dependency paths to new paths. Returns [constant OK] on success, or an [enum Error] constant in case of failure.",
+      "godotName": "_rename_dependencies",
+      "xmlDocId": "M:Godot.ResourceFormatLoader._RenameDependencies(String,Dictionary)",
+      "sourcePath": "doc/classes/ResourceFormatLoader.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceFormatLoader.xml",
+      "sha256": "962fa821769e9312e3c22535b7b12877ed789ecf534bd6182d80b988d0f4d9cf"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

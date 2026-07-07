@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "TileData",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.TileData",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "TileData",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "TileData",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileData()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileData\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileData.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "TileData",
+      "kind": "Constructor",
+      "signature": "public Electron2D.TileData()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.TileData\u0060 type.",
+      "xmlDocId": "M:Electron2D.TileData.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionPolygonOneWayMargin",
+      "kind": "Method",
+      "signature": "public System.Single GetCollisionPolygonOneWayMargin(System.Int32 layerId, System.Int32 polygonIndex)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the one-way collision margin for a polygon.",
+      "xmlDocId": "M:Electron2D.TileData.GetCollisionPolygonOneWayMargin(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionPolygonPoints",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2[] GetCollisionPolygonPoints(System.Int32 layerId, System.Int32 polygonIndex)",
+      "returnType": "Electron2D.Vector2[]",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the points for a collision polygon.",
+      "xmlDocId": "M:Electron2D.TileData.GetCollisionPolygonPoints(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCollisionPolygonsCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetCollisionPolygonsCount(System.Int32 layerId)",
+      "returnType": "System.Int32",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Gets the number of collision polygons in a collision layer.",
+      "xmlDocId": "M:Electron2D.TileData.GetCollisionPolygonsCount(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsCollisionPolygonOneWay",
+      "kind": "Method",
+      "signature": "public System.Boolean IsCollisionPolygonOneWay(System.Int32 layerId, System.Int32 polygonIndex)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether a collision polygon is one-way.",
+      "xmlDocId": "M:Electron2D.TileData.IsCollisionPolygonOneWay(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionPolygonOneWay",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionPolygonOneWay(System.Int32 layerId, System.Int32 polygonIndex, System.Boolean oneWay)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "oneWay",
+          "type": "System.Boolean"
+        }
+      ],
+      "summary": "Sets whether a collision polygon is one-way.",
+      "xmlDocId": "M:Electron2D.TileData.SetCollisionPolygonOneWay(System.Int32,System.Int32,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionPolygonOneWayMargin",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionPolygonOneWayMargin(System.Int32 layerId, System.Int32 polygonIndex, System.Single margin)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "margin",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Sets the one-way collision margin for a polygon.",
+      "xmlDocId": "M:Electron2D.TileData.SetCollisionPolygonOneWayMargin(System.Int32,System.Int32,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionPolygonPoints",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionPolygonPoints(System.Int32 layerId, System.Int32 polygonIndex, Electron2D.Vector2[] polygon)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonIndex",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygon",
+          "type": "Electron2D.Vector2[]"
+        }
+      ],
+      "summary": "Sets the points for a collision polygon.",
+      "xmlDocId": "M:Electron2D.TileData.SetCollisionPolygonPoints(System.Int32,System.Int32,Electron2D.Vector2[])",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetCollisionPolygonsCount",
+      "kind": "Method",
+      "signature": "public System.Void SetCollisionPolygonsCount(System.Int32 layerId, System.Int32 polygonsCount)",
+      "returnType": "System.Void",
+      "parameters": [
+        {
+          "name": "layerId",
+          "type": "System.Int32"
+        },
+        {
+          "name": "polygonsCount",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Sets the number of collision polygons stored in a collision layer.",
+      "xmlDocId": "M:Electron2D.TileData.SetCollisionPolygonsCount(System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Electron2D.Color Modulate { get; set; }",
+      "returnType": "Electron2D.Color",
+      "parameters": [],
+      "summary": "Gets or sets the color multiplied into the tile draw command.",
+      "xmlDocId": "P:Electron2D.TileData.Modulate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TextureOrigin",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2 TextureOrigin { get; set; }",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets or sets the visual offset applied to this tile inside its cell.",
+      "xmlDocId": "P:Electron2D.TileData.TextureOrigin",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ZIndex",
+      "kind": "Property",
+      "signature": "public System.Int32 ZIndex { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the z-index offset for this tile.",
+      "xmlDocId": "P:Electron2D.TileData.ZIndex",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

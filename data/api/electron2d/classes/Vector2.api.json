@@ -1,0 +1,947 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Vector2",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Vector2",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Vector2\u003E"
+    ],
+    "godotReference": "Vector2",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Vector2",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Vector2(System.Single x, System.Single y)",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Single"
+        },
+        {
+          "name": "y",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Initializes a new instance of the Vector2 type.",
+      "xmlDocId": "M:Electron2D.Vector2.#ctor(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Vector2",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Vector2(System.Single x, System.Single y)",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Single"
+        },
+        {
+          "name": "y",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Initializes a new instance of the Vector2 type.",
+      "xmlDocId": "M:Electron2D.Vector2.#ctor(System.Single,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Down",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Down",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the down value.",
+      "value": "(0, 1)",
+      "xmlDocId": "F:Electron2D.Vector2.Down",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inf",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Inf",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the inf value.",
+      "value": "(Infinity, Infinity)",
+      "xmlDocId": "F:Electron2D.Vector2.Inf",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Left",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the left value.",
+      "value": "(-1, 0)",
+      "xmlDocId": "F:Electron2D.Vector2.Left",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "One",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 One",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the one value.",
+      "value": "(1, 1)",
+      "xmlDocId": "F:Electron2D.Vector2.One",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Right",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the right value.",
+      "value": "(1, 0)",
+      "xmlDocId": "F:Electron2D.Vector2.Right",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Up",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Up",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the up value.",
+      "value": "(0, -1)",
+      "xmlDocId": "F:Electron2D.Vector2.Up",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Zero",
+      "kind": "Field",
+      "signature": "public static Electron2D.Vector2 Zero",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Represents the zero value.",
+      "value": "(0, 0)",
+      "xmlDocId": "F:Electron2D.Vector2.Zero",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Abs()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the abs operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Abs",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Angle",
+      "kind": "Method",
+      "signature": "public System.Single Angle()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Executes the angle operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Angle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "AngleTo",
+      "kind": "Method",
+      "signature": "public System.Single AngleTo(Electron2D.Vector2 to)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the angle to operation.",
+      "xmlDocId": "M:Electron2D.Vector2.AngleTo(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Ceil",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Ceil()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the ceil operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Ceil",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Clamp",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Clamp(Electron2D.Vector2 min, Electron2D.Vector2 max)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "max",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the clamp operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Clamp(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Cross",
+      "kind": "Method",
+      "signature": "public System.Single Cross(Electron2D.Vector2 with)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the cross operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Cross(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DirectionTo",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 DirectionTo(Electron2D.Vector2 to)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the direction to operation.",
+      "xmlDocId": "M:Electron2D.Vector2.DirectionTo(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DistanceSquaredTo",
+      "kind": "Method",
+      "signature": "public System.Single DistanceSquaredTo(Electron2D.Vector2 to)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the distance squared to operation.",
+      "xmlDocId": "M:Electron2D.Vector2.DistanceSquaredTo(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "DistanceTo",
+      "kind": "Method",
+      "signature": "public System.Single DistanceTo(Electron2D.Vector2 to)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the distance to operation.",
+      "xmlDocId": "M:Electron2D.Vector2.DistanceTo(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Dot",
+      "kind": "Method",
+      "signature": "public System.Single Dot(Electron2D.Vector2 with)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the dot operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Dot(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Vector2 other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Equals(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Floor",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Floor()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the floor operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Floor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.Vector2.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsEqualApprox",
+      "kind": "Method",
+      "signature": "public System.Boolean IsEqualApprox(Electron2D.Vector2 other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Checks whether equal approx is true.",
+      "xmlDocId": "M:Electron2D.Vector2.IsEqualApprox(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsFinite",
+      "kind": "Method",
+      "signature": "public System.Boolean IsFinite()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether finite is true.",
+      "xmlDocId": "M:Electron2D.Vector2.IsFinite",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsNormalized",
+      "kind": "Method",
+      "signature": "public System.Boolean IsNormalized()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether normalized is true.",
+      "xmlDocId": "M:Electron2D.Vector2.IsNormalized",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsZeroApprox",
+      "kind": "Method",
+      "signature": "public System.Boolean IsZeroApprox()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether zero approx is true.",
+      "xmlDocId": "M:Electron2D.Vector2.IsZeroApprox",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Length",
+      "kind": "Method",
+      "signature": "public System.Single Length()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Executes the length operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Length",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "LengthSquared",
+      "kind": "Method",
+      "signature": "public System.Single LengthSquared()",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Executes the length squared operation.",
+      "xmlDocId": "M:Electron2D.Vector2.LengthSquared",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Lerp",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Lerp(Electron2D.Vector2 to, System.Single weight)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "weight",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the lerp operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Lerp(Electron2D.Vector2,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Max",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Max(Electron2D.Vector2 with)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the max operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Max(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Min",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Min(Electron2D.Vector2 with)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "with",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Executes the min operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Min(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Normalized",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Normalized()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the normalized operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Normalized",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rotated",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Rotated(System.Single angle)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "angle",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Executes the rotated operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Rotated(System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Round",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Round()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the round operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Round",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Sign",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 Sign()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Executes the sign operation.",
+      "xmlDocId": "M:Electron2D.Vector2.Sign",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.Vector2.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Addition",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Addition(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060\u002B\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Addition(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Division(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2 value, System.Single scalar)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Division(Electron2D.Vector2,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Equality(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Inequality(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2 value, System.Single scalar)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(System.Single scalar, Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        },
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(System.Single,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Subtraction",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Subtraction(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Subtraction(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_UnaryNegation",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_UnaryNegation(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_UnaryNegation(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "X",
+      "kind": "Property",
+      "signature": "public System.Single X { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the x value.",
+      "xmlDocId": "P:Electron2D.Vector2.X",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Y",
+      "kind": "Property",
+      "signature": "public System.Single Y { get; set; }",
+      "returnType": "System.Single",
+      "parameters": [],
+      "summary": "Gets or sets the y value.",
+      "xmlDocId": "P:Electron2D.Vector2.Y",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Down",
+      "value": "(0, 1)",
+      "kind": "Field",
+      "summary": "Represents the down value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Inf",
+      "value": "(Infinity, Infinity)",
+      "kind": "Field",
+      "summary": "Represents the inf value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Left",
+      "value": "(-1, 0)",
+      "kind": "Field",
+      "summary": "Represents the left value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "One",
+      "value": "(1, 1)",
+      "kind": "Field",
+      "summary": "Represents the one value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Right",
+      "value": "(1, 0)",
+      "kind": "Field",
+      "summary": "Represents the right value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Up",
+      "value": "(0, -1)",
+      "kind": "Field",
+      "summary": "Represents the up value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Zero",
+      "value": "(0, 0)",
+      "kind": "Field",
+      "summary": "Represents the zero value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [
+    {
+      "name": "op_Addition",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Addition(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060\u002B\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Addition(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Division(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Division",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2 value, System.Single scalar)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060/\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Division(Electron2D.Vector2,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Equality(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Inequality(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2 value, System.Single scalar)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,System.Single)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Multiply",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Multiply(System.Single scalar, Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "scalar",
+          "type": "System.Single"
+        },
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060*\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Multiply(System.Single,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Subtraction",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_Subtraction(Electron2D.Vector2 left, Electron2D.Vector2 right)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Vector2"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_Subtraction(Electron2D.Vector2,Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_UnaryNegation",
+      "kind": "Operator",
+      "signature": "public static Electron2D.Vector2 op_UnaryNegation(Electron2D.Vector2 value)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Electron2D.Vector2"
+        }
+      ],
+      "summary": "Applies the \u0060-\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Vector2.op_UnaryNegation(Electron2D.Vector2)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

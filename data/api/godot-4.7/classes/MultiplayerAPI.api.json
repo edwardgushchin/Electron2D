@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MultiplayerAPI",
+    "namespace": "Godot",
+    "fullName": "Godot.MultiplayerAPI",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "MultiplayerAPI",
+    "documentationPath": "doc/classes/MultiplayerAPI.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_multiplayerapi.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateDefaultInterface",
+      "kind": "Method",
+      "signature": "public MultiplayerAPI CreateDefaultInterface()",
+      "returnType": "MultiplayerAPI",
+      "parameters": [],
+      "summary": "Returns a new instance of the default MultiplayerAPI.",
+      "godotName": "create_default_interface",
+      "xmlDocId": "M:Godot.MultiplayerAPI.CreateDefaultInterface",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "GetDefaultInterface",
+      "kind": "Method",
+      "signature": "public StringName GetDefaultInterface()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the default MultiplayerAPI implementation class name. This is usually [code]\u0022SceneMultiplayer\u0022[/code] when [SceneMultiplayer] is available. See [method set_default_interface].",
+      "godotName": "get_default_interface",
+      "xmlDocId": "M:Godot.MultiplayerAPI.GetDefaultInterface",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "GetPeers",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetPeers()",
+      "returnType": "PackedInt32Array",
+      "parameters": [],
+      "summary": "Returns the peer IDs of all connected peers of this MultiplayerAPI\u0027s [member multiplayer_peer].",
+      "godotName": "get_peers",
+      "xmlDocId": "M:Godot.MultiplayerAPI.GetPeers",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "GetRemoteSenderId",
+      "kind": "Method",
+      "signature": "public int GetRemoteSenderId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the sender\u0027s peer ID for the RPC currently being executed. [b]Note:[/b] This method returns [code]0[/code] when called outside of an RPC. As such, the original peer ID may be lost when code execution is delayed (such as with GDScript\u0027s [code]await[/code] keyword).",
+      "godotName": "get_remote_sender_id",
+      "xmlDocId": "M:Godot.MultiplayerAPI.GetRemoteSenderId",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "GetUniqueId",
+      "kind": "Method",
+      "signature": "public int GetUniqueId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the unique peer ID of this MultiplayerAPI\u0027s [member multiplayer_peer].",
+      "godotName": "get_unique_id",
+      "xmlDocId": "M:Godot.MultiplayerAPI.GetUniqueId",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "HasMultiplayerPeer",
+      "kind": "Method",
+      "signature": "public bool HasMultiplayerPeer()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if there is a [member multiplayer_peer] set.",
+      "godotName": "has_multiplayer_peer",
+      "xmlDocId": "M:Godot.MultiplayerAPI.HasMultiplayerPeer",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "IsServer",
+      "kind": "Method",
+      "signature": "public bool IsServer()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this MultiplayerAPI\u0027s [member multiplayer_peer] is valid and in server mode (listening for connections).",
+      "godotName": "is_server",
+      "xmlDocId": "M:Godot.MultiplayerAPI.IsServer",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "ObjectConfigurationAdd",
+      "kind": "Method",
+      "signature": "public int ObjectConfigurationAdd(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Notifies the MultiplayerAPI of a new [param configuration] for the given [param object]. This method is used internally by [SceneTree] to configure the root path for this MultiplayerAPI (passing [code]null[/code] and a valid [NodePath] as [param configuration]). This method can be further used by MultiplayerAPI implementations to provide additional features, refer to specific implementation (e.g. [SceneMultiplayer]) for details on how they use it. [b]Note:[/b] This method is mostly relevant when extending or overriding the MultiplayerAPI behavior via [MultiplayerAPIExtension].",
+      "godotName": "object_configuration_add",
+      "xmlDocId": "M:Godot.MultiplayerAPI.ObjectConfigurationAdd(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "ObjectConfigurationRemove",
+      "kind": "Method",
+      "signature": "public int ObjectConfigurationRemove(Object @object, Variant configuration)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "configuration",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Notifies the MultiplayerAPI to remove a [param configuration] for the given [param object]. This method is used internally by [SceneTree] to configure the root path for this MultiplayerAPI (passing [code]null[/code] and an empty [NodePath] as [param configuration]). This method can be further used by MultiplayerAPI implementations to provide additional features, refer to specific implementation (e.g. [SceneMultiplayer]) for details on how they use it. [b]Note:[/b] This method is mostly relevant when extending or overriding the MultiplayerAPI behavior via [MultiplayerAPIExtension].",
+      "godotName": "object_configuration_remove",
+      "xmlDocId": "M:Godot.MultiplayerAPI.ObjectConfigurationRemove(Object,Variant)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public int Poll()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Method used for polling the MultiplayerAPI. You only need to worry about this if you set [member SceneTree.multiplayer_poll] to [code]false[/code]. By default, [SceneTree] will poll its MultiplayerAPI(s) for you. [b]Note:[/b] This method results in RPCs being called, so they will be executed in the same context of this function (e.g. [code]_process[/code], [code]physics[/code], [Thread]).",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.MultiplayerAPI.Poll",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "Rpc",
+      "kind": "Method",
+      "signature": "public int Rpc(int peer, Object @object, StringName method, Array arguments)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "peer",
+          "type": "int"
+        },
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "method",
+          "type": "StringName"
+        },
+        {
+          "name": "arguments",
+          "type": "Array",
+          "defaultValue": "[]"
+        }
+      ],
+      "summary": "Sends an RPC to the target [param peer]. The given [param method] will be called on the remote [param object] with the provided [param arguments]. The RPC may also be called locally depending on the implementation and RPC configuration. See [method Node.rpc] and [method Node.rpc_config]. [b]Note:[/b] Prefer using [method Node.rpc], [method Node.rpc_id], or [code]my_method.rpc(peer, arg1, arg2, ...)[/code] (in GDScript), since they are faster. This method is mostly useful in conjunction with [MultiplayerAPIExtension] when extending or replacing the multiplayer capabilities.",
+      "godotName": "rpc",
+      "xmlDocId": "M:Godot.MultiplayerAPI.Rpc(int,Object,StringName,Array)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "SetDefaultInterface",
+      "kind": "Method",
+      "signature": "public void SetDefaultInterface(StringName interfaceName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "interface_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Sets the default MultiplayerAPI implementation class. This method can be used by modules and extensions to configure which implementation will be used by [SceneTree] when the engine starts.",
+      "godotName": "set_default_interface",
+      "xmlDocId": "M:Godot.MultiplayerAPI.SetDefaultInterface(StringName)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "MultiplayerPeer",
+      "kind": "Property",
+      "signature": "public MultiplayerPeer MultiplayerPeer { get; set; }",
+      "returnType": "MultiplayerPeer",
+      "parameters": [],
+      "summary": "The peer object to handle the RPC system (effectively enabling networking when set). Depending on the peer itself, the MultiplayerAPI will become a network server (check with [method is_server]) and will set root node\u0027s network mode to authority, or it will become a regular client peer. All child nodes are set to inherit the network mode by default. Handling of networking-related events (connection, disconnection, new clients) is done by connecting to MultiplayerAPI\u0027s signals.",
+      "godotName": "multiplayer_peer",
+      "xmlDocId": "P:Godot.MultiplayerAPI.MultiplayerPeer",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ConnectedToServer",
+      "kind": "Signal",
+      "signature": "public event ConnectedToServerHandler ConnectedToServer",
+      "parameters": [],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member multiplayer_peer] successfully connected to a server. Only emitted on clients.",
+      "godotName": "connected_to_server",
+      "xmlDocId": "E:Godot.MultiplayerAPI.ConnectedToServer",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "ConnectionFailed",
+      "kind": "Signal",
+      "signature": "public event ConnectionFailedHandler ConnectionFailed",
+      "parameters": [],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member multiplayer_peer] fails to establish a connection to a server. Only emitted on clients.",
+      "godotName": "connection_failed",
+      "xmlDocId": "E:Godot.MultiplayerAPI.ConnectionFailed",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "PeerConnected",
+      "kind": "Signal",
+      "signature": "public event PeerConnectedHandler PeerConnected",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member multiplayer_peer] connects with a new peer. ID is the peer ID of the new peer. Clients get notified when other clients connect to the same server. Upon connecting to a server, a client also receives this signal for the server (with ID being 1).",
+      "godotName": "peer_connected",
+      "xmlDocId": "E:Godot.MultiplayerAPI.PeerConnected(int)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "PeerDisconnected",
+      "kind": "Signal",
+      "signature": "public event PeerDisconnectedHandler PeerDisconnected",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member multiplayer_peer] disconnects from a peer. Clients get notified when other clients disconnect from the same server.",
+      "godotName": "peer_disconnected",
+      "xmlDocId": "E:Godot.MultiplayerAPI.PeerDisconnected(int)",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "ServerDisconnected",
+      "kind": "Signal",
+      "signature": "public event ServerDisconnectedHandler ServerDisconnected",
+      "parameters": [],
+      "summary": "Emitted when this MultiplayerAPI\u0027s [member multiplayer_peer] disconnects from server. Only emitted on clients.",
+      "godotName": "server_disconnected",
+      "xmlDocId": "E:Godot.MultiplayerAPI.ServerDisconnected",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "RPCMode",
+      "values": [
+        {
+          "name": "RPC_MODE_ANY_PEER",
+          "value": "1",
+          "enum": "RPCMode",
+          "kind": "EnumValue",
+          "summary": "Used with [method Node.rpc_config] to set a method to be callable remotely by any peer. Analogous to the [code]@rpc(\u0022any_peer\u0022)[/code] annotation. Calls are accepted from all remote peers, no matter if they are node\u0027s authority or not.",
+          "sourcePath": "doc/classes/MultiplayerAPI.xml"
+        },
+        {
+          "name": "RPC_MODE_AUTHORITY",
+          "value": "2",
+          "enum": "RPCMode",
+          "kind": "EnumValue",
+          "summary": "Used with [method Node.rpc_config] to set a method to be callable remotely only by the current multiplayer authority (which is the server by default). Analogous to the [code]@rpc(\u0022authority\u0022)[/code] annotation. See [method Node.set_multiplayer_authority].",
+          "sourcePath": "doc/classes/MultiplayerAPI.xml"
+        },
+        {
+          "name": "RPC_MODE_DISABLED",
+          "value": "0",
+          "enum": "RPCMode",
+          "kind": "EnumValue",
+          "summary": "Used with [method Node.rpc_config] to disable a method or property for all RPC calls, making it unavailable. Default for all methods.",
+          "sourcePath": "doc/classes/MultiplayerAPI.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RPC_MODE_DISABLED",
+      "value": "0",
+      "enum": "RPCMode",
+      "kind": "EnumValue",
+      "summary": "Used with [method Node.rpc_config] to disable a method or property for all RPC calls, making it unavailable. Default for all methods.",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "RPC_MODE_ANY_PEER",
+      "value": "1",
+      "enum": "RPCMode",
+      "kind": "EnumValue",
+      "summary": "Used with [method Node.rpc_config] to set a method to be callable remotely by any peer. Analogous to the [code]@rpc(\u0022any_peer\u0022)[/code] annotation. Calls are accepted from all remote peers, no matter if they are node\u0027s authority or not.",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    },
+    {
+      "name": "RPC_MODE_AUTHORITY",
+      "value": "2",
+      "enum": "RPCMode",
+      "kind": "EnumValue",
+      "summary": "Used with [method Node.rpc_config] to set a method to be callable remotely only by the current multiplayer authority (which is the server by default). Analogous to the [code]@rpc(\u0022authority\u0022)[/code] annotation. See [method Node.set_multiplayer_authority].",
+      "sourcePath": "doc/classes/MultiplayerAPI.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MultiplayerAPI.xml",
+      "sha256": "aec9589cf7149163cc189ae59fddd2b7a774755976f6444c7c44e8d0d3f06778"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

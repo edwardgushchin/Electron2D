@@ -1,0 +1,428 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Rect2I",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Rect2I",
+    "kind": "struct",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.Rect2I\u003E"
+    ],
+    "godotReference": "Rect2I",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Rect2I",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Rect2I(Electron2D.Vector2I position, Electron2D.Vector2I size)",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "size",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Initializes a new instance of the Rect2I type.",
+      "xmlDocId": "M:Electron2D.Rect2I.#ctor(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2I",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Rect2I(System.Int32 x, System.Int32 y, System.Int32 width, System.Int32 height)",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Int32"
+        },
+        {
+          "name": "y",
+          "type": "System.Int32"
+        },
+        {
+          "name": "width",
+          "type": "System.Int32"
+        },
+        {
+          "name": "height",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Initializes a new instance of the Rect2I type.",
+      "xmlDocId": "M:Electron2D.Rect2I.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Rect2I",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Rect2I(Electron2D.Vector2I position, Electron2D.Vector2I size)",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Electron2D.Vector2I"
+        },
+        {
+          "name": "size",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Initializes a new instance of the Rect2I type.",
+      "xmlDocId": "M:Electron2D.Rect2I.#ctor(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rect2I",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Rect2I(System.Int32 x, System.Int32 y, System.Int32 width, System.Int32 height)",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "System.Int32"
+        },
+        {
+          "name": "y",
+          "type": "System.Int32"
+        },
+        {
+          "name": "width",
+          "type": "System.Int32"
+        },
+        {
+          "name": "height",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Initializes a new instance of the Rect2I type.",
+      "xmlDocId": "M:Electron2D.Rect2I.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Abs",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I Abs()",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [],
+      "summary": "Executes the abs operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Abs",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Encloses",
+      "kind": "Method",
+      "signature": "public System.Boolean Encloses(Electron2D.Rect2I rect)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Executes the encloses operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Encloses(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(Electron2D.Rect2I other)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "other",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Equals(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "signature": "public System.Boolean Equals(System.Object obj)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "System.Object"
+        }
+      ],
+      "summary": "Executes the equals operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Equals(System.Object)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Expand",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I Expand(Electron2D.Vector2I to)",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [
+        {
+          "name": "to",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Executes the expand operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Expand(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetArea",
+      "kind": "Method",
+      "signature": "public System.Int32 GetArea()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the area value.",
+      "xmlDocId": "M:Electron2D.Rect2I.GetArea",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetCenter",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2I GetCenter()",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets the center value.",
+      "xmlDocId": "M:Electron2D.Rect2I.GetCenter",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "signature": "public System.Int32 GetHashCode()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the hash code value.",
+      "xmlDocId": "M:Electron2D.Rect2I.GetHashCode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Grow",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I Grow(System.Int32 amount)",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Executes the grow operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Grow(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasArea",
+      "kind": "Method",
+      "signature": "public System.Boolean HasArea()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether area is available.",
+      "xmlDocId": "M:Electron2D.Rect2I.HasArea",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasPoint",
+      "kind": "Method",
+      "signature": "public System.Boolean HasPoint(Electron2D.Vector2I point)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Electron2D.Vector2I"
+        }
+      ],
+      "summary": "Checks whether point is available.",
+      "xmlDocId": "M:Electron2D.Rect2I.HasPoint(Electron2D.Vector2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Intersection",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I Intersection(Electron2D.Rect2I rect)",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Executes the intersection operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Intersection(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Intersects",
+      "kind": "Method",
+      "signature": "public System.Boolean Intersects(Electron2D.Rect2I rect, System.Boolean includeBorders)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2I"
+        },
+        {
+          "name": "includeBorders",
+          "type": "System.Boolean",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Executes the intersects operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Intersects(Electron2D.Rect2I,System.Boolean)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public Electron2D.Rect2I Merge(Electron2D.Rect2I rect)",
+      "returnType": "Electron2D.Rect2I",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Executes the merge operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.Merge(Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "signature": "public System.String ToString()",
+      "returnType": "System.String",
+      "parameters": [],
+      "summary": "Executes the to string operation.",
+      "xmlDocId": "M:Electron2D.Rect2I.ToString",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Rect2I left, Electron2D.Rect2I right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Rect2I"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Rect2I.op_Equality(Electron2D.Rect2I,Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Rect2I left, Electron2D.Rect2I right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Rect2I"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Rect2I.op_Inequality(Electron2D.Rect2I,Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "End",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I End { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the end value.",
+      "xmlDocId": "P:Electron2D.Rect2I.End",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Position",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I Position { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the position value.",
+      "xmlDocId": "P:Electron2D.Rect2I.Position",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "signature": "public Electron2D.Vector2I Size { get; set; }",
+      "returnType": "Electron2D.Vector2I",
+      "parameters": [],
+      "summary": "Gets or sets the size value.",
+      "xmlDocId": "P:Electron2D.Rect2I.Size",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "op_Equality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Equality(Electron2D.Rect2I left, Electron2D.Rect2I right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Rect2I"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Applies the \u0060==\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Rect2I.op_Equality(Electron2D.Rect2I,Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Operator",
+      "signature": "public static System.Boolean op_Inequality(Electron2D.Rect2I left, Electron2D.Rect2I right)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "left",
+          "type": "Electron2D.Rect2I"
+        },
+        {
+          "name": "right",
+          "type": "Electron2D.Rect2I"
+        }
+      ],
+      "summary": "Applies the \u0060!=\u0060 operator.",
+      "xmlDocId": "M:Electron2D.Rect2I.op_Inequality(Electron2D.Rect2I,Electron2D.Rect2I)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

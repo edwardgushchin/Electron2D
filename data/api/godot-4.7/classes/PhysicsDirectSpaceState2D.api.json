@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsDirectSpaceState2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsDirectSpaceState2D",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "PhysicsDirectSpaceState2D",
+    "documentationPath": "doc/classes/PhysicsDirectSpaceState2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsdirectspacestate2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CastMotion",
+      "kind": "Method",
+      "signature": "public PackedFloat32Array CastMotion(PhysicsShapeQueryParameters2D parameters)",
+      "returnType": "PackedFloat32Array",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsShapeQueryParameters2D"
+        }
+      ],
+      "summary": "Checks how far a [Shape2D] can move without colliding. All the parameters for the query, including the shape and the motion, are supplied through a [PhysicsShapeQueryParameters2D] object. Returns an array with the safe and unsafe proportions (between 0 and 1) of the motion. The safe proportion is the maximum fraction of the motion that can be made without a collision. The unsafe proportion is the minimum fraction of the distance that must be moved for a collision. If no collision is detected a result of [code][1.0, 1.0][/code] will be returned. [b]Note:[/b] Any [Shape2D]s that the shape is already colliding with e.g. inside of, will be ignored. Use [method collide_shape] to determine the [Shape2D]s that the shape is already colliding with.",
+      "godotName": "cast_motion",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.CastMotion(PhysicsShapeQueryParameters2D)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    },
+    {
+      "name": "CollideShape",
+      "kind": "Method",
+      "signature": "public Vector2[] CollideShape(PhysicsShapeQueryParameters2D parameters, int maxResults)",
+      "returnType": "Vector2[]",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsShapeQueryParameters2D"
+        },
+        {
+          "name": "max_results",
+          "type": "int",
+          "defaultValue": "32"
+        }
+      ],
+      "summary": "Checks the intersections of a shape, given through a [PhysicsShapeQueryParameters2D] object, against the space. The resulting array contains a list of points where the shape intersects another. Like with [method intersect_shape], the number of returned results can be limited to save processing time. Returned points are a list of pairs of contact points. For each pair the first one is in the shape passed in [PhysicsShapeQueryParameters2D] object, second one is in the collided shape from the physics space.",
+      "godotName": "collide_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.CollideShape(PhysicsShapeQueryParameters2D,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    },
+    {
+      "name": "GetRestInfo",
+      "kind": "Method",
+      "signature": "public Dictionary GetRestInfo(PhysicsShapeQueryParameters2D parameters)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsShapeQueryParameters2D"
+        }
+      ],
+      "summary": "Checks the intersections of a shape, given through a [PhysicsShapeQueryParameters2D] object, against the space. If it collides with more than one shape, the nearest one is selected. The returned object is a dictionary containing the following fields: [code]collider_id[/code]: The colliding object\u0027s ID. [code]linear_velocity[/code]: The colliding object\u0027s velocity [Vector2]. If the object is an [Area2D], the result is [code](0, 0)[/code]. [code]normal[/code]: The collision normal of the query shape at the intersection point, pointing away from the intersecting object. [code]point[/code]: The intersection point. [code]rid[/code]: The intersecting object\u0027s [RID]. [code]shape[/code]: The shape index of the colliding shape. If the shape did not intersect anything, then an empty dictionary is returned instead.",
+      "godotName": "get_rest_info",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.GetRestInfo(PhysicsShapeQueryParameters2D)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    },
+    {
+      "name": "IntersectPoint",
+      "kind": "Method",
+      "signature": "public Dictionary[] IntersectPoint(PhysicsPointQueryParameters2D parameters, int maxResults)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsPointQueryParameters2D"
+        },
+        {
+          "name": "max_results",
+          "type": "int",
+          "defaultValue": "32"
+        }
+      ],
+      "summary": "Checks whether a point is inside any solid shape. Position and other parameters are defined through [PhysicsPointQueryParameters2D]. The shapes the point is inside of are returned in an array containing dictionaries with the following fields: [code]collider[/code]: The colliding object. [code]collider_id[/code]: The colliding object\u0027s ID. [code]rid[/code]: The intersecting object\u0027s [RID]. [code]shape[/code]: The shape index of the colliding shape. The number of intersections can be limited with the [param max_results] parameter, to reduce the processing time. [b]Note:[/b] [ConcavePolygonShape2D]s and [CollisionPolygon2D]s in [code]Segments[/code] build mode are not solid shapes. Therefore, they will not be detected.",
+      "godotName": "intersect_point",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.IntersectPoint(PhysicsPointQueryParameters2D,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    },
+    {
+      "name": "IntersectRay",
+      "kind": "Method",
+      "signature": "public Dictionary IntersectRay(PhysicsRayQueryParameters2D parameters)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsRayQueryParameters2D"
+        }
+      ],
+      "summary": "Intersects a ray in a given space. Ray position and other parameters are defined through [PhysicsRayQueryParameters2D]. The returned object is a dictionary with the following fields: [code]collider[/code]: The colliding object. [code]collider_id[/code]: The colliding object\u0027s ID. [code]normal[/code]: The object\u0027s surface normal at the intersection point, or [code]Vector2(0, 0)[/code] if the ray starts inside the shape and [member PhysicsRayQueryParameters2D.hit_from_inside] is [code]true[/code]. [code]position[/code]: The intersection point. [code]rid[/code]: The intersecting object\u0027s [RID]. [code]shape[/code]: The shape index of the colliding shape. If the ray did not intersect anything, then an empty dictionary is returned instead.",
+      "godotName": "intersect_ray",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.IntersectRay(PhysicsRayQueryParameters2D)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    },
+    {
+      "name": "IntersectShape",
+      "kind": "Method",
+      "signature": "public Dictionary[] IntersectShape(PhysicsShapeQueryParameters2D parameters, int maxResults)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "PhysicsShapeQueryParameters2D"
+        },
+        {
+          "name": "max_results",
+          "type": "int",
+          "defaultValue": "32"
+        }
+      ],
+      "summary": "Checks the intersections of a shape, given through a [PhysicsShapeQueryParameters2D] object, against the space. The intersected shapes are returned in an array containing dictionaries with the following fields: [code]collider[/code]: The colliding object. [code]collider_id[/code]: The colliding object\u0027s ID. [code]rid[/code]: The intersecting object\u0027s [RID]. [code]shape[/code]: The shape index of the colliding shape. The number of intersections can be limited with the [param max_results] parameter, to reduce the processing time.",
+      "godotName": "intersect_shape",
+      "xmlDocId": "M:Godot.PhysicsDirectSpaceState2D.IntersectShape(PhysicsShapeQueryParameters2D,int)",
+      "sourcePath": "doc/classes/PhysicsDirectSpaceState2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsDirectSpaceState2D.xml",
+      "sha256": "fc36b728dab9e4efab4a1ab9b1923940e67193e93ed88e39de7063c3b8492764"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ResourceImporterSVG",
+    "namespace": "Godot",
+    "fullName": "Godot.ResourceImporterSVG",
+    "kind": "class",
+    "baseType": "ResourceImporter",
+    "interfaces": [],
+    "godotReference": "ResourceImporterSVG",
+    "documentationPath": "doc/classes/ResourceImporterSVG.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resourceimportersvg.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "BaseScale",
+      "kind": "Property",
+      "signature": "public float BaseScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Texture scale. [code]1.0[/code] is the original SVG size. Higher values result in a larger image.",
+      "defaultValue": "1.0",
+      "godotName": "base_scale",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.BaseScale",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    },
+    {
+      "name": "ColorMap",
+      "kind": "Property",
+      "signature": "public Dictionary ColorMap { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "If set, remaps texture colors according to [Color]-[Color] map.",
+      "defaultValue": "{}",
+      "godotName": "color_map",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.ColorMap",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    },
+    {
+      "name": "Compress",
+      "kind": "Property",
+      "signature": "public bool Compress { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], uses lossless compression for the SVG source.",
+      "defaultValue": "true",
+      "godotName": "compress",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.Compress",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    },
+    {
+      "name": "FixAlphaBorder",
+      "kind": "Property",
+      "signature": "public bool FixAlphaBorder { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], puts pixels of the same surrounding color in transition from transparent to opaque areas. For textures displayed with bilinear filtering, this helps to reduce the outline effect when exporting images from an image editor.",
+      "defaultValue": "false",
+      "godotName": "fix_alpha_border",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.FixAlphaBorder",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    },
+    {
+      "name": "PremultAlpha",
+      "kind": "Property",
+      "signature": "public bool PremultAlpha { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "An alternative to fixing darkened borders with [member fix_alpha_border] is to use premultiplied alpha. By enabling this option, the texture will be converted to this format. A premultiplied alpha texture requires specific materials to be displayed correctly: - In 2D, a [CanvasItemMaterial] will need to be created and configured to use the [constant CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA] blend mode on [CanvasItem]s that use this texture. In custom [code]canvas_item[/code] shaders, [code]render_mode blend_premul_alpha;[/code] should be used. - In 3D, a [BaseMaterial3D] will need to be created and configured to use the [constant BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA] blend mode on materials that use this texture. In custom [code]spatial[/code] shaders, [code]render_mode blend_premul_alpha;[/code] should be used.",
+      "defaultValue": "false",
+      "godotName": "premult_alpha",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.PremultAlpha",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    },
+    {
+      "name": "Saturation",
+      "kind": "Property",
+      "signature": "public float Saturation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Overrides texture saturation.",
+      "defaultValue": "1.0",
+      "godotName": "saturation",
+      "xmlDocId": "P:Godot.ResourceImporterSVG.Saturation",
+      "sourcePath": "doc/classes/ResourceImporterSVG.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ResourceImporterSVG.xml",
+      "sha256": "3c937e3f5a6c940aeb431afd82c5290ef5243dc1d51b149080e6e58b7c2f018e"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

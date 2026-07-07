@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRActionSet",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRActionSet",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "OpenXRActionSet",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRActionSet.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxractionset.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddAction",
+      "kind": "Method",
+      "signature": "public void AddAction(OpenXRAction action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "OpenXRAction"
+        }
+      ],
+      "summary": "Add an action to this action set.",
+      "godotName": "add_action",
+      "xmlDocId": "M:Godot.OpenXRActionSet.AddAction(OpenXRAction)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    },
+    {
+      "name": "GetActionCount",
+      "kind": "Method",
+      "signature": "public int GetActionCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Retrieve the number of actions in our action set.",
+      "godotName": "get_action_count",
+      "xmlDocId": "M:Godot.OpenXRActionSet.GetActionCount",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    },
+    {
+      "name": "RemoveAction",
+      "kind": "Method",
+      "signature": "public void RemoveAction(OpenXRAction action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "OpenXRAction"
+        }
+      ],
+      "summary": "Remove an action from this action set.",
+      "godotName": "remove_action",
+      "xmlDocId": "M:Godot.OpenXRActionSet.RemoveAction(OpenXRAction)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    },
+    {
+      "name": "Actions",
+      "kind": "Property",
+      "signature": "public Array Actions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Collection of actions for this action set.",
+      "defaultValue": "[]",
+      "godotName": "actions",
+      "xmlDocId": "P:Godot.OpenXRActionSet.Actions",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    },
+    {
+      "name": "LocalizedName",
+      "kind": "Property",
+      "signature": "public String LocalizedName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The localized name of this action set.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "localized_name",
+      "xmlDocId": "P:Godot.OpenXRActionSet.LocalizedName",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    },
+    {
+      "name": "Priority",
+      "kind": "Property",
+      "signature": "public int Priority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The priority for this action set.",
+      "defaultValue": "0",
+      "godotName": "priority",
+      "xmlDocId": "P:Godot.OpenXRActionSet.Priority",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRActionSet.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRActionSet.xml",
+      "sha256": "e84c7cf243c089e09b19e45dd7e5bda56e0f9c4d2b2dd233076bc15a64d9e1e9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeStateMachinePlayback",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeStateMachinePlayback",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "AnimationNodeStateMachinePlayback",
+    "documentationPath": "doc/classes/AnimationNodeStateMachinePlayback.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodestatemachineplayback.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetCurrentLength",
+      "kind": "Method",
+      "signature": "public float GetCurrentLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the current state length. [b]Note:[/b] It is possible that any [AnimationRootNode] can be nodes as well as animations. This means that there can be multiple animations within a single state. Which animation length has priority depends on the nodes connected inside it. Also, if a transition does not reset, the remaining length at that point will be returned.",
+      "godotName": "get_current_length",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetCurrentLength",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetCurrentNode",
+      "kind": "Method",
+      "signature": "public StringName GetCurrentNode()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the currently playing animation state. [b]Note:[/b] When using a cross-fade, the current state changes to the next state immediately after the cross-fade begins.",
+      "godotName": "get_current_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetCurrentNode",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetCurrentPlayPosition",
+      "kind": "Method",
+      "signature": "public float GetCurrentPlayPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the playback position within the current animation state.",
+      "godotName": "get_current_play_position",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetCurrentPlayPosition",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetFadingFromLength",
+      "kind": "Method",
+      "signature": "public float GetFadingFromLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the playback state length of the node from [method get_fading_from_node]. Returns [code]0[/code] if no animation fade is occurring.",
+      "godotName": "get_fading_from_length",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetFadingFromLength",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetFadingFromNode",
+      "kind": "Method",
+      "signature": "public StringName GetFadingFromNode()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the starting state of currently fading animation.",
+      "godotName": "get_fading_from_node",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetFadingFromNode",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetFadingFromPlayPosition",
+      "kind": "Method",
+      "signature": "public float GetFadingFromPlayPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the playback position of the node from [method get_fading_from_node]. Returns [code]0[/code] if no animation fade is occurring.",
+      "godotName": "get_fading_from_play_position",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetFadingFromPlayPosition",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetFadingLength",
+      "kind": "Method",
+      "signature": "public float GetFadingLength()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the length of the current fade animation. Returns [code]0[/code] if no animation fade is occurring.",
+      "godotName": "get_fading_length",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetFadingLength",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetFadingPosition",
+      "kind": "Method",
+      "signature": "public float GetFadingPosition()",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Returns the playback position of the current fade animation. Returns [code]0[/code] if no animation fade is occurring.",
+      "godotName": "get_fading_position",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetFadingPosition",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "GetTravelPath",
+      "kind": "Method",
+      "signature": "public StringName[] GetTravelPath()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns the current travel path as computed internally by the A* algorithm.",
+      "godotName": "get_travel_path",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.GetTravelPath",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "IsPlaying",
+      "kind": "Method",
+      "signature": "public bool IsPlaying()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if an animation is playing.",
+      "godotName": "is_playing",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.IsPlaying",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "Next",
+      "kind": "Method",
+      "signature": "public void Next()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "If there is a next path by travel or auto advance, immediately transitions from the current state to the next state.",
+      "godotName": "next",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.Next",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public void Start(StringName node, bool reset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "StringName"
+        },
+        {
+          "name": "reset",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Starts playing the given animation. If [param reset] is [code]true[/code], the animation is played from the beginning.",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.Start(StringName,bool)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public void Stop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Stops the currently playing animation.",
+      "godotName": "stop",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.Stop",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "Travel",
+      "kind": "Method",
+      "signature": "public void Travel(StringName toNode, bool resetOnTeleport)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "to_node",
+          "type": "StringName"
+        },
+        {
+          "name": "reset_on_teleport",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Transitions from the current state to another one, following the shortest path. If the path does not connect from the current state, the animation will play after the state teleports. If [param reset_on_teleport] is [code]true[/code], the animation is played from the beginning when the travel cause a teleportation.",
+      "godotName": "travel",
+      "xmlDocId": "M:Godot.AnimationNodeStateMachinePlayback.Travel(StringName,bool)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "true",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.AnimationNodeStateMachinePlayback.ResourceLocalToScene",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "StateFinished",
+      "kind": "Signal",
+      "signature": "public event StateFinishedHandler StateFinished",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when the [param state] finishes playback. If [param state] is a state machine set to grouped mode, its signals are passed through with its name prefixed. If there is a crossfade, this will be fired when the influence of the [method get_fading_from_node] animation is no longer present.",
+      "godotName": "state_finished",
+      "xmlDocId": "E:Godot.AnimationNodeStateMachinePlayback.StateFinished(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    },
+    {
+      "name": "StateStarted",
+      "kind": "Signal",
+      "signature": "public event StateStartedHandler StateStarted",
+      "parameters": [
+        {
+          "name": "state",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when the [param state] starts playback. If [param state] is a state machine set to grouped mode, its signals are passed through with its name prefixed.",
+      "godotName": "state_started",
+      "xmlDocId": "E:Godot.AnimationNodeStateMachinePlayback.StateStarted(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeStateMachinePlayback.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeStateMachinePlayback.xml",
+      "sha256": "8e2712b901ddcc1bd8be0fae2881f9cfe5cb6b6ef8f8bf9e272a6acfeb3b01d6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

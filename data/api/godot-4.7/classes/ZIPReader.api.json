@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ZIPReader",
+    "namespace": "Godot",
+    "fullName": "Godot.ZIPReader",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "ZIPReader",
+    "documentationPath": "modules/zip/doc_classes/ZIPReader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_zipreader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Close",
+      "kind": "Method",
+      "signature": "public int Close()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Closes the underlying resources used by this instance.",
+      "godotName": "close",
+      "xmlDocId": "M:Godot.ZIPReader.Close",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    },
+    {
+      "name": "FileExists",
+      "kind": "Method",
+      "signature": "public bool FileExists(String path, bool caseSensitive)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "case_sensitive",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the file exists in the loaded zip archive. Must be called after [method open].",
+      "godotName": "file_exists",
+      "xmlDocId": "M:Godot.ZIPReader.FileExists(String,bool)",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    },
+    {
+      "name": "GetCompressionLevel",
+      "kind": "Method",
+      "signature": "public int GetCompressionLevel(String path, bool caseSensitive)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "case_sensitive",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the compression level of the file in the loaded zip archive. Returns [code]-1[/code] if the file doesn\u0027t exist or any other error occurs. Must be called after [method open].",
+      "godotName": "get_compression_level",
+      "xmlDocId": "M:Godot.ZIPReader.GetCompressionLevel(String,bool)",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    },
+    {
+      "name": "GetFiles",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFiles()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of names of all files in the loaded archive. Must be called after [method open].",
+      "godotName": "get_files",
+      "xmlDocId": "M:Godot.ZIPReader.GetFiles",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    },
+    {
+      "name": "Open",
+      "kind": "Method",
+      "signature": "public int Open(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Opens the zip archive at the given [param path] and reads its file index.",
+      "godotName": "open",
+      "xmlDocId": "M:Godot.ZIPReader.Open(String)",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    },
+    {
+      "name": "ReadFile",
+      "kind": "Method",
+      "signature": "public PackedByteArray ReadFile(String path, bool caseSensitive)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "case_sensitive",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Loads the whole content of a file in the loaded zip archive into memory and returns it. Must be called after [method open].",
+      "godotName": "read_file",
+      "xmlDocId": "M:Godot.ZIPReader.ReadFile(String,bool)",
+      "sourcePath": "modules/zip/doc_classes/ZIPReader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/zip/doc_classes/ZIPReader.xml",
+      "sha256": "05f4151f1e1b848e75c5c70af94ce9f3a7c4a712108f4c2ad45ceced50009eb8"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

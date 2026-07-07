@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.GDExtension",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GDExtension",
+    "documentationPath": "doc/classes/GDExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMinimumLibraryInitializationLevel",
+      "kind": "Method",
+      "signature": "public int GetMinimumLibraryInitializationLevel()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the lowest level required for this extension to be properly initialized (see the [enum InitializationLevel] enum).",
+      "godotName": "get_minimum_library_initialization_level",
+      "xmlDocId": "M:Godot.GDExtension.GetMinimumLibraryInitializationLevel",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    },
+    {
+      "name": "IsLibraryOpen",
+      "kind": "Method",
+      "signature": "public bool IsLibraryOpen()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this extension\u0027s library has been opened.",
+      "godotName": "is_library_open",
+      "xmlDocId": "M:Godot.GDExtension.IsLibraryOpen",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "InitializationLevel",
+      "values": [
+        {
+          "name": "INITIALIZATION_LEVEL_CORE",
+          "value": "0",
+          "enum": "InitializationLevel",
+          "kind": "EnumValue",
+          "summary": "The library is initialized at the same time as the core features of the engine.",
+          "sourcePath": "doc/classes/GDExtension.xml"
+        },
+        {
+          "name": "INITIALIZATION_LEVEL_EDITOR",
+          "value": "3",
+          "enum": "InitializationLevel",
+          "kind": "EnumValue",
+          "summary": "The library is initialized at the same time as the engine\u0027s editor classes. Only happens when loading the GDExtension in the editor.",
+          "sourcePath": "doc/classes/GDExtension.xml"
+        },
+        {
+          "name": "INITIALIZATION_LEVEL_SCENE",
+          "value": "2",
+          "enum": "InitializationLevel",
+          "kind": "EnumValue",
+          "summary": "The library is initialized at the same time as the engine\u0027s scene-related classes.",
+          "sourcePath": "doc/classes/GDExtension.xml"
+        },
+        {
+          "name": "INITIALIZATION_LEVEL_SERVERS",
+          "value": "1",
+          "enum": "InitializationLevel",
+          "kind": "EnumValue",
+          "summary": "The library is initialized at the same time as the engine\u0027s servers (such as [RenderingServer] or [PhysicsServer3D]).",
+          "sourcePath": "doc/classes/GDExtension.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "INITIALIZATION_LEVEL_CORE",
+      "value": "0",
+      "enum": "InitializationLevel",
+      "kind": "EnumValue",
+      "summary": "The library is initialized at the same time as the core features of the engine.",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    },
+    {
+      "name": "INITIALIZATION_LEVEL_SERVERS",
+      "value": "1",
+      "enum": "InitializationLevel",
+      "kind": "EnumValue",
+      "summary": "The library is initialized at the same time as the engine\u0027s servers (such as [RenderingServer] or [PhysicsServer3D]).",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    },
+    {
+      "name": "INITIALIZATION_LEVEL_SCENE",
+      "value": "2",
+      "enum": "InitializationLevel",
+      "kind": "EnumValue",
+      "summary": "The library is initialized at the same time as the engine\u0027s scene-related classes.",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    },
+    {
+      "name": "INITIALIZATION_LEVEL_EDITOR",
+      "value": "3",
+      "enum": "InitializationLevel",
+      "kind": "EnumValue",
+      "summary": "The library is initialized at the same time as the engine\u0027s editor classes. Only happens when loading the GDExtension in the editor.",
+      "sourcePath": "doc/classes/GDExtension.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GDExtension.xml",
+      "sha256": "5a2fcb41c337d1ec2795638da7c7113b8f2de7b97e84ebfe96b6374dba0a7c69"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

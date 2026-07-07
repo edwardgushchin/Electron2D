@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputMap",
+    "namespace": "Godot",
+    "fullName": "Godot.InputMap",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "InputMap",
+    "documentationPath": "doc/classes/InputMap.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_inputmap.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "ActionAddEvent",
+      "kind": "Method",
+      "signature": "public void ActionAddEvent(StringName action, InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Adds an [InputEvent] to an action. This [InputEvent] will trigger the action.",
+      "godotName": "action_add_event",
+      "xmlDocId": "M:Godot.InputMap.ActionAddEvent(StringName,InputEvent)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionEraseEvent",
+      "kind": "Method",
+      "signature": "public void ActionEraseEvent(StringName action, InputEvent @event)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Removes an [InputEvent] from an action.",
+      "godotName": "action_erase_event",
+      "xmlDocId": "M:Godot.InputMap.ActionEraseEvent(StringName,InputEvent)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionEraseEvents",
+      "kind": "Method",
+      "signature": "public void ActionEraseEvents(StringName action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes all events from an action.",
+      "godotName": "action_erase_events",
+      "xmlDocId": "M:Godot.InputMap.ActionEraseEvents(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionGetDeadzone",
+      "kind": "Method",
+      "signature": "public float ActionGetDeadzone(StringName action)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns a deadzone value for the action.",
+      "godotName": "action_get_deadzone",
+      "xmlDocId": "M:Godot.InputMap.ActionGetDeadzone(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionGetEvents",
+      "kind": "Method",
+      "signature": "public InputEvent[] ActionGetEvents(StringName action)",
+      "returnType": "InputEvent[]",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns an array of [InputEvent]s associated with a given action. [b]Note:[/b] When used in the editor (e.g. a tool script or [EditorPlugin]), this method will return events for the editor action. If you want to access your project\u0027s input binds from the editor, read the [code]input/*[/code] settings from [ProjectSettings].",
+      "godotName": "action_get_events",
+      "xmlDocId": "M:Godot.InputMap.ActionGetEvents(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionHasEvent",
+      "kind": "Method",
+      "signature": "public bool ActionHasEvent(StringName action, InputEvent @event)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the action has the given [InputEvent] associated with it.",
+      "godotName": "action_has_event",
+      "xmlDocId": "M:Godot.InputMap.ActionHasEvent(StringName,InputEvent)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "ActionSetDeadzone",
+      "kind": "Method",
+      "signature": "public void ActionSetDeadzone(StringName action, float deadzone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "deadzone",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets a deadzone value for the action.",
+      "godotName": "action_set_deadzone",
+      "xmlDocId": "M:Godot.InputMap.ActionSetDeadzone(StringName,float)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "AddAction",
+      "kind": "Method",
+      "signature": "public void AddAction(StringName action, float deadzone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "deadzone",
+          "type": "float",
+          "defaultValue": "0.2"
+        }
+      ],
+      "summary": "Adds an empty action to the [InputMap] with a configurable [param deadzone]. An [InputEvent] can then be added to this action with [method action_add_event].",
+      "godotName": "add_action",
+      "xmlDocId": "M:Godot.InputMap.AddAction(StringName,float)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "EraseAction",
+      "kind": "Method",
+      "signature": "public void EraseAction(StringName action)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes an action from the [InputMap].",
+      "godotName": "erase_action",
+      "xmlDocId": "M:Godot.InputMap.EraseAction(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "EventIsAction",
+      "kind": "Method",
+      "signature": "public bool EventIsAction(InputEvent @event, StringName action, bool exactMatch)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        },
+        {
+          "name": "action",
+          "type": "StringName"
+        },
+        {
+          "name": "exact_match",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given event is part of an existing action. This method ignores keyboard modifiers if the given [InputEvent] is not pressed (for proper release detection). See [method action_has_event] if you don\u0027t want this behavior. If [param exact_match] is [code]false[/code], it ignores additional input modifiers for [InputEventKey] and [InputEventMouseButton] events, and the direction for [InputEventJoypadMotion] events.",
+      "godotName": "event_is_action",
+      "xmlDocId": "M:Godot.InputMap.EventIsAction(InputEvent,StringName,bool)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "GetActionDescription",
+      "kind": "Method",
+      "signature": "public String GetActionDescription(StringName action)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the human-readable description of the given action.",
+      "godotName": "get_action_description",
+      "xmlDocId": "M:Godot.InputMap.GetActionDescription(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "GetActions",
+      "kind": "Method",
+      "signature": "public StringName[] GetActions()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns an array of all actions in the [InputMap].",
+      "godotName": "get_actions",
+      "xmlDocId": "M:Godot.InputMap.GetActions",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "HasAction",
+      "kind": "Method",
+      "signature": "public bool HasAction(StringName action)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "action",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [InputMap] has a registered action with the given name.",
+      "godotName": "has_action",
+      "xmlDocId": "M:Godot.InputMap.HasAction(StringName)",
+      "sourcePath": "doc/classes/InputMap.xml"
+    },
+    {
+      "name": "LoadFromProjectSettings",
+      "kind": "Method",
+      "signature": "public void LoadFromProjectSettings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all [InputEventAction] in the [InputMap] and load it anew from [ProjectSettings].",
+      "godotName": "load_from_project_settings",
+      "xmlDocId": "M:Godot.InputMap.LoadFromProjectSettings",
+      "sourcePath": "doc/classes/InputMap.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ProjectSettingsLoaded",
+      "kind": "Signal",
+      "signature": "public event ProjectSettingsLoadedHandler ProjectSettingsLoaded",
+      "parameters": [],
+      "summary": "Emitted when the [ProjectSettings] [InputMap] has been loaded.",
+      "godotName": "project_settings_loaded",
+      "xmlDocId": "E:Godot.InputMap.ProjectSettingsLoaded",
+      "sourcePath": "doc/classes/InputMap.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/InputMap.xml",
+      "sha256": "70876d7aa263d2a9b3e6255b40481519c50294c2c4a938d1db4edc522e96cc1d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2D.ShapeType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.PhysicsServer2D.ShapeType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "PhysicsServer2D.ShapeType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Capsule",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType Capsule",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Capsule shape.",
+      "value": "5",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.Capsule",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Circle",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType Circle",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Circle shape.",
+      "value": "3",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.Circle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConcavePolygon",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType ConcavePolygon",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Concave polygon shape.",
+      "value": "7",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.ConcavePolygon",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConvexPolygon",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType ConvexPolygon",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Convex polygon shape.",
+      "value": "6",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.ConvexPolygon",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Custom",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType Custom",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Reserved custom shape value.",
+      "value": "8",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.Custom",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rectangle",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType Rectangle",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Rectangle shape.",
+      "value": "4",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.Rectangle",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Segment",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType Segment",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Finite segment shape.",
+      "value": "2",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.Segment",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SeparationRay",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType SeparationRay",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Separation ray shape used by character-style controllers.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.SeparationRay",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WorldBoundary",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.PhysicsServer2D.ShapeType WorldBoundary",
+      "returnType": "Electron2D.PhysicsServer2D.ShapeType",
+      "parameters": [],
+      "summary": "Infinite world boundary line shape.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.PhysicsServer2D.ShapeType.WorldBoundary",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Capsule",
+      "value": "5",
+      "kind": "EnumValue",
+      "summary": "Capsule shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Circle",
+      "value": "3",
+      "kind": "EnumValue",
+      "summary": "Circle shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConcavePolygon",
+      "value": "7",
+      "kind": "EnumValue",
+      "summary": "Concave polygon shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ConvexPolygon",
+      "value": "6",
+      "kind": "EnumValue",
+      "summary": "Convex polygon shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Custom",
+      "value": "8",
+      "kind": "EnumValue",
+      "summary": "Reserved custom shape value.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Rectangle",
+      "value": "4",
+      "kind": "EnumValue",
+      "summary": "Rectangle shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Segment",
+      "value": "2",
+      "kind": "EnumValue",
+      "summary": "Finite segment shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SeparationRay",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "Separation ray shape used by character-style controllers.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "WorldBoundary",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "Infinite world boundary line shape.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

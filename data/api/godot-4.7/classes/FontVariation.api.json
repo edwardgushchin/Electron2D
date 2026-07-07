@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "FontVariation",
+    "namespace": "Godot",
+    "fullName": "Godot.FontVariation",
+    "kind": "class",
+    "baseType": "Font",
+    "interfaces": [],
+    "godotReference": "FontVariation",
+    "documentationPath": "doc/classes/FontVariation.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_fontvariation.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "SetSpacing",
+      "kind": "Method",
+      "signature": "public void SetSpacing(int spacing, int value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "spacing",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the spacing for [param spacing] to [param value] in pixels (not relative to the font size).",
+      "godotName": "set_spacing",
+      "xmlDocId": "M:Godot.FontVariation.SetSpacing(int,int)",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "BaseFont",
+      "kind": "Property",
+      "signature": "public Font BaseFont { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "Base font used to create a variation. If not set, default [Theme] font is used.",
+      "godotName": "base_font",
+      "xmlDocId": "P:Godot.FontVariation.BaseFont",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "BaselineOffset",
+      "kind": "Property",
+      "signature": "public float BaselineOffset { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Extra baseline offset (as a fraction of font height).",
+      "defaultValue": "0.0",
+      "godotName": "baseline_offset",
+      "xmlDocId": "P:Godot.FontVariation.BaselineOffset",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "OpentypeFeatures",
+      "kind": "Property",
+      "signature": "public Dictionary OpentypeFeatures { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "A set of OpenType feature tags. More info: [url=https://docs.microsoft.com/en-us/typography/opentype/spec/featuretags]OpenType feature tags[/url].",
+      "defaultValue": "{}",
+      "godotName": "opentype_features",
+      "xmlDocId": "P:Godot.FontVariation.OpentypeFeatures",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "PaletteCustomColors",
+      "kind": "Property",
+      "signature": "public PackedColorArray PaletteCustomColors { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "An array of colors to override predefined palette. Use [code]Color(0, 0, 0, 0)[/code], to keep predefined palette color at specific position.",
+      "defaultValue": "PackedColorArray()",
+      "godotName": "palette_custom_colors",
+      "xmlDocId": "P:Godot.FontVariation.PaletteCustomColors",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "PaletteIndex",
+      "kind": "Property",
+      "signature": "public int PaletteIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A palette index.",
+      "defaultValue": "0",
+      "godotName": "palette_index",
+      "xmlDocId": "P:Godot.FontVariation.PaletteIndex",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "SpacingBottom",
+      "kind": "Property",
+      "signature": "public int SpacingBottom { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extra spacing at the bottom of the line in pixels.",
+      "defaultValue": "0",
+      "godotName": "spacing_bottom",
+      "xmlDocId": "P:Godot.FontVariation.SpacingBottom",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "SpacingGlyph",
+      "kind": "Property",
+      "signature": "public int SpacingGlyph { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extra spacing between graphical glyphs.",
+      "defaultValue": "0",
+      "godotName": "spacing_glyph",
+      "xmlDocId": "P:Godot.FontVariation.SpacingGlyph",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "SpacingSpace",
+      "kind": "Property",
+      "signature": "public int SpacingSpace { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extra width of the space glyphs.",
+      "defaultValue": "0",
+      "godotName": "spacing_space",
+      "xmlDocId": "P:Godot.FontVariation.SpacingSpace",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "SpacingTop",
+      "kind": "Property",
+      "signature": "public int SpacingTop { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extra spacing at the top of the line in pixels.",
+      "defaultValue": "0",
+      "godotName": "spacing_top",
+      "xmlDocId": "P:Godot.FontVariation.SpacingTop",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "VariationEmbolden",
+      "kind": "Property",
+      "signature": "public float VariationEmbolden { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "If is not equal to zero, emboldens the font outlines. Negative values reduce the outline thickness. [b]Note:[/b] Emboldened fonts might have self-intersecting outlines, which will prevent MSDF fonts and [TextMesh] from working correctly.",
+      "defaultValue": "0.0",
+      "godotName": "variation_embolden",
+      "xmlDocId": "P:Godot.FontVariation.VariationEmbolden",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "VariationFaceIndex",
+      "kind": "Property",
+      "signature": "public int VariationFaceIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Active face index in the TrueType / OpenType collection file.",
+      "defaultValue": "0",
+      "godotName": "variation_face_index",
+      "xmlDocId": "P:Godot.FontVariation.VariationFaceIndex",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "VariationOpentype",
+      "kind": "Property",
+      "signature": "public Dictionary VariationOpentype { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Font OpenType variation coordinates. More info: [url=https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg]OpenType variation tags[/url]. [b]Note:[/b] This [Dictionary] uses OpenType tags as keys. Variation axes can be identified both by tags ([int], e.g. [code]0x77678674[/code]) and names ([String], e.g. [code]wght[/code]). Some axes might be accessible by multiple names. For example, [code]wght[/code] refers to the same axis as [code]weight[/code]. Tags on the other hand are unique. To convert between names and tags, use [method TextServer.name_to_tag] and [method TextServer.tag_to_name]. [b]Note:[/b] To get available variation axes of a font, use [method Font.get_supported_variation_list].",
+      "defaultValue": "{}",
+      "godotName": "variation_opentype",
+      "xmlDocId": "P:Godot.FontVariation.VariationOpentype",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    },
+    {
+      "name": "VariationTransform",
+      "kind": "Property",
+      "signature": "public Transform2D VariationTransform { get; set; }",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "2D transform, applied to the font outlines, can be used for slanting, flipping and rotating glyphs. For example, to simulate italic typeface by slanting, apply the following transform [code]Transform2D(1.0, slant, 0.0, 1.0, 0.0, 0.0)[/code].",
+      "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)",
+      "godotName": "variation_transform",
+      "xmlDocId": "P:Godot.FontVariation.VariationTransform",
+      "sourcePath": "doc/classes/FontVariation.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/FontVariation.xml",
+      "sha256": "99801d78a794afb61dbd7aac8df9d3af75db355046ef39031732a58180cd56ed"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

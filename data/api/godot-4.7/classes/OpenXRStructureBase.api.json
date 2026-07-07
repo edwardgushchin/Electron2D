@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRStructureBase",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRStructureBase",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "OpenXRStructureBase",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRStructureBase.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrstructurebase.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetHeader",
+      "kind": "Method",
+      "signature": "public int _GetHeader(int next)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_header",
+      "xmlDocId": "M:Godot.OpenXRStructureBase._GetHeader(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRStructureBase.xml"
+    },
+    {
+      "name": "GetStructureType",
+      "kind": "Method",
+      "signature": "public int GetStructureType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the structure type (OpenXR [code]XrStructureType[/code]) used for this structure.",
+      "godotName": "get_structure_type",
+      "xmlDocId": "M:Godot.OpenXRStructureBase.GetStructureType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRStructureBase.xml"
+    },
+    {
+      "name": "Next",
+      "kind": "Property",
+      "signature": "public OpenXRStructureBase Next { get; set; }",
+      "returnType": "OpenXRStructureBase",
+      "parameters": [],
+      "summary": "Setting another structure object here chains these structures together to extend the API functionality. Consult the OpenXR documentation for which structures can be used with a given API call.",
+      "godotName": "next",
+      "xmlDocId": "P:Godot.OpenXRStructureBase.Next",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRStructureBase.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetHeader",
+      "kind": "Method",
+      "signature": "public int _GetHeader(int next)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "next",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_header",
+      "xmlDocId": "M:Godot.OpenXRStructureBase._GetHeader(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRStructureBase.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRStructureBase.xml",
+      "sha256": "512d7e8b5e546bf128ff3dd181a6729e044e8c36e09f75b37ef613092f35c6ab"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

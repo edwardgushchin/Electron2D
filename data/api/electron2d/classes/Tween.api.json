@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Tween",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Tween",
+    "kind": "class",
+    "baseType": "Electron2D.RefCounted",
+    "interfaces": [],
+    "godotReference": "Tween",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Tween",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Tween()",
+      "parameters": [],
+      "summary": "Creates an invalid standalone tween.",
+      "xmlDocId": "M:Electron2D.Tween.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Tween",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Tween()",
+      "parameters": [],
+      "summary": "Creates an invalid standalone tween.",
+      "xmlDocId": "M:Electron2D.Tween.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "BindNode",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween BindNode(Electron2D.Node node)",
+      "returnType": "Electron2D.Tween",
+      "parameters": [
+        {
+          "name": "node",
+          "type": "Electron2D.Node"
+        }
+      ],
+      "summary": "Binds this tween to a node lifetime.",
+      "xmlDocId": "M:Electron2D.Tween.BindNode(Electron2D.Node)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "CustomStep",
+      "kind": "Method",
+      "signature": "public System.Boolean CustomStep(System.Double delta)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Manually advances this tween by a delta time.",
+      "xmlDocId": "M:Electron2D.Tween.CustomStep(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetTotalElapsedTime",
+      "kind": "Method",
+      "signature": "public System.Double GetTotalElapsedTime()",
+      "returnType": "System.Double",
+      "parameters": [],
+      "summary": "Gets the accumulated processed time for this tween.",
+      "xmlDocId": "M:Electron2D.Tween.GetTotalElapsedTime",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasTweeners",
+      "kind": "Method",
+      "signature": "public System.Boolean HasTweeners()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this tween has any tweeners.",
+      "xmlDocId": "M:Electron2D.Tween.HasTweeners",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "InterpolateValue",
+      "kind": "Method",
+      "signature": "public static Electron2D.Variant InterpolateValue(Electron2D.Variant initialValue, Electron2D.Variant deltaValue, System.Double elapsedTime, System.Double duration, Electron2D.Tween.TransitionType transType, Electron2D.Tween.EaseType easeType)",
+      "returnType": "Electron2D.Variant",
+      "parameters": [
+        {
+          "name": "initialValue",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "deltaValue",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "elapsedTime",
+          "type": "System.Double"
+        },
+        {
+          "name": "duration",
+          "type": "System.Double"
+        },
+        {
+          "name": "transType",
+          "type": "Electron2D.Tween.TransitionType"
+        },
+        {
+          "name": "easeType",
+          "type": "Electron2D.Tween.EaseType"
+        }
+      ],
+      "summary": "Computes an eased interpolated value from an initial value and delta.",
+      "xmlDocId": "M:Electron2D.Tween.InterpolateValue(Electron2D.Variant,Electron2D.Variant,System.Double,System.Double,Electron2D.Tween.TransitionType,Electron2D.Tween.EaseType)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsRunning",
+      "kind": "Method",
+      "signature": "public System.Boolean IsRunning()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this tween is currently advancing automatically.",
+      "xmlDocId": "M:Electron2D.Tween.IsRunning",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "IsValid",
+      "kind": "Method",
+      "signature": "public System.Boolean IsValid()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Checks whether this tween is registered and can accept tweeners.",
+      "xmlDocId": "M:Electron2D.Tween.IsValid",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Kill",
+      "kind": "Method",
+      "signature": "public System.Void Kill()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Cancels this tween and removes it from scene tree processing.",
+      "xmlDocId": "M:Electron2D.Tween.Kill",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public System.Void Pause()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Pauses automatic processing for this tween.",
+      "xmlDocId": "M:Electron2D.Tween.Pause",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Play",
+      "kind": "Method",
+      "signature": "public System.Void Play()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Starts or resumes automatic processing for this tween.",
+      "xmlDocId": "M:Electron2D.Tween.Play",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetEase",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween SetEase(Electron2D.Tween.EaseType ease)",
+      "returnType": "Electron2D.Tween",
+      "parameters": [
+        {
+          "name": "ease",
+          "type": "Electron2D.Tween.EaseType"
+        }
+      ],
+      "summary": "Sets the default ease mode for subsequently added property tweeners.",
+      "xmlDocId": "M:Electron2D.Tween.SetEase(Electron2D.Tween.EaseType)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetSpeedScale",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween SetSpeedScale(System.Double speed)",
+      "returnType": "Electron2D.Tween",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Sets the speed multiplier used by future tween processing steps.",
+      "xmlDocId": "M:Electron2D.Tween.SetSpeedScale(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "SetTrans",
+      "kind": "Method",
+      "signature": "public Electron2D.Tween SetTrans(Electron2D.Tween.TransitionType trans)",
+      "returnType": "Electron2D.Tween",
+      "parameters": [
+        {
+          "name": "trans",
+          "type": "Electron2D.Tween.TransitionType"
+        }
+      ],
+      "summary": "Sets the default transition for subsequently added property tweeners.",
+      "xmlDocId": "M:Electron2D.Tween.SetTrans(Electron2D.Tween.TransitionType)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Stop",
+      "kind": "Method",
+      "signature": "public System.Void Stop()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Stops this tween and rewinds its sequence time.",
+      "xmlDocId": "M:Electron2D.Tween.Stop",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TweenCallback",
+      "kind": "Method",
+      "signature": "public Electron2D.CallbackTweener TweenCallback(Electron2D.Callable callback)",
+      "returnType": "Electron2D.CallbackTweener",
+      "parameters": [
+        {
+          "name": "callback",
+          "type": "Electron2D.Callable"
+        }
+      ],
+      "summary": "Adds a callback tweener to this tween.",
+      "xmlDocId": "M:Electron2D.Tween.TweenCallback(Electron2D.Callable)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TweenInterval",
+      "kind": "Method",
+      "signature": "public Electron2D.IntervalTweener TweenInterval(System.Double time)",
+      "returnType": "Electron2D.IntervalTweener",
+      "parameters": [
+        {
+          "name": "time",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Adds a time-only interval to this tween.",
+      "xmlDocId": "M:Electron2D.Tween.TweenInterval(System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "TweenProperty",
+      "kind": "Method",
+      "signature": "public Electron2D.PropertyTweener TweenProperty(Electron2D.Object @object, Electron2D.NodePath property, Electron2D.Variant finalVal, System.Double duration)",
+      "returnType": "Electron2D.PropertyTweener",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Electron2D.Object"
+        },
+        {
+          "name": "property",
+          "type": "Electron2D.NodePath"
+        },
+        {
+          "name": "finalVal",
+          "type": "Electron2D.Variant"
+        },
+        {
+          "name": "duration",
+          "type": "System.Double"
+        }
+      ],
+      "summary": "Adds a property tweener to this tween.",
+      "xmlDocId": "M:Electron2D.Tween.TweenProperty(Electron2D.Object,Electron2D.NodePath,Electron2D.Variant,System.Double)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

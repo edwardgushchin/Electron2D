@@ -1,0 +1,2257 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CanvasItem",
+    "namespace": "Godot",
+    "fullName": "Godot.CanvasItem",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "CanvasItem",
+    "documentationPath": "doc/classes/CanvasItem.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when [CanvasItem] has been requested to redraw (after [method queue_redraw] is called, either manually or by the engine). Corresponds to the [constant NOTIFICATION_DRAW] notification in [method Object._notification].",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.CanvasItem._Draw",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawAnimationSlice",
+      "kind": "Method",
+      "signature": "public void DrawAnimationSlice(float animationLength, float sliceBegin, float sliceEnd, float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "animation_length",
+          "type": "float"
+        },
+        {
+          "name": "slice_begin",
+          "type": "float"
+        },
+        {
+          "name": "slice_end",
+          "type": "float"
+        },
+        {
+          "name": "offset",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Subsequent drawing commands will be ignored unless they fall within the specified animation slice. This is a faster way to implement animations that loop on background rather than redrawing constantly.",
+      "godotName": "draw_animation_slice",
+      "xmlDocId": "M:Godot.CanvasItem.DrawAnimationSlice(float,float,float,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawArc",
+      "kind": "Method",
+      "signature": "public void DrawArc(Vector2 center, float radius, float startAngle, float endAngle, int pointCount, Color color, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "center",
+          "type": "Vector2"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        },
+        {
+          "name": "start_angle",
+          "type": "float"
+        },
+        {
+          "name": "end_angle",
+          "type": "float"
+        },
+        {
+          "name": "point_count",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws an unfilled arc between the given angles with a uniform [param color] and [param width] and optional antialiasing (supported only for positive [param width]). The larger the value of [param point_count], the smoother the curve. [param center] is defined in local space. For elliptical arcs, see [method draw_ellipse_arc]. See also [method draw_circle]. If [param width] is negative, it will be ignored and the arc will be drawn using [constant RenderingServer.PRIMITIVE_LINE_STRIP]. This means that when the CanvasItem is scaled, the arc will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. The arc is drawn from [param start_angle] towards the value of [param end_angle] so in clockwise direction if [code]start_angle \u003C end_angle[/code] and counter-clockwise otherwise. Passing the same angles but in reversed order will produce the same arc. If absolute difference of [param start_angle] and [param end_angle] is greater than [constant @GDScript.TAU] radians, then a full circle arc is drawn (i.e. arc will not overlap itself).",
+      "godotName": "draw_arc",
+      "xmlDocId": "M:Godot.CanvasItem.DrawArc(Vector2,float,float,float,int,Color,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawChar",
+      "kind": "Method",
+      "signature": "public void DrawChar(Font font, Vector2 pos, String @char, int fontSize, Color modulate, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "char",
+          "type": "String"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draws a string first character using a custom font. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. [param pos] is defined in local space.",
+      "godotName": "draw_char",
+      "xmlDocId": "M:Godot.CanvasItem.DrawChar(Font,Vector2,String,int,Color,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawCharOutline",
+      "kind": "Method",
+      "signature": "public void DrawCharOutline(Font font, Vector2 pos, String @char, int fontSize, int size, Color modulate, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "char",
+          "type": "String"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draws a string first character outline using a custom font. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. [param pos] is defined in local space.",
+      "godotName": "draw_char_outline",
+      "xmlDocId": "M:Godot.CanvasItem.DrawCharOutline(Font,Vector2,String,int,int,Color,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawCircle",
+      "kind": "Method",
+      "signature": "public void DrawCircle(Vector2 position, float radius, Color color, bool filled, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "filled",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a circle, with [param position] defined in local space. See also [method draw_ellipse], [method draw_arc], [method draw_polyline], and [method draw_polygon]. If [param filled] is [code]true[/code], the circle will be filled with the [param color] specified. If [param filled] is [code]false[/code], the circle will be drawn as a stroke with the [param color] and [param width] specified. If [param width] is negative, then two-point primitives will be drawn instead of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. If [param antialiased] is [code]true[/code], half transparent \u0022feathers\u0022 will be attached to the boundary, making outlines smooth. [b]Note:[/b] [param width] is only effective if [param filled] is [code]false[/code].",
+      "godotName": "draw_circle",
+      "xmlDocId": "M:Godot.CanvasItem.DrawCircle(Vector2,float,Color,bool,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawColoredPolygon",
+      "kind": "Method",
+      "signature": "public void DrawColoredPolygon(PackedVector2Array points, Color color, PackedVector2Array uvs, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "uvs",
+          "type": "PackedVector2Array",
+          "defaultValue": "PackedVector2Array()"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Draws a colored polygon of any number of points, convex or concave. The points in the [param points] array are defined in local space. Unlike [method draw_polygon], a single color must be specified for the whole polygon. [b]Note:[/b] If you frequently redraw the same polygon with a large number of vertices, consider pre-calculating the triangulation with [method Geometry2D.triangulate_polygon] and using [method draw_mesh], [method draw_multimesh], or [method RenderingServer.canvas_item_add_triangle_array]. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_colored_polygon",
+      "xmlDocId": "M:Godot.CanvasItem.DrawColoredPolygon(PackedVector2Array,Color,PackedVector2Array,Texture2D)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawDashedLine",
+      "kind": "Method",
+      "signature": "public void DrawDashedLine(Vector2 from, Vector2 to, Color color, float width, float dash, bool aligned, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "dash",
+          "type": "float",
+          "defaultValue": "2.0"
+        },
+        {
+          "name": "aligned",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a dashed line from a 2D point to another, with a given color and width. The [param from] and [param to] positions are defined in local space. See also [method draw_line], [method draw_multiline], and [method draw_polyline]. If [param width] is negative, then a two-point primitives will be drawn instead of a four-point ones. This means that when the CanvasItem is scaled, the line parts will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. [param dash] is the length of each dash in pixels, with the gap between each dash being the same length. If [param aligned] is [code]true[/code], the length of the first and last dashes may be shortened or lengthened to allow the line to begin and end at the precise points defined by [param from] and [param to]. Both ends are always symmetrical when [param aligned] is [code]true[/code]. If [param aligned] is [code]false[/code], all dashes will have the same length, but the line may appear incomplete at the end due to the dash length not dividing evenly into the line length. Only full dashes are drawn when [param aligned] is [code]false[/code]. If [param antialiased] is [code]true[/code], half transparent \u0022feathers\u0022 will be attached to the boundary, making outlines smooth. [b]Note:[/b] [param antialiased] is only effective if [param width] is greater than [code]0.0[/code].",
+      "godotName": "draw_dashed_line",
+      "xmlDocId": "M:Godot.CanvasItem.DrawDashedLine(Vector2,Vector2,Color,float,float,bool,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawEllipse",
+      "kind": "Method",
+      "signature": "public void DrawEllipse(Vector2 position, float major, float minor, Color color, bool filled, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "major",
+          "type": "float"
+        },
+        {
+          "name": "minor",
+          "type": "float"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "filled",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws an ellipse with semi-major axis [param major] and semi-minor axis [param minor]. See also [method draw_circle], [method draw_ellipse_arc], [method draw_polyline], and [method draw_polygon]. If [param filled] is [code]true[/code], the ellipse will be filled with the [param color] specified. If [param filled] is [code]false[/code], the ellipse will be drawn as a stroke with the [param color] and [param width] specified. If [param width] is negative, then two-point primitives will be drawn instead of four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. If [param antialiased] is [code]true[/code], half transparent \u0022feathers\u0022 will be attached to the boundary, making outlines smooth. [b]Note:[/b] [param width] is only effective if [param filled] is [code]false[/code].",
+      "godotName": "draw_ellipse",
+      "xmlDocId": "M:Godot.CanvasItem.DrawEllipse(Vector2,float,float,Color,bool,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawEllipseArc",
+      "kind": "Method",
+      "signature": "public void DrawEllipseArc(Vector2 center, float major, float minor, float startAngle, float endAngle, int pointCount, Color color, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "center",
+          "type": "Vector2"
+        },
+        {
+          "name": "major",
+          "type": "float"
+        },
+        {
+          "name": "minor",
+          "type": "float"
+        },
+        {
+          "name": "start_angle",
+          "type": "float"
+        },
+        {
+          "name": "end_angle",
+          "type": "float"
+        },
+        {
+          "name": "point_count",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws an unfilled elliptical arc between the given angles with a uniform [param color] and [param width] and optional antialiasing (supported only for positive [param width]). The larger the value of [param point_count], the smoother the curve. For circular arcs, see [method draw_arc]. See also [method draw_ellipse]. If [param width] is negative, it will be ignored and the arc will be drawn using [constant RenderingServer.PRIMITIVE_LINE_STRIP]. This means that when the CanvasItem is scaled, the arc will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. The arc is drawn from [param start_angle] towards the value of [param end_angle] so in clockwise direction if [code]start_angle \u003C end_angle[/code] and counter-clockwise otherwise. Passing the same angles but in reversed order will produce the same arc. If absolute difference of [param start_angle] and [param end_angle] is greater than [constant @GDScript.TAU] radians, then a full ellipse is drawn (i.e. arc will not overlap itself).",
+      "godotName": "draw_ellipse_arc",
+      "xmlDocId": "M:Godot.CanvasItem.DrawEllipseArc(Vector2,float,float,float,float,int,Color,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawEndAnimation",
+      "kind": "Method",
+      "signature": "public void DrawEndAnimation()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "After submitting all animations slices via [method draw_animation_slice], this function can be used to revert drawing to its default state (all subsequent drawing commands will be visible). If you don\u0027t care about this particular use case, usage of this function after submitting the slices is not required.",
+      "godotName": "draw_end_animation",
+      "xmlDocId": "M:Godot.CanvasItem.DrawEndAnimation",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawLcdTextureRectRegion",
+      "kind": "Method",
+      "signature": "public void DrawLcdTextureRectRegion(Texture2D texture, Rect2 rect, Rect2 srcRect, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Draws a textured rectangle region of the font texture with LCD subpixel anti-aliasing at a given position, optionally modulated by a color. The [param rect] is defined in local space. Texture is drawn using the following blend operation, blend mode of the [CanvasItemMaterial] is ignored: [codeblock] dst.r = texture.r * modulate.r * modulate.a \u002B dst.r * (1.0 - texture.r * modulate.a); dst.g = texture.g * modulate.g * modulate.a \u002B dst.g * (1.0 - texture.g * modulate.a); dst.b = texture.b * modulate.b * modulate.a \u002B dst.b * (1.0 - texture.b * modulate.a); dst.a = modulate.a \u002B dst.a * (1.0 - modulate.a); [/codeblock] [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_lcd_texture_rect_region",
+      "xmlDocId": "M:Godot.CanvasItem.DrawLcdTextureRectRegion(Texture2D,Rect2,Rect2,Color)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawLine",
+      "kind": "Method",
+      "signature": "public void DrawLine(Vector2 from, Vector2 to, Color color, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Vector2"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased. The [param from] and [param to] positions are defined in local space. See also [method draw_dashed_line], [method draw_multiline], and [method draw_polyline]. If [param width] is negative, then a two-point primitive will be drawn instead of a four-point one. This means that when the CanvasItem is scaled, the line will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code].",
+      "godotName": "draw_line",
+      "xmlDocId": "M:Godot.CanvasItem.DrawLine(Vector2,Vector2,Color,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMesh",
+      "kind": "Method",
+      "signature": "public void DrawMesh(Mesh mesh, Texture2D texture, Transform2D transform, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "mesh",
+          "type": "Mesh"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D",
+          "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Draws a [Mesh] in 2D, using the provided texture. See [MeshInstance2D] for related documentation. The [param transform] is defined in local space. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_mesh",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMesh(Mesh,Texture2D,Transform2D,Color)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMsdfTextureRectRegion",
+      "kind": "Method",
+      "signature": "public void DrawMsdfTextureRectRegion(Texture2D texture, Rect2 rect, Rect2 srcRect, Color modulate, float outline, float pixelRange, float scale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "outline",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "pixel_range",
+          "type": "float",
+          "defaultValue": "4.0"
+        },
+        {
+          "name": "scale",
+          "type": "float",
+          "defaultValue": "1.0"
+        }
+      ],
+      "summary": "Draws a textured rectangle region of the multichannel signed distance field texture at a given position, optionally modulated by a color. The [param rect] is defined in local space. See [member FontFile.multichannel_signed_distance_field] for more information and caveats about MSDF font rendering. If [param outline] is positive, each alpha channel value of pixel in region is set to maximum value of true distance in the [param outline] radius. Value of the [param pixel_range] should the same that was used during distance field texture generation. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_msdf_texture_rect_region",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMsdfTextureRectRegion(Texture2D,Rect2,Rect2,Color,float,float,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMultiline",
+      "kind": "Method",
+      "signature": "public void DrawMultiline(PackedVector2Array points, Color color, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws multiple disconnected lines with a uniform [param width] and [param color]. Each line is defined by two consecutive points from [param points] array in local space, i.e. i-th segment consists of [code]points[2 * i][/code], [code]points[2 * i \u002B 1][/code] endpoints. When drawing large amounts of lines, this is faster than using individual [method draw_line] calls. To draw interconnected lines, use [method draw_polyline] instead. If [param width] is negative, then two-point primitives will be drawn instead of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. [b]Note:[/b] [param antialiased] is only effective if [param width] is greater than [code]0.0[/code].",
+      "godotName": "draw_multiline",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMultiline(PackedVector2Array,Color,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMultilineColors",
+      "kind": "Method",
+      "signature": "public void DrawMultilineColors(PackedVector2Array points, PackedColorArray colors, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "colors",
+          "type": "PackedColorArray"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws multiple disconnected lines with a uniform [param width] and segment-by-segment coloring. Each segment is defined by two consecutive points from [param points] array in local space and a corresponding color from [param colors] array, i.e. i-th segment consists of [code]points[2 * i][/code], [code]points[2 * i \u002B 1][/code] endpoints and has [code]colors[i][/code] color. When drawing large amounts of lines, this is faster than using individual [method draw_line] calls. To draw interconnected lines, use [method draw_polyline_colors] instead. If [param width] is negative, then two-point primitives will be drawn instead of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. [b]Note:[/b] [param antialiased] is only effective if [param width] is greater than [code]0.0[/code].",
+      "godotName": "draw_multiline_colors",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMultilineColors(PackedVector2Array,PackedColorArray,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMultilineString",
+      "kind": "Method",
+      "signature": "public void DrawMultilineString(Font font, Vector2 pos, String text, int alignment, float width, int fontSize, int maxLines, Color modulate, int brkFlags, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "max_lines",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "brk_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Breaks [param text] into lines and draws it using the specified [param font] at the [param pos] in local space (top-left corner). The text will have its color multiplied by [param modulate]. If [param width] is greater than or equal to 0, the text will be clipped if it exceeds the specified width. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_multiline_string",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMultilineString(Font,Vector2,String,int,float,int,int,Color,int,int,int,int,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMultilineStringOutline",
+      "kind": "Method",
+      "signature": "public void DrawMultilineStringOutline(Font font, Vector2 pos, String text, int alignment, float width, int fontSize, int maxLines, int size, Color modulate, int brkFlags, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "max_lines",
+          "type": "int",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "brk_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Breaks [param text] to the lines and draws text outline using the specified [param font] at the [param pos] in local space (top-left corner). The text will have its color multiplied by [param modulate]. If [param width] is greater than or equal to 0, the text will be clipped if it exceeds the specified width. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_multiline_string_outline",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMultilineStringOutline(Font,Vector2,String,int,float,int,int,int,Color,int,int,int,int,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawMultimesh",
+      "kind": "Method",
+      "signature": "public void DrawMultimesh(MultiMesh multimesh, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "multimesh",
+          "type": "MultiMesh"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        }
+      ],
+      "summary": "Draws a [MultiMesh] in 2D with the provided texture. See [MultiMeshInstance2D] for related documentation. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_multimesh",
+      "xmlDocId": "M:Godot.CanvasItem.DrawMultimesh(MultiMesh,Texture2D)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawPolygon",
+      "kind": "Method",
+      "signature": "public void DrawPolygon(PackedVector2Array points, PackedColorArray colors, PackedVector2Array uvs, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "colors",
+          "type": "PackedColorArray"
+        },
+        {
+          "name": "uvs",
+          "type": "PackedVector2Array",
+          "defaultValue": "PackedVector2Array()"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Draws a solid polygon of any number of points, convex or concave. Unlike [method draw_colored_polygon], each point\u0027s color can be changed individually. The [param points] array is defined in local space. See also [method draw_polyline] and [method draw_polyline_colors]. If you need more flexibility (such as being able to use bones), use [method RenderingServer.canvas_item_add_triangle_array] instead. [b]Note:[/b] If you frequently redraw the same polygon with a large number of vertices, consider pre-calculating the triangulation with [method Geometry2D.triangulate_polygon] and using [method draw_mesh], [method draw_multimesh], or [method RenderingServer.canvas_item_add_triangle_array]. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_polygon",
+      "xmlDocId": "M:Godot.CanvasItem.DrawPolygon(PackedVector2Array,PackedColorArray,PackedVector2Array,Texture2D)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawPolyline",
+      "kind": "Method",
+      "signature": "public void DrawPolyline(PackedVector2Array points, Color color, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws interconnected line segments with a uniform [param color] and [param width] and optional antialiasing (supported only for positive [param width]). The [param points] array is defined in local space. When drawing large amounts of lines, this is faster than using individual [method draw_line] calls. To draw disconnected lines, use [method draw_multiline] instead. See also [method draw_polygon]. If [param width] is negative, it will be ignored and the polyline will be drawn using [constant RenderingServer.PRIMITIVE_LINE_STRIP]. This means that when the CanvasItem is scaled, the polyline will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code].",
+      "godotName": "draw_polyline",
+      "xmlDocId": "M:Godot.CanvasItem.DrawPolyline(PackedVector2Array,Color,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawPolylineColors",
+      "kind": "Method",
+      "signature": "public void DrawPolylineColors(PackedVector2Array points, PackedColorArray colors, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "colors",
+          "type": "PackedColorArray"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws interconnected line segments with a uniform [param width], point-by-point coloring, and optional antialiasing (supported only for positive [param width]). Colors assigned to line points match by index between [param points] and [param colors], i.e. each line segment is filled with a gradient between the colors of the endpoints. The [param points] array is defined in local space. When drawing large amounts of lines, this is faster than using individual [method draw_line] calls. To draw disconnected lines, use [method draw_multiline_colors] instead. See also [method draw_polygon]. If [param width] is negative, it will be ignored and the polyline will be drawn using [constant RenderingServer.PRIMITIVE_LINE_STRIP]. This means that when the CanvasItem is scaled, the polyline will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code].",
+      "godotName": "draw_polyline_colors",
+      "xmlDocId": "M:Godot.CanvasItem.DrawPolylineColors(PackedVector2Array,PackedColorArray,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawPrimitive",
+      "kind": "Method",
+      "signature": "public void DrawPrimitive(PackedVector2Array points, PackedColorArray colors, PackedVector2Array uvs, Texture2D texture)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "colors",
+          "type": "PackedColorArray"
+        },
+        {
+          "name": "uvs",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "texture",
+          "type": "Texture2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle, and 4 points for a quad. If 0 points or more than 4 points are specified, nothing will be drawn and an error message will be printed. The [param points] array is defined in local space. See also [method draw_line], [method draw_polyline], [method draw_polygon], and [method draw_rect]. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_primitive",
+      "xmlDocId": "M:Godot.CanvasItem.DrawPrimitive(PackedVector2Array,PackedColorArray,PackedVector2Array,Texture2D)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawRect",
+      "kind": "Method",
+      "signature": "public void DrawRect(Rect2 rect, Color color, bool filled, float width, bool antialiased)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        },
+        {
+          "name": "filled",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1.0"
+        },
+        {
+          "name": "antialiased",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a rectangle. If [param filled] is [code]true[/code], the rectangle will be filled with the [param color] specified. If [param filled] is [code]false[/code], the rectangle will be drawn as a stroke with the [param color] and [param width] specified. The [param rect] is specified in local space. See also [method draw_texture_rect]. If [param width] is negative, then two-point primitives will be drawn instead of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not desired, then pass a positive [param width] like [code]1.0[/code]. If [param antialiased] is [code]true[/code], half transparent \u0022feathers\u0022 will be attached to the boundary, making outlines smooth. [b]Note:[/b] [param width] is only effective if [param filled] is [code]false[/code]. [b]Note:[/b] Unfilled rectangles drawn with a negative [param width] may not display perfectly. For example, corners may be missing or brighter due to overlapping lines (for a translucent [param color]).",
+      "godotName": "draw_rect",
+      "xmlDocId": "M:Godot.CanvasItem.DrawRect(Rect2,Color,bool,float,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawSetTransform",
+      "kind": "Method",
+      "signature": "public void DrawSetTransform(Vector2 position, float rotation, Vector2 scale)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "rotation",
+          "type": "float",
+          "defaultValue": "0.0"
+        },
+        {
+          "name": "scale",
+          "type": "Vector2",
+          "defaultValue": "Vector2(1, 1)"
+        }
+      ],
+      "summary": "Sets a custom local transform for drawing via components. Anything drawn afterwards will be transformed by this. [b]Note:[/b] [member FontFile.oversampling] does [i]not[/i] take [param scale] into account. This means that scaling up/down will cause bitmap fonts and rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated. To ensure text remains crisp regardless of scale, you can enable MSDF font rendering by enabling [member ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field] (applies to the default project font only), or enabling [b]Multichannel Signed Distance Field[/b] in the import options of a DynamicFont for custom fonts. On system fonts, [member SystemFont.multichannel_signed_distance_field] can be enabled in the inspector.",
+      "godotName": "draw_set_transform",
+      "xmlDocId": "M:Godot.CanvasItem.DrawSetTransform(Vector2,float,Vector2)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawSetTransformMatrix",
+      "kind": "Method",
+      "signature": "public void DrawSetTransformMatrix(Transform2D xform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "xform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets a custom local transform for drawing via matrix. Anything drawn afterwards will be transformed by this.",
+      "godotName": "draw_set_transform_matrix",
+      "xmlDocId": "M:Godot.CanvasItem.DrawSetTransformMatrix(Transform2D)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawString",
+      "kind": "Method",
+      "signature": "public void DrawString(Font font, Vector2 pos, String text, int alignment, float width, int fontSize, Color modulate, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draws [param text] using the specified [param font] at the [param pos] in local space (bottom-left corner using the baseline of the font). The text will have its color multiplied by [param modulate]. If [param width] is greater than or equal to 0, the text will be clipped if it exceeds the specified width. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used. [b]Example:[/b] Draw \u0022Hello world\u0022, using the project\u0027s default font: [codeblocks] [gdscript] draw_string(ThemeDB.fallback_font, Vector2(64, 64), \u0022Hello world\u0022, HORIZONTAL_ALIGNMENT_LEFT, -1, ThemeDB.fallback_font_size) [/gdscript] [csharp] DrawString(ThemeDB.FallbackFont, new Vector2(64, 64), \u0022Hello world\u0022, HorizontalAlignment.Left, -1, ThemeDB.FallbackFontSize); [/csharp] [/codeblocks] See also [method Font.draw_string].",
+      "godotName": "draw_string",
+      "xmlDocId": "M:Godot.CanvasItem.DrawString(Font,Vector2,String,int,float,int,Color,int,int,int,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawStringOutline",
+      "kind": "Method",
+      "signature": "public void DrawStringOutline(Font font, Vector2 pos, String text, int alignment, float width, int fontSize, int size, Color modulate, int justificationFlags, int direction, int orientation, float oversampling)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "font",
+          "type": "Font"
+        },
+        {
+          "name": "pos",
+          "type": "Vector2"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "alignment",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "width",
+          "type": "float",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "font_size",
+          "type": "int",
+          "defaultValue": "16"
+        },
+        {
+          "name": "size",
+          "type": "int",
+          "defaultValue": "1"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "justification_flags",
+          "type": "int",
+          "defaultValue": "3"
+        },
+        {
+          "name": "direction",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "orientation",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "oversampling",
+          "type": "float",
+          "defaultValue": "0.0"
+        }
+      ],
+      "summary": "Draws [param text] outline using the specified [param font] at the [param pos] in local space (bottom-left corner using the baseline of the font). The text will have its color multiplied by [param modulate]. If [param width] is greater than or equal to 0, the text will be clipped if it exceeds the specified width. If [param oversampling] is greater than zero, it is used as font oversampling factor, otherwise viewport oversampling settings are used.",
+      "godotName": "draw_string_outline",
+      "xmlDocId": "M:Godot.CanvasItem.DrawStringOutline(Font,Vector2,String,int,float,int,int,Color,int,int,int,float)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawStyleBox",
+      "kind": "Method",
+      "signature": "public void DrawStyleBox(StyleBox styleBox, Rect2 rect)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "style_box",
+          "type": "StyleBox"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        }
+      ],
+      "summary": "Draws a styled rectangle. The [param rect] is defined in local space. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_style_box",
+      "xmlDocId": "M:Godot.CanvasItem.DrawStyleBox(StyleBox,Rect2)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawTexture",
+      "kind": "Method",
+      "signature": "public void DrawTexture(Texture2D texture, Vector2 position, Color modulate)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        }
+      ],
+      "summary": "Draws a texture at a given position. The [param position] is defined in local space. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_texture",
+      "xmlDocId": "M:Godot.CanvasItem.DrawTexture(Texture2D,Vector2,Color)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawTextureRect",
+      "kind": "Method",
+      "signature": "public void DrawTextureRect(Texture2D texture, Rect2 rect, bool tile, Color modulate, bool transpose)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "tile",
+          "type": "bool"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Draws a textured rectangle at a given position, optionally modulated by a color. The [param rect] is defined in local space. If [param transpose] is [code]true[/code], the texture will have its X and Y coordinates swapped. See also [method draw_rect] and [method draw_texture_rect_region]. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_texture_rect",
+      "xmlDocId": "M:Godot.CanvasItem.DrawTextureRect(Texture2D,Rect2,bool,Color,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "DrawTextureRectRegion",
+      "kind": "Method",
+      "signature": "public void DrawTextureRectRegion(Texture2D texture, Rect2 rect, Rect2 srcRect, Color modulate, bool transpose, bool clipUv)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture",
+          "type": "Texture2D"
+        },
+        {
+          "name": "rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "src_rect",
+          "type": "Rect2"
+        },
+        {
+          "name": "modulate",
+          "type": "Color",
+          "defaultValue": "Color(1, 1, 1, 1)"
+        },
+        {
+          "name": "transpose",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "clip_uv",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Draws a textured rectangle from a texture\u0027s region (specified by [param src_rect]) at a given position in local space, optionally modulated by a color. If [param transpose] is [code]true[/code], the texture will have its X and Y coordinates swapped. See also [method draw_texture_rect]. [b]Note:[/b] Styleboxes, textures, and meshes stored only inside local variables should [b]not[/b] be used with this method in GDScript, because the drawing operation doesn\u0027t begin immediately once this method is called. In GDScript, when the function with the local variables ends, the local variables get destroyed before the rendering takes place.",
+      "godotName": "draw_texture_rect_region",
+      "xmlDocId": "M:Godot.CanvasItem.DrawTextureRectRegion(Texture2D,Rect2,Rect2,Color,bool,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ForceUpdateTransform",
+      "kind": "Method",
+      "signature": "public void ForceUpdateTransform()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Forces the node\u0027s transform to update. Fails if the node is not inside the tree. See also [method get_transform]. [b]Note:[/b] For performance reasons, transform changes are usually accumulated and applied [i]once[/i] at the end of the frame. The update propagates through [CanvasItem] children, as well. Therefore, use this method only when you need an up-to-date transform (such as during physics operations).",
+      "godotName": "force_update_transform",
+      "xmlDocId": "M:Godot.CanvasItem.ForceUpdateTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetCanvas",
+      "kind": "Method",
+      "signature": "public RID GetCanvas()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of the [World2D] canvas where this node is registered to, used by the [RenderingServer].",
+      "godotName": "get_canvas",
+      "xmlDocId": "M:Godot.CanvasItem.GetCanvas",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetCanvasItem",
+      "kind": "Method",
+      "signature": "public RID GetCanvasItem()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the internal canvas item [RID] used by the [RenderingServer] for this node.",
+      "godotName": "get_canvas_item",
+      "xmlDocId": "M:Godot.CanvasItem.GetCanvasItem",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetCanvasLayerNode",
+      "kind": "Method",
+      "signature": "public CanvasLayer GetCanvasLayerNode()",
+      "returnType": "CanvasLayer",
+      "parameters": [],
+      "summary": "Returns the [CanvasLayer] that contains this node, or [code]null[/code] if the node is not in any [CanvasLayer].",
+      "godotName": "get_canvas_layer_node",
+      "xmlDocId": "M:Godot.CanvasItem.GetCanvasLayerNode",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetCanvasTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetCanvasTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform of this node, converted from its registered canvas\u0027s coordinate system to its viewport\u0027s coordinate system. See also [method Node.get_viewport].",
+      "godotName": "get_canvas_transform",
+      "xmlDocId": "M:Godot.CanvasItem.GetCanvasTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetGlobalMousePosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetGlobalMousePosition()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns mouse cursor\u0027s global position relative to the [CanvasLayer] that contains this node. [b]Note:[/b] For screen-space coordinates (e.g. when using a non-embedded [Popup]), you can use [method DisplayServer.mouse_get_position].",
+      "godotName": "get_global_mouse_position",
+      "xmlDocId": "M:Godot.CanvasItem.GetGlobalMousePosition",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetGlobalTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetGlobalTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the global transform matrix of this item, i.e. the combined transform up to the topmost [CanvasItem] node. The topmost item is a [CanvasItem] that either has no parent, has non-[CanvasItem] parent or it has [member top_level] enabled.",
+      "godotName": "get_global_transform",
+      "xmlDocId": "M:Godot.CanvasItem.GetGlobalTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetGlobalTransformWithCanvas",
+      "kind": "Method",
+      "signature": "public Transform2D GetGlobalTransformWithCanvas()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform from the local coordinate system of this [CanvasItem] to the [Viewport]s coordinate system.",
+      "godotName": "get_global_transform_with_canvas",
+      "xmlDocId": "M:Godot.CanvasItem.GetGlobalTransformWithCanvas",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetInstanceShaderParameter",
+      "kind": "Method",
+      "signature": "public Variant GetInstanceShaderParameter(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Get the value of a shader parameter as set on this instance.",
+      "godotName": "get_instance_shader_parameter",
+      "xmlDocId": "M:Godot.CanvasItem.GetInstanceShaderParameter(StringName)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetLocalMousePosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetLocalMousePosition()",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "Returns the mouse\u0027s position in this [CanvasItem] using the local coordinate system of this [CanvasItem].",
+      "godotName": "get_local_mouse_position",
+      "xmlDocId": "M:Godot.CanvasItem.GetLocalMousePosition",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetScreenTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetScreenTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform of this [CanvasItem] in global screen coordinates (i.e. taking window position into account). Mostly useful for editor plugins. Equivalent to [method get_global_transform_with_canvas] if the window is embedded (see [member Viewport.gui_embed_subwindows]).",
+      "godotName": "get_screen_transform",
+      "xmlDocId": "M:Godot.CanvasItem.GetScreenTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform matrix of this [CanvasItem].",
+      "godotName": "get_transform",
+      "xmlDocId": "M:Godot.CanvasItem.GetTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetViewportRect",
+      "kind": "Method",
+      "signature": "public Rect2 GetViewportRect()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "Returns this node\u0027s viewport boundaries as a [Rect2]. See also [method Node.get_viewport].",
+      "godotName": "get_viewport_rect",
+      "xmlDocId": "M:Godot.CanvasItem.GetViewportRect",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetViewportTransform",
+      "kind": "Method",
+      "signature": "public Transform2D GetViewportTransform()",
+      "returnType": "Transform2D",
+      "parameters": [],
+      "summary": "Returns the transform of this node, converted from its registered canvas\u0027s coordinate system to its viewport embedder\u0027s coordinate system. See also [method Viewport.get_final_transform] and [method Node.get_viewport].",
+      "godotName": "get_viewport_transform",
+      "xmlDocId": "M:Godot.CanvasItem.GetViewportTransform",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetVisibilityLayerBit",
+      "kind": "Method",
+      "signature": "public bool GetVisibilityLayerBit(int layer)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the layer at the given index is set in [member visibility_layer].",
+      "godotName": "get_visibility_layer_bit",
+      "xmlDocId": "M:Godot.CanvasItem.GetVisibilityLayerBit(int)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "GetWorld2d",
+      "kind": "Method",
+      "signature": "public World2D GetWorld2d()",
+      "returnType": "World2D",
+      "parameters": [],
+      "summary": "Returns the [World2D] this node is registered to. Usually, this is the same as this node\u0027s viewport (see [method Node.get_viewport] and [method Viewport.find_world_2d]).",
+      "godotName": "get_world_2d",
+      "xmlDocId": "M:Godot.CanvasItem.GetWorld2d",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Hide",
+      "kind": "Method",
+      "signature": "public void Hide()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Hide the [CanvasItem] if it\u0027s currently visible. This is equivalent to setting [member visible] to [code]false[/code].",
+      "godotName": "hide",
+      "xmlDocId": "M:Godot.CanvasItem.Hide",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "IsLocalTransformNotificationEnabled",
+      "kind": "Method",
+      "signature": "public bool IsLocalTransformNotificationEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node receives [constant NOTIFICATION_LOCAL_TRANSFORM_CHANGED] whenever its local transform changes. This is enabled with [method set_notify_local_transform].",
+      "godotName": "is_local_transform_notification_enabled",
+      "xmlDocId": "M:Godot.CanvasItem.IsLocalTransformNotificationEnabled",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "IsTransformNotificationEnabled",
+      "kind": "Method",
+      "signature": "public bool IsTransformNotificationEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node receives [constant NOTIFICATION_TRANSFORM_CHANGED] whenever its global transform changes. This is enabled with [method set_notify_transform].",
+      "godotName": "is_transform_notification_enabled",
+      "xmlDocId": "M:Godot.CanvasItem.IsTransformNotificationEnabled",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "IsVisibleInTree",
+      "kind": "Method",
+      "signature": "public bool IsVisibleInTree()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the node is present in the [SceneTree], its [member visible] property is [code]true[/code] and all its ancestors are also visible. If any ancestor is hidden, this node will not be visible in the scene tree, and is therefore not drawn (see [method _draw]). Visibility is checked only in parent nodes that inherit from [CanvasItem], [CanvasLayer], and [Window]. If the parent is of any other type (such as [Node], [AnimationPlayer], or [Node3D]), it is assumed to be visible. [b]Note:[/b] This method does not take [member visibility_layer] into account, so even if this method returns [code]true[/code], the node might end up not being rendered.",
+      "godotName": "is_visible_in_tree",
+      "xmlDocId": "M:Godot.CanvasItem.IsVisibleInTree",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "MakeCanvasPositionLocal",
+      "kind": "Method",
+      "signature": "public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "viewport_point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Transforms [param viewport_point] from the viewport\u0027s coordinates to this node\u0027s local coordinates. For the opposite operation, use [method get_global_transform_with_canvas]. [codeblock] var viewport_point = get_global_transform_with_canvas() * local_point [/codeblock]",
+      "godotName": "make_canvas_position_local",
+      "xmlDocId": "M:Godot.CanvasItem.MakeCanvasPositionLocal(Vector2)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "MakeInputLocal",
+      "kind": "Method",
+      "signature": "public InputEvent MakeInputLocal(InputEvent @event)",
+      "returnType": "InputEvent",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "InputEvent"
+        }
+      ],
+      "summary": "Returns a copy of the given [param event] with its coordinates converted from global space to this [CanvasItem]\u0027s local space. If not possible, returns the same [InputEvent] unchanged.",
+      "godotName": "make_input_local",
+      "xmlDocId": "M:Godot.CanvasItem.MakeInputLocal(InputEvent)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "MoveToFront",
+      "kind": "Method",
+      "signature": "public void MoveToFront()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Moves this node below its siblings, usually causing the node to draw on top of its siblings. Does nothing if this node does not have a parent. See also [method Node.move_child].",
+      "godotName": "move_to_front",
+      "xmlDocId": "M:Godot.CanvasItem.MoveToFront",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "QueueRedraw",
+      "kind": "Method",
+      "signature": "public void QueueRedraw()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Queues the [CanvasItem] to redraw. During idle time, if [CanvasItem] is visible, [constant NOTIFICATION_DRAW] is sent and [method _draw] is called. This only occurs [b]once[/b] per frame, even if this method has been called multiple times.",
+      "godotName": "queue_redraw",
+      "xmlDocId": "M:Godot.CanvasItem.QueueRedraw",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "SetInstanceShaderParameter",
+      "kind": "Method",
+      "signature": "public void SetInstanceShaderParameter(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Set the value of a shader uniform for this instance only ([url=$DOCS_URL/tutorials/shaders/shader_reference/shading_language.html#per-instance-uniforms]per-instance uniform[/url]). See also [method ShaderMaterial.set_shader_parameter] to assign a uniform on all instances using the same [ShaderMaterial]. [b]Note:[/b] For a shader uniform to be assignable on a per-instance basis, it [i]must[/i] be defined with [code]instance uniform ...[/code] rather than [code]uniform ...[/code] in the shader code. [b]Note:[/b] [param name] is case-sensitive and must match the name of the uniform in the code exactly (not the capitalized name in the inspector).",
+      "godotName": "set_instance_shader_parameter",
+      "xmlDocId": "M:Godot.CanvasItem.SetInstanceShaderParameter(StringName,Variant)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "SetNotifyLocalTransform",
+      "kind": "Method",
+      "signature": "public void SetNotifyLocalTransform(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the node will receive [constant NOTIFICATION_LOCAL_TRANSFORM_CHANGED] whenever its local transform changes. [b]Note:[/b] Many canvas items such as [Bone2D] or [CollisionShape2D] automatically enable this in order to function correctly.",
+      "godotName": "set_notify_local_transform",
+      "xmlDocId": "M:Godot.CanvasItem.SetNotifyLocalTransform(bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "SetNotifyTransform",
+      "kind": "Method",
+      "signature": "public void SetNotifyTransform(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the node will receive [constant NOTIFICATION_TRANSFORM_CHANGED] whenever its global transform changes. [b]Note:[/b] Many canvas items such as [Camera2D] or [Light2D] automatically enable this in order to function correctly.",
+      "godotName": "set_notify_transform",
+      "xmlDocId": "M:Godot.CanvasItem.SetNotifyTransform(bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "SetVisibilityLayerBit",
+      "kind": "Method",
+      "signature": "public void SetVisibilityLayerBit(int layer, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "layer",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Set/clear individual bits on the rendering visibility layer. This simplifies editing this [CanvasItem]\u0027s visibility layer.",
+      "godotName": "set_visibility_layer_bit",
+      "xmlDocId": "M:Godot.CanvasItem.SetVisibilityLayerBit(int,bool)",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Show",
+      "kind": "Method",
+      "signature": "public void Show()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Show the [CanvasItem] if it\u0027s currently hidden. This is equivalent to setting [member visible] to [code]true[/code]. [b]Note:[/b] For controls that inherit [Popup], the correct way to make them visible is to call one of the multiple [code]popup*()[/code] functions instead.",
+      "godotName": "show",
+      "xmlDocId": "M:Godot.CanvasItem.Show",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ClipChildren",
+      "kind": "Property",
+      "signature": "public int ClipChildren { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The mode in which this node clips its children, acting as a mask. [b]Note:[/b] Clipping nodes cannot be nested or placed within a [CanvasGroup]. If an ancestor of this node clips its children or is a [CanvasGroup], then this node\u0027s clip mode should be set to [constant CLIP_CHILDREN_DISABLED] to avoid unexpected behavior.",
+      "defaultValue": "0",
+      "godotName": "clip_children",
+      "xmlDocId": "P:Godot.CanvasItem.ClipChildren",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "LightMask",
+      "kind": "Property",
+      "signature": "public int LightMask { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The rendering layers in which this [CanvasItem] responds to [Light2D] nodes.",
+      "defaultValue": "1",
+      "godotName": "light_mask",
+      "xmlDocId": "P:Godot.CanvasItem.LightMask",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Material",
+      "kind": "Property",
+      "signature": "public Material Material { get; set; }",
+      "returnType": "Material",
+      "parameters": [],
+      "summary": "The material applied to this [CanvasItem].",
+      "godotName": "material",
+      "xmlDocId": "P:Godot.CanvasItem.Material",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Color Modulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color applied to this [CanvasItem]. This property does affect child [CanvasItem]s, unlike [member self_modulate] which only affects the node itself.",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "modulate",
+      "xmlDocId": "P:Godot.CanvasItem.Modulate",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "OversamplingWithScale",
+      "kind": "Property",
+      "signature": "public int OversamplingWithScale { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If enabled, oversampling for this [CanvasItem] is automatically adjusted with scale.",
+      "defaultValue": "0",
+      "godotName": "oversampling_with_scale",
+      "xmlDocId": "P:Godot.CanvasItem.OversamplingWithScale",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "SelfModulate",
+      "kind": "Property",
+      "signature": "public Color SelfModulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The color applied to this [CanvasItem]. This property does [b]not[/b] affect child [CanvasItem]s, unlike [member modulate] which affects both the node itself and its children. [b]Note:[/b] Internal children are also not affected by this property (see the [code]include_internal[/code] parameter in [method Node.add_child]). For built-in nodes this includes sliders in [ColorPicker], and the tab bar in [TabContainer].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "self_modulate",
+      "xmlDocId": "P:Godot.CanvasItem.SelfModulate",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ShowBehindParent",
+      "kind": "Property",
+      "signature": "public bool ShowBehindParent { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this node draws behind its parent.",
+      "defaultValue": "false",
+      "godotName": "show_behind_parent",
+      "xmlDocId": "P:Godot.CanvasItem.ShowBehindParent",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TextureFilter",
+      "kind": "Property",
+      "signature": "public int TextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The filtering mode used to render this [CanvasItem]\u0027s texture(s).",
+      "defaultValue": "0",
+      "godotName": "texture_filter",
+      "xmlDocId": "P:Godot.CanvasItem.TextureFilter",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TextureRepeat",
+      "kind": "Property",
+      "signature": "public int TextureRepeat { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The repeating mode used to render this [CanvasItem]\u0027s texture(s). It affects what happens when the texture is sampled outside its extents, for example by setting a [member Sprite2D.region_rect] that is larger than the texture or assigning [Polygon2D] UV points outside the texture. [b]Note:[/b] [TextureRect] is not affected by [member texture_repeat], as it uses its own texture repeating implementation.",
+      "defaultValue": "0",
+      "godotName": "texture_repeat",
+      "xmlDocId": "P:Godot.CanvasItem.TextureRepeat",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TopLevel",
+      "kind": "Property",
+      "signature": "public bool TopLevel { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this [CanvasItem] will [i]not[/i] inherit its transform from parent [CanvasItem]s. Its draw order will also be changed to make it draw on top of other [CanvasItem]s that do not have [member top_level] set to [code]true[/code]. The [CanvasItem] will effectively act as if it was placed as a child of a bare [Node].",
+      "defaultValue": "false",
+      "godotName": "top_level",
+      "xmlDocId": "P:Godot.CanvasItem.TopLevel",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "UseParentMaterial",
+      "kind": "Property",
+      "signature": "public bool UseParentMaterial { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the parent [CanvasItem]\u0027s [member material] is used as this node\u0027s material.",
+      "defaultValue": "false",
+      "godotName": "use_parent_material",
+      "xmlDocId": "P:Godot.CanvasItem.UseParentMaterial",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "VisibilityLayer",
+      "kind": "Property",
+      "signature": "public int VisibilityLayer { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The rendering layer in which this [CanvasItem] is rendered by [Viewport] nodes. A [Viewport] will render a [CanvasItem] if it and all its parents share a layer with the [Viewport]\u0027s canvas cull mask. [b]Note:[/b] A [CanvasItem] does not inherit its parents\u0027 visibility layers. This means that if a parent [CanvasItem] does not have all the same layers as its child, the child may not be visible even if both the parent and child have [member visible] set to [code]true[/code]. For example, if a parent has layer 1 and a child has layer 2, the child will not be visible in a [Viewport] with the canvas cull mask set to layer 1 or 2 (see [member Viewport.canvas_cull_mask]). To ensure that both the parent and child are visible, the parent must have both layers 1 and 2, or the child must have [member top_level] set to [code]true[/code].",
+      "defaultValue": "1",
+      "godotName": "visibility_layer",
+      "xmlDocId": "P:Godot.CanvasItem.VisibilityLayer",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Visible",
+      "kind": "Property",
+      "signature": "public bool Visible { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this [CanvasItem] may be drawn. Whether this [CanvasItem] is actually drawn depends on the visibility of all of its [CanvasItem] ancestors. In other words: this [CanvasItem] will be drawn when [method is_visible_in_tree] returns [code]true[/code] and all [CanvasItem] ancestors share at least one [member visibility_layer] with this [CanvasItem]. [b]Note:[/b] For controls that inherit [Popup], the correct way to make them visible is to call one of the multiple [code]popup*()[/code] functions instead.",
+      "defaultValue": "true",
+      "godotName": "visible",
+      "xmlDocId": "P:Godot.CanvasItem.Visible",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "YSortEnabled",
+      "kind": "Property",
+      "signature": "public bool YSortEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this and child [CanvasItem] nodes with a higher Y position are rendered in front of nodes with a lower Y position. If [code]false[/code], this and child [CanvasItem] nodes are rendered normally in scene tree order. With Y-sorting enabled on a parent node (\u0027A\u0027) but disabled on a child node (\u0027B\u0027), the child node (\u0027B\u0027) is sorted but its children (\u0027C1\u0027, \u0027C2\u0027, etc.) render together on the same Y position as the child node (\u0027B\u0027). This allows you to organize the render order of a scene without changing the scene tree. Nodes sort relative to each other only if they are on the same [member z_index].",
+      "defaultValue": "false",
+      "godotName": "y_sort_enabled",
+      "xmlDocId": "P:Godot.CanvasItem.YSortEnabled",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ZAsRelative",
+      "kind": "Property",
+      "signature": "public bool ZAsRelative { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], this node\u0027s final Z index is relative to its parent\u0027s Z index. For example, if [member z_index] is [code]2[/code] and its parent\u0027s final Z index is [code]3[/code], then this node\u0027s final Z index will be [code]5[/code] ([code]2 \u002B 3[/code]).",
+      "defaultValue": "true",
+      "godotName": "z_as_relative",
+      "xmlDocId": "P:Godot.CanvasItem.ZAsRelative",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ZIndex",
+      "kind": "Property",
+      "signature": "public int ZIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The order in which this node is drawn. A node with a higher Z index will display in front of others. Must be between [constant RenderingServer.CANVAS_ITEM_Z_MIN] and [constant RenderingServer.CANVAS_ITEM_Z_MAX] (inclusive). [b]Note:[/b] The Z index does [b]not[/b] affect the order in which [CanvasItem] nodes are processed or the way input events are handled. This is especially important to keep in mind for [Control] nodes.",
+      "defaultValue": "0",
+      "godotName": "z_index",
+      "xmlDocId": "P:Godot.CanvasItem.ZIndex",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Draw",
+      "kind": "Signal",
+      "signature": "public event DrawHandler Draw",
+      "parameters": [],
+      "summary": "Emitted when the [CanvasItem] must redraw, [i]after[/i] the related [constant NOTIFICATION_DRAW] notification, and [i]before[/i] [method _draw] is called. [b]Note:[/b] Deferred connections do not allow drawing through the [code]draw_*[/code] methods.",
+      "godotName": "draw",
+      "xmlDocId": "E:Godot.CanvasItem.Draw",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "Hidden",
+      "kind": "Signal",
+      "signature": "public event HiddenHandler Hidden",
+      "parameters": [],
+      "summary": "Emitted when this node becomes hidden, i.e. it\u0027s no longer visible in the tree (see [method is_visible_in_tree]).",
+      "godotName": "hidden",
+      "xmlDocId": "E:Godot.CanvasItem.Hidden",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "ItemRectChanged",
+      "kind": "Signal",
+      "signature": "public event ItemRectChangedHandler ItemRectChanged",
+      "parameters": [],
+      "summary": "Emitted when the [CanvasItem]\u0027s boundaries (position or size) change, or when an action took place that may have affected these boundaries (e.g. changing [member Sprite2D.texture]).",
+      "godotName": "item_rect_changed",
+      "xmlDocId": "E:Godot.CanvasItem.ItemRectChanged",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "VisibilityChanged",
+      "kind": "Signal",
+      "signature": "public event VisibilityChangedHandler VisibilityChanged",
+      "parameters": [],
+      "summary": "Emitted when the [CanvasItem]\u0027s visibility changes, either because its own [member visible] property changed or because its visibility in the tree changed (see [method is_visible_in_tree]). This signal is emitted [i]after[/i] the related [constant NOTIFICATION_VISIBILITY_CHANGED] notification.",
+      "godotName": "visibility_changed",
+      "xmlDocId": "E:Godot.CanvasItem.VisibilityChanged",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "ClipChildrenMode",
+      "values": [
+        {
+          "name": "CLIP_CHILDREN_AND_DRAW",
+          "value": "2",
+          "enum": "ClipChildrenMode",
+          "kind": "EnumValue",
+          "summary": "This node is used as a mask and is also drawn. The mask is based on this node\u0027s alpha channel: Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are blended in according to their opacity. Children are clipped to the parent\u0027s drawn area.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "CLIP_CHILDREN_DISABLED",
+          "value": "0",
+          "enum": "ClipChildrenMode",
+          "kind": "EnumValue",
+          "summary": "Children are drawn over this node and are not clipped.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "CLIP_CHILDREN_MAX",
+          "value": "3",
+          "enum": "ClipChildrenMode",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ClipChildrenMode] enum.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "CLIP_CHILDREN_ONLY",
+          "value": "1",
+          "enum": "ClipChildrenMode",
+          "kind": "EnumValue",
+          "summary": "This node is used as a mask and is [b]not[/b] drawn. The mask is based on this node\u0027s alpha channel: Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are blended in according to their opacity. Children are clipped to this node\u0027s drawn area.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        }
+      ]
+    },
+    {
+      "name": "OversamplingWithScale",
+      "values": [
+        {
+          "name": "OVERSAMPLING_WITH_SCALE_DISABLED",
+          "value": "1",
+          "enum": "OversamplingWithScale",
+          "kind": "EnumValue",
+          "summary": "The oversampling is not affected by [CanvasItem] scale, and is equal to the [Viewport] oversampling.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "OVERSAMPLING_WITH_SCALE_ENABLED",
+          "value": "2",
+          "enum": "OversamplingWithScale",
+          "kind": "EnumValue",
+          "summary": "The oversampling is a product of [CanvasItem] scale and [Viewport] oversampling.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "OVERSAMPLING_WITH_SCALE_MAX",
+          "value": "3",
+          "enum": "OversamplingWithScale",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum OversamplingWithScale] enum.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "OVERSAMPLING_WITH_SCALE_PARENT_NODE",
+          "value": "0",
+          "enum": "OversamplingWithScale",
+          "kind": "EnumValue",
+          "summary": "The [CanvasItem] will inherit the oversampling mode from its parent.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureFilter",
+      "values": [
+        {
+          "name": "TEXTURE_FILTER_LINEAR",
+          "value": "2",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from up close, and grainy from a distance (due to mipmaps not being sampled).",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+          "value": "4",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look smooth from up close, and smooth from a distance. Use this for non-pixel art textures that may be viewed at a low scale (e.g. due to [Camera2D] zoom or sprite scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+          "value": "6",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level]. [b]Note:[/b] This texture filter is rarely useful in 2D projects. [constant TEXTURE_FILTER_LINEAR_WITH_MIPMAPS] is usually more appropriate in this case.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_MAX",
+          "value": "7",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureFilter] enum.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST",
+          "value": "1",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel only. This makes the texture look pixelated from up close, and grainy from a distance (due to mipmaps not being sampled).",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+          "value": "3",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look pixelated from up close, and smooth from a distance. Use this for non-pixel art textures that may be viewed at a low scale (e.g. due to [Camera2D] zoom or sprite scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+          "value": "5",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level]. [b]Note:[/b] This texture filter is rarely useful in 2D projects. [constant TEXTURE_FILTER_NEAREST_WITH_MIPMAPS] is usually more appropriate in this case.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_FILTER_PARENT_NODE",
+          "value": "0",
+          "enum": "TextureFilter",
+          "kind": "EnumValue",
+          "summary": "The [CanvasItem] will inherit the filter from its parent.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureRepeat",
+      "values": [
+        {
+          "name": "TEXTURE_REPEAT_DISABLED",
+          "value": "1",
+          "enum": "TextureRepeat",
+          "kind": "EnumValue",
+          "summary": "The texture does not repeat. Sampling the texture outside its extents will result in \u0022stretching\u0022 of the edge pixels. You can avoid this by ensuring a 1-pixel fully transparent border on each side of the texture.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_REPEAT_ENABLED",
+          "value": "2",
+          "enum": "TextureRepeat",
+          "kind": "EnumValue",
+          "summary": "The texture repeats when exceeding the texture\u0027s size.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_REPEAT_MAX",
+          "value": "4",
+          "enum": "TextureRepeat",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureRepeat] enum.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_REPEAT_MIRROR",
+          "value": "3",
+          "enum": "TextureRepeat",
+          "kind": "EnumValue",
+          "summary": "The texture repeats when the exceeding the texture\u0027s size in a \u00222\u00D72 tiled mode\u0022. Repeated textures at even positions are mirrored.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        },
+        {
+          "name": "TEXTURE_REPEAT_PARENT_NODE",
+          "value": "0",
+          "enum": "TextureRepeat",
+          "kind": "EnumValue",
+          "summary": "The [CanvasItem] will inherit the repeat mode from its parent.",
+          "sourcePath": "doc/classes/CanvasItem.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "NOTIFICATION_TRANSFORM_CHANGED",
+      "value": "2000",
+      "kind": "Constant",
+      "summary": "Notification received when this node\u0027s global transform changes, if [method is_transform_notification_enabled] is [code]true[/code]. See also [method set_notify_transform] and [method get_transform]. [b]Note:[/b] Many canvas items such as [Camera2D] or [CollisionObject2D] automatically enable this in order to function correctly.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_LOCAL_TRANSFORM_CHANGED",
+      "value": "35",
+      "kind": "Constant",
+      "summary": "Notification received when this node\u0027s transform changes, if [method is_local_transform_notification_enabled] is [code]true[/code]. This is not received when a parent [Node2D]\u0027s transform changes. See also [method set_notify_local_transform]. [b]Note:[/b] Many canvas items such as [Camera2D] or [CollisionShape2D] automatically enable this in order to function correctly.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_DRAW",
+      "value": "30",
+      "kind": "Constant",
+      "summary": "The [CanvasItem] is requested to draw (see [method _draw]).",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_VISIBILITY_CHANGED",
+      "value": "31",
+      "kind": "Constant",
+      "summary": "Notification received when this node\u0027s visibility changes (see [member visible] and [method is_visible_in_tree]). This notification is received [i]before[/i] the related [signal visibility_changed] signal.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_ENTER_CANVAS",
+      "value": "32",
+      "kind": "Constant",
+      "summary": "The [CanvasItem] has entered the canvas.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_EXIT_CANVAS",
+      "value": "33",
+      "kind": "Constant",
+      "summary": "The [CanvasItem] has exited the canvas. This notification is sent in reversed order.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "NOTIFICATION_WORLD_2D_CHANGED",
+      "value": "36",
+      "kind": "Constant",
+      "summary": "Notification received when this [CanvasItem] is registered to a new [World2D] (see [method get_world_2d]).",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_PARENT_NODE",
+      "value": "0",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The [CanvasItem] will inherit the filter from its parent.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST",
+      "value": "1",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel only. This makes the texture look pixelated from up close, and grainy from a distance (due to mipmaps not being sampled).",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR",
+      "value": "2",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from up close, and grainy from a distance (due to mipmaps not being sampled).",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+      "value": "3",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look pixelated from up close, and smooth from a distance. Use this for non-pixel art textures that may be viewed at a low scale (e.g. due to [Camera2D] zoom or sprite scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+      "value": "4",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]). This makes the texture look smooth from up close, and smooth from a distance. Use this for non-pixel art textures that may be viewed at a low scale (e.g. due to [Camera2D] zoom or sprite scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+      "value": "5",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level]. [b]Note:[/b] This texture filter is rarely useful in 2D projects. [constant TEXTURE_FILTER_NEAREST_WITH_MIPMAPS] is usually more appropriate in this case.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+      "value": "6",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the nearest mipmap if [member ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter] is [code]true[/code]) based on the angle between the surface and the camera view. This makes the texture look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture quality on surfaces that are almost in line with the camera, but is slightly slower. The anisotropic filtering level can be changed by adjusting [member ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level]. [b]Note:[/b] This texture filter is rarely useful in 2D projects. [constant TEXTURE_FILTER_LINEAR_WITH_MIPMAPS] is usually more appropriate in this case.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_FILTER_MAX",
+      "value": "7",
+      "enum": "TextureFilter",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureFilter] enum.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_REPEAT_PARENT_NODE",
+      "value": "0",
+      "enum": "TextureRepeat",
+      "kind": "EnumValue",
+      "summary": "The [CanvasItem] will inherit the repeat mode from its parent.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_REPEAT_DISABLED",
+      "value": "1",
+      "enum": "TextureRepeat",
+      "kind": "EnumValue",
+      "summary": "The texture does not repeat. Sampling the texture outside its extents will result in \u0022stretching\u0022 of the edge pixels. You can avoid this by ensuring a 1-pixel fully transparent border on each side of the texture.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_REPEAT_ENABLED",
+      "value": "2",
+      "enum": "TextureRepeat",
+      "kind": "EnumValue",
+      "summary": "The texture repeats when exceeding the texture\u0027s size.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_REPEAT_MIRROR",
+      "value": "3",
+      "enum": "TextureRepeat",
+      "kind": "EnumValue",
+      "summary": "The texture repeats when the exceeding the texture\u0027s size in a \u00222\u00D72 tiled mode\u0022. Repeated textures at even positions are mirrored.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "TEXTURE_REPEAT_MAX",
+      "value": "4",
+      "enum": "TextureRepeat",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureRepeat] enum.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "CLIP_CHILDREN_DISABLED",
+      "value": "0",
+      "enum": "ClipChildrenMode",
+      "kind": "EnumValue",
+      "summary": "Children are drawn over this node and are not clipped.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "CLIP_CHILDREN_ONLY",
+      "value": "1",
+      "enum": "ClipChildrenMode",
+      "kind": "EnumValue",
+      "summary": "This node is used as a mask and is [b]not[/b] drawn. The mask is based on this node\u0027s alpha channel: Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are blended in according to their opacity. Children are clipped to this node\u0027s drawn area.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "CLIP_CHILDREN_AND_DRAW",
+      "value": "2",
+      "enum": "ClipChildrenMode",
+      "kind": "EnumValue",
+      "summary": "This node is used as a mask and is also drawn. The mask is based on this node\u0027s alpha channel: Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are blended in according to their opacity. Children are clipped to the parent\u0027s drawn area.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "CLIP_CHILDREN_MAX",
+      "value": "3",
+      "enum": "ClipChildrenMode",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ClipChildrenMode] enum.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "OVERSAMPLING_WITH_SCALE_PARENT_NODE",
+      "value": "0",
+      "enum": "OversamplingWithScale",
+      "kind": "EnumValue",
+      "summary": "The [CanvasItem] will inherit the oversampling mode from its parent.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "OVERSAMPLING_WITH_SCALE_DISABLED",
+      "value": "1",
+      "enum": "OversamplingWithScale",
+      "kind": "EnumValue",
+      "summary": "The oversampling is not affected by [CanvasItem] scale, and is equal to the [Viewport] oversampling.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "OVERSAMPLING_WITH_SCALE_ENABLED",
+      "value": "2",
+      "enum": "OversamplingWithScale",
+      "kind": "EnumValue",
+      "summary": "The oversampling is a product of [CanvasItem] scale and [Viewport] oversampling.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    },
+    {
+      "name": "OVERSAMPLING_WITH_SCALE_MAX",
+      "value": "3",
+      "enum": "OversamplingWithScale",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum OversamplingWithScale] enum.",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Draw",
+      "kind": "Method",
+      "signature": "public void _Draw()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Called when [CanvasItem] has been requested to redraw (after [method queue_redraw] is called, either manually or by the engine). Corresponds to the [constant NOTIFICATION_DRAW] notification in [method Object._notification].",
+      "godotName": "_draw",
+      "xmlDocId": "M:Godot.CanvasItem._Draw",
+      "sourcePath": "doc/classes/CanvasItem.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CanvasItem.xml",
+      "sha256": "dea41259286d52a77549c386770f185a99b55b2a3b59a83f969f18cbf327227c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

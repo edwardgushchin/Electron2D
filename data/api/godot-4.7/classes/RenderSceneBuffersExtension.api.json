@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RenderSceneBuffersExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.RenderSceneBuffersExtension",
+    "kind": "class",
+    "baseType": "RenderSceneBuffers",
+    "interfaces": [],
+    "godotReference": "RenderSceneBuffersExtension",
+    "documentationPath": "doc/classes/RenderSceneBuffersExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_renderscenebuffersextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_Configure",
+      "kind": "Method",
+      "signature": "public void _Configure(RenderSceneBuffersConfiguration config)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "config",
+          "type": "RenderSceneBuffersConfiguration"
+        }
+      ],
+      "summary": "Implement this in GDExtension to handle the (re)sizing of a viewport.",
+      "godotName": "_configure",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._Configure(RenderSceneBuffersConfiguration)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetAnisotropicFilteringLevel",
+      "kind": "Method",
+      "signature": "public void _SetAnisotropicFilteringLevel(int anisotropicFilteringLevel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anisotropic_filtering_level",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to change the anisotropic filtering level.",
+      "godotName": "_set_anisotropic_filtering_level",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetAnisotropicFilteringLevel(int)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetFsrSharpness",
+      "kind": "Method",
+      "signature": "public void _SetFsrSharpness(float fsrSharpness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "fsr_sharpness",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement this in GDExtension to record a new FSR sharpness value.",
+      "godotName": "_set_fsr_sharpness",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetFsrSharpness(float)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetTextureMipmapBias",
+      "kind": "Method",
+      "signature": "public void _SetTextureMipmapBias(float textureMipmapBias)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture_mipmap_bias",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement this in GDExtension to change the texture mipmap bias.",
+      "godotName": "_set_texture_mipmap_bias",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetTextureMipmapBias(float)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetUseDebanding",
+      "kind": "Method",
+      "signature": "public void _SetUseDebanding(bool useDebanding)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "use_debanding",
+          "type": "bool"
+        }
+      ],
+      "summary": "Implement this in GDExtension to react to the debanding flag changing.",
+      "godotName": "_set_use_debanding",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetUseDebanding(bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_Configure",
+      "kind": "Method",
+      "signature": "public void _Configure(RenderSceneBuffersConfiguration config)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "config",
+          "type": "RenderSceneBuffersConfiguration"
+        }
+      ],
+      "summary": "Implement this in GDExtension to handle the (re)sizing of a viewport.",
+      "godotName": "_configure",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._Configure(RenderSceneBuffersConfiguration)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetAnisotropicFilteringLevel",
+      "kind": "Method",
+      "signature": "public void _SetAnisotropicFilteringLevel(int anisotropicFilteringLevel)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "anisotropic_filtering_level",
+          "type": "int"
+        }
+      ],
+      "summary": "Implement this in GDExtension to change the anisotropic filtering level.",
+      "godotName": "_set_anisotropic_filtering_level",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetAnisotropicFilteringLevel(int)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetFsrSharpness",
+      "kind": "Method",
+      "signature": "public void _SetFsrSharpness(float fsrSharpness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "fsr_sharpness",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement this in GDExtension to record a new FSR sharpness value.",
+      "godotName": "_set_fsr_sharpness",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetFsrSharpness(float)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetTextureMipmapBias",
+      "kind": "Method",
+      "signature": "public void _SetTextureMipmapBias(float textureMipmapBias)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "texture_mipmap_bias",
+          "type": "float"
+        }
+      ],
+      "summary": "Implement this in GDExtension to change the texture mipmap bias.",
+      "godotName": "_set_texture_mipmap_bias",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetTextureMipmapBias(float)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    },
+    {
+      "name": "_SetUseDebanding",
+      "kind": "Method",
+      "signature": "public void _SetUseDebanding(bool useDebanding)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "use_debanding",
+          "type": "bool"
+        }
+      ],
+      "summary": "Implement this in GDExtension to react to the debanding flag changing.",
+      "godotName": "_set_use_debanding",
+      "xmlDocId": "M:Godot.RenderSceneBuffersExtension._SetUseDebanding(bool)",
+      "sourcePath": "doc/classes/RenderSceneBuffersExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/RenderSceneBuffersExtension.xml",
+      "sha256": "b7b1f60b111d227628516e5d10f959abab495a3777f14f4ee1233e502758c397"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

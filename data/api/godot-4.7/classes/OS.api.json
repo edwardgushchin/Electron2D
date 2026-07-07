@@ -1,0 +1,1494 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OS",
+    "namespace": "Godot",
+    "fullName": "Godot.OS",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "OS",
+    "documentationPath": "doc/classes/OS.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_os.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddLogger",
+      "kind": "Method",
+      "signature": "public void AddLogger(Logger logger)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "logger",
+          "type": "Logger"
+        }
+      ],
+      "summary": "Add a custom logger to intercept the internal message stream.",
+      "godotName": "add_logger",
+      "xmlDocId": "M:Godot.OS.AddLogger(Logger)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "Alert",
+      "kind": "Method",
+      "signature": "public void Alert(String text, String title)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "title",
+          "type": "String",
+          "defaultValue": "\u0022Alert!\u0022"
+        }
+      ],
+      "summary": "Displays a modal dialog box using the host platform\u0027s implementation. The engine execution is blocked until the dialog is closed.",
+      "godotName": "alert",
+      "xmlDocId": "M:Godot.OS.Alert(String,String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "CloseMidiInputs",
+      "kind": "Method",
+      "signature": "public void CloseMidiInputs()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Shuts down the system MIDI driver. Godot will no longer receive [InputEventMIDI]. See also [method open_midi_inputs] and [method get_connected_midi_inputs]. [b]Note:[/b] This method is implemented on Linux, macOS, Windows, and Web.",
+      "godotName": "close_midi_inputs",
+      "xmlDocId": "M:Godot.OS.CloseMidiInputs",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "Crash",
+      "kind": "Method",
+      "signature": "public void Crash(String message)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "String"
+        }
+      ],
+      "summary": "Crashes the engine (or the editor if called within a [code]@tool[/code] script). See also [method kill]. [b]Note:[/b] This method should [i]only[/i] be used for testing the system\u0027s crash handler, not for any other purpose. For general error reporting, use (in order of preference) [method @GDScript.assert], [method @GlobalScope.push_error], or [method alert].",
+      "godotName": "crash",
+      "xmlDocId": "M:Godot.OS.Crash(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "CreateInstance",
+      "kind": "Method",
+      "signature": "public int CreateInstance(PackedStringArray arguments)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "arguments",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Creates a new instance of Godot that runs independently. The [param arguments] are used in the given order and separated by a space. If the process is successfully created, this method returns the new process\u0027 ID, which you can use to monitor the process (and potentially terminate it with [method kill]). If the process cannot be created, this method returns [code]-1[/code]. See [method create_process] if you wish to run a different process. [b]Note:[/b] This method is implemented on Android, Linux, macOS and Windows.",
+      "godotName": "create_instance",
+      "xmlDocId": "M:Godot.OS.CreateInstance(PackedStringArray)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "CreateProcess",
+      "kind": "Method",
+      "signature": "public int CreateProcess(String path, PackedStringArray arguments, bool openConsole)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "arguments",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "open_console",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Creates a new process that runs independently of Godot. It will not terminate when Godot terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space. On Windows, if [param open_console] is [code]true[/code] and the process is a console app, a new terminal window will be opened. If the process is successfully created, this method returns its process ID, which you can use to monitor the process (and potentially terminate it with [method kill]). Otherwise, this method returns [code]-1[/code]. [b]Example:[/b] Run another instance of the project: [codeblocks] [gdscript] var pid = OS.create_process(OS.get_executable_path(), []) [/gdscript] [csharp] var pid = OS.CreateProcess(OS.GetExecutablePath(), []); [/csharp] [/codeblocks] See [method execute] if you wish to run an external command and retrieve the results. [b]Note:[/b] This method is implemented on Android, Linux, macOS, and Windows. [b]Note:[/b] On macOS, sandboxed applications are limited to run only embedded helper executables, specified during export or system .app bundle, system .app bundles will ignore arguments.",
+      "godotName": "create_process",
+      "xmlDocId": "M:Godot.OS.CreateProcess(String,PackedStringArray,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "DelayMsec",
+      "kind": "Method",
+      "signature": "public void DelayMsec(int msec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "msec",
+          "type": "int"
+        }
+      ],
+      "summary": "Delays execution of the current thread by [param msec] milliseconds. [param msec] must be greater than or equal to [code]0[/code]. Otherwise, [method delay_msec] does nothing and prints an error message. [b]Note:[/b] [method delay_msec] is a [i]blocking[/i] way to delay code execution. To delay code execution in a non-blocking way, you may use [method SceneTree.create_timer]. Awaiting with [SceneTreeTimer] delays the execution of code placed below the [code]await[/code] without affecting the rest of the project (or editor, for [EditorPlugin]s and [EditorScript]s). [b]Note:[/b] When [method delay_msec] is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using [method delay_msec] as part of an [EditorPlugin] or [EditorScript], it will freeze the editor but won\u0027t freeze the project if it is currently running (since the project is an independent child process).",
+      "godotName": "delay_msec",
+      "xmlDocId": "M:Godot.OS.DelayMsec(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "DelayUsec",
+      "kind": "Method",
+      "signature": "public void DelayUsec(int usec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "usec",
+          "type": "int"
+        }
+      ],
+      "summary": "Delays execution of the current thread by [param usec] microseconds. [param usec] must be greater than or equal to [code]0[/code]. Otherwise, [method delay_usec] does nothing and prints an error message. [b]Note:[/b] [method delay_usec] is a [i]blocking[/i] way to delay code execution. To delay code execution in a non-blocking way, you may use [method SceneTree.create_timer]. Awaiting with a [SceneTreeTimer] delays the execution of code placed below the [code]await[/code] without affecting the rest of the project (or editor, for [EditorPlugin]s and [EditorScript]s). [b]Note:[/b] When [method delay_usec] is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using [method delay_usec] as part of an [EditorPlugin] or [EditorScript], it will freeze the editor but won\u0027t freeze the project if it is currently running (since the project is an independent child process).",
+      "godotName": "delay_usec",
+      "xmlDocId": "M:Godot.OS.DelayUsec(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "Execute",
+      "kind": "Method",
+      "signature": "public int Execute(String path, PackedStringArray arguments, Array output, bool readStderr, bool openConsole)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "arguments",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "output",
+          "type": "Array",
+          "defaultValue": "[]"
+        },
+        {
+          "name": "read_stderr",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        {
+          "name": "open_console",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Executes the given process in a [i]blocking[/i] way. The file specified in [param path] must exist and be executable. The system path resolution will be used. The [param arguments] are used in the given order, separated by spaces, and wrapped in quotes. If an [param output] array is provided, the complete shell output of the process is appended to [param output] as a single [String] element. If [param read_stderr] is [code]true[/code], the output to the standard error stream is also appended to the array. On Windows, if [param open_console] is [code]true[/code] and the process is a console app, a new terminal window is opened. This method returns the exit code of the command, or [code]-1[/code] if the process fails to execute. [b]Note:[/b] The main thread will be blocked until the executed command terminates. Use [Thread] to create a separate thread that will not block the main thread, or use [method create_process] to create a completely independent process. For example, to retrieve a list of the working directory\u0027s contents: [codeblocks] [gdscript] var output = [] var exit_code = OS.execute(\u0022ls\u0022, [\u0022-l\u0022, \u0022/tmp\u0022], output) [/gdscript] [csharp] Godot.Collections.Array output = []; int exitCode = OS.Execute(\u0022ls\u0022, [\u0022-l\u0022, \u0022/tmp\u0022], output); [/csharp] [/codeblocks] If you wish to access a shell built-in or execute a composite command, a platform-specific shell can be invoked. For example: [codeblocks] [gdscript] var output = [] OS.execute(\u0022CMD.exe\u0022, [\u0022/C\u0022, \u0022cd %TEMP% \u0026\u0026 dir\u0022], output) [/gdscript] [csharp] Godot.Collections.Array output = []; OS.Execute(\u0022CMD.exe\u0022, [\u0022/C\u0022, \u0022cd %TEMP% \u0026\u0026 dir\u0022], output); [/csharp] [/codeblocks] [b]Note:[/b] This method is implemented on Android, Linux, macOS, and Windows. [b]Note:[/b] To execute a Windows command interpreter built-in command, specify [code]cmd.exe[/code] in [param path], [code]/c[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] To execute a PowerShell built-in command, specify [code]powershell.exe[/code] in [param path], [code]-Command[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] To execute a Unix shell built-in command, specify shell executable name in [param path], [code]-c[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] On macOS, sandboxed applications are limited to run only embedded helper executables, specified during export. [b]Note:[/b] On Android, system commands such as [code]dumpsys[/code] can only be run on a rooted device.",
+      "godotName": "execute",
+      "xmlDocId": "M:Godot.OS.Execute(String,PackedStringArray,Array,bool,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "ExecuteWithPipe",
+      "kind": "Method",
+      "signature": "public Dictionary ExecuteWithPipe(String path, PackedStringArray arguments, bool blocking)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "arguments",
+          "type": "PackedStringArray"
+        },
+        {
+          "name": "blocking",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Creates a new process that runs independently of Godot with redirected IO. It will not terminate when Godot terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space. If [param blocking] is [code]false[/code], created pipes work in non-blocking mode, i.e. read and write operations will return immediately. Use [method FileAccess.get_error] to check if the last read/write operation was successful. If the process cannot be created, this method returns an empty [Dictionary]. Otherwise, this method returns a [Dictionary] with the following keys: - [code]\u0022stdio\u0022[/code] - [FileAccess] to access the process stdin and stdout pipes (read/write). - [code]\u0022stderr\u0022[/code] - [FileAccess] to access the process stderr pipe (read only). - [code]\u0022pid\u0022[/code] - Process ID as an [int], which you can use to monitor the process (and potentially terminate it with [method kill]). [b]Note:[/b] This method is implemented on Android, Linux, macOS, and Windows. [b]Note:[/b] To execute a Windows command interpreter built-in command, specify [code]cmd.exe[/code] in [param path], [code]/c[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] To execute a PowerShell built-in command, specify [code]powershell.exe[/code] in [param path], [code]-Command[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] To execute a Unix shell built-in command, specify shell executable name in [param path], [code]-c[/code] as the first argument, and the desired command as the second argument. [b]Note:[/b] On macOS, sandboxed applications are limited to run only embedded helper executables, specified during export or system .app bundle, system .app bundles will ignore arguments.",
+      "godotName": "execute_with_pipe",
+      "xmlDocId": "M:Godot.OS.ExecuteWithPipe(String,PackedStringArray,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "FindKeycodeFromString",
+      "kind": "Method",
+      "signature": "public int FindKeycodeFromString(String @string)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "string",
+          "type": "String"
+        }
+      ],
+      "summary": "Finds the keycode for the given string. The returned values are equivalent to the [enum Key] constants. [codeblocks] [gdscript] print(OS.find_keycode_from_string(\u0022C\u0022)) # Prints 67 (KEY_C) print(OS.find_keycode_from_string(\u0022Escape\u0022)) # Prints 4194305 (KEY_ESCAPE) print(OS.find_keycode_from_string(\u0022Shift\u002BTab\u0022)) # Prints 37748738 (KEY_MASK_SHIFT | KEY_TAB) print(OS.find_keycode_from_string(\u0022Unknown\u0022)) # Prints 0 (KEY_NONE) [/gdscript] [csharp] GD.Print(OS.FindKeycodeFromString(\u0022C\u0022)); // Prints C (Key.C) GD.Print(OS.FindKeycodeFromString(\u0022Escape\u0022)); // Prints Escape (Key.Escape) GD.Print(OS.FindKeycodeFromString(\u0022Shift\u002BTab\u0022)); // Prints 37748738 (KeyModifierMask.MaskShift | Key.Tab) GD.Print(OS.FindKeycodeFromString(\u0022Unknown\u0022)); // Prints None (Key.None) [/csharp] [/codeblocks] See also [method get_keycode_string].",
+      "godotName": "find_keycode_from_string",
+      "xmlDocId": "M:Godot.OS.FindKeycodeFromString(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetCacheDir",
+      "kind": "Method",
+      "signature": "public String GetCacheDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [i]global[/i] cache data directory according to the operating system\u0027s standards. On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CACHE_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_config_dir] and [method get_data_dir]. Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.",
+      "godotName": "get_cache_dir",
+      "xmlDocId": "M:Godot.OS.GetCacheDir",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetCmdlineArgs",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetCmdlineArgs()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the command-line arguments passed to the engine, excluding arguments processed by the engine, such as [code]--headless[/code] and [code]--fullscreen[/code]. [codeblock] # Godot has been executed with the following command: # godot --headless --verbose --scene my_scene.tscn --custom OS.get_cmdline_args() # Returns [\u0022--scene\u0022, \u0022my_scene.tscn\u0022, \u0022--custom\u0022] [/codeblock] Command-line arguments can be written in any form, including both [code]--key value[/code] and [code]--key=value[/code] forms so they can be properly parsed, as long as custom command-line arguments do not conflict with engine arguments. You can also incorporate environment variables using the [method get_environment] method. You can set [member ProjectSettings.editor/run/main_run_args] to define command-line arguments to be passed by the editor when running the project. [b]Example:[/b] Parse command-line arguments into a [Dictionary] using the [code]--key=value[/code] form for arguments: [codeblocks] [gdscript] var arguments = {} for argument in OS.get_cmdline_args(): if argument.contains(\u0022=\u0022): var key_value = argument.split(\u0022=\u0022) arguments[key_value[0].trim_prefix(\u0022--\u0022)] = key_value[1] else: # Options without an argument will be present in the dictionary, # with the value set to an empty string. arguments[argument.trim_prefix(\u0022--\u0022)] = \u0022\u0022 [/gdscript] [csharp] var arguments = new Dictionary\u003Cstring, string\u003E(); foreach (var argument in OS.GetCmdlineArgs()) { if (argument.Contains(\u0027=\u0027)) { string[] keyValue = argument.Split(\u0022=\u0022); arguments[keyValue[0].TrimPrefix(\u0022--\u0022)] = keyValue[1]; } else { // Options without an argument will be present in the dictionary, // with the value set to an empty string. arguments[argument.TrimPrefix(\u0022--\u0022)] = \u0022\u0022; } } [/csharp] [/codeblocks] [b]Note:[/b] Passing custom user arguments directly is not recommended, as the engine may discard or modify them. Instead, pass the standard UNIX double dash ([code]--[/code]) and then the custom arguments, which the engine will ignore by design. These can be read via [method get_cmdline_user_args].",
+      "godotName": "get_cmdline_args",
+      "xmlDocId": "M:Godot.OS.GetCmdlineArgs",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetCmdlineUserArgs",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetCmdlineUserArgs()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the command-line user arguments passed to the engine. User arguments are ignored by the engine and reserved for the user. They are passed after the double dash [code]--[/code] argument. [code]\u002B\u002B[/code] may be used when [code]--[/code] is intercepted by another program (such as [code]startx[/code]). [codeblock] # Godot has been executed with the following command: # godot --fullscreen --custom -- --level=2 --hardcore OS.get_cmdline_args() # Returns [\u0022--custom\u0022] OS.get_cmdline_user_args() # Returns [\u0022--level=2\u0022, \u0022--hardcore\u0022] [/codeblock] To get arguments passed before [code]--[/code] or [code]\u002B\u002B[/code], use [method get_cmdline_args].",
+      "godotName": "get_cmdline_user_args",
+      "xmlDocId": "M:Godot.OS.GetCmdlineUserArgs",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetConfigDir",
+      "kind": "Method",
+      "signature": "public String GetConfigDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [i]global[/i] user configuration directory according to the operating system\u0027s standards. On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CONFIG_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_data_dir]. Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.",
+      "godotName": "get_config_dir",
+      "xmlDocId": "M:Godot.OS.GetConfigDir",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetConnectedMidiInputs",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetConnectedMidiInputs()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns an array of connected MIDI device names, if they exist. Returns an empty array if the system MIDI driver has not previously been initialized with [method open_midi_inputs]. See also [method close_midi_inputs]. [b]Note:[/b] This method is implemented on Linux, macOS, Windows, and Web. [b]Note:[/b] On the Web platform, Web MIDI needs to be supported by the browser. [url=https://caniuse.com/midi]For the time being[/url], it is currently supported by all major browsers, except Safari. [b]Note:[/b] On the Web platform, using MIDI input requires a browser permission to be granted first. This permission request is performed when calling [method open_midi_inputs]. The browser will refrain from processing MIDI input until the user accepts the permission request.",
+      "godotName": "get_connected_midi_inputs",
+      "xmlDocId": "M:Godot.OS.GetConnectedMidiInputs",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetDataDir",
+      "kind": "Method",
+      "signature": "public String GetDataDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [i]global[/i] user data directory according to the operating system\u0027s standards. On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_DATA_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_config_dir]. Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.",
+      "godotName": "get_data_dir",
+      "xmlDocId": "M:Godot.OS.GetDataDir",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetDistributionName",
+      "kind": "Method",
+      "signature": "public String GetDistributionName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the distribution for Linux and BSD platforms (e.g. \u0022Ubuntu\u0022, \u0022Manjaro\u0022, \u0022OpenBSD\u0022, etc.). Returns the same value as [method get_name] for stock Android ROMs, but attempts to return the custom ROM name for popular Android derivatives such as \u0022LineageOS\u0022. Returns the same value as [method get_name] for other platforms. [b]Note:[/b] This method is not supported on the Web platform. It returns an empty string.",
+      "godotName": "get_distribution_name",
+      "xmlDocId": "M:Godot.OS.GetDistributionName",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetEntropy",
+      "kind": "Method",
+      "signature": "public PackedByteArray GetEntropy(int size)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int"
+        }
+      ],
+      "summary": "Generates a [PackedByteArray] of cryptographically secure random bytes with given [param size]. [b]Note:[/b] Generating large quantities of bytes using this method can result in locking and entropy of lower quality on most platforms. Using [method Crypto.generate_random_bytes] is preferred in most cases.",
+      "godotName": "get_entropy",
+      "xmlDocId": "M:Godot.OS.GetEntropy(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetEnvironment",
+      "kind": "Method",
+      "signature": "public String GetEnvironment(String variable)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "variable",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the value of the given environment variable, or an empty string if [param variable] doesn\u0027t exist. [b]Note:[/b] Double-check the casing of [param variable]. Environment variable names are case-sensitive on all platforms except Windows. [b]Note:[/b] On macOS, applications do not have access to shell environment variables.",
+      "godotName": "get_environment",
+      "xmlDocId": "M:Godot.OS.GetEnvironment(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetExecutablePath",
+      "kind": "Method",
+      "signature": "public String GetExecutablePath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the file path to the current engine executable. [b]Note:[/b] On macOS, if you want to launch another instance of Godot, always use [method create_instance] instead of relying on the executable path.",
+      "godotName": "get_executable_path",
+      "xmlDocId": "M:Godot.OS.GetExecutablePath",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetGrantedPermissions",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetGrantedPermissions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "On Android devices: Returns the list of dangerous permissions that have been granted. On macOS: Returns the list of granted permissions and user selected folders accessible to the application (sandboxed applications only). Use the native file dialog to request folder access permission. On iOS, visionOS: Returns the list of granted permissions.",
+      "godotName": "get_granted_permissions",
+      "xmlDocId": "M:Godot.OS.GetGrantedPermissions",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetKeycodeString",
+      "kind": "Method",
+      "signature": "public String GetKeycodeString(int code)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the given keycode as a [String]. [codeblocks] [gdscript] print(OS.get_keycode_string(KEY_C)) # Prints \u0022C\u0022 print(OS.get_keycode_string(KEY_ESCAPE)) # Prints \u0022Escape\u0022 print(OS.get_keycode_string(KEY_MASK_SHIFT | KEY_TAB)) # Prints \u0022Shift\u002BTab\u0022 [/gdscript] [csharp] GD.Print(OS.GetKeycodeString(Key.C)); // Prints \u0022C\u0022 GD.Print(OS.GetKeycodeString(Key.Escape)); // Prints \u0022Escape\u0022 GD.Print(OS.GetKeycodeString((Key)KeyModifierMask.MaskShift | Key.Tab)); // Prints \u0022Shift\u002BTab\u0022 [/csharp] [/codeblocks] See also [method find_keycode_from_string], [member InputEventKey.keycode], and [method InputEventKey.get_keycode_with_modifiers].",
+      "godotName": "get_keycode_string",
+      "xmlDocId": "M:Godot.OS.GetKeycodeString(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetLocale",
+      "kind": "Method",
+      "signature": "public String GetLocale()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the host OS locale as a [String] of the form [code]language_Script_COUNTRY_VARIANT@extra[/code]. Every substring after [code]language[/code] is optional and may not exist. - [code]language[/code] - 2 or 3-letter [url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes]language code[/url], in lower case. - [code skip-lint]Script[/code] - 4-letter [url=https://en.wikipedia.org/wiki/ISO_15924]script code[/url], in title case. - [code]COUNTRY[/code] - 2 or 3-letter [url=https://en.wikipedia.org/wiki/ISO_3166-1]country code[/url], in upper case. - [code]VARIANT[/code] - language variant, region and sort order. The variant can have any number of underscored keywords. - [code]extra[/code] - semicolon separated list of additional key words. This may include currency, calendar, sort order and numbering system information. If you want only the language code and not the fully specified locale from the OS, you can use [method get_locale_language].",
+      "godotName": "get_locale",
+      "xmlDocId": "M:Godot.OS.GetLocale",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetLocaleLanguage",
+      "kind": "Method",
+      "signature": "public String GetLocaleLanguage()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the host OS locale\u0027s 2 or 3-letter [url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes]language code[/url] as a string which should be consistent on all platforms. This is equivalent to extracting the [code]language[/code] part of the [method get_locale] string. This can be used to narrow down fully specified locale strings to only the \u0022common\u0022 language code, when you don\u0027t need the additional information about country code or variants. For example, for a French Canadian user with [code]fr_CA[/code] locale, this would return [code]fr[/code].",
+      "godotName": "get_locale_language",
+      "xmlDocId": "M:Godot.OS.GetLocaleLanguage",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetMainThreadId",
+      "kind": "Method",
+      "signature": "public int GetMainThreadId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the main thread. See [method get_thread_caller_id]. [b]Note:[/b] Thread IDs are not deterministic and may be reused across application restarts.",
+      "godotName": "get_main_thread_id",
+      "xmlDocId": "M:Godot.OS.GetMainThreadId",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetMemoryInfo",
+      "kind": "Method",
+      "signature": "public Dictionary GetMemoryInfo()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a [Dictionary] containing information about the current memory with the following entries: - [code]\u0022physical\u0022[/code] - total amount of usable physical memory in bytes. This value can be slightly less than the actual physical memory amount, since it does not include memory reserved by the kernel and devices. - [code]\u0022free\u0022[/code] - amount of physical memory, that can be immediately allocated without disk access or other costly operations, in bytes. The process might be able to allocate more physical memory, but this action will require moving inactive pages to disk, which can be expensive. - [code]\u0022available\u0022[/code] - amount of memory that can be allocated without extending the swap file(s), in bytes. This value includes both physical memory and swap. - [code]\u0022stack\u0022[/code] - size of the current thread stack in bytes. [b]Note:[/b] Each entry\u0027s value may be [code]-1[/code] if it is unknown.",
+      "godotName": "get_memory_info",
+      "xmlDocId": "M:Godot.OS.GetMemoryInfo",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetModelName",
+      "kind": "Method",
+      "signature": "public String GetModelName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the model name of the current device. [b]Note:[/b] This method is implemented on Android, iOS, macOS, and Windows. Returns [code]\u0022GenericDevice\u0022[/code] on unsupported platforms.",
+      "godotName": "get_model_name",
+      "xmlDocId": "M:Godot.OS.GetModelName",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetName",
+      "kind": "Method",
+      "signature": "public String GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of the host platform. - On Windows, this is [code]\u0022Windows\u0022[/code]. - On macOS, this is [code]\u0022macOS\u0022[/code]. - On Linux-based operating systems, this is [code]\u0022Linux\u0022[/code]. - On BSD-based operating systems, this is [code]\u0022FreeBSD\u0022[/code], [code]\u0022NetBSD\u0022[/code], [code]\u0022OpenBSD\u0022[/code], or [code]\u0022BSD\u0022[/code] as a fallback. - On Android, this is [code]\u0022Android\u0022[/code]. - On iOS, this is [code]\u0022iOS\u0022[/code]. - On Web, this is [code]\u0022Web\u0022[/code]. [b]Note:[/b] Custom builds of the engine may support additional platforms, such as consoles, possibly returning other names. [codeblocks] [gdscript] match OS.get_name(): \u0022Windows\u0022: print(\u0022Welcome to Windows!\u0022) \u0022macOS\u0022: print(\u0022Welcome to macOS!\u0022) \u0022Linux\u0022, \u0022FreeBSD\u0022, \u0022NetBSD\u0022, \u0022OpenBSD\u0022, \u0022BSD\u0022: print(\u0022Welcome to Linux/BSD!\u0022) \u0022Android\u0022: print(\u0022Welcome to Android!\u0022) \u0022iOS\u0022: print(\u0022Welcome to iOS!\u0022) \u0022Web\u0022: print(\u0022Welcome to the Web!\u0022) [/gdscript] [csharp] switch (OS.GetName()) { case \u0022Windows\u0022: GD.Print(\u0022Welcome to Windows\u0022); break; case \u0022macOS\u0022: GD.Print(\u0022Welcome to macOS!\u0022); break; case \u0022Linux\u0022: case \u0022FreeBSD\u0022: case \u0022NetBSD\u0022: case \u0022OpenBSD\u0022: case \u0022BSD\u0022: GD.Print(\u0022Welcome to Linux/BSD!\u0022); break; case \u0022Android\u0022: GD.Print(\u0022Welcome to Android!\u0022); break; case \u0022iOS\u0022: GD.Print(\u0022Welcome to iOS!\u0022); break; case \u0022Web\u0022: GD.Print(\u0022Welcome to the Web!\u0022); break; } [/csharp] [/codeblocks] [b]Note:[/b] On Web platforms, it is still possible to determine the host platform\u0027s OS with feature tags. See [method has_feature].",
+      "godotName": "get_name",
+      "xmlDocId": "M:Godot.OS.GetName",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetProcessExitCode",
+      "kind": "Method",
+      "signature": "public int GetProcessExitCode(int pid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "pid",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the exit code of a spawned process once it has finished running (see [method is_process_running]). Returns [code]-1[/code] if the [param pid] is not a PID of a spawned child process, the process is still running, or the method is not implemented for the current platform. [b]Note:[/b] Returns [code]-1[/code] if the [param pid] is a macOS bundled app process. [b]Note:[/b] This method is implemented on Android, Linux, macOS and Windows.",
+      "godotName": "get_process_exit_code",
+      "xmlDocId": "M:Godot.OS.GetProcessExitCode(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetProcessId",
+      "kind": "Method",
+      "signature": "public int GetProcessId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number used by the host machine to uniquely identify this application. [b]Note:[/b] On Web, this method always returns [code]0[/code].",
+      "godotName": "get_process_id",
+      "xmlDocId": "M:Godot.OS.GetProcessId",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetProcessorCount",
+      "kind": "Method",
+      "signature": "public int GetProcessorCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of [i]logical[/i] CPU cores available on the host machine. On CPUs with HyperThreading enabled, this number will be greater than the number of [i]physical[/i] CPU cores.",
+      "godotName": "get_processor_count",
+      "xmlDocId": "M:Godot.OS.GetProcessorCount",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetProcessorName",
+      "kind": "Method",
+      "signature": "public String GetProcessorName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the full name of the CPU model on the host machine (e.g. [code]\u0022Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz\u0022[/code]). [b]Note:[/b] This method is only implemented on Windows, macOS, Linux and iOS. On Android and Web, [method get_processor_name] returns an empty string.",
+      "godotName": "get_processor_name",
+      "xmlDocId": "M:Godot.OS.GetProcessorName",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetRestartOnExitArguments",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetRestartOnExitArguments()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of command line arguments that will be used when the project automatically restarts using [method set_restart_on_exit]. See also [method is_restart_on_exit_set].",
+      "godotName": "get_restart_on_exit_arguments",
+      "xmlDocId": "M:Godot.OS.GetRestartOnExitArguments",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetStaticMemoryPeakUsage",
+      "kind": "Method",
+      "signature": "public int GetStaticMemoryPeakUsage()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the maximum amount of static memory used. Only works in debug builds.",
+      "godotName": "get_static_memory_peak_usage",
+      "xmlDocId": "M:Godot.OS.GetStaticMemoryPeakUsage",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetStaticMemoryUsage",
+      "kind": "Method",
+      "signature": "public int GetStaticMemoryUsage()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the amount of static memory being used by the program in bytes. Only works in debug builds.",
+      "godotName": "get_static_memory_usage",
+      "xmlDocId": "M:Godot.OS.GetStaticMemoryUsage",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetStderrType",
+      "kind": "Method",
+      "signature": "public int GetStderrType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the type of the standard error device. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows.",
+      "godotName": "get_stderr_type",
+      "xmlDocId": "M:Godot.OS.GetStderrType",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetStdinType",
+      "kind": "Method",
+      "signature": "public int GetStdinType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the type of the standard input device. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] On exported Windows builds, run the console wrapper executable to access the standard input. If you need a single executable with full console support, use a custom build compiled with the [code]windows_subsystem=console[/code] flag.",
+      "godotName": "get_stdin_type",
+      "xmlDocId": "M:Godot.OS.GetStdinType",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetStdoutType",
+      "kind": "Method",
+      "signature": "public int GetStdoutType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the type of the standard output device. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows.",
+      "godotName": "get_stdout_type",
+      "xmlDocId": "M:Godot.OS.GetStdoutType",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetSystemCaCertificates",
+      "kind": "Method",
+      "signature": "public String GetSystemCaCertificates()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the list of certification authorities trusted by the operating system as a string of concatenated certificates in PEM format.",
+      "godotName": "get_system_ca_certificates",
+      "xmlDocId": "M:Godot.OS.GetSystemCaCertificates",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetSystemDir",
+      "kind": "Method",
+      "signature": "public String GetSystemDir(int dir, bool sharedStorage)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "dir",
+          "type": "int"
+        },
+        {
+          "name": "shared_storage",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Returns the path to commonly used folders across different platforms, as defined by [param dir]. See the [enum SystemDir] constants for available locations. [b]Note:[/b] This method is implemented on Android, Linux, macOS and Windows. [b]Note:[/b] Shared storage is implemented on Android and allows to differentiate between app specific and shared directories, if [param shared_storage] is [code]true[/code]. Shared directories have additional restrictions on Android.",
+      "godotName": "get_system_dir",
+      "xmlDocId": "M:Godot.OS.GetSystemDir(int,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetSystemFontPath",
+      "kind": "Method",
+      "signature": "public String GetSystemFontPath(String fontName, int weight, int stretch, bool italic)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "font_name",
+          "type": "String"
+        },
+        {
+          "name": "weight",
+          "type": "int",
+          "defaultValue": "400"
+        },
+        {
+          "name": "stretch",
+          "type": "int",
+          "defaultValue": "100"
+        },
+        {
+          "name": "italic",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the path to the system font file with [param font_name] and style. Returns an empty string if no matching fonts found. The following aliases can be used to request default fonts: \u0022sans-serif\u0022, \u0022serif\u0022, \u0022monospace\u0022, \u0022cursive\u0022, and \u0022fantasy\u0022. [b]Note:[/b] Returned font might have different style if the requested style is not available. [b]Note:[/b] This method is implemented on Android, iOS, Linux, macOS and Windows.",
+      "godotName": "get_system_font_path",
+      "xmlDocId": "M:Godot.OS.GetSystemFontPath(String,int,int,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetSystemFontPathForText",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSystemFontPathForText(String fontName, String text, String locale, String script, int weight, int stretch, bool italic)",
+      "returnType": "PackedStringArray",
+      "parameters": [
+        {
+          "name": "font_name",
+          "type": "String"
+        },
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "locale",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "script",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "weight",
+          "type": "int",
+          "defaultValue": "400"
+        },
+        {
+          "name": "stretch",
+          "type": "int",
+          "defaultValue": "100"
+        },
+        {
+          "name": "italic",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns an array of the system substitute font file paths, which are similar to the font with [param font_name] and style for the specified text, locale, and script. Returns an empty array if no matching fonts found. The following aliases can be used to request default fonts: \u0022sans-serif\u0022, \u0022serif\u0022, \u0022monospace\u0022, \u0022cursive\u0022, and \u0022fantasy\u0022. [b]Note:[/b] Depending on OS, it\u0027s not guaranteed that any of the returned fonts will be suitable for rendering specified text. Fonts should be loaded and checked in the order they are returned, and the first suitable one used. [b]Note:[/b] Returned fonts might have different style if the requested style is not available or belong to a different font family. [b]Note:[/b] This method is implemented on Android, iOS, Linux, macOS and Windows.",
+      "godotName": "get_system_font_path_for_text",
+      "xmlDocId": "M:Godot.OS.GetSystemFontPathForText(String,String,String,String,int,int,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetSystemFonts",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetSystemFonts()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of font family names available. [b]Note:[/b] This method is implemented on Android, iOS, Linux, macOS and Windows.",
+      "godotName": "get_system_fonts",
+      "xmlDocId": "M:Godot.OS.GetSystemFonts",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetTempDir",
+      "kind": "Method",
+      "signature": "public String GetTempDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the [i]global[/i] temporary data directory according to the operating system\u0027s standards.",
+      "godotName": "get_temp_dir",
+      "xmlDocId": "M:Godot.OS.GetTempDir",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetThreadCallerId",
+      "kind": "Method",
+      "signature": "public int GetThreadCallerId()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the ID of the current thread. This can be used in logs to ease debugging of multi-threaded applications. [b]Note:[/b] Thread IDs are not deterministic and may be reused across application restarts.",
+      "godotName": "get_thread_caller_id",
+      "xmlDocId": "M:Godot.OS.GetThreadCallerId",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetUniqueId",
+      "kind": "Method",
+      "signature": "public String GetUniqueId()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a string that is unique to the device. [b]Note:[/b] This string may change without notice if the user reinstalls their operating system, upgrades it, or modifies their hardware. This means it should generally not be used to encrypt persistent data, as the data saved before an unexpected ID change would become inaccessible. The returned string may also be falsified using external programs, so do not rely on the string returned by this method for security purposes. [b]Note:[/b] On Web, returns an empty string and generates an error, as this method cannot be implemented for security reasons.",
+      "godotName": "get_unique_id",
+      "xmlDocId": "M:Godot.OS.GetUniqueId",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetUserDataDir",
+      "kind": "Method",
+      "signature": "public String GetUserDataDir()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the absolute directory path where user data is written (the [code]user://[/code] directory in Godot). The path depends on the project name and [member ProjectSettings.application/config/use_custom_user_dir]. - On Windows, this is [code]%AppData%\\Godot\\app_userdata\\[project_name][/code], or [code]%AppData%\\[custom_name][/code] if [code]use_custom_user_dir[/code] is set. [code]%AppData%[/code] expands to [code]%UserProfile%\\AppData\\Roaming[/code]. - On macOS, this is [code]~/Library/Application Support/Godot/app_userdata/[project_name][/code], or [code]~/Library/Application Support/[custom_name][/code] if [code]use_custom_user_dir[/code] is set. - On Linux and BSD, this is [code]~/.local/share/godot/app_userdata/[project_name][/code], or [code]~/.local/share/[custom_name][/code] if [code]use_custom_user_dir[/code] is set. - On Android and iOS, this is a sandboxed directory in either internal or external storage, depending on the user\u0027s configuration. - On Web, this is a virtual directory managed by the browser. If the project name is empty, [code][project_name][/code] falls back to [code][unnamed project][/code]. Not to be confused with [method get_data_dir], which returns the [i]global[/i] (non-project-specific) user home directory.",
+      "godotName": "get_user_data_dir",
+      "xmlDocId": "M:Godot.OS.GetUserDataDir",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetVersion",
+      "kind": "Method",
+      "signature": "public String GetVersion()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the exact production and build version of the operating system. This is different from the branded version used in marketing. This helps to distinguish between different releases of operating systems, including minor versions, and insider and custom builds. - For Windows, the major and minor version are returned, as well as the build number. For example, the returned string may look like [code]10.0.9926[/code] for a build of Windows 10. - For rolling distributions, such as Arch Linux, an empty string is returned. - For macOS and iOS, the major and minor version are returned, as well as the patch number. - For Android, the SDK version and the incremental build number are returned. If it\u0027s a custom ROM, it attempts to return its version instead. [b]Note:[/b] This method is not supported on the Web platform. It returns an empty string.",
+      "godotName": "get_version",
+      "xmlDocId": "M:Godot.OS.GetVersion",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetVersionAlias",
+      "kind": "Method",
+      "signature": "public String GetVersionAlias()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the branded version used in marketing, followed by the build number (on Windows), the version number (on macOS), or the SDK version and incremental build number (on Android). Examples include [code]11 (build 22000)[/code], [code]Sequoia (15.0.0)[/code], and [code]15 (SDK 35 build abc528-11988f)[/code]. This value can then be appended to [method get_name] to get a full, human-readable operating system name and version combination for the operating system. Windows feature updates such as 24H2 are not contained in the resulting string, but Windows Server is recognized as such (e.g. [code]2025 (build 26100)[/code] for Windows Server 2025). [b]Note:[/b] This method is only supported on Windows, macOS, and Android. On other operating systems, it returns the same value as [method get_version].",
+      "godotName": "get_version_alias",
+      "xmlDocId": "M:Godot.OS.GetVersionAlias",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "GetVideoAdapterDriverInfo",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetVideoAdapterDriverInfo()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the video adapter driver name and version for the user\u0027s currently active graphics card, as a [PackedStringArray]. See also [method RenderingServer.get_video_adapter_api_version]. The first element holds the driver name, such as [code]nvidia[/code], [code]amdgpu[/code], etc. The second element holds the driver version. For example, on the [code]nvidia[/code] driver on a Linux/BSD platform, the version is in the format [code]510.85.02[/code]. For Windows, the driver\u0027s format is [code]31.0.15.1659[/code]. [b]Note:[/b] This method is only supported on Linux/BSD and Windows when not running in headless mode. On other platforms, it returns an empty array. [b]Note:[/b] This method will run slowly the first time it is called in a session; it can take several seconds depending on the operating system and hardware. It is blocking if called on the main thread, so it\u0027s recommended to call it on a separate thread using [Thread]. This allows the engine to keep running while the information is being retrieved. However, [method get_video_adapter_driver_info] is [i]not[/i] thread-safe, so it should not be called from multiple threads at the same time. [codeblocks] [gdscript] var thread = Thread.new() func _ready(): thread.start( func(): var driver_info = OS.get_video_adapter_driver_info() if not driver_info.is_empty(): print(\u0022Driver: %s %s\u0022 % [driver_info[0], driver_info[1]]) else: print(\u0022Driver: (unknown)\u0022) ) func _exit_tree(): thread.wait_to_finish() [/gdscript] [/codeblocks]",
+      "godotName": "get_video_adapter_driver_info",
+      "xmlDocId": "M:Godot.OS.GetVideoAdapterDriverInfo",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "HasEnvironment",
+      "kind": "Method",
+      "signature": "public bool HasEnvironment(String variable)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "variable",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the environment variable with the name [param variable] exists. [b]Note:[/b] Double-check the casing of [param variable]. Environment variable names are case-sensitive on all platforms except Windows.",
+      "godotName": "has_environment",
+      "xmlDocId": "M:Godot.OS.HasEnvironment(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "HasFeature",
+      "kind": "Method",
+      "signature": "public bool HasFeature(String tagName)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "tag_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build, etc. Can be used to check whether you\u0027re currently running a debug build, on a certain platform or arch, etc. Refer to the [url=$DOCS_URL/tutorials/export/feature_tags.html]Feature Tags[/url] documentation for more details. [b]Note:[/b] Tag names are case-sensitive. [b]Note:[/b] On the Web platform, one of the following additional tags is defined to indicate the host platform: [code]web_android[/code], [code]web_ios[/code], [code]web_linuxbsd[/code], [code]web_macos[/code], or [code]web_windows[/code].",
+      "godotName": "has_feature",
+      "xmlDocId": "M:Godot.OS.HasFeature(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsDebugBuild",
+      "kind": "Method",
+      "signature": "public bool IsDebugBuild()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the Godot binary used to run the project is a [i]debug[/i] export template, or when running in the editor. Returns [code]false[/code] if the Godot binary used to run the project is a [i]release[/i] export template. [b]Note:[/b] To check whether the Godot binary used to run the project is an export template (debug or release), use [code]OS.has_feature(\u0022template\u0022)[/code] instead.",
+      "godotName": "is_debug_build",
+      "xmlDocId": "M:Godot.OS.IsDebugBuild",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsKeycodeUnicode",
+      "kind": "Method",
+      "signature": "public bool IsKeycodeUnicode(int code)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the input keycode corresponds to a Unicode character. For a list of codes, see the [enum Key] constants. [codeblocks] [gdscript] print(OS.is_keycode_unicode(KEY_G)) # Prints true print(OS.is_keycode_unicode(KEY_KP_4)) # Prints true print(OS.is_keycode_unicode(KEY_TAB)) # Prints false print(OS.is_keycode_unicode(KEY_ESCAPE)) # Prints false [/gdscript] [csharp] GD.Print(OS.IsKeycodeUnicode((long)Key.G)); // Prints True GD.Print(OS.IsKeycodeUnicode((long)Key.Kp4)); // Prints True GD.Print(OS.IsKeycodeUnicode((long)Key.Tab)); // Prints False GD.Print(OS.IsKeycodeUnicode((long)Key.Escape)); // Prints False [/csharp] [/codeblocks]",
+      "godotName": "is_keycode_unicode",
+      "xmlDocId": "M:Godot.OS.IsKeycodeUnicode(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsProcessRunning",
+      "kind": "Method",
+      "signature": "public bool IsProcessRunning(int pid)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "pid",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the child process ID ([param pid]) is still running or [code]false[/code] if it has terminated. [param pid] must be a valid ID generated from [method create_process]. [b]Note:[/b] This method is implemented on Android, iOS, Linux, macOS, and Windows.",
+      "godotName": "is_process_running",
+      "xmlDocId": "M:Godot.OS.IsProcessRunning(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsRestartOnExitSet",
+      "kind": "Method",
+      "signature": "public bool IsRestartOnExitSet()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the project will automatically restart when it exits for any reason, [code]false[/code] otherwise. See also [method set_restart_on_exit] and [method get_restart_on_exit_arguments].",
+      "godotName": "is_restart_on_exit_set",
+      "xmlDocId": "M:Godot.OS.IsRestartOnExitSet",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsSandboxed",
+      "kind": "Method",
+      "signature": "public bool IsSandboxed()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the application is running in the sandbox. [b]Note:[/b] This method is only implemented on macOS and Linux.",
+      "godotName": "is_sandboxed",
+      "xmlDocId": "M:Godot.OS.IsSandboxed",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsStdoutVerbose",
+      "kind": "Method",
+      "signature": "public bool IsStdoutVerbose()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the engine was executed with the [code]--verbose[/code] or [code]-v[/code] command line argument, or if [member ProjectSettings.debug/settings/stdout/verbose_stdout] is [code]true[/code]. See also [method @GlobalScope.print_verbose].",
+      "godotName": "is_stdout_verbose",
+      "xmlDocId": "M:Godot.OS.IsStdoutVerbose",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "IsUserfsPersistent",
+      "kind": "Method",
+      "signature": "public bool IsUserfsPersistent()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [code]user://[/code] file system is persistent, that is, its state is the same after a player quits and starts the game again. Relevant to the Web platform, where this persistence may be unavailable.",
+      "godotName": "is_userfs_persistent",
+      "xmlDocId": "M:Godot.OS.IsUserfsPersistent",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "Kill",
+      "kind": "Method",
+      "signature": "public int Kill(int pid)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "pid",
+          "type": "int"
+        }
+      ],
+      "summary": "Kill (terminate) the process identified by the given process ID ([param pid]), such as the ID returned by [method execute] in non-blocking mode. See also [method crash]. [b]Note:[/b] This method can also be used to kill processes that were not spawned by the engine. [b]Note:[/b] This method is implemented on Android, iOS, Linux, macOS and Windows.",
+      "godotName": "kill",
+      "xmlDocId": "M:Godot.OS.Kill(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "MoveToTrash",
+      "kind": "Method",
+      "signature": "public int MoveToTrash(String path)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Moves the file or directory at the given [param path] to the system\u0027s recycle bin. See also [method DirAccess.remove]. The method takes only global paths, so you may need to use [method ProjectSettings.globalize_path]. Do not use it for files in [code]res://[/code] as it will not work in exported projects. Returns [constant FAILED] if the file or directory cannot be found, or the system does not support this method. [codeblocks] [gdscript] var file_to_remove = \u0022user://slot1.save\u0022 OS.move_to_trash(ProjectSettings.globalize_path(file_to_remove)) [/gdscript] [csharp] var fileToRemove = \u0022user://slot1.save\u0022; OS.MoveToTrash(ProjectSettings.GlobalizePath(fileToRemove)); [/csharp] [/codeblocks] [b]Note:[/b] This method is implemented on Android, Linux, macOS and Windows. [b]Note:[/b] If the user has disabled the recycle bin on their system, the file will be permanently deleted instead.",
+      "godotName": "move_to_trash",
+      "xmlDocId": "M:Godot.OS.MoveToTrash(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "OpenMidiInputs",
+      "kind": "Method",
+      "signature": "public void OpenMidiInputs()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Initializes the singleton for the system MIDI driver, allowing Godot to receive [InputEventMIDI]. See also [method get_connected_midi_inputs] and [method close_midi_inputs]. [b]Note:[/b] This method is implemented on Linux, macOS, Windows, and Web. [b]Note:[/b] On the Web platform, Web MIDI needs to be supported by the browser. [url=https://caniuse.com/midi]For the time being[/url], it is currently supported by all major browsers, except Safari. [b]Note:[/b] On the Web platform, using MIDI input requires a browser permission to be granted first. This permission request is performed when calling [method open_midi_inputs]. The browser will refrain from processing MIDI input until the user accepts the permission request.",
+      "godotName": "open_midi_inputs",
+      "xmlDocId": "M:Godot.OS.OpenMidiInputs",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "OpenWithProgram",
+      "kind": "Method",
+      "signature": "public int OpenWithProgram(String programPath, PackedStringArray paths)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "program_path",
+          "type": "String"
+        },
+        {
+          "name": "paths",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Opens one or more files/directories with the specified application. The [param program_path] specifies the path to the application to use for opening the files, and [param paths] contains an array of file/directory paths to open. [b]Note:[/b] This method is mostly only relevant for macOS, where opening files using [method create_process] might fail. On other platforms, this falls back to using [method create_process]. [b]Note:[/b] On macOS, [param program_path] should ideally be the path to a [code].app[/code] bundle.",
+      "godotName": "open_with_program",
+      "xmlDocId": "M:Godot.OS.OpenWithProgram(String,PackedStringArray)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "ReadBufferFromStdin",
+      "kind": "Method",
+      "signature": "public PackedByteArray ReadBufferFromStdin(int bufferSize)",
+      "returnType": "PackedByteArray",
+      "parameters": [
+        {
+          "name": "buffer_size",
+          "type": "int",
+          "defaultValue": "1024"
+        }
+      ],
+      "summary": "Reads a user input as raw data from the standard input. This operation can be [i]blocking[/i], which causes the window to freeze if [method read_buffer_from_stdin] is called on the main thread. - If standard input is console, this method will block until the program receives a line break in standard input (usually by the user pressing [kbd]Enter[/kbd]). - If standard input is pipe, this method will block until a specific amount of data is read or pipe is closed. - If standard input is a file, this method will read a specific amount of data (or less if end-of-file is reached) and return immediately. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] On exported Windows builds, run the console wrapper executable to access the terminal. If standard input is console, calling this method without console wrapped will freeze permanently. If standard input is pipe or file, it can be used without console wrapper. If you need a single executable with full console support, use a custom build compiled with the [code]windows_subsystem=console[/code] flag.",
+      "godotName": "read_buffer_from_stdin",
+      "xmlDocId": "M:Godot.OS.ReadBufferFromStdin(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "ReadStringFromStdin",
+      "kind": "Method",
+      "signature": "public String ReadStringFromStdin(int bufferSize)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "buffer_size",
+          "type": "int",
+          "defaultValue": "1024"
+        }
+      ],
+      "summary": "Reads a user input as a UTF-8 encoded string from the standard input. This operation can be [i]blocking[/i], which causes the window to freeze if [method read_string_from_stdin] is called on the main thread. - If standard input is console, this method will block until the program receives a line break in standard input (usually by the user pressing [kbd]Enter[/kbd]). - If standard input is pipe, this method will block until a specific amount of data is read or pipe is closed. - If standard input is a file, this method will read a specific amount of data (or less if end-of-file is reached) and return immediately. [b]Note:[/b] This method automatically replaces [code]\\r\\n[/code] line breaks with [code]\\n[/code] and removes them from the end of the string. Use [method read_buffer_from_stdin] to read the unprocessed data. [b]Note:[/b] This method is implemented on Linux, macOS, and Windows. [b]Note:[/b] On exported Windows builds, run the console wrapper executable to access the terminal. If standard input is console, calling this method without console wrapped will freeze permanently. If standard input is pipe or file, it can be used without console wrapper. If you need a single executable with full console support, use a custom build compiled with the [code]windows_subsystem=console[/code] flag.",
+      "godotName": "read_string_from_stdin",
+      "xmlDocId": "M:Godot.OS.ReadStringFromStdin(int)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RemoveLogger",
+      "kind": "Method",
+      "signature": "public void RemoveLogger(Logger logger)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "logger",
+          "type": "Logger"
+        }
+      ],
+      "summary": "Remove a custom logger added by [method add_logger].",
+      "godotName": "remove_logger",
+      "xmlDocId": "M:Godot.OS.RemoveLogger(Logger)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RequestPermission",
+      "kind": "Method",
+      "signature": "public bool RequestPermission(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Requests permission from the OS for the given [param name]. Returns [code]true[/code] if the permission has already been granted. See also [signal MainLoop.on_request_permissions_result]. The [param name] must be the full permission name. For example: - [code]OS.request_permission(\u0022android.permission.READ_EXTERNAL_STORAGE\u0022)[/code] - [code]OS.request_permission(\u0022android.permission.POST_NOTIFICATIONS\u0022)[/code] - [code]OS.request_permission(\u0022macos.permission.RECORD_SCREEN\u0022)[/code] - [code]OS.request_permission(\u0022appleembedded.permission.AUDIO_RECORD\u0022)[/code] [b]Note:[/b] On Android, permission must be checked during export. [b]Note:[/b] This method is implemented on Android, macOS, and visionOS platforms.",
+      "godotName": "request_permission",
+      "xmlDocId": "M:Godot.OS.RequestPermission(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RequestPermissions",
+      "kind": "Method",
+      "signature": "public bool RequestPermissions()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Requests [i]dangerous[/i] permissions from the OS. Returns [code]true[/code] if permissions have already been granted. See also [signal MainLoop.on_request_permissions_result]. [b]Note:[/b] Permissions must be checked during export. [b]Note:[/b] This method is only implemented on Android. Normal permissions are automatically granted at install time in Android applications.",
+      "godotName": "request_permissions",
+      "xmlDocId": "M:Godot.OS.RequestPermissions",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RevokeGrantedPermissions",
+      "kind": "Method",
+      "signature": "public void RevokeGrantedPermissions()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "On macOS (sandboxed applications only), this function clears list of user selected folders accessible to the application.",
+      "godotName": "revoke_granted_permissions",
+      "xmlDocId": "M:Godot.OS.RevokeGrantedPermissions",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SetEnvironment",
+      "kind": "Method",
+      "signature": "public void SetEnvironment(String variable, String value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "variable",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the value of the environment variable [param variable] to [param value]. The environment variable will be set for the Godot process and any process executed with [method execute] after running [method set_environment]. The environment variable will [i]not[/i] persist to processes run after the Godot process was terminated. [b]Note:[/b] Environment variable names are case-sensitive on all platforms except Windows. The [param variable] name cannot be empty or include the [code]=[/code] character. On Windows, there is a 32767 characters limit for the combined length of [param variable], [param value], and the [code]=[/code] and null terminator characters that will be registered in the environment block.",
+      "godotName": "set_environment",
+      "xmlDocId": "M:Godot.OS.SetEnvironment(String,String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SetRestartOnExit",
+      "kind": "Method",
+      "signature": "public void SetRestartOnExit(bool restart, PackedStringArray arguments)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "restart",
+          "type": "bool"
+        },
+        {
+          "name": "arguments",
+          "type": "PackedStringArray",
+          "defaultValue": "PackedStringArray()"
+        }
+      ],
+      "summary": "If [param restart] is [code]true[/code], restarts the project automatically when it is exited with [method SceneTree.quit] or [constant Node.NOTIFICATION_WM_CLOSE_REQUEST]. Command-line [param arguments] can be supplied. To restart the project with the same command line arguments as originally used to run the project, pass [method get_cmdline_args] as the value for [param arguments]. This method can be used to apply setting changes that require a restart. See also [method is_restart_on_exit_set] and [method get_restart_on_exit_arguments]. [b]Note:[/b] This method is only effective on desktop platforms, and only when the project isn\u0027t started from the editor. It will have no effect on mobile and Web platforms, or when the project is started from the editor. [b]Note:[/b] If the project process crashes or is [i]killed[/i] by the user (by sending [code]SIGKILL[/code] instead of the usual [code]SIGTERM[/code]), the project won\u0027t restart automatically.",
+      "godotName": "set_restart_on_exit",
+      "xmlDocId": "M:Godot.OS.SetRestartOnExit(bool,PackedStringArray)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SetThreadName",
+      "kind": "Method",
+      "signature": "public int SetThreadName(String name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Assigns the given name to the current thread. Returns [constant ERR_UNAVAILABLE] if unavailable on the current platform.",
+      "godotName": "set_thread_name",
+      "xmlDocId": "M:Godot.OS.SetThreadName(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SetUseFileAccessSaveAndSwap",
+      "kind": "Method",
+      "signature": "public void SetUseFileAccessSaveAndSwap(bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], when opening a file for writing, a temporary file is used in its place. When closed, it is automatically applied to the target file. This can useful when files may be opened by other applications, such as antiviruses, text editors, or even the Godot editor itself.",
+      "godotName": "set_use_file_access_save_and_swap",
+      "xmlDocId": "M:Godot.OS.SetUseFileAccessSaveAndSwap(bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "ShellOpen",
+      "kind": "Method",
+      "signature": "public int ShellOpen(String uri)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "String"
+        }
+      ],
+      "summary": "Requests the OS to open a resource identified by [param uri] with the most appropriate program. For example: - [code]OS.shell_open(\u0022\u003Cwindows-absolute-path\u003E\u0022)[/code] on Windows opens the file explorer at the user\u0027s Downloads folder. - [code]OS.shell_open(\u0022\u003Cwindows-absolute-path\u003E\u0022)[/code] also works on Windows and opens the file explorer at the user\u0027s Downloads folder. - [code]OS.shell_open(\u0022https://godotengine.org\u0022)[/code] opens the default web browser on the official Godot website. - [code]OS.shell_open(\u0022mailto:example@example.com\u0022)[/code] opens the default email client with the \u0022To\u0022 field set to [code]example@example.com[/code]. See [url=https://datatracker.ietf.org/doc/html/rfc2368]RFC 2368 - The mailto URL scheme[/url] for a list of fields that can be added. Use [method ProjectSettings.globalize_path] to convert a [code]res://[/code] or [code]user://[/code] project path into a system path for use with this method. [b]Note:[/b] Use [method String.uri_encode] to encode characters within URLs in a URL-safe, portable way. This is especially required for line breaks. Otherwise, [method shell_open] may not work correctly in a project exported to the Web platform. [b]Note:[/b] This method is implemented on Android, iOS, Web, Linux, macOS and Windows.",
+      "godotName": "shell_open",
+      "xmlDocId": "M:Godot.OS.ShellOpen(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "ShellShowInFileManager",
+      "kind": "Method",
+      "signature": "public int ShellShowInFileManager(String fileOrDirPath, bool openFolder)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file_or_dir_path",
+          "type": "String"
+        },
+        {
+          "name": "open_folder",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Requests the OS to open the file manager, navigate to the given [param file_or_dir_path] and select the target file or folder. If [param open_folder] is [code]true[/code] and [param file_or_dir_path] is a valid directory path, the OS will open the file manager and navigate to the target folder without selecting anything. Use [method ProjectSettings.globalize_path] to convert a [code]res://[/code] or [code]user://[/code] project path into a system path to use with this method. [b]Note:[/b] This method is currently only implemented on Windows and macOS. On other platforms, it will fallback to [method shell_open] with a directory path of [param file_or_dir_path] prefixed with [code]file://[/code].",
+      "godotName": "shell_show_in_file_manager",
+      "xmlDocId": "M:Godot.OS.ShellShowInFileManager(String,bool)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "UnsetEnvironment",
+      "kind": "Method",
+      "signature": "public void UnsetEnvironment(String variable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "variable",
+          "type": "String"
+        }
+      ],
+      "summary": "Removes the given environment variable from the current environment, if it exists. The [param variable] name cannot be empty or include the [code]=[/code] character. The environment variable will be removed for the Godot process and any process executed with [method execute] after running [method unset_environment]. The removal of the environment variable will [i]not[/i] persist to processes run after the Godot process was terminated. [b]Note:[/b] Environment variable names are case-sensitive on all platforms except Windows.",
+      "godotName": "unset_environment",
+      "xmlDocId": "M:Godot.OS.UnsetEnvironment(String)",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "DeltaSmoothing",
+      "kind": "Property",
+      "signature": "public bool DeltaSmoothing { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the engine filters the time delta measured between each frame, and attempts to compensate for random variation. This only works on systems where V-Sync is active. [b]Note:[/b] On start-up, this is the same as [member ProjectSettings.application/run/delta_smoothing].",
+      "defaultValue": "true",
+      "godotName": "delta_smoothing",
+      "xmlDocId": "P:Godot.OS.DeltaSmoothing",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "LowProcessorUsageMode",
+      "kind": "Property",
+      "signature": "public bool LowProcessorUsageMode { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the engine optimizes for low processor usage by only refreshing the screen if needed. Can improve battery consumption on mobile. [b]Note:[/b] On start-up, this is the same as [member ProjectSettings.application/run/low_processor_mode].",
+      "defaultValue": "false",
+      "godotName": "low_processor_usage_mode",
+      "xmlDocId": "P:Godot.OS.LowProcessorUsageMode",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "LowProcessorUsageModeSleepUsec",
+      "kind": "Property",
+      "signature": "public int LowProcessorUsageModeSleepUsec { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The amount of sleeping between frames when the low-processor usage mode is enabled, in microseconds. Higher values will result in lower CPU usage. See also [member low_processor_usage_mode]. [b]Note:[/b] On start-up, this is the same as [member ProjectSettings.application/run/low_processor_mode_sleep_usec].",
+      "defaultValue": "6900",
+      "godotName": "low_processor_usage_mode_sleep_usec",
+      "xmlDocId": "P:Godot.OS.LowProcessorUsageModeSleepUsec",
+      "sourcePath": "doc/classes/OS.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "RenderingDriver",
+      "values": [
+        {
+          "name": "RENDERING_DRIVER_D3D12",
+          "value": "2",
+          "enum": "RenderingDriver",
+          "kind": "EnumValue",
+          "summary": "The Direct3D 12 rendering driver. It requires the 12_0 feature level and Shader Model 6.0 support.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "RENDERING_DRIVER_METAL",
+          "value": "3",
+          "enum": "RenderingDriver",
+          "kind": "EnumValue",
+          "summary": "The Metal rendering driver.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "RENDERING_DRIVER_OPENGL3",
+          "value": "1",
+          "enum": "RenderingDriver",
+          "kind": "EnumValue",
+          "summary": "The OpenGL 3 rendering driver. It uses OpenGL 3.3 Core Profile on desktop platforms, OpenGL ES 3.0 on mobile devices, and WebGL 2.0 on Web.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "RENDERING_DRIVER_VULKAN",
+          "value": "0",
+          "enum": "RenderingDriver",
+          "kind": "EnumValue",
+          "summary": "The Vulkan rendering driver. It requires Vulkan 1.0 support and automatically uses features from Vulkan 1.1, 1.2, and 1.3 if available.",
+          "sourcePath": "doc/classes/OS.xml"
+        }
+      ]
+    },
+    {
+      "name": "StdHandleType",
+      "values": [
+        {
+          "name": "STD_HANDLE_CONSOLE",
+          "value": "1",
+          "enum": "StdHandleType",
+          "kind": "EnumValue",
+          "summary": "Standard I/O device is a console. This typically occurs when Godot is run from a terminal with no redirection. This is also used for all standard I/O devices when running Godot from the editor, at least on desktop platforms.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "STD_HANDLE_FILE",
+          "value": "2",
+          "enum": "StdHandleType",
+          "kind": "EnumValue",
+          "summary": "Standard I/O device is a regular file. This typically occurs with redirection from a terminal, e.g. [code]godot \u003E stdout.txt[/code], [code]godot \u003C stdin.txt[/code] or [code]godot \u003E stdout_stderr.txt 2\u003E\u00261[/code].",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "STD_HANDLE_INVALID",
+          "value": "0",
+          "enum": "StdHandleType",
+          "kind": "EnumValue",
+          "summary": "Standard I/O device is invalid. No data can be received from or sent to these standard I/O devices.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "STD_HANDLE_PIPE",
+          "value": "3",
+          "enum": "StdHandleType",
+          "kind": "EnumValue",
+          "summary": "Standard I/O device is a FIFO/pipe. This typically occurs with pipe usage from a terminal, e.g. [code]echo \u0022Hello\u0022 | godot[/code].",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "STD_HANDLE_UNKNOWN",
+          "value": "4",
+          "enum": "StdHandleType",
+          "kind": "EnumValue",
+          "summary": "Standard I/O device type is unknown.",
+          "sourcePath": "doc/classes/OS.xml"
+        }
+      ]
+    },
+    {
+      "name": "SystemDir",
+      "values": [
+        {
+          "name": "SYSTEM_DIR_DCIM",
+          "value": "1",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the DCIM (Digital Camera Images) directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_DESKTOP",
+          "value": "0",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Desktop directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_DOCUMENTS",
+          "value": "2",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Documents directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_DOWNLOADS",
+          "value": "3",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Downloads directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_MOVIES",
+          "value": "4",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Movies (or Videos) directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_MUSIC",
+          "value": "5",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Music directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_PICTURES",
+          "value": "6",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Pictures directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        },
+        {
+          "name": "SYSTEM_DIR_RINGTONES",
+          "value": "7",
+          "enum": "SystemDir",
+          "kind": "EnumValue",
+          "summary": "Refers to the Ringtones directory path.",
+          "sourcePath": "doc/classes/OS.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "RENDERING_DRIVER_VULKAN",
+      "value": "0",
+      "enum": "RenderingDriver",
+      "kind": "EnumValue",
+      "summary": "The Vulkan rendering driver. It requires Vulkan 1.0 support and automatically uses features from Vulkan 1.1, 1.2, and 1.3 if available.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RENDERING_DRIVER_OPENGL3",
+      "value": "1",
+      "enum": "RenderingDriver",
+      "kind": "EnumValue",
+      "summary": "The OpenGL 3 rendering driver. It uses OpenGL 3.3 Core Profile on desktop platforms, OpenGL ES 3.0 on mobile devices, and WebGL 2.0 on Web.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RENDERING_DRIVER_D3D12",
+      "value": "2",
+      "enum": "RenderingDriver",
+      "kind": "EnumValue",
+      "summary": "The Direct3D 12 rendering driver. It requires the 12_0 feature level and Shader Model 6.0 support.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "RENDERING_DRIVER_METAL",
+      "value": "3",
+      "enum": "RenderingDriver",
+      "kind": "EnumValue",
+      "summary": "The Metal rendering driver.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_DESKTOP",
+      "value": "0",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Desktop directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_DCIM",
+      "value": "1",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the DCIM (Digital Camera Images) directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_DOCUMENTS",
+      "value": "2",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Documents directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_DOWNLOADS",
+      "value": "3",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Downloads directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_MOVIES",
+      "value": "4",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Movies (or Videos) directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_MUSIC",
+      "value": "5",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Music directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_PICTURES",
+      "value": "6",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Pictures directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "SYSTEM_DIR_RINGTONES",
+      "value": "7",
+      "enum": "SystemDir",
+      "kind": "EnumValue",
+      "summary": "Refers to the Ringtones directory path.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "STD_HANDLE_INVALID",
+      "value": "0",
+      "enum": "StdHandleType",
+      "kind": "EnumValue",
+      "summary": "Standard I/O device is invalid. No data can be received from or sent to these standard I/O devices.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "STD_HANDLE_CONSOLE",
+      "value": "1",
+      "enum": "StdHandleType",
+      "kind": "EnumValue",
+      "summary": "Standard I/O device is a console. This typically occurs when Godot is run from a terminal with no redirection. This is also used for all standard I/O devices when running Godot from the editor, at least on desktop platforms.",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "STD_HANDLE_FILE",
+      "value": "2",
+      "enum": "StdHandleType",
+      "kind": "EnumValue",
+      "summary": "Standard I/O device is a regular file. This typically occurs with redirection from a terminal, e.g. [code]godot \u003E stdout.txt[/code], [code]godot \u003C stdin.txt[/code] or [code]godot \u003E stdout_stderr.txt 2\u003E\u00261[/code].",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "STD_HANDLE_PIPE",
+      "value": "3",
+      "enum": "StdHandleType",
+      "kind": "EnumValue",
+      "summary": "Standard I/O device is a FIFO/pipe. This typically occurs with pipe usage from a terminal, e.g. [code]echo \u0022Hello\u0022 | godot[/code].",
+      "sourcePath": "doc/classes/OS.xml"
+    },
+    {
+      "name": "STD_HANDLE_UNKNOWN",
+      "value": "4",
+      "enum": "StdHandleType",
+      "kind": "EnumValue",
+      "summary": "Standard I/O device type is unknown.",
+      "sourcePath": "doc/classes/OS.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/OS.xml",
+      "sha256": "0f14568d93eabd8a6965e3f127914c16fc19276b94b5b8e254268a94bb3f4ecd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

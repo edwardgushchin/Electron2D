@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRMarkerTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRMarkerTracker",
+    "kind": "class",
+    "baseType": "OpenXRSpatialEntityTracker",
+    "interfaces": [],
+    "godotReference": "OpenXRMarkerTracker",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrmarkertracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMarkerData",
+      "kind": "Method",
+      "signature": "public Variant GetMarkerData()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the marker data for this marker. This can return a [String] or [PackedByteArray]. Only applicable to QR Code based markers.",
+      "godotName": "get_marker_data",
+      "xmlDocId": "M:Godot.OpenXRMarkerTracker.GetMarkerData",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml"
+    },
+    {
+      "name": "SetMarkerData",
+      "kind": "Method",
+      "signature": "public void SetMarkerData(Variant markerData)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "marker_data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the marker data for this marker. [b]Note:[/b] This should only be set by marker discovery logic.",
+      "godotName": "set_marker_data",
+      "xmlDocId": "M:Godot.OpenXRMarkerTracker.SetMarkerData(Variant)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml"
+    },
+    {
+      "name": "BoundsSize",
+      "kind": "Property",
+      "signature": "public Vector2 BoundsSize { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The bounds size for this marker.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "bounds_size",
+      "xmlDocId": "P:Godot.OpenXRMarkerTracker.BoundsSize",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml"
+    },
+    {
+      "name": "MarkerId",
+      "kind": "Property",
+      "signature": "public int MarkerId { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The marker ID for this marker, this is only returned for Aruco and April Tag markers. Call [method get_marker_data] for QRCode markers.",
+      "defaultValue": "0",
+      "godotName": "marker_id",
+      "xmlDocId": "P:Godot.OpenXRMarkerTracker.MarkerId",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml"
+    },
+    {
+      "name": "MarkerType",
+      "kind": "Property",
+      "signature": "public int MarkerType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of marker.",
+      "defaultValue": "0",
+      "godotName": "marker_type",
+      "xmlDocId": "P:Godot.OpenXRMarkerTracker.MarkerType",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRMarkerTracker.xml",
+      "sha256": "241383e1da2270be07edc7b3d40e0e1b52f5ce7fb90bcdea7b3ede983d90a070"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "CameraAttributes",
+    "namespace": "Godot",
+    "fullName": "Godot.CameraAttributes",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "CameraAttributes",
+    "documentationPath": "doc/classes/CameraAttributes.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_cameraattributes.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AutoExposureEnabled",
+      "kind": "Property",
+      "signature": "public bool AutoExposureEnabled { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], enables the tonemapping auto exposure mode of the scene renderer. If [code]true[/code], the renderer will automatically determine the exposure setting to adapt to the scene\u0027s illumination and the observed light. [b]Note:[/b] Auto-exposure is only supported in the Forward\u002B rendering method, not Mobile or Compatibility.",
+      "defaultValue": "false",
+      "godotName": "auto_exposure_enabled",
+      "xmlDocId": "P:Godot.CameraAttributes.AutoExposureEnabled",
+      "sourcePath": "doc/classes/CameraAttributes.xml"
+    },
+    {
+      "name": "AutoExposureScale",
+      "kind": "Property",
+      "signature": "public float AutoExposureScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The scale of the auto exposure effect. Affects the intensity of auto exposure.",
+      "defaultValue": "0.4",
+      "godotName": "auto_exposure_scale",
+      "xmlDocId": "P:Godot.CameraAttributes.AutoExposureScale",
+      "sourcePath": "doc/classes/CameraAttributes.xml"
+    },
+    {
+      "name": "AutoExposureSpeed",
+      "kind": "Property",
+      "signature": "public float AutoExposureSpeed { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed of the auto exposure effect. Affects the time needed for the camera to perform auto exposure.",
+      "defaultValue": "0.5",
+      "godotName": "auto_exposure_speed",
+      "xmlDocId": "P:Godot.CameraAttributes.AutoExposureSpeed",
+      "sourcePath": "doc/classes/CameraAttributes.xml"
+    },
+    {
+      "name": "ExposureMultiplier",
+      "kind": "Property",
+      "signature": "public float ExposureMultiplier { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Multiplier for the exposure amount. A higher value results in a brighter image.",
+      "defaultValue": "1.0",
+      "godotName": "exposure_multiplier",
+      "xmlDocId": "P:Godot.CameraAttributes.ExposureMultiplier",
+      "sourcePath": "doc/classes/CameraAttributes.xml"
+    },
+    {
+      "name": "ExposureSensitivity",
+      "kind": "Property",
+      "signature": "public float ExposureSensitivity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Sensitivity of camera sensors, measured in ISO. A higher sensitivity results in a brighter image. If [member auto_exposure_enabled] is [code]true[/code], this can be used as a method of exposure compensation, doubling the value will increase the exposure value (measured in EV100) by 1 stop. [b]Note:[/b] Only available when [member ProjectSettings.rendering/lights_and_shadows/use_physical_light_units] is enabled.",
+      "defaultValue": "100.0",
+      "godotName": "exposure_sensitivity",
+      "xmlDocId": "P:Godot.CameraAttributes.ExposureSensitivity",
+      "sourcePath": "doc/classes/CameraAttributes.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/CameraAttributes.xml",
+      "sha256": "4d7bbea970073b04d6697628beb1a10ae77c50ba54fb866f5c1c87711474d989"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

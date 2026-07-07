@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Label3D",
+    "namespace": "Godot",
+    "fullName": "Godot.Label3D",
+    "kind": "class",
+    "baseType": "GeometryInstance3D",
+    "interfaces": [],
+    "godotReference": "Label3D",
+    "documentationPath": "doc/classes/Label3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_label3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GenerateTriangleMesh",
+      "kind": "Method",
+      "signature": "public TriangleMesh GenerateTriangleMesh()",
+      "returnType": "TriangleMesh",
+      "parameters": [],
+      "summary": "Returns a [TriangleMesh] with the label\u0027s vertices following its current configuration (such as its [member pixel_size]).",
+      "godotName": "generate_triangle_mesh",
+      "xmlDocId": "M:Godot.Label3D.GenerateTriangleMesh",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "GetDrawFlag",
+      "kind": "Method",
+      "signature": "public bool GetDrawFlag(int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the specified flag.",
+      "godotName": "get_draw_flag",
+      "xmlDocId": "M:Godot.Label3D.GetDrawFlag(int)",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "SetDrawFlag",
+      "kind": "Method",
+      "signature": "public void SetDrawFlag(int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the specified [param flag] will be enabled.",
+      "godotName": "set_draw_flag",
+      "xmlDocId": "M:Godot.Label3D.SetDrawFlag(int,bool)",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AlphaAntialiasingEdge",
+      "kind": "Property",
+      "signature": "public float AlphaAntialiasingEdge { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Threshold at which antialiasing will be applied on the alpha channel.",
+      "defaultValue": "0.0",
+      "godotName": "alpha_antialiasing_edge",
+      "xmlDocId": "P:Godot.Label3D.AlphaAntialiasingEdge",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AlphaAntialiasingMode",
+      "kind": "Property",
+      "signature": "public int AlphaAntialiasingMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type of alpha antialiasing to apply.",
+      "defaultValue": "0",
+      "godotName": "alpha_antialiasing_mode",
+      "xmlDocId": "P:Godot.Label3D.AlphaAntialiasingMode",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AlphaCut",
+      "kind": "Property",
+      "signature": "public int AlphaCut { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The alpha cutting mode to use for the sprite.",
+      "defaultValue": "0",
+      "godotName": "alpha_cut",
+      "xmlDocId": "P:Godot.Label3D.AlphaCut",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AlphaHashScale",
+      "kind": "Property",
+      "signature": "public float AlphaHashScale { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The hashing scale for Alpha Hash. Recommended values between [code]0[/code] and [code]2[/code].",
+      "defaultValue": "1.0",
+      "godotName": "alpha_hash_scale",
+      "xmlDocId": "P:Godot.Label3D.AlphaHashScale",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AlphaScissorThreshold",
+      "kind": "Property",
+      "signature": "public float AlphaScissorThreshold { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Threshold at which the alpha scissor will discard values.",
+      "defaultValue": "0.5",
+      "godotName": "alpha_scissor_threshold",
+      "xmlDocId": "P:Godot.Label3D.AlphaScissorThreshold",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AutowrapMode",
+      "kind": "Property",
+      "signature": "public int AutowrapMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "If set to something other than [constant TextServer.AUTOWRAP_OFF], the text gets wrapped inside the node\u0027s bounding rectangle. If you resize the node, it will change its height automatically to show all the text.",
+      "defaultValue": "0",
+      "godotName": "autowrap_mode",
+      "xmlDocId": "P:Godot.Label3D.AutowrapMode",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "AutowrapTrimFlags",
+      "kind": "Property",
+      "signature": "public int AutowrapTrimFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Autowrap space trimming flags. See [constant TextServer.BREAK_TRIM_START_EDGE_SPACES] and [constant TextServer.BREAK_TRIM_END_EDGE_SPACES] for more info.",
+      "defaultValue": "192",
+      "godotName": "autowrap_trim_flags",
+      "xmlDocId": "P:Godot.Label3D.AutowrapTrimFlags",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Billboard",
+      "kind": "Property",
+      "signature": "public int Billboard { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The billboard mode to use for the label.",
+      "defaultValue": "0",
+      "godotName": "billboard",
+      "xmlDocId": "P:Godot.Label3D.Billboard",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "CastShadow",
+      "kind": "Property",
+      "signature": "public int CastShadow { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "cast_shadow",
+      "xmlDocId": "P:Godot.Label3D.CastShadow",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "DoubleSided",
+      "kind": "Property",
+      "signature": "public bool DoubleSided { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], text can be seen from the back as well, if [code]false[/code], it is invisible when looking at it from behind.",
+      "defaultValue": "true",
+      "godotName": "double_sided",
+      "xmlDocId": "P:Godot.Label3D.DoubleSided",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FixedSize",
+      "kind": "Property",
+      "signature": "public bool FixedSize { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the label is rendered at the same size regardless of distance. The label\u0027s size on screen is the same as if the camera was [code]1.0[/code] units away from the label\u0027s origin, regardless of the actual distance from the camera. The [Camera3D]\u0027s field of view (or [member Camera3D.size] when in orthogonal/frustum mode) still affects the size the label is drawn at.",
+      "defaultValue": "false",
+      "godotName": "fixed_size",
+      "xmlDocId": "P:Godot.Label3D.FixedSize",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Font",
+      "kind": "Property",
+      "signature": "public Font Font { get; set; }",
+      "returnType": "Font",
+      "parameters": [],
+      "summary": "Font configuration used to display text.",
+      "godotName": "font",
+      "xmlDocId": "P:Godot.Label3D.Font",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FontSize",
+      "kind": "Property",
+      "signature": "public int FontSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Font size of the [Label3D]\u0027s text. To make the font look more detailed when up close, increase [member font_size] while decreasing [member pixel_size] at the same time. Higher font sizes require more time to render new characters, which can cause stuttering during gameplay.",
+      "defaultValue": "32",
+      "godotName": "font_size",
+      "xmlDocId": "P:Godot.Label3D.FontSize",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "GiMode",
+      "kind": "Property",
+      "signature": "public int GiMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "0",
+      "godotName": "gi_mode",
+      "xmlDocId": "P:Godot.Label3D.GiMode",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "HorizontalAlignment",
+      "kind": "Property",
+      "signature": "public int HorizontalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s horizontal alignment. Supports left, center, right, and fill (also known as justify).",
+      "defaultValue": "1",
+      "godotName": "horizontal_alignment",
+      "xmlDocId": "P:Godot.Label3D.HorizontalAlignment",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "JustificationFlags",
+      "kind": "Property",
+      "signature": "public int JustificationFlags { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Line fill alignment rules.",
+      "defaultValue": "163",
+      "godotName": "justification_flags",
+      "xmlDocId": "P:Godot.Label3D.JustificationFlags",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.Label3D.Language",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "LineSpacing",
+      "kind": "Property",
+      "signature": "public float LineSpacing { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Additional vertical spacing between lines (in pixels), spacing is added to line descent. This value can be negative.",
+      "defaultValue": "0.0",
+      "godotName": "line_spacing",
+      "xmlDocId": "P:Godot.Label3D.LineSpacing",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Modulate",
+      "kind": "Property",
+      "signature": "public Color Modulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "Text [Color] of the [Label3D].",
+      "defaultValue": "Color(1, 1, 1, 1)",
+      "godotName": "modulate",
+      "xmlDocId": "P:Godot.Label3D.Modulate",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "NoDepthTest",
+      "kind": "Property",
+      "signature": "public bool NoDepthTest { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], depth testing is disabled and the object will be drawn in render order.",
+      "defaultValue": "false",
+      "godotName": "no_depth_test",
+      "xmlDocId": "P:Godot.Label3D.NoDepthTest",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Offset",
+      "kind": "Property",
+      "signature": "public Vector2 Offset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The text drawing offset (in pixels).",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "offset",
+      "xmlDocId": "P:Godot.Label3D.Offset",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "OutlineModulate",
+      "kind": "Property",
+      "signature": "public Color OutlineModulate { get; set; }",
+      "returnType": "Color",
+      "parameters": [],
+      "summary": "The tint of text outline.",
+      "defaultValue": "Color(0, 0, 0, 1)",
+      "godotName": "outline_modulate",
+      "xmlDocId": "P:Godot.Label3D.OutlineModulate",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "OutlineRenderPriority",
+      "kind": "Property",
+      "signature": "public int OutlineRenderPriority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the render priority for the text outline. Higher priority objects will be sorted in front of lower priority objects. [b]Note:[/b] This only applies if [member alpha_cut] is set to [constant ALPHA_CUT_DISABLED] (default value). [b]Note:[/b] This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).",
+      "defaultValue": "-1",
+      "godotName": "outline_render_priority",
+      "xmlDocId": "P:Godot.Label3D.OutlineRenderPriority",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "OutlineSize",
+      "kind": "Property",
+      "signature": "public int OutlineSize { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Text outline size.",
+      "defaultValue": "12",
+      "godotName": "outline_size",
+      "xmlDocId": "P:Godot.Label3D.OutlineSize",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "PixelSize",
+      "kind": "Property",
+      "signature": "public float PixelSize { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The size of one pixel\u0027s width on the label to scale it in 3D. To make the font look more detailed when up close, increase [member font_size] while decreasing [member pixel_size] at the same time.",
+      "defaultValue": "0.005",
+      "godotName": "pixel_size",
+      "xmlDocId": "P:Godot.Label3D.PixelSize",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "RenderPriority",
+      "kind": "Property",
+      "signature": "public int RenderPriority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the render priority for the text. Higher priority objects will be sorted in front of lower priority objects. [b]Note:[/b] This only applies if [member alpha_cut] is set to [constant ALPHA_CUT_DISABLED] (default value). [b]Note:[/b] This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).",
+      "defaultValue": "0",
+      "godotName": "render_priority",
+      "xmlDocId": "P:Godot.Label3D.RenderPriority",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Shaded",
+      "kind": "Property",
+      "signature": "public bool Shaded { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [Light3D] in the [Environment] has effects on the label.",
+      "defaultValue": "false",
+      "godotName": "shaded",
+      "xmlDocId": "P:Godot.Label3D.Shaded",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.Label3D.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.Label3D.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The text to display on screen.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.Label3D.Text",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.Label3D.TextDirection",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "TextureFilter",
+      "kind": "Property",
+      "signature": "public int TextureFilter { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Filter flags for the texture.",
+      "defaultValue": "3",
+      "godotName": "texture_filter",
+      "xmlDocId": "P:Godot.Label3D.TextureFilter",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Uppercase",
+      "kind": "Property",
+      "signature": "public bool Uppercase { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], all the text displays as UPPERCASE.",
+      "defaultValue": "false",
+      "godotName": "uppercase",
+      "xmlDocId": "P:Godot.Label3D.Uppercase",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "VerticalAlignment",
+      "kind": "Property",
+      "signature": "public int VerticalAlignment { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Controls the text\u0027s vertical alignment. Supports top, center, and bottom.",
+      "defaultValue": "1",
+      "godotName": "vertical_alignment",
+      "xmlDocId": "P:Godot.Label3D.VerticalAlignment",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "Width",
+      "kind": "Property",
+      "signature": "public float Width { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Text width (in pixels), used for autowrap and fill alignment.",
+      "defaultValue": "500.0",
+      "godotName": "width",
+      "xmlDocId": "P:Godot.Label3D.Width",
+      "sourcePath": "doc/classes/Label3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AlphaCutMode",
+      "values": [
+        {
+          "name": "ALPHA_CUT_DISABLED",
+          "value": "0",
+          "enum": "AlphaCutMode",
+          "kind": "EnumValue",
+          "summary": "This mode performs standard alpha blending. It can display translucent areas, but transparency sorting issues may be visible when multiple transparent materials are overlapping. [member GeometryInstance3D.cast_shadow] has no effect when this transparency mode is used; the [Label3D] will never cast shadows.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "ALPHA_CUT_DISCARD",
+          "value": "1",
+          "enum": "AlphaCutMode",
+          "kind": "EnumValue",
+          "summary": "This mode only allows fully transparent or fully opaque pixels. Harsh edges will be visible unless some form of screen-space antialiasing is enabled (see [member ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa]). This mode is also known as [i]alpha testing[/i] or [i]1-bit transparency[/i]. [b]Note:[/b] This mode might have issues with anti-aliased fonts and outlines, try adjusting [member alpha_scissor_threshold] or using MSDF font. [b]Note:[/b] When using text with overlapping glyphs (e.g., cursive scripts), this mode might have transparency sorting issues between the main text and the outline.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "ALPHA_CUT_HASH",
+          "value": "3",
+          "enum": "AlphaCutMode",
+          "kind": "EnumValue",
+          "summary": "This mode draws cuts off all values below a spatially-deterministic threshold, the rest will remain opaque.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "ALPHA_CUT_OPAQUE_PREPASS",
+          "value": "2",
+          "enum": "AlphaCutMode",
+          "kind": "EnumValue",
+          "summary": "This mode draws fully opaque pixels in the depth prepass. This is slower than [constant ALPHA_CUT_DISABLED] or [constant ALPHA_CUT_DISCARD], but it allows displaying translucent areas and smooth edges while using proper sorting. [b]Note:[/b] When using text with overlapping glyphs (e.g., cursive scripts), this mode might have transparency sorting issues between the main text and the outline.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DrawFlags",
+      "values": [
+        {
+          "name": "FLAG_DISABLE_DEPTH_TEST",
+          "value": "2",
+          "enum": "DrawFlags",
+          "kind": "EnumValue",
+          "summary": "Disables the depth test, so this object is drawn on top of all others. However, objects drawn after it in the draw order may cover it.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "FLAG_DOUBLE_SIDED",
+          "value": "1",
+          "enum": "DrawFlags",
+          "kind": "EnumValue",
+          "summary": "If set, text can be seen from the back as well. If not, the text is invisible when looking at it from behind.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "FLAG_FIXED_SIZE",
+          "value": "3",
+          "enum": "DrawFlags",
+          "kind": "EnumValue",
+          "summary": "Label is scaled by depth so that it always appears the same size on screen.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "FLAG_MAX",
+          "value": "4",
+          "enum": "DrawFlags",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum DrawFlags] enum.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        },
+        {
+          "name": "FLAG_SHADED",
+          "value": "0",
+          "enum": "DrawFlags",
+          "kind": "EnumValue",
+          "summary": "If set, lights in the environment affect the label.",
+          "sourcePath": "doc/classes/Label3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FLAG_SHADED",
+      "value": "0",
+      "enum": "DrawFlags",
+      "kind": "EnumValue",
+      "summary": "If set, lights in the environment affect the label.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FLAG_DOUBLE_SIDED",
+      "value": "1",
+      "enum": "DrawFlags",
+      "kind": "EnumValue",
+      "summary": "If set, text can be seen from the back as well. If not, the text is invisible when looking at it from behind.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FLAG_DISABLE_DEPTH_TEST",
+      "value": "2",
+      "enum": "DrawFlags",
+      "kind": "EnumValue",
+      "summary": "Disables the depth test, so this object is drawn on top of all others. However, objects drawn after it in the draw order may cover it.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FLAG_FIXED_SIZE",
+      "value": "3",
+      "enum": "DrawFlags",
+      "kind": "EnumValue",
+      "summary": "Label is scaled by depth so that it always appears the same size on screen.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "FLAG_MAX",
+      "value": "4",
+      "enum": "DrawFlags",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum DrawFlags] enum.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "ALPHA_CUT_DISABLED",
+      "value": "0",
+      "enum": "AlphaCutMode",
+      "kind": "EnumValue",
+      "summary": "This mode performs standard alpha blending. It can display translucent areas, but transparency sorting issues may be visible when multiple transparent materials are overlapping. [member GeometryInstance3D.cast_shadow] has no effect when this transparency mode is used; the [Label3D] will never cast shadows.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "ALPHA_CUT_DISCARD",
+      "value": "1",
+      "enum": "AlphaCutMode",
+      "kind": "EnumValue",
+      "summary": "This mode only allows fully transparent or fully opaque pixels. Harsh edges will be visible unless some form of screen-space antialiasing is enabled (see [member ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa]). This mode is also known as [i]alpha testing[/i] or [i]1-bit transparency[/i]. [b]Note:[/b] This mode might have issues with anti-aliased fonts and outlines, try adjusting [member alpha_scissor_threshold] or using MSDF font. [b]Note:[/b] When using text with overlapping glyphs (e.g., cursive scripts), this mode might have transparency sorting issues between the main text and the outline.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "ALPHA_CUT_OPAQUE_PREPASS",
+      "value": "2",
+      "enum": "AlphaCutMode",
+      "kind": "EnumValue",
+      "summary": "This mode draws fully opaque pixels in the depth prepass. This is slower than [constant ALPHA_CUT_DISABLED] or [constant ALPHA_CUT_DISCARD], but it allows displaying translucent areas and smooth edges while using proper sorting. [b]Note:[/b] When using text with overlapping glyphs (e.g., cursive scripts), this mode might have transparency sorting issues between the main text and the outline.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    },
+    {
+      "name": "ALPHA_CUT_HASH",
+      "value": "3",
+      "enum": "AlphaCutMode",
+      "kind": "EnumValue",
+      "summary": "This mode draws cuts off all values below a spatially-deterministic threshold, the rest will remain opaque.",
+      "sourcePath": "doc/classes/Label3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Label3D.xml",
+      "sha256": "ddd7b25da803e3cc3a8deb1c9641aa1babd2b9d2666297ed77b9e3f648aa3306"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

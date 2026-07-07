@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Resource",
+    "namespace": "Godot",
+    "fullName": "Godot.Resource",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Resource",
+    "documentationPath": "doc/classes/Resource.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_resource.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetRid",
+      "kind": "Method",
+      "signature": "public RID _GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Override this method to return a custom [RID] when [method get_rid] is called.",
+      "godotName": "_get_rid",
+      "xmlDocId": "M:Godot.Resource._GetRid",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_ResetState",
+      "kind": "Method",
+      "signature": "public void _ResetState()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "For resources that store state in non-exported properties, such as via [method Object._validate_property] or [method Object._get_property_list], this method must be implemented to clear them.",
+      "godotName": "_reset_state",
+      "xmlDocId": "M:Godot.Resource._ResetState",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_SetPathCache",
+      "kind": "Method",
+      "signature": "public void _SetPathCache(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to execute additional logic after [method set_path_cache] is called on this object.",
+      "godotName": "_set_path_cache",
+      "xmlDocId": "M:Godot.Resource._SetPathCache(String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_SetupLocalToScene",
+      "kind": "Method",
+      "signature": "public void _SetupLocalToScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to customize the newly duplicated resource created from [method PackedScene.instantiate], if the original\u0027s [member resource_local_to_scene] is set to [code]true[/code]. [b]Example:[/b] Set a random [code]damage[/code] value to every local resource from an instantiated scene: [codeblock] extends Resource var damage = 0 func _setup_local_to_scene(): damage = randi_range(10, 40) [/codeblock]",
+      "godotName": "_setup_local_to_scene",
+      "xmlDocId": "M:Godot.Resource._SetupLocalToScene",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "CopyFromResource",
+      "kind": "Method",
+      "signature": "public int CopyFromResource(Resource resource)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "Resource"
+        }
+      ],
+      "summary": "Copies the data from [param resource] into this resource. Both resources must share the same class.",
+      "godotName": "copy_from_resource",
+      "xmlDocId": "M:Godot.Resource.CopyFromResource(Resource)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public Resource Duplicate(bool deep)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "deep",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Duplicates this resource, returning a new resource with its [code]export[/code]ed or [constant PROPERTY_USAGE_STORAGE] properties copied from the original. If [param deep] is [code]false[/code], a [b]shallow[/b] copy is returned: nested [Array], [Dictionary], and [Resource] properties are not duplicated and are shared with the original resource. If [param deep] is [code]true[/code], a [b]deep[/b] copy is returned: all nested arrays, dictionaries, and packed arrays are also duplicated (recursively). Any [Resource] found inside will only be duplicated if it\u0027s local, like [constant DEEP_DUPLICATE_INTERNAL] used with [method duplicate_deep]. The following exceptions apply: - Subresource properties with the [constant PROPERTY_USAGE_ALWAYS_DUPLICATE] flag are always duplicated (recursively or not, depending on [param deep]). - Subresource properties with the [constant PROPERTY_USAGE_NEVER_DUPLICATE] flag are never duplicated. [b]Note:[/b] For custom resources, this method will fail if [method Object._init] has been defined with required parameters. [b]Note:[/b] When duplicating with [param deep] set to [code]true[/code], each resource found, including the one on which this method is called, will be only duplicated once and referenced as many times as needed in the duplicate. For instance, if you are duplicating resource A that happens to have resource B referenced twice, you\u0027ll get a new resource A\u0027 referencing a new resource B\u0027 twice.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.Resource.Duplicate(bool)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "DuplicateDeep",
+      "kind": "Method",
+      "signature": "public Resource DuplicateDeep(int deepSubresourcesMode)",
+      "returnType": "Resource",
+      "parameters": [
+        {
+          "name": "deep_subresources_mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Duplicates this resource, deeply, like [method duplicate] when passing [code]true[/code], with extra control over how subresources are handled.",
+      "godotName": "duplicate_deep",
+      "xmlDocId": "M:Godot.Resource.DuplicateDeep(int)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "EmitChanged",
+      "kind": "Method",
+      "signature": "public void EmitChanged()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Emits the [signal changed] signal. This method is called automatically for some built-in resources. [b]Note:[/b] For custom resources, it\u0027s recommended to call this method whenever a meaningful change occurs, such as a modified property. This ensures that custom [Object]s depending on the resource are properly updated. [codeblock] var damage: set(new_value): if damage != new_value: damage = new_value emit_changed() [/codeblock]",
+      "godotName": "emit_changed",
+      "xmlDocId": "M:Godot.Resource.EmitChanged",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "GenerateSceneUniqueId",
+      "kind": "Method",
+      "signature": "public String GenerateSceneUniqueId()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Generates a unique identifier for a resource to be contained inside a [PackedScene], based on the current date, time, and a random value. The returned string is only composed of letters ([code]a[/code] to [code]y[/code]) and numbers ([code]0[/code] to [code]8[/code]). See also [member resource_scene_unique_id].",
+      "godotName": "generate_scene_unique_id",
+      "xmlDocId": "M:Godot.Resource.GenerateSceneUniqueId",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "GetIdForPath",
+      "kind": "Method",
+      "signature": "public String GetIdForPath(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "From the internal cache for scene-unique IDs, returns the ID of this resource for the scene at [param path]. If there is no entry, an empty string is returned. Useful to keep scene-unique IDs the same when implementing a VCS-friendly custom resource format by extending [ResourceFormatLoader] and [ResourceFormatSaver]. [b]Note:[/b] This method is only implemented when running in an editor context. At runtime, it returns an empty string.",
+      "godotName": "get_id_for_path",
+      "xmlDocId": "M:Godot.Resource.GetIdForPath(String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "GetLocalScene",
+      "kind": "Method",
+      "signature": "public Node GetLocalScene()",
+      "returnType": "Node",
+      "parameters": [],
+      "summary": "If [member resource_local_to_scene] is set to [code]true[/code] and the resource has been loaded from a [PackedScene] instantiation, returns the root [Node] of the scene where this resource is used. Otherwise, returns [code]null[/code].",
+      "godotName": "get_local_scene",
+      "xmlDocId": "M:Godot.Resource.GetLocalScene",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "GetRid",
+      "kind": "Method",
+      "signature": "public RID GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Returns the [RID] of this resource (or an empty RID). Many resources (such as [Texture2D], [Mesh], and so on) are high-level abstractions of resources stored in a specialized server ([DisplayServer], [RenderingServer], etc.), so this function will return the original [RID].",
+      "godotName": "get_rid",
+      "xmlDocId": "M:Godot.Resource.GetRid",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "IsBuiltIn",
+      "kind": "Method",
+      "signature": "public bool IsBuiltIn()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the resource is saved on disk as a part of another resource\u0027s file.",
+      "godotName": "is_built_in",
+      "xmlDocId": "M:Godot.Resource.IsBuiltIn",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "ResetState",
+      "kind": "Method",
+      "signature": "public void ResetState()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes the resource clear its non-exported properties. See also [method _reset_state]. Useful when implementing a custom resource format by extending [ResourceFormatLoader] and [ResourceFormatSaver].",
+      "godotName": "reset_state",
+      "xmlDocId": "M:Godot.Resource.ResetState",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "SetIdForPath",
+      "kind": "Method",
+      "signature": "public void SetIdForPath(String path, String id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "id",
+          "type": "String"
+        }
+      ],
+      "summary": "In the internal cache for scene-unique IDs, sets the ID of this resource to [param id] for the scene at [param path]. If [param id] is empty, the cache entry for [param path] is cleared. Useful to keep scene-unique IDs the same when implementing a VCS-friendly custom resource format by extending [ResourceFormatLoader] and [ResourceFormatSaver]. [b]Note:[/b] This method is only implemented when running in an editor context.",
+      "godotName": "set_id_for_path",
+      "xmlDocId": "M:Godot.Resource.SetIdForPath(String,String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "SetPathCache",
+      "kind": "Method",
+      "signature": "public void SetPathCache(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the resource\u0027s path to [param path] without involving the resource cache. Useful for handling [enum ResourceFormatLoader.CacheMode] values when implementing a custom resource format by extending [ResourceFormatLoader] and [ResourceFormatSaver].",
+      "godotName": "set_path_cache",
+      "xmlDocId": "M:Godot.Resource.SetPathCache(String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "SetupLocalToScene",
+      "kind": "Method",
+      "signature": "public void SetupLocalToScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Calls [method _setup_local_to_scene]. If [member resource_local_to_scene] is set to [code]true[/code], this method is automatically called from [method PackedScene.instantiate] by the newly duplicated resource within the scene instance.",
+      "godotName": "setup_local_to_scene",
+      "xmlDocId": "M:Godot.Resource.SetupLocalToScene",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "TakeOverPath",
+      "kind": "Method",
+      "signature": "public void TakeOverPath(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the [member resource_path] to [param path], potentially overriding an existing cache entry for this path. Further attempts to load an overridden resource by path will instead return this resource.",
+      "godotName": "take_over_path",
+      "xmlDocId": "M:Godot.Resource.TakeOverPath(String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "ResourceLocalToScene",
+      "kind": "Property",
+      "signature": "public bool ResourceLocalToScene { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the resource is duplicated for each instance of all scenes using it. At run-time, the resource can be modified in one scene without affecting other instances (see [method PackedScene.instantiate]). [b]Note:[/b] Changing this property at run-time has no effect on already created duplicate resources.",
+      "defaultValue": "false",
+      "godotName": "resource_local_to_scene",
+      "xmlDocId": "P:Godot.Resource.ResourceLocalToScene",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "ResourceName",
+      "kind": "Property",
+      "signature": "public String ResourceName { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "An optional name for this resource. When defined, its value is displayed to represent the resource in the Inspector dock. For built-in scripts, the name is displayed as part of the tab name in the script editor. [b]Note:[/b] Some resource formats do not support resource names. You can still set the name in the editor or via code, but it will be lost when the resource is reloaded. For example, only built-in scripts can have a resource name, while scripts stored in separate files cannot.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "resource_name",
+      "xmlDocId": "P:Godot.Resource.ResourceName",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "ResourcePath",
+      "kind": "Property",
+      "signature": "public String ResourcePath { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The unique path to this resource. If it has been saved to disk, the value will be its filepath. If the resource is exclusively contained within a scene, the value will be the [PackedScene]\u0027s filepath, followed by a unique identifier. [b]Note:[/b] Setting this property manually may fail if a resource with the same path has already been previously loaded. If necessary, use [method take_over_path].",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "resource_path",
+      "xmlDocId": "P:Godot.Resource.ResourcePath",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "ResourceSceneUniqueId",
+      "kind": "Property",
+      "signature": "public String ResourceSceneUniqueId { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "A unique identifier relative to this resource\u0027s scene. If left empty, the ID is automatically generated when this resource is saved inside a [PackedScene]. If the resource is not inside a scene, this property is empty by default. [b]Note:[/b] When the [PackedScene] is saved, if multiple resources in the same scene use the same ID, only the earliest resource in the scene hierarchy keeps the original ID. The other resources are assigned new IDs from [method generate_scene_unique_id]. [b]Note:[/b] Setting this property does not emit the [signal changed] signal. [b]Warning:[/b] When setting, the ID must only consist of letters, numbers, and underscores. Otherwise, it will fail and default to a randomly generated ID.",
+      "godotName": "resource_scene_unique_id",
+      "xmlDocId": "P:Godot.Resource.ResourceSceneUniqueId",
+      "sourcePath": "doc/classes/Resource.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "Changed",
+      "kind": "Signal",
+      "signature": "public event ChangedHandler Changed",
+      "parameters": [],
+      "summary": "Emitted when the resource changes, usually when one of its properties is modified. See also [method emit_changed]. [b]Note:[/b] This signal is not emitted automatically for properties of custom resources. If necessary, a setter needs to be created to emit the signal.",
+      "godotName": "changed",
+      "xmlDocId": "E:Godot.Resource.Changed",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "SetupLocalToSceneRequested",
+      "kind": "Signal",
+      "signature": "public event SetupLocalToSceneRequestedHandler SetupLocalToSceneRequested",
+      "parameters": [],
+      "summary": "Emitted by a newly duplicated resource with [member resource_local_to_scene] set to [code]true[/code].",
+      "godotName": "setup_local_to_scene_requested",
+      "xmlDocId": "E:Godot.Resource.SetupLocalToSceneRequested",
+      "sourcePath": "doc/classes/Resource.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "DeepDuplicateMode",
+      "values": [
+        {
+          "name": "DEEP_DUPLICATE_ALL",
+          "value": "2",
+          "enum": "DeepDuplicateMode",
+          "kind": "EnumValue",
+          "summary": "Every subresource found will be duplicated, even if it has a non-local path. In other words, even potentially big resources stored separately will be duplicated.",
+          "sourcePath": "doc/classes/Resource.xml"
+        },
+        {
+          "name": "DEEP_DUPLICATE_INTERNAL",
+          "value": "1",
+          "enum": "DeepDuplicateMode",
+          "kind": "EnumValue",
+          "summary": "Only subresources without a path or with a scene-local path will be duplicated.",
+          "sourcePath": "doc/classes/Resource.xml"
+        },
+        {
+          "name": "DEEP_DUPLICATE_NONE",
+          "value": "0",
+          "enum": "DeepDuplicateMode",
+          "kind": "EnumValue",
+          "summary": "No subresources at all are duplicated. This is useful even in a deep duplication to have all the arrays and dictionaries duplicated but still pointing to the original resources.",
+          "sourcePath": "doc/classes/Resource.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "DEEP_DUPLICATE_NONE",
+      "value": "0",
+      "enum": "DeepDuplicateMode",
+      "kind": "EnumValue",
+      "summary": "No subresources at all are duplicated. This is useful even in a deep duplication to have all the arrays and dictionaries duplicated but still pointing to the original resources.",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "DEEP_DUPLICATE_INTERNAL",
+      "value": "1",
+      "enum": "DeepDuplicateMode",
+      "kind": "EnumValue",
+      "summary": "Only subresources without a path or with a scene-local path will be duplicated.",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "DEEP_DUPLICATE_ALL",
+      "value": "2",
+      "enum": "DeepDuplicateMode",
+      "kind": "EnumValue",
+      "summary": "Every subresource found will be duplicated, even if it has a non-local path. In other words, even potentially big resources stored separately will be duplicated.",
+      "sourcePath": "doc/classes/Resource.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetRid",
+      "kind": "Method",
+      "signature": "public RID _GetRid()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Override this method to return a custom [RID] when [method get_rid] is called.",
+      "godotName": "_get_rid",
+      "xmlDocId": "M:Godot.Resource._GetRid",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_ResetState",
+      "kind": "Method",
+      "signature": "public void _ResetState()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "For resources that store state in non-exported properties, such as via [method Object._validate_property] or [method Object._get_property_list], this method must be implemented to clear them.",
+      "godotName": "_reset_state",
+      "xmlDocId": "M:Godot.Resource._ResetState",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_SetPathCache",
+      "kind": "Method",
+      "signature": "public void _SetPathCache(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override this method to execute additional logic after [method set_path_cache] is called on this object.",
+      "godotName": "_set_path_cache",
+      "xmlDocId": "M:Godot.Resource._SetPathCache(String)",
+      "sourcePath": "doc/classes/Resource.xml"
+    },
+    {
+      "name": "_SetupLocalToScene",
+      "kind": "Method",
+      "signature": "public void _SetupLocalToScene()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Override this method to customize the newly duplicated resource created from [method PackedScene.instantiate], if the original\u0027s [member resource_local_to_scene] is set to [code]true[/code]. [b]Example:[/b] Set a random [code]damage[/code] value to every local resource from an instantiated scene: [codeblock] extends Resource var damage = 0 func _setup_local_to_scene(): damage = randi_range(10, 40) [/codeblock]",
+      "godotName": "_setup_local_to_scene",
+      "xmlDocId": "M:Godot.Resource._SetupLocalToScene",
+      "sourcePath": "doc/classes/Resource.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Resource.xml",
+      "sha256": "dae709c915d6017fb04ff15ac31d3c9b6a0a09620aecc6c3eaa2141f37c03954"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PolygonPathFinder",
+    "namespace": "Godot",
+    "fullName": "Godot.PolygonPathFinder",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "PolygonPathFinder",
+    "documentationPath": "doc/classes/PolygonPathFinder.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_polygonpathfinder.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FindPath",
+      "kind": "Method",
+      "signature": "public PackedVector2Array FindPath(Vector2 from, Vector2 to)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "",
+      "godotName": "find_path",
+      "xmlDocId": "M:Godot.PolygonPathFinder.FindPath(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "GetBounds",
+      "kind": "Method",
+      "signature": "public Rect2 GetBounds()",
+      "returnType": "Rect2",
+      "parameters": [],
+      "summary": "",
+      "godotName": "get_bounds",
+      "xmlDocId": "M:Godot.PolygonPathFinder.GetBounds",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "GetClosestPoint",
+      "kind": "Method",
+      "signature": "public Vector2 GetClosestPoint(Vector2 point)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_closest_point",
+      "xmlDocId": "M:Godot.PolygonPathFinder.GetClosestPoint(Vector2)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "GetIntersections",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetIntersections(Vector2 from, Vector2 to)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Vector2"
+        },
+        {
+          "name": "to",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_intersections",
+      "xmlDocId": "M:Godot.PolygonPathFinder.GetIntersections(Vector2,Vector2)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "GetPointPenalty",
+      "kind": "Method",
+      "signature": "public float GetPointPenalty(int idx)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "get_point_penalty",
+      "xmlDocId": "M:Godot.PolygonPathFinder.GetPointPenalty(int)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "IsPointInside",
+      "kind": "Method",
+      "signature": "public bool IsPointInside(Vector2 point)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if [param point] falls inside the polygon area. [codeblocks] [gdscript] var polygon_path_finder = PolygonPathFinder.new() var points = [Vector2(0.0, 0.0), Vector2(1.0, 0.0), Vector2(0.0, 1.0)] var connections = [0, 1, 1, 2, 2, 0] polygon_path_finder.setup(points, connections) print(polygon_path_finder.is_point_inside(Vector2(0.2, 0.2))) # Prints true print(polygon_path_finder.is_point_inside(Vector2(1.0, 1.0))) # Prints false [/gdscript] [csharp] var polygonPathFinder = new PolygonPathFinder(); Vector2[] points = [ new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f) ]; int[] connections = [0, 1, 1, 2, 2, 0]; polygonPathFinder.Setup(points, connections); GD.Print(polygonPathFinder.IsPointInside(new Vector2(0.2f, 0.2f))); // Prints True GD.Print(polygonPathFinder.IsPointInside(new Vector2(1.0f, 1.0f))); // Prints False [/csharp] [/codeblocks]",
+      "godotName": "is_point_inside",
+      "xmlDocId": "M:Godot.PolygonPathFinder.IsPointInside(Vector2)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "SetPointPenalty",
+      "kind": "Method",
+      "signature": "public void SetPointPenalty(int idx, float penalty)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "penalty",
+          "type": "float"
+        }
+      ],
+      "summary": "",
+      "godotName": "set_point_penalty",
+      "xmlDocId": "M:Godot.PolygonPathFinder.SetPointPenalty(int,float)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    },
+    {
+      "name": "Setup",
+      "kind": "Method",
+      "signature": "public void Setup(PackedVector2Array points, PackedInt32Array connections)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "points",
+          "type": "PackedVector2Array"
+        },
+        {
+          "name": "connections",
+          "type": "PackedInt32Array"
+        }
+      ],
+      "summary": "Sets up [PolygonPathFinder] with an array of points that define the vertices of the polygon, and an array of indices that determine the edges of the polygon. The length of [param connections] must be even, returns an error if odd. [codeblocks] [gdscript] var polygon_path_finder = PolygonPathFinder.new() var points = [Vector2(0.0, 0.0), Vector2(1.0, 0.0), Vector2(0.0, 1.0)] var connections = [0, 1, 1, 2, 2, 0] polygon_path_finder.setup(points, connections) [/gdscript] [csharp] var polygonPathFinder = new PolygonPathFinder(); Vector2[] points = [ new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f) ]; int[] connections = [0, 1, 1, 2, 2, 0]; polygonPathFinder.Setup(points, connections); [/csharp] [/codeblocks]",
+      "godotName": "setup",
+      "xmlDocId": "M:Godot.PolygonPathFinder.Setup(PackedVector2Array,PackedInt32Array)",
+      "sourcePath": "doc/classes/PolygonPathFinder.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PolygonPathFinder.xml",
+      "sha256": "53d815ee6d6bd94934a94d77b4821f3de7d0f1d086e19f24fa367cd32b72423c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

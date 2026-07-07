@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeVectorFunc",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeVectorFunc",
+    "kind": "class",
+    "baseType": "VisualShaderNodeVectorBase",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeVectorFunc",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodevectorfunc.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The function to be performed.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeVectorFunc.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_ABS",
+          "value": "4",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the absolute value of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ACOS",
+          "value": "5",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the arc-cosine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ACOSH",
+          "value": "6",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the inverse hyperbolic cosine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ASIN",
+          "value": "7",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the arc-sine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ASINH",
+          "value": "8",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the inverse hyperbolic sine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ATAN",
+          "value": "9",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the arc-tangent of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ATANH",
+          "value": "10",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the inverse hyperbolic tangent of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_CEIL",
+          "value": "11",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Finds the nearest integer that is greater than or equal to the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_COS",
+          "value": "12",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the cosine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_COSH",
+          "value": "13",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the hyperbolic cosine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_DEGREES",
+          "value": "14",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Converts a quantity in radians to degrees.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_EXP",
+          "value": "15",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Base-e Exponential.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_EXP2",
+          "value": "16",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Base-2 Exponential.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_FLOOR",
+          "value": "17",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Finds the nearest integer less than or equal to the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_FRACT",
+          "value": "18",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Computes the fractional part of the argument.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_INVERSE_SQRT",
+          "value": "19",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the inverse of the square root of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_LOG",
+          "value": "20",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Natural logarithm.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_LOG2",
+          "value": "21",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Base-2 logarithm.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "33",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_NEGATE",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the opposite value of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_NORMALIZE",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Normalizes the vector so that it has a length of [code]1[/code] but points in the same direction.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ONEMINUS",
+          "value": "32",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns [code]1.0 - vector[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_RADIANS",
+          "value": "22",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Converts a quantity in degrees to radians.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_RECIPROCAL",
+          "value": "3",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns [code]1/vector[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ROUND",
+          "value": "23",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Finds the nearest integer to the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_ROUNDEVEN",
+          "value": "24",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Finds the nearest even integer to the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_SATURATE",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Clamps the value between [code]0.0[/code] and [code]1.0[/code].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_SIGN",
+          "value": "25",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Extracts the sign of the parameter, i.e. returns [code]-1[/code] if the parameter is negative, [code]1[/code] if it\u0027s positive and [code]0[/code] otherwise.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_SIN",
+          "value": "26",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the sine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_SINH",
+          "value": "27",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the hyperbolic sine of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_SQRT",
+          "value": "28",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the square root of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_TAN",
+          "value": "29",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the tangent of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_TANH",
+          "value": "30",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns the hyperbolic tangent of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        },
+        {
+          "name": "FUNC_TRUNC",
+          "value": "31",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Returns a value equal to the nearest integer to the parameter whose absolute value is not larger than the absolute value of the parameter.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "FUNC_NORMALIZE",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Normalizes the vector so that it has a length of [code]1[/code] but points in the same direction.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_SATURATE",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Clamps the value between [code]0.0[/code] and [code]1.0[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_NEGATE",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the opposite value of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_RECIPROCAL",
+      "value": "3",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns [code]1/vector[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ABS",
+      "value": "4",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the absolute value of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ACOS",
+      "value": "5",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the arc-cosine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ACOSH",
+      "value": "6",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the inverse hyperbolic cosine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ASIN",
+      "value": "7",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the arc-sine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ASINH",
+      "value": "8",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the inverse hyperbolic sine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ATAN",
+      "value": "9",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the arc-tangent of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ATANH",
+      "value": "10",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the inverse hyperbolic tangent of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_CEIL",
+      "value": "11",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Finds the nearest integer that is greater than or equal to the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_COS",
+      "value": "12",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the cosine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_COSH",
+      "value": "13",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the hyperbolic cosine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_DEGREES",
+      "value": "14",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Converts a quantity in radians to degrees.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_EXP",
+      "value": "15",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Base-e Exponential.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_EXP2",
+      "value": "16",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Base-2 Exponential.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_FLOOR",
+      "value": "17",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Finds the nearest integer less than or equal to the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_FRACT",
+      "value": "18",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Computes the fractional part of the argument.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_INVERSE_SQRT",
+      "value": "19",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the inverse of the square root of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_LOG",
+      "value": "20",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Natural logarithm.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_LOG2",
+      "value": "21",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Base-2 logarithm.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_RADIANS",
+      "value": "22",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Converts a quantity in degrees to radians.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ROUND",
+      "value": "23",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Finds the nearest integer to the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ROUNDEVEN",
+      "value": "24",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Finds the nearest even integer to the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_SIGN",
+      "value": "25",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Extracts the sign of the parameter, i.e. returns [code]-1[/code] if the parameter is negative, [code]1[/code] if it\u0027s positive and [code]0[/code] otherwise.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_SIN",
+      "value": "26",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the sine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_SINH",
+      "value": "27",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the hyperbolic sine of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_SQRT",
+      "value": "28",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the square root of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_TAN",
+      "value": "29",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the tangent of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_TANH",
+      "value": "30",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns the hyperbolic tangent of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_TRUNC",
+      "value": "31",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns a value equal to the nearest integer to the parameter whose absolute value is not larger than the absolute value of the parameter.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_ONEMINUS",
+      "value": "32",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Returns [code]1.0 - vector[/code].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "33",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeVectorFunc.xml",
+      "sha256": "8e776e10e5dcd19f82548e48e3295e4facdafd6da6298d65ba96138f5859e798"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

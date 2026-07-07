@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XRNode3D",
+    "namespace": "Godot",
+    "fullName": "Godot.XRNode3D",
+    "kind": "class",
+    "baseType": "Node3D",
+    "interfaces": [],
+    "godotReference": "XRNode3D",
+    "documentationPath": "doc/classes/XRNode3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xrnode3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetHasTrackingData",
+      "kind": "Method",
+      "signature": "public bool GetHasTrackingData()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [member tracker] has current tracking data for the [member pose] being tracked.",
+      "godotName": "get_has_tracking_data",
+      "xmlDocId": "M:Godot.XRNode3D.GetHasTrackingData",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "GetIsActive",
+      "kind": "Method",
+      "signature": "public bool GetIsActive()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the [member tracker] has been registered and the [member pose] is being tracked.",
+      "godotName": "get_is_active",
+      "xmlDocId": "M:Godot.XRNode3D.GetIsActive",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "GetPose",
+      "kind": "Method",
+      "signature": "public XRPose GetPose()",
+      "returnType": "XRPose",
+      "parameters": [],
+      "summary": "Returns the [XRPose] containing the current state of the pose being tracked. This gives access to additional properties of this pose.",
+      "godotName": "get_pose",
+      "xmlDocId": "M:Godot.XRNode3D.GetPose",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "TriggerHapticPulse",
+      "kind": "Method",
+      "signature": "public void TriggerHapticPulse(String actionName, float frequency, float amplitude, float durationSec, float delaySec)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "action_name",
+          "type": "String"
+        },
+        {
+          "name": "frequency",
+          "type": "float"
+        },
+        {
+          "name": "amplitude",
+          "type": "float"
+        },
+        {
+          "name": "duration_sec",
+          "type": "float"
+        },
+        {
+          "name": "delay_sec",
+          "type": "float"
+        }
+      ],
+      "summary": "Triggers a haptic pulse on a device associated with this interface. [param action_name] is the name of the action for this pulse. [param frequency] is the frequency of the pulse, set to [code]0.0[/code] to have the system use a default frequency. [param amplitude] is the amplitude of the pulse between [code]0.0[/code] and [code]1.0[/code]. [param duration_sec] is the duration of the pulse in seconds. [param delay_sec] is a delay in seconds before the pulse is given.",
+      "godotName": "trigger_haptic_pulse",
+      "xmlDocId": "M:Godot.XRNode3D.TriggerHapticPulse(String,float,float,float,float)",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "PhysicsInterpolationMode",
+      "kind": "Property",
+      "signature": "public int PhysicsInterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "physics_interpolation_mode",
+      "xmlDocId": "P:Godot.XRNode3D.PhysicsInterpolationMode",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "Pose",
+      "kind": "Property",
+      "signature": "public StringName Pose { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the pose we\u0027re bound to. Which poses a tracker supports is not known during design time. Godot defines number of standard pose names such as [code]aim[/code] and [code]grip[/code] but other may be configured within a given [XRInterface].",
+      "defaultValue": "\u0026\u0022default\u0022",
+      "godotName": "pose",
+      "xmlDocId": "P:Godot.XRNode3D.Pose",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "ShowWhenTracked",
+      "kind": "Property",
+      "signature": "public bool ShowWhenTracked { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Enables showing the node when tracking starts, and hiding the node when tracking is lost.",
+      "defaultValue": "false",
+      "godotName": "show_when_tracked",
+      "xmlDocId": "P:Godot.XRNode3D.ShowWhenTracked",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    },
+    {
+      "name": "Tracker",
+      "kind": "Property",
+      "signature": "public StringName Tracker { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the tracker we\u0027re bound to. Which trackers are available is not known during design time. Godot defines a number of standard trackers such as [code]left_hand[/code] and [code]right_hand[/code] but others may be configured within a given [XRInterface].",
+      "defaultValue": "\u0026\u0022\u0022",
+      "godotName": "tracker",
+      "xmlDocId": "P:Godot.XRNode3D.Tracker",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "TrackingChanged",
+      "kind": "Signal",
+      "signature": "public event TrackingChangedHandler TrackingChanged",
+      "parameters": [
+        {
+          "name": "tracking",
+          "type": "bool"
+        }
+      ],
+      "summary": "Emitted when the [member tracker] starts or stops receiving updated tracking data for the [member pose] being tracked. The [param tracking] argument indicates whether the tracker is getting updated tracking data.",
+      "godotName": "tracking_changed",
+      "xmlDocId": "E:Godot.XRNode3D.TrackingChanged(bool)",
+      "sourcePath": "doc/classes/XRNode3D.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XRNode3D.xml",
+      "sha256": "fbef3b074a6699b62fcea87bc532d7989078e3861fdacb9f7736d654f44e9991"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

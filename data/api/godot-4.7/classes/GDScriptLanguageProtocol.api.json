@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GDScriptLanguageProtocol",
+    "namespace": "Godot",
+    "fullName": "Godot.GDScriptLanguageProtocol",
+    "kind": "class",
+    "baseType": "JSONRPC",
+    "interfaces": [],
+    "godotReference": "GDScriptLanguageProtocol",
+    "documentationPath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gdscriptlanguageprotocol.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetTextDocument",
+      "kind": "Method",
+      "signature": "public GDScriptTextDocument GetTextDocument()",
+      "returnType": "GDScriptTextDocument",
+      "parameters": [],
+      "summary": "Returns the language server\u0027s [GDScriptTextDocument] instance.",
+      "godotName": "get_text_document",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.GetTextDocument",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "GetWorkspace",
+      "kind": "Method",
+      "signature": "public GDScriptWorkspace GetWorkspace()",
+      "returnType": "GDScriptWorkspace",
+      "parameters": [],
+      "summary": "Returns the language server\u0027s [GDScriptWorkspace] instance.",
+      "godotName": "get_workspace",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.GetWorkspace",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "Initialize",
+      "kind": "Method",
+      "signature": "public Variant Initialize(Dictionary @params)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "",
+      "godotName": "initialize",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.Initialize(Dictionary)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "Initialized",
+      "kind": "Method",
+      "signature": "public void Initialized(Variant @params)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "initialized",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.Initialized(Variant)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "IsInitialized",
+      "kind": "Method",
+      "signature": "public bool IsInitialized()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the language server was initialized by a language server client, [code]false[/code] otherwise.",
+      "godotName": "is_initialized",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.IsInitialized",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "IsSmartResolveEnabled",
+      "kind": "Method",
+      "signature": "public bool IsSmartResolveEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the language server is providing the smart resolve feature, [code]false[/code] otherwise. The feature can be configured through the editor settings.",
+      "godotName": "is_smart_resolve_enabled",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.IsSmartResolveEnabled",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "NotifyClient",
+      "kind": "Method",
+      "signature": "public void NotifyClient(String method, Variant @params, int clientId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "String"
+        },
+        {
+          "name": "params",
+          "type": "Variant",
+          "defaultValue": "null"
+        },
+        {
+          "name": "client_id",
+          "type": "int",
+          "defaultValue": "-1"
+        }
+      ],
+      "summary": "",
+      "godotName": "notify_client",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.NotifyClient(String,Variant,int)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "OnClientConnected",
+      "kind": "Method",
+      "signature": "public int OnClientConnected()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "on_client_connected",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.OnClientConnected",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    },
+    {
+      "name": "OnClientDisconnected",
+      "kind": "Method",
+      "signature": "public void OnClientDisconnected(int clientId)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "client_id",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "on_client_disconnected",
+      "xmlDocId": "M:Godot.GDScriptLanguageProtocol.OnClientDisconnected(int)",
+      "sourcePath": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gdscript/doc_classes/GDScriptLanguageProtocol.xml",
+      "sha256": "e4f01934f4474a1f4c141cf05a91bb85c58ecb914cc4588afacca9cc04fc761a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

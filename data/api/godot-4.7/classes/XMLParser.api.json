@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "XMLParser",
+    "namespace": "Godot",
+    "fullName": "Godot.XMLParser",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "XMLParser",
+    "documentationPath": "doc/classes/XMLParser.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_xmlparser.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetAttributeCount",
+      "kind": "Method",
+      "signature": "public int GetAttributeCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of attributes in the currently parsed element. [b]Note:[/b] If this method is used while the currently parsed node is not [constant NODE_ELEMENT] or [constant NODE_ELEMENT_END], this count will not be updated and will still reflect the last element.",
+      "godotName": "get_attribute_count",
+      "xmlDocId": "M:Godot.XMLParser.GetAttributeCount",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetAttributeName",
+      "kind": "Method",
+      "signature": "public String GetAttributeName(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the name of an attribute of the currently parsed element, specified by the [param idx] index.",
+      "godotName": "get_attribute_name",
+      "xmlDocId": "M:Godot.XMLParser.GetAttributeName(int)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetAttributeValue",
+      "kind": "Method",
+      "signature": "public String GetAttributeValue(int idx)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of an attribute of the currently parsed element, specified by the [param idx] index.",
+      "godotName": "get_attribute_value",
+      "xmlDocId": "M:Godot.XMLParser.GetAttributeValue(int)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetCurrentLine",
+      "kind": "Method",
+      "signature": "public int GetCurrentLine()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the current line in the parsed file, counting from 0.",
+      "godotName": "get_current_line",
+      "xmlDocId": "M:Godot.XMLParser.GetCurrentLine",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNamedAttributeValue",
+      "kind": "Method",
+      "signature": "public String GetNamedAttributeValue(String name)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the value of an attribute of the currently parsed element, specified by its [param name]. This method will raise an error if the element has no such attribute.",
+      "godotName": "get_named_attribute_value",
+      "xmlDocId": "M:Godot.XMLParser.GetNamedAttributeValue(String)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNamedAttributeValueSafe",
+      "kind": "Method",
+      "signature": "public String GetNamedAttributeValueSafe(String name)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the value of an attribute of the currently parsed element, specified by its [param name]. This method will return an empty string if the element has no such attribute.",
+      "godotName": "get_named_attribute_value_safe",
+      "xmlDocId": "M:Godot.XMLParser.GetNamedAttributeValueSafe(String)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNodeData",
+      "kind": "Method",
+      "signature": "public String GetNodeData()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the contents of a text node. This method will raise an error if the current parsed node is of any other type.",
+      "godotName": "get_node_data",
+      "xmlDocId": "M:Godot.XMLParser.GetNodeData",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNodeName",
+      "kind": "Method",
+      "signature": "public String GetNodeName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the name of a node. This method will raise an error if the currently parsed node is a text node. [b]Note:[/b] The content of a [constant NODE_CDATA] node and the comment string of a [constant NODE_COMMENT] node are also considered names.",
+      "godotName": "get_node_name",
+      "xmlDocId": "M:Godot.XMLParser.GetNodeName",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNodeOffset",
+      "kind": "Method",
+      "signature": "public int GetNodeOffset()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the byte offset of the currently parsed node since the beginning of the file or buffer. This is usually equivalent to the number of characters before the read position.",
+      "godotName": "get_node_offset",
+      "xmlDocId": "M:Godot.XMLParser.GetNodeOffset",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "GetNodeType",
+      "kind": "Method",
+      "signature": "public int GetNodeType()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the type of the current node. Compare with [enum NodeType] constants.",
+      "godotName": "get_node_type",
+      "xmlDocId": "M:Godot.XMLParser.GetNodeType",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "HasAttribute",
+      "kind": "Method",
+      "signature": "public bool HasAttribute(String name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the currently parsed element has an attribute with the [param name].",
+      "godotName": "has_attribute",
+      "xmlDocId": "M:Godot.XMLParser.HasAttribute(String)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the currently parsed element is empty, e.g. [code]\u003Celement /\u003E[/code].",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.XMLParser.IsEmpty",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "Open",
+      "kind": "Method",
+      "signature": "public int Open(String file)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "file",
+          "type": "String"
+        }
+      ],
+      "summary": "Opens an XML [param file] for parsing. This method returns an error code.",
+      "godotName": "open",
+      "xmlDocId": "M:Godot.XMLParser.Open(String)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "OpenBuffer",
+      "kind": "Method",
+      "signature": "public int OpenBuffer(PackedByteArray buffer)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "buffer",
+          "type": "PackedByteArray"
+        }
+      ],
+      "summary": "Opens an XML raw [param buffer] for parsing. This method returns an error code.",
+      "godotName": "open_buffer",
+      "xmlDocId": "M:Godot.XMLParser.OpenBuffer(PackedByteArray)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "Read",
+      "kind": "Method",
+      "signature": "public int Read()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Parses the next node in the file. This method returns an error code.",
+      "godotName": "read",
+      "xmlDocId": "M:Godot.XMLParser.Read",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "Seek",
+      "kind": "Method",
+      "signature": "public int Seek(int position)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "int"
+        }
+      ],
+      "summary": "Moves the buffer cursor to a certain offset (since the beginning) and reads the next node there. This method returns an error code.",
+      "godotName": "seek",
+      "xmlDocId": "M:Godot.XMLParser.Seek(int)",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "SkipSection",
+      "kind": "Method",
+      "signature": "public void SkipSection()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Skips the current section. If the currently parsed node contains more inner nodes, they will be ignored and the cursor will go to the closing of the current element.",
+      "godotName": "skip_section",
+      "xmlDocId": "M:Godot.XMLParser.SkipSection",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "NodeType",
+      "values": [
+        {
+          "name": "NODE_CDATA",
+          "value": "5",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "A node type for CDATA (Character Data) sections, e.g. [code]\u003C![CDATA[CDATA section]]\u003E[/code].",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_COMMENT",
+          "value": "4",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "A comment node type, e.g. [code]\u003C!--A comment--\u003E[/code].",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_ELEMENT",
+          "value": "1",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "An element node type, also known as a tag, e.g. [code]\u003Ctitle\u003E[/code].",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_ELEMENT_END",
+          "value": "2",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "An end of element node type, e.g. [code]\u003C/title\u003E[/code].",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_NONE",
+          "value": "0",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "There\u0027s no node (no file or buffer opened).",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_TEXT",
+          "value": "3",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "A text node type, i.e. text that is not inside an element. This includes whitespace.",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        },
+        {
+          "name": "NODE_UNKNOWN",
+          "value": "6",
+          "enum": "NodeType",
+          "kind": "EnumValue",
+          "summary": "An unknown node type.",
+          "sourcePath": "doc/classes/XMLParser.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "NODE_NONE",
+      "value": "0",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "There\u0027s no node (no file or buffer opened).",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_ELEMENT",
+      "value": "1",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "An element node type, also known as a tag, e.g. [code]\u003Ctitle\u003E[/code].",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_ELEMENT_END",
+      "value": "2",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "An end of element node type, e.g. [code]\u003C/title\u003E[/code].",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_TEXT",
+      "value": "3",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "A text node type, i.e. text that is not inside an element. This includes whitespace.",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_COMMENT",
+      "value": "4",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "A comment node type, e.g. [code]\u003C!--A comment--\u003E[/code].",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_CDATA",
+      "value": "5",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "A node type for CDATA (Character Data) sections, e.g. [code]\u003C![CDATA[CDATA section]]\u003E[/code].",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    },
+    {
+      "name": "NODE_UNKNOWN",
+      "value": "6",
+      "enum": "NodeType",
+      "kind": "EnumValue",
+      "summary": "An unknown node type.",
+      "sourcePath": "doc/classes/XMLParser.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/XMLParser.xml",
+      "sha256": "ee49378bf59d61273e67ba87136e7127e9c8772eb1690fc69f8dc90e7d7009e9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

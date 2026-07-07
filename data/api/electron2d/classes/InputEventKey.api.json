@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "InputEventKey",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.InputEventKey",
+    "kind": "class",
+    "baseType": "Electron2D.InputEventWithModifiers",
+    "interfaces": [],
+    "godotReference": "InputEventKey",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "InputEventKey",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventKey()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventKey type.",
+      "xmlDocId": "M:Electron2D.InputEventKey.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "InputEventKey",
+      "kind": "Constructor",
+      "signature": "public Electron2D.InputEventKey()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the InputEventKey type.",
+      "xmlDocId": "M:Electron2D.InputEventKey.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Echo",
+      "kind": "Property",
+      "signature": "public System.Boolean Echo { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this event is an echo repeat while the key is held.",
+      "xmlDocId": "P:Electron2D.InputEventKey.Echo",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "KeyLabel",
+      "kind": "Property",
+      "signature": "public Electron2D.Key KeyLabel { get; set; }",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Gets or sets the localized key label.",
+      "xmlDocId": "P:Electron2D.InputEventKey.KeyLabel",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Keycode",
+      "kind": "Property",
+      "signature": "public Electron2D.Key Keycode { get; set; }",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Gets or sets the layout key code.",
+      "xmlDocId": "P:Electron2D.InputEventKey.Keycode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Location",
+      "kind": "Property",
+      "signature": "public Electron2D.KeyLocation Location { get; set; }",
+      "returnType": "Electron2D.KeyLocation",
+      "parameters": [],
+      "summary": "Gets or sets the left/right key location for modifier keys.",
+      "xmlDocId": "P:Electron2D.InputEventKey.Location",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "PhysicalKeycode",
+      "kind": "Property",
+      "signature": "public Electron2D.Key PhysicalKeycode { get; set; }",
+      "returnType": "Electron2D.Key",
+      "parameters": [],
+      "summary": "Gets or sets the physical key code on a US QWERTY keyboard layout.",
+      "xmlDocId": "P:Electron2D.InputEventKey.PhysicalKeycode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Pressed",
+      "kind": "Property",
+      "signature": "public System.Boolean Pressed { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether the key is pressed.",
+      "xmlDocId": "P:Electron2D.InputEventKey.Pressed",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unicode",
+      "kind": "Property",
+      "signature": "public System.Int32 Unicode { get; set; }",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets or sets the Unicode scalar value produced by platform text input.",
+      "xmlDocId": "P:Electron2D.InputEventKey.Unicode",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,1569 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "SpringBoneSimulator3D",
+    "namespace": "Godot",
+    "fullName": "Godot.SpringBoneSimulator3D",
+    "kind": "class",
+    "baseType": "SkeletonModifier3D",
+    "interfaces": [],
+    "godotReference": "SpringBoneSimulator3D",
+    "documentationPath": "doc/classes/SpringBoneSimulator3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_springbonesimulator3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AreAllChildCollisionsEnabled",
+      "kind": "Method",
+      "signature": "public bool AreAllChildCollisionsEnabled(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if all child [SpringBoneCollision3D]s are contained in the collision list at [param index] in the settings.",
+      "godotName": "are_all_child_collisions_enabled",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.AreAllChildCollisionsEnabled(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "ClearCollisions",
+      "kind": "Method",
+      "signature": "public void ClearCollisions(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Clears all collisions from the collision list at [param index] in the settings when [method are_all_child_collisions_enabled] is [code]false[/code].",
+      "godotName": "clear_collisions",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.ClearCollisions(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "ClearExcludeCollisions",
+      "kind": "Method",
+      "signature": "public void ClearExcludeCollisions(int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Clears all exclude collisions from the collision list at [param index] in the settings when [method are_all_child_collisions_enabled] is [code]true[/code].",
+      "godotName": "clear_exclude_collisions",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.ClearExcludeCollisions(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "ClearSettings",
+      "kind": "Method",
+      "signature": "public void ClearSettings()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears all settings.",
+      "godotName": "clear_settings",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.ClearSettings",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCenterBone",
+      "kind": "Method",
+      "signature": "public int GetCenterBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the center bone index of the bone chain.",
+      "godotName": "get_center_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCenterBone(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCenterBoneName",
+      "kind": "Method",
+      "signature": "public String GetCenterBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the center bone name of the bone chain.",
+      "godotName": "get_center_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCenterBoneName(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCenterFrom",
+      "kind": "Method",
+      "signature": "public int GetCenterFrom(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns what the center originates from in the bone chain.",
+      "godotName": "get_center_from",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCenterFrom(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCenterNode",
+      "kind": "Method",
+      "signature": "public NodePath GetCenterNode(int index)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the center node path of the bone chain.",
+      "godotName": "get_center_node",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCenterNode(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetCollisionCount(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the collision count of the bone chain\u0027s collision list when [method are_all_child_collisions_enabled] is [code]false[/code].",
+      "godotName": "get_collision_count",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCollisionCount(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetCollisionPath",
+      "kind": "Method",
+      "signature": "public NodePath GetCollisionPath(int index, int collision)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "collision",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the node path of the [SpringBoneCollision3D] at [param collision] in the bone chain\u0027s collision list when [method are_all_child_collisions_enabled] is [code]false[/code].",
+      "godotName": "get_collision_path",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetCollisionPath(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetDrag",
+      "kind": "Method",
+      "signature": "public float GetDrag(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the drag force damping curve of the bone chain.",
+      "godotName": "get_drag",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetDrag(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetDragDampingCurve",
+      "kind": "Method",
+      "signature": "public Curve GetDragDampingCurve(int index)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the drag force damping curve of the bone chain.",
+      "godotName": "get_drag_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetDragDampingCurve(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetEndBone",
+      "kind": "Method",
+      "signature": "public int GetEndBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone index of the bone chain.",
+      "godotName": "get_end_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetEndBone(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public int GetEndBoneDirection(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the tail direction of the end bone of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetEndBoneDirection(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetEndBoneLength",
+      "kind": "Method",
+      "signature": "public float GetEndBoneLength(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone tail length of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "get_end_bone_length",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetEndBoneLength(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetEndBoneName",
+      "kind": "Method",
+      "signature": "public String GetEndBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the end bone name of the bone chain.",
+      "godotName": "get_end_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetEndBoneName(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetExcludeCollisionCount",
+      "kind": "Method",
+      "signature": "public int GetExcludeCollisionCount(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the exclude collision count of the bone chain\u0027s exclude collision list when [method are_all_child_collisions_enabled] is [code]true[/code].",
+      "godotName": "get_exclude_collision_count",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetExcludeCollisionCount(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetExcludeCollisionPath",
+      "kind": "Method",
+      "signature": "public NodePath GetExcludeCollisionPath(int index, int collision)",
+      "returnType": "NodePath",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "collision",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the node path of the [SpringBoneCollision3D] at [param collision] in the bone chain\u0027s exclude collision list when [method are_all_child_collisions_enabled] is [code]true[/code].",
+      "godotName": "get_exclude_collision_path",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetExcludeCollisionPath(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetGravity",
+      "kind": "Method",
+      "signature": "public float GetGravity(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity amount of the bone chain.",
+      "godotName": "get_gravity",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetGravity(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetGravityDampingCurve",
+      "kind": "Method",
+      "signature": "public Curve GetGravityDampingCurve(int index)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity amount damping curve of the bone chain.",
+      "godotName": "get_gravity_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetGravityDampingCurve(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetGravityDirection",
+      "kind": "Method",
+      "signature": "public Vector3 GetGravityDirection(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity direction of the bone chain.",
+      "godotName": "get_gravity_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetGravityDirection(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointBone",
+      "kind": "Method",
+      "signature": "public int GetJointBone(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone index at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointBone(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointBoneName",
+      "kind": "Method",
+      "signature": "public String GetJointBoneName(int index, int joint)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the bone name at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointBoneName(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointCount",
+      "kind": "Method",
+      "signature": "public int GetJointCount(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint count of the bone chain\u0027s joint list.",
+      "godotName": "get_joint_count",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointCount(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointDrag",
+      "kind": "Method",
+      "signature": "public float GetJointDrag(int index, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the drag force at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_drag",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointDrag(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointGravity",
+      "kind": "Method",
+      "signature": "public float GetJointGravity(int index, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity amount at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_gravity",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointGravity(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointGravityDirection",
+      "kind": "Method",
+      "signature": "public Vector3 GetJointGravityDirection(int index, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the gravity direction at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_gravity_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointGravityDirection(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointRadius",
+      "kind": "Method",
+      "signature": "public float GetJointRadius(int index, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the radius at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_radius",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointRadius(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointRotationAxis",
+      "kind": "Method",
+      "signature": "public int GetJointRotationAxis(int index, int joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_rotation_axis",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointRotationAxis(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointRotationAxisVector",
+      "kind": "Method",
+      "signature": "public Vector3 GetJointRotationAxisVector(int index, int joint)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis vector for the specified joint in the bone chain. This vector represents the axis around which the joint can rotate. It is determined based on the rotation axis set for the joint. If [method get_joint_rotation_axis] is [constant SkeletonModifier3D.ROTATION_AXIS_ALL], this method returns [code]Vector3(0, 0, 0)[/code].",
+      "godotName": "get_joint_rotation_axis_vector",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointRotationAxisVector(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetJointStiffness",
+      "kind": "Method",
+      "signature": "public float GetJointStiffness(int index, int joint)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stiffness force at [param joint] in the bone chain\u0027s joint list.",
+      "godotName": "get_joint_stiffness",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetJointStiffness(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRadius",
+      "kind": "Method",
+      "signature": "public float GetRadius(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint radius of the bone chain.",
+      "godotName": "get_radius",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRadius(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRadiusDampingCurve",
+      "kind": "Method",
+      "signature": "public Curve GetRadiusDampingCurve(int index)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the joint radius damping curve of the bone chain.",
+      "godotName": "get_radius_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRadiusDampingCurve(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRootBone",
+      "kind": "Method",
+      "signature": "public int GetRootBone(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone index of the bone chain.",
+      "godotName": "get_root_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRootBone(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRootBoneName",
+      "kind": "Method",
+      "signature": "public String GetRootBoneName(int index)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the root bone name of the bone chain.",
+      "godotName": "get_root_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRootBoneName(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRotationAxis",
+      "kind": "Method",
+      "signature": "public int GetRotationAxis(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis of the bone chain.",
+      "godotName": "get_rotation_axis",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRotationAxis(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetRotationAxisVector",
+      "kind": "Method",
+      "signature": "public Vector3 GetRotationAxisVector(int index)",
+      "returnType": "Vector3",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the rotation axis vector of the bone chain. This vector represents the axis around which the bone chain can rotate. It is determined based on the rotation axis set for the bone chain. If [method get_rotation_axis] is [constant SkeletonModifier3D.ROTATION_AXIS_ALL], this method returns [code]Vector3(0, 0, 0)[/code].",
+      "godotName": "get_rotation_axis_vector",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetRotationAxisVector(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetStiffness",
+      "kind": "Method",
+      "signature": "public float GetStiffness(int index)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stiffness force of the bone chain.",
+      "godotName": "get_stiffness",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetStiffness(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "GetStiffnessDampingCurve",
+      "kind": "Method",
+      "signature": "public Curve GetStiffnessDampingCurve(int index)",
+      "returnType": "Curve",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the stiffness force damping curve of the bone chain.",
+      "godotName": "get_stiffness_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.GetStiffnessDampingCurve(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "IsConfigIndividual",
+      "kind": "Method",
+      "signature": "public bool IsConfigIndividual(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the config can be edited individually for each joint.",
+      "godotName": "is_config_individual",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.IsConfigIndividual(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "IsEndBoneExtended",
+      "kind": "Method",
+      "signature": "public bool IsEndBoneExtended(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the end bone is extended to have a tail.",
+      "godotName": "is_end_bone_extended",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.IsEndBoneExtended(int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "Reset",
+      "kind": "Method",
+      "signature": "public void Reset()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Resets a simulating state with respect to the current bone pose. It is useful to prevent the simulation result getting violent. For example, calling this immediately after a call to [method AnimationPlayer.play] without a fading, or within the previous [signal SkeletonModifier3D.modification_processed] signal if it\u0027s condition changes significantly.",
+      "godotName": "reset",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.Reset",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCenterBone",
+      "kind": "Method",
+      "signature": "public void SetCenterBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the center bone index of the bone chain.",
+      "godotName": "set_center_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCenterBone(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCenterBoneName",
+      "kind": "Method",
+      "signature": "public void SetCenterBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the center bone name of the bone chain.",
+      "godotName": "set_center_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCenterBoneName(int,String)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCenterFrom",
+      "kind": "Method",
+      "signature": "public void SetCenterFrom(int index, int centerFrom)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "center_from",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets what the center originates from in the bone chain. Bone movement is calculated based on the difference in relative distance between center and bone in the previous and next frames. For example, if the parent [Skeleton3D] is used as the center, the bones are considered to have not moved if the [Skeleton3D] moves in the world. In this case, only a change in the bone pose is considered to be a bone movement.",
+      "godotName": "set_center_from",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCenterFrom(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCenterNode",
+      "kind": "Method",
+      "signature": "public void SetCenterNode(int index, NodePath nodePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the center node path of the bone chain.",
+      "godotName": "set_center_node",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCenterNode(int,NodePath)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCollisionCount",
+      "kind": "Method",
+      "signature": "public void SetCollisionCount(int index, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the number of collisions in the collision list at [param index] in the settings when [method are_all_child_collisions_enabled] is [code]false[/code].",
+      "godotName": "set_collision_count",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCollisionCount(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetCollisionPath",
+      "kind": "Method",
+      "signature": "public void SetCollisionPath(int index, int collision, NodePath nodePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "collision",
+          "type": "int"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the node path of the [SpringBoneCollision3D] at [param collision] in the bone chain\u0027s collision list when [method are_all_child_collisions_enabled] is [code]false[/code].",
+      "godotName": "set_collision_path",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetCollisionPath(int,int,NodePath)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetDrag",
+      "kind": "Method",
+      "signature": "public void SetDrag(int index, float drag)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "drag",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the drag force of the bone chain. The greater the value, the more suppressed the wiggling. The value is scaled by [method set_drag_damping_curve] and cached in each joint setting in the joint list.",
+      "godotName": "set_drag",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetDrag(int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetDragDampingCurve",
+      "kind": "Method",
+      "signature": "public void SetDragDampingCurve(int index, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the drag force damping curve of the bone chain.",
+      "godotName": "set_drag_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetDragDampingCurve(int,Curve)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetEnableAllChildCollisions",
+      "kind": "Method",
+      "signature": "public void SetEnableAllChildCollisions(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], all child [SpringBoneCollision3D]s are colliding and [method set_exclude_collision_path] is enabled as an exclusion list at [param index] in the settings. If [param enabled] is [code]false[/code], you need to manually register all valid collisions with [method set_collision_path].",
+      "godotName": "set_enable_all_child_collisions",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetEnableAllChildCollisions(int,bool)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetEndBone",
+      "kind": "Method",
+      "signature": "public void SetEndBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone index of the bone chain.",
+      "godotName": "set_end_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetEndBone(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetEndBoneDirection",
+      "kind": "Method",
+      "signature": "public void SetEndBoneDirection(int index, int boneDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_direction",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the end bone tail direction of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetEndBoneDirection(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetEndBoneLength",
+      "kind": "Method",
+      "signature": "public void SetEndBoneLength(int index, float length)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the end bone tail length of the bone chain when [method is_end_bone_extended] is [code]true[/code].",
+      "godotName": "set_end_bone_length",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetEndBoneLength(int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetEndBoneName",
+      "kind": "Method",
+      "signature": "public void SetEndBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the end bone name of the bone chain. [b]Note:[/b] End bone must be the root bone or a child of the root bone. If they are the same, the tail must be extended by [method set_extend_end_bone] to jiggle the bone.",
+      "godotName": "set_end_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetEndBoneName(int,String)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetExcludeCollisionCount",
+      "kind": "Method",
+      "signature": "public void SetExcludeCollisionCount(int index, int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "count",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the number of exclude collisions in the exclude collision list at [param index] in the settings when [method are_all_child_collisions_enabled] is [code]true[/code].",
+      "godotName": "set_exclude_collision_count",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetExcludeCollisionCount(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetExcludeCollisionPath",
+      "kind": "Method",
+      "signature": "public void SetExcludeCollisionPath(int index, int collision, NodePath nodePath)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "collision",
+          "type": "int"
+        },
+        {
+          "name": "node_path",
+          "type": "NodePath"
+        }
+      ],
+      "summary": "Sets the node path of the [SpringBoneCollision3D] at [param collision] in the bone chain\u0027s exclude collision list when [method are_all_child_collisions_enabled] is [code]true[/code].",
+      "godotName": "set_exclude_collision_path",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetExcludeCollisionPath(int,int,NodePath)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetExtendEndBone",
+      "kind": "Method",
+      "signature": "public void SetExtendEndBone(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the end bone is extended to have a tail. The extended tail config is allocated to the last element in the joint list. In other words, if you set [param enabled] to [code]false[/code], the config of the last element in the joint list has no effect in the simulated result.",
+      "godotName": "set_extend_end_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetExtendEndBone(int,bool)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetGravity",
+      "kind": "Method",
+      "signature": "public void SetGravity(int index, float gravity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "gravity",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the gravity amount of the bone chain. This value is not an acceleration, but a constant velocity of movement in [method set_gravity_direction]. If [param gravity] is not [code]0[/code], the modified pose will not return to the original pose since it is always affected by gravity. The value is scaled by [method set_gravity_damping_curve] and cached in each joint setting in the joint list.",
+      "godotName": "set_gravity",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetGravity(int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetGravityDampingCurve",
+      "kind": "Method",
+      "signature": "public void SetGravityDampingCurve(int index, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the gravity amount damping curve of the bone chain.",
+      "godotName": "set_gravity_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetGravityDampingCurve(int,Curve)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetGravityDirection",
+      "kind": "Method",
+      "signature": "public void SetGravityDirection(int index, Vector3 gravityDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "gravity_direction",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the gravity direction of the bone chain. This value is internally normalized and then multiplied by [method set_gravity]. The value is cached in each joint setting in the joint list.",
+      "godotName": "set_gravity_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetGravityDirection(int,Vector3)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetIndividualConfig",
+      "kind": "Method",
+      "signature": "public void SetIndividualConfig(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [param enabled] is [code]true[/code], the config can be edited individually for each joint.",
+      "godotName": "set_individual_config",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetIndividualConfig(int,bool)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointDrag",
+      "kind": "Method",
+      "signature": "public void SetJointDrag(int index, int joint, float drag)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "drag",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the drag force at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code].",
+      "godotName": "set_joint_drag",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointDrag(int,int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointGravity",
+      "kind": "Method",
+      "signature": "public void SetJointGravity(int index, int joint, float gravity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "gravity",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the gravity amount at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code].",
+      "godotName": "set_joint_gravity",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointGravity(int,int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointGravityDirection",
+      "kind": "Method",
+      "signature": "public void SetJointGravityDirection(int index, int joint, Vector3 gravityDirection)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "gravity_direction",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the gravity direction at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code].",
+      "godotName": "set_joint_gravity_direction",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointGravityDirection(int,int,Vector3)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointRadius",
+      "kind": "Method",
+      "signature": "public void SetJointRadius(int index, int joint, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the joint radius at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code].",
+      "godotName": "set_joint_radius",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointRadius(int,int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointRotationAxis",
+      "kind": "Method",
+      "signature": "public void SetJointRotationAxis(int index, int joint, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the rotation axis at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code]. The axes are based on the reference pose\u0027s space, if [param axis] is [constant SkeletonModifier3D.ROTATION_AXIS_CUSTOM], you can specify any axis. In here, the reference pose is the bone pose immediately before the simulation. [b]Note:[/b] The rotation axis and the forward vector shouldn\u0027t be colinear to avoid unintended rotation since [SpringBoneSimulator3D] does not factor in twisting forces.",
+      "godotName": "set_joint_rotation_axis",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointRotationAxis(int,int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointRotationAxisVector",
+      "kind": "Method",
+      "signature": "public void SetJointRotationAxisVector(int index, int joint, Vector3 vector)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "vector",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the rotation axis vector for the specified joint in the bone chain. This vector is normalized by an internal process and represents the axis around which the bone chain can rotate. If the vector length is [code]0[/code], it is considered synonymous with [constant SkeletonModifier3D.ROTATION_AXIS_ALL].",
+      "godotName": "set_joint_rotation_axis_vector",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointRotationAxisVector(int,int,Vector3)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetJointStiffness",
+      "kind": "Method",
+      "signature": "public void SetJointStiffness(int index, int joint, float stiffness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "joint",
+          "type": "int"
+        },
+        {
+          "name": "stiffness",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the stiffness force at [param joint] in the bone chain\u0027s joint list when [method is_config_individual] is [code]true[/code].",
+      "godotName": "set_joint_stiffness",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetJointStiffness(int,int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRadius",
+      "kind": "Method",
+      "signature": "public void SetRadius(int index, float radius)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "radius",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the joint radius of the bone chain. It is used to move and slide with the [SpringBoneCollision3D] in the collision list. The value is scaled by [method set_radius_damping_curve] and cached in each joint setting in the joint list.",
+      "godotName": "set_radius",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRadius(int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRadiusDampingCurve",
+      "kind": "Method",
+      "signature": "public void SetRadiusDampingCurve(int index, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the joint radius damping curve of the bone chain.",
+      "godotName": "set_radius_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRadiusDampingCurve(int,Curve)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRootBone",
+      "kind": "Method",
+      "signature": "public void SetRootBone(int index, int bone)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the root bone index of the bone chain.",
+      "godotName": "set_root_bone",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRootBone(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRootBoneName",
+      "kind": "Method",
+      "signature": "public void SetRootBoneName(int index, String boneName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "bone_name",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets the root bone name of the bone chain.",
+      "godotName": "set_root_bone_name",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRootBoneName(int,String)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRotationAxis",
+      "kind": "Method",
+      "signature": "public void SetRotationAxis(int index, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the rotation axis of the bone chain. If set to a specific axis, it acts like a hinge joint. The value is cached in each joint setting in the joint list. The axes are based on the reference pose\u0027s space, if [param axis] is [constant SkeletonModifier3D.ROTATION_AXIS_CUSTOM], you can specify any axis. In here, the reference pose is the bone pose immediately before the simulation. [b]Note:[/b] The rotation axis vector and the forward vector shouldn\u0027t be colinear to avoid unintended rotation since [SpringBoneSimulator3D] does not factor in twisting forces.",
+      "godotName": "set_rotation_axis",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRotationAxis(int,int)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetRotationAxisVector",
+      "kind": "Method",
+      "signature": "public void SetRotationAxisVector(int index, Vector3 vector)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "vector",
+          "type": "Vector3"
+        }
+      ],
+      "summary": "Sets the rotation axis vector of the bone chain. The value is cached in each joint setting in the joint list. This vector is normalized by an internal process and represents the axis around which the bone chain can rotate. If the vector length is [code]0[/code], it is considered synonymous with [constant SkeletonModifier3D.ROTATION_AXIS_ALL].",
+      "godotName": "set_rotation_axis_vector",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetRotationAxisVector(int,Vector3)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetStiffness",
+      "kind": "Method",
+      "signature": "public void SetStiffness(int index, float stiffness)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "stiffness",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the stiffness force of the bone chain. The greater the value, the faster it recovers to its initial pose. If [param stiffness] is [code]0[/code], the modified pose will not return to the original pose. The value is scaled by [method set_stiffness_damping_curve] and cached in each joint setting in the joint list.",
+      "godotName": "set_stiffness",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetStiffness(int,float)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SetStiffnessDampingCurve",
+      "kind": "Method",
+      "signature": "public void SetStiffnessDampingCurve(int index, Curve curve)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "curve",
+          "type": "Curve"
+        }
+      ],
+      "summary": "Sets the stiffness force damping curve of the bone chain.",
+      "godotName": "set_stiffness_damping_curve",
+      "xmlDocId": "M:Godot.SpringBoneSimulator3D.SetStiffnessDampingCurve(int,Curve)",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "ExternalForce",
+      "kind": "Property",
+      "signature": "public Vector3 ExternalForce { get; set; }",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "The constant force that always affected bones. It is equal to the result when the parent [Skeleton3D] moves at this speed in the opposite direction. This is useful for effects such as wind and anti-gravity.",
+      "defaultValue": "Vector3(0, 0, 0)",
+      "godotName": "external_force",
+      "xmlDocId": "P:Godot.SpringBoneSimulator3D.ExternalForce",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "MutableBoneAxes",
+      "kind": "Property",
+      "signature": "public bool MutableBoneAxes { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the solver retrieves the bone axis from the bone pose every frame. If [code]false[/code], the solver retrieves the bone axis from the bone rest and caches it, which increases performance slightly, but position changes in the bone pose made before processing this [SpringBoneSimulator3D] are ignored.",
+      "defaultValue": "true",
+      "godotName": "mutable_bone_axes",
+      "xmlDocId": "P:Godot.SpringBoneSimulator3D.MutableBoneAxes",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.SpringBoneSimulator3D.SettingCount",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CenterFrom",
+      "values": [
+        {
+          "name": "CENTER_FROM_BONE",
+          "value": "2",
+          "enum": "CenterFrom",
+          "kind": "EnumValue",
+          "summary": "The bone pose origin of the parent [Skeleton3D] specified by [method set_center_bone] is defined as center. If [Node3D] is not found, the parent [Skeleton3D] is treated as center.",
+          "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+        },
+        {
+          "name": "CENTER_FROM_NODE",
+          "value": "1",
+          "enum": "CenterFrom",
+          "kind": "EnumValue",
+          "summary": "The [Node3D] specified by [method set_center_node] is defined as center. If [Node3D] is not found, the parent [Skeleton3D] is treated as center.",
+          "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+        },
+        {
+          "name": "CENTER_FROM_WORLD_ORIGIN",
+          "value": "0",
+          "enum": "CenterFrom",
+          "kind": "EnumValue",
+          "summary": "The world origin is defined as center.",
+          "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CENTER_FROM_WORLD_ORIGIN",
+      "value": "0",
+      "enum": "CenterFrom",
+      "kind": "EnumValue",
+      "summary": "The world origin is defined as center.",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "CENTER_FROM_NODE",
+      "value": "1",
+      "enum": "CenterFrom",
+      "kind": "EnumValue",
+      "summary": "The [Node3D] specified by [method set_center_node] is defined as center. If [Node3D] is not found, the parent [Skeleton3D] is treated as center.",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    },
+    {
+      "name": "CENTER_FROM_BONE",
+      "value": "2",
+      "enum": "CenterFrom",
+      "kind": "EnumValue",
+      "summary": "The bone pose origin of the parent [Skeleton3D] specified by [method set_center_bone] is defined as center. If [Node3D] is not found, the parent [Skeleton3D] is treated as center.",
+      "sourcePath": "doc/classes/SpringBoneSimulator3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/SpringBoneSimulator3D.xml",
+      "sha256": "8bc59e2493d70b47cc8ba1df7efe0ef2f37eec25e4fe3755555982bbcc9dfc4b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

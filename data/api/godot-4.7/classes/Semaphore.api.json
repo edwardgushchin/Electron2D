@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Semaphore",
+    "namespace": "Godot",
+    "fullName": "Godot.Semaphore",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "Semaphore",
+    "documentationPath": "doc/classes/Semaphore.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_semaphore.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Post",
+      "kind": "Method",
+      "signature": "public void Post(int count)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Lowers the [Semaphore], allowing one thread in, or more if [param count] is specified.",
+      "godotName": "post",
+      "xmlDocId": "M:Godot.Semaphore.Post(int)",
+      "sourcePath": "doc/classes/Semaphore.xml"
+    },
+    {
+      "name": "TryWait",
+      "kind": "Method",
+      "signature": "public bool TryWait()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Like [method wait], but won\u0027t block, so if the value is zero, fails immediately and returns [code]false[/code]. If non-zero, it returns [code]true[/code] to report success.",
+      "godotName": "try_wait",
+      "xmlDocId": "M:Godot.Semaphore.TryWait",
+      "sourcePath": "doc/classes/Semaphore.xml"
+    },
+    {
+      "name": "Wait",
+      "kind": "Method",
+      "signature": "public void Wait()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Waits for the [Semaphore], if its value is zero, blocks until non-zero.",
+      "godotName": "wait",
+      "xmlDocId": "M:Godot.Semaphore.Wait",
+      "sourcePath": "doc/classes/Semaphore.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Semaphore.xml",
+      "sha256": "c2bfd6a347f01e7bc54f97d6e011666c513b98241cc8ab85f78238a484ebb2ce"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

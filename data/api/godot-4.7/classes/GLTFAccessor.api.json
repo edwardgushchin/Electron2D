@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GLTFAccessor",
+    "namespace": "Godot",
+    "fullName": "Godot.GLTFAccessor",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "GLTFAccessor",
+    "documentationPath": "modules/gltf/doc_classes/GLTFAccessor.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gltfaccessor.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FromDictionary",
+      "kind": "Method",
+      "signature": "public GLTFAccessor FromDictionary(Dictionary dictionary)",
+      "returnType": "GLTFAccessor",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Creates a new GLTFAccessor instance by parsing the given [Dictionary].",
+      "godotName": "from_dictionary",
+      "xmlDocId": "M:Godot.GLTFAccessor.FromDictionary(Dictionary)",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "ToDictionary",
+      "kind": "Method",
+      "signature": "public Dictionary ToDictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Serializes this GLTFAccessor instance into a [Dictionary].",
+      "godotName": "to_dictionary",
+      "xmlDocId": "M:Godot.GLTFAccessor.ToDictionary",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "AccessorType",
+      "kind": "Property",
+      "signature": "public int AccessorType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The glTF accessor type, as an enum.",
+      "defaultValue": "0",
+      "godotName": "accessor_type",
+      "xmlDocId": "P:Godot.GLTFAccessor.AccessorType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "BufferView",
+      "kind": "Property",
+      "signature": "public int BufferView { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the buffer view this accessor is referencing. If [code]-1[/code], this accessor is not referencing any buffer view.",
+      "defaultValue": "-1",
+      "godotName": "buffer_view",
+      "xmlDocId": "P:Godot.GLTFAccessor.BufferView",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "ByteOffset",
+      "kind": "Property",
+      "signature": "public int ByteOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The offset relative to the start of the buffer view in bytes.",
+      "defaultValue": "0",
+      "godotName": "byte_offset",
+      "xmlDocId": "P:Godot.GLTFAccessor.ByteOffset",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "ComponentType",
+      "kind": "Property",
+      "signature": "public int ComponentType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The glTF component type as an enum. See [enum GLTFComponentType] for possible values. Within the core glTF specification, a value of 5125 or \u0022UNSIGNED_INT\u0022 must not be used for any accessor that is not referenced by mesh.primitive.indices.",
+      "defaultValue": "0",
+      "godotName": "component_type",
+      "xmlDocId": "P:Godot.GLTFAccessor.ComponentType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "Count",
+      "kind": "Property",
+      "signature": "public int Count { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of elements referenced by this accessor.",
+      "defaultValue": "0",
+      "godotName": "count",
+      "xmlDocId": "P:Godot.GLTFAccessor.Count",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "Max",
+      "kind": "Property",
+      "signature": "public PackedFloat64Array Max { get; set; }",
+      "returnType": "PackedFloat64Array",
+      "parameters": [],
+      "summary": "Maximum value of each component in this accessor.",
+      "defaultValue": "PackedFloat64Array()",
+      "godotName": "max",
+      "xmlDocId": "P:Godot.GLTFAccessor.Max",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "Min",
+      "kind": "Property",
+      "signature": "public PackedFloat64Array Min { get; set; }",
+      "returnType": "PackedFloat64Array",
+      "parameters": [],
+      "summary": "Minimum value of each component in this accessor.",
+      "defaultValue": "PackedFloat64Array()",
+      "godotName": "min",
+      "xmlDocId": "P:Godot.GLTFAccessor.Min",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "Normalized",
+      "kind": "Property",
+      "signature": "public bool Normalized { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Specifies whether integer data values are normalized before usage.",
+      "defaultValue": "false",
+      "godotName": "normalized",
+      "xmlDocId": "P:Godot.GLTFAccessor.Normalized",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseCount",
+      "kind": "Property",
+      "signature": "public int SparseCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Number of deviating accessor values stored in the sparse array.",
+      "defaultValue": "0",
+      "godotName": "sparse_count",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseCount",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseIndicesBufferView",
+      "kind": "Property",
+      "signature": "public int SparseIndicesBufferView { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the buffer view with sparse indices. The referenced buffer view MUST NOT have its target or byteStride properties defined. The buffer view and the optional byteOffset MUST be aligned to the componentType byte length.",
+      "defaultValue": "0",
+      "godotName": "sparse_indices_buffer_view",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseIndicesBufferView",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseIndicesByteOffset",
+      "kind": "Property",
+      "signature": "public int SparseIndicesByteOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The offset relative to the start of the buffer view in bytes.",
+      "defaultValue": "0",
+      "godotName": "sparse_indices_byte_offset",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseIndicesByteOffset",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseIndicesComponentType",
+      "kind": "Property",
+      "signature": "public int SparseIndicesComponentType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The indices component data type as an enum. Possible values are 5121 for \u0022UNSIGNED_BYTE\u0022, 5123 for \u0022UNSIGNED_SHORT\u0022, and 5125 for \u0022UNSIGNED_INT\u0022.",
+      "defaultValue": "0",
+      "godotName": "sparse_indices_component_type",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseIndicesComponentType",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseValuesBufferView",
+      "kind": "Property",
+      "signature": "public int SparseValuesBufferView { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The index of the bufferView with sparse values. The referenced buffer view MUST NOT have its target or byteStride properties defined.",
+      "defaultValue": "0",
+      "godotName": "sparse_values_buffer_view",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseValuesBufferView",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "SparseValuesByteOffset",
+      "kind": "Property",
+      "signature": "public int SparseValuesByteOffset { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The offset relative to the start of the bufferView in bytes.",
+      "defaultValue": "0",
+      "godotName": "sparse_values_byte_offset",
+      "xmlDocId": "P:Godot.GLTFAccessor.SparseValuesByteOffset",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The glTF accessor type, as an [int]. Possible values are [code]0[/code] for \u0022SCALAR\u0022, [code]1[/code] for \u0022VEC2\u0022, [code]2[/code] for \u0022VEC3\u0022, [code]3[/code] for \u0022VEC4\u0022, [code]4[/code] for \u0022MAT2\u0022, [code]5[/code] for \u0022MAT3\u0022, and [code]6[/code] for \u0022MAT4\u0022.",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.GLTFAccessor.Type",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "GLTFAccessorType",
+      "values": [
+        {
+          "name": "TYPE_MAT2",
+          "value": "4",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022MAT2\u0022. For the glTF object model, this maps to \u0022float2x2\u0022, represented in the glTF JSON as an array of four floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_MAT3",
+          "value": "5",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022MAT3\u0022. For the glTF object model, this maps to \u0022float3x3\u0022, represented in the glTF JSON as an array of nine floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_MAT4",
+          "value": "6",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022MAT4\u0022. For the glTF object model, this maps to \u0022float4x4\u0022, represented in the glTF JSON as an array of sixteen floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_SCALAR",
+          "value": "0",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022SCALAR\u0022. For the glTF object model, this can be used to map to a single float, int, or bool value, or a float array.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_VEC2",
+          "value": "1",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022VEC2\u0022. For the glTF object model, this maps to \u0022float2\u0022, represented in the glTF JSON as an array of two floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_VEC3",
+          "value": "2",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022VEC3\u0022. For the glTF object model, this maps to \u0022float3\u0022, represented in the glTF JSON as an array of three floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "TYPE_VEC4",
+          "value": "3",
+          "enum": "GLTFAccessorType",
+          "kind": "EnumValue",
+          "summary": "Accessor type \u0022VEC4\u0022. For the glTF object model, this maps to \u0022float4\u0022, represented in the glTF JSON as an array of four floats.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        }
+      ]
+    },
+    {
+      "name": "GLTFComponentType",
+      "values": [
+        {
+          "name": "COMPONENT_TYPE_DOUBLE_FLOAT",
+          "value": "5130",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022DOUBLE\u0022. The value is [code]0x140A[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit floating-point numbers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_HALF_FLOAT",
+          "value": "5131",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022HALF_FLOAT\u0022. The value is [code]0x140B[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit floating-point numbers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_NONE",
+          "value": "0",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022NONE\u0022. This is not a valid component type, and is used to indicate that the component type is not set.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_SIGNED_BYTE",
+          "value": "5120",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022BYTE\u0022. The value is [code]0x1400[/code] which comes from OpenGL. This indicates data is stored in 1-byte or 8-bit signed integers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_SIGNED_INT",
+          "value": "5124",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022INT\u0022. The value is [code]0x1404[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit signed integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_SIGNED_LONG",
+          "value": "5134",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022LONG\u0022. The value is [code]0x140E[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit signed integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_SIGNED_SHORT",
+          "value": "5122",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022SHORT\u0022. The value is [code]0x1402[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit signed integers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_SINGLE_FLOAT",
+          "value": "5126",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022FLOAT\u0022. The value is [code]0x1406[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit floating-point numbers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_UNSIGNED_BYTE",
+          "value": "5121",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022UNSIGNED_BYTE\u0022. The value is [code]0x1401[/code] which comes from OpenGL. This indicates data is stored in 1-byte or 8-bit unsigned integers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_UNSIGNED_INT",
+          "value": "5125",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022UNSIGNED_INT\u0022. The value is [code]0x1405[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit unsigned integers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_UNSIGNED_LONG",
+          "value": "5135",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022UNSIGNED_LONG\u0022. The value is [code]0x140F[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit unsigned integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        },
+        {
+          "name": "COMPONENT_TYPE_UNSIGNED_SHORT",
+          "value": "5123",
+          "enum": "GLTFComponentType",
+          "kind": "EnumValue",
+          "summary": "Component type \u0022UNSIGNED_SHORT\u0022. The value is [code]0x1403[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit unsigned integers. This is a core part of the glTF specification.",
+          "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "TYPE_SCALAR",
+      "value": "0",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022SCALAR\u0022. For the glTF object model, this can be used to map to a single float, int, or bool value, or a float array.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_VEC2",
+      "value": "1",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022VEC2\u0022. For the glTF object model, this maps to \u0022float2\u0022, represented in the glTF JSON as an array of two floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_VEC3",
+      "value": "2",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022VEC3\u0022. For the glTF object model, this maps to \u0022float3\u0022, represented in the glTF JSON as an array of three floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_VEC4",
+      "value": "3",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022VEC4\u0022. For the glTF object model, this maps to \u0022float4\u0022, represented in the glTF JSON as an array of four floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_MAT2",
+      "value": "4",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022MAT2\u0022. For the glTF object model, this maps to \u0022float2x2\u0022, represented in the glTF JSON as an array of four floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_MAT3",
+      "value": "5",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022MAT3\u0022. For the glTF object model, this maps to \u0022float3x3\u0022, represented in the glTF JSON as an array of nine floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "TYPE_MAT4",
+      "value": "6",
+      "enum": "GLTFAccessorType",
+      "kind": "EnumValue",
+      "summary": "Accessor type \u0022MAT4\u0022. For the glTF object model, this maps to \u0022float4x4\u0022, represented in the glTF JSON as an array of sixteen floats.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_NONE",
+      "value": "0",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022NONE\u0022. This is not a valid component type, and is used to indicate that the component type is not set.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_SIGNED_BYTE",
+      "value": "5120",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022BYTE\u0022. The value is [code]0x1400[/code] which comes from OpenGL. This indicates data is stored in 1-byte or 8-bit signed integers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_UNSIGNED_BYTE",
+      "value": "5121",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022UNSIGNED_BYTE\u0022. The value is [code]0x1401[/code] which comes from OpenGL. This indicates data is stored in 1-byte or 8-bit unsigned integers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_SIGNED_SHORT",
+      "value": "5122",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022SHORT\u0022. The value is [code]0x1402[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit signed integers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_UNSIGNED_SHORT",
+      "value": "5123",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022UNSIGNED_SHORT\u0022. The value is [code]0x1403[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit unsigned integers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_SIGNED_INT",
+      "value": "5124",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022INT\u0022. The value is [code]0x1404[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit signed integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_UNSIGNED_INT",
+      "value": "5125",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022UNSIGNED_INT\u0022. The value is [code]0x1405[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit unsigned integers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_SINGLE_FLOAT",
+      "value": "5126",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022FLOAT\u0022. The value is [code]0x1406[/code] which comes from OpenGL. This indicates data is stored in 4-byte or 32-bit floating-point numbers. This is a core part of the glTF specification.",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_DOUBLE_FLOAT",
+      "value": "5130",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022DOUBLE\u0022. The value is [code]0x140A[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit floating-point numbers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_HALF_FLOAT",
+      "value": "5131",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022HALF_FLOAT\u0022. The value is [code]0x140B[/code] which comes from OpenGL. This indicates data is stored in 2-byte or 16-bit floating-point numbers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_SIGNED_LONG",
+      "value": "5134",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022LONG\u0022. The value is [code]0x140E[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit signed integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    },
+    {
+      "name": "COMPONENT_TYPE_UNSIGNED_LONG",
+      "value": "5135",
+      "enum": "GLTFComponentType",
+      "kind": "EnumValue",
+      "summary": "Component type \u0022UNSIGNED_LONG\u0022. The value is [code]0x140F[/code] which comes from OpenGL. This indicates data is stored in 8-byte or 64-bit unsigned integers. This is NOT a core part of the glTF specification, and may not be supported by all glTF importers. May be used by some extensions including [code]KHR_interactivity[/code].",
+      "sourcePath": "modules/gltf/doc_classes/GLTFAccessor.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/gltf/doc_classes/GLTFAccessor.xml",
+      "sha256": "46fa1a098a570436094f484492e7db3d71555541a3c57bededc41c77ac1ccfaa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

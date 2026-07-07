@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeTexture",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeTexture",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeTexture",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodetexture.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Source",
+      "kind": "Property",
+      "signature": "public int Source { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Determines the source for the lookup.",
+      "defaultValue": "0",
+      "godotName": "source",
+      "xmlDocId": "P:Godot.VisualShaderNodeTexture.Source",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "Texture",
+      "kind": "Property",
+      "signature": "public Texture2D Texture { get; set; }",
+      "returnType": "Texture2D",
+      "parameters": [],
+      "summary": "The source texture, if needed for the selected [member source].",
+      "godotName": "texture",
+      "xmlDocId": "P:Godot.VisualShaderNodeTexture.Texture",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "TextureType",
+      "kind": "Property",
+      "signature": "public int TextureType { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Specifies the type of the texture if [member source] is set to [constant SOURCE_TEXTURE].",
+      "defaultValue": "0",
+      "godotName": "texture_type",
+      "xmlDocId": "P:Godot.VisualShaderNodeTexture.TextureType",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Source",
+      "values": [
+        {
+          "name": "SOURCE_2D_NORMAL",
+          "value": "3",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the texture from this shader\u0027s normal map built-in.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_2D_TEXTURE",
+          "value": "2",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the texture from this shader\u0027s texture built-in (e.g. a texture of a [Sprite2D]).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_3D_NORMAL",
+          "value": "6",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the normal buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_DEPTH",
+          "value": "4",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the depth texture captured during the depth prepass. Only available when the depth prepass is used (i.e. in spatial shaders and in the forward_plus or gl_compatibility renderers).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_MAX",
+          "value": "8",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Source] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_PORT",
+          "value": "5",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the texture provided in the input port for this function.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_ROUGHNESS",
+          "value": "7",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the roughness buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_SCREEN",
+          "value": "1",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the current viewport\u0027s texture as the source.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "SOURCE_TEXTURE",
+          "value": "0",
+          "enum": "Source",
+          "kind": "EnumValue",
+          "summary": "Use the texture given as an argument for this function.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        }
+      ]
+    },
+    {
+      "name": "TextureType",
+      "values": [
+        {
+          "name": "TYPE_COLOR",
+          "value": "1",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Adds [code]source_color[/code] as hint to the uniform declaration for proper conversion from nonlinear sRGB encoding to linear encoding.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "TYPE_DATA",
+          "value": "0",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "No hints are added to the uniform declaration.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "TYPE_MAX",
+          "value": "3",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum TextureType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        },
+        {
+          "name": "TYPE_NORMAL_MAP",
+          "value": "2",
+          "enum": "TextureType",
+          "kind": "EnumValue",
+          "summary": "Adds [code]hint_normal[/code] as hint to the uniform declaration, which internally converts the texture for proper usage as normal map.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SOURCE_TEXTURE",
+      "value": "0",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the texture given as an argument for this function.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_SCREEN",
+      "value": "1",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the current viewport\u0027s texture as the source.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_2D_TEXTURE",
+      "value": "2",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the texture from this shader\u0027s texture built-in (e.g. a texture of a [Sprite2D]).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_2D_NORMAL",
+      "value": "3",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the texture from this shader\u0027s normal map built-in.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_DEPTH",
+      "value": "4",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the depth texture captured during the depth prepass. Only available when the depth prepass is used (i.e. in spatial shaders and in the forward_plus or gl_compatibility renderers).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_PORT",
+      "value": "5",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the texture provided in the input port for this function.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_3D_NORMAL",
+      "value": "6",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the normal buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_ROUGHNESS",
+      "value": "7",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Use the roughness buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "SOURCE_MAX",
+      "value": "8",
+      "enum": "Source",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Source] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "TYPE_DATA",
+      "value": "0",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "No hints are added to the uniform declaration.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "TYPE_COLOR",
+      "value": "1",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Adds [code]source_color[/code] as hint to the uniform declaration for proper conversion from nonlinear sRGB encoding to linear encoding.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "TYPE_NORMAL_MAP",
+      "value": "2",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Adds [code]hint_normal[/code] as hint to the uniform declaration, which internally converts the texture for proper usage as normal map.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    },
+    {
+      "name": "TYPE_MAX",
+      "value": "3",
+      "enum": "TextureType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum TextureType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeTexture.xml",
+      "sha256": "523b6ee08d259116e4770c6e851165a2195cce4fd9c011ea8e328ff6499c0dc2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeBlendTree",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeBlendTree",
+    "kind": "class",
+    "baseType": "AnimationRootNode",
+    "interfaces": [],
+    "godotReference": "AnimationNodeBlendTree",
+    "documentationPath": "doc/classes/AnimationNodeBlendTree.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodeblendtree.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddNode",
+      "kind": "Method",
+      "signature": "public void AddNode(StringName name, AnimationNode node, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "node",
+          "type": "AnimationNode"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Adds an [AnimationNode] at the given [param position]. The [param name] is used to identify the created sub animation node later.",
+      "godotName": "add_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.AddNode(StringName,AnimationNode,Vector2)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "ConnectNode",
+      "kind": "Method",
+      "signature": "public void ConnectNode(StringName inputNode, int inputIndex, StringName outputNode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "input_node",
+          "type": "StringName"
+        },
+        {
+          "name": "input_index",
+          "type": "int"
+        },
+        {
+          "name": "output_node",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Connects the output of an [AnimationNode] as input for another [AnimationNode], at the input port specified by [param input_index].",
+      "godotName": "connect_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.ConnectNode(StringName,int,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "DisconnectNode",
+      "kind": "Method",
+      "signature": "public void DisconnectNode(StringName inputNode, int inputIndex)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "input_node",
+          "type": "StringName"
+        },
+        {
+          "name": "input_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Disconnects the animation node connected to the specified input.",
+      "godotName": "disconnect_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.DisconnectNode(StringName,int)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "GetNode",
+      "kind": "Method",
+      "signature": "public AnimationNode GetNode(StringName name)",
+      "returnType": "AnimationNode",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the sub animation node with the specified [param name].",
+      "godotName": "get_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.GetNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "GetNodeList",
+      "kind": "Method",
+      "signature": "public StringName[] GetNodeList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns a list containing the names of all sub animation nodes in this blend tree.",
+      "godotName": "get_node_list",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.GetNodeList",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "GetNodePosition",
+      "kind": "Method",
+      "signature": "public Vector2 GetNodePosition(StringName name)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the position of the sub animation node with the specified [param name].",
+      "godotName": "get_node_position",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.GetNodePosition(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "HasNode",
+      "kind": "Method",
+      "signature": "public bool HasNode(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a sub animation node with specified [param name] exists.",
+      "godotName": "has_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.HasNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "RemoveNode",
+      "kind": "Method",
+      "signature": "public void RemoveNode(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes a sub animation node.",
+      "godotName": "remove_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.RemoveNode(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "RenameNode",
+      "kind": "Method",
+      "signature": "public void RenameNode(StringName name, StringName newName)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "new_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Changes the name of a sub animation node.",
+      "godotName": "rename_node",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.RenameNode(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "SetNodePosition",
+      "kind": "Method",
+      "signature": "public void SetNodePosition(StringName name, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "position",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Modifies the position of a sub animation node.",
+      "godotName": "set_node_position",
+      "xmlDocId": "M:Godot.AnimationNodeBlendTree.SetNodePosition(StringName,Vector2)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "GraphOffset",
+      "kind": "Property",
+      "signature": "public Vector2 GraphOffset { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The global offset of all sub animation nodes.",
+      "defaultValue": "Vector2(0, 0)",
+      "godotName": "graph_offset",
+      "xmlDocId": "P:Godot.AnimationNodeBlendTree.GraphOffset",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "NodeChanged",
+      "kind": "Signal",
+      "signature": "public event NodeChangedHandler NodeChanged",
+      "parameters": [
+        {
+          "name": "node_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Emitted when the input port information is changed.",
+      "godotName": "node_changed",
+      "xmlDocId": "E:Godot.AnimationNodeBlendTree.NodeChanged(StringName)",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [
+    {
+      "name": "CONNECTION_OK",
+      "value": "0",
+      "kind": "Constant",
+      "summary": "The connection was successful.",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "CONNECTION_ERROR_NO_INPUT",
+      "value": "1",
+      "kind": "Constant",
+      "summary": "The input node is [code]null[/code].",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "CONNECTION_ERROR_NO_INPUT_INDEX",
+      "value": "2",
+      "kind": "Constant",
+      "summary": "The specified input port is out of range.",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "CONNECTION_ERROR_NO_OUTPUT",
+      "value": "3",
+      "kind": "Constant",
+      "summary": "The output node is [code]null[/code].",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "CONNECTION_ERROR_SAME_NODE",
+      "value": "4",
+      "kind": "Constant",
+      "summary": "Input and output nodes are the same.",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    },
+    {
+      "name": "CONNECTION_ERROR_CONNECTION_EXISTS",
+      "value": "5",
+      "kind": "Constant",
+      "summary": "The specified connection already exists.",
+      "sourcePath": "doc/classes/AnimationNodeBlendTree.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeBlendTree.xml",
+      "sha256": "c8313cec6d13fa11fa9f98fa9acddb4710430109b28a8664a53c631dce0f8944"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

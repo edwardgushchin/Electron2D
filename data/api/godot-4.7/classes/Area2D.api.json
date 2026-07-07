@@ -1,0 +1,548 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Area2D",
+    "namespace": "Godot",
+    "fullName": "Godot.Area2D",
+    "kind": "class",
+    "baseType": "CollisionObject2D",
+    "interfaces": [],
+    "godotReference": "Area2D",
+    "documentationPath": "doc/classes/Area2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_area2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetOverlappingAreas",
+      "kind": "Method",
+      "signature": "public Area2D[] GetOverlappingAreas()",
+      "returnType": "Area2D[]",
+      "parameters": [],
+      "summary": "Returns a list of intersecting [Area2D]s. The overlapping area\u0027s [member CollisionObject2D.collision_layer] must be part of this area\u0027s [member CollisionObject2D.collision_mask] in order to be detected. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.",
+      "godotName": "get_overlapping_areas",
+      "xmlDocId": "M:Godot.Area2D.GetOverlappingAreas",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GetOverlappingBodies",
+      "kind": "Method",
+      "signature": "public Node2D[] GetOverlappingBodies()",
+      "returnType": "Node2D[]",
+      "parameters": [],
+      "summary": "Returns a list of intersecting [PhysicsBody2D]s and [TileMap]s. The overlapping body\u0027s [member CollisionObject2D.collision_layer] must be part of this area\u0027s [member CollisionObject2D.collision_mask] in order to be detected. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.",
+      "godotName": "get_overlapping_bodies",
+      "xmlDocId": "M:Godot.Area2D.GetOverlappingBodies",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "HasOverlappingAreas",
+      "kind": "Method",
+      "signature": "public bool HasOverlappingAreas()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if intersecting any [Area2D]s, otherwise returns [code]false[/code]. The overlapping area\u0027s [member CollisionObject2D.collision_layer] must be part of this area\u0027s [member CollisionObject2D.collision_mask] in order to be detected. For performance reasons (collisions are all processed at the same time) the list of overlapping areas is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.",
+      "godotName": "has_overlapping_areas",
+      "xmlDocId": "M:Godot.Area2D.HasOverlappingAreas",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "HasOverlappingBodies",
+      "kind": "Method",
+      "signature": "public bool HasOverlappingBodies()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if intersecting any [PhysicsBody2D]s or [TileMap]s, otherwise returns [code]false[/code]. The overlapping body\u0027s [member CollisionObject2D.collision_layer] must be part of this area\u0027s [member CollisionObject2D.collision_mask] in order to be detected. For performance reasons (collisions are all processed at the same time) the list of overlapping bodies is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.",
+      "godotName": "has_overlapping_bodies",
+      "xmlDocId": "M:Godot.Area2D.HasOverlappingBodies",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "OverlapsArea",
+      "kind": "Method",
+      "signature": "public bool OverlapsArea(Node area)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given [Area2D] intersects or overlaps this [Area2D], [code]false[/code] otherwise. [b]Note:[/b] The result of this test is not immediate after moving objects. For performance, the list of overlaps is updated once per frame and before the physics step. Consider using signals instead.",
+      "godotName": "overlaps_area",
+      "xmlDocId": "M:Godot.Area2D.OverlapsArea(Node)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "OverlapsBody",
+      "kind": "Method",
+      "signature": "public bool OverlapsBody(Node body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the given physics body intersects or overlaps this [Area2D], [code]false[/code] otherwise. [b]Note:[/b] The result of this test is not immediate after moving objects. For performance, list of overlaps is updated once per frame and before the physics step. Consider using signals instead. The [param body] argument can either be a [PhysicsBody2D] or a [TileMap] instance. While TileMaps are not physics bodies themselves, they register their tiles with collision shapes as a virtual physics body.",
+      "godotName": "overlaps_body",
+      "xmlDocId": "M:Godot.Area2D.OverlapsBody(Node)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AngularDamp",
+      "kind": "Property",
+      "signature": "public float AngularDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate at which objects stop spinning in this area. Represents the angular velocity lost per second. See [member ProjectSettings.physics/2d/default_angular_damp] for more details about damping.",
+      "defaultValue": "1.0",
+      "godotName": "angular_damp",
+      "xmlDocId": "P:Godot.Area2D.AngularDamp",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AngularDampSpaceOverride",
+      "kind": "Property",
+      "signature": "public int AngularDampSpaceOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override mode for angular damping calculations within this area.",
+      "defaultValue": "0",
+      "godotName": "angular_damp_space_override",
+      "xmlDocId": "P:Godot.Area2D.AngularDampSpaceOverride",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AudioBusName",
+      "kind": "Property",
+      "signature": "public StringName AudioBusName { get; set; }",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "The name of the area\u0027s audio bus.",
+      "defaultValue": "\u0026\u0022Master\u0022",
+      "godotName": "audio_bus_name",
+      "xmlDocId": "P:Godot.Area2D.AudioBusName",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AudioBusOverride",
+      "kind": "Property",
+      "signature": "public bool AudioBusOverride { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the area\u0027s audio bus overrides the default audio bus.",
+      "defaultValue": "false",
+      "godotName": "audio_bus_override",
+      "xmlDocId": "P:Godot.Area2D.AudioBusOverride",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "Gravity",
+      "kind": "Property",
+      "signature": "public float Gravity { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The area\u0027s gravity intensity (in pixels per second squared). This value multiplies the gravity direction. This is useful to alter the force of gravity without altering its direction.",
+      "defaultValue": "980.0",
+      "godotName": "gravity",
+      "xmlDocId": "P:Godot.Area2D.Gravity",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GravityDirection",
+      "kind": "Property",
+      "signature": "public Vector2 GravityDirection { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "The area\u0027s gravity vector (not normalized).",
+      "defaultValue": "Vector2(0, 1)",
+      "godotName": "gravity_direction",
+      "xmlDocId": "P:Godot.Area2D.GravityDirection",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GravityPoint",
+      "kind": "Property",
+      "signature": "public bool GravityPoint { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], gravity is calculated from a point (set via [member gravity_point_center]). See also [member gravity_space_override].",
+      "defaultValue": "false",
+      "godotName": "gravity_point",
+      "xmlDocId": "P:Godot.Area2D.GravityPoint",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GravityPointCenter",
+      "kind": "Property",
+      "signature": "public Vector2 GravityPointCenter { get; set; }",
+      "returnType": "Vector2",
+      "parameters": [],
+      "summary": "If gravity is a point (see [member gravity_point]), this will be the point of attraction.",
+      "defaultValue": "Vector2(0, 1)",
+      "godotName": "gravity_point_center",
+      "xmlDocId": "P:Godot.Area2D.GravityPointCenter",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GravityPointUnitDistance",
+      "kind": "Property",
+      "signature": "public float GravityPointUnitDistance { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The distance at which the gravity strength is equal to [member gravity]. For example, on a planet 100 pixels in radius with a surface gravity of 4.0 px/s\u00B2, set the [member gravity] to 4.0 and the unit distance to 100.0. The gravity will have falloff according to the inverse square law, so in the example, at 200 pixels from the center the gravity will be 1.0 px/s\u00B2 (twice the distance, 1/4th the gravity), at 50 pixels it will be 16.0 px/s\u00B2 (half the distance, 4x the gravity), and so on. The above is true only when the unit distance is a positive number. When this is set to 0.0, the gravity will be constant regardless of distance.",
+      "defaultValue": "0.0",
+      "godotName": "gravity_point_unit_distance",
+      "xmlDocId": "P:Godot.Area2D.GravityPointUnitDistance",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "GravitySpaceOverride",
+      "kind": "Property",
+      "signature": "public int GravitySpaceOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override mode for gravity calculations within this area.",
+      "defaultValue": "0",
+      "godotName": "gravity_space_override",
+      "xmlDocId": "P:Godot.Area2D.GravitySpaceOverride",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "LinearDamp",
+      "kind": "Property",
+      "signature": "public float LinearDamp { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The rate at which objects stop moving in this area. Represents the linear velocity lost per second. See [member ProjectSettings.physics/2d/default_linear_damp] for more details about damping.",
+      "defaultValue": "0.1",
+      "godotName": "linear_damp",
+      "xmlDocId": "P:Godot.Area2D.LinearDamp",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "LinearDampSpaceOverride",
+      "kind": "Property",
+      "signature": "public int LinearDampSpaceOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Override mode for linear damping calculations within this area.",
+      "defaultValue": "0",
+      "godotName": "linear_damp_space_override",
+      "xmlDocId": "P:Godot.Area2D.LinearDampSpaceOverride",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "Monitorable",
+      "kind": "Property",
+      "signature": "public bool Monitorable { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], other monitoring areas can detect this area.",
+      "defaultValue": "true",
+      "godotName": "monitorable",
+      "xmlDocId": "P:Godot.Area2D.Monitorable",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "Monitoring",
+      "kind": "Property",
+      "signature": "public bool Monitoring { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the area detects bodies or areas entering and exiting it.",
+      "defaultValue": "true",
+      "godotName": "monitoring",
+      "xmlDocId": "P:Godot.Area2D.Monitoring",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "Priority",
+      "kind": "Property",
+      "signature": "public int Priority { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The area\u0027s priority. Higher priority areas are processed first. The [World2D]\u0027s physics is always processed last, after all areas.",
+      "defaultValue": "0",
+      "godotName": "priority",
+      "xmlDocId": "P:Godot.Area2D.Priority",
+      "sourcePath": "doc/classes/Area2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AreaEntered",
+      "kind": "Signal",
+      "signature": "public event AreaEnteredHandler AreaEntered",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "Area2D"
+        }
+      ],
+      "summary": "Emitted when the received [param area] enters this area. Requires [member monitoring] to be set to [code]true[/code].",
+      "godotName": "area_entered",
+      "xmlDocId": "E:Godot.Area2D.AreaEntered(Area2D)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AreaExited",
+      "kind": "Signal",
+      "signature": "public event AreaExitedHandler AreaExited",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "Area2D"
+        }
+      ],
+      "summary": "Emitted when the received [param area] exits this area. Requires [member monitoring] to be set to [code]true[/code].",
+      "godotName": "area_exited",
+      "xmlDocId": "E:Godot.Area2D.AreaExited(Area2D)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AreaShapeEntered",
+      "kind": "Signal",
+      "signature": "public event AreaShapeEnteredHandler AreaShapeEntered",
+      "parameters": [
+        {
+          "name": "area_rid",
+          "type": "RID"
+        },
+        {
+          "name": "area",
+          "type": "Area2D"
+        },
+        {
+          "name": "area_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [Shape2D] of the received [param area] enters a shape of this area. Requires [member monitoring] to be set to [code]true[/code]. [param local_shape_index] and [param area_shape_index] contain indices of the interacting shapes from this area and the other area, respectively. [param area_rid] contains the [RID] of the other area. These values can be used with the [PhysicsServer2D]. [b]Example:[/b] Get the [CollisionShape2D] node from the shape index: [codeblocks] [gdscript] var other_shape_owner = area.shape_find_owner(area_shape_index) var other_shape_node = area.shape_owner_get_owner(other_shape_owner) var local_shape_owner = shape_find_owner(local_shape_index) var local_shape_node = shape_owner_get_owner(local_shape_owner) [/gdscript] [/codeblocks]",
+      "godotName": "area_shape_entered",
+      "xmlDocId": "E:Godot.Area2D.AreaShapeEntered(RID,Area2D,int,int)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "AreaShapeExited",
+      "kind": "Signal",
+      "signature": "public event AreaShapeExitedHandler AreaShapeExited",
+      "parameters": [
+        {
+          "name": "area_rid",
+          "type": "RID"
+        },
+        {
+          "name": "area",
+          "type": "Area2D"
+        },
+        {
+          "name": "area_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [Shape2D] of the received [param area] exits a shape of this area. Requires [member monitoring] to be set to [code]true[/code]. See also [signal area_shape_entered].",
+      "godotName": "area_shape_exited",
+      "xmlDocId": "E:Godot.Area2D.AreaShapeExited(RID,Area2D,int,int)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "BodyEntered",
+      "kind": "Signal",
+      "signature": "public event BodyEnteredHandler BodyEntered",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node2D"
+        }
+      ],
+      "summary": "Emitted when the received [param body] enters this area. [param body] can be a [PhysicsBody2D] or a [TileMap]. [TileMap]s are detected if their [TileSet] has collision shapes configured. Requires [member monitoring] to be set to [code]true[/code].",
+      "godotName": "body_entered",
+      "xmlDocId": "E:Godot.Area2D.BodyEntered(Node2D)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "BodyExited",
+      "kind": "Signal",
+      "signature": "public event BodyExitedHandler BodyExited",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "Node2D"
+        }
+      ],
+      "summary": "Emitted when the received [param body] exits this area. [param body] can be a [PhysicsBody2D] or a [TileMap]. [TileMap]s are detected if their [TileSet] has collision shapes configured. Requires [member monitoring] to be set to [code]true[/code].",
+      "godotName": "body_exited",
+      "xmlDocId": "E:Godot.Area2D.BodyExited(Node2D)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "BodyShapeEntered",
+      "kind": "Signal",
+      "signature": "public event BodyShapeEnteredHandler BodyShapeEntered",
+      "parameters": [
+        {
+          "name": "body_rid",
+          "type": "RID"
+        },
+        {
+          "name": "body",
+          "type": "Node2D"
+        },
+        {
+          "name": "body_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [Shape2D] of the received [param body] enters a shape of this area. [param body] can be a [PhysicsBody2D] or a [TileMap]. [TileMap]s are detected if their [TileSet] has collision shapes configured. Requires [member monitoring] to be set to [code]true[/code]. [param local_shape_index] and [param body_shape_index] contain indices of the interacting shapes from this area and the interacting body, respectively. [param body_rid] contains the [RID] of the body. These values can be used with the [PhysicsServer2D]. [b]Example:[/b] Get the [CollisionShape2D] node from the shape index: [codeblocks] [gdscript] var body_shape_owner = body.shape_find_owner(body_shape_index) var body_shape_node = body.shape_owner_get_owner(body_shape_owner) var local_shape_owner = shape_find_owner(local_shape_index) var local_shape_node = shape_owner_get_owner(local_shape_owner) [/gdscript] [/codeblocks]",
+      "godotName": "body_shape_entered",
+      "xmlDocId": "E:Godot.Area2D.BodyShapeEntered(RID,Node2D,int,int)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "BodyShapeExited",
+      "kind": "Signal",
+      "signature": "public event BodyShapeExitedHandler BodyShapeExited",
+      "parameters": [
+        {
+          "name": "body_rid",
+          "type": "RID"
+        },
+        {
+          "name": "body",
+          "type": "Node2D"
+        },
+        {
+          "name": "body_shape_index",
+          "type": "int"
+        },
+        {
+          "name": "local_shape_index",
+          "type": "int"
+        }
+      ],
+      "summary": "Emitted when a [Shape2D] of the received [param body] exits a shape of this area. [param body] can be a [PhysicsBody2D] or a [TileMap]. [TileMap]s are detected if their [TileSet] has collision shapes configured. Requires [member monitoring] to be set to [code]true[/code]. See also [signal body_shape_entered].",
+      "godotName": "body_shape_exited",
+      "xmlDocId": "E:Godot.Area2D.BodyShapeExited(RID,Node2D,int,int)",
+      "sourcePath": "doc/classes/Area2D.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "SpaceOverride",
+      "values": [
+        {
+          "name": "SPACE_OVERRIDE_COMBINE",
+          "value": "1",
+          "enum": "SpaceOverride",
+          "kind": "EnumValue",
+          "summary": "This area adds its gravity/damping values to whatever has been calculated so far (in [member priority] order).",
+          "sourcePath": "doc/classes/Area2D.xml"
+        },
+        {
+          "name": "SPACE_OVERRIDE_COMBINE_REPLACE",
+          "value": "2",
+          "enum": "SpaceOverride",
+          "kind": "EnumValue",
+          "summary": "This area adds its gravity/damping values to whatever has been calculated so far (in [member priority] order), ignoring any lower priority areas.",
+          "sourcePath": "doc/classes/Area2D.xml"
+        },
+        {
+          "name": "SPACE_OVERRIDE_DISABLED",
+          "value": "0",
+          "enum": "SpaceOverride",
+          "kind": "EnumValue",
+          "summary": "This area does not affect gravity/damping.",
+          "sourcePath": "doc/classes/Area2D.xml"
+        },
+        {
+          "name": "SPACE_OVERRIDE_REPLACE",
+          "value": "3",
+          "enum": "SpaceOverride",
+          "kind": "EnumValue",
+          "summary": "This area replaces any gravity/damping, even the defaults, ignoring any lower priority areas.",
+          "sourcePath": "doc/classes/Area2D.xml"
+        },
+        {
+          "name": "SPACE_OVERRIDE_REPLACE_COMBINE",
+          "value": "4",
+          "enum": "SpaceOverride",
+          "kind": "EnumValue",
+          "summary": "This area replaces any gravity/damping calculated so far (in [member priority] order), but keeps calculating the rest of the areas.",
+          "sourcePath": "doc/classes/Area2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SPACE_OVERRIDE_DISABLED",
+      "value": "0",
+      "enum": "SpaceOverride",
+      "kind": "EnumValue",
+      "summary": "This area does not affect gravity/damping.",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "SPACE_OVERRIDE_COMBINE",
+      "value": "1",
+      "enum": "SpaceOverride",
+      "kind": "EnumValue",
+      "summary": "This area adds its gravity/damping values to whatever has been calculated so far (in [member priority] order).",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "SPACE_OVERRIDE_COMBINE_REPLACE",
+      "value": "2",
+      "enum": "SpaceOverride",
+      "kind": "EnumValue",
+      "summary": "This area adds its gravity/damping values to whatever has been calculated so far (in [member priority] order), ignoring any lower priority areas.",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "SPACE_OVERRIDE_REPLACE",
+      "value": "3",
+      "enum": "SpaceOverride",
+      "kind": "EnumValue",
+      "summary": "This area replaces any gravity/damping, even the defaults, ignoring any lower priority areas.",
+      "sourcePath": "doc/classes/Area2D.xml"
+    },
+    {
+      "name": "SPACE_OVERRIDE_REPLACE_COMBINE",
+      "value": "4",
+      "enum": "SpaceOverride",
+      "kind": "EnumValue",
+      "summary": "This area replaces any gravity/damping calculated so far (in [member priority] order), but keeps calculating the rest of the areas.",
+      "sourcePath": "doc/classes/Area2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Area2D.xml",
+      "sha256": "9f7ed75d67df09b2dba6434be2405c59403cadcb8d036b34deeb67cb98e515d9"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

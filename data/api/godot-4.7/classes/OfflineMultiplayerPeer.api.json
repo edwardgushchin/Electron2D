@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OfflineMultiplayerPeer",
+    "namespace": "Godot",
+    "fullName": "Godot.OfflineMultiplayerPeer",
+    "kind": "class",
+    "baseType": "MultiplayerPeer",
+    "interfaces": [],
+    "godotReference": "OfflineMultiplayerPeer",
+    "documentationPath": "modules/multiplayer/doc_classes/OfflineMultiplayerPeer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_offlinemultiplayerpeer.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/multiplayer/doc_classes/OfflineMultiplayerPeer.xml",
+      "sha256": "ce43e03afc8c7ac197626cc1c2dcf751c48823b513d313598d53c72799edcebd"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

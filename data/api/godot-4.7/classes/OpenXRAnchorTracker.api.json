@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRAnchorTracker",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRAnchorTracker",
+    "kind": "class",
+    "baseType": "OpenXRSpatialEntityTracker",
+    "interfaces": [],
+    "godotReference": "OpenXRAnchorTracker",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRAnchorTracker.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxranchortracker.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "HasUuid",
+      "kind": "Method",
+      "signature": "public bool HasUuid()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if a non-zero UUID is set.",
+      "godotName": "has_uuid",
+      "xmlDocId": "M:Godot.OpenXRAnchorTracker.HasUuid",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnchorTracker.xml"
+    },
+    {
+      "name": "Uuid",
+      "kind": "Property",
+      "signature": "public String Uuid { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The UUID provided for persistent anchors.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "uuid",
+      "xmlDocId": "P:Godot.OpenXRAnchorTracker.Uuid",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnchorTracker.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "UuidChanged",
+      "kind": "Signal",
+      "signature": "public event UuidChangedHandler UuidChanged",
+      "parameters": [],
+      "summary": "Emitted when the UUID for this anchor was changed.",
+      "godotName": "uuid_changed",
+      "xmlDocId": "E:Godot.OpenXRAnchorTracker.UuidChanged",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRAnchorTracker.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRAnchorTracker.xml",
+      "sha256": "d1a810d94a329efbac08c0da8d56244faa6016f29d8024fd7fa50629106f69c2"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

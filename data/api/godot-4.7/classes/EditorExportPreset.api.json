@@ -1,0 +1,563 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorExportPreset",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorExportPreset",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorExportPreset",
+    "documentationPath": "doc/classes/EditorExportPreset.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorexportpreset.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AreAdvancedOptionsEnabled",
+      "kind": "Method",
+      "signature": "public bool AreAdvancedOptionsEnabled()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the \u0022Advanced\u0022 toggle is enabled in the export dialog.",
+      "godotName": "are_advanced_options_enabled",
+      "xmlDocId": "M:Godot.EditorExportPreset.AreAdvancedOptionsEnabled",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetCustomFeatures",
+      "kind": "Method",
+      "signature": "public String GetCustomFeatures()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns a comma-separated list of custom features added to this preset, as a string. See [url=$DOCS_URL/tutorials/export/feature_tags.html]Feature tags[/url] in the documentation for more information.",
+      "godotName": "get_custom_features",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetCustomFeatures",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetCustomizedFiles",
+      "kind": "Method",
+      "signature": "public Dictionary GetCustomizedFiles()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Returns a dictionary of files selected in the \u0022Resources\u0022 tab of the export dialog. The dictionary\u0027s keys are file paths, and its values are the corresponding export modes: [code]\u0022strip\u0022[/code], [code]\u0022keep\u0022[/code], or [code]\u0022remove\u0022[/code]. See also [method get_file_export_mode].",
+      "godotName": "get_customized_files",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetCustomizedFiles",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetCustomizedFilesCount",
+      "kind": "Method",
+      "signature": "public int GetCustomizedFilesCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of files selected in the \u0022Resources\u0022 tab of the export dialog.",
+      "godotName": "get_customized_files_count",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetCustomizedFilesCount",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetEncryptDirectory",
+      "kind": "Method",
+      "signature": "public bool GetEncryptDirectory()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if PCK directory encryption is enabled in the export dialog.",
+      "godotName": "get_encrypt_directory",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetEncryptDirectory",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetEncryptPck",
+      "kind": "Method",
+      "signature": "public bool GetEncryptPck()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if PCK encryption is enabled in the export dialog.",
+      "godotName": "get_encrypt_pck",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetEncryptPck",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetEncryptionExFilter",
+      "kind": "Method",
+      "signature": "public String GetEncryptionExFilter()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns file filters to exclude during PCK encryption.",
+      "godotName": "get_encryption_ex_filter",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetEncryptionExFilter",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetEncryptionInFilter",
+      "kind": "Method",
+      "signature": "public String GetEncryptionInFilter()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns file filters to include during PCK encryption.",
+      "godotName": "get_encryption_in_filter",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetEncryptionInFilter",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetEncryptionKey",
+      "kind": "Method",
+      "signature": "public String GetEncryptionKey()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns PCK encryption key.",
+      "godotName": "get_encryption_key",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetEncryptionKey",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetExcludeFilter",
+      "kind": "Method",
+      "signature": "public String GetExcludeFilter()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns file filters to exclude during export.",
+      "godotName": "get_exclude_filter",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetExcludeFilter",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetExportFilter",
+      "kind": "Method",
+      "signature": "public int GetExportFilter()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns export file filter mode selected in the \u0022Resources\u0022 tab of the export dialog.",
+      "godotName": "get_export_filter",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetExportFilter",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetExportPath",
+      "kind": "Method",
+      "signature": "public String GetExportPath()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns export target path.",
+      "godotName": "get_export_path",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetExportPath",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetFileExportMode",
+      "kind": "Method",
+      "signature": "public int GetFileExportMode(String path, int @default)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "default",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns file export mode for the specified file.",
+      "godotName": "get_file_export_mode",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetFileExportMode(String,int)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetFilesToExport",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetFilesToExport()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns array of files to export.",
+      "godotName": "get_files_to_export",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetFilesToExport",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetIncludeFilter",
+      "kind": "Method",
+      "signature": "public String GetIncludeFilter()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns file filters to include during export.",
+      "godotName": "get_include_filter",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetIncludeFilter",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetOrEnv",
+      "kind": "Method",
+      "signature": "public Variant GetOrEnv(StringName name, String envVar)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "env_var",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns export option value or value of environment variable if it is set.",
+      "godotName": "get_or_env",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetOrEnv(StringName,String)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetPatches",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetPatches()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of packs on which to base a patch export on.",
+      "godotName": "get_patches",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetPatches",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetPresetName",
+      "kind": "Method",
+      "signature": "public String GetPresetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns this export preset\u0027s name.",
+      "godotName": "get_preset_name",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetPresetName",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetProjectSetting",
+      "kind": "Method",
+      "signature": "public Variant GetProjectSetting(StringName name)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the value of the setting identified by [param name] using export preset feature tag overrides instead of current OS features.",
+      "godotName": "get_project_setting",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetProjectSetting(StringName)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetScriptExportMode",
+      "kind": "Method",
+      "signature": "public int GetScriptExportMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the export mode used by GDScript files. [code]0[/code] for \u0022Text\u0022, [code]1[/code] for \u0022Binary tokens\u0022, and [code]2[/code] for \u0022Compressed binary tokens (smaller files)\u0022.",
+      "godotName": "get_script_export_mode",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetScriptExportMode",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "GetVersion",
+      "kind": "Method",
+      "signature": "public String GetVersion(StringName name, bool windowsVersion)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "windows_version",
+          "type": "bool"
+        }
+      ],
+      "summary": "Returns the preset\u0027s version number, or fall back to the [member ProjectSettings.application/config/version] project setting if set to an empty string. If [param windows_version] is [code]true[/code], formats the returned version number to be compatible with Windows executable metadata.",
+      "godotName": "get_version",
+      "xmlDocId": "M:Godot.EditorExportPreset.GetVersion(StringName,bool)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(StringName property)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "property",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the preset has the property named [param property].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.EditorExportPreset.Has(StringName)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "HasExportFile",
+      "kind": "Method",
+      "signature": "public bool HasExportFile(String path)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the file at the specified [param path] will be exported.",
+      "godotName": "has_export_file",
+      "xmlDocId": "M:Godot.EditorExportPreset.HasExportFile(String)",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "IsDedicatedServer",
+      "kind": "Method",
+      "signature": "public bool IsDedicatedServer()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dedicated server export mode is selected in the export dialog.",
+      "godotName": "is_dedicated_server",
+      "xmlDocId": "M:Godot.EditorExportPreset.IsDedicatedServer",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "IsRunnable",
+      "kind": "Method",
+      "signature": "public bool IsRunnable()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the \u0022Runnable\u0022 toggle is enabled in the export dialog.",
+      "godotName": "is_runnable",
+      "xmlDocId": "M:Godot.EditorExportPreset.IsRunnable",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ExportFilter",
+      "values": [
+        {
+          "name": "EXCLUDE_SELECTED_RESOURCES",
+          "value": "3",
+          "enum": "ExportFilter",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "EXPORT_ALL_RESOURCES",
+          "value": "0",
+          "enum": "ExportFilter",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "EXPORT_CUSTOMIZED",
+          "value": "4",
+          "enum": "ExportFilter",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "EXPORT_SELECTED_RESOURCES",
+          "value": "2",
+          "enum": "ExportFilter",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "EXPORT_SELECTED_SCENES",
+          "value": "1",
+          "enum": "ExportFilter",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        }
+      ]
+    },
+    {
+      "name": "FileExportMode",
+      "values": [
+        {
+          "name": "MODE_FILE_KEEP",
+          "value": "2",
+          "enum": "FileExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "MODE_FILE_NOT_CUSTOMIZED",
+          "value": "0",
+          "enum": "FileExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "MODE_FILE_REMOVE",
+          "value": "3",
+          "enum": "FileExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "MODE_FILE_STRIP",
+          "value": "1",
+          "enum": "FileExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        }
+      ]
+    },
+    {
+      "name": "ScriptExportMode",
+      "values": [
+        {
+          "name": "MODE_SCRIPT_BINARY_TOKENS",
+          "value": "1",
+          "enum": "ScriptExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "MODE_SCRIPT_BINARY_TOKENS_COMPRESSED",
+          "value": "2",
+          "enum": "ScriptExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        },
+        {
+          "name": "MODE_SCRIPT_TEXT",
+          "value": "0",
+          "enum": "ScriptExportMode",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/EditorExportPreset.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "EXPORT_ALL_RESOURCES",
+      "value": "0",
+      "enum": "ExportFilter",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "EXPORT_SELECTED_SCENES",
+      "value": "1",
+      "enum": "ExportFilter",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "EXPORT_SELECTED_RESOURCES",
+      "value": "2",
+      "enum": "ExportFilter",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "EXCLUDE_SELECTED_RESOURCES",
+      "value": "3",
+      "enum": "ExportFilter",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "EXPORT_CUSTOMIZED",
+      "value": "4",
+      "enum": "ExportFilter",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_FILE_NOT_CUSTOMIZED",
+      "value": "0",
+      "enum": "FileExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_FILE_STRIP",
+      "value": "1",
+      "enum": "FileExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_FILE_KEEP",
+      "value": "2",
+      "enum": "FileExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_FILE_REMOVE",
+      "value": "3",
+      "enum": "FileExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_SCRIPT_TEXT",
+      "value": "0",
+      "enum": "ScriptExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_SCRIPT_BINARY_TOKENS",
+      "value": "1",
+      "enum": "ScriptExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    },
+    {
+      "name": "MODE_SCRIPT_BINARY_TOKENS_COMPRESSED",
+      "value": "2",
+      "enum": "ScriptExportMode",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/EditorExportPreset.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorExportPreset.xml",
+      "sha256": "98dd32b05192e581cfde1bcd3a38c9bd50efa5398c683a51a2410d9bee0a378c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

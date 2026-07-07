@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptCreateDialog",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptCreateDialog",
+    "kind": "class",
+    "baseType": "ConfirmationDialog",
+    "interfaces": [],
+    "godotReference": "ScriptCreateDialog",
+    "documentationPath": "doc/classes/ScriptCreateDialog.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scriptcreatedialog.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Config",
+      "kind": "Method",
+      "signature": "public void Config(String inherits, String path, bool builtInEnabled, bool loadEnabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "inherits",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "built_in_enabled",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        {
+          "name": "load_enabled",
+          "type": "bool",
+          "defaultValue": "true"
+        }
+      ],
+      "summary": "Prefills required fields to configure the ScriptCreateDialog for use.",
+      "godotName": "config",
+      "xmlDocId": "M:Godot.ScriptCreateDialog.Config(String,String,bool,bool)",
+      "sourcePath": "doc/classes/ScriptCreateDialog.xml"
+    },
+    {
+      "name": "DialogHideOnOk",
+      "kind": "Property",
+      "signature": "public bool DialogHideOnOk { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "false",
+      "godotName": "dialog_hide_on_ok",
+      "xmlDocId": "P:Godot.ScriptCreateDialog.DialogHideOnOk",
+      "sourcePath": "doc/classes/ScriptCreateDialog.xml"
+    },
+    {
+      "name": "OkButtonText",
+      "kind": "Property",
+      "signature": "public String OkButtonText { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0022Create\u0022",
+      "godotName": "ok_button_text",
+      "xmlDocId": "P:Godot.ScriptCreateDialog.OkButtonText",
+      "sourcePath": "doc/classes/ScriptCreateDialog.xml"
+    },
+    {
+      "name": "Title",
+      "kind": "Property",
+      "signature": "public String Title { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "\u0022Attach Node Script\u0022",
+      "godotName": "title",
+      "xmlDocId": "P:Godot.ScriptCreateDialog.Title",
+      "sourcePath": "doc/classes/ScriptCreateDialog.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "ScriptCreated",
+      "kind": "Signal",
+      "signature": "public event ScriptCreatedHandler ScriptCreated",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        }
+      ],
+      "summary": "Emitted when the user clicks the OK button.",
+      "godotName": "script_created",
+      "xmlDocId": "E:Godot.ScriptCreateDialog.ScriptCreated(Script)",
+      "sourcePath": "doc/classes/ScriptCreateDialog.xml"
+    }
+  ],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptCreateDialog.xml",
+      "sha256": "19ff94adc26a62b5bc3229e34c609f437c045fe934c4f1d3c664acba465e279c"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "OpenXRSpatialComponentMesh2DList",
+    "namespace": "Godot",
+    "fullName": "Godot.OpenXRSpatialComponentMesh2DList",
+    "kind": "class",
+    "baseType": "OpenXRSpatialComponentData",
+    "interfaces": [],
+    "godotReference": "OpenXRSpatialComponentMesh2DList",
+    "documentationPath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh2DList.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_openxrspatialcomponentmesh2dlist.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetIndices",
+      "kind": "Method",
+      "signature": "public PackedInt32Array GetIndices(RID snapshot, int index)",
+      "returnType": "PackedInt32Array",
+      "parameters": [
+        {
+          "name": "snapshot",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the mesh indices for the entity at this [param index].",
+      "godotName": "get_indices",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMesh2DList.GetIndices(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh2DList.xml"
+    },
+    {
+      "name": "GetTransform",
+      "kind": "Method",
+      "signature": "public Transform3D GetTransform(int index)",
+      "returnType": "Transform3D",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the transform for positioning our mesh for the entity at this [param index].",
+      "godotName": "get_transform",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMesh2DList.GetTransform(int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh2DList.xml"
+    },
+    {
+      "name": "GetVertices",
+      "kind": "Method",
+      "signature": "public PackedVector2Array GetVertices(RID snapshot, int index)",
+      "returnType": "PackedVector2Array",
+      "parameters": [
+        {
+          "name": "snapshot",
+          "type": "RID"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the mesh vertices for the entity at this [param index].",
+      "godotName": "get_vertices",
+      "xmlDocId": "M:Godot.OpenXRSpatialComponentMesh2DList.GetVertices(RID,int)",
+      "sourcePath": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh2DList.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/openxr/doc_classes/OpenXRSpatialComponentMesh2DList.xml",
+      "sha256": "475d14a8405e3eaf2306827c983085d04c643296832b85ad4a8b7254656bda80"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationNodeTransition",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationNodeTransition",
+    "kind": "class",
+    "baseType": "AnimationNodeSync",
+    "interfaces": [],
+    "godotReference": "AnimationNodeTransition",
+    "documentationPath": "doc/classes/AnimationNodeTransition.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationnodetransition.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "IsInputLoopBrokenAtEnd",
+      "kind": "Method",
+      "signature": "public bool IsInputLoopBrokenAtEnd(int input)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the animation breaks the loop at the end of the loop cycle for transition.",
+      "godotName": "is_input_loop_broken_at_end",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.IsInputLoopBrokenAtEnd(int)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "IsInputReset",
+      "kind": "Method",
+      "signature": "public bool IsInputReset(int input)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns whether the animation restarts when the animation transitions from the other animation.",
+      "godotName": "is_input_reset",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.IsInputReset(int)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "IsInputSetAsAutoAdvance",
+      "kind": "Method",
+      "signature": "public bool IsInputSetAsAutoAdvance(int input)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if auto-advance is enabled for the given [param input] index.",
+      "godotName": "is_input_set_as_auto_advance",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.IsInputSetAsAutoAdvance(int)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "SetInputAsAutoAdvance",
+      "kind": "Method",
+      "signature": "public void SetInputAsAutoAdvance(int input, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Enables or disables auto-advance for the given [param input] index. If enabled, state changes to the next input after playing the animation once. If enabled for the last input state, it loops to the first.",
+      "godotName": "set_input_as_auto_advance",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.SetInputAsAutoAdvance(int,bool)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "SetInputBreakLoopAtEnd",
+      "kind": "Method",
+      "signature": "public void SetInputBreakLoopAtEnd(int input, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], breaks the loop at the end of the loop cycle for transition, even if the animation is looping.",
+      "godotName": "set_input_break_loop_at_end",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.SetInputBreakLoopAtEnd(int,bool)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "SetInputReset",
+      "kind": "Method",
+      "signature": "public void SetInputReset(int input, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], the destination animation is restarted when the animation transitions.",
+      "godotName": "set_input_reset",
+      "xmlDocId": "M:Godot.AnimationNodeTransition.SetInputReset(int,bool)",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "AllowTransitionToSelf",
+      "kind": "Property",
+      "signature": "public bool AllowTransitionToSelf { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], allows transition to the self state. When the reset option is enabled in input, the animation is restarted. If [code]false[/code], nothing happens on the transition to the self state.",
+      "defaultValue": "false",
+      "godotName": "allow_transition_to_self",
+      "xmlDocId": "P:Godot.AnimationNodeTransition.AllowTransitionToSelf",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "InputCount",
+      "kind": "Property",
+      "signature": "public int InputCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of enabled input ports for this animation node.",
+      "defaultValue": "0",
+      "godotName": "input_count",
+      "xmlDocId": "P:Godot.AnimationNodeTransition.InputCount",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "XfadeCurve",
+      "kind": "Property",
+      "signature": "public Curve XfadeCurve { get; set; }",
+      "returnType": "Curve",
+      "parameters": [],
+      "summary": "Determines how cross-fading between animations is eased. If empty, the transition will be linear. Should be a unit [Curve].",
+      "godotName": "xfade_curve",
+      "xmlDocId": "P:Godot.AnimationNodeTransition.XfadeCurve",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    },
+    {
+      "name": "XfadeTime",
+      "kind": "Property",
+      "signature": "public float XfadeTime { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Cross-fading time (in seconds) between each animation connected to the inputs. [b]Note:[/b] [AnimationNodeTransition] transitions the current state immediately after the start of the fading. The precise remaining time can only be inferred from the main animation. When [AnimationNodeOutput] is considered as the most upstream, so the [member xfade_time] is not scaled depending on the downstream delta. See also [member AnimationNodeOneShot.fadeout_time].",
+      "defaultValue": "0.0",
+      "godotName": "xfade_time",
+      "xmlDocId": "P:Godot.AnimationNodeTransition.XfadeTime",
+      "sourcePath": "doc/classes/AnimationNodeTransition.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationNodeTransition.xml",
+      "sha256": "d8c4f71181fcd12a537a77b3d8ecc067b1d6c4c4645d0567e02114843ab717c0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

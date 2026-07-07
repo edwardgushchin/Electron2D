@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Animation.TrackType",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Animation.TrackType",
+    "kind": "enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "godotReference": "Animation.TrackType",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Method",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.TrackType Method",
+      "returnType": "Electron2D.Animation.TrackType",
+      "parameters": [],
+      "summary": "A track that calls methods on a target node when playback crosses a key time.",
+      "value": "1",
+      "xmlDocId": "F:Electron2D.Animation.TrackTypeEnum.Method",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Value",
+      "kind": "EnumValue",
+      "signature": "public const Electron2D.Animation.TrackType Value",
+      "returnType": "Electron2D.Animation.TrackType",
+      "parameters": [],
+      "summary": "A track that applies keyframed \u0060Electron2D.Variant\u0060 values to a property path.",
+      "value": "0",
+      "xmlDocId": "F:Electron2D.Animation.TrackTypeEnum.Value",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [
+    {
+      "name": "Method",
+      "value": "1",
+      "kind": "EnumValue",
+      "summary": "A track that calls methods on a target node when playback crosses a key time.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Value",
+      "value": "0",
+      "kind": "EnumValue",
+      "summary": "A track that applies keyframed \u0060Electron2D.Variant\u0060 values to a property path.",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

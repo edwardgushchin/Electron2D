@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "VisualShaderNodeCompare",
+    "namespace": "Godot",
+    "fullName": "Godot.VisualShaderNodeCompare",
+    "kind": "class",
+    "baseType": "VisualShaderNode",
+    "interfaces": [],
+    "godotReference": "VisualShaderNodeCompare",
+    "documentationPath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_visualshadernodecompare.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Condition",
+      "kind": "Property",
+      "signature": "public int Condition { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Extra condition which is applied if [member type] is set to [constant CTYPE_VECTOR_3D].",
+      "defaultValue": "0",
+      "godotName": "condition",
+      "xmlDocId": "P:Godot.VisualShaderNodeCompare.Condition",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "Function",
+      "kind": "Property",
+      "signature": "public int Function { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "A comparison function.",
+      "defaultValue": "0",
+      "godotName": "function",
+      "xmlDocId": "P:Godot.VisualShaderNodeCompare.Function",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "signature": "public int Type { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The type to be used in the comparison.",
+      "defaultValue": "0",
+      "godotName": "type",
+      "xmlDocId": "P:Godot.VisualShaderNodeCompare.Type",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ComparisonType",
+      "values": [
+        {
+          "name": "CTYPE_BOOLEAN",
+          "value": "6",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A boolean type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_MAX",
+          "value": "8",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum ComparisonType] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_SCALAR",
+          "value": "0",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A floating-point scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_SCALAR_INT",
+          "value": "1",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "An integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_SCALAR_UINT",
+          "value": "2",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "An unsigned integer scalar.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_TRANSFORM",
+          "value": "7",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A transform ([code]mat4[/code]) type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_VECTOR_2D",
+          "value": "3",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A 2D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_VECTOR_3D",
+          "value": "4",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A 3D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "CTYPE_VECTOR_4D",
+          "value": "5",
+          "enum": "ComparisonType",
+          "kind": "EnumValue",
+          "summary": "A 4D vector type.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        }
+      ]
+    },
+    {
+      "name": "Condition",
+      "values": [
+        {
+          "name": "COND_ALL",
+          "value": "0",
+          "enum": "Condition",
+          "kind": "EnumValue",
+          "summary": "The result will be [code]true[/code] if all components in the vector satisfy the comparison condition.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "COND_ANY",
+          "value": "1",
+          "enum": "Condition",
+          "kind": "EnumValue",
+          "summary": "The result will be [code]true[/code] if any component in the vector satisfies the comparison condition.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "COND_MAX",
+          "value": "2",
+          "enum": "Condition",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Condition] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        }
+      ]
+    },
+    {
+      "name": "Function",
+      "values": [
+        {
+          "name": "FUNC_EQUAL",
+          "value": "0",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for equality ([code]a == b[/code]).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_GREATER_THAN",
+          "value": "2",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for greater than ([code]a \u003E b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_GREATER_THAN_EQUAL",
+          "value": "3",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for greater than or equal ([code]a \u003E= b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_LESS_THAN",
+          "value": "4",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for less than ([code]a \u003C b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_LESS_THAN_EQUAL",
+          "value": "5",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for less than or equal ([code]a \u003C= b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_MAX",
+          "value": "6",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Function] enum.",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        },
+        {
+          "name": "FUNC_NOT_EQUAL",
+          "value": "1",
+          "enum": "Function",
+          "kind": "EnumValue",
+          "summary": "Comparison for inequality ([code]a != b[/code]).",
+          "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CTYPE_SCALAR",
+      "value": "0",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A floating-point scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_SCALAR_INT",
+      "value": "1",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "An integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_SCALAR_UINT",
+      "value": "2",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "An unsigned integer scalar.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_VECTOR_2D",
+      "value": "3",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A 2D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_VECTOR_3D",
+      "value": "4",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A 3D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_VECTOR_4D",
+      "value": "5",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A 4D vector type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_BOOLEAN",
+      "value": "6",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A boolean type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_TRANSFORM",
+      "value": "7",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "A transform ([code]mat4[/code]) type.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "CTYPE_MAX",
+      "value": "8",
+      "enum": "ComparisonType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum ComparisonType] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_EQUAL",
+      "value": "0",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for equality ([code]a == b[/code]).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_NOT_EQUAL",
+      "value": "1",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for inequality ([code]a != b[/code]).",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_GREATER_THAN",
+      "value": "2",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for greater than ([code]a \u003E b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_GREATER_THAN_EQUAL",
+      "value": "3",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for greater than or equal ([code]a \u003E= b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_LESS_THAN",
+      "value": "4",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for less than ([code]a \u003C b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_LESS_THAN_EQUAL",
+      "value": "5",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Comparison for less than or equal ([code]a \u003C= b[/code]). Cannot be used if [member type] set to [constant CTYPE_BOOLEAN] or [constant CTYPE_TRANSFORM].",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "FUNC_MAX",
+      "value": "6",
+      "enum": "Function",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Function] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "COND_ALL",
+      "value": "0",
+      "enum": "Condition",
+      "kind": "EnumValue",
+      "summary": "The result will be [code]true[/code] if all components in the vector satisfy the comparison condition.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "COND_ANY",
+      "value": "1",
+      "enum": "Condition",
+      "kind": "EnumValue",
+      "summary": "The result will be [code]true[/code] if any component in the vector satisfies the comparison condition.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    },
+    {
+      "name": "COND_MAX",
+      "value": "2",
+      "enum": "Condition",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Condition] enum.",
+      "sourcePath": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/visual_shader/doc_classes/VisualShaderNodeCompare.xml",
+      "sha256": "c358d3813d37945dc87455c5440f42d6238fa481fc5f500fcd53c9e5c9ff3a73"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

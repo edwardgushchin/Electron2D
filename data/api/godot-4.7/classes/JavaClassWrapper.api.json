@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "JavaClassWrapper",
+    "namespace": "Godot",
+    "fullName": "Godot.JavaClassWrapper",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "JavaClassWrapper",
+    "documentationPath": "doc/classes/JavaClassWrapper.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_javaclasswrapper.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "CreateProxy",
+      "kind": "Method",
+      "signature": "public JavaObject CreateProxy(Object @object, PackedStringArray interfaces)",
+      "returnType": "JavaObject",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "Object"
+        },
+        {
+          "name": "interfaces",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "Creates a [JavaObject] implementing the given Java interfaces using the given [Object] as the implementation. The [param object] must contain methods signatures matching the methods signatures from the passed Java [param interfaces]. Invoking methods from the Java [param interfaces] will route to the matching [param object] method. [codeblock] class PrintProxy: func println(content: String) -\u003E void: print(content) var print_proxy = PrintProxy.new() var printer_object = JavaClassWrapper.create_proxy(print_proxy, [\u0022android.util.Printer\u0022]) printer_object.println(\u0022Hello Godot World!\u0022) [/codeblock] [b]Note:[/b] This method only works on Android. On every other platform, this method will always return [code]null[/code].",
+      "godotName": "create_proxy",
+      "xmlDocId": "M:Godot.JavaClassWrapper.CreateProxy(Object,PackedStringArray)",
+      "sourcePath": "doc/classes/JavaClassWrapper.xml"
+    },
+    {
+      "name": "CreateSamCallback",
+      "kind": "Method",
+      "signature": "public JavaObject CreateSamCallback(String samInterface, Callable callable)",
+      "returnType": "JavaObject",
+      "parameters": [
+        {
+          "name": "sam_interface",
+          "type": "String"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Creates a [JavaObject] implementing the Java Single Abstract Method (SAM) interface using the Godot [Callable] as the implementation. The [param sam_interface] [b]must be[/b] a Java SAM interface, meaning it must only have a single abstract method to implement. The [param callable] must be able to handle the same parameter types as the SAM interface method, and must provide the same return type. The [param callable] will be invoked as a callback, passing the arguments from the Java SAM interface method. [codeblock] var cb = func (content: String) -\u003E void: print(content) var callback = JavaClassWrapper.create_sam_callback(\u0022android.util.Printer\u0022, cb) callback.println(\u0022Hello Godot World!\u0022) [/codeblock] [b]Note:[/b] This method only works on Android. On every other platform, this method will always return [code]null[/code].",
+      "godotName": "create_sam_callback",
+      "xmlDocId": "M:Godot.JavaClassWrapper.CreateSamCallback(String,Callable)",
+      "sourcePath": "doc/classes/JavaClassWrapper.xml"
+    },
+    {
+      "name": "GetException",
+      "kind": "Method",
+      "signature": "public JavaObject GetException()",
+      "returnType": "JavaObject",
+      "parameters": [],
+      "summary": "Returns the Java exception from the last call into a Java class. If there was no exception, it will return [code]null[/code]. [b]Note:[/b] This method only works on Android. On every other platform, this method will always return [code]null[/code].",
+      "godotName": "get_exception",
+      "xmlDocId": "M:Godot.JavaClassWrapper.GetException",
+      "sourcePath": "doc/classes/JavaClassWrapper.xml"
+    },
+    {
+      "name": "Wrap",
+      "kind": "Method",
+      "signature": "public JavaClass Wrap(String name)",
+      "returnType": "JavaClass",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "summary": "Wraps a class defined in Java, and returns it as a [JavaClass] [Object] type that Godot can interact with. When wrapping inner (nested) classes, use [code]$[/code] instead of [code].[/code] to separate them. For example, [code]JavaClassWrapper.wrap(\u0022android.view.WindowManager$LayoutParams\u0022)[/code] wraps the [b]WindowManager.LayoutParams[/b] class. [b]Note:[/b] To invoke a constructor, call a method with the same name as the class. For example: [codeblock] var Intent = JavaClassWrapper.wrap(\u0022android.content.Intent\u0022) var intent = Intent.Intent() [/codeblock] [b]Note:[/b] This method only works on Android. On every other platform, this method does nothing and returns an empty [JavaClass].",
+      "godotName": "wrap",
+      "xmlDocId": "M:Godot.JavaClassWrapper.Wrap(String)",
+      "sourcePath": "doc/classes/JavaClassWrapper.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/JavaClassWrapper.xml",
+      "sha256": "3b968671d40b9621dd016747e5f348e3e3592595f2b4303b911319fff059635d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

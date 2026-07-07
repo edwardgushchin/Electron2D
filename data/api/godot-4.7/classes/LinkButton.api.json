@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "LinkButton",
+    "namespace": "Godot",
+    "fullName": "Godot.LinkButton",
+    "kind": "class",
+    "baseType": "BaseButton",
+    "interfaces": [],
+    "godotReference": "LinkButton",
+    "documentationPath": "doc/classes/LinkButton.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_linkbutton.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "EllipsisChar",
+      "kind": "Property",
+      "signature": "public String EllipsisChar { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Ellipsis character used for text clipping.",
+      "defaultValue": "\u0022\u2026\u0022",
+      "godotName": "ellipsis_char",
+      "xmlDocId": "P:Godot.LinkButton.EllipsisChar",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.LinkButton.FocusMode",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.LinkButton.Language",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "MouseDefaultCursorShape",
+      "kind": "Property",
+      "signature": "public int MouseDefaultCursorShape { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "2",
+      "godotName": "mouse_default_cursor_shape",
+      "xmlDocId": "P:Godot.LinkButton.MouseDefaultCursorShape",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverride",
+      "kind": "Property",
+      "signature": "public int StructuredTextBidiOverride { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Set BiDi algorithm override for the structured text.",
+      "defaultValue": "0",
+      "godotName": "structured_text_bidi_override",
+      "xmlDocId": "P:Godot.LinkButton.StructuredTextBidiOverride",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "StructuredTextBidiOverrideOptions",
+      "kind": "Property",
+      "signature": "public Array StructuredTextBidiOverrideOptions { get; set; }",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Set additional options for BiDi override.",
+      "defaultValue": "[]",
+      "godotName": "structured_text_bidi_override_options",
+      "xmlDocId": "P:Godot.LinkButton.StructuredTextBidiOverrideOptions",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "signature": "public String Text { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The button\u0027s text that will be displayed inside the button\u0027s area.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "text",
+      "xmlDocId": "P:Godot.LinkButton.Text",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.LinkButton.TextDirection",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "TextOverrunBehavior",
+      "kind": "Property",
+      "signature": "public int TextOverrunBehavior { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Sets the clipping behavior when the text exceeds the node\u0027s bounding rectangle.",
+      "defaultValue": "0",
+      "godotName": "text_overrun_behavior",
+      "xmlDocId": "P:Godot.LinkButton.TextOverrunBehavior",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "Underline",
+      "kind": "Property",
+      "signature": "public int Underline { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The underline mode to use for the text.",
+      "defaultValue": "0",
+      "godotName": "underline",
+      "xmlDocId": "P:Godot.LinkButton.Underline",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "Uri",
+      "kind": "Property",
+      "signature": "public String Uri { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The [url=https://en.wikipedia.org/wiki/Uniform_Resource_Identifier]URI[/url] for this [LinkButton]. If set to a valid URI, pressing the button opens the URI using the operating system\u0027s default program for the protocol (via [method OS.shell_open]). HTTP and HTTPS URLs open the default web browser. [codeblocks] [gdscript] uri = \u0022https://godotengine.org\u0022 # Opens the URL in the default web browser. uri = \u0022\u003Cwindows-absolute-path\u003E\u0022 # Opens the file explorer at the given path. uri = \u0022\u003Cwindows-absolute-path\u003E\u0022 # Opens the given image in the default viewing app. [/gdscript] [csharp] Uri = \u0022https://godotengine.org\u0022; // Opens the URL in the default web browser. Uri = \u0022\u003Cwindows-absolute-path\u003E\u0022; // Opens the file explorer at the given path. Uri = \u0022\u003Cwindows-absolute-path\u003E\u0022; // Opens the given image in the default viewing app. [/csharp] [/codeblocks]",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "uri",
+      "xmlDocId": "P:Godot.LinkButton.Uri",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "UnderlineMode",
+      "values": [
+        {
+          "name": "UNDERLINE_MODE_ALWAYS",
+          "value": "0",
+          "enum": "UnderlineMode",
+          "kind": "EnumValue",
+          "summary": "The LinkButton will always show an underline at the bottom of its text.",
+          "sourcePath": "doc/classes/LinkButton.xml"
+        },
+        {
+          "name": "UNDERLINE_MODE_NEVER",
+          "value": "2",
+          "enum": "UnderlineMode",
+          "kind": "EnumValue",
+          "summary": "The LinkButton will never show an underline at the bottom of its text.",
+          "sourcePath": "doc/classes/LinkButton.xml"
+        },
+        {
+          "name": "UNDERLINE_MODE_ON_HOVER",
+          "value": "1",
+          "enum": "UnderlineMode",
+          "kind": "EnumValue",
+          "summary": "The LinkButton will show an underline at the bottom of its text when the mouse cursor is over it.",
+          "sourcePath": "doc/classes/LinkButton.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "UNDERLINE_MODE_ALWAYS",
+      "value": "0",
+      "enum": "UnderlineMode",
+      "kind": "EnumValue",
+      "summary": "The LinkButton will always show an underline at the bottom of its text.",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "UNDERLINE_MODE_ON_HOVER",
+      "value": "1",
+      "enum": "UnderlineMode",
+      "kind": "EnumValue",
+      "summary": "The LinkButton will show an underline at the bottom of its text when the mouse cursor is over it.",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    },
+    {
+      "name": "UNDERLINE_MODE_NEVER",
+      "value": "2",
+      "enum": "UnderlineMode",
+      "kind": "EnumValue",
+      "summary": "The LinkButton will never show an underline at the bottom of its text.",
+      "sourcePath": "doc/classes/LinkButton.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/LinkButton.xml",
+      "sha256": "11c025a5a76a857cd6e1e7a92c37bc331b19d306a75bdff1381251d4f87839fa"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

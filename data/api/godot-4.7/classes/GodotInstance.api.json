@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "GodotInstance",
+    "namespace": "Godot",
+    "fullName": "Godot.GodotInstance",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "GodotInstance",
+    "documentationPath": "doc/classes/GodotInstance.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_godotinstance.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "FocusIn",
+      "kind": "Method",
+      "signature": "public void FocusIn()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Notifies the instance that it is now in focus.",
+      "godotName": "focus_in",
+      "xmlDocId": "M:Godot.GodotInstance.FocusIn",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "FocusOut",
+      "kind": "Method",
+      "signature": "public void FocusOut()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Notifies the instance that it is now not in focus.",
+      "godotName": "focus_out",
+      "xmlDocId": "M:Godot.GodotInstance.FocusOut",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "IsStarted",
+      "kind": "Method",
+      "signature": "public bool IsStarted()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if this instance has been fully started.",
+      "godotName": "is_started",
+      "xmlDocId": "M:Godot.GodotInstance.IsStarted",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "Iteration",
+      "kind": "Method",
+      "signature": "public bool Iteration()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Runs a single iteration of the main loop. Returns [code]true[/code] if the engine is attempting to quit.",
+      "godotName": "iteration",
+      "xmlDocId": "M:Godot.GodotInstance.Iteration",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "Pause",
+      "kind": "Method",
+      "signature": "public void Pause()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Notifies the instance that it is going to be paused.",
+      "godotName": "pause",
+      "xmlDocId": "M:Godot.GodotInstance.Pause",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "Resume",
+      "kind": "Method",
+      "signature": "public void Resume()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Notifies the instance that it is being resumed.",
+      "godotName": "resume",
+      "xmlDocId": "M:Godot.GodotInstance.Resume",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    },
+    {
+      "name": "Start",
+      "kind": "Method",
+      "signature": "public bool Start()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Finishes this instance\u0027s startup sequence. Returns [code]true[/code] on success.",
+      "godotName": "start",
+      "xmlDocId": "M:Godot.GodotInstance.Start",
+      "sourcePath": "doc/classes/GodotInstance.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/GodotInstance.xml",
+      "sha256": "d4314f84265c2cb1130da1c01438c4e52164d7b140c3b108069aabb584e39a26"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

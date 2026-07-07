@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AimModifier3D",
+    "namespace": "Godot",
+    "fullName": "Godot.AimModifier3D",
+    "kind": "class",
+    "baseType": "BoneConstraint3D",
+    "interfaces": [],
+    "godotReference": "AimModifier3D",
+    "documentationPath": "doc/classes/AimModifier3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_aimmodifier3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetForwardAxis",
+      "kind": "Method",
+      "signature": "public int GetForwardAxis(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the forward axis of the bone.",
+      "godotName": "get_forward_axis",
+      "xmlDocId": "M:Godot.AimModifier3D.GetForwardAxis(int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "GetPrimaryRotationAxis",
+      "kind": "Method",
+      "signature": "public int GetPrimaryRotationAxis(int index)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the axis of the first rotation. It is enabled only if [method is_using_euler] is [code]true[/code].",
+      "godotName": "get_primary_rotation_axis",
+      "xmlDocId": "M:Godot.AimModifier3D.GetPrimaryRotationAxis(int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "IsRelative",
+      "kind": "Method",
+      "signature": "public bool IsRelative(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the relative option is enabled in the setting at [param index].",
+      "godotName": "is_relative",
+      "xmlDocId": "M:Godot.AimModifier3D.IsRelative(int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "IsUsingEuler",
+      "kind": "Method",
+      "signature": "public bool IsUsingEuler(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if it provides rotation with using euler.",
+      "godotName": "is_using_euler",
+      "xmlDocId": "M:Godot.AimModifier3D.IsUsingEuler(int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "IsUsingSecondaryRotation",
+      "kind": "Method",
+      "signature": "public bool IsUsingSecondaryRotation(int index)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if it provides rotation by two axes. It is enabled only if [method is_using_euler] is [code]true[/code].",
+      "godotName": "is_using_secondary_rotation",
+      "xmlDocId": "M:Godot.AimModifier3D.IsUsingSecondaryRotation(int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SetForwardAxis",
+      "kind": "Method",
+      "signature": "public void SetForwardAxis(int index, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the forward axis of the bone.",
+      "godotName": "set_forward_axis",
+      "xmlDocId": "M:Godot.AimModifier3D.SetForwardAxis(int,int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SetPrimaryRotationAxis",
+      "kind": "Method",
+      "signature": "public void SetPrimaryRotationAxis(int index, int axis)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "axis",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the axis of the first rotation. It is enabled only if [method is_using_euler] is [code]true[/code].",
+      "godotName": "set_primary_rotation_axis",
+      "xmlDocId": "M:Godot.AimModifier3D.SetPrimaryRotationAxis(int,int)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SetRelative",
+      "kind": "Method",
+      "signature": "public void SetRelative(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets relative option in the setting at [param index] to [param enabled]. If sets [param enabled] to [code]true[/code], the rotation is applied relative to the pose. If sets [param enabled] to [code]false[/code], the rotation is applied relative to the rest. It means to replace the current pose with the [AimModifier3D]\u0027s result.",
+      "godotName": "set_relative",
+      "xmlDocId": "M:Godot.AimModifier3D.SetRelative(int,bool)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SetUseEuler",
+      "kind": "Method",
+      "signature": "public void SetUseEuler(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], it provides rotation with using euler. If sets [param enabled] to [code]false[/code], it provides rotation with using rotation by arc generated from the forward axis vector and the vector toward the reference.",
+      "godotName": "set_use_euler",
+      "xmlDocId": "M:Godot.AimModifier3D.SetUseEuler(int,bool)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SetUseSecondaryRotation",
+      "kind": "Method",
+      "signature": "public void SetUseSecondaryRotation(int index, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If sets [param enabled] to [code]true[/code], it provides rotation by two axes. It is enabled only if [method is_using_euler] is [code]true[/code].",
+      "godotName": "set_use_secondary_rotation",
+      "xmlDocId": "M:Godot.AimModifier3D.SetUseSecondaryRotation(int,bool)",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    },
+    {
+      "name": "SettingCount",
+      "kind": "Property",
+      "signature": "public int SettingCount { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of settings in the modifier.",
+      "defaultValue": "0",
+      "godotName": "setting_count",
+      "xmlDocId": "P:Godot.AimModifier3D.SettingCount",
+      "sourcePath": "doc/classes/AimModifier3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AimModifier3D.xml",
+      "sha256": "255ca82fd1acbdfcd7a1ce5167a57d6e7d362c071f93566c641e2bdc326ce0dc"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

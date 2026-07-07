@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "StreamPeerTLS",
+    "namespace": "Godot",
+    "fullName": "Godot.StreamPeerTLS",
+    "kind": "class",
+    "baseType": "StreamPeer",
+    "interfaces": [],
+    "godotReference": "StreamPeerTLS",
+    "documentationPath": "doc/classes/StreamPeerTLS.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_streampeertls.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AcceptStream",
+      "kind": "Method",
+      "signature": "public int AcceptStream(StreamPeer stream, TLSOptions serverOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "StreamPeer"
+        },
+        {
+          "name": "server_options",
+          "type": "TLSOptions"
+        }
+      ],
+      "summary": "Accepts a peer connection as a server using the given [param server_options]. See [method TLSOptions.server].",
+      "godotName": "accept_stream",
+      "xmlDocId": "M:Godot.StreamPeerTLS.AcceptStream(StreamPeer,TLSOptions)",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "ConnectToStream",
+      "kind": "Method",
+      "signature": "public int ConnectToStream(StreamPeer stream, String commonName, TLSOptions clientOptions)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "StreamPeer"
+        },
+        {
+          "name": "common_name",
+          "type": "String"
+        },
+        {
+          "name": "client_options",
+          "type": "TLSOptions",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Connects to a peer using an underlying [StreamPeer] [param stream] and verifying the remote certificate is correctly signed for the given [param common_name]. You can pass the optional [param client_options] parameter to customize the trusted certification authorities, or disable the common name verification. See [method TLSOptions.client] and [method TLSOptions.client_unsafe].",
+      "godotName": "connect_to_stream",
+      "xmlDocId": "M:Godot.StreamPeerTLS.ConnectToStream(StreamPeer,String,TLSOptions)",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "DisconnectFromStream",
+      "kind": "Method",
+      "signature": "public void DisconnectFromStream()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Disconnects from host.",
+      "godotName": "disconnect_from_stream",
+      "xmlDocId": "M:Godot.StreamPeerTLS.DisconnectFromStream",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "GetStatus",
+      "kind": "Method",
+      "signature": "public int GetStatus()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the status of the connection.",
+      "godotName": "get_status",
+      "xmlDocId": "M:Godot.StreamPeerTLS.GetStatus",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "GetStream",
+      "kind": "Method",
+      "signature": "public StreamPeer GetStream()",
+      "returnType": "StreamPeer",
+      "parameters": [],
+      "summary": "Returns the underlying [StreamPeer] connection, used in [method accept_stream] or [method connect_to_stream].",
+      "godotName": "get_stream",
+      "xmlDocId": "M:Godot.StreamPeerTLS.GetStream",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "Poll",
+      "kind": "Method",
+      "signature": "public void Poll()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Poll the connection to check for incoming bytes. Call this right before [method StreamPeer.get_available_bytes] for it to work properly.",
+      "godotName": "poll",
+      "xmlDocId": "M:Godot.StreamPeerTLS.Poll",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Status",
+      "values": [
+        {
+          "name": "STATUS_CONNECTED",
+          "value": "2",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerTLS] that is connected to a host.",
+          "sourcePath": "doc/classes/StreamPeerTLS.xml"
+        },
+        {
+          "name": "STATUS_DISCONNECTED",
+          "value": "0",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerTLS] that is disconnected.",
+          "sourcePath": "doc/classes/StreamPeerTLS.xml"
+        },
+        {
+          "name": "STATUS_ERROR",
+          "value": "3",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerTLS] in error state.",
+          "sourcePath": "doc/classes/StreamPeerTLS.xml"
+        },
+        {
+          "name": "STATUS_ERROR_HOSTNAME_MISMATCH",
+          "value": "4",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "An error status that shows a mismatch in the TLS certificate domain presented by the host and the domain requested for validation.",
+          "sourcePath": "doc/classes/StreamPeerTLS.xml"
+        },
+        {
+          "name": "STATUS_HANDSHAKING",
+          "value": "1",
+          "enum": "Status",
+          "kind": "EnumValue",
+          "summary": "A status representing a [StreamPeerTLS] during handshaking.",
+          "sourcePath": "doc/classes/StreamPeerTLS.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "STATUS_DISCONNECTED",
+      "value": "0",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerTLS] that is disconnected.",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "STATUS_HANDSHAKING",
+      "value": "1",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerTLS] during handshaking.",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "STATUS_CONNECTED",
+      "value": "2",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerTLS] that is connected to a host.",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "STATUS_ERROR",
+      "value": "3",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "A status representing a [StreamPeerTLS] in error state.",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    },
+    {
+      "name": "STATUS_ERROR_HOSTNAME_MISMATCH",
+      "value": "4",
+      "enum": "Status",
+      "kind": "EnumValue",
+      "summary": "An error status that shows a mismatch in the TLS certificate domain presented by the host and the domain requested for validation.",
+      "sourcePath": "doc/classes/StreamPeerTLS.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/StreamPeerTLS.xml",
+      "sha256": "151cd3bf1d4c46bfb913a198cab25d3cb9866af0716d2ac8757860c1c3b79125"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

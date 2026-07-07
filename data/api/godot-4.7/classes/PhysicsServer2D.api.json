@@ -1,0 +1,3672 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "PhysicsServer2D",
+    "namespace": "Godot",
+    "fullName": "Godot.PhysicsServer2D",
+    "kind": "class",
+    "baseType": "Object",
+    "interfaces": [],
+    "godotReference": "PhysicsServer2D",
+    "documentationPath": "doc/classes/PhysicsServer2D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_physicsserver2d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AreaAddShape",
+      "kind": "Method",
+      "signature": "public void AreaAddShape(RID area, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D",
+          "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)"
+        },
+        {
+          "name": "disabled",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a shape to the area, with the given local transform. The shape (together with its [param transform] and [param disabled] properties) is added to an array of shapes, and the shapes of an area are usually referenced by their index in this array.",
+      "godotName": "area_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void AreaAttachCanvasInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Attaches the [code]ObjectID[/code] of a canvas to the area. Use [method Object.get_instance_id] to get the [code]ObjectID[/code] of a [CanvasLayer].",
+      "godotName": "area_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void AreaAttachObjectInstanceId(RID area, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Attaches the [code]ObjectID[/code] of an [Object] to the area. Use [method Object.get_instance_id] to get the [code]ObjectID[/code] of a [CollisionObject2D].",
+      "godotName": "area_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaClearShapes",
+      "kind": "Method",
+      "signature": "public void AreaClearShapes(RID area)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes all shapes from the area. This does not delete the shapes themselves, so they can continue to be used elsewhere or added back later.",
+      "godotName": "area_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaCreate",
+      "kind": "Method",
+      "signature": "public RID AreaCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D area object in the physics server, and returns the [RID] that identifies it. The default settings for the created area include a collision layer and mask set to [code]1[/code], and [code]monitorable[/code] set to [code]false[/code]. Use [method area_add_shape] to add shapes to it, use [method area_set_transform] to set its transform, and use [method area_set_space] to add the area to a space. If you want the area to be detectable use [method area_set_monitorable].",
+      "godotName": "area_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int AreaGetCanvasInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] of the canvas attached to the area. Use [method @GlobalScope.instance_from_id] to retrieve a [CanvasLayer] from a nonzero [code]ObjectID[/code].",
+      "godotName": "area_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int AreaGetCollisionLayer(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the physics layer or layers the area belongs to, as a bitmask.",
+      "godotName": "area_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int AreaGetCollisionMask(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the physics layer or layers the area can contact with, as a bitmask.",
+      "godotName": "area_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int AreaGetObjectInstanceId(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] attached to the area. Use [method @GlobalScope.instance_from_id] to retrieve an [Object] from a nonzero [code]ObjectID[/code].",
+      "godotName": "area_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetParam",
+      "kind": "Method",
+      "signature": "public Variant AreaGetParam(RID area, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given area parameter.",
+      "godotName": "area_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetShape",
+      "kind": "Method",
+      "signature": "public RID AreaGetShape(RID area, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [RID] of the shape with the given index in the area\u0027s array of shapes.",
+      "godotName": "area_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetShapeCount",
+      "kind": "Method",
+      "signature": "public int AreaGetShapeCount(RID area)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the number of shapes added to the area.",
+      "godotName": "area_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D AreaGetShapeTransform(RID area, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local transform matrix of the shape with the given index in the area\u0027s array of shapes.",
+      "godotName": "area_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetSpace",
+      "kind": "Method",
+      "signature": "public RID AreaGetSpace(RID area)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [RID] of the space assigned to the area. Returns an empty [RID] if no space is assigned.",
+      "godotName": "area_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaGetTransform",
+      "kind": "Method",
+      "signature": "public Transform2D AreaGetTransform(RID area)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the transform matrix of the area.",
+      "godotName": "area_get_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaGetTransform(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaRemoveShape",
+      "kind": "Method",
+      "signature": "public void AreaRemoveShape(RID area, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the shape with the given index from the area\u0027s array of shapes. The shape itself is not deleted, so it can continue to be used elsewhere or added back later. As a result of this operation, the area\u0027s shapes which used to have indices higher than [param shape_idx] will have their index decreased by one.",
+      "godotName": "area_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetAreaMonitorCallback",
+      "kind": "Method",
+      "signature": "public void AreaSetAreaMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the area\u0027s area monitor callback. This callback will be called when any other (shape of an) area enters or exits (a shape of) the given area, and must take the following five parameters: 1. an integer [code]status[/code]: either [constant AREA_BODY_ADDED] or [constant AREA_BODY_REMOVED] depending on whether the other area\u0027s shape entered or exited the area, 2. an [RID] [code]area_rid[/code]: the [RID] of the other area that entered or exited the area, 3. an integer [code]instance_id[/code]: the [code]ObjectID[/code] attached to the other area, 4. an integer [code]area_shape_idx[/code]: the index of the shape of the other area that entered or exited the area, 5. an integer [code]self_shape_idx[/code]: the index of the shape of the area where the other area entered or exited. By counting (or keeping track of) the shapes that enter and exit, it can be determined if an area (with all its shapes) is entering for the first time or exiting for the last time.",
+      "godotName": "area_set_area_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetAreaMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void AreaSetCollisionLayer(RID area, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Assigns the area to one or many physics layers, via a bitmask.",
+      "godotName": "area_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetCollisionMask",
+      "kind": "Method",
+      "signature": "public void AreaSetCollisionMask(RID area, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets which physics layers the area will monitor, via a bitmask.",
+      "godotName": "area_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetMonitorCallback",
+      "kind": "Method",
+      "signature": "public void AreaSetMonitorCallback(RID area, Callable callback)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "callback",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the area\u0027s body monitor callback. This callback will be called when any other (shape of a) body enters or exits (a shape of) the given area, and must take the following five parameters: 1. an integer [code]status[/code]: either [constant AREA_BODY_ADDED] or [constant AREA_BODY_REMOVED] depending on whether the other body shape entered or exited the area, 2. an [RID] [code]body_rid[/code]: the [RID] of the body that entered or exited the area, 3. an integer [code]instance_id[/code]: the [code]ObjectID[/code] attached to the body, 4. an integer [code]body_shape_idx[/code]: the index of the shape of the body that entered or exited the area, 5. an integer [code]self_shape_idx[/code]: the index of the shape of the area where the body entered or exited. By counting (or keeping track of) the shapes that enter and exit, it can be determined if a body (with all its shapes) is entering for the first time or exiting for the last time.",
+      "godotName": "area_set_monitor_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetMonitorCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetMonitorable",
+      "kind": "Method",
+      "signature": "public void AreaSetMonitorable(RID area, bool monitorable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "monitorable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the area is monitorable or not. If [param monitorable] is [code]true[/code], the area monitoring callback of other areas will be called when this area enters or exits them.",
+      "godotName": "area_set_monitorable",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetMonitorable(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetParam",
+      "kind": "Method",
+      "signature": "public void AreaSetParam(RID area, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of the given area parameter.",
+      "godotName": "area_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetShape",
+      "kind": "Method",
+      "signature": "public void AreaSetShape(RID area, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Replaces the area\u0027s shape at the given index by another shape, while not affecting the [code]transform[/code] and [code]disabled[/code] properties at the same index.",
+      "godotName": "area_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void AreaSetShapeDisabled(RID area, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the disabled property of the area\u0027s shape with the given index. If [param disabled] is [code]true[/code], then the shape will not detect any other shapes entering or exiting it.",
+      "godotName": "area_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetShapeTransform",
+      "kind": "Method",
+      "signature": "public void AreaSetShapeTransform(RID area, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets the local transform matrix of the area\u0027s shape with the given index.",
+      "godotName": "area_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetSpace",
+      "kind": "Method",
+      "signature": "public void AreaSetSpace(RID area, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds the area to the given space, after removing the area from the previously assigned space (if any). [b]Note:[/b] To remove an area from a space without immediately adding it back elsewhere, use [code]PhysicsServer2D.area_set_space(area, RID())[/code].",
+      "godotName": "area_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AreaSetTransform",
+      "kind": "Method",
+      "signature": "public void AreaSetTransform(RID area, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets the transform matrix of the area.",
+      "godotName": "area_set_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.AreaSetTransform(RID,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAddCollisionException",
+      "kind": "Method",
+      "signature": "public void BodyAddCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds [param excepted_body] to the body\u0027s list of collision exceptions, so that collisions with it are ignored.",
+      "godotName": "body_add_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAddCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAddConstantCentralForce",
+      "kind": "Method",
+      "signature": "public void BodyAddConstantCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Adds a constant directional force to the body. The force does not affect rotation. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Vector2(0, 0))[/code]. This is equivalent to using [method body_add_constant_force] at the body\u0027s center of mass.",
+      "godotName": "body_add_constant_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAddConstantCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAddConstantForce",
+      "kind": "Method",
+      "signature": "public void BodyAddConstantForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Adds a constant positioned force to the body. The force can affect rotation if [param position] is different from the body\u0027s center of mass. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Vector2(0, 0))[/code]. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "body_add_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAddConstantForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAddConstantTorque",
+      "kind": "Method",
+      "signature": "public void BodyAddConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Adds a constant rotational force to the body. The force does not affect position. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_torque(body, 0)[/code].",
+      "godotName": "body_add_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAddConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAddShape",
+      "kind": "Method",
+      "signature": "public void BodyAddShape(RID body, RID shape, Transform2D transform, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D",
+          "defaultValue": "Transform2D(1, 0, 0, 1, 0, 0)"
+        },
+        {
+          "name": "disabled",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds a shape to the area, with the given local transform. The shape (together with its [param transform] and [param disabled] properties) is added to an array of shapes, and the shapes of a body are usually referenced by their index in this array.",
+      "godotName": "body_add_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAddShape(RID,RID,Transform2D,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyCentralForce",
+      "kind": "Method",
+      "signature": "public void BodyApplyCentralForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Applies a directional force to the body, at the body\u0027s center of mass. The force does not affect rotation. A force is time dependent and meant to be applied every physics update. This is equivalent to using [method body_apply_force] at the body\u0027s center of mass.",
+      "godotName": "body_apply_central_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyCentralForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyCentralImpulse",
+      "kind": "Method",
+      "signature": "public void BodyApplyCentralImpulse(RID body, Vector2 impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Applies a directional impulse to the body, at the body\u0027s center of mass. The impulse does not affect rotation. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). This is equivalent to using [method body_apply_impulse] at the body\u0027s center of mass.",
+      "godotName": "body_apply_central_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyCentralImpulse(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyForce",
+      "kind": "Method",
+      "signature": "public void BodyApplyForce(RID body, Vector2 force, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned force to the body. The force can affect rotation if [param position] is different from the body\u0027s center of mass. A force is time dependent and meant to be applied every physics update. [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "body_apply_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyForce(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyImpulse",
+      "kind": "Method",
+      "signature": "public void BodyApplyImpulse(RID body, Vector2 impulse, Vector2 position)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "Vector2"
+        },
+        {
+          "name": "position",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 0)"
+        }
+      ],
+      "summary": "Applies a positioned impulse to the body. The impulse can affect rotation if [param position] is different from the body\u0027s center of mass. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise). [param position] is the offset from the body origin in global coordinates.",
+      "godotName": "body_apply_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyImpulse(RID,Vector2,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyTorque",
+      "kind": "Method",
+      "signature": "public void BodyApplyTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Applies a rotational force to the body. The force does not affect position. A force is time dependent and meant to be applied every physics update.",
+      "godotName": "body_apply_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyApplyTorqueImpulse",
+      "kind": "Method",
+      "signature": "public void BodyApplyTorqueImpulse(RID body, float impulse)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "impulse",
+          "type": "float"
+        }
+      ],
+      "summary": "Applies a rotational impulse to the body. The impulse does not affect position. An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the \u0022_force\u0022 functions otherwise).",
+      "godotName": "body_apply_torque_impulse",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyApplyTorqueImpulse(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAttachCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public void BodyAttachCanvasInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Attaches the [code]ObjectID[/code] of a canvas to the body. Use [method Object.get_instance_id] to get the [code]ObjectID[/code] of a [CanvasLayer].",
+      "godotName": "body_attach_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAttachCanvasInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyAttachObjectInstanceId",
+      "kind": "Method",
+      "signature": "public void BodyAttachObjectInstanceId(RID body, int id)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "summary": "Attaches the [code]ObjectID[/code] of an [Object] to the body. Use [method Object.get_instance_id] to get the [code]ObjectID[/code] of a [CollisionObject2D].",
+      "godotName": "body_attach_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyAttachObjectInstanceId(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyClearShapes",
+      "kind": "Method",
+      "signature": "public void BodyClearShapes(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes all shapes from the body. This does not delete the shapes themselves, so they can continue to be used elsewhere or added back later.",
+      "godotName": "body_clear_shapes",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyClearShapes(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyCreate",
+      "kind": "Method",
+      "signature": "public RID BodyCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D body object in the physics server, and returns the [RID] that identifies it. The default settings for the created area include a collision layer and mask set to [code]1[/code], and body mode set to [constant BODY_MODE_RIGID]. Use [method body_add_shape] to add shapes to it, use [method body_set_state] to set its transform, and use [method body_set_space] to add the body to a space.",
+      "godotName": "body_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetCanvasInstanceId",
+      "kind": "Method",
+      "signature": "public int BodyGetCanvasInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] of the canvas attached to the body. Use [method @GlobalScope.instance_from_id] to retrieve a [CanvasLayer] from a nonzero [code]ObjectID[/code].",
+      "godotName": "body_get_canvas_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetCanvasInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetCollisionLayer",
+      "kind": "Method",
+      "signature": "public int BodyGetCollisionLayer(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the physics layer or layers the body belongs to, as a bitmask.",
+      "godotName": "body_get_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetCollisionLayer(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetCollisionMask",
+      "kind": "Method",
+      "signature": "public int BodyGetCollisionMask(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the physics layer or layers the body can collide with, as a bitmask.",
+      "godotName": "body_get_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetCollisionMask(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetCollisionPriority",
+      "kind": "Method",
+      "signature": "public float BodyGetCollisionPriority(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the body\u0027s collision priority. This is used in the depenetration phase of [method body_test_motion]. The higher the priority is, the lower the penetration into the body will be.",
+      "godotName": "body_get_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetCollisionPriority(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetConstantForce",
+      "kind": "Method",
+      "signature": "public Vector2 BodyGetConstantForce(RID body)",
+      "returnType": "Vector2",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the body\u0027s total constant positional force applied during each physics update. See [method body_add_constant_force] and [method body_add_constant_central_force].",
+      "godotName": "body_get_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetConstantForce(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetConstantTorque",
+      "kind": "Method",
+      "signature": "public float BodyGetConstantTorque(RID body)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the body\u0027s total constant rotational force applied during each physics update. See [method body_add_constant_torque].",
+      "godotName": "body_get_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetConstantTorque(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public int BodyGetContinuousCollisionDetectionMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the body\u0027s continuous collision detection mode.",
+      "godotName": "body_get_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetContinuousCollisionDetectionMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectBodyState2D BodyGetDirectState(RID body)",
+      "returnType": "PhysicsDirectBodyState2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [PhysicsDirectBodyState2D] of the body. Returns [code]null[/code] if the body is destroyed or not assigned to a space.",
+      "godotName": "body_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public int BodyGetMaxContactsReported(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the maximum number of contacts that the body can report. See [method body_set_max_contacts_reported].",
+      "godotName": "body_get_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetMaxContactsReported(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetMode",
+      "kind": "Method",
+      "signature": "public int BodyGetMode(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the body\u0027s mode.",
+      "godotName": "body_get_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetMode(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetObjectInstanceId",
+      "kind": "Method",
+      "signature": "public int BodyGetObjectInstanceId(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [code]ObjectID[/code] attached to the body. Use [method @GlobalScope.instance_from_id] to retrieve an [Object] from a nonzero [code]ObjectID[/code].",
+      "godotName": "body_get_object_instance_id",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetObjectInstanceId(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetParam",
+      "kind": "Method",
+      "signature": "public Variant BodyGetParam(RID body, int param)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given body parameter.",
+      "godotName": "body_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetShape",
+      "kind": "Method",
+      "signature": "public RID BodyGetShape(RID body, int shapeIdx)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the [RID] of the shape with the given index in the body\u0027s array of shapes.",
+      "godotName": "body_get_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetShapeCount",
+      "kind": "Method",
+      "signature": "public int BodyGetShapeCount(RID body)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the number of shapes added to the body.",
+      "godotName": "body_get_shape_count",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetShapeCount(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetShapeTransform",
+      "kind": "Method",
+      "signature": "public Transform2D BodyGetShapeTransform(RID body, int shapeIdx)",
+      "returnType": "Transform2D",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the local transform matrix of the shape with the given index in the area\u0027s array of shapes.",
+      "godotName": "body_get_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetShapeTransform(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetSpace",
+      "kind": "Method",
+      "signature": "public RID BodyGetSpace(RID body)",
+      "returnType": "RID",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the [RID] of the space assigned to the body. Returns an empty [RID] if no space is assigned.",
+      "godotName": "body_get_space",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetSpace(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyGetState",
+      "kind": "Method",
+      "signature": "public Variant BodyGetState(RID body, int state)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given state of the body.",
+      "godotName": "body_get_state",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyGetState(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyIsOmittingForceIntegration",
+      "kind": "Method",
+      "signature": "public bool BodyIsOmittingForceIntegration(RID body)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the body is omitting the standard force integration. See [method body_set_omit_force_integration].",
+      "godotName": "body_is_omitting_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyIsOmittingForceIntegration(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyRemoveCollisionException",
+      "kind": "Method",
+      "signature": "public void BodyRemoveCollisionException(RID body, RID exceptedBody)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "excepted_body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Removes [param excepted_body] from the body\u0027s list of collision exceptions, so that collisions with it are no longer ignored.",
+      "godotName": "body_remove_collision_exception",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyRemoveCollisionException(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyRemoveShape",
+      "kind": "Method",
+      "signature": "public void BodyRemoveShape(RID body, int shapeIdx)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the shape with the given index from the body\u0027s array of shapes. The shape itself is not deleted, so it can continue to be used elsewhere or added back later. As a result of this operation, the body\u0027s shapes which used to have indices higher than [param shape_idx] will have their index decreased by one.",
+      "godotName": "body_remove_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyRemoveShape(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyResetMassProperties",
+      "kind": "Method",
+      "signature": "public void BodyResetMassProperties(RID body)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        }
+      ],
+      "summary": "Restores the default inertia and center of mass of the body based on its shapes. This undoes any custom values previously set using [method body_set_param].",
+      "godotName": "body_reset_mass_properties",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyResetMassProperties(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetAxisVelocity",
+      "kind": "Method",
+      "signature": "public void BodySetAxisVelocity(RID body, Vector2 axisVelocity)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "axis_velocity",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Modifies the body\u0027s linear velocity so that its projection to the axis [code]axis_velocity.normalized()[/code] is exactly [code]axis_velocity.length()[/code]. This is useful for jumping behavior.",
+      "godotName": "body_set_axis_velocity",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetAxisVelocity(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetCollisionLayer",
+      "kind": "Method",
+      "signature": "public void BodySetCollisionLayer(RID body, int layer)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "layer",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the physics layer or layers the body belongs to, via a bitmask.",
+      "godotName": "body_set_collision_layer",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetCollisionLayer(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetCollisionMask",
+      "kind": "Method",
+      "signature": "public void BodySetCollisionMask(RID body, int mask)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mask",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the physics layer or layers the body can collide with, via a bitmask.",
+      "godotName": "body_set_collision_mask",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetCollisionMask(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetCollisionPriority",
+      "kind": "Method",
+      "signature": "public void BodySetCollisionPriority(RID body, float priority)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "priority",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the body\u0027s collision priority. This is used in the depenetration phase of [method body_test_motion]. The higher the priority is, the lower the penetration into the body will be.",
+      "godotName": "body_set_collision_priority",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetCollisionPriority(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetConstantForce",
+      "kind": "Method",
+      "signature": "public void BodySetConstantForce(RID body, Vector2 force)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "force",
+          "type": "Vector2"
+        }
+      ],
+      "summary": "Sets the body\u0027s total constant positional force applied during each physics update. See [method body_add_constant_force] and [method body_add_constant_central_force].",
+      "godotName": "body_set_constant_force",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetConstantForce(RID,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetConstantTorque",
+      "kind": "Method",
+      "signature": "public void BodySetConstantTorque(RID body, float torque)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "torque",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the body\u0027s total constant rotational force applied during each physics update. See [method body_add_constant_torque].",
+      "godotName": "body_set_constant_torque",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetConstantTorque(RID,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetContinuousCollisionDetectionMode",
+      "kind": "Method",
+      "signature": "public void BodySetContinuousCollisionDetectionMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the continuous collision detection mode. Continuous collision detection tries to predict where a moving body would collide in between physics updates, instead of moving it and correcting its movement if it collided.",
+      "godotName": "body_set_continuous_collision_detection_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetContinuousCollisionDetectionMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetForceIntegrationCallback",
+      "kind": "Method",
+      "signature": "public void BodySetForceIntegrationCallback(RID body, Callable callable, Variant userdata)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        },
+        {
+          "name": "userdata",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Sets the body\u0027s custom force integration callback function to [param callable]. Use an empty [Callable] ([code skip-lint]Callable()[/code]) to clear the custom callback. The function [param callable] will be called every physics tick, before the standard force integration (see [method body_set_omit_force_integration]). It can be used for example to update the body\u0027s linear and angular velocity based on contact with other bodies. If [param userdata] is not [code]null[/code], the function [param callable] must take the following two parameters: 1. [code]state[/code]: a [PhysicsDirectBodyState2D] used to retrieve and modify the body\u0027s state, 2. [code skip-lint]userdata[/code]: a [Variant]; its value will be the [param userdata] passed into this method. If [param userdata] is [code]null[/code], then [param callable] must take only the [code]state[/code] parameter.",
+      "godotName": "body_set_force_integration_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetForceIntegrationCallback(RID,Callable,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetMaxContactsReported",
+      "kind": "Method",
+      "signature": "public void BodySetMaxContactsReported(RID body, int amount)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the maximum number of contacts that the body can report. If [param amount] is greater than zero, then the body will keep track of at most this many contacts with other bodies.",
+      "godotName": "body_set_max_contacts_reported",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetMaxContactsReported(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetMode",
+      "kind": "Method",
+      "signature": "public void BodySetMode(RID body, int mode)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "mode",
+          "type": "int"
+        }
+      ],
+      "summary": "Sets the body\u0027s mode.",
+      "godotName": "body_set_mode",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetMode(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetOmitForceIntegration",
+      "kind": "Method",
+      "signature": "public void BodySetOmitForceIntegration(RID body, bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the body omits the standard force integration. If [param enable] is [code]true[/code], the body will not automatically use applied forces, torques, and damping to update the body\u0027s linear and angular velocity. In this case, [method body_set_force_integration_callback] can be used to manually update the linear and angular velocity instead. This method is called when the property [member RigidBody2D.custom_integrator] is set.",
+      "godotName": "body_set_omit_force_integration",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetOmitForceIntegration(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetParam",
+      "kind": "Method",
+      "signature": "public void BodySetParam(RID body, int param, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of the given body parameter.",
+      "godotName": "body_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetParam(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetShape",
+      "kind": "Method",
+      "signature": "public void BodySetShape(RID body, int shapeIdx, RID shape)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Replaces the body\u0027s shape at the given index by another shape, while not affecting the [code]transform[/code], [code]disabled[/code], and one-way collision properties at the same index.",
+      "godotName": "body_set_shape",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetShape(RID,int,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetShapeAsOneWayCollision",
+      "kind": "Method",
+      "signature": "public void BodySetShapeAsOneWayCollision(RID body, int shapeIdx, bool enable, float margin, Vector2 direction)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "enable",
+          "type": "bool"
+        },
+        {
+          "name": "margin",
+          "type": "float"
+        },
+        {
+          "name": "direction",
+          "type": "Vector2",
+          "defaultValue": "Vector2(0, 1)"
+        }
+      ],
+      "summary": "Sets the one-way collision properties of the body\u0027s shape with the given index. If [param enable] is [code]true[/code], the one-way collision direction given by [param direction] in the shape\u0027s local space (that is [code]body_get_shape_transform(body, shape_idx).basis_xform(direction).normalized()[/code] in the body\u0027s local space) will be used to ignore collisions with the shape in the opposite direction, and to ensure depenetration of kinematic bodies happens in this direction.",
+      "godotName": "body_set_shape_as_one_way_collision",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetShapeAsOneWayCollision(RID,int,bool,float,Vector2)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetShapeDisabled",
+      "kind": "Method",
+      "signature": "public void BodySetShapeDisabled(RID body, int shapeIdx, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets the disabled property of the body\u0027s shape with the given index. If [param disabled] is [code]true[/code], then the shape will be ignored in all collision detection.",
+      "godotName": "body_set_shape_disabled",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetShapeDisabled(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetShapeTransform",
+      "kind": "Method",
+      "signature": "public void BodySetShapeTransform(RID body, int shapeIdx, Transform2D transform)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "shape_idx",
+          "type": "int"
+        },
+        {
+          "name": "transform",
+          "type": "Transform2D"
+        }
+      ],
+      "summary": "Sets the local transform matrix of the body\u0027s shape with the given index.",
+      "godotName": "body_set_shape_transform",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetShapeTransform(RID,int,Transform2D)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetSpace",
+      "kind": "Method",
+      "signature": "public void BodySetSpace(RID body, RID space)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Adds the body to the given space, after removing the body from the previously assigned space (if any). If the body\u0027s mode is set to [constant BODY_MODE_RIGID], then adding the body to a space will have the following additional effects: - If the parameter [constant BODY_PARAM_CENTER_OF_MASS] has never been set explicitly, then the value of that parameter will be recalculated based on the body\u0027s shapes. - If the parameter [constant BODY_PARAM_INERTIA] is set to a value [code]\u003C= 0.0[/code], then the value of that parameter will be recalculated based on the body\u0027s shapes, mass, and center of mass. [b]Note:[/b] To remove a body from a space without immediately adding it back elsewhere, use [code]PhysicsServer2D.body_set_space(body, RID())[/code].",
+      "godotName": "body_set_space",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetSpace(RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetState",
+      "kind": "Method",
+      "signature": "public void BodySetState(RID body, int state, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of a body\u0027s state. [b]Note:[/b] The state change doesn\u0027t take effect immediately. The state will change on the next physics frame.",
+      "godotName": "body_set_state",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetState(RID,int,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodySetStateSyncCallback",
+      "kind": "Method",
+      "signature": "public void BodySetStateSyncCallback(RID body, Callable callable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "callable",
+          "type": "Callable"
+        }
+      ],
+      "summary": "Sets the body\u0027s state synchronization callback function to [param callable]. Use an empty [Callable] ([code skip-lint]Callable()[/code]) to clear the callback. The function [param callable] will be called every physics frame, assuming that the body was active during the previous physics tick, and can be used to fetch the latest state from the physics server. The function [param callable] must take the following parameters: 1. [code]state[/code]: a [PhysicsDirectBodyState2D], used to retrieve the body\u0027s state.",
+      "godotName": "body_set_state_sync_callback",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodySetStateSyncCallback(RID,Callable)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BodyTestMotion",
+      "kind": "Method",
+      "signature": "public bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D result)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "RID"
+        },
+        {
+          "name": "parameters",
+          "type": "PhysicsTestMotionParameters2D"
+        },
+        {
+          "name": "result",
+          "type": "PhysicsTestMotionResult2D",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if a collision would result from moving the body along a motion vector from a given point in space. See [PhysicsTestMotionParameters2D] for the available motion parameters. Optionally a [PhysicsTestMotionResult2D] object can be passed, which will be used to store the information about the resulting collision.",
+      "godotName": "body_test_motion",
+      "xmlDocId": "M:Godot.PhysicsServer2D.BodyTestMotion(RID,PhysicsTestMotionParameters2D,PhysicsTestMotionResult2D)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "CapsuleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID CapsuleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D capsule shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the capsule\u0027s height and radius.",
+      "godotName": "capsule_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.CapsuleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "CircleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID CircleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D circle shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the circle\u0027s radius.",
+      "godotName": "circle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.CircleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "ConcavePolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID ConcavePolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D concave polygon shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the concave polygon\u0027s segments.",
+      "godotName": "concave_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.ConcavePolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "ConvexPolygonShapeCreate",
+      "kind": "Method",
+      "signature": "public RID ConvexPolygonShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D convex polygon shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the convex polygon\u0027s points.",
+      "godotName": "convex_polygon_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.ConvexPolygonShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "DampedSpringJointGetParam",
+      "kind": "Method",
+      "signature": "public float DampedSpringJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given damped spring joint parameter.",
+      "godotName": "damped_spring_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.DampedSpringJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "DampedSpringJointSetParam",
+      "kind": "Method",
+      "signature": "public void DampedSpringJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the given damped spring joint parameter.",
+      "godotName": "damped_spring_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.DampedSpringJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "FreeRid",
+      "kind": "Method",
+      "signature": "public void FreeRid(RID rid)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "rid",
+          "type": "RID"
+        }
+      ],
+      "summary": "Destroys any of the objects created by PhysicsServer2D. If the [RID] passed is not one of the objects that can be created by PhysicsServer2D, an error will be printed to the console.",
+      "godotName": "free_rid",
+      "xmlDocId": "M:Godot.PhysicsServer2D.FreeRid(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "GetProcessInfo",
+      "kind": "Method",
+      "signature": "public int GetProcessInfo(int processInfo)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "process_info",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of a physics engine state specified by [param process_info].",
+      "godotName": "get_process_info",
+      "xmlDocId": "M:Godot.PhysicsServer2D.GetProcessInfo(int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointClear",
+      "kind": "Method",
+      "signature": "public void JointClear(RID joint)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Destroys the joint with the given [RID], creates a new uninitialized joint, and makes the [RID] refer to this new joint.",
+      "godotName": "joint_clear",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointClear(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointCreate",
+      "kind": "Method",
+      "signature": "public RID JointCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D joint in the physics server, and returns the [RID] that identifies it. To set the joint type, use [method joint_make_damped_spring], [method joint_make_groove] or [method joint_make_pin]. Use [method joint_set_param] to set generic joint parameters.",
+      "godotName": "joint_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointDisableCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public void JointDisableCollisionsBetweenBodies(RID joint, bool disable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "disable",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets whether the bodies attached to the [Joint2D] will collide with each other.",
+      "godotName": "joint_disable_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointDisableCollisionsBetweenBodies(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointGetParam",
+      "kind": "Method",
+      "signature": "public float JointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given joint parameter.",
+      "godotName": "joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointGetType",
+      "kind": "Method",
+      "signature": "public int JointGetType(RID joint)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the joint\u0027s type.",
+      "godotName": "joint_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointIsDisabledCollisionsBetweenBodies",
+      "kind": "Method",
+      "signature": "public bool JointIsDisabledCollisionsBetweenBodies(RID joint)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns whether the bodies attached to the [Joint2D] will collide with each other.",
+      "godotName": "joint_is_disabled_collisions_between_bodies",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointIsDisabledCollisionsBetweenBodies(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointMakeDampedSpring",
+      "kind": "Method",
+      "signature": "public void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor_a",
+          "type": "Vector2"
+        },
+        {
+          "name": "anchor_b",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID",
+          "defaultValue": "RID()"
+        }
+      ],
+      "summary": "Makes the joint a damped spring joint, attached at the point [param anchor_a] (given in global coordinates) on the body [param body_a] and at the point [param anchor_b] (given in global coordinates) on the body [param body_b]. To set the parameters which are specific to the damped spring, see [method damped_spring_joint_set_param].",
+      "godotName": "joint_make_damped_spring",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointMakeDampedSpring(RID,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointMakeGroove",
+      "kind": "Method",
+      "signature": "public void JointMakeGroove(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "groove1_a",
+          "type": "Vector2"
+        },
+        {
+          "name": "groove2_a",
+          "type": "Vector2"
+        },
+        {
+          "name": "anchor_b",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID",
+          "defaultValue": "RID()"
+        },
+        {
+          "name": "body_b",
+          "type": "RID",
+          "defaultValue": "RID()"
+        }
+      ],
+      "summary": "Makes the joint a groove joint.",
+      "godotName": "joint_make_groove",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointMakeGroove(RID,Vector2,Vector2,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointMakePin",
+      "kind": "Method",
+      "signature": "public void JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "anchor",
+          "type": "Vector2"
+        },
+        {
+          "name": "body_a",
+          "type": "RID"
+        },
+        {
+          "name": "body_b",
+          "type": "RID",
+          "defaultValue": "RID()"
+        }
+      ],
+      "summary": "Makes the joint a pin joint. If [param body_b] is an empty [RID], then [param body_a] is pinned to the point [param anchor] (given in global coordinates); otherwise, [param body_a] is pinned to [param body_b] at the point [param anchor] (given in global coordinates). To set the parameters which are specific to the pin joint, see [method pin_joint_set_param].",
+      "godotName": "joint_make_pin",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointMakePin(RID,Vector2,RID,RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JointSetParam",
+      "kind": "Method",
+      "signature": "public void JointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the given joint parameter.",
+      "godotName": "joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.JointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PinJointGetFlag",
+      "kind": "Method",
+      "signature": "public bool PinJointGetFlag(RID joint, int flag)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        }
+      ],
+      "summary": "Gets a pin joint flag.",
+      "godotName": "pin_joint_get_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2D.PinJointGetFlag(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PinJointGetParam",
+      "kind": "Method",
+      "signature": "public float PinJointGetParam(RID joint, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of a pin joint parameter.",
+      "godotName": "pin_joint_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.PinJointGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PinJointSetFlag",
+      "kind": "Method",
+      "signature": "public void PinJointSetFlag(RID joint, int flag, bool enabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "flag",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "Sets a pin joint flag.",
+      "godotName": "pin_joint_set_flag",
+      "xmlDocId": "M:Godot.PhysicsServer2D.PinJointSetFlag(RID,int,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PinJointSetParam",
+      "kind": "Method",
+      "signature": "public void PinJointSetParam(RID joint, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "joint",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets a pin joint parameter.",
+      "godotName": "pin_joint_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.PinJointSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "RectangleShapeCreate",
+      "kind": "Method",
+      "signature": "public RID RectangleShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D rectangle shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the rectangle\u0027s half-extents.",
+      "godotName": "rectangle_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.RectangleShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SegmentShapeCreate",
+      "kind": "Method",
+      "signature": "public RID SegmentShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D segment shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the segment\u0027s start and end points.",
+      "godotName": "segment_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SegmentShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SeparationRayShapeCreate",
+      "kind": "Method",
+      "signature": "public RID SeparationRayShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D separation ray shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the shape\u0027s [code]length[/code] and [code]slide_on_slope[/code] properties.",
+      "godotName": "separation_ray_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SeparationRayShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SetActive",
+      "kind": "Method",
+      "signature": "public void SetActive(bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Activates or deactivates the 2D physics server. If [param active] is [code]false[/code], then the physics server will not do anything in its physics step.",
+      "godotName": "set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SetActive(bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "ShapeGetData",
+      "kind": "Method",
+      "signature": "public Variant ShapeGetData(RID shape)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the shape data that defines the configuration of the shape, such as the half-extents of a rectangle or the segments of a concave shape. See [method shape_set_data] for the precise format of this data in each case.",
+      "godotName": "shape_get_data",
+      "xmlDocId": "M:Godot.PhysicsServer2D.ShapeGetData(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "ShapeGetType",
+      "kind": "Method",
+      "signature": "public int ShapeGetType(RID shape)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the shape\u0027s type.",
+      "godotName": "shape_get_type",
+      "xmlDocId": "M:Godot.PhysicsServer2D.ShapeGetType(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "ShapeSetData",
+      "kind": "Method",
+      "signature": "public void ShapeSetData(RID shape, Variant data)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "RID"
+        },
+        {
+          "name": "data",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the shape data that defines the configuration of the shape. The [param data] to be passed depends on the shape\u0027s type (see [method shape_get_type]): - [constant SHAPE_WORLD_BOUNDARY]: an array of length two containing a [Vector2] [code]normal[/code] direction and a [float] distance [code]d[/code], - [constant SHAPE_SEPARATION_RAY]: a dictionary containing the key [code]length[/code] with a [float] value and the key [code]slide_on_slope[/code] with a [bool] value, - [constant SHAPE_SEGMENT]: a [Rect2] [code]rect[/code] containing the first point of the segment in [code]rect.position[/code] and the second point of the segment in [code]rect.size[/code], - [constant SHAPE_CIRCLE]: a [float] [code]radius[/code], - [constant SHAPE_RECTANGLE]: a [Vector2] [code]half_extents[/code], - [constant SHAPE_CAPSULE]: an array of length two (or a [Vector2]) containing a [float] [code]height[/code] and a [float] [code]radius[/code], - [constant SHAPE_CONVEX_POLYGON]: either a [PackedVector2Array] of points defining a convex polygon in counterclockwise order (the clockwise outward normal of each segment formed by consecutive points is calculated internally), or a [PackedFloat32Array] of length divisible by four so that every 4-tuple of [float]s contains the coordinates of a point followed by the coordinates of the clockwise outward normal vector to the segment between the current point and the next point, - [constant SHAPE_CONCAVE_POLYGON]: a [PackedVector2Array] of length divisible by two (each pair of points forms one segment). [b]Warning:[/b] In the case of [constant SHAPE_CONVEX_POLYGON], this method does not check if the points supplied actually form a convex polygon (unlike the [member CollisionPolygon2D.polygon] property).",
+      "godotName": "shape_set_data",
+      "xmlDocId": "M:Godot.PhysicsServer2D.ShapeSetData(RID,Variant)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceCreate",
+      "kind": "Method",
+      "signature": "public RID SpaceCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D space in the physics server, and returns the [RID] that identifies it. A space contains bodies and areas, and controls the stepping of the physics simulation of the objects in it.",
+      "godotName": "space_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceGetDirectState",
+      "kind": "Method",
+      "signature": "public PhysicsDirectSpaceState2D SpaceGetDirectState(RID space)",
+      "returnType": "PhysicsDirectSpaceState2D",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns the state of a space, a [PhysicsDirectSpaceState2D]. This object can be used for collision/intersection queries.",
+      "godotName": "space_get_direct_state",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceGetDirectState(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceGetParam",
+      "kind": "Method",
+      "signature": "public float SpaceGetParam(RID space, int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the given space parameter.",
+      "godotName": "space_get_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceGetParam(RID,int)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceIsActive",
+      "kind": "Method",
+      "signature": "public bool SpaceIsActive(RID space)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the space is active.",
+      "godotName": "space_is_active",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceIsActive(RID)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceSetActive",
+      "kind": "Method",
+      "signature": "public void SpaceSetActive(RID space, bool active)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "summary": "Activates or deactivates the space. If [param active] is [code]false[/code], then the physics server will not do anything with this space in its physics step.",
+      "godotName": "space_set_active",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceSetActive(RID,bool)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SpaceSetParam",
+      "kind": "Method",
+      "signature": "public void SpaceSetParam(RID space, int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "space",
+          "type": "RID"
+        },
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the given space parameter.",
+      "godotName": "space_set_param",
+      "xmlDocId": "M:Godot.PhysicsServer2D.SpaceSetParam(RID,int,float)",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "WorldBoundaryShapeCreate",
+      "kind": "Method",
+      "signature": "public RID WorldBoundaryShapeCreate()",
+      "returnType": "RID",
+      "parameters": [],
+      "summary": "Creates a 2D world boundary shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the shape\u0027s normal direction and distance properties.",
+      "godotName": "world_boundary_shape_create",
+      "xmlDocId": "M:Godot.PhysicsServer2D.WorldBoundaryShapeCreate",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "AreaBodyStatus",
+      "values": [
+        {
+          "name": "AREA_BODY_ADDED",
+          "value": "0",
+          "enum": "AreaBodyStatus",
+          "kind": "EnumValue",
+          "summary": "The value of the first parameter and area callback function receives, when an object enters one of its shapes.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_BODY_REMOVED",
+          "value": "1",
+          "enum": "AreaBodyStatus",
+          "kind": "EnumValue",
+          "summary": "The value of the first parameter and area callback function receives, when an object exits one of its shapes.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "AreaParameter",
+      "values": [
+        {
+          "name": "AREA_PARAM_ANGULAR_DAMP",
+          "value": "8",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the angular damping factor of an area. The default value of this parameter is [code]1.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE",
+          "value": "7",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get angular damping override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_GRAVITY",
+          "value": "1",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get gravity strength in an area. The default value of this parameter is [code]9.80665[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_GRAVITY_IS_POINT",
+          "value": "3",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get whether the gravity vector of an area is a direction, or a center point. The default value of this parameter is [code]false[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_GRAVITY_OVERRIDE_MODE",
+          "value": "0",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get gravity override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE",
+          "value": "4",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the distance at which the gravity strength is equal to the gravity controlled by [constant AREA_PARAM_GRAVITY]. For example, on a planet 100 pixels in radius with a surface gravity of 4.0 px/s\u00B2, set the gravity to 4.0 and the unit distance to 100.0. The gravity will have falloff according to the inverse square law, so in the example, at 200 pixels from the center the gravity will be 1.0 px/s\u00B2 (twice the distance, 1/4th the gravity), at 50 pixels it will be 16.0 px/s\u00B2 (half the distance, 4x the gravity), and so on. The above is true only when the unit distance is a positive number. When the unit distance is set to 0.0, the gravity will be constant regardless of distance. The default value of this parameter is [code]0.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_GRAVITY_VECTOR",
+          "value": "2",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get gravity vector/center in an area. The default value of this parameter is [code]Vector2(0, -1)[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_LINEAR_DAMP",
+          "value": "6",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the linear damping factor of an area. The default value of this parameter is [code]0.1[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE",
+          "value": "5",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get linear damping override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_PARAM_PRIORITY",
+          "value": "9",
+          "enum": "AreaParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the priority (order of processing) of an area. The default value of this parameter is [code]0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "AreaSpaceOverrideMode",
+      "values": [
+        {
+          "name": "AREA_SPACE_OVERRIDE_COMBINE",
+          "value": "1",
+          "enum": "AreaSpaceOverrideMode",
+          "kind": "EnumValue",
+          "summary": "This area adds its gravity/damp values to whatever has been calculated so far. This way, many overlapping areas can combine their physics to make interesting effects.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_SPACE_OVERRIDE_COMBINE_REPLACE",
+          "value": "2",
+          "enum": "AreaSpaceOverrideMode",
+          "kind": "EnumValue",
+          "summary": "This area adds its gravity/damp values to whatever has been calculated so far. Then stops taking into account the rest of the areas, even the default one.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_SPACE_OVERRIDE_DISABLED",
+          "value": "0",
+          "enum": "AreaSpaceOverrideMode",
+          "kind": "EnumValue",
+          "summary": "This area does not affect gravity/damp. These are generally areas that exist only to detect collisions, and objects entering or exiting them.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_SPACE_OVERRIDE_REPLACE",
+          "value": "3",
+          "enum": "AreaSpaceOverrideMode",
+          "kind": "EnumValue",
+          "summary": "This area replaces any gravity/damp, even the default one, and stops taking into account the rest of the areas.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "AREA_SPACE_OVERRIDE_REPLACE_COMBINE",
+          "value": "4",
+          "enum": "AreaSpaceOverrideMode",
+          "kind": "EnumValue",
+          "summary": "This area replaces any gravity/damp calculated so far, but keeps calculating the rest of the areas, down to the default one.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BodyDampMode",
+      "values": [
+        {
+          "name": "BODY_DAMP_MODE_COMBINE",
+          "value": "0",
+          "enum": "BodyDampMode",
+          "kind": "EnumValue",
+          "summary": "The body\u0027s damping value is added to any value set in areas or the default value.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_DAMP_MODE_REPLACE",
+          "value": "1",
+          "enum": "BodyDampMode",
+          "kind": "EnumValue",
+          "summary": "The body\u0027s damping value replaces any value set in areas or the default value.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BodyMode",
+      "values": [
+        {
+          "name": "BODY_MODE_KINEMATIC",
+          "value": "1",
+          "enum": "BodyMode",
+          "kind": "EnumValue",
+          "summary": "Constant for kinematic bodies. In this mode, a body can be only moved by user code and collides with other bodies along its path.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_MODE_RIGID",
+          "value": "2",
+          "enum": "BodyMode",
+          "kind": "EnumValue",
+          "summary": "Constant for rigid bodies. In this mode, a body can be pushed by other bodies and has forces applied.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_MODE_RIGID_LINEAR",
+          "value": "3",
+          "enum": "BodyMode",
+          "kind": "EnumValue",
+          "summary": "Constant for linear rigid bodies. In this mode, a body can not rotate, and only its linear velocity is affected by external forces.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_MODE_STATIC",
+          "value": "0",
+          "enum": "BodyMode",
+          "kind": "EnumValue",
+          "summary": "Constant for static bodies. In this mode, a body can be only moved by user code and doesn\u0027t collide with other bodies along its path when moved.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BodyParameter",
+      "values": [
+        {
+          "name": "BODY_PARAM_ANGULAR_DAMP",
+          "value": "9",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s angular damping factor. The default value of this parameter is [code]0.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_ANGULAR_DAMP_MODE",
+          "value": "7",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s angular damping mode. See [enum BodyDampMode] for possible values. The default value of this parameter is [constant BODY_DAMP_MODE_COMBINE].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_BOUNCE",
+          "value": "0",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s bounce factor. The default value of this parameter is [code]0.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_CENTER_OF_MASS",
+          "value": "4",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s center of mass position in the body\u0027s local coordinate system. The default value of this parameter is [code]Vector2(0, 0)[/code]. If this parameter is never set explicitly, then it is recalculated based on the body\u0027s shapes when setting the parameter [constant BODY_PARAM_MASS] or when calling [method body_set_space].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_FRICTION",
+          "value": "1",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s friction. The default value of this parameter is [code]1.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_GRAVITY_SCALE",
+          "value": "5",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s gravity multiplier. The default value of this parameter is [code]1.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_INERTIA",
+          "value": "3",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s inertia. The default value of this parameter is [code]0.0[/code]. If the body\u0027s inertia is set to a value [code]\u003C= 0.0[/code], then the inertia will be recalculated based on the body\u0027s shapes, mass, and center of mass.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_LINEAR_DAMP",
+          "value": "8",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s linear damping factor. The default value of this parameter is [code]0.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_LINEAR_DAMP_MODE",
+          "value": "6",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s linear damping mode. See [enum BodyDampMode] for possible values. The default value of this parameter is [constant BODY_DAMP_MODE_COMBINE].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_MASS",
+          "value": "2",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a body\u0027s mass. The default value of this parameter is [code]1.0[/code]. If the body\u0027s mode is set to [constant BODY_MODE_RIGID], then setting this parameter will have the following additional effects: - If the parameter [constant BODY_PARAM_CENTER_OF_MASS] has never been set explicitly, then the value of that parameter will be recalculated based on the body\u0027s shapes. - If the parameter [constant BODY_PARAM_INERTIA] is set to a value [code]\u003C= 0.0[/code], then the value of that parameter will be recalculated based on the body\u0027s shapes, mass, and center of mass.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_PARAM_MAX",
+          "value": "10",
+          "enum": "BodyParameter",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum BodyParameter] enum.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "BodyState",
+      "values": [
+        {
+          "name": "BODY_STATE_ANGULAR_VELOCITY",
+          "value": "2",
+          "enum": "BodyState",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the current angular velocity of the body.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_STATE_CAN_SLEEP",
+          "value": "4",
+          "enum": "BodyState",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get whether the body can sleep.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_STATE_LINEAR_VELOCITY",
+          "value": "1",
+          "enum": "BodyState",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the current linear velocity of the body.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_STATE_SLEEPING",
+          "value": "3",
+          "enum": "BodyState",
+          "kind": "EnumValue",
+          "summary": "Constant to sleep/wake up a body, or to get whether it is sleeping.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "BODY_STATE_TRANSFORM",
+          "value": "0",
+          "enum": "BodyState",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the current transform matrix of the body.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "CCDMode",
+      "values": [
+        {
+          "name": "CCD_MODE_CAST_RAY",
+          "value": "1",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Enables continuous collision detection by raycasting. It is faster than shapecasting, but less precise.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "CCD_MODE_CAST_SHAPE",
+          "value": "2",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Enables continuous collision detection by shapecasting. It is the slowest CCD method, and the most precise.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "CCD_MODE_DISABLED",
+          "value": "0",
+          "enum": "CCDMode",
+          "kind": "EnumValue",
+          "summary": "Disables continuous collision detection. This is the fastest way to detect body collisions, but it can miss small and/or fast-moving objects.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "DampedSpringParam",
+      "values": [
+        {
+          "name": "DAMPED_SPRING_DAMPING",
+          "value": "2",
+          "enum": "DampedSpringParam",
+          "kind": "EnumValue",
+          "summary": "Sets the damping ratio of the spring joint. A value of 0 indicates an undamped spring, while 1 causes the system to reach equilibrium as fast as possible (critical damping). The default value of this parameter is [code]1.5[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "DAMPED_SPRING_REST_LENGTH",
+          "value": "0",
+          "enum": "DampedSpringParam",
+          "kind": "EnumValue",
+          "summary": "Sets the resting length of the spring joint. The joint will always try to go to back this length when pulled apart. The default value of this parameter is the distance between the joint\u0027s anchor points.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "DAMPED_SPRING_STIFFNESS",
+          "value": "1",
+          "enum": "DampedSpringParam",
+          "kind": "EnumValue",
+          "summary": "Sets the stiffness of the spring joint. The joint applies a force equal to the stiffness times the distance from its resting length. The default value of this parameter is [code]20.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "JointParam",
+      "values": [
+        {
+          "name": "JOINT_PARAM_BIAS",
+          "value": "0",
+          "enum": "JointParam",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get how fast the joint pulls the bodies back to satisfy the joint constraint. The lower the value, the more the two bodies can pull on the joint. The default value of this parameter is [code]0.0[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for pin joints and groove joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "JOINT_PARAM_MAX_BIAS",
+          "value": "1",
+          "enum": "JointParam",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum speed with which the joint can apply corrections. The default value of this parameter is [code]3.40282e\u002B38[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for groove joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "JOINT_PARAM_MAX_FORCE",
+          "value": "2",
+          "enum": "JointParam",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum force that the joint can use to act on the two bodies. The default value of this parameter is [code]3.40282e\u002B38[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for groove joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "JointType",
+      "values": [
+        {
+          "name": "JOINT_TYPE_DAMPED_SPRING",
+          "value": "2",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "Constant to create damped spring joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_GROOVE",
+          "value": "1",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "Constant to create groove joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_MAX",
+          "value": "3",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum JointType] enum.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "JOINT_TYPE_PIN",
+          "value": "0",
+          "enum": "JointType",
+          "kind": "EnumValue",
+          "summary": "Constant to create pin joints.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "PinJointFlag",
+      "values": [
+        {
+          "name": "PIN_JOINT_FLAG_ANGULAR_LIMIT_ENABLED",
+          "value": "0",
+          "enum": "PinJointFlag",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], the pin has a maximum and a minimum rotation.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "PIN_JOINT_FLAG_MOTOR_ENABLED",
+          "value": "1",
+          "enum": "PinJointFlag",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], a motor turns the pin.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "PinJointParam",
+      "values": [
+        {
+          "name": "PIN_JOINT_LIMIT_LOWER",
+          "value": "2",
+          "enum": "PinJointParam",
+          "kind": "EnumValue",
+          "summary": "The minimum rotation around the pin.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "PIN_JOINT_LIMIT_UPPER",
+          "value": "1",
+          "enum": "PinJointParam",
+          "kind": "EnumValue",
+          "summary": "The maximum rotation around the pin.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "PIN_JOINT_MOTOR_TARGET_VELOCITY",
+          "value": "3",
+          "enum": "PinJointParam",
+          "kind": "EnumValue",
+          "summary": "Target speed for the motor. In radians per second.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "PIN_JOINT_SOFTNESS",
+          "value": "0",
+          "enum": "PinJointParam",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get a how much the bond of the pin joint can flex. The default value of this parameter is [code]0.0[/code].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ProcessInfo",
+      "values": [
+        {
+          "name": "INFO_ACTIVE_OBJECTS",
+          "value": "0",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of objects that are not sleeping.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "INFO_COLLISION_PAIRS",
+          "value": "1",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of possible collisions.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "INFO_ISLAND_COUNT",
+          "value": "2",
+          "enum": "ProcessInfo",
+          "kind": "EnumValue",
+          "summary": "Constant to get the number of space regions where a collision could occur.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "ShapeType",
+      "values": [
+        {
+          "name": "SHAPE_CAPSULE",
+          "value": "5",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating capsule shapes. A capsule shape is defined by a radius and a length. It can be used for intersections and inside/outside checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_CIRCLE",
+          "value": "3",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating circle shapes. A circle shape only has a radius. It can be used for intersections and inside/outside checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_CONCAVE_POLYGON",
+          "value": "7",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating concave polygon shapes. A polygon is defined by a list of points. It can be used for intersections checks, but not for inside/outside checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_CONVEX_POLYGON",
+          "value": "6",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating convex polygon shapes. A polygon is defined by a list of points. It can be used for intersections and inside/outside checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_CUSTOM",
+          "value": "8",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This constant is used internally by the engine. Any attempt to create this kind of shape results in an error.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_RECTANGLE",
+          "value": "4",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating rectangle shapes. A rectangle shape is defined by a width and a height. It can be used for intersections and inside/outside checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_SEGMENT",
+          "value": "2",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating segment shapes. A segment shape is a [i]finite[/i] line from a point A to a point B. It can be checked for intersections.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_SEPARATION_RAY",
+          "value": "1",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating separation ray shapes. A separation ray is defined by a length and separates itself from what is touching its far endpoint. Useful for character controllers.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SHAPE_WORLD_BOUNDARY",
+          "value": "0",
+          "enum": "ShapeType",
+          "kind": "EnumValue",
+          "summary": "This is the constant for creating world boundary shapes. A world boundary shape is an [i]infinite[/i] line with an origin point, and a normal. Thus, it can be used for front/behind checks.",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    },
+    {
+      "name": "SpaceParameter",
+      "values": [
+        {
+          "name": "SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD",
+          "value": "5",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the threshold angular velocity of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after the time given. The default value of this parameter is [member ProjectSettings.physics/2d/sleep_threshold_angular].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD",
+          "value": "4",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the threshold linear velocity of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after the time given. The default value of this parameter is [member ProjectSettings.physics/2d/sleep_threshold_linear].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_BODY_TIME_TO_SLEEP",
+          "value": "6",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum time of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after this time. The default value of this parameter is [member ProjectSettings.physics/2d/time_before_sleep].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS",
+          "value": "7",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the default solver bias for all physics constraints. A solver bias is a factor controlling how much two objects \u0022rebound\u0022, after violating a constraint, to avoid leaving them in that state because of numerical imprecision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/default_constraint_bias].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_CONTACT_DEFAULT_BIAS",
+          "value": "3",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the default solver bias for all physics contacts. A solver bias is a factor controlling how much two objects \u0022rebound\u0022, after overlapping, to avoid leaving them in that state because of numerical imprecision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/default_contact_bias].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION",
+          "value": "2",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum distance a shape can penetrate another shape before it is considered a collision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_max_allowed_penetration].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_CONTACT_MAX_SEPARATION",
+          "value": "1",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum distance a shape can be from another before they are considered separated and the contact is discarded. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_max_separation].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_CONTACT_RECYCLE_RADIUS",
+          "value": "0",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the maximum distance a pair of bodies has to move before their collision status has to be recalculated. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_recycle_radius].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        },
+        {
+          "name": "SPACE_PARAM_SOLVER_ITERATIONS",
+          "value": "8",
+          "enum": "SpaceParameter",
+          "kind": "EnumValue",
+          "summary": "Constant to set/get the number of solver iterations for all contacts and constraints. The greater the number of iterations, the more accurate the collisions will be. However, a greater number of iterations requires more CPU power, which can decrease performance. The default value of this parameter is [member ProjectSettings.physics/2d/solver/solver_iterations].",
+          "sourcePath": "doc/classes/PhysicsServer2D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SPACE_PARAM_CONTACT_RECYCLE_RADIUS",
+      "value": "0",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum distance a pair of bodies has to move before their collision status has to be recalculated. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_recycle_radius].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_CONTACT_MAX_SEPARATION",
+      "value": "1",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum distance a shape can be from another before they are considered separated and the contact is discarded. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_max_separation].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION",
+      "value": "2",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum distance a shape can penetrate another shape before it is considered a collision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/contact_max_allowed_penetration].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_CONTACT_DEFAULT_BIAS",
+      "value": "3",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the default solver bias for all physics contacts. A solver bias is a factor controlling how much two objects \u0022rebound\u0022, after overlapping, to avoid leaving them in that state because of numerical imprecision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/default_contact_bias].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD",
+      "value": "4",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the threshold linear velocity of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after the time given. The default value of this parameter is [member ProjectSettings.physics/2d/sleep_threshold_linear].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD",
+      "value": "5",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the threshold angular velocity of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after the time given. The default value of this parameter is [member ProjectSettings.physics/2d/sleep_threshold_angular].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_BODY_TIME_TO_SLEEP",
+      "value": "6",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum time of activity. A body marked as potentially inactive for both linear and angular velocity will be put to sleep after this time. The default value of this parameter is [member ProjectSettings.physics/2d/time_before_sleep].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS",
+      "value": "7",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the default solver bias for all physics constraints. A solver bias is a factor controlling how much two objects \u0022rebound\u0022, after violating a constraint, to avoid leaving them in that state because of numerical imprecision. The default value of this parameter is [member ProjectSettings.physics/2d/solver/default_constraint_bias].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SPACE_PARAM_SOLVER_ITERATIONS",
+      "value": "8",
+      "enum": "SpaceParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the number of solver iterations for all contacts and constraints. The greater the number of iterations, the more accurate the collisions will be. However, a greater number of iterations requires more CPU power, which can decrease performance. The default value of this parameter is [member ProjectSettings.physics/2d/solver/solver_iterations].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_WORLD_BOUNDARY",
+      "value": "0",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating world boundary shapes. A world boundary shape is an [i]infinite[/i] line with an origin point, and a normal. Thus, it can be used for front/behind checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_SEPARATION_RAY",
+      "value": "1",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating separation ray shapes. A separation ray is defined by a length and separates itself from what is touching its far endpoint. Useful for character controllers.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_SEGMENT",
+      "value": "2",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating segment shapes. A segment shape is a [i]finite[/i] line from a point A to a point B. It can be checked for intersections.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_CIRCLE",
+      "value": "3",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating circle shapes. A circle shape only has a radius. It can be used for intersections and inside/outside checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_RECTANGLE",
+      "value": "4",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating rectangle shapes. A rectangle shape is defined by a width and a height. It can be used for intersections and inside/outside checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_CAPSULE",
+      "value": "5",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating capsule shapes. A capsule shape is defined by a radius and a length. It can be used for intersections and inside/outside checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_CONVEX_POLYGON",
+      "value": "6",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating convex polygon shapes. A polygon is defined by a list of points. It can be used for intersections and inside/outside checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_CONCAVE_POLYGON",
+      "value": "7",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This is the constant for creating concave polygon shapes. A polygon is defined by a list of points. It can be used for intersections checks, but not for inside/outside checks.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "SHAPE_CUSTOM",
+      "value": "8",
+      "enum": "ShapeType",
+      "kind": "EnumValue",
+      "summary": "This constant is used internally by the engine. Any attempt to create this kind of shape results in an error.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_GRAVITY_OVERRIDE_MODE",
+      "value": "0",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get gravity override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_GRAVITY",
+      "value": "1",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get gravity strength in an area. The default value of this parameter is [code]9.80665[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_GRAVITY_VECTOR",
+      "value": "2",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get gravity vector/center in an area. The default value of this parameter is [code]Vector2(0, -1)[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_GRAVITY_IS_POINT",
+      "value": "3",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get whether the gravity vector of an area is a direction, or a center point. The default value of this parameter is [code]false[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE",
+      "value": "4",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the distance at which the gravity strength is equal to the gravity controlled by [constant AREA_PARAM_GRAVITY]. For example, on a planet 100 pixels in radius with a surface gravity of 4.0 px/s\u00B2, set the gravity to 4.0 and the unit distance to 100.0. The gravity will have falloff according to the inverse square law, so in the example, at 200 pixels from the center the gravity will be 1.0 px/s\u00B2 (twice the distance, 1/4th the gravity), at 50 pixels it will be 16.0 px/s\u00B2 (half the distance, 4x the gravity), and so on. The above is true only when the unit distance is a positive number. When the unit distance is set to 0.0, the gravity will be constant regardless of distance. The default value of this parameter is [code]0.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE",
+      "value": "5",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get linear damping override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_LINEAR_DAMP",
+      "value": "6",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the linear damping factor of an area. The default value of this parameter is [code]0.1[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE",
+      "value": "7",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get angular damping override mode in an area. See [enum AreaSpaceOverrideMode] for possible values. The default value of this parameter is [constant AREA_SPACE_OVERRIDE_DISABLED].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_ANGULAR_DAMP",
+      "value": "8",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the angular damping factor of an area. The default value of this parameter is [code]1.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_PARAM_PRIORITY",
+      "value": "9",
+      "enum": "AreaParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the priority (order of processing) of an area. The default value of this parameter is [code]0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_SPACE_OVERRIDE_DISABLED",
+      "value": "0",
+      "enum": "AreaSpaceOverrideMode",
+      "kind": "EnumValue",
+      "summary": "This area does not affect gravity/damp. These are generally areas that exist only to detect collisions, and objects entering or exiting them.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_SPACE_OVERRIDE_COMBINE",
+      "value": "1",
+      "enum": "AreaSpaceOverrideMode",
+      "kind": "EnumValue",
+      "summary": "This area adds its gravity/damp values to whatever has been calculated so far. This way, many overlapping areas can combine their physics to make interesting effects.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_SPACE_OVERRIDE_COMBINE_REPLACE",
+      "value": "2",
+      "enum": "AreaSpaceOverrideMode",
+      "kind": "EnumValue",
+      "summary": "This area adds its gravity/damp values to whatever has been calculated so far. Then stops taking into account the rest of the areas, even the default one.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_SPACE_OVERRIDE_REPLACE",
+      "value": "3",
+      "enum": "AreaSpaceOverrideMode",
+      "kind": "EnumValue",
+      "summary": "This area replaces any gravity/damp, even the default one, and stops taking into account the rest of the areas.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_SPACE_OVERRIDE_REPLACE_COMBINE",
+      "value": "4",
+      "enum": "AreaSpaceOverrideMode",
+      "kind": "EnumValue",
+      "summary": "This area replaces any gravity/damp calculated so far, but keeps calculating the rest of the areas, down to the default one.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_MODE_STATIC",
+      "value": "0",
+      "enum": "BodyMode",
+      "kind": "EnumValue",
+      "summary": "Constant for static bodies. In this mode, a body can be only moved by user code and doesn\u0027t collide with other bodies along its path when moved.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_MODE_KINEMATIC",
+      "value": "1",
+      "enum": "BodyMode",
+      "kind": "EnumValue",
+      "summary": "Constant for kinematic bodies. In this mode, a body can be only moved by user code and collides with other bodies along its path.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_MODE_RIGID",
+      "value": "2",
+      "enum": "BodyMode",
+      "kind": "EnumValue",
+      "summary": "Constant for rigid bodies. In this mode, a body can be pushed by other bodies and has forces applied.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_MODE_RIGID_LINEAR",
+      "value": "3",
+      "enum": "BodyMode",
+      "kind": "EnumValue",
+      "summary": "Constant for linear rigid bodies. In this mode, a body can not rotate, and only its linear velocity is affected by external forces.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_BOUNCE",
+      "value": "0",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s bounce factor. The default value of this parameter is [code]0.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_FRICTION",
+      "value": "1",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s friction. The default value of this parameter is [code]1.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_MASS",
+      "value": "2",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s mass. The default value of this parameter is [code]1.0[/code]. If the body\u0027s mode is set to [constant BODY_MODE_RIGID], then setting this parameter will have the following additional effects: - If the parameter [constant BODY_PARAM_CENTER_OF_MASS] has never been set explicitly, then the value of that parameter will be recalculated based on the body\u0027s shapes. - If the parameter [constant BODY_PARAM_INERTIA] is set to a value [code]\u003C= 0.0[/code], then the value of that parameter will be recalculated based on the body\u0027s shapes, mass, and center of mass.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_INERTIA",
+      "value": "3",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s inertia. The default value of this parameter is [code]0.0[/code]. If the body\u0027s inertia is set to a value [code]\u003C= 0.0[/code], then the inertia will be recalculated based on the body\u0027s shapes, mass, and center of mass.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_CENTER_OF_MASS",
+      "value": "4",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s center of mass position in the body\u0027s local coordinate system. The default value of this parameter is [code]Vector2(0, 0)[/code]. If this parameter is never set explicitly, then it is recalculated based on the body\u0027s shapes when setting the parameter [constant BODY_PARAM_MASS] or when calling [method body_set_space].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_GRAVITY_SCALE",
+      "value": "5",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s gravity multiplier. The default value of this parameter is [code]1.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_LINEAR_DAMP_MODE",
+      "value": "6",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s linear damping mode. See [enum BodyDampMode] for possible values. The default value of this parameter is [constant BODY_DAMP_MODE_COMBINE].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_ANGULAR_DAMP_MODE",
+      "value": "7",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s angular damping mode. See [enum BodyDampMode] for possible values. The default value of this parameter is [constant BODY_DAMP_MODE_COMBINE].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_LINEAR_DAMP",
+      "value": "8",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s linear damping factor. The default value of this parameter is [code]0.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_ANGULAR_DAMP",
+      "value": "9",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a body\u0027s angular damping factor. The default value of this parameter is [code]0.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_PARAM_MAX",
+      "value": "10",
+      "enum": "BodyParameter",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum BodyParameter] enum.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_DAMP_MODE_COMBINE",
+      "value": "0",
+      "enum": "BodyDampMode",
+      "kind": "EnumValue",
+      "summary": "The body\u0027s damping value is added to any value set in areas or the default value.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_DAMP_MODE_REPLACE",
+      "value": "1",
+      "enum": "BodyDampMode",
+      "kind": "EnumValue",
+      "summary": "The body\u0027s damping value replaces any value set in areas or the default value.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_STATE_TRANSFORM",
+      "value": "0",
+      "enum": "BodyState",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the current transform matrix of the body.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_STATE_LINEAR_VELOCITY",
+      "value": "1",
+      "enum": "BodyState",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the current linear velocity of the body.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_STATE_ANGULAR_VELOCITY",
+      "value": "2",
+      "enum": "BodyState",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the current angular velocity of the body.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_STATE_SLEEPING",
+      "value": "3",
+      "enum": "BodyState",
+      "kind": "EnumValue",
+      "summary": "Constant to sleep/wake up a body, or to get whether it is sleeping.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "BODY_STATE_CAN_SLEEP",
+      "value": "4",
+      "enum": "BodyState",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get whether the body can sleep.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_PIN",
+      "value": "0",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "Constant to create pin joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_GROOVE",
+      "value": "1",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "Constant to create groove joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_DAMPED_SPRING",
+      "value": "2",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "Constant to create damped spring joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_TYPE_MAX",
+      "value": "3",
+      "enum": "JointType",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum JointType] enum.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_PARAM_BIAS",
+      "value": "0",
+      "enum": "JointParam",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get how fast the joint pulls the bodies back to satisfy the joint constraint. The lower the value, the more the two bodies can pull on the joint. The default value of this parameter is [code]0.0[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for pin joints and groove joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_PARAM_MAX_BIAS",
+      "value": "1",
+      "enum": "JointParam",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum speed with which the joint can apply corrections. The default value of this parameter is [code]3.40282e\u002B38[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for groove joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "JOINT_PARAM_MAX_FORCE",
+      "value": "2",
+      "enum": "JointParam",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get the maximum force that the joint can use to act on the two bodies. The default value of this parameter is [code]3.40282e\u002B38[/code]. [b]Note:[/b] In Godot Physics, this parameter is only used for groove joints.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_SOFTNESS",
+      "value": "0",
+      "enum": "PinJointParam",
+      "kind": "EnumValue",
+      "summary": "Constant to set/get a how much the bond of the pin joint can flex. The default value of this parameter is [code]0.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_LIMIT_UPPER",
+      "value": "1",
+      "enum": "PinJointParam",
+      "kind": "EnumValue",
+      "summary": "The maximum rotation around the pin.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_LIMIT_LOWER",
+      "value": "2",
+      "enum": "PinJointParam",
+      "kind": "EnumValue",
+      "summary": "The minimum rotation around the pin.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_MOTOR_TARGET_VELOCITY",
+      "value": "3",
+      "enum": "PinJointParam",
+      "kind": "EnumValue",
+      "summary": "Target speed for the motor. In radians per second.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_FLAG_ANGULAR_LIMIT_ENABLED",
+      "value": "0",
+      "enum": "PinJointFlag",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], the pin has a maximum and a minimum rotation.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "PIN_JOINT_FLAG_MOTOR_ENABLED",
+      "value": "1",
+      "enum": "PinJointFlag",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], a motor turns the pin.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "DAMPED_SPRING_REST_LENGTH",
+      "value": "0",
+      "enum": "DampedSpringParam",
+      "kind": "EnumValue",
+      "summary": "Sets the resting length of the spring joint. The joint will always try to go to back this length when pulled apart. The default value of this parameter is the distance between the joint\u0027s anchor points.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "DAMPED_SPRING_STIFFNESS",
+      "value": "1",
+      "enum": "DampedSpringParam",
+      "kind": "EnumValue",
+      "summary": "Sets the stiffness of the spring joint. The joint applies a force equal to the stiffness times the distance from its resting length. The default value of this parameter is [code]20.0[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "DAMPED_SPRING_DAMPING",
+      "value": "2",
+      "enum": "DampedSpringParam",
+      "kind": "EnumValue",
+      "summary": "Sets the damping ratio of the spring joint. A value of 0 indicates an undamped spring, while 1 causes the system to reach equilibrium as fast as possible (critical damping). The default value of this parameter is [code]1.5[/code].",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "CCD_MODE_DISABLED",
+      "value": "0",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Disables continuous collision detection. This is the fastest way to detect body collisions, but it can miss small and/or fast-moving objects.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "CCD_MODE_CAST_RAY",
+      "value": "1",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Enables continuous collision detection by raycasting. It is faster than shapecasting, but less precise.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "CCD_MODE_CAST_SHAPE",
+      "value": "2",
+      "enum": "CCDMode",
+      "kind": "EnumValue",
+      "summary": "Enables continuous collision detection by shapecasting. It is the slowest CCD method, and the most precise.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_BODY_ADDED",
+      "value": "0",
+      "enum": "AreaBodyStatus",
+      "kind": "EnumValue",
+      "summary": "The value of the first parameter and area callback function receives, when an object enters one of its shapes.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "AREA_BODY_REMOVED",
+      "value": "1",
+      "enum": "AreaBodyStatus",
+      "kind": "EnumValue",
+      "summary": "The value of the first parameter and area callback function receives, when an object exits one of its shapes.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "INFO_ACTIVE_OBJECTS",
+      "value": "0",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of objects that are not sleeping.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "INFO_COLLISION_PAIRS",
+      "value": "1",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of possible collisions.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    },
+    {
+      "name": "INFO_ISLAND_COUNT",
+      "value": "2",
+      "enum": "ProcessInfo",
+      "kind": "EnumValue",
+      "summary": "Constant to get the number of space regions where a collision could occur.",
+      "sourcePath": "doc/classes/PhysicsServer2D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/PhysicsServer2D.xml",
+      "sha256": "16d8790db6724a72c5bdfcb079b7ceb332b60864ba2b98f07018b2033c353e5a"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

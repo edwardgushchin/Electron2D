@@ -1,0 +1,636 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Dictionary",
+    "namespace": "Godot",
+    "fullName": "Godot.Dictionary",
+    "kind": "class",
+    "interfaces": [],
+    "godotReference": "Dictionary",
+    "documentationPath": "doc/classes/Dictionary.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_dictionary.html"
+  },
+  "constructors": [
+    {
+      "name": "Dictionary",
+      "kind": "Constructor",
+      "signature": "public Dictionary()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "Constructs an empty [Dictionary].",
+      "godotName": "Dictionary",
+      "xmlDocId": "M:Godot.Dictionary.#ctor",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Dictionary",
+      "kind": "Constructor",
+      "signature": "public Dictionary(Dictionary @base, int keyType, StringName keyClassName, Variant keyScript, int valueType, StringName valueClassName, Variant valueScript)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "base",
+          "type": "Dictionary"
+        },
+        {
+          "name": "key_type",
+          "type": "int"
+        },
+        {
+          "name": "key_class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "key_script",
+          "type": "Variant"
+        },
+        {
+          "name": "value_type",
+          "type": "int"
+        },
+        {
+          "name": "value_class_name",
+          "type": "StringName"
+        },
+        {
+          "name": "value_script",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Creates a typed dictionary from the [param base] dictionary. A typed dictionary can only contain keys and values of the given types, or that inherit from the given classes, as described by this constructor\u0027s parameters.",
+      "godotName": "Dictionary",
+      "xmlDocId": "M:Godot.Dictionary.#ctor(Dictionary,int,StringName,Variant,int,StringName,Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Dictionary",
+      "kind": "Constructor",
+      "signature": "public Dictionary(Dictionary from)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns the same dictionary as [param from]. If you need a copy of the dictionary, use [method duplicate].",
+      "godotName": "Dictionary",
+      "xmlDocId": "M:Godot.Dictionary.#ctor(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    }
+  ],
+  "members": [
+    {
+      "name": "Assign",
+      "kind": "Method",
+      "signature": "public void Assign(Dictionary dictionary)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Assigns elements of another [param dictionary] into the dictionary. Resizes the dictionary to match [param dictionary]. Performs type conversions if the dictionary is typed.",
+      "godotName": "assign",
+      "xmlDocId": "M:Godot.Dictionary.Assign(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Clear",
+      "kind": "Method",
+      "signature": "public void Clear()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Clears the dictionary, removing all entries from it.",
+      "godotName": "clear",
+      "xmlDocId": "M:Godot.Dictionary.Clear",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Duplicate",
+      "kind": "Method",
+      "signature": "public Dictionary Duplicate(bool deep)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "deep",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a new copy of the dictionary. By default, a [b]shallow[/b] copy is returned: all nested [Array], [Dictionary], and [Resource] keys and values are shared with the original dictionary. Modifying any of those in one dictionary will also affect them in the other. If [param deep] is [code]true[/code], a [b]deep[/b] copy is returned: all nested arrays and dictionaries are also duplicated (recursively). Any [Resource] is still shared with the original dictionary, though.",
+      "godotName": "duplicate",
+      "xmlDocId": "M:Godot.Dictionary.Duplicate(bool)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "DuplicateDeep",
+      "kind": "Method",
+      "signature": "public Dictionary DuplicateDeep(int deepSubresourcesMode)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "deep_subresources_mode",
+          "type": "int",
+          "defaultValue": "1"
+        }
+      ],
+      "summary": "Duplicates this dictionary, deeply, like [method duplicate] when passing [code]true[/code], with extra control over how subresources are handled. [param deep_subresources_mode] must be one of the values from [enum Resource.DeepDuplicateMode]. By default, only internal resources will be duplicated (recursively).",
+      "godotName": "duplicate_deep",
+      "xmlDocId": "M:Godot.Dictionary.DuplicateDeep(int)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Erase",
+      "kind": "Method",
+      "signature": "public bool Erase(Variant key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Removes the dictionary entry by key, if it exists. Returns [code]true[/code] if the given [param key] existed in the dictionary, otherwise [code]false[/code]. [b]Note:[/b] Do not erase entries while iterating over the dictionary. You can iterate over the [method keys] array instead.",
+      "godotName": "erase",
+      "xmlDocId": "M:Godot.Dictionary.Erase(Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "FindKey",
+      "kind": "Method",
+      "signature": "public Variant FindKey(Variant value)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Finds and returns the first key whose associated value is equal to [param value], or [code]null[/code] if it is not found. [b]Note:[/b] [code]null[/code] is also a valid key. If inside the dictionary, [method find_key] may give misleading results.",
+      "godotName": "find_key",
+      "xmlDocId": "M:Godot.Dictionary.FindKey(Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Get",
+      "kind": "Method",
+      "signature": "public Variant Get(Variant key, Variant @default)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "default",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Returns the corresponding value for the given [param key] in the dictionary. If the [param key] does not exist, returns [param default], or [code]null[/code] if the parameter is omitted. [b]Note:[/b] If the [param default] argument is computationally expensive or has unwanted side effects, consider using the [method has] method instead: [codeblock] # Always calls \u0060expensive_function()\u0060. dict.get(\u0022key\u0022, expensive_function()) # Calls \u0060expensive_function()\u0060 only if the key does not exist. dict.get(\u0022key\u0022) if dict.has(\u0022key\u0022) else expensive_function() [/codeblock]",
+      "godotName": "get",
+      "xmlDocId": "M:Godot.Dictionary.Get(Variant,Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetOrAdd",
+      "kind": "Method",
+      "signature": "public Variant GetOrAdd(Variant key, Variant @default)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "default",
+          "type": "Variant",
+          "defaultValue": "null"
+        }
+      ],
+      "summary": "Gets a value and ensures the key is set. If the [param key] exists in the dictionary, this behaves like [method get]. Otherwise, the [param default] value is inserted into the dictionary and returned.",
+      "godotName": "get_or_add",
+      "xmlDocId": "M:Godot.Dictionary.GetOrAdd(Variant,Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedKeyBuiltin",
+      "kind": "Method",
+      "signature": "public int GetTypedKeyBuiltin()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the built-in [Variant] type of the typed dictionary\u0027s keys as a [enum Variant.Type] constant. If the keys are not typed, returns [constant TYPE_NIL]. See also [method is_typed_key].",
+      "godotName": "get_typed_key_builtin",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedKeyBuiltin",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedKeyClassName",
+      "kind": "Method",
+      "signature": "public StringName GetTypedKeyClassName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the [b]built-in[/b] class name of the typed dictionary\u0027s keys, if the built-in [Variant] type is [constant TYPE_OBJECT]. Otherwise, returns an empty [StringName]. See also [method is_typed_key] and [method Object.get_class].",
+      "godotName": "get_typed_key_class_name",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedKeyClassName",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedKeyScript",
+      "kind": "Method",
+      "signature": "public Variant GetTypedKeyScript()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the [Script] instance associated with this typed dictionary\u0027s keys, or [code]null[/code] if it does not exist. See also [method is_typed_key].",
+      "godotName": "get_typed_key_script",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedKeyScript",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedValueBuiltin",
+      "kind": "Method",
+      "signature": "public int GetTypedValueBuiltin()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the built-in [Variant] type of the typed dictionary\u0027s values as a [enum Variant.Type] constant. If the values are not typed, returns [constant TYPE_NIL]. See also [method is_typed_value].",
+      "godotName": "get_typed_value_builtin",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedValueBuiltin",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedValueClassName",
+      "kind": "Method",
+      "signature": "public StringName GetTypedValueClassName()",
+      "returnType": "StringName",
+      "parameters": [],
+      "summary": "Returns the [b]built-in[/b] class name of the typed dictionary\u0027s values, if the built-in [Variant] type is [constant TYPE_OBJECT]. Otherwise, returns an empty [StringName]. See also [method is_typed_value] and [method Object.get_class].",
+      "godotName": "get_typed_value_class_name",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedValueClassName",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "GetTypedValueScript",
+      "kind": "Method",
+      "signature": "public Variant GetTypedValueScript()",
+      "returnType": "Variant",
+      "parameters": [],
+      "summary": "Returns the [Script] instance associated with this typed dictionary\u0027s values, or [code]null[/code] if it does not exist. See also [method is_typed_value].",
+      "godotName": "get_typed_value_script",
+      "xmlDocId": "M:Godot.Dictionary.GetTypedValueScript",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Has",
+      "kind": "Method",
+      "signature": "public bool Has(Variant key)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the dictionary contains an entry with the given [param key]. [codeblocks] [gdscript] var my_dict = { \u0022Godot\u0022 : 4, 210 : null, } print(my_dict.has(\u0022Godot\u0022)) # Prints true print(my_dict.has(210)) # Prints true print(my_dict.has(4)) # Prints false [/gdscript] [csharp] var myDict = new Godot.Collections.Dictionary { { \u0022Godot\u0022, 4 }, { 210, default }, }; GD.Print(myDict.ContainsKey(\u0022Godot\u0022)); // Prints True GD.Print(myDict.ContainsKey(210)); // Prints True GD.Print(myDict.ContainsKey(4)); // Prints False [/csharp] [/codeblocks] In GDScript, this is equivalent to the [code]in[/code] operator: [codeblock] if \u0022Godot\u0022 in { \u0022Godot\u0022: 4 }: print(\u0022The key is here!\u0022) # Will be printed. [/codeblock] [b]Note:[/b] This method returns [code]true[/code] as long as the [param key] exists, even if its corresponding value is [code]null[/code].",
+      "godotName": "has",
+      "xmlDocId": "M:Godot.Dictionary.Has(Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "HasAll",
+      "kind": "Method",
+      "signature": "public bool HasAll(Array keys)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keys",
+          "type": "Array"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the dictionary contains all keys in the given [param keys] array. [codeblock] var data = { \u0022width\u0022: 10, \u0022height\u0022: 20 } data.has_all([\u0022height\u0022, \u0022width\u0022]) # Returns true [/codeblock]",
+      "godotName": "has_all",
+      "xmlDocId": "M:Godot.Dictionary.HasAll(Array)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Hash",
+      "kind": "Method",
+      "signature": "public int Hash()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns a hashed 32-bit integer value representing the dictionary contents. [codeblocks] [gdscript] var dict1 = { \u0022A\u0022: 10, \u0022B\u0022: 2 } var dict2 = { \u0022A\u0022: 10, \u0022B\u0022: 2 } print(dict1.hash() == dict2.hash()) # Prints true [/gdscript] [csharp] var dict1 = new Godot.Collections.Dictionary { { \u0022A\u0022, 10 }, { \u0022B\u0022, 2 } }; var dict2 = new Godot.Collections.Dictionary { { \u0022A\u0022, 10 }, { \u0022B\u0022, 2 } }; // Godot.Collections.Dictionary has no Hash() method. Use GD.Hash() instead. GD.Print(GD.Hash(dict1) == GD.Hash(dict2)); // Prints True [/csharp] [/codeblocks] [b]Note:[/b] Dictionaries with the same entries but in a different order will not have the same hash. [b]Note:[/b] Dictionaries with equal hash values are [i]not[/i] guaranteed to be the same, because of hash collisions. On the contrary, dictionaries with different hash values are guaranteed to be different.",
+      "godotName": "hash",
+      "xmlDocId": "M:Godot.Dictionary.Hash",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsEmpty",
+      "kind": "Method",
+      "signature": "public bool IsEmpty()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dictionary is empty (its size is [code]0[/code]). See also [method size].",
+      "godotName": "is_empty",
+      "xmlDocId": "M:Godot.Dictionary.IsEmpty",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsReadOnly",
+      "kind": "Method",
+      "signature": "public bool IsReadOnly()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dictionary is read-only. See [method make_read_only]. Dictionaries are automatically read-only if declared with [code]const[/code] keyword.",
+      "godotName": "is_read_only",
+      "xmlDocId": "M:Godot.Dictionary.IsReadOnly",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsSameTyped",
+      "kind": "Method",
+      "signature": "public bool IsSameTyped(Dictionary dictionary)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the dictionary is typed the same as [param dictionary].",
+      "godotName": "is_same_typed",
+      "xmlDocId": "M:Godot.Dictionary.IsSameTyped(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsSameTypedKey",
+      "kind": "Method",
+      "signature": "public bool IsSameTypedKey(Dictionary dictionary)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the dictionary\u0027s keys are typed the same as [param dictionary]\u0027s keys.",
+      "godotName": "is_same_typed_key",
+      "xmlDocId": "M:Godot.Dictionary.IsSameTypedKey(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsSameTypedValue",
+      "kind": "Method",
+      "signature": "public bool IsSameTypedValue(Dictionary dictionary)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the dictionary\u0027s values are typed the same as [param dictionary]\u0027s values.",
+      "godotName": "is_same_typed_value",
+      "xmlDocId": "M:Godot.Dictionary.IsSameTypedValue(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsTyped",
+      "kind": "Method",
+      "signature": "public bool IsTyped()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dictionary is typed. Typed dictionaries can only store keys/values of their associated type and provide type safety for the [code][][/code] operator. Methods of typed dictionary still return [Variant].",
+      "godotName": "is_typed",
+      "xmlDocId": "M:Godot.Dictionary.IsTyped",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsTypedKey",
+      "kind": "Method",
+      "signature": "public bool IsTypedKey()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dictionary\u0027s keys are typed.",
+      "godotName": "is_typed_key",
+      "xmlDocId": "M:Godot.Dictionary.IsTypedKey",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "IsTypedValue",
+      "kind": "Method",
+      "signature": "public bool IsTypedValue()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the dictionary\u0027s values are typed.",
+      "godotName": "is_typed_value",
+      "xmlDocId": "M:Godot.Dictionary.IsTypedValue",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Keys",
+      "kind": "Method",
+      "signature": "public Array Keys()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns the list of keys in the dictionary.",
+      "godotName": "keys",
+      "xmlDocId": "M:Godot.Dictionary.Keys",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "MakeReadOnly",
+      "kind": "Method",
+      "signature": "public void MakeReadOnly()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Makes the dictionary read-only, i.e. disables modification of the dictionary\u0027s contents. Does not apply to nested content, e.g. content of nested dictionaries.",
+      "godotName": "make_read_only",
+      "xmlDocId": "M:Godot.Dictionary.MakeReadOnly",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Merge",
+      "kind": "Method",
+      "signature": "public void Merge(Dictionary dictionary, bool overwrite)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        },
+        {
+          "name": "overwrite",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Adds entries from [param dictionary] to this dictionary. By default, duplicate keys are not copied over, unless [param overwrite] is [code]true[/code]. [codeblocks] [gdscript] var dict = { \u0022item\u0022: \u0022sword\u0022, \u0022quantity\u0022: 2 } var other_dict = { \u0022quantity\u0022: 15, \u0022color\u0022: \u0022silver\u0022 } # Overwriting of existing keys is disabled by default. dict.merge(other_dict) print(dict) # { \u0022item\u0022: \u0022sword\u0022, \u0022quantity\u0022: 2, \u0022color\u0022: \u0022silver\u0022 } # With overwriting of existing keys enabled. dict.merge(other_dict, true) print(dict) # { \u0022item\u0022: \u0022sword\u0022, \u0022quantity\u0022: 15, \u0022color\u0022: \u0022silver\u0022 } [/gdscript] [csharp] var dict = new Godot.Collections.Dictionary { [\u0022item\u0022] = \u0022sword\u0022, [\u0022quantity\u0022] = 2, }; var otherDict = new Godot.Collections.Dictionary { [\u0022quantity\u0022] = 15, [\u0022color\u0022] = \u0022silver\u0022, }; // Overwriting of existing keys is disabled by default. dict.Merge(otherDict); GD.Print(dict); // { \u0022item\u0022: \u0022sword\u0022, \u0022quantity\u0022: 2, \u0022color\u0022: \u0022silver\u0022 } // With overwriting of existing keys enabled. dict.Merge(otherDict, true); GD.Print(dict); // { \u0022item\u0022: \u0022sword\u0022, \u0022quantity\u0022: 15, \u0022color\u0022: \u0022silver\u0022 } [/csharp] [/codeblocks] [b]Note:[/b] [method merge] is [i]not[/i] recursive. Nested dictionaries are considered as keys that can be overwritten or not depending on the value of [param overwrite], but they will never be merged together.",
+      "godotName": "merge",
+      "xmlDocId": "M:Godot.Dictionary.Merge(Dictionary,bool)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Merged",
+      "kind": "Method",
+      "signature": "public Dictionary Merged(Dictionary dictionary, bool overwrite)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        },
+        {
+          "name": "overwrite",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns a copy of this dictionary merged with the other [param dictionary]. By default, duplicate keys are not copied over, unless [param overwrite] is [code]true[/code]. See also [method merge]. This method is useful for quickly making dictionaries with default values: [codeblock] var base = { \u0022fruit\u0022: \u0022apple\u0022, \u0022vegetable\u0022: \u0022potato\u0022 } var extra = { \u0022fruit\u0022: \u0022orange\u0022, \u0022dressing\u0022: \u0022vinegar\u0022 } # Prints { \u0022fruit\u0022: \u0022orange\u0022, \u0022vegetable\u0022: \u0022potato\u0022, \u0022dressing\u0022: \u0022vinegar\u0022 } print(extra.merged(base)) # Prints { \u0022fruit\u0022: \u0022apple\u0022, \u0022vegetable\u0022: \u0022potato\u0022, \u0022dressing\u0022: \u0022vinegar\u0022 } print(extra.merged(base, true)) [/codeblock]",
+      "godotName": "merged",
+      "xmlDocId": "M:Godot.Dictionary.Merged(Dictionary,bool)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "RecursiveEqual",
+      "kind": "Method",
+      "signature": "public bool RecursiveEqual(Dictionary dictionary, int recursionCount)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "dictionary",
+          "type": "Dictionary"
+        },
+        {
+          "name": "recursion_count",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the two dictionaries contain the same keys and values, inner [Dictionary] and [Array] keys and values are compared recursively.",
+      "godotName": "recursive_equal",
+      "xmlDocId": "M:Godot.Dictionary.RecursiveEqual(Dictionary,int)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Set",
+      "kind": "Method",
+      "signature": "public bool Set(Variant key, Variant value)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Sets the value of the element at the given [param key] to the given [param value]. Returns [code]true[/code] if the value is set successfully. Fails and returns [code]false[/code] if the dictionary is read-only, or if [param key] and [param value] don\u0027t match the dictionary\u0027s types. This is the same as using the [code][][/code] operator ([code]dict[key] = value[/code]).",
+      "godotName": "set",
+      "xmlDocId": "M:Godot.Dictionary.Set(Variant,Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Size",
+      "kind": "Method",
+      "signature": "public int Size()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of entries in the dictionary. Empty dictionaries ([code]{ }[/code]) always return [code]0[/code]. See also [method is_empty].",
+      "godotName": "size",
+      "xmlDocId": "M:Godot.Dictionary.Size",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Sort",
+      "kind": "Method",
+      "signature": "public void Sort()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Sorts the dictionary in ascending order, by key. The final order is dependent on the \u0022less than\u0022 ([code]\u003C[/code]) comparison between keys. [codeblocks] [gdscript] var numbers = { \u0022c\u0022: 2, \u0022a\u0022: 0, \u0022b\u0022: 1 } numbers.sort() print(numbers) # Prints { \u0022a\u0022: 0, \u0022b\u0022: 1, \u0022c\u0022: 2 } [/gdscript] [/codeblocks] This method ensures that the dictionary\u0027s entries are ordered consistently when [method keys] or [method values] are called, or when the dictionary needs to be converted to a string through [method @GlobalScope.str] or [method JSON.stringify].",
+      "godotName": "sort",
+      "xmlDocId": "M:Godot.Dictionary.Sort",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "Values",
+      "kind": "Method",
+      "signature": "public Array Values()",
+      "returnType": "Array",
+      "parameters": [],
+      "summary": "Returns the list of values in this dictionary.",
+      "godotName": "values",
+      "xmlDocId": "M:Godot.Dictionary.Values",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [
+    {
+      "name": "operator !=",
+      "kind": "Operator",
+      "signature": "public bool operator !=(Dictionary right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the two dictionaries do not contain the same keys and values.",
+      "godotName": "operator !=",
+      "xmlDocId": "M:Godot.Dictionary.operator !=(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "operator ==",
+      "kind": "Operator",
+      "signature": "public bool operator ==(Dictionary right)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "right",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the two dictionaries contain the same keys and values. The order of the entries does not matter. [b]Note:[/b] In C#, by convention, this operator compares by [b]reference[/b]. If you need to compare by value, iterate over both dictionaries.",
+      "godotName": "operator ==",
+      "xmlDocId": "M:Godot.Dictionary.operator ==(Dictionary)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    },
+    {
+      "name": "operator []",
+      "kind": "Operator",
+      "signature": "public Variant operator [](Variant key)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "key",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Returns the corresponding value for the given [param key] in the dictionary. If the entry does not exist, fails and returns [code]null[/code]. For safe access, use [method get] or [method has].",
+      "godotName": "operator []",
+      "xmlDocId": "M:Godot.Dictionary.operator [](Variant)",
+      "sourcePath": "doc/classes/Dictionary.xml"
+    }
+  ],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Dictionary.xml",
+      "sha256": "cb3a8b5e1f7043afca966265bdc88bcdd9bfdb3ae72261fddd3e18970f790fe6"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

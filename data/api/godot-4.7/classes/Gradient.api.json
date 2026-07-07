@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Gradient",
+    "namespace": "Godot",
+    "fullName": "Godot.Gradient",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Gradient",
+    "documentationPath": "doc/classes/Gradient.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_gradient.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "AddPoint",
+      "kind": "Method",
+      "signature": "public void AddPoint(float offset, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Adds the specified color to the gradient, with the specified offset.",
+      "godotName": "add_point",
+      "xmlDocId": "M:Godot.Gradient.AddPoint(float,Color)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GetColor",
+      "kind": "Method",
+      "signature": "public Color GetColor(int point)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the color of the gradient color at index [param point].",
+      "godotName": "get_color",
+      "xmlDocId": "M:Godot.Gradient.GetColor(int)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GetOffset",
+      "kind": "Method",
+      "signature": "public float GetOffset(int point)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the offset of the gradient color at index [param point].",
+      "godotName": "get_offset",
+      "xmlDocId": "M:Godot.Gradient.GetOffset(int)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GetPointCount",
+      "kind": "Method",
+      "signature": "public int GetPointCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of colors in the gradient.",
+      "godotName": "get_point_count",
+      "xmlDocId": "M:Godot.Gradient.GetPointCount",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "RemovePoint",
+      "kind": "Method",
+      "signature": "public void RemovePoint(int point)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        }
+      ],
+      "summary": "Removes the color at index [param point].",
+      "godotName": "remove_point",
+      "xmlDocId": "M:Godot.Gradient.RemovePoint(int)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "Reverse",
+      "kind": "Method",
+      "signature": "public void Reverse()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Reverses/mirrors the gradient. [b]Note:[/b] This method mirrors all points around the middle of the gradient, which may produce unexpected results when [member interpolation_mode] is set to [constant GRADIENT_INTERPOLATE_CONSTANT].",
+      "godotName": "reverse",
+      "xmlDocId": "M:Godot.Gradient.Reverse",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "Sample",
+      "kind": "Method",
+      "signature": "public Color Sample(float offset)",
+      "returnType": "Color",
+      "parameters": [
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Returns the interpolated color specified by [param offset]. [param offset] should be between [code]0.0[/code] and [code]1.0[/code] (inclusive). Using a value lower than [code]0.0[/code] will return the same color as [code]0.0[/code], and using a value higher than [code]1.0[/code] will return the same color as [code]1.0[/code]. If your input value is not within this range, consider using [method @GlobalScope.remap] on the input value with output values set to [code]0.0[/code] and [code]1.0[/code].",
+      "godotName": "sample",
+      "xmlDocId": "M:Godot.Gradient.Sample(float)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "SetColor",
+      "kind": "Method",
+      "signature": "public void SetColor(int point, Color color)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        },
+        {
+          "name": "color",
+          "type": "Color"
+        }
+      ],
+      "summary": "Sets the color of the gradient color at index [param point].",
+      "godotName": "set_color",
+      "xmlDocId": "M:Godot.Gradient.SetColor(int,Color)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "SetOffset",
+      "kind": "Method",
+      "signature": "public void SetOffset(int point, float offset)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "point",
+          "type": "int"
+        },
+        {
+          "name": "offset",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the offset for the gradient color at index [param point].",
+      "godotName": "set_offset",
+      "xmlDocId": "M:Godot.Gradient.SetOffset(int,float)",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "Colors",
+      "kind": "Property",
+      "signature": "public PackedColorArray Colors { get; set; }",
+      "returnType": "PackedColorArray",
+      "parameters": [],
+      "summary": "Gradient\u0027s colors as a [PackedColorArray]. [b]Note:[/b] Setting this property updates all colors at once. To update any color individually use [method set_color].",
+      "defaultValue": "PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1)",
+      "godotName": "colors",
+      "xmlDocId": "P:Godot.Gradient.Colors",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "InterpolationColorSpace",
+      "kind": "Property",
+      "signature": "public int InterpolationColorSpace { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The color space used to interpolate between points of the gradient. It does not affect the returned colors, which will always use nonlinear sRGB encoding. [b]Note:[/b] This setting has no effect when [member interpolation_mode] is set to [constant GRADIENT_INTERPOLATE_CONSTANT].",
+      "defaultValue": "0",
+      "godotName": "interpolation_color_space",
+      "xmlDocId": "P:Godot.Gradient.InterpolationColorSpace",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "InterpolationMode",
+      "kind": "Property",
+      "signature": "public int InterpolationMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The algorithm used to interpolate between points of the gradient.",
+      "defaultValue": "0",
+      "godotName": "interpolation_mode",
+      "xmlDocId": "P:Godot.Gradient.InterpolationMode",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "Offsets",
+      "kind": "Property",
+      "signature": "public PackedFloat32Array Offsets { get; set; }",
+      "returnType": "PackedFloat32Array",
+      "parameters": [],
+      "summary": "Gradient\u0027s offsets as a [PackedFloat32Array]. [b]Note:[/b] Setting this property updates all offsets at once. To update any offset individually use [method set_offset].",
+      "defaultValue": "PackedFloat32Array(0, 1)",
+      "godotName": "offsets",
+      "xmlDocId": "P:Godot.Gradient.Offsets",
+      "sourcePath": "doc/classes/Gradient.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ColorSpace",
+      "values": [
+        {
+          "name": "GRADIENT_COLOR_SPACE_LINEAR_SRGB",
+          "value": "1",
+          "enum": "ColorSpace",
+          "kind": "EnumValue",
+          "summary": "Linear sRGB color space.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        },
+        {
+          "name": "GRADIENT_COLOR_SPACE_OKLAB",
+          "value": "2",
+          "enum": "ColorSpace",
+          "kind": "EnumValue",
+          "summary": "[url=https://bottosson.github.io/posts/oklab/]Oklab[/url] color space. This color space provides a smooth and uniform-looking transition between colors.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        },
+        {
+          "name": "GRADIENT_COLOR_SPACE_SRGB",
+          "value": "0",
+          "enum": "ColorSpace",
+          "kind": "EnumValue",
+          "summary": "sRGB color space.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        }
+      ]
+    },
+    {
+      "name": "InterpolationMode",
+      "values": [
+        {
+          "name": "GRADIENT_INTERPOLATE_CONSTANT",
+          "value": "1",
+          "enum": "InterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Constant interpolation, color changes abruptly at each point and stays uniform between. This might cause visible aliasing when used for a gradient texture in some cases.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        },
+        {
+          "name": "GRADIENT_INTERPOLATE_CUBIC",
+          "value": "2",
+          "enum": "InterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Cubic interpolation.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        },
+        {
+          "name": "GRADIENT_INTERPOLATE_LINEAR",
+          "value": "0",
+          "enum": "InterpolationMode",
+          "kind": "EnumValue",
+          "summary": "Linear interpolation.",
+          "sourcePath": "doc/classes/Gradient.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "GRADIENT_INTERPOLATE_LINEAR",
+      "value": "0",
+      "enum": "InterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Linear interpolation.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GRADIENT_INTERPOLATE_CONSTANT",
+      "value": "1",
+      "enum": "InterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Constant interpolation, color changes abruptly at each point and stays uniform between. This might cause visible aliasing when used for a gradient texture in some cases.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GRADIENT_INTERPOLATE_CUBIC",
+      "value": "2",
+      "enum": "InterpolationMode",
+      "kind": "EnumValue",
+      "summary": "Cubic interpolation.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GRADIENT_COLOR_SPACE_SRGB",
+      "value": "0",
+      "enum": "ColorSpace",
+      "kind": "EnumValue",
+      "summary": "sRGB color space.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GRADIENT_COLOR_SPACE_LINEAR_SRGB",
+      "value": "1",
+      "enum": "ColorSpace",
+      "kind": "EnumValue",
+      "summary": "Linear sRGB color space.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    },
+    {
+      "name": "GRADIENT_COLOR_SPACE_OKLAB",
+      "value": "2",
+      "enum": "ColorSpace",
+      "kind": "EnumValue",
+      "summary": "[url=https://bottosson.github.io/posts/oklab/]Oklab[/url] color space. This color space provides a smooth and uniform-looking transition between colors.",
+      "sourcePath": "doc/classes/Gradient.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Gradient.xml",
+      "sha256": "8192af7cf0e4ff5e114a71733afa394abdca2c27d8888f756be7f6ea1714440b"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

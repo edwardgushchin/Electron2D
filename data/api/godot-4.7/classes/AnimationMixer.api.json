@@ -1,0 +1,744 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AnimationMixer",
+    "namespace": "Godot",
+    "fullName": "Godot.AnimationMixer",
+    "kind": "class",
+    "baseType": "Node",
+    "interfaces": [],
+    "godotReference": "AnimationMixer",
+    "documentationPath": "doc/classes/AnimationMixer.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_animationmixer.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_PostProcessKeyValue",
+      "kind": "Method",
+      "signature": "public Variant _PostProcessKeyValue(Animation animation, int track, Variant value, int objectId, int objectSubIdx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Animation"
+        },
+        {
+          "name": "track",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "object_id",
+          "type": "int"
+        },
+        {
+          "name": "object_sub_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "A virtual function for processing after getting a key during playback.",
+      "godotName": "_post_process_key_value",
+      "xmlDocId": "M:Godot.AnimationMixer._PostProcessKeyValue(Animation,int,Variant,int,int)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "AddAnimationLibrary",
+      "kind": "Method",
+      "signature": "public int AddAnimationLibrary(StringName name, AnimationLibrary library)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "library",
+          "type": "AnimationLibrary"
+        }
+      ],
+      "summary": "Adds [param library] to the animation player, under the key [param name]. AnimationMixer has a global library by default with an empty string as key. For adding an animation to the global library: [codeblocks] [gdscript] var global_library = mixer.get_animation_library(\u0022\u0022) global_library.add_animation(\u0022animation_name\u0022, animation_resource) [/gdscript] [/codeblocks]",
+      "godotName": "add_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.AddAnimationLibrary(StringName,AnimationLibrary)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "Advance",
+      "kind": "Method",
+      "signature": "public void Advance(float delta)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "delta",
+          "type": "float"
+        }
+      ],
+      "summary": "Manually advance the animations by the specified time (in seconds).",
+      "godotName": "advance",
+      "xmlDocId": "M:Godot.AnimationMixer.Advance(float)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "Capture",
+      "kind": "Method",
+      "signature": "public void Capture(StringName name, float duration, int transType, int easeType)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "duration",
+          "type": "float"
+        },
+        {
+          "name": "trans_type",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "ease_type",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "If the animation track specified by [param name] has an option [constant Animation.UPDATE_CAPTURE], stores current values of the objects indicated by the track path as a cache. If there is already a captured cache, the old cache is discarded. After this it will interpolate with current animation blending result during the playback process for the time specified by [param duration], working like a crossfade. You can specify [param trans_type] as the curve for the interpolation. For better results, it may be appropriate to specify [constant Tween.TRANS_LINEAR] for cases where the first key of the track begins with a non-zero value or where the key value does not change, and [constant Tween.TRANS_QUAD] for cases where the key value changes linearly.",
+      "godotName": "capture",
+      "xmlDocId": "M:Godot.AnimationMixer.Capture(StringName,float,int,int)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ClearCaches",
+      "kind": "Method",
+      "signature": "public void ClearCaches()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "[AnimationMixer] caches animated nodes. It may not notice if a node disappears; [method clear_caches] forces it to update the cache again.",
+      "godotName": "clear_caches",
+      "xmlDocId": "M:Godot.AnimationMixer.ClearCaches",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "FindAnimation",
+      "kind": "Method",
+      "signature": "public StringName FindAnimation(Animation animation)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Animation"
+        }
+      ],
+      "summary": "Returns the key of [param animation] or an empty [StringName] if not found.",
+      "godotName": "find_animation",
+      "xmlDocId": "M:Godot.AnimationMixer.FindAnimation(Animation)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "FindAnimationLibrary",
+      "kind": "Method",
+      "signature": "public StringName FindAnimationLibrary(Animation animation)",
+      "returnType": "StringName",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Animation"
+        }
+      ],
+      "summary": "Returns the key for the [AnimationLibrary] that contains [param animation] or an empty [StringName] if not found.",
+      "godotName": "find_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.FindAnimationLibrary(Animation)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetAnimation",
+      "kind": "Method",
+      "signature": "public Animation GetAnimation(StringName name)",
+      "returnType": "Animation",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the [Animation] with the key [param name]. If the animation does not exist, [code]null[/code] is returned and an error is logged.",
+      "godotName": "get_animation",
+      "xmlDocId": "M:Godot.AnimationMixer.GetAnimation(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetAnimationLibrary",
+      "kind": "Method",
+      "signature": "public AnimationLibrary GetAnimationLibrary(StringName name)",
+      "returnType": "AnimationLibrary",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns the first [AnimationLibrary] with key [param name] or [code]null[/code] if not found. To get the [AnimationMixer]\u0027s global animation library, use [code]get_animation_library(\u0022\u0022)[/code].",
+      "godotName": "get_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.GetAnimationLibrary(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetAnimationLibraryList",
+      "kind": "Method",
+      "signature": "public StringName[] GetAnimationLibraryList()",
+      "returnType": "StringName[]",
+      "parameters": [],
+      "summary": "Returns the list of stored library keys.",
+      "godotName": "get_animation_library_list",
+      "xmlDocId": "M:Godot.AnimationMixer.GetAnimationLibraryList",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetAnimationList",
+      "kind": "Method",
+      "signature": "public PackedStringArray GetAnimationList()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Returns the list of stored animation keys.",
+      "godotName": "get_animation_list",
+      "xmlDocId": "M:Godot.AnimationMixer.GetAnimationList",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionPosition",
+      "kind": "Method",
+      "signature": "public Vector3 GetRootMotionPosition()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Retrieve the motion delta of position with the [member root_motion_track] as a [Vector3] that can be used elsewhere. If [member root_motion_track] is not a path to a track of type [constant Animation.TYPE_POSITION_3D], returns [code]Vector3(0, 0, 0)[/code]. See also [member root_motion_track] and [RootMotionView]. The most basic example is applying position to [CharacterBody3D]: [codeblocks] [gdscript] var current_rotation func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): current_rotation = get_quaternion() state_machine.travel(\u0022Animate\u0022) var velocity = current_rotation * animation_tree.get_root_motion_position() / delta set_velocity(velocity) move_and_slide() [/gdscript] [/codeblocks] By using this in combination with [method get_root_motion_rotation_accumulator], you can apply the root motion position more correctly to account for the rotation of the node. [codeblocks] [gdscript] func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) set_quaternion(get_quaternion() * animation_tree.get_root_motion_rotation()) var velocity = (animation_tree.get_root_motion_rotation_accumulator().inverse() * get_quaternion()) * animation_tree.get_root_motion_position() / delta set_velocity(velocity) move_and_slide() [/gdscript] [/codeblocks] If [member root_motion_local] is [code]true[/code], returns the pre-multiplied translation value with the inverted rotation. In this case, the code can be written as follows: [codeblocks] [gdscript] func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) set_quaternion(get_quaternion() * animation_tree.get_root_motion_rotation()) var velocity = get_quaternion() * animation_tree.get_root_motion_position() / delta set_velocity(velocity) move_and_slide() [/gdscript] [/codeblocks]",
+      "godotName": "get_root_motion_position",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionPosition",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionPositionAccumulator",
+      "kind": "Method",
+      "signature": "public Vector3 GetRootMotionPositionAccumulator()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Retrieve the blended value of the position tracks with the [member root_motion_track] as a [Vector3] that can be used elsewhere. This is useful in cases where you want to respect the initial key values of the animation. For example, if an animation with only one key [code]Vector3(0, 0, 0)[/code] is played in the previous frame and then an animation with only one key [code]Vector3(1, 0, 1)[/code] is played in the next frame, the difference can be calculated as follows: [codeblocks] [gdscript] var prev_root_motion_position_accumulator func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) var current_root_motion_position_accumulator = animation_tree.get_root_motion_position_accumulator() var difference = current_root_motion_position_accumulator - prev_root_motion_position_accumulator prev_root_motion_position_accumulator = current_root_motion_position_accumulator transform.origin \u002B= difference [/gdscript] [/codeblocks] However, if the animation loops, an unintended discrete change may occur, so this is only useful for some simple use cases.",
+      "godotName": "get_root_motion_position_accumulator",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionPositionAccumulator",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionRotation",
+      "kind": "Method",
+      "signature": "public Quaternion GetRootMotionRotation()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Retrieve the motion delta of rotation with the [member root_motion_track] as a [Quaternion] that can be used elsewhere. If [member root_motion_track] is not a path to a track of type [constant Animation.TYPE_ROTATION_3D], returns [code]Quaternion(0, 0, 0, 1)[/code]. See also [member root_motion_track] and [RootMotionView]. The most basic example is applying rotation to [CharacterBody3D]: [codeblocks] [gdscript] func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) set_quaternion(get_quaternion() * animation_tree.get_root_motion_rotation()) [/gdscript] [/codeblocks]",
+      "godotName": "get_root_motion_rotation",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionRotation",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionRotationAccumulator",
+      "kind": "Method",
+      "signature": "public Quaternion GetRootMotionRotationAccumulator()",
+      "returnType": "Quaternion",
+      "parameters": [],
+      "summary": "Retrieve the blended value of the rotation tracks with the [member root_motion_track] as a [Quaternion] that can be used elsewhere. This is necessary to apply the root motion position correctly, taking rotation into account. See also [method get_root_motion_position]. Also, this is useful in cases where you want to respect the initial key values of the animation. For example, if an animation with only one key [code]Quaternion(0, 0, 0, 1)[/code] is played in the previous frame and then an animation with only one key [code]Quaternion(0, 0.707, 0, 0.707)[/code] is played in the next frame, the difference can be calculated as follows: [codeblocks] [gdscript] var prev_root_motion_rotation_accumulator func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) var current_root_motion_rotation_accumulator = animation_tree.get_root_motion_rotation_accumulator() var difference = prev_root_motion_rotation_accumulator.inverse() * current_root_motion_rotation_accumulator prev_root_motion_rotation_accumulator = current_root_motion_rotation_accumulator transform.basis *= Basis(difference) [/gdscript] [/codeblocks] However, if the animation loops, an unintended discrete change may occur, so this is only useful for some simple use cases.",
+      "godotName": "get_root_motion_rotation_accumulator",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionRotationAccumulator",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionScale",
+      "kind": "Method",
+      "signature": "public Vector3 GetRootMotionScale()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Retrieve the motion delta of scale with the [member root_motion_track] as a [Vector3] that can be used elsewhere. If [member root_motion_track] is not a path to a track of type [constant Animation.TYPE_SCALE_3D], returns [code]Vector3(0, 0, 0)[/code]. See also [member root_motion_track] and [RootMotionView]. The most basic example is applying scale to [CharacterBody3D]: [codeblocks] [gdscript] var current_scale = Vector3(1, 1, 1) var scale_accum = Vector3(1, 1, 1) func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): current_scale = get_scale() scale_accum = Vector3(1, 1, 1) state_machine.travel(\u0022Animate\u0022) scale_accum \u002B= animation_tree.get_root_motion_scale() set_scale(current_scale * scale_accum) [/gdscript] [/codeblocks]",
+      "godotName": "get_root_motion_scale",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionScale",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "GetRootMotionScaleAccumulator",
+      "kind": "Method",
+      "signature": "public Vector3 GetRootMotionScaleAccumulator()",
+      "returnType": "Vector3",
+      "parameters": [],
+      "summary": "Retrieve the blended value of the scale tracks with the [member root_motion_track] as a [Vector3] that can be used elsewhere. For example, if an animation with only one key [code]Vector3(1, 1, 1)[/code] is played in the previous frame and then an animation with only one key [code]Vector3(2, 2, 2)[/code] is played in the next frame, the difference can be calculated as follows: [codeblocks] [gdscript] var prev_root_motion_scale_accumulator func _process(delta): if Input.is_action_just_pressed(\u0022animate\u0022): state_machine.travel(\u0022Animate\u0022) var current_root_motion_scale_accumulator = animation_tree.get_root_motion_scale_accumulator() var difference = current_root_motion_scale_accumulator - prev_root_motion_scale_accumulator prev_root_motion_scale_accumulator = current_root_motion_scale_accumulator transform.basis = transform.basis.scaled(difference) [/gdscript] [/codeblocks] However, if the animation loops, an unintended discrete change may occur, so this is only useful for some simple use cases.",
+      "godotName": "get_root_motion_scale_accumulator",
+      "xmlDocId": "M:Godot.AnimationMixer.GetRootMotionScaleAccumulator",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "HasAnimation",
+      "kind": "Method",
+      "signature": "public bool HasAnimation(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [AnimationMixer] stores an [Animation] with key [param name].",
+      "godotName": "has_animation",
+      "xmlDocId": "M:Godot.AnimationMixer.HasAnimation(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "HasAnimationLibrary",
+      "kind": "Method",
+      "signature": "public bool HasAnimationLibrary(StringName name)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the [AnimationMixer] stores an [AnimationLibrary] with key [param name].",
+      "godotName": "has_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.HasAnimationLibrary(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "RemoveAnimationLibrary",
+      "kind": "Method",
+      "signature": "public void RemoveAnimationLibrary(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Removes the [AnimationLibrary] associated with the key [param name].",
+      "godotName": "remove_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.RemoveAnimationLibrary(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "RenameAnimationLibrary",
+      "kind": "Method",
+      "signature": "public void RenameAnimationLibrary(StringName name, StringName newname)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "newname",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Moves the [AnimationLibrary] associated with the key [param name] to the key [param newname].",
+      "godotName": "rename_animation_library",
+      "xmlDocId": "M:Godot.AnimationMixer.RenameAnimationLibrary(StringName,StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "Active",
+      "kind": "Property",
+      "signature": "public bool Active { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the [AnimationMixer] will be processing.",
+      "defaultValue": "true",
+      "godotName": "active",
+      "xmlDocId": "P:Godot.AnimationMixer.Active",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "AudioMaxPolyphony",
+      "kind": "Property",
+      "signature": "public int AudioMaxPolyphony { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The number of possible simultaneous sounds for each of the assigned AudioStreamPlayers. For example, if this value is [code]32[/code] and the animation has two audio tracks, the two [AudioStreamPlayer]s assigned can play simultaneously up to [code]32[/code] voices each.",
+      "defaultValue": "32",
+      "godotName": "audio_max_polyphony",
+      "xmlDocId": "P:Godot.AnimationMixer.AudioMaxPolyphony",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "CallbackModeDiscrete",
+      "kind": "Property",
+      "signature": "public int CallbackModeDiscrete { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Ordinarily, tracks can be set to [constant Animation.UPDATE_DISCRETE] to update infrequently, usually when using nearest interpolation. However, when blending with [constant Animation.UPDATE_CONTINUOUS] several results are considered. The [member callback_mode_discrete] specify it explicitly. See also [enum AnimationCallbackModeDiscrete]. To make the blended results look good, it is recommended to set this to [constant ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS] to update every frame during blending. Other values exist for compatibility and they are fine if there is no blending, but not so, may produce artifacts.",
+      "defaultValue": "1",
+      "godotName": "callback_mode_discrete",
+      "xmlDocId": "P:Godot.AnimationMixer.CallbackModeDiscrete",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "CallbackModeMethod",
+      "kind": "Property",
+      "signature": "public int CallbackModeMethod { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The call mode used for \u0022Call Method\u0022 tracks.",
+      "defaultValue": "0",
+      "godotName": "callback_mode_method",
+      "xmlDocId": "P:Godot.AnimationMixer.CallbackModeMethod",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "CallbackModeProcess",
+      "kind": "Property",
+      "signature": "public int CallbackModeProcess { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "The process notification in which to update animations.",
+      "defaultValue": "1",
+      "godotName": "callback_mode_process",
+      "xmlDocId": "P:Godot.AnimationMixer.CallbackModeProcess",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "Deterministic",
+      "kind": "Property",
+      "signature": "public bool Deterministic { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], the blending uses the deterministic algorithm. The total weight is not normalized and the result is accumulated with an initial value ([code]0[/code] or a [code]\u0022RESET\u0022[/code] animation if present). This means that if the total amount of blending is [code]0.0[/code], the result is equal to the [code]\u0022RESET\u0022[/code] animation. If the number of tracks between the blended animations is different, the animation with the missing track is treated as if it had the initial value. If [code]false[/code], The blend does not use the deterministic algorithm. The total weight is normalized and always [code]1.0[/code]. If the number of tracks between the blended animations is different, nothing is done about the animation that is missing a track. [b]Note:[/b] In [AnimationTree], the blending with [AnimationNodeAdd2], [AnimationNodeAdd3], [AnimationNodeSub2] or the weight greater than [code]1.0[/code] may produce unexpected results. For example, if [AnimationNodeAdd2] blends two nodes with the amount [code]1.0[/code], then total weight is [code]2.0[/code] but it will be normalized to make the total amount [code]1.0[/code] and the result will be equal to [AnimationNodeBlend2] with the amount [code]0.5[/code].",
+      "defaultValue": "false",
+      "godotName": "deterministic",
+      "xmlDocId": "P:Godot.AnimationMixer.Deterministic",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ResetOnSave",
+      "kind": "Property",
+      "signature": "public bool ResetOnSave { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "This is used by the editor. If set to [code]true[/code], the scene will be saved with the effects of the reset animation (the animation with the key [code]\u0022RESET\u0022[/code]) applied as if it had been seeked to time 0, with the editor keeping the values that the scene had before saving. This makes it more convenient to preview and edit animations in the editor, as changes to the scene will not be saved as long as they are set in the reset animation.",
+      "defaultValue": "true",
+      "godotName": "reset_on_save",
+      "xmlDocId": "P:Godot.AnimationMixer.ResetOnSave",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "RootMotionLocal",
+      "kind": "Property",
+      "signature": "public bool RootMotionLocal { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [method get_root_motion_position] value is extracted as a local translation value before blending. In other words, it is treated like the translation is done after the rotation.",
+      "defaultValue": "false",
+      "godotName": "root_motion_local",
+      "xmlDocId": "P:Godot.AnimationMixer.RootMotionLocal",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "RootMotionTrack",
+      "kind": "Property",
+      "signature": "public NodePath RootMotionTrack { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. The [member root_motion_track] uses the same format as [method Animation.track_set_path], but note that a bone must be specified. If the track has type [constant Animation.TYPE_POSITION_3D], [constant Animation.TYPE_ROTATION_3D], or [constant Animation.TYPE_SCALE_3D] the transformation will be canceled visually, and the animation will appear to stay in place. See also [method get_root_motion_position], [method get_root_motion_rotation], [method get_root_motion_scale], and [RootMotionView].",
+      "defaultValue": "NodePath(\u0022\u0022)",
+      "godotName": "root_motion_track",
+      "xmlDocId": "P:Godot.AnimationMixer.RootMotionTrack",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "RootNode",
+      "kind": "Property",
+      "signature": "public NodePath RootNode { get; set; }",
+      "returnType": "NodePath",
+      "parameters": [],
+      "summary": "The node which node path references will travel from.",
+      "defaultValue": "NodePath(\u0022..\u0022)",
+      "godotName": "root_node",
+      "xmlDocId": "P:Godot.AnimationMixer.RootNode",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [
+    {
+      "name": "AnimationFinished",
+      "kind": "Signal",
+      "signature": "public event AnimationFinishedHandler AnimationFinished",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Notifies when an animation finished playing. [b]Note:[/b] This signal is not emitted if an animation is looping.",
+      "godotName": "animation_finished",
+      "xmlDocId": "E:Godot.AnimationMixer.AnimationFinished(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "AnimationLibrariesUpdated",
+      "kind": "Signal",
+      "signature": "public event AnimationLibrariesUpdatedHandler AnimationLibrariesUpdated",
+      "parameters": [],
+      "summary": "Notifies when the animation libraries have changed.",
+      "godotName": "animation_libraries_updated",
+      "xmlDocId": "E:Godot.AnimationMixer.AnimationLibrariesUpdated",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "AnimationListChanged",
+      "kind": "Signal",
+      "signature": "public event AnimationListChangedHandler AnimationListChanged",
+      "parameters": [],
+      "summary": "Notifies when an animation list is changed.",
+      "godotName": "animation_list_changed",
+      "xmlDocId": "E:Godot.AnimationMixer.AnimationListChanged",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "AnimationStarted",
+      "kind": "Signal",
+      "signature": "public event AnimationStartedHandler AnimationStarted",
+      "parameters": [
+        {
+          "name": "anim_name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "Notifies when an animation starts playing. [b]Note:[/b] This signal is not emitted if an animation is looping.",
+      "godotName": "animation_started",
+      "xmlDocId": "E:Godot.AnimationMixer.AnimationStarted(StringName)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "CachesCleared",
+      "kind": "Signal",
+      "signature": "public event CachesClearedHandler CachesCleared",
+      "parameters": [],
+      "summary": "Notifies when the caches have been cleared, either automatically, or manually via [method clear_caches].",
+      "godotName": "caches_cleared",
+      "xmlDocId": "E:Godot.AnimationMixer.CachesCleared",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "MixerApplied",
+      "kind": "Signal",
+      "signature": "public event MixerAppliedHandler MixerApplied",
+      "parameters": [],
+      "summary": "Notifies when the blending result related have been applied to the target objects.",
+      "godotName": "mixer_applied",
+      "xmlDocId": "E:Godot.AnimationMixer.MixerApplied",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "MixerUpdated",
+      "kind": "Signal",
+      "signature": "public event MixerUpdatedHandler MixerUpdated",
+      "parameters": [],
+      "summary": "Notifies when the property related process have been updated.",
+      "godotName": "mixer_updated",
+      "xmlDocId": "E:Godot.AnimationMixer.MixerUpdated",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    }
+  ],
+  "enums": [
+    {
+      "name": "AnimationCallbackModeDiscrete",
+      "values": [
+        {
+          "name": "ANIMATION_CALLBACK_MODE_DISCRETE_DOMINANT",
+          "value": "0",
+          "enum": "AnimationCallbackModeDiscrete",
+          "kind": "EnumValue",
+          "summary": "An [constant Animation.UPDATE_DISCRETE] track value takes precedence when blending [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track values and [constant Animation.UPDATE_DISCRETE] track values.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        },
+        {
+          "name": "ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS",
+          "value": "2",
+          "enum": "AnimationCallbackModeDiscrete",
+          "kind": "EnumValue",
+          "summary": "Always treat the [constant Animation.UPDATE_DISCRETE] track value as [constant Animation.UPDATE_CONTINUOUS] with [constant Animation.INTERPOLATION_NEAREST]. This is the default behavior for [AnimationTree]. If a value track has un-interpolatable type key values, it is internally converted to use [constant ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE] with [constant Animation.UPDATE_DISCRETE]. Un-interpolatable type list: - [constant @GlobalScope.TYPE_NIL] - [constant @GlobalScope.TYPE_NODE_PATH] - [constant @GlobalScope.TYPE_RID] - [constant @GlobalScope.TYPE_OBJECT] - [constant @GlobalScope.TYPE_CALLABLE] - [constant @GlobalScope.TYPE_SIGNAL] - [constant @GlobalScope.TYPE_DICTIONARY] - [constant @GlobalScope.TYPE_PACKED_BYTE_ARRAY] [constant @GlobalScope.TYPE_BOOL] and [constant @GlobalScope.TYPE_INT] are treated as [constant @GlobalScope.TYPE_FLOAT] during blending and rounded when the result is retrieved. It is same for arrays and vectors with them such as [constant @GlobalScope.TYPE_PACKED_INT32_ARRAY] or [constant @GlobalScope.TYPE_VECTOR2I], they are treated as [constant @GlobalScope.TYPE_PACKED_FLOAT32_ARRAY] or [constant @GlobalScope.TYPE_VECTOR2]. Also note that for arrays, the size is also interpolated. [constant @GlobalScope.TYPE_STRING] and [constant @GlobalScope.TYPE_STRING_NAME] are interpolated between character codes and lengths, but note that there is a difference in algorithm between interpolation between keys and interpolation by blending.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        },
+        {
+          "name": "ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE",
+          "value": "1",
+          "enum": "AnimationCallbackModeDiscrete",
+          "kind": "EnumValue",
+          "summary": "An [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track value takes precedence when blending the [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track values and the [constant Animation.UPDATE_DISCRETE] track values. This is the default behavior for [AnimationPlayer].",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AnimationCallbackModeMethod",
+      "values": [
+        {
+          "name": "ANIMATION_CALLBACK_MODE_METHOD_DEFERRED",
+          "value": "0",
+          "enum": "AnimationCallbackModeMethod",
+          "kind": "EnumValue",
+          "summary": "Batch method calls during the animation process, then do the calls after events are processed. This avoids bugs involving deleting nodes or modifying the AnimationPlayer while playing.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        },
+        {
+          "name": "ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE",
+          "value": "1",
+          "enum": "AnimationCallbackModeMethod",
+          "kind": "EnumValue",
+          "summary": "Make method calls immediately when reached in the animation.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        }
+      ]
+    },
+    {
+      "name": "AnimationCallbackModeProcess",
+      "values": [
+        {
+          "name": "ANIMATION_CALLBACK_MODE_PROCESS_IDLE",
+          "value": "1",
+          "enum": "AnimationCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Process animation during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        },
+        {
+          "name": "ANIMATION_CALLBACK_MODE_PROCESS_MANUAL",
+          "value": "2",
+          "enum": "AnimationCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Do not process animation. Use [method advance] to process the animation manually.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        },
+        {
+          "name": "ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS",
+          "value": "0",
+          "enum": "AnimationCallbackModeProcess",
+          "kind": "EnumValue",
+          "summary": "Process animation during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]). This is especially useful when animating physics bodies.",
+          "sourcePath": "doc/classes/AnimationMixer.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS",
+      "value": "0",
+      "enum": "AnimationCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Process animation during physics frames (see [constant Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS]). This is especially useful when animating physics bodies.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_PROCESS_IDLE",
+      "value": "1",
+      "enum": "AnimationCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Process animation during process frames (see [constant Node.NOTIFICATION_INTERNAL_PROCESS]).",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_PROCESS_MANUAL",
+      "value": "2",
+      "enum": "AnimationCallbackModeProcess",
+      "kind": "EnumValue",
+      "summary": "Do not process animation. Use [method advance] to process the animation manually.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_METHOD_DEFERRED",
+      "value": "0",
+      "enum": "AnimationCallbackModeMethod",
+      "kind": "EnumValue",
+      "summary": "Batch method calls during the animation process, then do the calls after events are processed. This avoids bugs involving deleting nodes or modifying the AnimationPlayer while playing.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE",
+      "value": "1",
+      "enum": "AnimationCallbackModeMethod",
+      "kind": "EnumValue",
+      "summary": "Make method calls immediately when reached in the animation.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_DISCRETE_DOMINANT",
+      "value": "0",
+      "enum": "AnimationCallbackModeDiscrete",
+      "kind": "EnumValue",
+      "summary": "An [constant Animation.UPDATE_DISCRETE] track value takes precedence when blending [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track values and [constant Animation.UPDATE_DISCRETE] track values.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE",
+      "value": "1",
+      "enum": "AnimationCallbackModeDiscrete",
+      "kind": "EnumValue",
+      "summary": "An [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track value takes precedence when blending the [constant Animation.UPDATE_CONTINUOUS] or [constant Animation.UPDATE_CAPTURE] track values and the [constant Animation.UPDATE_DISCRETE] track values. This is the default behavior for [AnimationPlayer].",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    },
+    {
+      "name": "ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS",
+      "value": "2",
+      "enum": "AnimationCallbackModeDiscrete",
+      "kind": "EnumValue",
+      "summary": "Always treat the [constant Animation.UPDATE_DISCRETE] track value as [constant Animation.UPDATE_CONTINUOUS] with [constant Animation.INTERPOLATION_NEAREST]. This is the default behavior for [AnimationTree]. If a value track has un-interpolatable type key values, it is internally converted to use [constant ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE] with [constant Animation.UPDATE_DISCRETE]. Un-interpolatable type list: - [constant @GlobalScope.TYPE_NIL] - [constant @GlobalScope.TYPE_NODE_PATH] - [constant @GlobalScope.TYPE_RID] - [constant @GlobalScope.TYPE_OBJECT] - [constant @GlobalScope.TYPE_CALLABLE] - [constant @GlobalScope.TYPE_SIGNAL] - [constant @GlobalScope.TYPE_DICTIONARY] - [constant @GlobalScope.TYPE_PACKED_BYTE_ARRAY] [constant @GlobalScope.TYPE_BOOL] and [constant @GlobalScope.TYPE_INT] are treated as [constant @GlobalScope.TYPE_FLOAT] during blending and rounded when the result is retrieved. It is same for arrays and vectors with them such as [constant @GlobalScope.TYPE_PACKED_INT32_ARRAY] or [constant @GlobalScope.TYPE_VECTOR2I], they are treated as [constant @GlobalScope.TYPE_PACKED_FLOAT32_ARRAY] or [constant @GlobalScope.TYPE_VECTOR2]. Also note that for arrays, the size is also interpolated. [constant @GlobalScope.TYPE_STRING] and [constant @GlobalScope.TYPE_STRING_NAME] are interpolated between character codes and lengths, but note that there is a difference in algorithm between interpolation between keys and interpolation by blending.",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_PostProcessKeyValue",
+      "kind": "Method",
+      "signature": "public Variant _PostProcessKeyValue(Animation animation, int track, Variant value, int objectId, int objectSubIdx)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "animation",
+          "type": "Animation"
+        },
+        {
+          "name": "track",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        },
+        {
+          "name": "object_id",
+          "type": "int"
+        },
+        {
+          "name": "object_sub_idx",
+          "type": "int"
+        }
+      ],
+      "summary": "A virtual function for processing after getting a key during playback.",
+      "godotName": "_post_process_key_value",
+      "xmlDocId": "M:Godot.AnimationMixer._PostProcessKeyValue(Animation,int,Variant,int,int)",
+      "sourcePath": "doc/classes/AnimationMixer.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AnimationMixer.xml",
+      "sha256": "ee9d72cdc4e6a83bbbc71da84e6fef91d6d6a47f4e4809b14b4f2971df80a816"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

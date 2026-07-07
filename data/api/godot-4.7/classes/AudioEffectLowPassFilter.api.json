@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioEffectLowPassFilter",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioEffectLowPassFilter",
+    "kind": "class",
+    "baseType": "AudioEffectFilter",
+    "interfaces": [],
+    "godotReference": "AudioEffectLowPassFilter",
+    "documentationPath": "doc/classes/AudioEffectLowPassFilter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audioeffectlowpassfilter.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioEffectLowPassFilter.xml",
+      "sha256": "9d2e6f0e19ca278c863b71542ea20a5c17169399b08d7290b894e0bb47fa8972"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

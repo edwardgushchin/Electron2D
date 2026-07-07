@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RegExMatch",
+    "namespace": "Godot",
+    "fullName": "Godot.RegExMatch",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "RegExMatch",
+    "documentationPath": "modules/regex/doc_classes/RegExMatch.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_regexmatch.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetEnd",
+      "kind": "Method",
+      "signature": "public int GetEnd(Variant name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Variant",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the end position of the match within the source string. The end position of capturing groups can be retrieved by providing its group number as an integer or its string name (if it\u0027s a named group). The default value of 0 refers to the whole pattern. Returns -1 if the group did not match or doesn\u0027t exist.",
+      "godotName": "get_end",
+      "xmlDocId": "M:Godot.RegExMatch.GetEnd(Variant)",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "GetGroupCount",
+      "kind": "Method",
+      "signature": "public int GetGroupCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the number of capturing groups.",
+      "godotName": "get_group_count",
+      "xmlDocId": "M:Godot.RegExMatch.GetGroupCount",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "GetStart",
+      "kind": "Method",
+      "signature": "public int GetStart(Variant name)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Variant",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the starting position of the match within the source string. The starting position of capturing groups can be retrieved by providing its group number as an integer or its string name (if it\u0027s a named group). The default value of 0 refers to the whole pattern. Returns -1 if the group did not match or doesn\u0027t exist.",
+      "godotName": "get_start",
+      "xmlDocId": "M:Godot.RegExMatch.GetStart(Variant)",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "GetString",
+      "kind": "Method",
+      "signature": "public String GetString(Variant name)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "Variant",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the substring of the match from the source string. Capturing groups can be retrieved by providing its group number as an integer or its string name (if it\u0027s a named group). The default value of 0 refers to the whole pattern. Returns an empty string if the group did not match or doesn\u0027t exist.",
+      "godotName": "get_string",
+      "xmlDocId": "M:Godot.RegExMatch.GetString(Variant)",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "Names",
+      "kind": "Property",
+      "signature": "public Dictionary Names { get; set; }",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "A dictionary of named groups and its corresponding group number. Only groups that were matched are included. If multiple groups have the same name, that name would refer to the first matching one.",
+      "defaultValue": "{}",
+      "godotName": "names",
+      "xmlDocId": "P:Godot.RegExMatch.Names",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "Strings",
+      "kind": "Property",
+      "signature": "public PackedStringArray Strings { get; set; }",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "An [Array] of the match and its capturing groups.",
+      "defaultValue": "PackedStringArray()",
+      "godotName": "strings",
+      "xmlDocId": "P:Godot.RegExMatch.Strings",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    },
+    {
+      "name": "Subject",
+      "kind": "Property",
+      "signature": "public String Subject { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "The source string used with the search pattern to find this matching result.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "subject",
+      "xmlDocId": "P:Godot.RegExMatch.Subject",
+      "sourcePath": "modules/regex/doc_classes/RegExMatch.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "modules/regex/doc_classes/RegExMatch.xml",
+      "sha256": "e7b355d5cf53b1b33f7b7f37dd870cd7ba6f9241a2bae7475c301c42ea9036a0"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

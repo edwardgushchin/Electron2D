@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "MenuBar",
+    "namespace": "Godot",
+    "fullName": "Godot.MenuBar",
+    "kind": "class",
+    "baseType": "Control",
+    "interfaces": [],
+    "godotReference": "MenuBar",
+    "documentationPath": "doc/classes/MenuBar.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_menubar.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetMenuCount",
+      "kind": "Method",
+      "signature": "public int GetMenuCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns number of menu items.",
+      "godotName": "get_menu_count",
+      "xmlDocId": "M:Godot.MenuBar.GetMenuCount",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "GetMenuPopup",
+      "kind": "Method",
+      "signature": "public PopupMenu GetMenuPopup(int menu)",
+      "returnType": "PopupMenu",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [PopupMenu] associated with menu item.",
+      "godotName": "get_menu_popup",
+      "xmlDocId": "M:Godot.MenuBar.GetMenuPopup(int)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "GetMenuTitle",
+      "kind": "Method",
+      "signature": "public String GetMenuTitle(int menu)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns menu item title.",
+      "godotName": "get_menu_title",
+      "xmlDocId": "M:Godot.MenuBar.GetMenuTitle(int)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "GetMenuTooltip",
+      "kind": "Method",
+      "signature": "public String GetMenuTooltip(int menu)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns menu item tooltip.",
+      "godotName": "get_menu_tooltip",
+      "xmlDocId": "M:Godot.MenuBar.GetMenuTooltip(int)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "IsMenuDisabled",
+      "kind": "Method",
+      "signature": "public bool IsMenuDisabled(int menu)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the menu item is disabled.",
+      "godotName": "is_menu_disabled",
+      "xmlDocId": "M:Godot.MenuBar.IsMenuDisabled(int)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "IsMenuHidden",
+      "kind": "Method",
+      "signature": "public bool IsMenuHidden(int menu)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns [code]true[/code] if the menu item is hidden.",
+      "godotName": "is_menu_hidden",
+      "xmlDocId": "M:Godot.MenuBar.IsMenuHidden(int)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "IsNativeMenu",
+      "kind": "Method",
+      "signature": "public bool IsNativeMenu()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Returns [code]true[/code] if the current system\u0027s global menu is supported and used by this [MenuBar].",
+      "godotName": "is_native_menu",
+      "xmlDocId": "M:Godot.MenuBar.IsNativeMenu",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SetDisableShortcuts",
+      "kind": "Method",
+      "signature": "public void SetDisableShortcuts(bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], shortcuts are disabled and cannot be used to trigger the button.",
+      "godotName": "set_disable_shortcuts",
+      "xmlDocId": "M:Godot.MenuBar.SetDisableShortcuts(bool)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SetMenuDisabled",
+      "kind": "Method",
+      "signature": "public void SetMenuDisabled(int menu, bool disabled)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], menu item is disabled.",
+      "godotName": "set_menu_disabled",
+      "xmlDocId": "M:Godot.MenuBar.SetMenuDisabled(int,bool)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SetMenuHidden",
+      "kind": "Method",
+      "signature": "public void SetMenuHidden(int menu, bool hidden)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        },
+        {
+          "name": "hidden",
+          "type": "bool"
+        }
+      ],
+      "summary": "If [code]true[/code], menu item is hidden.",
+      "godotName": "set_menu_hidden",
+      "xmlDocId": "M:Godot.MenuBar.SetMenuHidden(int,bool)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SetMenuTitle",
+      "kind": "Method",
+      "signature": "public void SetMenuTitle(int menu, String title)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets menu item title.",
+      "godotName": "set_menu_title",
+      "xmlDocId": "M:Godot.MenuBar.SetMenuTitle(int,String)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SetMenuTooltip",
+      "kind": "Method",
+      "signature": "public void SetMenuTooltip(int menu, String tooltip)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "menu",
+          "type": "int"
+        },
+        {
+          "name": "tooltip",
+          "type": "String"
+        }
+      ],
+      "summary": "Sets menu item tooltip.",
+      "godotName": "set_menu_tooltip",
+      "xmlDocId": "M:Godot.MenuBar.SetMenuTooltip(int,String)",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "Flat",
+      "kind": "Property",
+      "signature": "public bool Flat { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "Flat [MenuBar] don\u0027t display item decoration.",
+      "defaultValue": "false",
+      "godotName": "flat",
+      "xmlDocId": "P:Godot.MenuBar.Flat",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "FocusMode",
+      "kind": "Property",
+      "signature": "public int FocusMode { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "defaultValue": "3",
+      "godotName": "focus_mode",
+      "xmlDocId": "P:Godot.MenuBar.FocusMode",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "Language",
+      "kind": "Property",
+      "signature": "public String Language { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Language code used for line-breaking and text shaping algorithms. If left empty, the current locale is used instead.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "language",
+      "xmlDocId": "P:Godot.MenuBar.Language",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "PreferGlobalMenu",
+      "kind": "Property",
+      "signature": "public bool PreferGlobalMenu { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], [MenuBar] will use system global menu when supported. [b]Note:[/b] If [code]true[/code] and global menu is supported, this node is not displayed, has zero size, and all its child nodes except [PopupMenu]s are inaccessible. [b]Note:[/b] This property overrides the value of the [member PopupMenu.prefer_native_menu] property of the child nodes.",
+      "defaultValue": "true",
+      "godotName": "prefer_global_menu",
+      "xmlDocId": "P:Godot.MenuBar.PreferGlobalMenu",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "StartIndex",
+      "kind": "Property",
+      "signature": "public int StartIndex { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Position order in the global menu to insert [MenuBar] items at. All menu items in the [MenuBar] are always inserted as a continuous range. Menus with lower [member start_index] are inserted first. Menus with [member start_index] equal to [code]-1[/code] are inserted last.",
+      "defaultValue": "-1",
+      "godotName": "start_index",
+      "xmlDocId": "P:Godot.MenuBar.StartIndex",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "SwitchOnHover",
+      "kind": "Property",
+      "signature": "public bool SwitchOnHover { get; set; }",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "If [code]true[/code], when the cursor hovers above menu item, it will close the current [PopupMenu] and open the other one.",
+      "defaultValue": "true",
+      "godotName": "switch_on_hover",
+      "xmlDocId": "P:Godot.MenuBar.SwitchOnHover",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    },
+    {
+      "name": "TextDirection",
+      "kind": "Property",
+      "signature": "public int TextDirection { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Base text writing direction.",
+      "defaultValue": "0",
+      "godotName": "text_direction",
+      "xmlDocId": "P:Godot.MenuBar.TextDirection",
+      "sourcePath": "doc/classes/MenuBar.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/MenuBar.xml",
+      "sha256": "0c26172e0c5c35090af4c553cb8cb9f53fd404c6c1309b39ec4c1a70417b29d4"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

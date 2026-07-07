@@ -1,0 +1,2376 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ScriptLanguageExtension",
+    "namespace": "Godot",
+    "fullName": "Godot.ScriptLanguageExtension",
+    "kind": "class",
+    "baseType": "ScriptLanguage",
+    "interfaces": [],
+    "godotReference": "ScriptLanguageExtension",
+    "documentationPath": "doc/classes/ScriptLanguageExtension.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_scriptlanguageextension.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_AddGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _AddGlobalConstant(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AddGlobalConstant(StringName,Variant)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_AddNamedGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _AddNamedGlobalConstant(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_named_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AddNamedGlobalConstant(StringName,Variant)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_AutoIndentCode",
+      "kind": "Method",
+      "signature": "public String _AutoIndentCode(String code, int fromLine, int toLine)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_auto_indent_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AutoIndentCode(String,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CanInheritFromFile",
+      "kind": "Method",
+      "signature": "public bool _CanInheritFromFile()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_inherit_from_file",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CanInheritFromFile",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CanMakeFunction",
+      "kind": "Method",
+      "signature": "public bool _CanMakeFunction()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_make_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CanMakeFunction",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CompleteCode",
+      "kind": "Method",
+      "signature": "public Dictionary _CompleteCode(String code, String path, Object owner)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "owner",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_complete_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CompleteCode(String,String,Object)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CreateScript",
+      "kind": "Method",
+      "signature": "public Object _CreateScript()",
+      "returnType": "Object",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_create_script",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CreateScript",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetCurrentStackInfo",
+      "kind": "Method",
+      "signature": "public Dictionary[] _DebugGetCurrentStackInfo()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_current_stack_info",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetCurrentStackInfo",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetError",
+      "kind": "Method",
+      "signature": "public String _DebugGetError()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_error",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetError",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetGlobals",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetGlobals(int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_globals",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetGlobals(int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelCount",
+      "kind": "Method",
+      "signature": "public int _DebugGetStackLevelCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_count",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelCount",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelFunction",
+      "kind": "Method",
+      "signature": "public String _DebugGetStackLevelFunction(int level)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelFunction(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelInstance",
+      "kind": "Method",
+      "signature": "public void* _DebugGetStackLevelInstance(int level)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_instance",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelInstance(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelLine",
+      "kind": "Method",
+      "signature": "public int _DebugGetStackLevelLine(int level)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_line",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelLine(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelLocals",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetStackLevelLocals(int level, int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_locals",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelLocals(int,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelMembers",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetStackLevelMembers(int level, int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_members",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelMembers(int,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelSource",
+      "kind": "Method",
+      "signature": "public String _DebugGetStackLevelSource(int level)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the source associated with a given debug stack position.",
+      "godotName": "_debug_get_stack_level_source",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelSource(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugParseStackLevelExpression",
+      "kind": "Method",
+      "signature": "public String _DebugParseStackLevelExpression(int level, String expression, int maxSubitems, int maxDepth)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "expression",
+          "type": "String"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_parse_stack_level_expression",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugParseStackLevelExpression(int,String,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_FindFunction",
+      "kind": "Method",
+      "signature": "public int _FindFunction(String function, String code)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "function",
+          "type": "String"
+        },
+        {
+          "name": "code",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the line where the function is defined in the code, or [code]-1[/code] if the function is not present.",
+      "godotName": "_find_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._FindFunction(String,String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Finish",
+      "kind": "Method",
+      "signature": "public void _Finish()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_finish",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Finish",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Frame",
+      "kind": "Method",
+      "signature": "public void _Frame()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_frame",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Frame",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetBuiltInTemplates",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetBuiltInTemplates(StringName @object)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_built_in_templates",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetBuiltInTemplates(StringName)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetCommentDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetCommentDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_comment_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetCommentDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetDocCommentDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetDocCommentDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_doc_comment_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetDocCommentDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetExtension",
+      "kind": "Method",
+      "signature": "public String _GetExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_extension",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetExtension",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetGlobalClassName",
+      "kind": "Method",
+      "signature": "public Dictionary _GetGlobalClassName(String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_global_class_name",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetGlobalClassName(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetName",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicAnnotations",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPublicAnnotations()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_annotations",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicAnnotations",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicConstants",
+      "kind": "Method",
+      "signature": "public Dictionary _GetPublicConstants()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_constants",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicConstants",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicFunctions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPublicFunctions()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_functions",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicFunctions",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetReservedWords",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetReservedWords()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_reserved_words",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetReservedWords",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetStringDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetStringDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_string_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetStringDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetType",
+      "kind": "Method",
+      "signature": "public String _GetType()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_type",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetType",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_HandlesGlobalClassType",
+      "kind": "Method",
+      "signature": "public bool _HandlesGlobalClassType(String type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_handles_global_class_type",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._HandlesGlobalClassType(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_HasNamedClasses",
+      "kind": "Method",
+      "signature": "public bool _HasNamedClasses()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_has_named_classes",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._HasNamedClasses",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Init",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_IsControlFlowKeyword",
+      "kind": "Method",
+      "signature": "public bool _IsControlFlowKeyword(String keyword)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_is_control_flow_keyword",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._IsControlFlowKeyword(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_IsUsingTemplates",
+      "kind": "Method",
+      "signature": "public bool _IsUsingTemplates()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_using_templates",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._IsUsingTemplates",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_LookupCode",
+      "kind": "Method",
+      "signature": "public Dictionary _LookupCode(String code, String symbol, String path, Object owner)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "symbol",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "owner",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_lookup_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._LookupCode(String,String,String,Object)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_MakeFunction",
+      "kind": "Method",
+      "signature": "public String _MakeFunction(String className, String functionName, PackedStringArray functionArgs)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "String"
+        },
+        {
+          "name": "function_name",
+          "type": "String"
+        },
+        {
+          "name": "function_args",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "",
+      "godotName": "_make_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._MakeFunction(String,String,PackedStringArray)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_MakeTemplate",
+      "kind": "Method",
+      "signature": "public Script _MakeTemplate(String template, String className, String baseClassName)",
+      "returnType": "Script",
+      "parameters": [
+        {
+          "name": "template",
+          "type": "String"
+        },
+        {
+          "name": "class_name",
+          "type": "String"
+        },
+        {
+          "name": "base_class_name",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_make_template",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._MakeTemplate(String,String,String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_OpenInExternalEditor",
+      "kind": "Method",
+      "signature": "public int _OpenInExternalEditor(Script script, int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_open_in_external_editor",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._OpenInExternalEditor(Script,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_OverridesExternalEditor",
+      "kind": "Method",
+      "signature": "public bool _OverridesExternalEditor()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_overrides_external_editor",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._OverridesExternalEditor",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_PreferredFileNameCasing",
+      "kind": "Method",
+      "signature": "public int _PreferredFileNameCasing()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_preferred_file_name_casing",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._PreferredFileNameCasing",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingGetAccumulatedData",
+      "kind": "Method",
+      "signature": "public int _ProfilingGetAccumulatedData(ScriptLanguageExtensionProfilingInfo* infoArray, int infoMax)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "info_array",
+          "type": "ScriptLanguageExtensionProfilingInfo*"
+        },
+        {
+          "name": "info_max",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_get_accumulated_data",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingGetAccumulatedData(ScriptLanguageExtensionProfilingInfo*,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingGetFrameData",
+      "kind": "Method",
+      "signature": "public int _ProfilingGetFrameData(ScriptLanguageExtensionProfilingInfo* infoArray, int infoMax)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "info_array",
+          "type": "ScriptLanguageExtensionProfilingInfo*"
+        },
+        {
+          "name": "info_max",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_get_frame_data",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingGetFrameData(ScriptLanguageExtensionProfilingInfo*,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingSetSaveNativeCalls",
+      "kind": "Method",
+      "signature": "public void _ProfilingSetSaveNativeCalls(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_set_save_native_calls",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingSetSaveNativeCalls(bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingStart",
+      "kind": "Method",
+      "signature": "public void _ProfilingStart()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_profiling_start",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingStart",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingStop",
+      "kind": "Method",
+      "signature": "public void _ProfilingStop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_profiling_stop",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingStop",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadAllScripts",
+      "kind": "Method",
+      "signature": "public void _ReloadAllScripts()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_reload_all_scripts",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadAllScripts",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadScripts",
+      "kind": "Method",
+      "signature": "public void _ReloadScripts(Array scripts, bool softReload)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scripts",
+          "type": "Array"
+        },
+        {
+          "name": "soft_reload",
+          "type": "bool"
+        }
+      ],
+      "summary": "Reloads all [param scripts] from disk and the specifics of how that happens is [ScriptLanguageExtension] specific.",
+      "godotName": "_reload_scripts",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadScripts(Array,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadToolScript",
+      "kind": "Method",
+      "signature": "public void _ReloadToolScript(Script script, bool softReload)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "soft_reload",
+          "type": "bool"
+        }
+      ],
+      "summary": "Reloads the given [param script] from disk and the specifics of how that happens is [ScriptLanguageExtension] specific.",
+      "godotName": "_reload_tool_script",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadToolScript(Script,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_RemoveNamedGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _RemoveNamedGlobalConstant(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_remove_named_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._RemoveNamedGlobalConstant(StringName)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_SupportsBuiltinMode",
+      "kind": "Method",
+      "signature": "public bool _SupportsBuiltinMode()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_supports_builtin_mode",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._SupportsBuiltinMode",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_SupportsDocumentation",
+      "kind": "Method",
+      "signature": "public bool _SupportsDocumentation()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_supports_documentation",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._SupportsDocumentation",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ThreadEnter",
+      "kind": "Method",
+      "signature": "public void _ThreadEnter()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_thread_enter",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ThreadEnter",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ThreadExit",
+      "kind": "Method",
+      "signature": "public void _ThreadExit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_thread_exit",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ThreadExit",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Validate",
+      "kind": "Method",
+      "signature": "public Dictionary _Validate(String script, String path, bool validateFunctions, bool validateErrors, bool validateWarnings, bool validateSafeLines)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "validate_functions",
+          "type": "bool"
+        },
+        {
+          "name": "validate_errors",
+          "type": "bool"
+        },
+        {
+          "name": "validate_warnings",
+          "type": "bool"
+        },
+        {
+          "name": "validate_safe_lines",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_validate",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Validate(String,String,bool,bool,bool,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ValidatePath",
+      "kind": "Method",
+      "signature": "public String _ValidatePath(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_validate_path",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ValidatePath(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "CodeCompletionKind",
+      "values": [
+        {
+          "name": "CODE_COMPLETION_KIND_CLASS",
+          "value": "0",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_CONSTANT",
+          "value": "6",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_ENUM",
+          "value": "5",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_FILE_PATH",
+          "value": "8",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_FUNCTION",
+          "value": "1",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_KEYWORD",
+          "value": "10",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_MAX",
+          "value": "11",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_MEMBER",
+          "value": "4",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_NODE_PATH",
+          "value": "7",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_PLAIN_TEXT",
+          "value": "9",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_SIGNAL",
+          "value": "2",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "CODE_COMPLETION_KIND_VARIABLE",
+          "value": "3",
+          "enum": "CodeCompletionKind",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        }
+      ]
+    },
+    {
+      "name": "CodeCompletionLocation",
+      "values": [
+        {
+          "name": "LOCATION_LOCAL",
+          "value": "0",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is local to the location of the code completion query - e.g. a local variable. Subsequent value of location represent options from the outer class, the exact value represent how far they are (in terms of inner classes).",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOCATION_OTHER",
+          "value": "1024",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from other engine code, not covered by the other enum constants - e.g. built-in classes.",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOCATION_OTHER_USER_CODE",
+          "value": "512",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from user code which is not local and not in a derived class (e.g. Autoload Singletons).",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOCATION_PARENT_MASK",
+          "value": "256",
+          "enum": "CodeCompletionLocation",
+          "kind": "EnumValue",
+          "summary": "The option is from the containing class or a parent class, relative to the location of the code completion query. Perform a bitwise OR with the class depth (e.g. [code]0[/code] for the local class, [code]1[/code] for the parent, [code]2[/code] for the grandparent, etc.) to store the depth of an option in the class or a parent class.",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        }
+      ]
+    },
+    {
+      "name": "LookupResultType",
+      "values": [
+        {
+          "name": "LOOKUP_RESULT_CLASS",
+          "value": "1",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_ANNOTATION",
+          "value": "8",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_CONSTANT",
+          "value": "2",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_ENUM",
+          "value": "6",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_METHOD",
+          "value": "4",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_PROPERTY",
+          "value": "3",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_SIGNAL",
+          "value": "5",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_CLASS_TBD_GLOBALSCOPE",
+          "value": "7",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_LOCAL_CONSTANT",
+          "value": "9",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_LOCAL_VARIABLE",
+          "value": "10",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_MAX",
+          "value": "11",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        },
+        {
+          "name": "LOOKUP_RESULT_SCRIPT_LOCATION",
+          "value": "0",
+          "enum": "LookupResultType",
+          "kind": "EnumValue",
+          "summary": "",
+          "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "LOOKUP_RESULT_SCRIPT_LOCATION",
+      "value": "0",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS",
+      "value": "1",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_CONSTANT",
+      "value": "2",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_PROPERTY",
+      "value": "3",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_METHOD",
+      "value": "4",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_SIGNAL",
+      "value": "5",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_ENUM",
+      "value": "6",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_TBD_GLOBALSCOPE",
+      "value": "7",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_CLASS_ANNOTATION",
+      "value": "8",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_LOCAL_CONSTANT",
+      "value": "9",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_LOCAL_VARIABLE",
+      "value": "10",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOOKUP_RESULT_MAX",
+      "value": "11",
+      "enum": "LookupResultType",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOCATION_LOCAL",
+      "value": "0",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is local to the location of the code completion query - e.g. a local variable. Subsequent value of location represent options from the outer class, the exact value represent how far they are (in terms of inner classes).",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOCATION_PARENT_MASK",
+      "value": "256",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from the containing class or a parent class, relative to the location of the code completion query. Perform a bitwise OR with the class depth (e.g. [code]0[/code] for the local class, [code]1[/code] for the parent, [code]2[/code] for the grandparent, etc.) to store the depth of an option in the class or a parent class.",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOCATION_OTHER_USER_CODE",
+      "value": "512",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from user code which is not local and not in a derived class (e.g. Autoload Singletons).",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "LOCATION_OTHER",
+      "value": "1024",
+      "enum": "CodeCompletionLocation",
+      "kind": "EnumValue",
+      "summary": "The option is from other engine code, not covered by the other enum constants - e.g. built-in classes.",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_CLASS",
+      "value": "0",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_FUNCTION",
+      "value": "1",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_SIGNAL",
+      "value": "2",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_VARIABLE",
+      "value": "3",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_MEMBER",
+      "value": "4",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_ENUM",
+      "value": "5",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_CONSTANT",
+      "value": "6",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_NODE_PATH",
+      "value": "7",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_FILE_PATH",
+      "value": "8",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_PLAIN_TEXT",
+      "value": "9",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_KEYWORD",
+      "value": "10",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "CODE_COMPLETION_KIND_MAX",
+      "value": "11",
+      "enum": "CodeCompletionKind",
+      "kind": "EnumValue",
+      "summary": "",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_AddGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _AddGlobalConstant(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AddGlobalConstant(StringName,Variant)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_AddNamedGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _AddNamedGlobalConstant(StringName name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "",
+      "godotName": "_add_named_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AddNamedGlobalConstant(StringName,Variant)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_AutoIndentCode",
+      "kind": "Method",
+      "signature": "public String _AutoIndentCode(String code, int fromLine, int toLine)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "from_line",
+          "type": "int"
+        },
+        {
+          "name": "to_line",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_auto_indent_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._AutoIndentCode(String,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CanInheritFromFile",
+      "kind": "Method",
+      "signature": "public bool _CanInheritFromFile()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_inherit_from_file",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CanInheritFromFile",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CanMakeFunction",
+      "kind": "Method",
+      "signature": "public bool _CanMakeFunction()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_can_make_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CanMakeFunction",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CompleteCode",
+      "kind": "Method",
+      "signature": "public Dictionary _CompleteCode(String code, String path, Object owner)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "owner",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_complete_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CompleteCode(String,String,Object)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_CreateScript",
+      "kind": "Method",
+      "signature": "public Object _CreateScript()",
+      "returnType": "Object",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_create_script",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._CreateScript",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetCurrentStackInfo",
+      "kind": "Method",
+      "signature": "public Dictionary[] _DebugGetCurrentStackInfo()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_current_stack_info",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetCurrentStackInfo",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetError",
+      "kind": "Method",
+      "signature": "public String _DebugGetError()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_error",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetError",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetGlobals",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetGlobals(int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_globals",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetGlobals(int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelCount",
+      "kind": "Method",
+      "signature": "public int _DebugGetStackLevelCount()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_count",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelCount",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelFunction",
+      "kind": "Method",
+      "signature": "public String _DebugGetStackLevelFunction(int level)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelFunction(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelInstance",
+      "kind": "Method",
+      "signature": "public void* _DebugGetStackLevelInstance(int level)",
+      "returnType": "void*",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_instance",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelInstance(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelLine",
+      "kind": "Method",
+      "signature": "public int _DebugGetStackLevelLine(int level)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_line",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelLine(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelLocals",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetStackLevelLocals(int level, int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_locals",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelLocals(int,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelMembers",
+      "kind": "Method",
+      "signature": "public Dictionary _DebugGetStackLevelMembers(int level, int maxSubitems, int maxDepth)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_get_stack_level_members",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelMembers(int,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugGetStackLevelSource",
+      "kind": "Method",
+      "signature": "public String _DebugGetStackLevelSource(int level)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the source associated with a given debug stack position.",
+      "godotName": "_debug_get_stack_level_source",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugGetStackLevelSource(int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_DebugParseStackLevelExpression",
+      "kind": "Method",
+      "signature": "public String _DebugParseStackLevelExpression(int level, String expression, int maxSubitems, int maxDepth)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "level",
+          "type": "int"
+        },
+        {
+          "name": "expression",
+          "type": "String"
+        },
+        {
+          "name": "max_subitems",
+          "type": "int"
+        },
+        {
+          "name": "max_depth",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_debug_parse_stack_level_expression",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._DebugParseStackLevelExpression(int,String,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_FindFunction",
+      "kind": "Method",
+      "signature": "public int _FindFunction(String function, String code)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "function",
+          "type": "String"
+        },
+        {
+          "name": "code",
+          "type": "String"
+        }
+      ],
+      "summary": "Returns the line where the function is defined in the code, or [code]-1[/code] if the function is not present.",
+      "godotName": "_find_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._FindFunction(String,String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Finish",
+      "kind": "Method",
+      "signature": "public void _Finish()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_finish",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Finish",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Frame",
+      "kind": "Method",
+      "signature": "public void _Frame()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_frame",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Frame",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetBuiltInTemplates",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetBuiltInTemplates(StringName @object)",
+      "returnType": "Dictionary[]",
+      "parameters": [
+        {
+          "name": "object",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_built_in_templates",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetBuiltInTemplates(StringName)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetCommentDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetCommentDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_comment_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetCommentDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetDocCommentDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetDocCommentDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_doc_comment_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetDocCommentDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetExtension",
+      "kind": "Method",
+      "signature": "public String _GetExtension()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_extension",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetExtension",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetGlobalClassName",
+      "kind": "Method",
+      "signature": "public Dictionary _GetGlobalClassName(String path)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_get_global_class_name",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetGlobalClassName(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetName",
+      "kind": "Method",
+      "signature": "public String _GetName()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_name",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetName",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicAnnotations",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPublicAnnotations()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_annotations",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicAnnotations",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicConstants",
+      "kind": "Method",
+      "signature": "public Dictionary _GetPublicConstants()",
+      "returnType": "Dictionary",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_constants",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicConstants",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetPublicFunctions",
+      "kind": "Method",
+      "signature": "public Dictionary[] _GetPublicFunctions()",
+      "returnType": "Dictionary[]",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_public_functions",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetPublicFunctions",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetRecognizedExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetRecognizedExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_recognized_extensions",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetRecognizedExtensions",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetReservedWords",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetReservedWords()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_reserved_words",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetReservedWords",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetStringDelimiters",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetStringDelimiters()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_string_delimiters",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetStringDelimiters",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_GetType",
+      "kind": "Method",
+      "signature": "public String _GetType()",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_get_type",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._GetType",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_HandlesGlobalClassType",
+      "kind": "Method",
+      "signature": "public bool _HandlesGlobalClassType(String type)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_handles_global_class_type",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._HandlesGlobalClassType(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_HasNamedClasses",
+      "kind": "Method",
+      "signature": "public bool _HasNamedClasses()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_has_named_classes",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._HasNamedClasses",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Init",
+      "kind": "Method",
+      "signature": "public void _Init()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_init",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Init",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_IsControlFlowKeyword",
+      "kind": "Method",
+      "signature": "public bool _IsControlFlowKeyword(String keyword)",
+      "returnType": "bool",
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_is_control_flow_keyword",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._IsControlFlowKeyword(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_IsUsingTemplates",
+      "kind": "Method",
+      "signature": "public bool _IsUsingTemplates()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_is_using_templates",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._IsUsingTemplates",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_LookupCode",
+      "kind": "Method",
+      "signature": "public Dictionary _LookupCode(String code, String symbol, String path, Object owner)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "String"
+        },
+        {
+          "name": "symbol",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "owner",
+          "type": "Object"
+        }
+      ],
+      "summary": "",
+      "godotName": "_lookup_code",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._LookupCode(String,String,String,Object)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_MakeFunction",
+      "kind": "Method",
+      "signature": "public String _MakeFunction(String className, String functionName, PackedStringArray functionArgs)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "class_name",
+          "type": "String"
+        },
+        {
+          "name": "function_name",
+          "type": "String"
+        },
+        {
+          "name": "function_args",
+          "type": "PackedStringArray"
+        }
+      ],
+      "summary": "",
+      "godotName": "_make_function",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._MakeFunction(String,String,PackedStringArray)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_MakeTemplate",
+      "kind": "Method",
+      "signature": "public Script _MakeTemplate(String template, String className, String baseClassName)",
+      "returnType": "Script",
+      "parameters": [
+        {
+          "name": "template",
+          "type": "String"
+        },
+        {
+          "name": "class_name",
+          "type": "String"
+        },
+        {
+          "name": "base_class_name",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_make_template",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._MakeTemplate(String,String,String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_OpenInExternalEditor",
+      "kind": "Method",
+      "signature": "public int _OpenInExternalEditor(Script script, int line, int column)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "line",
+          "type": "int"
+        },
+        {
+          "name": "column",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_open_in_external_editor",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._OpenInExternalEditor(Script,int,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_OverridesExternalEditor",
+      "kind": "Method",
+      "signature": "public bool _OverridesExternalEditor()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_overrides_external_editor",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._OverridesExternalEditor",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_PreferredFileNameCasing",
+      "kind": "Method",
+      "signature": "public int _PreferredFileNameCasing()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_preferred_file_name_casing",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._PreferredFileNameCasing",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingGetAccumulatedData",
+      "kind": "Method",
+      "signature": "public int _ProfilingGetAccumulatedData(ScriptLanguageExtensionProfilingInfo* infoArray, int infoMax)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "info_array",
+          "type": "ScriptLanguageExtensionProfilingInfo*"
+        },
+        {
+          "name": "info_max",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_get_accumulated_data",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingGetAccumulatedData(ScriptLanguageExtensionProfilingInfo*,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingGetFrameData",
+      "kind": "Method",
+      "signature": "public int _ProfilingGetFrameData(ScriptLanguageExtensionProfilingInfo* infoArray, int infoMax)",
+      "returnType": "int",
+      "parameters": [
+        {
+          "name": "info_array",
+          "type": "ScriptLanguageExtensionProfilingInfo*"
+        },
+        {
+          "name": "info_max",
+          "type": "int"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_get_frame_data",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingGetFrameData(ScriptLanguageExtensionProfilingInfo*,int)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingSetSaveNativeCalls",
+      "kind": "Method",
+      "signature": "public void _ProfilingSetSaveNativeCalls(bool enable)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "enable",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_profiling_set_save_native_calls",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingSetSaveNativeCalls(bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingStart",
+      "kind": "Method",
+      "signature": "public void _ProfilingStart()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_profiling_start",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingStart",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ProfilingStop",
+      "kind": "Method",
+      "signature": "public void _ProfilingStop()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_profiling_stop",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ProfilingStop",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadAllScripts",
+      "kind": "Method",
+      "signature": "public void _ReloadAllScripts()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_reload_all_scripts",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadAllScripts",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadScripts",
+      "kind": "Method",
+      "signature": "public void _ReloadScripts(Array scripts, bool softReload)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "scripts",
+          "type": "Array"
+        },
+        {
+          "name": "soft_reload",
+          "type": "bool"
+        }
+      ],
+      "summary": "Reloads all [param scripts] from disk and the specifics of how that happens is [ScriptLanguageExtension] specific.",
+      "godotName": "_reload_scripts",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadScripts(Array,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ReloadToolScript",
+      "kind": "Method",
+      "signature": "public void _ReloadToolScript(Script script, bool softReload)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "Script"
+        },
+        {
+          "name": "soft_reload",
+          "type": "bool"
+        }
+      ],
+      "summary": "Reloads the given [param script] from disk and the specifics of how that happens is [ScriptLanguageExtension] specific.",
+      "godotName": "_reload_tool_script",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ReloadToolScript(Script,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_RemoveNamedGlobalConstant",
+      "kind": "Method",
+      "signature": "public void _RemoveNamedGlobalConstant(StringName name)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        }
+      ],
+      "summary": "",
+      "godotName": "_remove_named_global_constant",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._RemoveNamedGlobalConstant(StringName)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_SupportsBuiltinMode",
+      "kind": "Method",
+      "signature": "public bool _SupportsBuiltinMode()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_supports_builtin_mode",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._SupportsBuiltinMode",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_SupportsDocumentation",
+      "kind": "Method",
+      "signature": "public bool _SupportsDocumentation()",
+      "returnType": "bool",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_supports_documentation",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._SupportsDocumentation",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ThreadEnter",
+      "kind": "Method",
+      "signature": "public void _ThreadEnter()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_thread_enter",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ThreadEnter",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ThreadExit",
+      "kind": "Method",
+      "signature": "public void _ThreadExit()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "",
+      "godotName": "_thread_exit",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ThreadExit",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_Validate",
+      "kind": "Method",
+      "signature": "public Dictionary _Validate(String script, String path, bool validateFunctions, bool validateErrors, bool validateWarnings, bool validateSafeLines)",
+      "returnType": "Dictionary",
+      "parameters": [
+        {
+          "name": "script",
+          "type": "String"
+        },
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "validate_functions",
+          "type": "bool"
+        },
+        {
+          "name": "validate_errors",
+          "type": "bool"
+        },
+        {
+          "name": "validate_warnings",
+          "type": "bool"
+        },
+        {
+          "name": "validate_safe_lines",
+          "type": "bool"
+        }
+      ],
+      "summary": "",
+      "godotName": "_validate",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._Validate(String,String,bool,bool,bool,bool)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    },
+    {
+      "name": "_ValidatePath",
+      "kind": "Method",
+      "signature": "public String _ValidatePath(String path)",
+      "returnType": "String",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "",
+      "godotName": "_validate_path",
+      "xmlDocId": "M:Godot.ScriptLanguageExtension._ValidatePath(String)",
+      "sourcePath": "doc/classes/ScriptLanguageExtension.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ScriptLanguageExtension.xml",
+      "sha256": "d4f1f38a73d6afa7890712bd8530404ffa4d3c6febc4850f7579658bbb8a40e7"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

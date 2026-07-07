@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "AudioStreamPolyphonic",
+    "namespace": "Godot",
+    "fullName": "Godot.AudioStreamPolyphonic",
+    "kind": "class",
+    "baseType": "AudioStream",
+    "interfaces": [],
+    "godotReference": "AudioStreamPolyphonic",
+    "documentationPath": "doc/classes/AudioStreamPolyphonic.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_audiostreampolyphonic.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "Polyphony",
+      "kind": "Property",
+      "signature": "public int Polyphony { get; set; }",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Maximum amount of simultaneous streams that can be played.",
+      "defaultValue": "32",
+      "godotName": "polyphony",
+      "xmlDocId": "P:Godot.AudioStreamPolyphonic.Polyphony",
+      "sourcePath": "doc/classes/AudioStreamPolyphonic.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/AudioStreamPolyphonic.xml",
+      "sha256": "d38c427acae72c0ec2f12545395f0275ea1145eac6b74b7802139c11c6cc38d1"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

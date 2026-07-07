@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "RefCounted",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.RefCounted",
+    "kind": "class",
+    "baseType": "Electron2D.Object",
+    "interfaces": [],
+    "godotReference": "RefCounted",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "RefCounted",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RefCounted()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RefCounted type.",
+      "xmlDocId": "M:Electron2D.RefCounted.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "RefCounted",
+      "kind": "Constructor",
+      "signature": "public Electron2D.RefCounted()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the RefCounted type.",
+      "xmlDocId": "M:Electron2D.RefCounted.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetReferenceCount",
+      "kind": "Method",
+      "signature": "public System.Int32 GetReferenceCount()",
+      "returnType": "System.Int32",
+      "parameters": [],
+      "summary": "Gets the reference count value.",
+      "xmlDocId": "M:Electron2D.RefCounted.GetReferenceCount",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Reference",
+      "kind": "Method",
+      "signature": "public System.Boolean Reference()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Executes the reference operation.",
+      "xmlDocId": "M:Electron2D.RefCounted.Reference",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Unreference",
+      "kind": "Method",
+      "signature": "public System.Boolean Unreference()",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Executes the unreference operation.",
+      "xmlDocId": "M:Electron2D.RefCounted.Unreference",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ProgressBar",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.ProgressBar",
+    "kind": "class",
+    "baseType": "Electron2D.Range",
+    "interfaces": [],
+    "godotReference": "ProgressBar",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "ProgressBar",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ProgressBar()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ProgressBar\u0060 class.",
+      "xmlDocId": "M:Electron2D.ProgressBar.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "ProgressBar",
+      "kind": "Constructor",
+      "signature": "public Electron2D.ProgressBar()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the \u0060Electron2D.ProgressBar\u0060 class.",
+      "xmlDocId": "M:Electron2D.ProgressBar.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this progress bar.",
+      "xmlDocId": "M:Electron2D.ProgressBar._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the progress background, fill and optional percentage text.",
+      "xmlDocId": "M:Electron2D.ProgressBar._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Indeterminate",
+      "kind": "Property",
+      "signature": "public System.Boolean Indeterminate { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether this progress bar is indeterminate.",
+      "xmlDocId": "P:Electron2D.ProgressBar.Indeterminate",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "ShowPercentage",
+      "kind": "Property",
+      "signature": "public System.Boolean ShowPercentage { get; set; }",
+      "returnType": "System.Boolean",
+      "parameters": [],
+      "summary": "Gets or sets whether a percentage label should be drawn.",
+      "xmlDocId": "P:Electron2D.ProgressBar.ShowPercentage",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "ComputeMinimumSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 ComputeMinimumSize()",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [],
+      "summary": "Gets the minimum size requested by this progress bar.",
+      "xmlDocId": "M:Electron2D.ProgressBar._GetMinimumSize",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "Draw",
+      "kind": "Method",
+      "signature": "public System.Void Draw()",
+      "returnType": "System.Void",
+      "parameters": [],
+      "summary": "Draws the progress background, fill and optional percentage text.",
+      "xmlDocId": "M:Electron2D.ProgressBar._Draw",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

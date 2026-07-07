@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "electron2d",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Font",
+    "namespace": "Electron2D",
+    "fullName": "Electron2D.Font",
+    "kind": "class",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [],
+    "godotReference": "Font",
+    "documentationPath": "data/api/electron2d-api-manifest.json"
+  },
+  "constructors": [
+    {
+      "name": "Font",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Font()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Font type.",
+      "xmlDocId": "M:Electron2D.Font.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "members": [
+    {
+      "name": "Font",
+      "kind": "Constructor",
+      "signature": "public Electron2D.Font()",
+      "parameters": [],
+      "summary": "Initializes a new instance of the Font type.",
+      "xmlDocId": "M:Electron2D.Font.#ctor",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetAscent",
+      "kind": "Method",
+      "signature": "public System.Single GetAscent(System.Int32 fontSize)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "fontSize",
+          "type": "System.Int32",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the ascent above the text baseline for a font size.",
+      "xmlDocId": "M:Electron2D.Font.GetAscent(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetDescent",
+      "kind": "Method",
+      "signature": "public System.Single GetDescent(System.Int32 fontSize)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "fontSize",
+          "type": "System.Int32",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the descent below the text baseline for a font size.",
+      "xmlDocId": "M:Electron2D.Font.GetDescent(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetHeight",
+      "kind": "Method",
+      "signature": "public System.Single GetHeight(System.Int32 fontSize)",
+      "returnType": "System.Single",
+      "parameters": [
+        {
+          "name": "fontSize",
+          "type": "System.Int32",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the line height for a font size.",
+      "xmlDocId": "M:Electron2D.Font.GetHeight(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "GetStringSize",
+      "kind": "Method",
+      "signature": "public Electron2D.Vector2 GetStringSize(System.String text, Electron2D.HorizontalAlignment alignment, System.Single width, System.Int32 fontSize)",
+      "returnType": "Electron2D.Vector2",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "System.String"
+        },
+        {
+          "name": "alignment",
+          "type": "Electron2D.HorizontalAlignment",
+          "defaultValue": "Left"
+        },
+        {
+          "name": "width",
+          "type": "System.Single",
+          "defaultValue": "-1"
+        },
+        {
+          "name": "fontSize",
+          "type": "System.Int32",
+          "defaultValue": "16"
+        }
+      ],
+      "summary": "Returns the size required to draw a single-line string.",
+      "xmlDocId": "M:Electron2D.Font.GetStringSize(System.String,Electron2D.HorizontalAlignment,System.Single,System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "name": "HasChar",
+      "kind": "Method",
+      "signature": "public System.Boolean HasChar(System.Int32 charCode)",
+      "returnType": "System.Boolean",
+      "parameters": [
+        {
+          "name": "charCode",
+          "type": "System.Int32"
+        }
+      ],
+      "summary": "Checks whether this font contains a glyph for a Unicode codepoint.",
+      "xmlDocId": "M:Electron2D.Font.HasChar(System.Int32)",
+      "sourcePath": "data/api/electron2d-api-manifest.json"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "data/api/electron2d-api-manifest.json",
+      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+    }
+  ]
+}

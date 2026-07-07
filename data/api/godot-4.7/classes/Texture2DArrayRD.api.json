@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Texture2DArrayRD",
+    "namespace": "Godot",
+    "fullName": "Godot.Texture2DArrayRD",
+    "kind": "class",
+    "baseType": "TextureLayeredRD",
+    "interfaces": [],
+    "godotReference": "Texture2DArrayRD",
+    "documentationPath": "doc/classes/Texture2DArrayRD.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_texture2darrayrd.html"
+  },
+  "constructors": [],
+  "members": [],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [],
+  "constants": [],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Texture2DArrayRD.xml",
+      "sha256": "4cbdc5122c86e27fd7b26c9ca04546349382f9a55995ac14e646d67115b9d45d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

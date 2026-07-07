@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "ConeTwistJoint3D",
+    "namespace": "Godot",
+    "fullName": "Godot.ConeTwistJoint3D",
+    "kind": "class",
+    "baseType": "Joint3D",
+    "interfaces": [],
+    "godotReference": "ConeTwistJoint3D",
+    "documentationPath": "doc/classes/ConeTwistJoint3D.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_conetwistjoint3d.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetParam",
+      "kind": "Method",
+      "signature": "public float GetParam(int param)",
+      "returnType": "float",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        }
+      ],
+      "summary": "Returns the value of the specified parameter.",
+      "godotName": "get_param",
+      "xmlDocId": "M:Godot.ConeTwistJoint3D.GetParam(int)",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "SetParam",
+      "kind": "Method",
+      "signature": "public void SetParam(int param, float value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "int"
+        },
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "summary": "Sets the value of the specified parameter.",
+      "godotName": "set_param",
+      "xmlDocId": "M:Godot.ConeTwistJoint3D.SetParam(int,float)",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "Bias",
+      "kind": "Property",
+      "signature": "public float Bias { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The speed with which the swing or twist will take place. The higher, the faster.",
+      "defaultValue": "0.3",
+      "godotName": "bias",
+      "xmlDocId": "P:Godot.ConeTwistJoint3D.Bias",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "Relaxation",
+      "kind": "Property",
+      "signature": "public float Relaxation { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Defines, how fast the swing- and twist-speed-difference on both sides gets synced.",
+      "defaultValue": "1.0",
+      "godotName": "relaxation",
+      "xmlDocId": "P:Godot.ConeTwistJoint3D.Relaxation",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "Softness",
+      "kind": "Property",
+      "signature": "public float Softness { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "The ease with which the joint starts to twist. If it\u0027s too low, it takes more force to start twisting the joint.",
+      "defaultValue": "0.8",
+      "godotName": "softness",
+      "xmlDocId": "P:Godot.ConeTwistJoint3D.Softness",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "SwingSpan",
+      "kind": "Property",
+      "signature": "public float SwingSpan { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing span defines, how much rotation will not get corrected along the swing axis. Could be defined as looseness in the [ConeTwistJoint3D]. If below 0.05, this behavior is locked.",
+      "defaultValue": "0.7853982",
+      "godotName": "swing_span",
+      "xmlDocId": "P:Godot.ConeTwistJoint3D.SwingSpan",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "TwistSpan",
+      "kind": "Property",
+      "signature": "public float TwistSpan { get; set; }",
+      "returnType": "float",
+      "parameters": [],
+      "summary": "Twist is the rotation around the twist axis, this value defined how far the joint can twist. Twist is locked if below 0.05.",
+      "defaultValue": "3.1415927",
+      "godotName": "twist_span",
+      "xmlDocId": "P:Godot.ConeTwistJoint3D.TwistSpan",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Param",
+      "values": [
+        {
+          "name": "PARAM_BIAS",
+          "value": "2",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The speed with which the swing or twist will take place. The higher, the faster.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        },
+        {
+          "name": "PARAM_MAX",
+          "value": "5",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Represents the size of the [enum Param] enum.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        },
+        {
+          "name": "PARAM_RELAXATION",
+          "value": "4",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Defines, how fast the swing- and twist-speed-difference on both sides gets synced.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        },
+        {
+          "name": "PARAM_SOFTNESS",
+          "value": "3",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "The ease with which the joint starts to twist. If it\u0027s too low, it takes more force to start twisting the joint.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        },
+        {
+          "name": "PARAM_SWING_SPAN",
+          "value": "0",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing span defines, how much rotation will not get corrected along the swing axis. Could be defined as looseness in the [ConeTwistJoint3D]. If below 0.05, this behavior is locked.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        },
+        {
+          "name": "PARAM_TWIST_SPAN",
+          "value": "1",
+          "enum": "Param",
+          "kind": "EnumValue",
+          "summary": "Twist is the rotation around the twist axis, this value defined how far the joint can twist. Twist is locked if below 0.05.",
+          "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "PARAM_SWING_SPAN",
+      "value": "0",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing span defines, how much rotation will not get corrected along the swing axis. Could be defined as looseness in the [ConeTwistJoint3D]. If below 0.05, this behavior is locked.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "PARAM_TWIST_SPAN",
+      "value": "1",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Twist is the rotation around the twist axis, this value defined how far the joint can twist. Twist is locked if below 0.05.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "PARAM_BIAS",
+      "value": "2",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The speed with which the swing or twist will take place. The higher, the faster.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "PARAM_SOFTNESS",
+      "value": "3",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "The ease with which the joint starts to twist. If it\u0027s too low, it takes more force to start twisting the joint.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "PARAM_RELAXATION",
+      "value": "4",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Defines, how fast the swing- and twist-speed-difference on both sides gets synced.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    },
+    {
+      "name": "PARAM_MAX",
+      "value": "5",
+      "enum": "Param",
+      "kind": "EnumValue",
+      "summary": "Represents the size of the [enum Param] enum.",
+      "sourcePath": "doc/classes/ConeTwistJoint3D.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/ConeTwistJoint3D.xml",
+      "sha256": "926ed1f053d59a8f3eb582276d1720f9660335599329f751d987a943cb69ee6d"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "EditorSceneFormatImporter",
+    "namespace": "Godot",
+    "fullName": "Godot.EditorSceneFormatImporter",
+    "kind": "class",
+    "baseType": "RefCounted",
+    "interfaces": [],
+    "godotReference": "EditorSceneFormatImporter",
+    "documentationPath": "doc/classes/EditorSceneFormatImporter.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_editorsceneformatimporter.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "_GetExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Return supported file extensions for this scene importer.",
+      "godotName": "_get_extensions",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetExtensions",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetImportOptions(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override to add general import options. These will appear in the main import dock on the editor. Add options via [method add_import_option] and [method add_import_option_advanced]. [b]Note:[/b] All [EditorSceneFormatImporter] and [EditorScenePostImportPlugin] instances will add options for all files. It is good practice to check the file extension when [param path] is non-empty. When the user is editing project settings, [param path] will be empty. It is recommended to add all options when [param path] is empty to allow the user to customize Import Defaults.",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetImportOptions(String)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetOptionVisibility(String path, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetOptionVisibility(String,bool,String)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_ImportScene",
+      "kind": "Method",
+      "signature": "public Object _ImportScene(String path, int flags, Dictionary options)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Perform the bulk of the scene import logic here, for example using [GLTFDocument] or [FBXDocument].",
+      "godotName": "_import_scene",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._ImportScene(String,int,Dictionary)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "AddImportOption",
+      "kind": "Method",
+      "signature": "public void AddImportOption(String name, Variant value)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "value",
+          "type": "Variant"
+        }
+      ],
+      "summary": "Add a specific import option (name and default value only). This function can only be called from [method _get_import_options].",
+      "godotName": "add_import_option",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter.AddImportOption(String,Variant)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "AddImportOptionAdvanced",
+      "kind": "Method",
+      "signature": "public void AddImportOptionAdvanced(int type, String name, Variant defaultValue, int hint, String hintString, int usageFlags)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "name": "default_value",
+          "type": "Variant"
+        },
+        {
+          "name": "hint",
+          "type": "int",
+          "defaultValue": "0"
+        },
+        {
+          "name": "hint_string",
+          "type": "String",
+          "defaultValue": "\u0022\u0022"
+        },
+        {
+          "name": "usage_flags",
+          "type": "int",
+          "defaultValue": "6"
+        }
+      ],
+      "summary": "Add a specific import option. This function can only be called from [method _get_import_options].",
+      "godotName": "add_import_option_advanced",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter.AddImportOptionAdvanced(int,String,Variant,int,String,int)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "ImportFlags",
+      "values": [
+        {
+          "name": "IMPORT_ANIMATION",
+          "value": "2",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "Import animations from the 3D scene. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_DISCARD_MESHES_AND_MATERIALS",
+          "value": "32",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "Ignore meshes and materials on import. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_FAIL_ON_MISSING_DEPENDENCIES",
+          "value": "4",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "Unused flag (this has no effect when enabled).",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_FORCE_DISABLE_MESH_COMPRESSION",
+          "value": "64",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_GENERATE_TANGENT_ARRAYS",
+          "value": "8",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the input meshes don\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_SCENE",
+          "value": "1",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "Unused flag (this has no effect when enabled).",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        },
+        {
+          "name": "IMPORT_USE_NAMED_SKIN_BINDS",
+          "value": "16",
+          "enum": "ImportFlags",
+          "kind": "EnumValue",
+          "summary": "If checked, use named [Skin]s for animation. The [MeshInstance3D] node contains 3 properties of relevance here: a skeleton [NodePath] pointing to the [Skeleton3D] node (usually [code]..[/code]), a mesh, and a skin: - The [Skeleton3D] node contains a list of bones with names, their pose and rest, a name, and a parent bone. - The mesh is all of the raw vertex data needed to display a mesh. In terms of the mesh, it knows how vertices are weight-painted and uses some internal numbering often imported from 3D modeling software. - The skin contains the information necessary to bind this mesh onto this Skeleton3D. For each of the internal bone IDs chosen by the 3D modeling software, it contains two things. Firstly, a matrix known as the Bind Pose Matrix, Inverse Bind Matrix, or IBM for short. Secondly, the [Skin] contains each bone\u0027s name (if this flag is enabled), or the bone\u0027s index within the [Skeleton3D] list (if this flag is disabled). Together, this information is enough to tell Godot how to use the bone poses in the [Skeleton3D] node to render the mesh from each [MeshInstance3D]. Note that each [MeshInstance3D] may share binds, as is common in models exported from Blender, or each [MeshInstance3D] may use a separate [Skin] object, as is common in models exported from other tools such as Maya.",
+          "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "IMPORT_SCENE",
+      "value": "1",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "Unused flag (this has no effect when enabled).",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_ANIMATION",
+      "value": "2",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "Import animations from the 3D scene. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_FAIL_ON_MISSING_DEPENDENCIES",
+      "value": "4",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "Unused flag (this has no effect when enabled).",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_GENERATE_TANGENT_ARRAYS",
+      "value": "8",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], generate vertex tangents using [url=http://www.mikktspace.com/]Mikktspace[/url] if the input meshes don\u0027t have tangent data. When possible, it\u0027s recommended to let the 3D modeling software generate tangents on export instead of relying on this option. Tangents are required for correct display of normal and height maps, along with any material/shader features that require tangents. If you don\u0027t need material features that require tangents, disabling this can reduce output file size and speed up importing if the source 3D file doesn\u0027t contain tangents.",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_USE_NAMED_SKIN_BINDS",
+      "value": "16",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If checked, use named [Skin]s for animation. The [MeshInstance3D] node contains 3 properties of relevance here: a skeleton [NodePath] pointing to the [Skeleton3D] node (usually [code]..[/code]), a mesh, and a skin: - The [Skeleton3D] node contains a list of bones with names, their pose and rest, a name, and a parent bone. - The mesh is all of the raw vertex data needed to display a mesh. In terms of the mesh, it knows how vertices are weight-painted and uses some internal numbering often imported from 3D modeling software. - The skin contains the information necessary to bind this mesh onto this Skeleton3D. For each of the internal bone IDs chosen by the 3D modeling software, it contains two things. Firstly, a matrix known as the Bind Pose Matrix, Inverse Bind Matrix, or IBM for short. Secondly, the [Skin] contains each bone\u0027s name (if this flag is enabled), or the bone\u0027s index within the [Skeleton3D] list (if this flag is disabled). Together, this information is enough to tell Godot how to use the bone poses in the [Skeleton3D] node to render the mesh from each [MeshInstance3D]. Note that each [MeshInstance3D] may share binds, as is common in models exported from Blender, or each [MeshInstance3D] may use a separate [Skin] object, as is common in models exported from other tools such as Maya.",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_DISCARD_MESHES_AND_MATERIALS",
+      "value": "32",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "Ignore meshes and materials on import. When importing a scene as an [AnimationLibrary], this flag is always enabled.",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "IMPORT_FORCE_DISABLE_MESH_COMPRESSION",
+      "value": "64",
+      "enum": "ImportFlags",
+      "kind": "EnumValue",
+      "summary": "If [code]true[/code], mesh compression will not be used. Consider enabling if you notice blocky artifacts in your mesh normals or UVs, or if you have meshes that are larger than a few thousand meters in each direction.",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [
+    {
+      "name": "_GetExtensions",
+      "kind": "Method",
+      "signature": "public PackedStringArray _GetExtensions()",
+      "returnType": "PackedStringArray",
+      "parameters": [],
+      "summary": "Return supported file extensions for this scene importer.",
+      "godotName": "_get_extensions",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetExtensions",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_GetImportOptions",
+      "kind": "Method",
+      "signature": "public void _GetImportOptions(String path)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        }
+      ],
+      "summary": "Override to add general import options. These will appear in the main import dock on the editor. Add options via [method add_import_option] and [method add_import_option_advanced]. [b]Note:[/b] All [EditorSceneFormatImporter] and [EditorScenePostImportPlugin] instances will add options for all files. It is good practice to check the file extension when [param path] is non-empty. When the user is editing project settings, [param path] will be empty. It is recommended to add all options when [param path] is empty to allow the user to customize Import Defaults.",
+      "godotName": "_get_import_options",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetImportOptions(String)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_GetOptionVisibility",
+      "kind": "Method",
+      "signature": "public Variant _GetOptionVisibility(String path, bool forAnimation, String option)",
+      "returnType": "Variant",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "for_animation",
+          "type": "bool"
+        },
+        {
+          "name": "option",
+          "type": "String"
+        }
+      ],
+      "summary": "Should return [code]true[/code] to show the given option, [code]false[/code] to hide the given option, or [code]null[/code] to ignore.",
+      "godotName": "_get_option_visibility",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._GetOptionVisibility(String,bool,String)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    },
+    {
+      "name": "_ImportScene",
+      "kind": "Method",
+      "signature": "public Object _ImportScene(String path, int flags, Dictionary options)",
+      "returnType": "Object",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "String"
+        },
+        {
+          "name": "flags",
+          "type": "int"
+        },
+        {
+          "name": "options",
+          "type": "Dictionary"
+        }
+      ],
+      "summary": "Perform the bulk of the scene import logic here, for example using [GLTFDocument] or [FBXDocument].",
+      "godotName": "_import_scene",
+      "xmlDocId": "M:Godot.EditorSceneFormatImporter._ImportScene(String,int,Dictionary)",
+      "sourcePath": "doc/classes/EditorSceneFormatImporter.xml"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/EditorSceneFormatImporter.xml",
+      "sha256": "4dac03378312dc8503fba7363cae3cdf7e1e3cebde610a989ad63781cd656529"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}

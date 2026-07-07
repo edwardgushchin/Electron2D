@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "source": "godot",
+  "baseline": "4.7-stable",
+  "generatorVersion": "T-0242",
+  "class": {
+    "name": "Shader",
+    "namespace": "Godot",
+    "fullName": "Godot.Shader",
+    "kind": "class",
+    "baseType": "Resource",
+    "interfaces": [],
+    "godotReference": "Shader",
+    "documentationPath": "doc/classes/Shader.xml",
+    "documentationUrl": "https://docs.godotengine.org/en/4.7/classes/class_shader.html"
+  },
+  "constructors": [],
+  "members": [
+    {
+      "name": "GetDefaultTextureParameter",
+      "kind": "Method",
+      "signature": "public Texture GetDefaultTextureParameter(StringName name, int index)",
+      "returnType": "Texture",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Returns the texture that is set as default for the specified parameter. [b]Note:[/b] [param name] must match the name of the uniform in the code exactly. [b]Note:[/b] If the sampler array is used use [param index] to access the specified texture.",
+      "godotName": "get_default_texture_parameter",
+      "xmlDocId": "M:Godot.Shader.GetDefaultTextureParameter(StringName,int)",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "GetMode",
+      "kind": "Method",
+      "signature": "public int GetMode()",
+      "returnType": "int",
+      "parameters": [],
+      "summary": "Returns the shader mode for the shader.",
+      "godotName": "get_mode",
+      "xmlDocId": "M:Godot.Shader.GetMode",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "GetShaderUniformList",
+      "kind": "Method",
+      "signature": "public Array GetShaderUniformList(bool getGroups)",
+      "returnType": "Array",
+      "parameters": [
+        {
+          "name": "get_groups",
+          "type": "bool",
+          "defaultValue": "false"
+        }
+      ],
+      "summary": "Returns the list of shader uniforms that can be assigned to a [ShaderMaterial], for use with [method ShaderMaterial.set_shader_parameter] and [method ShaderMaterial.get_shader_parameter]. The parameters returned are contained in dictionaries in a similar format to the ones returned by [method Object.get_property_list]. If argument [param get_groups] is [code]true[/code], parameter grouping hints are also included in the list.",
+      "godotName": "get_shader_uniform_list",
+      "xmlDocId": "M:Godot.Shader.GetShaderUniformList(bool)",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "InspectNativeShaderCode",
+      "kind": "Method",
+      "signature": "public void InspectNativeShaderCode()",
+      "returnType": "void",
+      "parameters": [],
+      "summary": "Only available when running in the editor. Opens a popup that visualizes the generated shader code, including all variants and internal shader code. See also [method Material.inspect_native_shader_code].",
+      "godotName": "inspect_native_shader_code",
+      "xmlDocId": "M:Godot.Shader.InspectNativeShaderCode",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "SetDefaultTextureParameter",
+      "kind": "Method",
+      "signature": "public void SetDefaultTextureParameter(StringName name, Texture texture, int index)",
+      "returnType": "void",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "StringName"
+        },
+        {
+          "name": "texture",
+          "type": "Texture"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "defaultValue": "0"
+        }
+      ],
+      "summary": "Sets the default texture to be used with a texture uniform. The default is used if a texture is not set in the [ShaderMaterial]. [b]Note:[/b] [param name] must match the name of the uniform in the code exactly. [b]Note:[/b] If the sampler array is used use [param index] to access the specified texture.",
+      "godotName": "set_default_texture_parameter",
+      "xmlDocId": "M:Godot.Shader.SetDefaultTextureParameter(StringName,Texture,int)",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "Code",
+      "kind": "Property",
+      "signature": "public String Code { get; set; }",
+      "returnType": "String",
+      "parameters": [],
+      "summary": "Returns the shader\u0027s code as the user has written it, not the full generated code used internally.",
+      "defaultValue": "\u0022\u0022",
+      "godotName": "code",
+      "xmlDocId": "P:Godot.Shader.Code",
+      "sourcePath": "doc/classes/Shader.xml"
+    }
+  ],
+  "rawMembers": [],
+  "signals": [],
+  "enums": [
+    {
+      "name": "Mode",
+      "values": [
+        {
+          "name": "MODE_CANVAS_ITEM",
+          "value": "1",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used to draw all 2D objects.",
+          "sourcePath": "doc/classes/Shader.xml"
+        },
+        {
+          "name": "MODE_FOG",
+          "value": "4",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used for setting the color and density of volumetric fog effect.",
+          "sourcePath": "doc/classes/Shader.xml"
+        },
+        {
+          "name": "MODE_PARTICLES",
+          "value": "2",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used to calculate particle information on a per-particle basis. Not used for drawing.",
+          "sourcePath": "doc/classes/Shader.xml"
+        },
+        {
+          "name": "MODE_SKY",
+          "value": "3",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used for drawing skies. Only works with shaders attached to [Sky] objects.",
+          "sourcePath": "doc/classes/Shader.xml"
+        },
+        {
+          "name": "MODE_SPATIAL",
+          "value": "0",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used to draw all 3D objects.",
+          "sourcePath": "doc/classes/Shader.xml"
+        },
+        {
+          "name": "MODE_TEXTURE_BLIT",
+          "value": "5",
+          "enum": "Mode",
+          "kind": "EnumValue",
+          "summary": "Mode used for drawing to DrawableTexture resources via blit calls.",
+          "sourcePath": "doc/classes/Shader.xml"
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "MODE_SPATIAL",
+      "value": "0",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used to draw all 3D objects.",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "MODE_CANVAS_ITEM",
+      "value": "1",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used to draw all 2D objects.",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "MODE_PARTICLES",
+      "value": "2",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used to calculate particle information on a per-particle basis. Not used for drawing.",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "MODE_SKY",
+      "value": "3",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used for drawing skies. Only works with shaders attached to [Sky] objects.",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "MODE_FOG",
+      "value": "4",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used for setting the color and density of volumetric fog effect.",
+      "sourcePath": "doc/classes/Shader.xml"
+    },
+    {
+      "name": "MODE_TEXTURE_BLIT",
+      "value": "5",
+      "enum": "Mode",
+      "kind": "EnumValue",
+      "summary": "Mode used for drawing to DrawableTexture resources via blit calls.",
+      "sourcePath": "doc/classes/Shader.xml"
+    }
+  ],
+  "operators": [],
+  "virtualMethods": [],
+  "sourceInputs": [
+    {
+      "path": "doc/classes/Shader.xml",
+      "sha256": "d12b9aabcc4e60616b82c8c54daef2a53c51c4b511c6f3a5ad53d9decde9dcac"
+    },
+    {
+      "path": "csharp_api.json",
+      "sha256": "957d4c378daa92b8deb2990c22a6fe3cff076822091a2b84daf513ba2497fd44"
+    }
+  ]
+}
